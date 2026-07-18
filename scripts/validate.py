@@ -256,6 +256,31 @@ def validate_wallpaper(version: str) -> None:
         raise ValidationError("wallpaper output must be exactly 2560x1440")
 
 
+def validate_tooling() -> None:
+    required = (
+        ROOT / "scripts/build.py",
+        ROOT / "scripts/install.sh",
+        ROOT / "scripts/uninstall.sh",
+        ROOT / "docs/QUICKSTART.md",
+        ROOT / "docs/MANUAL_TESTING.md",
+    )
+    missing = [path.relative_to(ROOT) for path in required if not path.is_file()]
+    if missing:
+        raise ValidationError(f"missing phase 4 tooling or documentation: {missing}")
+    install_text = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")
+    uninstall_text = (ROOT / "scripts/uninstall.sh").read_text(encoding="utf-8")
+    for option in ("--user", "--dry-run"):
+        if option not in install_text or option not in uninstall_text:
+            raise ValidationError(f"install and uninstall must support {option}")
+    forbidden = ("sudo", "kwriteconfig", "qdbus", "systemctl", "plasmashell --replace", "plasma-apply-")
+    for command in forbidden:
+        if command in install_text or command in uninstall_text:
+            raise ValidationError(f"install tooling must not execute live-setting command {command!r}")
+    checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
+    if checklist.count("Pending") < 9:
+        raise ValidationError("manual graphical checks must remain explicitly pending")
+
+
 def validate_json_and_xml() -> None:
     for path in sorted(ROOT.rglob("*.json")):
         if ".git" not in path.parts:
@@ -292,6 +317,7 @@ def validate() -> None:
     validate_aurorae()
     validate_icons()
     validate_wallpaper(version)
+    validate_tooling()
     validate_json_and_xml()
     validate_no_package_symlinks()
 

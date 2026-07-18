@@ -20,6 +20,10 @@ See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for the locked scope
 and [the compatibility record](docs/COMPATIBILITY.md) for verified Plasma 6
 contracts.
 
+Use the [quick-start and rollback guide](docs/QUICKSTART.md) for safe user-local
+installation. The [manual visual checklist](docs/MANUAL_TESTING.md) tracks the
+live Plasma checks that cannot be inferred from structural validation.
+
 ## License
 
 See [LICENSES.md](LICENSES.md). All NoxForge artwork is original project work.
