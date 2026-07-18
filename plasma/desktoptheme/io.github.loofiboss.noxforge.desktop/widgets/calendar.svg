@@ -11,5 +11,5 @@
       .ColorScheme-ButtonFocus { color: #A3FF47; }
     ]]></style>
   </defs>
-  <g id="event" transform="translate(0 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
+  <g id="event" transform="translate(0 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M11 11h2v2h-2z"/></g>
 </svg>

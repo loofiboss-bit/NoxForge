@@ -11,13 +11,13 @@
       .ColorScheme-ButtonFocus { color: #A3FF47; }
     ]]></style>
   </defs>
-  <g id="add-normal" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="remove-normal" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="add-hover" transform="translate(64 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="add-pressed" transform="translate(96 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="remove-hover" transform="translate(128 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="remove-pressed" transform="translate(160 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
-  <g id="open-normal" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 8h14M5 12h10M5 16h7"/></g>
-  <g id="open-hover" transform="translate(224 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2"/></g>
-  <g id="open-pressed" transform="translate(256 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
+  <g id="add-normal" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
+  <g id="remove-normal" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12h12"/></g>
+  <g id="add-hover" transform="translate(64 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
+  <g id="add-pressed" transform="translate(96 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
+  <g id="remove-hover" transform="translate(128 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12h12"/></g>
+  <g id="remove-pressed" transform="translate(160 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12h12"/></g>
+  <g id="open-normal" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
+  <g id="open-hover" transform="translate(224 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
+  <g id="open-pressed" transform="translate(256 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 6v12M6 12h12"/></g>
 </svg>

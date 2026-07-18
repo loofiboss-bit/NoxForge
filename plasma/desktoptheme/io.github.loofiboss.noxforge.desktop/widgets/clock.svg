@@ -11,10 +11,10 @@
       .ColorScheme-ButtonFocus { color: #A3FF47; }
     ]]></style>
   </defs>
-  <g id="ClockFace" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="HourHand" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="MinuteHand" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="SecondHand" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="HandCenterScrew" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="Glass" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
+  <g id="ClockFace" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z"/></g>
+  <g id="HourHand" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12V7"/></g>
+  <g id="MinuteHand" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12V4"/></g>
+  <g id="SecondHand" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12V3"/></g>
+  <g id="HandCenterScrew" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></g>
+  <g id="Glass" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z"/></g>
 </svg>

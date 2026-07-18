@@ -1,10 +1,10 @@
-# NoxForge KDE — v1.0 Implementation Plan
+# NoxForge KDE — v2.0 Implementation Plan
 
 <!-- Canonical scope and release-gate authority. -->
 
 **Target:** Fedora KDE 44, Plasma 6.7+, Qt 6.11, Wayland
 **Theme ID:** `io.github.loofiboss.noxforge.desktop`
-**Milestone:** `v1.0.0-local`
+**Milestone:** `v2.0.0-local`
 **Compatibility:** Plasma 6 and Qt 6 only
 
 ## Goal
@@ -66,7 +66,7 @@ checks pass. Live cursor and sound checks remain Pending until performed.
 
 **Gate:** validation, Python tests, CMake/CTest, deterministic build, isolated
 repeated user install/uninstall and system dry-runs pass. Set all metadata to
-`1.0.0` only at this final gate.
+`2.0.0` only at this final gate.
 
 ## Required verification
 

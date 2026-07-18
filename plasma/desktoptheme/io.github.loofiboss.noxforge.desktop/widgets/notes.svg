@@ -11,13 +11,13 @@
       .ColorScheme-ButtonFocus { color: #A3FF47; }
     ]]></style>
   </defs>
-  <g id="yellow-notes" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="green-notes" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="red-notes" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="blue-notes" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="white-notes" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="pink-notes" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
-  <g id="orange-notes" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 8h14M5 12h10M5 16h7"/></g>
-  <g id="black-notes" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2"/></g>
-  <g id="transluscent-notes" transform="translate(256 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
+  <g id="yellow-notes" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="green-notes" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="red-notes" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="blue-notes" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="white-notes" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="pink-notes" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="orange-notes" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="black-notes" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
+  <g id="transluscent-notes" transform="translate(256 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12v12H6z"/></g>
 </svg>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create deterministic local NoxForge v1.0.0 build artifacts."""
+"""Create deterministic local NoxForge v2.0.0 build artifacts."""
 
 from __future__ import annotations
 

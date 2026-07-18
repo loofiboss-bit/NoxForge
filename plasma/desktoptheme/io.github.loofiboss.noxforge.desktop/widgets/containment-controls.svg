@@ -11,30 +11,30 @@
       .ColorScheme-ButtonFocus { color: #A3FF47; }
     ]]></style>
   </defs>
-  <g id="vertical-centerindicator" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="horizontal-centerindicator" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="south-maxslider" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="south-offsetslider" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="south-center" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="south-bottom" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
-  <g id="south-top" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 8h14M5 12h10M5 16h7"/></g>
-  <g id="north-center" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2"/></g>
-  <g id="north-bottom" transform="translate(256 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="north-top" transform="translate(288 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="west-center" transform="translate(320 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="west-left" transform="translate(352 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="west-right" transform="translate(0 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="east-center" transform="translate(32 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
-  <g id="east-left" transform="translate(64 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 8h14M5 12h10M5 16h7"/></g>
-  <g id="east-right" transform="translate(96 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2"/></g>
-  <g id="south-minslider" transform="translate(128 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="north-maxslider" transform="translate(160 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
-  <g id="north-offsetslider" transform="translate(192 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 12l4 4 8-9"/></g>
-  <g id="north-minslider" transform="translate(224 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M7 7l10 10M17 7L7 17"/></g>
-  <g id="east-maxslider" transform="translate(256 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16M12 4v16"/></g>
-  <g id="east-offsetslider" transform="translate(288 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 17l7-10 7 10M8 14h8"/></g>
-  <g id="east-minslider" transform="translate(320 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 8h14M5 12h10M5 16h7"/></g>
-  <g id="west-maxslider" transform="translate(352 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2"/></g>
-  <g id="west-offsetslider" transform="translate(0 64)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14M12 5v14"/></g>
-  <g id="west-minslider" transform="translate(32 64)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 7h12v10H6zM9 10h6M9 14h4"/></g>
+  <g id="vertical-centerindicator" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4v16"/></g>
+  <g id="horizontal-centerindicator" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h16"/></g>
+  <g id="south-maxslider" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18h12"/></g>
+  <g id="south-offsetslider" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18h12"/></g>
+  <g id="south-center" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12v6M9 15l3 3 3-3"/></g>
+  <g id="south-bottom" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18h12"/></g>
+  <g id="south-top" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12"/></g>
+  <g id="north-center" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12V6M9 9l3-3 3 3"/></g>
+  <g id="north-bottom" transform="translate(256 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18h12"/></g>
+  <g id="north-top" transform="translate(288 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12"/></g>
+  <g id="west-center" transform="translate(320 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12H6M9 9l-3 3 3 3"/></g>
+  <g id="west-left" transform="translate(352 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6v12"/></g>
+  <g id="west-right" transform="translate(0 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6v12"/></g>
+  <g id="east-center" transform="translate(32 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12h6M15 9l3 3-3 3"/></g>
+  <g id="east-left" transform="translate(64 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6v12"/></g>
+  <g id="east-right" transform="translate(96 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6v12"/></g>
+  <g id="south-minslider" transform="translate(128 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18h12"/></g>
+  <g id="north-maxslider" transform="translate(160 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12"/></g>
+  <g id="north-offsetslider" transform="translate(192 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12"/></g>
+  <g id="north-minslider" transform="translate(224 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6h12"/></g>
+  <g id="east-maxslider" transform="translate(256 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6v12"/></g>
+  <g id="east-offsetslider" transform="translate(288 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6v12"/></g>
+  <g id="east-minslider" transform="translate(320 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6v12"/></g>
+  <g id="west-maxslider" transform="translate(352 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6v12"/></g>
+  <g id="west-offsetslider" transform="translate(0 64)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6v12"/></g>
+  <g id="west-minslider" transform="translate(32 64)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6v12"/></g>
 </svg>

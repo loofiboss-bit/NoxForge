@@ -123,22 +123,24 @@ def control_sheet(states: list[tuple[str, Paint]]) -> str:
 
 
 def semantic_symbols(names: list[str]) -> str:
-    """Draw compact original symbols for shell-owned semantic element IDs."""
-    glyphs = (
-        "M5 12h14M12 5v14", "M6 7h12v10H6zM9 10h6M9 14h4",
-        "M6 12l4 4 8-9", "M7 7l10 10M17 7L7 17",
-        "M4 12h16M12 4v16", "M5 17l7-10 7 10M8 14h8",
-        "M5 8h14M5 12h10M5 16h7", "M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16M12 8v5l3 2",
-    )
+    """Draw compact original symbols from the versioned contract for shell-owned semantic element IDs."""
+    import json
+    contract_path = ROOT / "design/plasma-semantic-contract.json"
+    try:
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    except Exception:
+        contract = {}
+
     body: list[str] = []
     for index, name in enumerate(names):
         x = (index % 12) * 32
         y = (index // 12) * 32
         css_class = "ColorScheme-Highlight" if any(word in name for word in ("active", "hover", "pressed", "event")) else "ColorScheme-Text"
+        path_d = contract.get(name, "M12 12l1 1")
         body.append(
             f'<g id="{name}" transform="translate({x} {y})" class="{css_class}" '
             'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">'
-            f'<path d="{glyphs[index % len(glyphs)]}"/></g>'
+            f'<path d="{path_d}"/></g>'
         )
     return svg("\n".join(body))
 
