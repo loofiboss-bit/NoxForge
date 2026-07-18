@@ -1,0 +1,33 @@
+[Icon Theme]
+Name=NoxForge
+Comment=Original compact NoxForge prototype icons
+Inherits=breeze-dark,breeze,hicolor
+Directories=scalable/actions,scalable/places,scalable/devices,scalable/status
+
+[scalable/actions]
+Size=24
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/places]
+Size=24
+Context=Places
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/devices]
+Size=24
+Context=Devices
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/status]
+Size=24
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=64

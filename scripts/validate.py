@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import configparser
+import gzip
 import json
 import re
+import struct
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -171,6 +173,89 @@ def validate_plasma_style() -> None:
         raise ValidationError("Plasma Style must not use Plasma 5 metadata.desktop")
 
 
+def validate_aurorae() -> None:
+    theme = ROOT / f"aurorae/{THEME_ID}"
+    metadata = load_colors(theme / "metadata.desktop")
+    entry = metadata["Desktop Entry"]
+    if entry.get("x-kde-plugininfo-name") != THEME_ID:
+        raise ValidationError("Aurorae plugin ID does not match its directory")
+    rc = theme / f"{THEME_ID}rc"
+    settings = load_colors(rc)
+    if settings["General"].get("rightbuttons") != "IAX":
+        raise ValidationError("Aurorae must configure minimize, maximize/restore, and close buttons")
+    decoration_ids = svg_ids(theme / "decoration.svg")
+    for prefix in ("decoration", "decoration-inactive"):
+        if not {f"{prefix}-{position}" for position in POSITIONS}.issubset(decoration_ids):
+            raise ValidationError(f"Aurorae has an incomplete {prefix} frame")
+    states = {
+        "active",
+        "inactive",
+        "hover",
+        "hover-inactive",
+        "pressed",
+        "pressed-inactive",
+        "deactivated",
+        "deactivated-inactive",
+    }
+    for name in ("close", "minimize", "maximize", "restore"):
+        svg_path = theme / f"{name}.svg"
+        if not {f"{state}-center" for state in states}.issubset(svg_ids(svg_path)):
+            raise ValidationError(f"Aurorae {name}.svg has incomplete button states")
+    for svg_path in sorted(theme.glob("*.svg")):
+        svgz_path = svg_path.with_suffix(".svgz")
+        try:
+            compressed = gzip.decompress(svgz_path.read_bytes())
+        except (OSError, gzip.BadGzipFile) as error:
+            raise ValidationError(f"invalid compressed Aurorae asset {svgz_path.name}: {error}") from error
+        if compressed != svg_path.read_bytes():
+            raise ValidationError(f"compressed Aurorae asset differs from {svg_path.name}")
+
+
+def validate_icons() -> None:
+    theme = ROOT / "icons/NoxForge"
+    index = load_colors(theme / "index.theme")
+    inherited = index["Icon Theme"].get("inherits", "").split(",")
+    if inherited != ["breeze-dark", "breeze", "hicolor"]:
+        raise ValidationError("icon fallback order must be breeze-dark,breeze,hicolor")
+    expected_counts = {"actions": 8, "places": 5, "devices": 6, "status": 5}
+    icons = list((theme / "scalable").glob("*/*.svg"))
+    if len(icons) != 24:
+        raise ValidationError(f"icon prototype must contain exactly 24 SVGs, found {len(icons)}")
+    for category, count in expected_counts.items():
+        found = list((theme / "scalable" / category).glob("*.svg"))
+        if len(found) != count:
+            raise ValidationError(f"icon category {category} requires {count} icons, found {len(found)}")
+    for path in icons:
+        root = ET.parse(path).getroot()
+        if root.get("viewBox") != "0 0 24 24":
+            raise ValidationError(f"icon {path.name} must use the 24px design grid")
+        forbidden = [element for element in root.iter() if element.tag.rsplit("}", 1)[-1] in {"image", "text"}]
+        if forbidden:
+            raise ValidationError(f"icon {path.name} embeds raster data or text")
+
+
+def png_dimensions(path: Path) -> tuple[int, int]:
+    data = path.read_bytes()[:24]
+    if len(data) != 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+        raise ValidationError(f"invalid PNG header: {path.relative_to(ROOT)}")
+    return struct.unpack(">II", data[16:24])
+
+
+def validate_wallpaper(version: str) -> None:
+    package = ROOT / "wallpapers/NoxForge"
+    metadata = load_json(package / "metadata.json")
+    if not isinstance(metadata, dict) or not isinstance(metadata.get("KPlugin"), dict):
+        raise ValidationError("wallpaper metadata requires a KPlugin object")
+    plugin = metadata["KPlugin"]
+    if plugin.get("Id") != "NoxForge" or plugin.get("Version") != version or plugin.get("License") != "MIT":
+        raise ValidationError("wallpaper metadata identity, version, or license mismatch")
+    source = ET.parse(package / "contents/source/NoxForge.svg").getroot()
+    if source.get("viewBox") != "0 0 2560 1440":
+        raise ValidationError("editable wallpaper source must use a 2560x1440 viewBox")
+    if png_dimensions(package / "contents/images/2560x1440.png") != (2560, 1440):
+        raise ValidationError("wallpaper output must be exactly 2560x1440")
+
+
 def validate_json_and_xml() -> None:
     for path in sorted(ROOT.rglob("*.json")):
         if ".git" not in path.parts:
@@ -204,6 +289,9 @@ def validate() -> None:
         raise ValidationError("standalone and Plasma Style color schemes differ")
     validate_metadata(version)
     validate_plasma_style()
+    validate_aurorae()
+    validate_icons()
+    validate_wallpaper(version)
     validate_json_and_xml()
     validate_no_package_symlinks()
 

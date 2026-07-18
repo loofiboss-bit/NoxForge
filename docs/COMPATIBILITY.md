@@ -44,6 +44,21 @@ at least an `active-center` element and may provide `inactive`, `hover`,
 `deactivated-inactive` states. Aurorae has no fallback for missing button files,
 so the prototype must supply every button enabled by its configuration.
 
+KWin 6.7's installed `KWin/Aurorae` KPackage structure requires
+`decoration.svgz` and declares compressed SVG as its package MIME type, while
+the current tutorial describes editable `.svg` files. NoxForge keeps editable
+`.svg` sources beside deterministic `.svgz` package assets so both contracts are
+satisfied. This was verified against KWin's upstream
+`src/plugins/kpackage/aurorae/aurorae.cpp` and the locally installed
+`kwin_aurorae.so`.
+
+`kpackagetool6` derives the destination from the source folder using only the
+segment before the first dot for Aurorae packages, so it installs the locked
+reverse-DNS ID under `io/`. Direct installation to the documented user-local
+folder preserves the locked ID, and KWin 6.7 discovers it as
+`__aurorae__svg__io.github.loofiboss.noxforge.desktop`. The NoxForge installer
+therefore uses an exact directory copy for Aurorae rather than KPackage.
+
 ## Packaging and safety decisions
 
 - Plasma Style metadata uses JSON. The older Plasma 5 `metadata.desktop`
@@ -66,6 +81,7 @@ so the prototype must supply every button enabled by its configuration.
 - KDE theme elements reference: <https://develop.kde.org/docs/plasma/theme/theme-elements/>
 - KDE Plasma 6 porting notes: <https://develop.kde.org/docs/plasma/theme/theme-porting-to-plasma6/>
 - KDE Aurorae documentation: <https://develop.kde.org/docs/plasma/aurorae/>
+- KWin Aurorae KPackage source: <https://invent.kde.org/plasma/kwin/-/blob/master/src/plugins/kpackage/aurorae/aurorae.cpp>
 - freedesktop icon theme specification: <https://specifications.freedesktop.org/icon-theme-spec/latest/>
 
 Installed Fedora package contents under `/usr/share/plasma/desktoptheme/default`

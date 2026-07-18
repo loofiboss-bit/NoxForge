@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Description": "Original angular graphite NoxForge wallpaper",
+    "Id": "NoxForge",
+    "License": "MIT",
+    "Name": "NoxForge",
+    "Version": "0.1.0"
+  }
+}

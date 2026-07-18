@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="decoration-topleft" d="M4 0H6V6H0V4Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<g id="decoration-top"><rect x="6" y="0" width="28" height="6" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/><path d="M8 1h10" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="1"/></g>
+<path id="decoration-topright" d="M34 0A6 6 0 0 1 40 6H34Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<rect id="decoration-left" x="0" y="6" width="6" height="28" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<rect id="decoration-center" x="6" y="6" width="28" height="28" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<rect id="decoration-right" x="34" y="6" width="6" height="28" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<path id="decoration-bottomleft" d="M0 34H6V40A6 6 0 0 1 0 34Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<rect id="decoration-bottom" x="6" y="34" width="28" height="6" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+<path id="decoration-bottomright" d="M34 34H40A6 6 0 0 1 34 40Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
+  <path id="decoration-inactive-topleft" d="M56 0H58V6H52V4Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<g id="decoration-inactive-top"><rect x="58" y="0" width="28" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/></g>
+<path id="decoration-inactive-topright" d="M86 0A6 6 0 0 1 92 6H86Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<rect id="decoration-inactive-left" x="52" y="6" width="6" height="28" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<rect id="decoration-inactive-center" x="58" y="6" width="28" height="28" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<rect id="decoration-inactive-right" x="86" y="6" width="6" height="28" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<path id="decoration-inactive-bottomleft" d="M52 34H58V40A6 6 0 0 1 52 34Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<rect id="decoration-inactive-bottom" x="58" y="34" width="28" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+<path id="decoration-inactive-bottomright" d="M86 34H92A6 6 0 0 1 86 40Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="decoration-maximized-center" x="104" y="0" width="28" height="28" class="ColorScheme-Background" fill="currentColor"/>
+  <rect id="decoration-maximized-inactive-center" x="104" y="36" width="28" height="28" class="ColorScheme-ViewBackground" fill="currentColor"/>
+</svg>
