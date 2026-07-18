@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <style>
+    .accent { stroke: #A3FF47; }
+    .accent-fill { fill: #A3FF47; stroke: none; }
+  </style>
+  <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="13" rx="1"/><path d="M9 21h6M12 17v4"/><path class="accent" d="M4 5h5"/>
+  </g>
+</svg>

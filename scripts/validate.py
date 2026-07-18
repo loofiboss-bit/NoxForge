@@ -306,6 +306,13 @@ def validate_icons() -> None:
     inherited = index["Icon Theme"].get("inherits", "").split(",")
     if inherited != ["hicolor"]:
         raise ValidationError("icon theme may inherit only hicolor for application logos")
+    valid_contexts = {
+        "Actions", "Animations", "Applications", "Categories", "Devices", "Emblems",
+        "Emotes", "International", "MimeTypes", "Places", "Status",
+    }
+    for directory in index["Icon Theme"].get("directories", "").split(","):
+        if index[directory].get("context") not in valid_contexts:
+            raise ValidationError(f"icon directory {directory} has an invalid Context")
     expected_categories = {"actions", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
     icons = list((theme / "scalable").glob("*/*.svg"))
     if len(icons) < 120:

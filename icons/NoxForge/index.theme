@@ -34,7 +34,7 @@ MaxSize=64
 
 [scalable/applets]
 Size=24
-Context=Apps
+Context=Applications
 Type=Scalable
 MinSize=16
 MaxSize=64
