@@ -1,0 +1,19 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Category": "Plasma Theme",
+    "Description": "Compact graphite Plasma Style with an electric-lime accent",
+    "EnabledByDefault": false,
+    "Id": "io.github.loofiboss.noxforge.desktop",
+    "License": "MIT",
+    "Name": "NoxForge",
+    "Version": "0.1.0",
+    "Website": "https://github.com/loofiboss/NoxForge"
+  },
+  "X-Plasma-API": "5.0"
+}
