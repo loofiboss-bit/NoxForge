@@ -14,6 +14,14 @@ ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PACKAGE_ROOTS = (ROOT / "plasma", ROOT / "aurorae", ROOT / "icons", ROOT / "wallpapers")
+POSITIONS = {"top", "topright", "right", "bottomright", "bottom", "bottomleft", "left", "topleft", "center"}
+PLASMA_STATES = {
+    "widgets/button.svg": {"normal", "hover", "focus", "pressed", "toolbutton-hover", "toolbutton-focus", "toolbutton-pressed"},
+    "widgets/tasks.svg": {"normal", "hover", "focus", "attention", "minimized", "progress"},
+    "widgets/viewitem.svg": {"normal", "hover", "selected", "selected+hover"},
+    "widgets/lineedit.svg": {"base", "hover", "focus"},
+    "widgets/plasmoidheading.svg": {"header", "footer"},
+}
 
 COLOR_SECTIONS = {
     "Colors:Button",
@@ -112,15 +120,55 @@ def validate_color_scheme(path: Path) -> None:
 
 
 def validate_metadata(version: str) -> None:
-    path = ROOT / "plasma/desktoptheme/noxforge/metadata.json"
+    path = ROOT / f"plasma/desktoptheme/{THEME_ID}/metadata.json"
     metadata = load_json(path)
     if not isinstance(metadata, dict) or not isinstance(metadata.get("KPlugin"), dict):
         raise ValidationError("Plasma Style metadata requires a KPlugin object")
     plugin = metadata["KPlugin"]
     if plugin.get("Id") != THEME_ID or plugin.get("Version") != version:
         raise ValidationError("Plasma Style metadata identity or version mismatch")
+    if path.parent.name != plugin.get("Id"):
+        raise ValidationError("Plasma Style directory must match KPlugin.Id")
     if metadata.get("X-Plasma-API") != "5.0":
         raise ValidationError("Plasma Style metadata has an unexpected X-Plasma-API")
+
+
+def svg_ids(path: Path) -> set[str]:
+    try:
+        return {element.get("id") for element in ET.parse(path).iter() if element.get("id")}
+    except (OSError, ET.ParseError) as error:
+        raise ValidationError(f"invalid SVG {path.relative_to(ROOT)}: {error}") from error
+
+
+def validate_plasma_style() -> None:
+    theme = ROOT / f"plasma/desktoptheme/{THEME_ID}"
+    backgrounds = {
+        "dialogs/background.svg",
+        "widgets/panel-background.svg",
+        "widgets/background.svg",
+        "widgets/tooltip.svg",
+    }
+    for relative in backgrounds:
+        found = svg_ids(theme / relative)
+        required = POSITIONS | {f"mask-{position}" for position in POSITIONS}
+        if not required.issubset(found):
+            raise ValidationError(f"{relative} has an incomplete background or blur mask frame")
+    for relative, states in PLASMA_STATES.items():
+        found = svg_ids(theme / relative)
+        for state in states:
+            if not {f"{state}-{position}" for position in POSITIONS}.issubset(found):
+                raise ValidationError(f"{relative} has an incomplete {state} frame")
+    for path in sorted(theme.rglob("*.svg")):
+        text = path.read_text(encoding="utf-8")
+        if 'id="current-color-scheme"' not in text or "ColorScheme-Highlight" not in text:
+            raise ValidationError(f"{path.relative_to(ROOT)} does not use Plasma color classes")
+        if "filter=" in text:
+            raise ValidationError(f"{path.relative_to(ROOT)} uses unsupported runtime SVG filters")
+    plasmarc = (theme / "plasmarc").read_text(encoding="utf-8")
+    if "FallbackTheme=default" not in plasmarc:
+        raise ValidationError("Plasma Style must explicitly fall back to Breeze")
+    if list(theme.rglob("metadata.desktop")):
+        raise ValidationError("Plasma Style must not use Plasma 5 metadata.desktop")
 
 
 def validate_json_and_xml() -> None:
@@ -149,12 +197,13 @@ def validate() -> None:
     version = validate_version()
     validate_tokens(version)
     validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors")
-    validate_color_scheme(ROOT / "plasma/desktoptheme/noxforge/colors")
+    validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors")
     if (ROOT / "color-schemes/NoxForgeDark.colors").read_bytes() != (
-        ROOT / "plasma/desktoptheme/noxforge/colors"
+        ROOT / f"plasma/desktoptheme/{THEME_ID}/colors"
     ).read_bytes():
         raise ValidationError("standalone and Plasma Style color schemes differ")
     validate_metadata(version)
+    validate_plasma_style()
     validate_json_and_xml()
     validate_no_package_symlinks()
 

@@ -8,7 +8,7 @@ Frameworks packages at 6.28.0, and Fedora 44.
 
 | Component | User-local path | Metadata and required structure |
 | --- | --- | --- |
-| Plasma Style | `~/.local/share/plasma/desktoptheme/noxforge/` | `metadata.json` with a `KPlugin` object; SVG assets in `dialogs/` and `widgets/`; an optional `colors` file |
+| Plasma Style | `~/.local/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` | `metadata.json` with a matching `KPlugin.Id`; SVG assets in `dialogs/` and `widgets/`; an optional `colors` file and `plasmarc` |
 | Color scheme | `~/.local/share/color-schemes/NoxForgeDark.colors` | KDE color-scheme INI format |
 | Aurorae | `~/.local/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` | `metadata.desktop`, matching `io.github.loofiboss.noxforge.desktoprc`, `decoration.svg`, and button SVGs |
 | Icon theme | `~/.local/share/icons/NoxForge/` | freedesktop `index.theme`, declared directories, and inheritance |
@@ -50,6 +50,8 @@ so the prototype must supply every button enabled by its configuration.
   format is not used for Plasma Style packages.
 - No package contains symlinks.
 - The icon theme inherits `breeze-dark,breeze,hicolor` in that order.
+- Missing Plasma Style SVG files fall back to Breeze through
+  `FallbackTheme=default`; intentionally missing files are not copied.
 - Installation remains user-local, never changes live KDE settings, and never
   restarts Plasma Shell.
 - Wayland always uses compositing. The release checklist still tests readable

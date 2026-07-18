@@ -35,7 +35,7 @@ class PhaseOneTests(unittest.TestCase):
 
     def test_color_scheme_is_complete_and_consistent(self) -> None:
         standalone = ROOT / "color-schemes/NoxForgeDark.colors"
-        embedded = ROOT / "plasma/desktoptheme/noxforge/colors"
+        embedded = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/colors"
         self.assertEqual(standalone.read_bytes(), embedded.read_bytes())
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(standalone, encoding="utf-8")
