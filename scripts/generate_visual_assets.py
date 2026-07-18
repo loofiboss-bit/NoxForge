@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import gzip
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,122 @@ ICON_SPECS = {
     "status/audio-volume-high.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9a5 5 0 0 1 0 6M18 6a9 9 0 0 1 0 12"/><path class="accent" d="M12 6v4"/>',
     "status/battery-good.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2"/><path class="accent" d="M7 12h8"/>',
     "status/dialog-warning.svg": '<path d="M12 3L22 20H2zM12 8v6"/><circle class="accent-fill" cx="12" cy="17" r="1"/>',
+}
+
+CORE_ICON_SPECS = {
+    "actions/edit-cut.svg": '<path d="M5 5l14 14M19 5L5 19"/><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path class="accent" d="M10 10l2 2"/>',
+    "actions/edit-undo.svg": '<path d="M9 7L4 12l5 5M5 12h8a6 6 0 0 1 6 6"/><path class="accent" d="M4 12h5"/>',
+    "actions/edit-redo.svg": '<path d="M15 7l5 5-5 5M19 12h-8a6 6 0 0 0-6 6"/><path class="accent" d="M15 12h5"/>',
+    "actions/go-next.svg": '<path d="M8 5l7 7-7 7"/><path class="accent" d="M15 12h5"/>',
+    "actions/list-add.svg": '<path d="M5 7h10M5 12h10M5 17h7M19 14v6M16 17h6"/><path class="accent" d="M16 17h6"/>',
+    "actions/media-playback-start.svg": '<path d="M7 4l13 8-13 8z"/><path class="accent" d="M7 4v6"/>',
+    "actions/view-refresh.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5"/><path class="accent" d="M16 7l3-3"/>',
+    "categories/applications-system.svg": '<rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/><path class="accent" d="M13 3h8v3"/>',
+    "categories/applications-development.svg": '<path d="M9 5l-6 7 6 7M15 5l6 7-6 7M13 3l-2 18"/><path class="accent" d="M15 5l3 3"/>',
+    "categories/applications-graphics.svg": '<path d="M4 20l4-12 8-4 4 4-4 8zM8 8l8 8"/><circle cx="16" cy="8" r="1.5"/><path class="accent" d="M4 20l5-1"/>',
+    "categories/applications-internet.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M12 3v4"/>',
+    "categories/applications-multimedia.svg": '<rect x="3" y="5" width="18" height="14"/><path d="M9 9l7 3-7 3z"/><path class="accent" d="M3 5h8"/>',
+    "devices/camera-photo.svg": '<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="4"/><path class="accent" d="M17 8h4"/>',
+    "devices/printer.svg": '<path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/><path class="accent" d="M16 12h2"/>',
+    "devices/audio-headphones.svg": '<path d="M4 13a8 8 0 0 1 16 0v7h-4v-6h4M4 14h4v6H4z"/><path class="accent" d="M4 13a8 8 0 0 1 3-6"/>',
+    "devices/media-removable.svg": '<path d="M7 3h10v8l3 3v7H4v-7l3-3zM7 11h10"/><path class="accent" d="M10 6h4"/>',
+    "emblems/emblem-favorite.svg": '<path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/><path class="accent" d="M12 3v6"/>',
+    "emblems/emblem-important.svg": '<path d="M12 3v12"/><circle cx="12" cy="20" r="1"/><path class="accent" d="M12 3v5"/>',
+    "emblems/emblem-shared.svg": '<circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 11l6-4M9 13l6 4"/><path class="accent" d="M15 7l3-1"/>',
+    "mimetypes/text-x-generic.svg": '<path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/><path class="accent" d="M9 12h4"/>',
+    "mimetypes/application-pdf.svg": '<path d="M6 3h9l4 4v14H6zM15 3v5h4M9 16c3-6 5-6 7 0M10 13h5"/><path class="accent" d="M9 16h3"/>',
+    "mimetypes/package-x-generic.svg": '<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/><path class="accent" d="M12 3l5 2"/>',
+    "mimetypes/image-x-generic.svg": '<rect x="3" y="4" width="18" height="16"/><circle cx="8" cy="9" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/><path class="accent" d="M15 12l5 6"/>',
+    "mimetypes/audio-x-generic.svg": '<path d="M9 18V6l10-2v12M9 10l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/><path class="accent" d="M9 6l5-1"/>',
+    "mimetypes/video-x-generic.svg": '<rect x="3" y="5" width="18" height="14"/><path d="M10 9l6 3-6 3zM3 9h3M18 9h3"/><path class="accent" d="M10 9v3"/>',
+    "places/folder-documents.svg": '<path d="M3 6h7l2 2h9v11H3zM8 11h8M8 15h6"/><path class="accent" d="M8 11h5"/>',
+    "places/user-trash.svg": '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/><path class="accent" d="M5 7h4"/>',
+    "preferences/preferences-system.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M9 4v4"/>',
+    "preferences/preferences-desktop-theme.svg": '<rect x="3" y="4" width="18" height="14"/><path d="M8 22h8M12 18v4M6 8h12M6 12h7"/><path class="accent" d="M6 8h5"/>',
+    "preferences/preferences-system-network.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M12 3v4"/>',
+    "preferences/preferences-system-power-management.svg": '<path d="M12 3v8M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v5"/>',
+    "status/dialog-information.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7" r="1"/><path class="accent" d="M12 11v3"/>',
+    "status/dialog-error.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/><path class="accent" d="M8 8l4 4"/>',
+    "status/security-high.svg": '<path d="M12 3l8 3v6c0 5-3 8-8 10-5-2-8-5-8-10V6zM8 12l3 3 5-6"/><path class="accent" d="M8 12l3 3"/>',
+    "status/software-update-available.svg": '<path d="M12 3v12M7 10l5 5 5-5M5 20h14"/><path class="accent" d="M12 3v6"/>',
+}
+
+ICON_ALIASES = {
+    "actions/edit-clear.svg": "actions/edit-delete.svg",
+    "actions/edit-find.svg": "actions/system-search.svg",
+    "actions/edit-select-all.svg": "actions/configure.svg",
+    "actions/go-previous.svg": "actions/go-next.svg",
+    "actions/go-up.svg": "actions/go-next.svg",
+    "actions/go-down.svg": "actions/go-next.svg",
+    "actions/list-remove.svg": "actions/list-add.svg",
+    "actions/dialog-ok.svg": "status/security-high.svg",
+    "actions/dialog-cancel.svg": "status/dialog-error.svg",
+    "actions/window-close.svg": "status/dialog-error.svg",
+    "actions/media-playback-pause.svg": "actions/media-playback-start.svg",
+    "actions/media-playback-stop.svg": "actions/media-playback-start.svg",
+    "actions/media-skip-forward.svg": "actions/go-next.svg",
+    "actions/media-skip-backward.svg": "actions/go-next.svg",
+    "actions/zoom-in.svg": "actions/system-search.svg",
+    "actions/zoom-out.svg": "actions/system-search.svg",
+    "actions/view-list-icons.svg": "categories/applications-system.svg",
+    "actions/view-list-details.svg": "actions/configure.svg",
+    "applets/systemtray.svg": "categories/applications-system.svg",
+    "applets/clock.svg": "status/battery-good.svg",
+    "applets/notifications.svg": "status/dialog-information.svg",
+    "applets/network.svg": "status/network-wireless.svg",
+    "applets/audio-volume.svg": "status/audio-volume-high.svg",
+    "applets/battery.svg": "status/battery-good.svg",
+    "categories/applications-office.svg": "mimetypes/text-x-generic.svg",
+    "categories/applications-utilities.svg": "preferences/preferences-system.svg",
+    "categories/preferences-system.svg": "preferences/preferences-system.svg",
+    "devices/camera-web.svg": "devices/camera-photo.svg",
+    "devices/video-display.svg": "places/user-desktop.svg",
+    "devices/audio-input-microphone.svg": "devices/audio-headphones.svg",
+    "devices/drive-removable-media.svg": "devices/media-removable.svg",
+    "devices/drive-removable-media-usb.svg": "devices/media-removable.svg",
+    "devices/network-wired.svg": "status/network-wired.svg",
+    "devices/network-wireless.svg": "status/network-wireless.svg",
+    "emblems/emblem-readonly.svg": "status/security-high.svg",
+    "emblems/emblem-symbolic-link.svg": "places/network-workgroup.svg",
+    "emblems/emblem-success.svg": "status/security-high.svg",
+    "mimetypes/application-x-archive.svg": "mimetypes/package-x-generic.svg",
+    "mimetypes/application-zip.svg": "mimetypes/package-x-generic.svg",
+    "mimetypes/application-x-executable.svg": "categories/applications-development.svg",
+    "mimetypes/application-x-shellscript.svg": "categories/applications-development.svg",
+    "mimetypes/text-html.svg": "mimetypes/text-x-generic.svg",
+    "mimetypes/text-x-script.svg": "mimetypes/text-x-generic.svg",
+    "mimetypes/inode-directory.svg": "places/folder.svg",
+    "places/folder-download.svg": "places/folder-documents.svg",
+    "places/folder-pictures.svg": "places/folder-documents.svg",
+    "places/folder-music.svg": "places/folder-documents.svg",
+    "places/folder-videos.svg": "places/folder-documents.svg",
+    "places/folder-publicshare.svg": "places/network-workgroup.svg",
+    "places/network-server.svg": "places/network-workgroup.svg",
+    "places/network-server-database.svg": "devices/drive-harddisk.svg",
+    "places/start-here-kde.svg": "categories/applications-system.svg",
+    "preferences/preferences-desktop-color.svg": "preferences/preferences-desktop-theme.svg",
+    "preferences/preferences-desktop-icons.svg": "preferences/preferences-desktop-theme.svg",
+    "preferences/preferences-system-windows.svg": "preferences/preferences-desktop-theme.svg",
+    "preferences/preferences-system-bluetooth.svg": "preferences/preferences-system-network.svg",
+    "preferences/preferences-system-sound.svg": "devices/audio-card.svg",
+    "preferences/preferences-desktop-notification.svg": "status/dialog-information.svg",
+    "preferences/preferences-desktop-display.svg": "places/user-desktop.svg",
+    "preferences/preferences-desktop-keyboard.svg": "devices/input-keyboard.svg",
+    "preferences/preferences-desktop-mouse.svg": "devices/input-mouse.svg",
+    "status/audio-volume-low.svg": "status/audio-volume-high.svg",
+    "status/audio-volume-medium.svg": "status/audio-volume-high.svg",
+    "status/audio-volume-muted.svg": "status/audio-volume-high.svg",
+    "status/battery-low.svg": "status/battery-good.svg",
+    "status/battery-caution.svg": "status/battery-good.svg",
+    "status/battery-charging.svg": "status/battery-good.svg",
+    "status/network-wireless-connected-100.svg": "status/network-wireless.svg",
+    "status/network-wireless-connected-50.svg": "status/network-wireless.svg",
+    "status/network-wireless-disconnected.svg": "status/network-wireless.svg",
+    "status/network-wired-activated.svg": "status/network-wired.svg",
+    "status/network-wired-disconnected.svg": "status/network-wired.svg",
+    "status/dialog-question.svg": "status/dialog-information.svg",
+    "status/dialog-password.svg": "status/security-high.svg",
+    "status/task-complete.svg": "status/security-high.svg",
 }
 
 
@@ -147,12 +264,26 @@ def write_aurorae_svg(name: str, content: str) -> None:
 
 
 def main() -> None:
-    for relative, body in sorted(ICON_SPECS.items()):
+    specs = {**ICON_SPECS, **CORE_ICON_SPECS}
+    for relative, target in ICON_ALIASES.items():
+        specs[relative] = specs[target]
+    for relative, body in sorted(specs.items()):
         write(ICONS / "scalable" / relative, icon_svg(body))
+    categories: dict[str, int] = {}
+    for relative in specs:
+        category = relative.split("/", 1)[0]
+        categories[category] = categories.get(category, 0) + 1
+    write(
+        ICONS / "coverage.json",
+        json.dumps(
+            {"schemaVersion": 1, "iconCount": len(specs), "categories": dict(sorted(categories.items())), "icons": sorted(specs)},
+            indent=2,
+        ) + "\n",
+    )
     write_aurorae_svg("decoration", decoration_svg())
     for kind in GLYPHS:
         write_aurorae_svg(kind, button_svg(kind))
-    print(f"Generated {len(ICON_SPECS)} icons and 5 editable/compressed Aurorae asset pairs")
+    print(f"Generated {len(specs)} icons and 5 editable/compressed Aurorae asset pairs")
 
 
 if __name__ == "__main__":

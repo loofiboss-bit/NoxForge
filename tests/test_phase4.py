@@ -32,8 +32,10 @@ class PhaseFourTests(unittest.TestCase):
                 self.assertTrue(all(member.uid == 0 and member.gid == 0 and member.mtime == 0 for member in members))
                 names = {member.name for member in members}
                 self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
-                self.assertIn("NoxForge-0.1.0/scripts/install.sh", names)
-                self.assertIn("NoxForge-0.1.0/wallpapers/NoxForge/contents/images/2560x1440.png", names)
+                self.assertIn(f"{BUILD.RELEASE_NAME}/scripts/install.sh", names)
+                self.assertIn(f"{BUILD.RELEASE_NAME}/wallpapers/NoxForge/contents/images/2560x1440.png", names)
+                self.assertIn(f"{BUILD.RELEASE_NAME}/look-and-feel/io.github.loofiboss.noxforge.desktop/metadata.json", names)
+                self.assertIn(f"{BUILD.RELEASE_NAME}/src/style/noxforgestyle.cpp", names)
 
     def test_repeated_install_and_uninstall_are_reversible(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-install-test-") as temp:
@@ -52,11 +54,19 @@ class PhaseFourTests(unittest.TestCase):
             self.assertTrue((data / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/metadata.json").is_file())
             self.assertTrue((data / "aurorae/themes/io.github.loofiboss.noxforge.desktop/decoration.svgz").is_file())
             self.assertTrue((data / "icons/NoxForge/index.theme").is_file())
+            self.assertTrue((data / "icons/NoxForge-Cursors/index.theme").is_file())
+            self.assertTrue((data / "sounds/NoxForge/index.theme").is_file())
+            self.assertTrue((data / "plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/metadata.json").is_file())
+            self.assertTrue((data / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/metadata.json").is_file())
             self.assertTrue((data / "wallpapers/NoxForge/metadata.json").is_file())
             subprocess.run(uninstall, cwd=ROOT, env=env, check=True, capture_output=True, text=True)
             subprocess.run(uninstall, cwd=ROOT, env=env, check=True, capture_output=True, text=True)
             self.assertTrue(unrelated.is_file())
             self.assertFalse((data / "icons/NoxForge").exists())
+            self.assertFalse((data / "icons/NoxForge-Cursors").exists())
+            self.assertFalse((data / "sounds/NoxForge").exists())
+            self.assertFalse((data / "plasma/look-and-feel/io.github.loofiboss.noxforge.desktop").exists())
+            self.assertFalse((data / "kwin/tabbox/io.github.loofiboss.noxforge.desktop").exists())
             self.assertFalse((data / "wallpapers/NoxForge").exists())
 
     def test_dry_runs_do_not_create_component_paths(self) -> None:
@@ -76,6 +86,23 @@ class PhaseFourTests(unittest.TestCase):
                 )
                 self.assertIn("Dry run complete", result.stdout)
             self.assertFalse(data.exists())
+
+    def test_system_dry_runs_are_explicit_and_non_mutating(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="noxforge-system-dry-run-") as temp:
+            root = Path(temp)
+            env = os.environ.copy()
+            env["NOXFORGE_SYSTEM_ROOT"] = str(root)
+            for script in ("install-system.sh", "uninstall-system.sh"):
+                result = subprocess.run(
+                    [str(ROOT / "scripts" / script), "--system", "--dry-run"],
+                    cwd=ROOT,
+                    env=env,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertIn("Dry run complete", result.stdout)
+            self.assertEqual(list(root.iterdir()), [])
 
     def test_live_graphical_checks_are_pending(self) -> None:
         checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")

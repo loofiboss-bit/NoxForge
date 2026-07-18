@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="normal" d="M5 12h14" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="hover" d="M5 12h14" transform="translate(32 0)" class="ColorScheme-ButtonHover" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="focus" d="M5 12h14" transform="translate(64 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="pressed" d="M7 12h10" transform="translate(96 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="16-16-normal" d="M6 12h12" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="16-16-hover" d="M6 12h12" transform="translate(160 0)" class="ColorScheme-ButtonHover" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="16-16-focus" d="M6 12h12" transform="translate(192 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="16-16-pressed" d="M7 12h10" transform="translate(224 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="22-22-normal" d="M5 12h14" transform="translate(256 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="22-22-hover" d="M5 12h14" transform="translate(288 0)" class="ColorScheme-ButtonHover" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="22-22-focus" d="M5 12h14" transform="translate(320 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="22-22-pressed" d="M7 12h10" transform="translate(352 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="24-24-normal" d="M4 12h16" transform="translate(0 32)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="24-24-hover" d="M4 12h16" transform="translate(32 32)" class="ColorScheme-ButtonHover" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="24-24-focus" d="M4 12h16" transform="translate(64 32)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="24-24-pressed" d="M6 12h12" transform="translate(96 32)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

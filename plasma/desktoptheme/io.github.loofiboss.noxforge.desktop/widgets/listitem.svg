@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="normal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-top" x="6" y="0" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-left" x="0" y="6" width="6" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-center" x="6" y="6" width="12" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-right" x="18" y="6" width="6" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="hover-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-top" x="46" y="0" width="12" height="6" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <path id="hover-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-left" x="40" y="6" width="6" height="12" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-center" x="46" y="6" width="12" height="12" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-right" x="58" y="6" width="6" height="12" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <path id="hover-bottomleft" d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-bottom" x="46" y="18" width="12" height="6" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <path id="hover-bottomright" d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.14"/>
+  <rect id="hover-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="pressed-topleft" d="M84 0H86V6H80V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-top" x="86" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="pressed-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-left" x="80" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-center" x="86" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-right" x="98" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="pressed-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-bottom" x="86" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="pressed-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="pressed-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="section-topleft" d="M126 0V6H120V6A6 6 0 0 1 126 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-top" x="126" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <path id="section-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-left" x="120" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-center" x="126" y="6" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-right" x="138" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <path id="section-bottomleft" d="M120 18H126V24A6 6 0 0 1 120 18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-bottom" x="126" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <path id="section-bottomright" d="M138 18H144A6 6 0 0 1 138 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.78"/>
+  <rect id="section-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="section-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="section-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="section-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+</svg>

@@ -15,7 +15,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
-PACKAGE_ROOTS = (ROOT / "plasma", ROOT / "aurorae", ROOT / "icons", ROOT / "wallpapers")
+PACKAGE_ROOTS = (
+    ROOT / "plasma",
+    ROOT / "aurorae",
+    ROOT / "icons",
+    ROOT / "wallpapers",
+    ROOT / "look-and-feel",
+    ROOT / "kwin",
+    ROOT / "cursors",
+    ROOT / "sounds",
+    ROOT / "sddm",
+)
 POSITIONS = {"top", "topright", "right", "bottomright", "bottom", "bottomleft", "left", "topleft", "center"}
 PLASMA_STATES = {
     "widgets/button.svg": {"normal", "hover", "focus", "pressed", "toolbutton-hover", "toolbutton-focus", "toolbutton-pressed"},
@@ -23,6 +33,13 @@ PLASMA_STATES = {
     "widgets/viewitem.svg": {"normal", "hover", "selected", "selected+hover"},
     "widgets/lineedit.svg": {"base", "hover", "focus"},
     "widgets/plasmoidheading.svg": {"header", "footer"},
+    "widgets/listitem.svg": {"normal", "hover", "pressed", "section"},
+    "widgets/menubaritem.svg": {"normal", "hover", "pressed"},
+    "widgets/frame.svg": {"plain", "raised", "sunken"},
+    "widgets/tabbar.svg": {"north-active-tab", "south-active-tab", "east-active-tab", "west-active-tab"},
+    "widgets/scrollbar.svg": {"background-horizontal", "background-vertical", "slider", "mouseover-slider"},
+    "widgets/slider.svg": {"groove", "groove-highlight"},
+    "widgets/switch.svg": {"inactive", "active"},
 }
 
 COLOR_SECTIONS = {
@@ -85,18 +102,35 @@ def validate_tokens(version: str) -> dict[str, object]:
         raise ValidationError("design/tokens.json must contain an object")
     if tokens.get("themeId") != THEME_ID or tokens.get("version") != version:
         raise ValidationError("token identity or version does not match repository metadata")
-    required = {
+    required_colors = {
         "background": "#0E1318",
         "surface": "#141B21",
         "surfaceRaised": "#1A232B",
+        "surfaceHover": "#202C34",
+        "surfaceSelected": "#26361D",
+        "border": "#2B3942",
+        "borderStrong": "#3B4B55",
         "textPrimary": "#E8F0F2",
         "textSecondary": "#A6B4B9",
+        "textDisabled": "#6F7C82",
         "accent": "#A3FF47",
+        "accentPressed": "#82D936",
+        "accentInk": "#0E1318",
         "detailCyan": "#22D3EE",
         "detailViolet": "#A78BFA",
+        "negative": "#FF6B7A",
+        "neutral": "#FBBF24",
     }
-    if tokens.get("colors") != {**required, "negative": "#FF6B7A", "neutral": "#FBBF24"}:
+    if tokens.get("schemaVersion") != 2 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    geometry = tokens.get("geometry")
+    motion = tokens.get("motion")
+    if not isinstance(geometry, dict) or not isinstance(motion, dict):
+        raise ValidationError("design tokens require geometry and motion objects")
+    if geometry.get("forgeNotch") != 4 or geometry.get("controlHeight") != 32:
+        raise ValidationError("design geometry does not match Industrial Precision")
+    if motion != {"pressMs": 90, "hoverMs": 140, "popupMs": 180}:
+        raise ValidationError("design motion does not match Industrial Precision")
     return tokens
 
 
@@ -160,6 +194,20 @@ def validate_plasma_style() -> None:
         for state in states:
             if not {f"{state}-{position}" for position in POSITIONS}.issubset(found):
                 raise ValidationError(f"{relative} has an incomplete {state} frame")
+    required_shell_assets = {
+        "widgets/calendar.svg", "widgets/clock.svg", "widgets/busywidget.svg",
+        "widgets/configuration-icons.svg", "widgets/containment-controls.svg",
+        "widgets/pager.svg", "widgets/media-delegate.svg", "widgets/action-overlays.svg",
+        "widgets/analog_meter.svg", "widgets/bar_meter_horizontal.svg",
+        "widgets/bar_meter_vertical.svg", "widgets/notes.svg", "widgets/timer.svg",
+        "solid/widgets/background.svg", "translucent/widgets/background.svg",
+        "opaque/widgets/panel-background.svg",
+    }
+    missing_assets = sorted(relative for relative in required_shell_assets if not (theme / relative).is_file())
+    if missing_assets:
+        raise ValidationError(f"Plasma shell asset coverage is incomplete: {missing_assets}")
+    if len(list(theme.rglob("*.svg"))) < 50:
+        raise ValidationError("Plasma Style requires at least 50 original SVG assets")
     for path in sorted(theme.rglob("*.svg")):
         text = path.read_text(encoding="utf-8")
         if 'id="current-color-scheme"' not in text or "ColorScheme-Highlight" not in text:
@@ -167,18 +215,59 @@ def validate_plasma_style() -> None:
         if "filter=" in text:
             raise ValidationError(f"{path.relative_to(ROOT)} uses unsupported runtime SVG filters")
     plasmarc = (theme / "plasmarc").read_text(encoding="utf-8")
-    if "FallbackTheme=default" not in plasmarc:
-        raise ValidationError("Plasma Style must explicitly fall back to Breeze")
+    if "FallbackTheme" in plasmarc:
+        raise ValidationError("complete Plasma Style must not declare a fallback theme")
     if list(theme.rglob("metadata.desktop")):
         raise ValidationError("Plasma Style must not use Plasma 5 metadata.desktop")
 
 
-def validate_aurorae() -> None:
+def validate_look_and_feel(version: str) -> None:
+    package = ROOT / f"look-and-feel/{THEME_ID}"
+    for name in ("metadata.json", "manifest.json"):
+        data = load_json(package / name)
+        if not isinstance(data, dict) or data.get("KPackageStructure") != "Plasma/LookAndFeel":
+            raise ValidationError(f"{name} must declare Plasma/LookAndFeel")
+        plugin = data.get("KPlugin")
+        if not isinstance(plugin, dict) or plugin.get("Id") != THEME_ID or plugin.get("Version") != version:
+            raise ValidationError(f"{name} identity or version mismatch")
+    required = (
+        "contents/defaults",
+        "contents/layouts/org.kde.plasma.desktop-layout.js",
+        "contents/splash/Splash.qml",
+        "contents/logout/Logout.qml",
+        "contents/previews/preview.png",
+    )
+    missing = [relative for relative in required if not (package / relative).is_file()]
+    if missing:
+        raise ValidationError(f"Look-and-Feel package is incomplete: {missing}")
+    defaults = (package / "contents/defaults").read_text(encoding="utf-8")
+    expected = ("widgetStyle=NoxForge", "ColorScheme=NoxForgeDark", "Theme=NoxForge", f"name={THEME_ID}")
+    if any(value not in defaults for value in expected):
+        raise ValidationError("Look-and-Feel defaults do not select all NoxForge components")
+    if re.search(r"breeze|default", defaults, re.IGNORECASE):
+        raise ValidationError("Look-and-Feel defaults must not reference Breeze or default themes")
+
+
+def validate_tabbox(version: str) -> None:
+    package = ROOT / f"kwin/tabbox/{THEME_ID}"
+    metadata = load_json(package / "metadata.json")
+    if not isinstance(metadata, dict) or metadata.get("KPackageStructure") != "KWin/WindowSwitcher":
+        raise ValidationError("task switcher has the wrong KPackage structure")
+    plugin = metadata.get("KPlugin")
+    if not isinstance(plugin, dict) or plugin.get("Id") != THEME_ID or plugin.get("Version") != version:
+        raise ValidationError("task switcher identity or version mismatch")
+    if not (package / "contents/ui/main.qml").is_file():
+        raise ValidationError("task switcher main QML is missing")
+
+
+def validate_aurorae(version: str) -> None:
     theme = ROOT / f"aurorae/{THEME_ID}"
     metadata = load_colors(theme / "metadata.desktop")
     entry = metadata["Desktop Entry"]
     if entry.get("x-kde-plugininfo-name") != THEME_ID:
         raise ValidationError("Aurorae plugin ID does not match its directory")
+    if entry.get("x-kde-plugininfo-version") != version:
+        raise ValidationError("Aurorae version does not match VERSION")
     rc = theme / f"{THEME_ID}rc"
     settings = load_colors(rc)
     if settings["General"].get("rightbuttons") != "IAX":
@@ -215,16 +304,17 @@ def validate_icons() -> None:
     theme = ROOT / "icons/NoxForge"
     index = load_colors(theme / "index.theme")
     inherited = index["Icon Theme"].get("inherits", "").split(",")
-    if inherited != ["breeze-dark", "breeze", "hicolor"]:
-        raise ValidationError("icon fallback order must be breeze-dark,breeze,hicolor")
-    expected_counts = {"actions": 8, "places": 5, "devices": 6, "status": 5}
+    if inherited != ["hicolor"]:
+        raise ValidationError("icon theme may inherit only hicolor for application logos")
+    expected_categories = {"actions", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
     icons = list((theme / "scalable").glob("*/*.svg"))
-    if len(icons) != 24:
-        raise ValidationError(f"icon prototype must contain exactly 24 SVGs, found {len(icons)}")
-    for category, count in expected_counts.items():
-        found = list((theme / "scalable" / category).glob("*.svg"))
-        if len(found) != count:
-            raise ValidationError(f"icon category {category} requires {count} icons, found {len(found)}")
+    if len(icons) < 120:
+        raise ValidationError(f"system icon coverage requires at least 120 SVGs, found {len(icons)}")
+    if {path.parent.name for path in icons} != expected_categories:
+        raise ValidationError("system icon categories are incomplete")
+    coverage = load_json(theme / "coverage.json")
+    if not isinstance(coverage, dict) or coverage.get("iconCount") != len(icons):
+        raise ValidationError("icon coverage manifest does not match generated files")
     for path in icons:
         root = ET.parse(path).getroot()
         if root.get("viewBox") != "0 0 24 24":
@@ -232,6 +322,67 @@ def validate_icons() -> None:
         forbidden = [element for element in root.iter() if element.tag.rsplit("}", 1)[-1] in {"image", "text"}]
         if forbidden:
             raise ValidationError(f"icon {path.name} embeds raster data or text")
+
+
+def validate_cursors() -> None:
+    theme = ROOT / "cursors/NoxForge-Cursors"
+    index = load_colors(theme / "index.theme")
+    if index["Icon Theme"].get("name") != "NoxForge":
+        raise ValidationError("cursor theme display name must be NoxForge")
+    cursors = sorted((theme / "cursors").iterdir())
+    if len(cursors) < 90 or any(not path.is_file() or path.is_symlink() for path in cursors):
+        raise ValidationError("cursor theme requires at least 90 physical cursor files")
+    expected_sizes = {24, 32, 48}
+    for path in cursors:
+        data = path.read_bytes()
+        if len(data) < 52:
+            raise ValidationError(f"cursor {path.name} is truncated")
+        magic, header, version, count = struct.unpack("<4I", data[:16])
+        if magic != 0x72756358 or header != 16 or version != 0x00010000:
+            raise ValidationError(f"cursor {path.name} has an invalid Xcursor header")
+        sizes = {struct.unpack("<3I", data[16 + offset * 12 : 28 + offset * 12])[1] for offset in range(count)}
+        if sizes != expected_sizes:
+            raise ValidationError(f"cursor {path.name} lacks required sizes")
+    coverage = load_json(theme / "coverage.json")
+    if not isinstance(coverage, dict) or coverage.get("sizes") != [24, 32, 48]:
+        raise ValidationError("cursor coverage manifest is invalid")
+
+
+def validate_sounds() -> None:
+    theme = ROOT / "sounds/NoxForge"
+    index = load_colors(theme / "index.theme")
+    if index["Sound Theme"].get("name") != "NoxForge" or index["Sound Theme"].get("directories") != "stereo":
+        raise ValidationError("sound theme index is invalid")
+    sounds = sorted((theme / "stereo").glob("*.oga"))
+    coverage = load_json(theme / "coverage.json")
+    if not isinstance(coverage, dict) or not isinstance(coverage.get("events"), dict):
+        raise ValidationError("sound coverage manifest is invalid")
+    if len(sounds) != len(coverage["events"]) or len(sounds) < 30:
+        raise ValidationError("sound event coverage does not match encoded files")
+    for path in sounds:
+        if path.read_bytes()[:4] != b"OggS":
+            raise ValidationError(f"sound {path.name} is not an Ogg stream")
+    sources = sorted((theme / "source").glob("*.wav"))
+    if len(sources) < 10 or any(path.read_bytes()[:4] != b"RIFF" for path in sources):
+        raise ValidationError("editable WAV sound sources are incomplete")
+
+
+def validate_sddm(version: str) -> None:
+    theme = ROOT / "sddm/NoxForge"
+    metadata = load_colors(theme / "metadata.desktop")
+    entry = metadata["SddmGreeterTheme"]
+    if entry.get("theme-id") != "NoxForge" or entry.get("version") != version or entry.get("qtversion") != "6":
+        raise ValidationError("SDDM metadata identity, version, or Qt contract is invalid")
+    qml = (theme / "Main.qml").read_text(encoding="utf-8")
+    for required in ("userModel", "sessionModel", "keyboard.layouts", "sddm.login", "onLoginFailed"):
+        if required not in qml:
+            raise ValidationError(f"SDDM theme lacks required flow: {required}")
+    if re.search(r"breeze|plasma5", qml, re.IGNORECASE):
+        raise ValidationError("SDDM theme must not import Breeze or Plasma 5 components")
+    if png_dimensions(theme / "background.png") != (2560, 1440):
+        raise ValidationError("SDDM background must be 2560x1440")
+    if png_dimensions(theme / "preview.png") != (960, 540):
+        raise ValidationError("SDDM preview must be 960x540")
 
 
 def png_dimensions(path: Path) -> tuple[int, int]:
@@ -261,6 +412,8 @@ def validate_tooling() -> None:
         ROOT / "scripts/build.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
+        ROOT / "scripts/install-system.sh",
+        ROOT / "scripts/uninstall-system.sh",
         ROOT / "docs/QUICKSTART.md",
         ROOT / "docs/MANUAL_TESTING.md",
     )
@@ -272,10 +425,17 @@ def validate_tooling() -> None:
     for option in ("--user", "--dry-run"):
         if option not in install_text or option not in uninstall_text:
             raise ValidationError(f"install and uninstall must support {option}")
+    system_install = (ROOT / "scripts/install-system.sh").read_text(encoding="utf-8")
+    system_uninstall = (ROOT / "scripts/uninstall-system.sh").read_text(encoding="utf-8")
+    for option in ("--system", "--dry-run"):
+        if option not in system_install or option not in system_uninstall:
+            raise ValidationError(f"system install and uninstall must support {option}")
     forbidden = ("sudo", "kwriteconfig", "qdbus", "systemctl", "plasmashell --replace", "plasma-apply-")
     for command in forbidden:
         if command in install_text or command in uninstall_text:
             raise ValidationError(f"install tooling must not execute live-setting command {command!r}")
+        if command in system_install or command in system_uninstall:
+            raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
     if checklist.count("Pending") < 9:
         raise ValidationError("manual graphical checks must remain explicitly pending")
@@ -314,8 +474,13 @@ def validate() -> None:
         raise ValidationError("standalone and Plasma Style color schemes differ")
     validate_metadata(version)
     validate_plasma_style()
-    validate_aurorae()
+    validate_look_and_feel(version)
+    validate_tabbox(version)
+    validate_aurorae(version)
     validate_icons()
+    validate_cursors()
+    validate_sounds()
+    validate_sddm(version)
     validate_wallpaper(version)
     validate_tooling()
     validate_json_and_xml()

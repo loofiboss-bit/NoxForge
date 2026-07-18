@@ -1,0 +1,8 @@
+[Sound Theme]
+Name=NoxForge
+Comment=Original restrained forge tones for KDE Plasma
+Directories=stereo
+Example=theme-demo
+
+[stereo]
+OutputProfile=stereo

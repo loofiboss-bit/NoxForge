@@ -1,8 +1,8 @@
 [Icon Theme]
 Name=NoxForge
-Comment=Original compact NoxForge prototype icons
-Inherits=breeze-dark,breeze,hicolor
-Directories=scalable/actions,scalable/places,scalable/devices,scalable/status
+Comment=Original Industrial Precision system icons
+Inherits=hicolor
+Directories=scalable/actions,scalable/applets,scalable/categories,scalable/devices,scalable/emblems,scalable/mimetypes,scalable/places,scalable/preferences,scalable/status
 
 [scalable/actions]
 Size=24
@@ -28,6 +28,41 @@ MaxSize=64
 [scalable/status]
 Size=24
 Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/applets]
+Size=24
+Context=Apps
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/categories]
+Size=24
+Context=Categories
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/emblems]
+Size=24
+Context=Emblems
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/mimetypes]
+Size=24
+Context=MimeTypes
+Type=Scalable
+MinSize=16
+MaxSize=64
+
+[scalable/preferences]
+Size=24
+Context=Categories
 Type=Scalable
 MinSize=16
 MaxSize=64

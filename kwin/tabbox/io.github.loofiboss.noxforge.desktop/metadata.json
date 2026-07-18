@@ -1,0 +1,12 @@
+{
+  "KPackageStructure": "KWin/WindowSwitcher",
+  "KPlugin": {
+    "Authors": [{"Email": "loofi@loofi.com", "Name": "Loofi"}],
+    "Description": "Compact NoxForge window switcher",
+    "Icon": "preferences-system-windows-switcher",
+    "Id": "io.github.loofiboss.noxforge.desktop",
+    "License": "MIT",
+    "Name": "NoxForge",
+    "Version": "1.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#0E1318"/>
+  <path d="M0 70H238L210 98H0Z" fill="#141B21" stroke="#2B3942"/>
+  <path d="M28 112H340L312 140H28Z" fill="#1A232B" stroke="#2B3942"/>
+  <path d="M292 70H612V284H292L276 268V86Z" fill="#141B21" stroke="#2B3942"/>
+  <path d="M304 84H396" stroke="#A3FF47" stroke-width="3"/>
+  <rect x="312" y="116" width="120" height="32" rx="6" fill="#26361D" stroke="#A3FF47"/>
+  <rect x="448" y="116" width="140" height="32" rx="6" fill="#1A232B" stroke="#2B3942"/>
+  <rect x="312" y="164" width="276" height="12" rx="6" fill="#202C34"/>
+  <rect x="312" y="192" width="216" height="12" rx="6" fill="#202C34"/>
+  <path d="M0 320H640V360H0Z" fill="#141B21" stroke="#2B3942"/>
+  <rect x="16" y="330" width="68" height="20" rx="4" fill="#26361D"/>
+  <circle cx="598" cy="340" r="5" fill="#A3FF47"/>
+  <text x="28" y="52" fill="#E8F0F2" font-family="sans-serif" font-size="24" font-weight="600">NOXFORGE</text>
+  <text x="312" y="106" fill="#A6B4B9" font-family="sans-serif" font-size="12">INDUSTRIAL PRECISION</text>
+</svg>

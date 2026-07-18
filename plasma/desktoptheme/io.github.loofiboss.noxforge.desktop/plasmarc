@@ -1,5 +1,5 @@
 [Settings]
-FallbackTheme=default
+UseNativeWidgetStyle=false
 
 [ContrastEffect]
 enabled=true

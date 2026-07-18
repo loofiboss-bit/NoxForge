@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <title>NoxForge nesw-resize cursor source</title>
+  <rect width="24" height="24" fill="#0E1318"/>
+  <path d="M3 2v18l5-4 3 6 4-2-3-6h9z" fill="#141B21" stroke="#E8F0F2" stroke-width="1.5"/>
+  <rect x="3" y="2" width="2" height="2" fill="#A3FF47"/>
+</svg>

@@ -34,6 +34,10 @@ targets=(
     "${data_home}/plasma/desktoptheme/${theme_id}"
     "${data_home}/aurorae/themes/${theme_id}"
     "${data_home}/icons/NoxForge"
+    "${data_home}/icons/NoxForge-Cursors"
+    "${data_home}/sounds/NoxForge"
+    "${data_home}/plasma/look-and-feel/${theme_id}"
+    "${data_home}/kwin/tabbox/${theme_id}"
     "${data_home}/wallpapers/NoxForge"
 )
 

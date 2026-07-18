@@ -43,9 +43,9 @@ class PhaseTwoTests(unittest.TestCase):
                 self.assertIn("ColorScheme-Highlight", text)
                 self.assertNotIn("filter=", text)
 
-    def test_plasma_style_fallback_is_breeze(self) -> None:
+    def test_plasma_style_has_no_explicit_fallback(self) -> None:
         text = (THEME / "plasmarc").read_text(encoding="utf-8")
-        self.assertIn("FallbackTheme=default", text)
+        self.assertNotIn("FallbackTheme", text)
 
     def test_primary_text_stays_readable_without_blur(self) -> None:
         foreground = (232, 240, 242)

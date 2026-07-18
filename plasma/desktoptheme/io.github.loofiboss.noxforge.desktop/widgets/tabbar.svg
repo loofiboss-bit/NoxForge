@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="north-active-tab-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-top" x="6" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="north-active-tab-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-left" x="0" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-center" x="6" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-right" x="18" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="north-active-tab-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="north-active-tab-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="north-active-tab-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-active-tab-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-top" x="46" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="south-active-tab-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-left" x="40" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-center" x="46" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-right" x="58" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="south-active-tab-bottomleft" d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-bottom" x="46" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="south-active-tab-bottomright" d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="south-active-tab-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-active-tab-topleft" d="M86 0V6H80V6A6 6 0 0 1 86 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-top" x="86" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="east-active-tab-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-left" x="80" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-center" x="86" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-right" x="98" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="east-active-tab-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-bottom" x="86" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="east-active-tab-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="east-active-tab-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-active-tab-topleft" d="M126 0V6H120V6A6 6 0 0 1 126 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-top" x="126" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="west-active-tab-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-left" x="120" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-center" x="126" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-right" x="138" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="west-active-tab-bottomleft" d="M120 18H126V24A6 6 0 0 1 120 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-bottom" x="126" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <path id="west-active-tab-bottomright" d="M138 18H144A6 6 0 0 1 138 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.18"/>
+  <rect id="west-active-tab-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+</svg>

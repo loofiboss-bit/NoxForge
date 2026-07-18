@@ -12,7 +12,7 @@
     "Id": "io.github.loofiboss.noxforge.desktop",
     "License": "MIT",
     "Name": "NoxForge",
-    "Version": "0.1.0",
+    "Version": "1.0.0",
     "Website": "https://github.com/loofiboss/NoxForge"
   },
   "X-Plasma-API": "5.0"

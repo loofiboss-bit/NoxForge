@@ -1,89 +1,39 @@
 # Plasma 6 compatibility record
 
-Verified on 2026-07-18 against Fedora KDE 44 and current upstream
-documentation. The local system reports Plasma 6.7.3, KWin 6.7.3, KDE
-Frameworks packages at 6.28.0, and Fedora 44.
+Verified structurally on 2026-07-18 against Fedora KDE 44: Plasma/KWin 6.7.3,
+KDE Frameworks 6.28 and Qt 6.11.1. Plasma 5, Qt 5 and legacy metadata are not
+supported.
 
-## Verified package contracts
+## Package contracts
 
-| Component | User-local path | Metadata and required structure |
-| --- | --- | --- |
-| Plasma Style | `~/.local/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` | `metadata.json` with a matching `KPlugin.Id`; SVG assets in `dialogs/` and `widgets/`; an optional `colors` file and `plasmarc` |
-| Color scheme | `~/.local/share/color-schemes/NoxForgeDark.colors` | KDE color-scheme INI format |
-| Aurorae | `~/.local/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` | `metadata.desktop`, matching `io.github.loofiboss.noxforge.desktoprc`, `decoration.svg`, and button SVGs |
-| Icon theme | `~/.local/share/icons/NoxForge/` | freedesktop `index.theme`, declared directories, and inheritance |
-| Wallpaper | `~/.local/share/wallpapers/NoxForge/` | image package with `metadata.json` and `contents/images/2560x1440.png` |
+| Component | Installed path |
+| --- | --- |
+| Global Theme | `~/.local/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/` |
+| Plasma Style | `~/.local/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` |
+| Color scheme | `~/.local/share/color-schemes/NoxForgeDark.colors` |
+| Aurorae | `~/.local/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
+| KWin switcher | `~/.local/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
+| Icons | `~/.local/share/icons/NoxForge/` |
+| Cursors | `~/.local/share/icons/NoxForge-Cursors/` |
+| Sounds | `~/.local/share/sounds/NoxForge/` |
+| Wallpaper | `~/.local/share/wallpapers/NoxForge/` |
+| Qt style plugin | `/usr/lib64/qt6/plugins/styles/libnoxforge6.so` |
+| SDDM | `/usr/share/sddm/themes/NoxForge/` |
 
-The Plasma Style is not a Global Theme or Look-and-Feel package. Therefore the
-Plasma 6 `manifest.json` requirement for `Plasma/LookAndFeel` packages does not
-apply. Look-and-Feel integration is explicitly deferred.
+The Look-and-Feel package declares `Plasma/LookAndFeel`; the task switcher
+declares `KWin/WindowSwitcher`. Packages contain no symlinks. The icon theme
+inherits only `hicolor`, and the Plasma Style declares no explicit fallback.
 
-## Verified SVG contracts
+The Qt style is a native `QCommonStyle`/`QStylePlugin` implementation with the
+public key `NoxForge`. It does not link against Breeze or Kvantum.
 
-The prototype uses the Plasma 6 nine-slice frame identifiers `top`,
-`topright`, `right`, `bottomright`, `bottom`, `bottomleft`, `left`, `topleft`,
-and `center`, plus file-specific prefixes documented by KDE:
-
-- `button.svg`: `normal`, `hover`, `focus`, `pressed`, and `toolbutton-*` frames;
-- `tasks.svg`: `normal`, `hover`, `focus`, `attention`, `minimized`, and
-  `progress` frames, including panel-orientation variants;
-- `lineedit.svg`: `base`, `hover`, and `focus` frames;
-- `plasmoidheading.svg`: `header` and `footer` frames;
-- `viewitem.svg`: `normal`, `hover`, `selected`, and `selected+hover` frames;
-- panel, dialog, popup, and tooltip frames use the standard nine-slice IDs and
-  margin/inset hints.
-
-SVGs use a `<style id="current-color-scheme">` block and KDE's documented
-`ColorScheme-*` classes. `ColorScheme-Highlight` is reserved for elements that
-should follow the user's selected accent color.
-
-Aurorae `decoration.svg` uses the standard nine-slice `decoration-*` elements,
-with `decoration-inactive-*` for inactive windows. Each supplied button SVG has
-at least an `active-center` element and may provide `inactive`, `hover`,
-`hover-inactive`, `pressed`, `pressed-inactive`, `deactivated`, and
-`deactivated-inactive` states. Aurorae has no fallback for missing button files,
-so the prototype must supply every button enabled by its configuration.
-
-KWin 6.7's installed `KWin/Aurorae` KPackage structure requires
-`decoration.svgz` and declares compressed SVG as its package MIME type, while
-the current tutorial describes editable `.svg` files. NoxForge keeps editable
-`.svg` sources beside deterministic `.svgz` package assets so both contracts are
-satisfied. This was verified against KWin's upstream
-`src/plugins/kpackage/aurorae/aurorae.cpp` and the locally installed
-`kwin_aurorae.so`.
-
-`kpackagetool6` derives the destination from the source folder using only the
-segment before the first dot for Aurorae packages, so it installs the locked
-reverse-DNS ID under `io/`. Direct installation to the documented user-local
-folder preserves the locked ID, and KWin 6.7 discovers it as
-`__aurorae__svg__io.github.loofiboss.noxforge.desktop`. The NoxForge installer
-therefore uses an exact directory copy for Aurorae rather than KPackage.
-
-## Packaging and safety decisions
-
-- Plasma Style metadata uses JSON. The older Plasma 5 `metadata.desktop`
-  format is not used for Plasma Style packages.
-- No package contains symlinks.
-- The icon theme inherits `breeze-dark,breeze,hicolor` in that order.
-- Missing Plasma Style SVG files fall back to Breeze through
-  `FallbackTheme=default`; intentionally missing files are not copied.
-- Installation remains user-local, never changes live KDE settings, and never
-  restarts Plasma Shell.
-- Wayland always uses compositing. The release checklist still tests readable
-  opaque surfaces with blur disabled rather than relying on the X11-only
-  `opaque/` fallback mechanism.
+Offscreen SDDM test-mode startup passes. Live Wayland, scaling, interactive
+SDDM and visual fallback checks remain recorded in `docs/MANUAL_TESTING.md`;
+structural validation cannot mark them passed.
 
 ## Sources
 
-- KDE Plasma Style quickstart: <https://develop.kde.org/docs/plasma/theme/quickstart/>
-- KDE background SVG format: <https://develop.kde.org/docs/plasma/theme/background-svg/>
-- KDE system and accent colors: <https://develop.kde.org/docs/plasma/theme/theme-colors/>
-- KDE theme elements reference: <https://develop.kde.org/docs/plasma/theme/theme-elements/>
-- KDE Plasma 6 porting notes: <https://develop.kde.org/docs/plasma/theme/theme-porting-to-plasma6/>
-- KDE Aurorae documentation: <https://develop.kde.org/docs/plasma/aurorae/>
-- KWin Aurorae KPackage source: <https://invent.kde.org/plasma/kwin/-/blob/master/src/plugins/kpackage/aurorae/aurorae.cpp>
-- freedesktop icon theme specification: <https://specifications.freedesktop.org/icon-theme-spec/latest/>
-
-Installed Fedora package contents under `/usr/share/plasma/desktoptheme/default`
-were inspected only for metadata shape, package paths, filenames, and SVG
-element IDs. No artwork was copied.
+- <https://develop.kde.org/docs/plasma/theme/theme-porting-to-plasma6/>
+- <https://develop.kde.org/docs/plasma/>
+- <https://doc.qt.io/QT-6/qstyleplugin.html>
+- <https://doc.qt.io/qt-6/style-reference.html>

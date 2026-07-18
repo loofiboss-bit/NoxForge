@@ -36,13 +36,16 @@ class PhaseThreeTests(unittest.TestCase):
                 self.assertEqual(gzip.decompress(svgz.read_bytes()), svg.read_bytes())
                 self.assertEqual(struct.unpack("<I", svgz.read_bytes()[4:8])[0], 0)
 
-    def test_icon_theme_has_exact_coverage_and_fallback(self) -> None:
+    def test_icon_theme_has_system_coverage_and_neutral_app_fallback(self) -> None:
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(ICONS / "index.theme", encoding="utf-8")
-        self.assertEqual(parser["Icon Theme"]["Inherits"], "breeze-dark,breeze,hicolor")
+        self.assertEqual(parser["Icon Theme"]["Inherits"], "hicolor")
         icons = list((ICONS / "scalable").glob("*/*.svg"))
-        self.assertEqual(len(icons), 24)
-        self.assertEqual({path.parent.name for path in icons}, {"actions", "places", "devices", "status"})
+        self.assertGreaterEqual(len(icons), 120)
+        self.assertEqual(
+            {path.parent.name for path in icons},
+            {"actions", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"},
+        )
 
     def test_wallpaper_has_editable_source_and_release_output(self) -> None:
         source = ET.parse(WALLPAPER / "contents/source/NoxForge.svg").getroot()
@@ -56,7 +59,7 @@ class PhaseThreeTests(unittest.TestCase):
         text = (ROOT / "docs/ARTWORK.md").read_text(encoding="utf-8")
         self.assertIn("No artwork from Breeze", text)
         self.assertIn("another theme", text)
-        self.assertIn("24 icon SVGs", text)
+        self.assertIn("system icon SVGs", text)
 
 
 if __name__ == "__main__":

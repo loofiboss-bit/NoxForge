@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="normal" d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="hover" d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" transform="translate(32 0)" class="ColorScheme-ButtonHover" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="focus" d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" transform="translate(64 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="checked" d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0M9 12h6" transform="translate(96 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+    ]]></style>
+  </defs>
+  <path id="topleft" d="M4 0H6V6H0V4Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="top" x="6" y="0" width="12" height="6" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <path id="topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="left" x="0" y="6" width="6" height="12" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="center" x="6" y="6" width="12" height="12" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="right" x="18" y="6" width="6" height="12" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <path id="bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="bottom" x="6" y="18" width="12" height="6" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <path id="bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.9"/>
+  <rect id="hint-top-margin" x="0" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-margin" x="2" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-margin" x="9" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-margin" x="11" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+</svg>
