@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 1.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland.
+NoxForge 2.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland.
 
 ## Verify and build
 

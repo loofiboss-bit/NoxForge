@@ -20,21 +20,24 @@ namespace NP = NoxForgePalette;
 
 namespace {
 
-QPainterPath notchedPath(const QRectF &rect, qreal radius = NP::radius)
+QPainterPath surfacePath(const QRectF &rect, bool notched, qreal radius = NP::radius)
 {
     const qreal left = rect.left();
     const qreal top = rect.top();
     const qreal right = rect.right();
     const qreal bottom = rect.bottom();
     QPainterPath path;
-    path.moveTo(left + NP::notch, top);
+    path.moveTo(left + (notched ? NP::notch : radius), top);
     path.lineTo(right - radius, top);
     path.quadTo(right, top, right, top + radius);
     path.lineTo(right, bottom - radius);
     path.quadTo(right, bottom, right - radius, bottom);
     path.lineTo(left + radius, bottom);
     path.quadTo(left, bottom, left, bottom - radius);
-    path.lineTo(left, top + NP::notch);
+    path.lineTo(left, top + (notched ? NP::notch : radius));
+    if (!notched) {
+        path.quadTo(left, top, left + radius, top);
+    }
     path.closeSubpath();
     return path;
 }
@@ -59,13 +62,28 @@ QColor stateSurface(const QStyleOption *option)
 }
 
 void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
-                  const QColor &stroke, int width = NP::borderWidth)
+                  const QColor &stroke, int width = NP::borderWidth, bool notched = false)
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(QPen(stroke, width));
     painter->setBrush(fill);
-    painter->drawPath(notchedPath(QRectF(rect).adjusted(0.5, 0.5, -0.5, -0.5)));
+    painter->drawPath(surfacePath(QRectF(rect).adjusted(0.5, 0.5, -0.5, -0.5), notched));
+    painter->restore();
+}
+
+void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirection direction,
+                          bool focused = false)
+{
+    paintSurface(painter, rect, NP::surfaceSelected(),
+                 focused ? NP::accent() : NP::borderStrong(), NP::borderWidth, true);
+    painter->save();
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(NP::accent());
+    const int markerX = direction == Qt::RightToLeft
+        ? rect.right() - NP::activeMarkerWidth + 1 : rect.left();
+    painter->drawRect(markerX, rect.top() + NP::compactRadius,
+                      NP::activeMarkerWidth, qMax(1, rect.height() - 2 * NP::compactRadius));
     painter->restore();
 }
 
@@ -185,6 +203,102 @@ QSize NoxForgeStyle::sizeFromContents(ContentsType type, const QStyleOption *opt
     return size;
 }
 
+QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionComplex *option,
+                                    SubControl subControl, const QWidget *widget) const
+{
+    if (control == CC_ScrollBar) {
+        const auto *scroll = qstyleoption_cast<const QStyleOptionSlider *>(option);
+        if (!scroll) return QRect();
+        if (subControl == SC_ScrollBarAddLine || subControl == SC_ScrollBarSubLine) return QRect();
+        const QRect groove = option->rect.adjusted(2, 2, -2, -2);
+        if (subControl == SC_ScrollBarGroove) return groove;
+        if (subControl == SC_ScrollBarSlider) {
+            const bool horizontal = scroll->orientation == Qt::Horizontal;
+            const int length = horizontal ? groove.width() : groove.height();
+            const int range = scroll->maximum - scroll->minimum;
+            const int page = qMax(1, scroll->pageStep);
+            const int thumb = qBound(18, range > 0 ? (length * page) / (range + page) : length, length);
+            const int available = qMax(0, length - thumb);
+            const int position = sliderPositionFromValue(scroll->minimum, scroll->maximum,
+                                                         scroll->sliderPosition, available,
+                                                         scroll->upsideDown);
+            return horizontal
+                ? QRect(groove.left() + position, groove.top(), thumb, groove.height())
+                : QRect(groove.left(), groove.top() + position, groove.width(), thumb);
+        }
+    }
+    if (control == CC_ComboBox) {
+        const int arrowWidth = 30;
+        const QRect logicalArrow(option->rect.right() - arrowWidth + 1, option->rect.top(),
+                                 arrowWidth, option->rect.height());
+        if (subControl == SC_ComboBoxArrow)
+            return visualRect(option->direction, option->rect, logicalArrow);
+        if (subControl == SC_ComboBoxEditField)
+            return visualRect(option->direction, option->rect,
+                              option->rect.adjusted(8, 1, -arrowWidth, -1));
+    }
+    if (control == CC_SpinBox) {
+        const int buttonWidth = 26;
+        const int half = option->rect.height() / 2;
+        const QRect logicalButtons(option->rect.right() - buttonWidth + 1, option->rect.top(),
+                                   buttonWidth, option->rect.height());
+        if (subControl == SC_SpinBoxUp)
+            return visualRect(option->direction, option->rect,
+                              QRect(logicalButtons.left(), logicalButtons.top(), buttonWidth, half));
+        if (subControl == SC_SpinBoxDown)
+            return visualRect(option->direction, option->rect,
+                              QRect(logicalButtons.left(), logicalButtons.top() + half,
+                                    buttonWidth, option->rect.height() - half));
+        if (subControl == SC_SpinBoxEditField)
+            return visualRect(option->direction, option->rect,
+                              option->rect.adjusted(8, 1, -buttonWidth, -1));
+    }
+    if (control == CC_Slider) {
+        const auto *slider = qstyleoption_cast<const QStyleOptionSlider *>(option);
+        if (!slider) return QRect();
+        constexpr int handleLength = 18;
+        if (subControl == SC_SliderGroove) {
+            return slider->orientation == Qt::Horizontal
+                ? QRect(option->rect.left() + handleLength / 2, option->rect.center().y() - 2,
+                        qMax(1, option->rect.width() - handleLength), 4)
+                : QRect(option->rect.center().x() - 2, option->rect.top() + handleLength / 2,
+                        4, qMax(1, option->rect.height() - handleLength));
+        }
+        if (subControl == SC_SliderHandle) {
+            const bool horizontal = slider->orientation == Qt::Horizontal;
+            const int available = qMax(0, (horizontal ? option->rect.width() : option->rect.height()) - handleLength);
+            const int position = sliderPositionFromValue(slider->minimum, slider->maximum,
+                                                         slider->sliderPosition, available,
+                                                         slider->upsideDown);
+            return horizontal
+                ? QRect(option->rect.left() + position, option->rect.center().y() - handleLength / 2,
+                        handleLength, handleLength)
+                : QRect(option->rect.center().x() - handleLength / 2, option->rect.top() + position,
+                        handleLength, handleLength);
+        }
+    }
+    return QCommonStyle::subControlRect(control, option, subControl, widget);
+}
+
+QRect NoxForgeStyle::subElementRect(SubElement element, const QStyleOption *option,
+                                    const QWidget *widget) const
+{
+    switch (element) {
+    case SE_LineEditContents:
+        return option->rect.adjusted(8, 4, -8, -4);
+    case SE_ComboBoxFocusRect:
+        return visualRect(option->direction, option->rect, option->rect.adjusted(8, 2, -30, -2));
+    case SE_SliderFocusRect:
+        return option->rect.adjusted(1, 1, -1, -1);
+    case SE_ComboBoxLayoutItem:
+    case SE_SliderLayoutItem:
+    case SE_SpinBoxLayoutItem:
+        return option->rect;
+    default:
+        return QCommonStyle::subElementRect(element, option, widget);
+    }
+}
+
 void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *option,
                                   QPainter *painter, const QWidget *widget) const
 {
@@ -194,13 +308,19 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         const auto *button = qstyleoption_cast<const QStyleOptionButton *>(option);
         const bool primary = button && button->features.testFlag(QStyleOptionButton::DefaultButton);
         QColor fill = primary ? (option->state.testFlag(State_Sunken) ? NP::accentPressed() : NP::accent()) : stateSurface(option);
-        QColor stroke = option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border();
-        paintSurface(painter, option->rect, fill, stroke, option->state.testFlag(State_HasFocus) ? 2 : 1);
+        QColor stroke = option->state.testFlag(State_HasFocus)
+            ? (primary ? NP::background() : NP::accent()) : NP::border();
+        const bool focused = option->state.testFlag(State_HasFocus);
+        paintSurface(painter, option->rect, fill, stroke,
+                     focused ? NP::focusWidth : NP::borderWidth, focused);
         return;
     }
     case PE_PanelLineEdit:
     case PE_FrameLineEdit:
-        paintSurface(painter, option->rect, NP::background(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(), option->state.testFlag(State_HasFocus) ? 2 : 1);
+        paintSurface(painter, option->rect, NP::background(),
+                     option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                     option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
+                     option->state.testFlag(State_HasFocus));
         return;
     case PE_PanelMenu:
     case PE_PanelTipLabel:
@@ -209,13 +329,14 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         return;
     case PE_PanelItemViewItem:
         if (option->state.testFlag(State_Selected)) {
-            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), NP::surfaceSelected(), NP::accent());
+            paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                                 option->direction, option->state.testFlag(State_HasFocus));
         } else if (option->state.testFlag(State_MouseOver)) {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), NP::surfaceHover(), NP::border());
         }
         return;
     case PE_FrameFocusRect:
-        paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), Qt::transparent, NP::accent(), 2);
+        // Owning controls paint their focus once; a second frame creates a neon halo.
         return;
     case PE_IndicatorCheckBox:
     case PE_IndicatorRadioButton: {
@@ -224,7 +345,10 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? NP::accent() : NP::borderStrong(), 1));
         painter->setBrush(option->state.testFlag(State_On) ? NP::surfaceSelected() : NP::background());
-        element == PE_IndicatorRadioButton ? painter->drawEllipse(box.adjusted(1, 1, -1, -1)) : painter->drawPath(notchedPath(box.adjusted(1, 1, -1, -1), 3));
+        element == PE_IndicatorRadioButton
+            ? painter->drawEllipse(box.adjusted(1, 1, -1, -1))
+            : painter->drawPath(surfacePath(box.adjusted(1, 1, -1, -1),
+                                            option->state.testFlag(State_HasFocus), 3));
         if (option->state.testFlag(State_On)) {
             painter->setPen(QPen(NP::accent(), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             if (element == PE_IndicatorRadioButton) painter->drawEllipse(box.center(), 3, 3);
@@ -281,7 +405,9 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
             painter->fillRect(QRect(option->rect.left() + 10, option->rect.center().y(), option->rect.width() - 20, 1), NP::border());
             return;
         }
-        if (option->state.testFlag(State_Selected)) paintSurface(painter, option->rect.adjusted(3, 2, -3, -2), NP::surfaceSelected(), NP::accent());
+        if (option->state.testFlag(State_Selected))
+            paintSelectedSurface(painter, option->rect.adjusted(3, 2, -3, -2),
+                                 option->direction, option->state.testFlag(State_HasFocus));
         const int leadingWidth = 28;
         const QRect leading = visualRect(option->direction, option->rect,
                                          QRect(option->rect.left() + 6, option->rect.top(), leadingWidth, option->rect.height()));
@@ -334,7 +460,12 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
     }
     case CE_TabBarTabShape:
     case CE_HeaderSection:
-        paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), option->state.testFlag(State_Selected) ? NP::surfaceSelected() : stateSurface(option), option->state.testFlag(State_Selected) ? NP::accent() : NP::border());
+        if (option->state.testFlag(State_Selected))
+            paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                                 option->direction, option->state.testFlag(State_HasFocus));
+        else
+            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                         stateSurface(option), NP::border());
         return;
     case CE_ToolBar:
         painter->fillRect(option->rect, NP::surface());
@@ -350,7 +481,10 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
 {
     switch (control) {
     case CC_ComboBox: {
-        paintSurface(painter, option->rect, NP::background(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border());
+        paintSurface(painter, option->rect, NP::background(),
+                     option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                     option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
+                     option->state.testFlag(State_HasFocus));
         const QRect arrowRect = subControlRect(CC_ComboBox, option, SC_ComboBoxArrow, widget);
         paintArrow(painter, arrowRect, Qt::DownArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled());
         return;
@@ -359,7 +493,9 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         const auto *spin = qstyleoption_cast<const QStyleOptionSpinBox *>(option);
         if (!spin) break;
         paintSurface(painter, option->rect, NP::background(),
-                     option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border());
+                     option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                     option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
+                     option->state.testFlag(State_HasFocus));
         const QRect up = subControlRect(CC_SpinBox, option, SC_SpinBoxUp, widget);
         const QRect down = subControlRect(CC_SpinBox, option, SC_SpinBoxDown, widget);
         painter->fillRect(visualRect(option->direction, option->rect,
@@ -391,30 +527,17 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
     case CC_Slider: {
         const auto *slider = qstyleoption_cast<const QStyleOptionSlider *>(option);
         if (!slider) break;
-        const int handleLength = 18;
-        QRect groove;
-        QRect handle;
+        const QRect groove = subControlRect(CC_Slider, option, SC_SliderGroove, widget);
+        const QRect handle = subControlRect(CC_Slider, option, SC_SliderHandle, widget);
         QRect highlight;
         if (slider->orientation == Qt::Horizontal) {
-            groove = QRect(option->rect.left() + handleLength / 2, option->rect.center().y() - 2,
-                           option->rect.width() - handleLength, 4);
-            const int position = sliderPositionFromValue(slider->minimum, slider->maximum,
-                                                         slider->sliderPosition,
-                                                         groove.width() - handleLength,
-                                                         slider->upsideDown);
-            handle = QRect(groove.left() + position, option->rect.center().y() - handleLength / 2,
-                           handleLength, handleLength);
-            highlight = QRect(groove.left(), groove.top(), handle.center().x() - groove.left(), groove.height());
+            highlight = slider->upsideDown
+                ? QRect(handle.center().x(), groove.top(), groove.right() - handle.center().x() + 1, groove.height())
+                : QRect(groove.left(), groove.top(), handle.center().x() - groove.left() + 1, groove.height());
         } else {
-            groove = QRect(option->rect.center().x() - 2, option->rect.top() + handleLength / 2,
-                           4, option->rect.height() - handleLength);
-            const int position = sliderPositionFromValue(slider->minimum, slider->maximum,
-                                                         slider->sliderPosition,
-                                                         groove.height() - handleLength,
-                                                         slider->upsideDown);
-            handle = QRect(option->rect.center().x() - handleLength / 2, groove.top() + position,
-                           handleLength, handleLength);
-            highlight = QRect(groove.left(), groove.top(), groove.width(), handle.center().y() - groove.top());
+            highlight = slider->upsideDown
+                ? QRect(groove.left(), handle.center().y(), groove.width(), groove.bottom() - handle.center().y() + 1)
+                : QRect(groove.left(), groove.top(), groove.width(), handle.center().y() - groove.top() + 1);
         }
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
@@ -431,7 +554,7 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
     case CC_ScrollBar: {
         const QRect groove = subControlRect(CC_ScrollBar, option, SC_ScrollBarGroove, widget);
         const QRect slider = subControlRect(CC_ScrollBar, option, SC_ScrollBarSlider, widget);
-        painter->fillRect(groove, NP::background());
+        painter->fillRect(option->rect, NP::background());
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);

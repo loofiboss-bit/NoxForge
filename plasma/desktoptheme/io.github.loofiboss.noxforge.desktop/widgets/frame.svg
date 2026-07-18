@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="plain-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.86"/>
@@ -24,6 +26,11 @@
   <rect id="plain-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="plain-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="plain-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="plain-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="plain-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="plain-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="plain-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="plain-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="raised-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
   <rect id="raised-top" x="46" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
   <path id="raised-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
@@ -37,6 +44,11 @@
   <rect id="raised-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="raised-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="raised-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="raised-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="raised-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="raised-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="raised-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="raised-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="sunken-topleft" d="M86 0V6H80V6A6 6 0 0 1 86 0Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
   <rect id="sunken-top" x="86" y="0" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
   <path id="sunken-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.96"/>
@@ -50,4 +62,9 @@
   <rect id="sunken-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="sunken-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="sunken-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="sunken-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="sunken-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="sunken-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="sunken-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="sunken-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

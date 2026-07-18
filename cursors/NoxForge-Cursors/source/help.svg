@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
   <title>NoxForge help cursor source</title>
-  <rect width="24" height="24" fill="#0E1318"/>
-  <path d="M3 2v18l5-4 3 6 4-2-3-6h9z" fill="#141B21" stroke="#E8F0F2" stroke-width="1.5"/>
-  <rect x="3" y="2" width="2" height="2" fill="#A3FF47"/>
+  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 2v18l5-4 3 6 4-2-3-6h9z"/><path class="accent-line" d="M15 5c0-3 5-3 5 0 0 2-2 2-2 4M18 11v1"/>
+  </g>
+  <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
 </svg>

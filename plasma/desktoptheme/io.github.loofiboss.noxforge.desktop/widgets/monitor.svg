@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
+    ]]></style>
+  </defs>
+  <path id="monitor-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-top" x="6" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <path id="monitor-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-left" x="0" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-center" x="6" y="6" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-right" x="18" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <path id="monitor-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <path id="monitor-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.96"/>
+  <rect id="monitor-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="monitor-active-topleft" d="M44 0H46V6H40V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="monitor-active-top" x="46" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="monitor-active-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="monitor-active-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="40" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="monitor-active-center" x="46" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="monitor-active-right" x="58" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="monitor-active-bottomleft" d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="monitor-active-bottom" x="46" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="monitor-active-bottomright" d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="monitor-active-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+</svg>

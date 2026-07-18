@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import configparser
 import gzip
+import hashlib
 import json
 import re
 import struct
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -121,16 +123,23 @@ def validate_tokens(version: str) -> dict[str, object]:
         "negative": "#FF6B7A",
         "neutral": "#FBBF24",
     }
-    if tokens.get("schemaVersion") != 2 or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") != 3 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
     geometry = tokens.get("geometry")
     motion = tokens.get("motion")
-    if not isinstance(geometry, dict) or not isinstance(motion, dict):
-        raise ValidationError("design tokens require geometry and motion objects")
+    states = tokens.get("states")
+    typography = tokens.get("typography")
+    iconography = tokens.get("iconography")
+    if not all(isinstance(value, dict) for value in (geometry, motion, states, typography, iconography)):
+        raise ValidationError("design tokens require geometry, state, typography, iconography and motion objects")
     if geometry.get("forgeNotch") != 4 or geometry.get("controlHeight") != 32:
         raise ValidationError("design geometry does not match Industrial Precision")
     if motion != {"pressMs": 90, "hoverMs": 140, "popupMs": 180}:
         raise ValidationError("design motion does not match Industrial Precision")
+    if states.get("focusStyle") != "single-2px-outline" or states.get("normalNotch") is not False:
+        raise ValidationError("design state hierarchy does not match Industrial Precision")
+    if iconography.get("grid") != 24 or iconography.get("opticalSizes") != [16, 22]:
+        raise ValidationError("iconography tokens are incomplete")
     return tokens
 
 
@@ -178,6 +187,19 @@ def svg_ids(path: Path) -> set[str]:
 
 def validate_plasma_style() -> None:
     theme = ROOT / f"plasma/desktoptheme/{THEME_ID}"
+    contract = load_json(ROOT / "design/plasma-semantic-contract.json")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 2 or contract.get("plasmaVersion") != "6.7":
+        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 2")
+    widget_families = contract.get("widgetFamilies")
+    weather_families = contract.get("weatherFamilies")
+    if not isinstance(widget_families, list) or len(widget_families) != 43:
+        raise ValidationError("Plasma semantic contract must declare all 43 widget families")
+    if not isinstance(weather_families, list) or weather_families != ["wind-arrows"]:
+        raise ValidationError("Plasma weather artwork contract is incomplete")
+    missing_families = [name for name in widget_families if not (theme / f"widgets/{name}.svg").is_file()]
+    missing_weather = [name for name in weather_families if not (theme / f"weather/{name}.svg").is_file()]
+    if missing_families or missing_weather:
+        raise ValidationError(f"Plasma asset families are incomplete: {missing_families + missing_weather}")
     backgrounds = {
         "dialogs/background.svg",
         "widgets/panel-background.svg",
@@ -194,6 +216,19 @@ def validate_plasma_style() -> None:
         for state in states:
             if not {f"{state}-{position}" for position in POSITIONS}.issubset(found):
                 raise ValidationError(f"{relative} has an incomplete {state} frame")
+    tasks = svg_ids(theme / "widgets/tasks.svg")
+    for orientation in ("north", "south", "east", "west"):
+        for state in PLASMA_STATES["widgets/tasks.svg"]:
+            prefix = f"{orientation}-{state}"
+            if not {f"{prefix}-{position}" for position in POSITIONS}.issubset(tasks):
+                raise ValidationError(f"tasks.svg lacks the complete {prefix} edge state")
+    required_hints = contract.get("requiredHints")
+    if not isinstance(required_hints, dict):
+        raise ValidationError("Plasma semantic contract lacks required hints")
+    for family, hints in required_hints.items():
+        found = svg_ids(theme / f"widgets/{family}.svg")
+        if not set(hints).issubset(found):
+            raise ValidationError(f"widgets/{family}.svg lacks required hints: {sorted(set(hints) - found)}")
     required_shell_assets = {
         "widgets/calendar.svg", "widgets/clock.svg", "widgets/busywidget.svg",
         "widgets/configuration-icons.svg", "widgets/containment-controls.svg",
@@ -206,8 +241,8 @@ def validate_plasma_style() -> None:
     missing_assets = sorted(relative for relative in required_shell_assets if not (theme / relative).is_file())
     if missing_assets:
         raise ValidationError(f"Plasma shell asset coverage is incomplete: {missing_assets}")
-    if len(list(theme.rglob("*.svg"))) < 50:
-        raise ValidationError("Plasma Style requires at least 50 original SVG assets")
+    if len(list(theme.rglob("*.svg"))) < 56:
+        raise ValidationError("Plasma Style requires the complete generated SVG asset set")
     for path in sorted(theme.rglob("*.svg")):
         text = path.read_text(encoding="utf-8")
         if 'id="current-color-scheme"' not in text or "ColorScheme-Highlight" not in text:
@@ -246,6 +281,35 @@ def validate_look_and_feel(version: str) -> None:
         raise ValidationError("Look-and-Feel defaults do not select all NoxForge components")
     if re.search(r"breeze|default", defaults, re.IGNORECASE):
         raise ValidationError("Look-and-Feel defaults must not reference Breeze or default themes")
+    validate_qml_design_consumers()
+
+
+def validate_qml_design_consumers() -> None:
+    qml_files = (
+        ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
+        ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/main.qml",
+        ROOT / "sddm/NoxForge/Main.qml",
+    )
+    raw_color = re.compile(r"#[0-9A-Fa-f]{6,8}")
+    for path in qml_files:
+        text = path.read_text(encoding="utf-8")
+        if "Tokens {" not in text:
+            raise ValidationError(f"{path.relative_to(ROOT)} does not consume generated tokens")
+        if raw_color.search(text):
+            raise ValidationError(f"{path.relative_to(ROOT)} contains a hard-coded palette color")
+    token_copies = [path.parent / "Tokens.qml" for path in qml_files]
+    if len({path.read_bytes() for path in token_copies}) != 1:
+        raise ValidationError("physical QML token copies differ")
+    marks = (
+        ROOT / "design/brand/noxforge-mark.svg",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/splash/NoxForgeMark.svg",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/logout/NoxForgeMark.svg",
+        ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/NoxForgeMark.svg",
+        ROOT / "sddm/NoxForge/NoxForgeMark.svg",
+    )
+    if len({path.read_bytes() for path in marks}) != 1:
+        raise ValidationError("physical canonical N/F mark copies differ")
 
 
 def validate_tabbox(version: str) -> None:
@@ -320,8 +384,39 @@ def validate_icons() -> None:
     if {path.parent.name for path in icons} != expected_categories:
         raise ValidationError("system icon categories are incomplete")
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or coverage.get("iconCount") != len(icons):
+    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 2 or coverage.get("iconCount") != len(icons):
         raise ValidationError("icon coverage manifest does not match generated files")
+    if coverage.get("opticalSizes") != [16, 22] or not isinstance(coverage.get("aliases"), dict):
+        raise ValidationError("icon optical-size or alias coverage is incomplete")
+    duplicate_allowlist = coverage.get("duplicateAllowlist")
+    if not isinstance(duplicate_allowlist, list):
+        raise ValidationError("icon duplicate allowlist is missing")
+    optical_count = 0
+    for size in (16, 22):
+        optical = list((theme / f"{size}x{size}").glob("*/*.svg"))
+        if any(path.is_symlink() for path in optical):
+            raise ValidationError("small optical icons must be physical files")
+        optical_count += len(optical)
+    if optical_count != coverage.get("opticalCount"):
+        raise ValidationError("icon optical manifest does not match generated files")
+    distinct_pairs = (
+        ("actions/go-next.svg", "actions/go-previous.svg"),
+        ("actions/media-playback-start.svg", "actions/media-playback-pause.svg"),
+        ("actions/media-playback-pause.svg", "actions/media-playback-stop.svg"),
+        ("status/audio-volume-high.svg", "status/audio-volume-muted.svg"),
+        ("status/battery-good.svg", "status/battery-charging.svg"),
+        ("status/network-wireless.svg", "status/network-wireless-disconnected.svg"),
+    )
+    for first, second in distinct_pairs:
+        if (theme / "scalable" / first).read_bytes() == (theme / "scalable" / second).read_bytes():
+            raise ValidationError(f"semantic icon states must differ: {first}, {second}")
+    groups: dict[bytes, list[str]] = {}
+    for path in icons:
+        digest = hashlib.sha256(path.read_bytes()).digest()
+        groups.setdefault(digest, []).append(path.relative_to(theme / "scalable").as_posix())
+    actual_duplicates = sorted(sorted(group) for group in groups.values() if len(group) > 1)
+    if actual_duplicates != sorted(duplicate_allowlist):
+        raise ValidationError("icon duplicates differ from the explicit semantic allowlist")
     for path in icons:
         root = ET.parse(path).getroot()
         if root.get("viewBox") != "0 0 24 24":
@@ -340,6 +435,7 @@ def validate_cursors() -> None:
     if len(cursors) < 90 or any(not path.is_file() or path.is_symlink() for path in cursors):
         raise ValidationError("cursor theme requires at least 90 physical cursor files")
     expected_sizes = {24, 32, 48}
+    cursor_counts: dict[str, int] = {}
     for path in cursors:
         data = path.read_bytes()
         if len(data) < 52:
@@ -350,9 +446,30 @@ def validate_cursors() -> None:
         sizes = {struct.unpack("<3I", data[16 + offset * 12 : 28 + offset * 12])[1] for offset in range(count)}
         if sizes != expected_sizes:
             raise ValidationError(f"cursor {path.name} lacks required sizes")
+        cursor_counts[path.name] = count
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or coverage.get("sizes") != [24, 32, 48]:
+    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 2 or coverage.get("sizes") != [24, 32, 48]:
         raise ValidationError("cursor coverage manifest is invalid")
+    animations = coverage.get("animations")
+    if not isinstance(animations, dict):
+        raise ValidationError("cursor animation manifest is missing")
+    for name in ("wait", "progress"):
+        if cursor_counts.get(name) != 36 or animations.get(name) != {"delayMs": 80, "frames": 12}:
+            raise ValidationError(f"cursor {name} must contain 12 frames at each size")
+        data = (theme / "cursors" / name).read_bytes()
+        _, _, _, count = struct.unpack("<4I", data[:16])
+        for offset in range(count):
+            position = struct.unpack("<3I", data[16 + offset * 12 : 28 + offset * 12])[2]
+            if struct.unpack("<9I", data[position : position + 36])[8] != 80:
+                raise ValidationError(f"cursor {name} contains a frame with the wrong delay")
+    canonical = coverage.get("canonical")
+    if not isinstance(canonical, list):
+        raise ValidationError("cursor canonical manifest is invalid")
+    source_files = [theme / "source" / f"{name}.svg" for name in canonical]
+    if any(not path.is_file() for path in source_files):
+        raise ValidationError("editable cursor SVG sources are incomplete")
+    if len({hashlib.sha256(path.read_bytes()).digest() for path in source_files}) != len(source_files):
+        raise ValidationError("editable cursor sources must represent distinct canonical glyphs")
 
 
 def validate_sounds() -> None:
@@ -381,7 +498,7 @@ def validate_sddm(version: str) -> None:
     if entry.get("theme-id") != "NoxForge" or entry.get("version") != version or entry.get("qtversion") != "6":
         raise ValidationError("SDDM metadata identity, version, or Qt contract is invalid")
     qml = (theme / "Main.qml").read_text(encoding="utf-8")
-    for required in ("userModel", "sessionModel", "keyboard.layouts", "sddm.login", "onLoginFailed"):
+    for required in ("userModel", "sessionModel", "keyboard.layouts", "sddm.login", "onLoginFailed", 'qsTr("Username")', 'qsTr("Password")', "Accessible.name"):
         if required not in qml:
             raise ValidationError(f"SDDM theme lacks required flow: {required}")
     if re.search(r"breeze|plasma5", qml, re.IGNORECASE):
@@ -410,13 +527,15 @@ def validate_wallpaper(version: str) -> None:
     source = ET.parse(package / "contents/source/NoxForge.svg").getroot()
     if source.get("viewBox") != "0 0 2560 1440":
         raise ValidationError("editable wallpaper source must use a 2560x1440 viewBox")
-    if png_dimensions(package / "contents/images/2560x1440.png") != (2560, 1440):
-        raise ValidationError("wallpaper output must be exactly 2560x1440")
+    for width, height in ((2560, 1440), (3840, 2160), (3440, 1440)):
+        if png_dimensions(package / f"contents/images/{width}x{height}.png") != (width, height):
+            raise ValidationError(f"wallpaper output must be exactly {width}x{height}")
 
 
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
+        ROOT / "scripts/generate_design_system.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -446,6 +565,35 @@ def validate_tooling() -> None:
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
     if checklist.count("Pending") < 9:
         raise ValidationError("manual graphical checks must remain explicitly pending")
+
+
+def validate_generated_sources() -> None:
+    for script in (
+        "scripts/generate_design_system.py",
+        "scripts/generate_plasma_svgs.py",
+        "scripts/generate_visual_assets.py",
+        "scripts/generate_cursors.py",
+        "scripts/render_wallpaper.py",
+    ):
+        result = subprocess.run(
+            [sys.executable, str(ROOT / script), "--check"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            detail = (result.stderr or result.stdout).strip()
+            raise ValidationError(f"generated source drift in {script}: {detail}")
+    raster = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/check_plasma_rasters.py")],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if raster.returncode != 0:
+        raise ValidationError(f"Plasma raster matrix failed: {(raster.stderr or raster.stdout).strip()}")
 
 
 def validate_json_and_xml() -> None:
@@ -490,6 +638,7 @@ def validate() -> None:
     validate_sddm(version)
     validate_wallpaper(version)
     validate_tooling()
+    validate_generated_sources()
     validate_json_and_xml()
     validate_no_package_symlinks()
 

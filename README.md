@@ -10,21 +10,25 @@ The repository provides:
 - a strict Plasma 6 Look-and-Feel package and optional compact panel layout;
 - NoxForge Dark colors and an expanded Plasma Style without an explicit theme fallback;
 - a native Qt 6 `QStylePlugin`, Aurorae decoration and KWin task switcher;
-- 134 system icons with only `hicolor` application-logo inheritance;
-- 96 physical multi-size cursors, 32 original system sounds and a wallpaper;
+- 165 scalable system icons, 170 physical 16/22 px variants and only `hicolor` application-logo inheritance;
+- 96 physical multi-size cursors, 32 original system sounds and three wallpaper resolutions;
 - original splash, logout and Qt 6 SDDM experiences;
 - safe user-local and separate explicit system installation tooling.
 
 Installation never applies the theme, changes the panel, edits SDDM settings or
 restarts Plasma. See [Quick start](docs/QUICKSTART.md), the authoritative
 [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the live
-[manual testing gate](docs/MANUAL_TESTING.md).
+[manual testing gate](docs/MANUAL_TESTING.md). The historical issues that drove
+the rebuild are recorded in the [v2 visual baseline](docs/V2_VISUAL_BASELINE.md).
 
 ## Status
 
-Automated validation, tests and local builds are the structural v1.0 gate.
-Checks requiring a live Plasma/SDDM session remain Pending until they are
-performed at the recorded scaling factors.
+NoxForge 2.0.0 is the current stable release. Its visual rebuild passes the full
+automated release gate, including deterministic generation, the Python and
+CTest suites, the LTR/RTL scale matrix, isolated repeat installs and a
+byte-reproducible archive. Live Plasma, KWin and interactive SDDM checks that
+require applying the theme remain honestly Pending and are not replaced by
+structural or offscreen evidence.
 
 ## License
 

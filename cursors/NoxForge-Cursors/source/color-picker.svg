@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <title>NoxForge color-picker cursor source</title>
+  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 19L18 6l2 2L7 21H3z"/><path class="accent-line" d="M15 5l4 4M4 20h3"/>
+  </g>
+  <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
+</svg>

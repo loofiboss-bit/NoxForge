@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="144" viewBox="0 0 192 144">
+  <title>NoxForge angled N/F mark</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M20 116L48 28l52 78 28-78" stroke="#E8F0F2" stroke-width="16"/>
+    <path d="M116 116l28-88h40M134 68h36" stroke="#E8F0F2" stroke-width="16"/>
+    <path d="M46 28l54 78" stroke="#A3FF47" stroke-width="7"/>
+    <path d="M144 28h40" stroke="#A3FF47" stroke-width="7"/>
+  </g>
+</svg>

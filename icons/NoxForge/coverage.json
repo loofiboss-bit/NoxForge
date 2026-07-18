@@ -1,6 +1,11 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "iconCount": 165,
+  "opticalCount": 170,
+  "opticalSizes": [
+    16,
+    22
+  ],
   "categories": {
     "actions": 33,
     "applets": 29,
@@ -178,5 +183,65 @@
     "status/security-high.svg",
     "status/software-update-available.svg",
     "status/task-complete.svg"
+  ],
+  "aliases": {
+    "actions/edit-clear.svg": "actions/edit-delete.svg",
+    "actions/edit-find.svg": "actions/system-search.svg",
+    "applets/audio-volume-high-symbolic.svg": "status/audio-volume-high.svg",
+    "applets/battery-full-symbolic.svg": "status/battery-good.svg",
+    "applets/battery-full.svg": "status/battery-good.svg",
+    "applets/camera-on-symbolic.svg": "devices/camera-photo.svg",
+    "categories/preferences-system.svg": "preferences/preferences-system.svg",
+    "devices/network-wired.svg": "status/network-wired.svg",
+    "devices/network-wireless.svg": "status/network-wireless.svg",
+    "mimetypes/inode-directory.svg": "places/folder.svg",
+    "status/network-wired-activated.svg": "status/network-wired.svg",
+    "status/network-wireless-connected-100.svg": "status/network-wireless.svg"
+  },
+  "duplicateAllowlist": [
+    [
+      "actions/configure.svg",
+      "categories/preferences-system.svg",
+      "preferences/preferences-system.svg"
+    ],
+    [
+      "actions/edit-clear.svg",
+      "actions/edit-delete.svg"
+    ],
+    [
+      "actions/edit-find.svg",
+      "actions/system-search.svg"
+    ],
+    [
+      "applets/camera-on-symbolic.svg",
+      "devices/camera-photo.svg"
+    ],
+    [
+      "applets/audio-volume-high-symbolic.svg",
+      "status/audio-volume-high.svg"
+    ],
+    [
+      "applets/battery-full-symbolic.svg",
+      "applets/battery-full.svg",
+      "status/battery-good.svg"
+    ],
+    [
+      "categories/applications-internet.svg",
+      "preferences/preferences-system-network.svg"
+    ],
+    [
+      "devices/network-wired.svg",
+      "status/network-wired-activated.svg",
+      "status/network-wired.svg"
+    ],
+    [
+      "devices/network-wireless.svg",
+      "status/network-wireless-connected-100.svg",
+      "status/network-wireless.svg"
+    ],
+    [
+      "mimetypes/inode-directory.svg",
+      "places/folder.svg"
+    ]
   ]
 }

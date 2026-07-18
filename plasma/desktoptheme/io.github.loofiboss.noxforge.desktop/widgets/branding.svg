@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <g id="brilliant" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></g>

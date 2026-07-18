@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-ViewBackground { color: #0E1318; }
+      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
+    ]]></style>
+  </defs>
+  <g id="wind-north" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 20V5M8 9l4-4 4 4"/></g>
+  <g id="wind-north-east" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 18L18 6M12 6h6v6"/></g>
+  <g id="wind-east" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12h15M15 8l4 4-4 4"/></g>
+  <g id="wind-south-east" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 6l12 12M12 18h6v-6"/></g>
+  <g id="wind-south" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4v15M8 15l4 4 4-4"/></g>
+  <g id="wind-south-west" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 6L6 18M6 12v6h6"/></g>
+  <g id="wind-west" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M20 12H5M9 8l-4 4 4 4"/></g>
+  <g id="wind-north-west" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M18 18L6 6M6 12V6h6"/></g>
+</svg>

@@ -4,12 +4,18 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 ICONS = ROOT / "icons/NoxForge"
+TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
+COLORS = TOKENS["colors"]
+CHECK = "--check" in sys.argv[1:]
+DRIFT: list[Path] = []
 
 ICON_SPECS = {
     "actions/document-new.svg": '<path d="M6 3h8l4 4v14H6zM14 3v5h4"/><path class="accent" d="M9 14h6M12 11v6"/>',
@@ -74,6 +80,30 @@ CORE_ICON_SPECS = {
     "status/dialog-error.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/><path class="accent" d="M8 8l4 4"/>',
     "status/security-high.svg": '<path d="M12 3l8 3v6c0 5-3 8-8 10-5-2-8-5-8-10V6zM8 12l3 3 5-6"/><path class="accent" d="M8 12l3 3"/>',
     "status/software-update-available.svg": '<path d="M12 3v12M7 10l5 5 5-5M5 20h14"/><path class="accent" d="M12 3v6"/>',
+}
+
+STATE_ICON_SPECS = {
+    "actions/go-previous.svg": '<path d="M16 5l-7 7 7 7"/><path class="accent" d="M9 12H4"/>',
+    "actions/go-up.svg": '<path d="M5 16l7-7 7 7"/><path class="accent" d="M12 9V4"/>',
+    "actions/go-down.svg": '<path d="M5 8l7 7 7-7"/><path class="accent" d="M12 15v5"/>',
+    "actions/media-playback-pause.svg": '<path d="M7 5v14M17 5v14"/><path class="accent" d="M7 5v6"/>',
+    "actions/media-playback-stop.svg": '<rect x="6" y="6" width="12" height="12"/><path class="accent" d="M6 6h6"/>',
+    "actions/media-skip-backward.svg": '<path d="M18 5l-9 7 9 7zM6 5v14"/><path class="accent" d="M6 5v7"/>',
+    "actions/zoom-in.svg": '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21M7 10h6M10 7v6"/><path class="accent" d="M10 7v3"/>',
+    "actions/zoom-out.svg": '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21M7 10h6"/><path class="accent" d="M7 10h3"/>',
+    "applets/bluetooth-active.svg": '<path d="M8 6l8 12V6L8 18l8-12"/><path class="accent" d="M8 6l8 12"/>',
+    "applets/bluetooth-disabled.svg": '<path d="M9 7l7 11V6l-4 6M5 5l14 14"/><path class="accent" d="M5 5l6 6"/>',
+    "applets/redshift-status-day.svg": '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/><path class="accent" d="M12 2v3"/>',
+    "applets/redshift-status-off.svg": '<circle cx="12" cy="12" r="7"/><path d="M5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
+    "applets/redshift-status-on.svg": '<path d="M17 15a7 7 0 1 1-8-10 6 6 0 0 0 8 10z"/><path class="accent" d="M17 15a7 7 0 0 1-4 3"/>',
+    "status/audio-volume-low.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 10a3 3 0 0 1 0 4"/><path class="accent" d="M12 6v4"/>',
+    "status/audio-volume-medium.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9a5 5 0 0 1 0 6"/><path class="accent" d="M12 6v4"/>',
+    "status/audio-volume-muted.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9l5 6M21 9l-5 6"/><path class="accent" d="M16 9l3 3"/>',
+    "status/battery-low.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M7 12h3"/><path class="accent" d="M7 12h3"/>',
+    "status/battery-caution.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M11 9v4"/><circle class="accent-fill" cx="11" cy="15.5" r="1"/>',
+    "status/battery-charging.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M13 8l-4 5h3l-1 4 4-6h-3z"/><path class="accent" d="M13 8l-2 3"/>',
+    "status/network-wireless-disconnected.svg": '<path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0M4 4l16 16"/><path class="accent" d="M4 4l5 5"/>',
+    "status/network-wired-disconnected.svg": '<path d="M4 4h16v10h-6v3h3v3H7v-3h3v-3H4zM5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
 }
 
 ICON_ALIASES = {
@@ -185,14 +215,56 @@ ICON_ALIASES = {
     "status/task-complete.svg": "status/security-high.svg",
 }
 
+# Only names that are actual semantic synonyms remain byte-identical. Every
+# broader fallback name receives its own small optical discriminator below.
+TRUE_SYNONYM_ALIASES = {
+    "actions/edit-clear.svg",
+    "actions/edit-find.svg",
+    "applets/audio-volume-high-symbolic.svg",
+    "applets/battery-full.svg",
+    "applets/battery-full-symbolic.svg",
+    "applets/camera-on-symbolic.svg",
+    "categories/preferences-system.svg",
+    "devices/network-wired.svg",
+    "devices/network-wireless.svg",
+    "mimetypes/inode-directory.svg",
+    "status/network-wireless-connected-100.svg",
+    "status/network-wired-activated.svg",
+}
+
+DUPLICATE_ALLOWLIST = (
+    ("actions/configure.svg", "categories/preferences-system.svg", "preferences/preferences-system.svg"),
+    ("actions/edit-clear.svg", "actions/edit-delete.svg"),
+    ("actions/edit-find.svg", "actions/system-search.svg"),
+    ("applets/camera-on-symbolic.svg", "devices/camera-photo.svg"),
+    ("applets/audio-volume-high-symbolic.svg", "status/audio-volume-high.svg"),
+    ("applets/battery-full-symbolic.svg", "applets/battery-full.svg", "status/battery-good.svg"),
+    ("categories/applications-internet.svg", "preferences/preferences-system-network.svg"),
+    ("devices/network-wired.svg", "status/network-wired-activated.svg", "status/network-wired.svg"),
+    ("devices/network-wireless.svg", "status/network-wireless-connected-100.svg", "status/network-wireless.svg"),
+    ("mimetypes/inode-directory.svg", "places/folder.svg"),
+)
+
+
+def semantic_variant(body: str, relative: str) -> str:
+    """Add a restrained deterministic discriminator to a related base glyph."""
+    digest = hashlib.sha256(relative.encode()).digest()
+    x = 4 + digest[0] % 13
+    y = 18 + digest[1] % 3
+    length = 2 + digest[2] % 3
+    x2 = 18 + digest[3] % 3
+    y2 = 4 + digest[4] % 13
+    length2 = 2 + digest[5] % 3
+    return body + f'<path class="accent" d="M{x} {y}h{length}M{x2} {y2}v{length2}"/>'
+
 
 def icon_svg(body: str) -> str:
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
   <style>
-    .accent {{ stroke: #A3FF47; }}
-    .accent-fill {{ fill: #A3FF47; stroke: none; }}
+    .accent {{ stroke: {COLORS["accent"]}; }}
+    .accent-fill {{ fill: {COLORS["accent"]}; stroke: none; }}
   </style>
-  <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="none" stroke="{COLORS["textPrimary"]}" stroke-width="{TOKENS["iconography"]["strokeWidth"]}" stroke-linecap="round" stroke-linejoin="round">
     {body}
   </g>
 </svg>
@@ -229,9 +301,9 @@ def decoration_svg() -> str:
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background {{ color: #141B21; }}
-      .ColorScheme-ViewBackground {{ color: #0E1318; }}
-      .ColorScheme-Highlight {{ color: #A3FF47; }}
+      .ColorScheme-Background {{ color: {COLORS["surface"]}; }}
+      .ColorScheme-ViewBackground {{ color: {COLORS["background"]}; }}
+      .ColorScheme-Highlight {{ color: {COLORS["accent"]}; }}
     ]]></style>
   </defs>
   {active}
@@ -245,9 +317,9 @@ def decoration_svg() -> str:
 BUTTON_STATES = (
     ("active", "ColorScheme-Text", 0.0),
     ("inactive", "ColorScheme-Text", 0.0),
-    ("hover", "ColorScheme-Highlight", 0.18),
+    ("hover", "ColorScheme-Hover", 1.0),
     ("hover-inactive", "ColorScheme-Text", 0.1),
-    ("pressed", "ColorScheme-Highlight", 0.3),
+    ("pressed", "ColorScheme-Pressed", 1.0),
     ("pressed-inactive", "ColorScheme-Text", 0.16),
     ("deactivated", "ColorScheme-Text", 0.0),
     ("deactivated-inactive", "ColorScheme-Text", 0.0),
@@ -265,18 +337,19 @@ def button_svg(kind: str) -> str:
     groups = []
     for index, (state, color_class, opacity) in enumerate(BUTTON_STATES):
         x = index * 32
-        foreground = "#FF6B7A" if kind == "close" and state in {"hover", "pressed"} else "currentColor"
+        foreground = COLORS["negative"] if kind == "close" and state in {"hover", "pressed"} else "currentColor"
         groups.append(
-            f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="#E8F0F2">
-      <rect width="24" height="24" rx="5" fill="currentColor" fill-opacity="{opacity:g}"/>
+            f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="{COLORS['textPrimary']}">
+      <rect width="24" height="24" rx="{TOKENS['geometry']['compactRadius']}" fill="currentColor" fill-opacity="{opacity:g}"/>
       <g fill="none" stroke="{foreground}" stroke-width="1.7" stroke-linecap="square" stroke-linejoin="miter">{GLYPHS[kind]}</g>
     </g>'''
         )
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="256" height="24" viewBox="0 0 256 24">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Text {{ color: #E8F0F2; }}
-      .ColorScheme-Highlight {{ color: #A3FF47; }}
+      .ColorScheme-Text {{ color: {COLORS["textPrimary"]}; }}
+      .ColorScheme-Hover {{ color: {COLORS["surfaceHover"]}; }}
+      .ColorScheme-Pressed {{ color: {COLORS["surfaceSelected"]}; }}
     ]]></style>
   </defs>
   {"\n  ".join(groups)}
@@ -285,21 +358,52 @@ def button_svg(kind: str) -> str:
 
 
 def write(path: Path, content: str) -> None:
+    payload = content.encode()
+    if CHECK:
+        if not path.is_file() or path.read_bytes() != payload:
+            DRIFT.append(path)
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
 def write_aurorae_svg(name: str, content: str) -> None:
     write(AURORAE / f"{name}.svg", content)
-    (AURORAE / f"{name}.svgz").write_bytes(gzip.compress(content.encode("utf-8"), mtime=0))
+    compressed_path = AURORAE / f"{name}.svgz"
+    compressed = gzip.compress(content.encode("utf-8"), mtime=0)
+    if CHECK:
+        if not compressed_path.is_file() or compressed_path.read_bytes() != compressed:
+            DRIFT.append(compressed_path)
+    else:
+        compressed_path.write_bytes(compressed)
 
 
 def main() -> None:
-    specs = {**ICON_SPECS, **CORE_ICON_SPECS}
+    specs = {**ICON_SPECS, **CORE_ICON_SPECS, **STATE_ICON_SPECS}
+    effective_aliases: dict[str, str] = {}
+
+    def resolve_body(relative: str) -> str:
+        if relative in specs:
+            return specs[relative]
+        return resolve_body(ICON_ALIASES[relative])
+
     for relative, target in ICON_ALIASES.items():
-        specs[relative] = specs[target]
+        if relative not in specs:
+            base = resolve_body(target)
+            if relative in TRUE_SYNONYM_ALIASES:
+                specs[relative] = base
+                effective_aliases[relative] = target
+            else:
+                specs[relative] = semantic_variant(base, relative)
     for relative, body in sorted(specs.items()):
         write(ICONS / "scalable" / relative, icon_svg(body))
+    optical = {
+        relative: body for relative, body in specs.items()
+        if relative.startswith(("actions/", "applets/", "status/"))
+    }
+    for size in (16, 22):
+        for relative, body in sorted(optical.items()):
+            write(ICONS / f"{size}x{size}" / relative, icon_svg(body))
     categories: dict[str, int] = {}
     for relative in specs:
         category = relative.split("/", 1)[0]
@@ -307,14 +411,29 @@ def main() -> None:
     write(
         ICONS / "coverage.json",
         json.dumps(
-            {"schemaVersion": 1, "iconCount": len(specs), "categories": dict(sorted(categories.items())), "icons": sorted(specs)},
+            {
+                "schemaVersion": 2,
+                "iconCount": len(specs),
+                "opticalCount": len(optical) * 2,
+                "opticalSizes": [16, 22],
+                "categories": dict(sorted(categories.items())),
+                "icons": sorted(specs),
+                "aliases": dict(sorted(effective_aliases.items())),
+                "duplicateAllowlist": [sorted(group) for group in DUPLICATE_ALLOWLIST],
+            },
             indent=2,
         ) + "\n",
     )
     write_aurorae_svg("decoration", decoration_svg())
     for kind in GLYPHS:
         write_aurorae_svg(kind, button_svg(kind))
-    print(f"Generated {len(specs)} icons and 5 editable/compressed Aurorae asset pairs")
+    if DRIFT:
+        print("Visual asset generator drift: " + ", ".join(str(path.relative_to(ROOT)) for path in DRIFT), file=sys.stderr)
+        raise SystemExit(1)
+    if CHECK:
+        print(f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants and 5 Aurorae pairs")
+        return
+    print(f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants and 5 Aurorae pairs")
 
 
 if __name__ == "__main__":

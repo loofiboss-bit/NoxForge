@@ -50,8 +50,9 @@ class PhaseThreeTests(unittest.TestCase):
     def test_wallpaper_has_editable_source_and_release_output(self) -> None:
         source = ET.parse(WALLPAPER / "contents/source/NoxForge.svg").getroot()
         self.assertEqual(source.get("viewBox"), "0 0 2560 1440")
-        png = (WALLPAPER / "contents/images/2560x1440.png").read_bytes()[:24]
-        self.assertEqual(struct.unpack(">II", png[16:24]), (2560, 1440))
+        for dimensions in ((2560, 1440), (3840, 2160), (3440, 1440)):
+            png = (WALLPAPER / f"contents/images/{dimensions[0]}x{dimensions[1]}.png").read_bytes()[:24]
+            self.assertEqual(struct.unpack(">II", png[16:24]), dimensions)
         metadata = json.loads((WALLPAPER / "metadata.json").read_text(encoding="utf-8"))
         self.assertEqual(metadata["KPlugin"]["License"], "MIT")
 

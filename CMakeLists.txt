@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
 add_library(noxforge_style MODULE
     src/style/noxforgepalette.h
@@ -29,17 +29,43 @@ target_link_libraries(noxforge_style_probe PRIVATE Qt6::Core Qt6::Widgets)
 add_executable(noxforge_widget_gallery tools/widget_gallery.cpp)
 target_link_libraries(noxforge_widget_gallery PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 
+add_executable(noxforge_sddm_renderer tools/sddm_renderer.cpp)
+target_link_libraries(noxforge_sddm_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
+
 enable_testing()
 add_test(NAME style-plugin-discovery COMMAND noxforge_style_probe)
-add_test(NAME widget-gallery-offscreen COMMAND noxforge_widget_gallery)
-add_test(NAME widget-gallery-rtl COMMAND noxforge_widget_gallery --rtl)
-add_test(NAME widget-gallery-scale-140 COMMAND noxforge_widget_gallery)
-set_tests_properties(style-plugin-discovery widget-gallery-offscreen widget-gallery-rtl PROPERTIES
-    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins"
+set_tests_properties(style-plugin-discovery PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins")
+
+function(add_noxforge_gallery_test name scale rtl)
+    if(rtl)
+        add_test(NAME ${name} COMMAND noxforge_widget_gallery --rtl)
+    else()
+        add_test(NAME ${name} COMMAND noxforge_widget_gallery)
+    endif()
+    set_tests_properties(${name} PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_SCALE_FACTOR=${scale}")
+endfunction()
+
+add_noxforge_gallery_test(widget-gallery-ltr-100 1.0 FALSE)
+add_noxforge_gallery_test(widget-gallery-ltr-125 1.25 FALSE)
+add_noxforge_gallery_test(widget-gallery-ltr-140 1.4 FALSE)
+add_noxforge_gallery_test(widget-gallery-ltr-200 2.0 FALSE)
+add_noxforge_gallery_test(widget-gallery-rtl-100 1.0 TRUE)
+add_noxforge_gallery_test(widget-gallery-rtl-125 1.25 TRUE)
+add_noxforge_gallery_test(widget-gallery-rtl-140 1.4 TRUE)
+add_noxforge_gallery_test(widget-gallery-rtl-200 2.0 TRUE)
+add_test(NAME widget-gallery-data-page COMMAND noxforge_widget_gallery --data)
+set_tests_properties(widget-gallery-data-page PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_SCALE_FACTOR=1.0")
+add_test(
+    NAME sddm-qml-surface
+    COMMAND noxforge_sddm_renderer
+        "${CMAKE_SOURCE_DIR}/sddm/NoxForge/Main.qml"
+        "${CMAKE_SOURCE_DIR}/sddm/NoxForge/background.png"
+        "${CMAKE_BINARY_DIR}/sddm-qml-surface.png"
 )
-set_tests_properties(widget-gallery-scale-140 PROPERTIES
-    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_SCALE_FACTOR=1.4"
-)
+set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 
 include(GNUInstallDirs)
 install(TARGETS noxforge_style

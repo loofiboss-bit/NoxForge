@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="topleft" d="M4 0H6V6H0V4Z" class="ColorScheme-Background" fill="currentColor" fill-opacity="1"/>
@@ -24,4 +26,9 @@
   <rect id="hint-right-margin" x="2" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
   <rect id="hint-bottom-margin" x="9" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
   <rect id="hint-left-margin" x="11" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-top-inset" x="18" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-inset" x="20" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-inset" x="27" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-inset" x="29" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

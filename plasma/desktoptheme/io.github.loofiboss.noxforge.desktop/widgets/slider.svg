@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="groove-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.2"/>
@@ -24,6 +26,11 @@
   <rect id="groove-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="groove-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="groove-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="groove-highlight-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.78"/>
   <rect id="groove-highlight-top" x="46" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.78"/>
   <path id="groove-highlight-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.78"/>
@@ -37,4 +44,9 @@
   <rect id="groove-highlight-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="groove-highlight-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="groove-highlight-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-<circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>
+  <rect id="groove-highlight-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+<rect id="hint-handle-size" x="160" y="160" width="18" height="18" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>

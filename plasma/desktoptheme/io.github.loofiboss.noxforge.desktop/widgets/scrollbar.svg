@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="background-horizontal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.35"/>
@@ -24,6 +26,11 @@
   <rect id="background-horizontal-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="background-horizontal-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="background-horizontal-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-horizontal-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="background-horizontal-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-horizontal-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="background-horizontal-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-horizontal-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="background-vertical-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.35"/>
   <rect id="background-vertical-top" x="46" y="0" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.35"/>
   <path id="background-vertical-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.35"/>
@@ -37,6 +44,11 @@
   <rect id="background-vertical-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="background-vertical-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="background-vertical-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-vertical-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="background-vertical-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-vertical-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="background-vertical-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="background-vertical-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="slider-topleft" d="M86 0V6H80V6A6 6 0 0 1 86 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.36"/>
   <rect id="slider-top" x="86" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.36"/>
   <path id="slider-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.36"/>
@@ -50,6 +62,11 @@
   <rect id="slider-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="slider-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="slider-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="slider-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="slider-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="slider-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="slider-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="slider-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="mouseover-slider-topleft" d="M126 0V6H120V6A6 6 0 0 1 126 0Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.62"/>
   <rect id="mouseover-slider-top" x="126" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.62"/>
   <path id="mouseover-slider-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.62"/>
@@ -63,4 +80,9 @@
   <rect id="mouseover-slider-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="mouseover-slider-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="mouseover-slider-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-</svg>
+  <rect id="mouseover-slider-hint-top-inset" x="138" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="mouseover-slider-hint-right-inset" x="140" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="mouseover-slider-hint-bottom-inset" x="147" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="mouseover-slider-hint-left-inset" x="149" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="mouseover-slider-hint-stretch-borders" x="156" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+<rect id="hint-scrollbar-size" x="220" y="220" width="10" height="10" fill="#000" fill-opacity="0"/></svg>

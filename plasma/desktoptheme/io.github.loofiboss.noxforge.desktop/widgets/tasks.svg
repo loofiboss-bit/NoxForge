@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="normal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
@@ -24,6 +26,11 @@
   <rect id="normal-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="hover-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
   <rect id="hover-top" x="46" y="0" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
   <path id="hover-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
@@ -37,19 +44,29 @@
   <rect id="hover-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="hover-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="hover-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="focus-topleft" d="M84 0H86V6H80V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <rect id="focus-top" x="86" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <path id="focus-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <rect id="focus-left" x="80" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <rect id="focus-center" x="86" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <rect id="focus-right" x="98" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <path id="focus-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <rect id="focus-bottom" x="86" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
-  <path id="focus-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.32"/>
+  <rect id="hover-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="focus-topleft" d="M84 0H86V6H80V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-top" x="86" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="focus-left"><rect x="80" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="80" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="focus-center" x="86" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-right" x="98" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-bottom" x="86" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="focus-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="attention-topleft" d="M126 0V6H120V6A6 6 0 0 1 126 0Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
   <rect id="attention-top" x="126" y="0" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
   <path id="attention-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
@@ -63,6 +80,11 @@
   <rect id="attention-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="attention-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="attention-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="attention-hint-top-inset" x="138" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="attention-hint-right-inset" x="140" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="attention-hint-bottom-inset" x="147" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="attention-hint-left-inset" x="149" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="attention-hint-stretch-borders" x="156" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="minimized-topleft" d="M166 0V6H160V6A6 6 0 0 1 166 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
   <rect id="minimized-top" x="166" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
   <path id="minimized-topright" d="M178 0A6 6 0 0 1 184 6H178Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
@@ -76,17 +98,459 @@
   <rect id="minimized-hint-right-margin" x="162" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="minimized-hint-bottom-margin" x="169" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="minimized-hint-left-margin" x="171" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="progress-topleft" d="M204 0H206V6H200V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <rect id="progress-top" x="206" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <path id="progress-topright" d="M218 0A6 6 0 0 1 224 6H218Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <rect id="progress-left" x="200" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <rect id="progress-center" x="206" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <rect id="progress-right" x="218" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <path id="progress-bottomleft" d="M200 18H206V24A6 6 0 0 1 200 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <rect id="progress-bottom" x="206" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
-  <path id="progress-bottomright" d="M218 18H224A6 6 0 0 1 218 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.5"/>
+  <rect id="minimized-hint-top-inset" x="178" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="minimized-hint-right-inset" x="180" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="minimized-hint-bottom-inset" x="187" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="minimized-hint-left-inset" x="189" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="minimized-hint-stretch-borders" x="196" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="progress-topleft" d="M204 0H206V6H200V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="progress-top" x="206" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="progress-topright" d="M218 0A6 6 0 0 1 224 6H218Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="progress-left"><rect x="200" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="200" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="progress-center" x="206" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="progress-right" x="218" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="progress-bottomleft" d="M200 18H206V24A6 6 0 0 1 200 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="progress-bottom" x="206" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="progress-bottomright" d="M218 18H224A6 6 0 0 1 218 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="progress-hint-top-margin" x="200" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="progress-hint-right-margin" x="202" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="progress-hint-bottom-margin" x="209" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="progress-hint-left-margin" x="211" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="progress-hint-top-inset" x="218" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="progress-hint-right-inset" x="220" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="progress-hint-bottom-inset" x="227" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="progress-hint-left-inset" x="229" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="progress-hint-stretch-borders" x="236" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-normal-topleft" d="M246 0V6H240V6A6 6 0 0 1 246 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-top" x="246" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="north-normal-topright" d="M258 0A6 6 0 0 1 264 6H258Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-left" x="240" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-center" x="246" y="6" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-right" x="258" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="north-normal-bottomleft" d="M240 18H246V24A6 6 0 0 1 240 18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-bottom" x="246" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="north-normal-bottomright" d="M258 18H264A6 6 0 0 1 258 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="north-normal-hint-top-margin" x="240" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-right-margin" x="242" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-bottom-margin" x="249" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-left-margin" x="251" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-top-inset" x="258" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-right-inset" x="260" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-bottom-inset" x="267" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-left-inset" x="269" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-normal-hint-stretch-borders" x="276" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-hover-topleft" d="M286 0V6H280V6A6 6 0 0 1 286 0Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-top" x="286" y="0" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="north-hover-topright" d="M298 0A6 6 0 0 1 304 6H298Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-left" x="280" y="6" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-center" x="286" y="6" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-right" x="298" y="6" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="north-hover-bottomleft" d="M280 18H286V24A6 6 0 0 1 280 18Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-bottom" x="286" y="18" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="north-hover-bottomright" d="M298 18H304A6 6 0 0 1 298 24Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="north-hover-hint-top-margin" x="280" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-right-margin" x="282" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-bottom-margin" x="289" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-left-margin" x="291" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-top-inset" x="298" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-right-inset" x="300" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-bottom-inset" x="307" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-left-inset" x="309" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hover-hint-stretch-borders" x="316" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-focus-topleft" d="M6 64V70H0V70A6 6 0 0 1 6 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-focus-top" x="6" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-focus-topright" d="M18 64A6 6 0 0 1 24 70H18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="north-focus-left"><rect x="0" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="0" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="north-focus-center" x="6" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-focus-right" x="18" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-focus-bottomleft" d="M0 82H6V88A6 6 0 0 1 0 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-focus-bottom" x="6" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-focus-bottomright" d="M18 82H24A6 6 0 0 1 18 88Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-focus-hint-top-margin" x="0" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-right-margin" x="2" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-bottom-margin" x="9" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-left-margin" x="11" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-top-inset" x="18" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-right-inset" x="20" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-bottom-inset" x="27" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-left-inset" x="29" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-focus-hint-stretch-borders" x="36" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-attention-topleft" d="M46 64V70H40V70A6 6 0 0 1 46 64Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-top" x="46" y="64" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="north-attention-topright" d="M58 64A6 6 0 0 1 64 70H58Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-left" x="40" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-center" x="46" y="70" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-right" x="58" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="north-attention-bottomleft" d="M40 82H46V88A6 6 0 0 1 40 82Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-bottom" x="46" y="82" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="north-attention-bottomright" d="M58 82H64A6 6 0 0 1 58 88Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="north-attention-hint-top-margin" x="40" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-right-margin" x="42" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-bottom-margin" x="49" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-left-margin" x="51" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-top-inset" x="58" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-right-inset" x="60" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-bottom-inset" x="67" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-left-inset" x="69" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-attention-hint-stretch-borders" x="76" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-minimized-topleft" d="M86 64V70H80V70A6 6 0 0 1 86 64Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-top" x="86" y="64" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="north-minimized-topright" d="M98 64A6 6 0 0 1 104 70H98Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-left" x="80" y="70" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-center" x="86" y="70" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-right" x="98" y="70" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="north-minimized-bottomleft" d="M80 82H86V88A6 6 0 0 1 80 82Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-bottom" x="86" y="82" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="north-minimized-bottomright" d="M98 82H104A6 6 0 0 1 98 88Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="north-minimized-hint-top-margin" x="80" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-right-margin" x="82" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-bottom-margin" x="89" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-left-margin" x="91" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-top-inset" x="98" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-right-inset" x="100" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-bottom-inset" x="107" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-left-inset" x="109" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-minimized-hint-stretch-borders" x="116" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="north-progress-topleft" d="M126 64V70H120V70A6 6 0 0 1 126 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-progress-top" x="126" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-progress-topright" d="M138 64A6 6 0 0 1 144 70H138Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="north-progress-left"><rect x="120" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="120" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="north-progress-center" x="126" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-progress-right" x="138" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-progress-bottomleft" d="M120 82H126V88A6 6 0 0 1 120 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-progress-bottom" x="126" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-progress-bottomright" d="M138 82H144A6 6 0 0 1 138 88Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="north-progress-hint-top-margin" x="120" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-right-margin" x="122" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-bottom-margin" x="129" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-left-margin" x="131" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-top-inset" x="138" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-right-inset" x="140" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-bottom-inset" x="147" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-left-inset" x="149" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-progress-hint-stretch-borders" x="156" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-normal-topleft" d="M166 64V70H160V70A6 6 0 0 1 166 64Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-top" x="166" y="64" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="south-normal-topright" d="M178 64A6 6 0 0 1 184 70H178Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-left" x="160" y="70" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-center" x="166" y="70" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-right" x="178" y="70" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="south-normal-bottomleft" d="M160 82H166V88A6 6 0 0 1 160 82Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-bottom" x="166" y="82" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="south-normal-bottomright" d="M178 82H184A6 6 0 0 1 178 88Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="south-normal-hint-top-margin" x="160" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-right-margin" x="162" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-bottom-margin" x="169" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-left-margin" x="171" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-top-inset" x="178" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-right-inset" x="180" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-bottom-inset" x="187" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-left-inset" x="189" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-normal-hint-stretch-borders" x="196" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-hover-topleft" d="M206 64V70H200V70A6 6 0 0 1 206 64Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-top" x="206" y="64" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="south-hover-topright" d="M218 64A6 6 0 0 1 224 70H218Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-left" x="200" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-center" x="206" y="70" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-right" x="218" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="south-hover-bottomleft" d="M200 82H206V88A6 6 0 0 1 200 82Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-bottom" x="206" y="82" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="south-hover-bottomright" d="M218 82H224A6 6 0 0 1 218 88Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="south-hover-hint-top-margin" x="200" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-right-margin" x="202" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-bottom-margin" x="209" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-left-margin" x="211" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-top-inset" x="218" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-right-inset" x="220" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-bottom-inset" x="227" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-left-inset" x="229" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hover-hint-stretch-borders" x="236" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-focus-topleft" d="M246 64V70H240V70A6 6 0 0 1 246 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-focus-top" x="246" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-focus-topright" d="M258 64A6 6 0 0 1 264 70H258Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="south-focus-left"><rect x="240" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="240" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="south-focus-center" x="246" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-focus-right" x="258" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-focus-bottomleft" d="M240 82H246V88A6 6 0 0 1 240 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-focus-bottom" x="246" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-focus-bottomright" d="M258 82H264A6 6 0 0 1 258 88Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-focus-hint-top-margin" x="240" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-right-margin" x="242" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-bottom-margin" x="249" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-left-margin" x="251" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-top-inset" x="258" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-right-inset" x="260" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-bottom-inset" x="267" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-left-inset" x="269" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-focus-hint-stretch-borders" x="276" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-attention-topleft" d="M286 64V70H280V70A6 6 0 0 1 286 64Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-top" x="286" y="64" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="south-attention-topright" d="M298 64A6 6 0 0 1 304 70H298Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-left" x="280" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-center" x="286" y="70" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-right" x="298" y="70" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="south-attention-bottomleft" d="M280 82H286V88A6 6 0 0 1 280 82Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-bottom" x="286" y="82" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="south-attention-bottomright" d="M298 82H304A6 6 0 0 1 298 88Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="south-attention-hint-top-margin" x="280" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-right-margin" x="282" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-bottom-margin" x="289" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-left-margin" x="291" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-top-inset" x="298" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-right-inset" x="300" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-bottom-inset" x="307" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-left-inset" x="309" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-attention-hint-stretch-borders" x="316" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-minimized-topleft" d="M6 128V134H0V134A6 6 0 0 1 6 128Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-top" x="6" y="128" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="south-minimized-topright" d="M18 128A6 6 0 0 1 24 134H18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-left" x="0" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-center" x="6" y="134" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-right" x="18" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="south-minimized-bottomleft" d="M0 146H6V152A6 6 0 0 1 0 146Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-bottom" x="6" y="146" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="south-minimized-bottomright" d="M18 146H24A6 6 0 0 1 18 152Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="south-minimized-hint-top-margin" x="0" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-right-margin" x="2" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-bottom-margin" x="9" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-left-margin" x="11" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-top-inset" x="18" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-right-inset" x="20" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-bottom-inset" x="27" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-left-inset" x="29" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-minimized-hint-stretch-borders" x="36" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="south-progress-topleft" d="M46 128V134H40V134A6 6 0 0 1 46 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-progress-top" x="46" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-progress-topright" d="M58 128A6 6 0 0 1 64 134H58Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="south-progress-left"><rect x="40" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="40" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="south-progress-center" x="46" y="134" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-progress-right" x="58" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-progress-bottomleft" d="M40 146H46V152A6 6 0 0 1 40 146Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-progress-bottom" x="46" y="146" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-progress-bottomright" d="M58 146H64A6 6 0 0 1 58 152Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="south-progress-hint-top-margin" x="40" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-right-margin" x="42" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-bottom-margin" x="49" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-left-margin" x="51" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-top-inset" x="58" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-right-inset" x="60" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-bottom-inset" x="67" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-left-inset" x="69" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-progress-hint-stretch-borders" x="76" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-normal-topleft" d="M86 128V134H80V134A6 6 0 0 1 86 128Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-top" x="86" y="128" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="east-normal-topright" d="M98 128A6 6 0 0 1 104 134H98Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-left" x="80" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-center" x="86" y="134" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-right" x="98" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="east-normal-bottomleft" d="M80 146H86V152A6 6 0 0 1 80 146Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-bottom" x="86" y="146" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="east-normal-bottomright" d="M98 146H104A6 6 0 0 1 98 152Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="east-normal-hint-top-margin" x="80" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-right-margin" x="82" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-bottom-margin" x="89" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-left-margin" x="91" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-top-inset" x="98" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-right-inset" x="100" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-bottom-inset" x="107" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-left-inset" x="109" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-normal-hint-stretch-borders" x="116" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-hover-topleft" d="M126 128V134H120V134A6 6 0 0 1 126 128Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-top" x="126" y="128" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="east-hover-topright" d="M138 128A6 6 0 0 1 144 134H138Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-left" x="120" y="134" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-center" x="126" y="134" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-right" x="138" y="134" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="east-hover-bottomleft" d="M120 146H126V152A6 6 0 0 1 120 146Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-bottom" x="126" y="146" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="east-hover-bottomright" d="M138 146H144A6 6 0 0 1 138 152Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="east-hover-hint-top-margin" x="120" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-right-margin" x="122" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-bottom-margin" x="129" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-left-margin" x="131" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-top-inset" x="138" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-right-inset" x="140" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-bottom-inset" x="147" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-left-inset" x="149" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hover-hint-stretch-borders" x="156" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-focus-topleft" d="M166 128V134H160V134A6 6 0 0 1 166 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-focus-top" x="166" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-focus-topright" d="M178 128A6 6 0 0 1 184 134H178Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="east-focus-left"><rect x="160" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="160" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="east-focus-center" x="166" y="134" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-focus-right" x="178" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-focus-bottomleft" d="M160 146H166V152A6 6 0 0 1 160 146Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-focus-bottom" x="166" y="146" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-focus-bottomright" d="M178 146H184A6 6 0 0 1 178 152Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-focus-hint-top-margin" x="160" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-right-margin" x="162" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-bottom-margin" x="169" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-left-margin" x="171" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-top-inset" x="178" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-right-inset" x="180" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-bottom-inset" x="187" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-left-inset" x="189" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-focus-hint-stretch-borders" x="196" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-attention-topleft" d="M206 128V134H200V134A6 6 0 0 1 206 128Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-top" x="206" y="128" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="east-attention-topright" d="M218 128A6 6 0 0 1 224 134H218Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-left" x="200" y="134" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-center" x="206" y="134" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-right" x="218" y="134" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="east-attention-bottomleft" d="M200 146H206V152A6 6 0 0 1 200 146Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-bottom" x="206" y="146" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="east-attention-bottomright" d="M218 146H224A6 6 0 0 1 218 152Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="east-attention-hint-top-margin" x="200" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-right-margin" x="202" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-bottom-margin" x="209" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-left-margin" x="211" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-top-inset" x="218" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-right-inset" x="220" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-bottom-inset" x="227" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-left-inset" x="229" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-attention-hint-stretch-borders" x="236" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-minimized-topleft" d="M246 128V134H240V134A6 6 0 0 1 246 128Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-top" x="246" y="128" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="east-minimized-topright" d="M258 128A6 6 0 0 1 264 134H258Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-left" x="240" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-center" x="246" y="134" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-right" x="258" y="134" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="east-minimized-bottomleft" d="M240 146H246V152A6 6 0 0 1 240 146Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-bottom" x="246" y="146" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="east-minimized-bottomright" d="M258 146H264A6 6 0 0 1 258 152Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="east-minimized-hint-top-margin" x="240" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-right-margin" x="242" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-bottom-margin" x="249" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-left-margin" x="251" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-top-inset" x="258" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-right-inset" x="260" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-bottom-inset" x="267" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-left-inset" x="269" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-minimized-hint-stretch-borders" x="276" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="east-progress-topleft" d="M286 128V134H280V134A6 6 0 0 1 286 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-progress-top" x="286" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-progress-topright" d="M298 128A6 6 0 0 1 304 134H298Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="east-progress-left"><rect x="280" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="280" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="east-progress-center" x="286" y="134" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-progress-right" x="298" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-progress-bottomleft" d="M280 146H286V152A6 6 0 0 1 280 146Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-progress-bottom" x="286" y="146" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-progress-bottomright" d="M298 146H304A6 6 0 0 1 298 152Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="east-progress-hint-top-margin" x="280" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-right-margin" x="282" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-bottom-margin" x="289" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-left-margin" x="291" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-top-inset" x="298" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-right-inset" x="300" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-bottom-inset" x="307" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-left-inset" x="309" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-progress-hint-stretch-borders" x="316" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-normal-topleft" d="M6 192V198H0V198A6 6 0 0 1 6 192Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-top" x="6" y="192" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="west-normal-topright" d="M18 192A6 6 0 0 1 24 198H18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-left" x="0" y="198" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-center" x="6" y="198" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-right" x="18" y="198" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="west-normal-bottomleft" d="M0 210H6V216A6 6 0 0 1 0 210Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-bottom" x="6" y="210" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <path id="west-normal-bottomright" d="M18 210H24A6 6 0 0 1 18 216Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.45"/>
+  <rect id="west-normal-hint-top-margin" x="0" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-right-margin" x="2" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-bottom-margin" x="9" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-left-margin" x="11" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-top-inset" x="18" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-right-inset" x="20" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-bottom-inset" x="27" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-left-inset" x="29" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-normal-hint-stretch-borders" x="36" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-hover-topleft" d="M46 192V198H40V198A6 6 0 0 1 46 192Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-top" x="46" y="192" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="west-hover-topright" d="M58 192A6 6 0 0 1 64 198H58Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-left" x="40" y="198" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-center" x="46" y="198" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-right" x="58" y="198" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="west-hover-bottomleft" d="M40 210H46V216A6 6 0 0 1 40 210Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-bottom" x="46" y="210" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <path id="west-hover-bottomright" d="M58 210H64A6 6 0 0 1 58 216Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.22"/>
+  <rect id="west-hover-hint-top-margin" x="40" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-right-margin" x="42" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-bottom-margin" x="49" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-left-margin" x="51" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-top-inset" x="58" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-right-inset" x="60" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-bottom-inset" x="67" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-left-inset" x="69" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hover-hint-stretch-borders" x="76" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-focus-topleft" d="M86 192V198H80V198A6 6 0 0 1 86 192Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-focus-top" x="86" y="192" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-focus-topright" d="M98 192A6 6 0 0 1 104 198H98Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="west-focus-left"><rect x="80" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="80" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="west-focus-center" x="86" y="198" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-focus-right" x="98" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-focus-bottomleft" d="M80 210H86V216A6 6 0 0 1 80 210Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-focus-bottom" x="86" y="210" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-focus-bottomright" d="M98 210H104A6 6 0 0 1 98 216Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-focus-hint-top-margin" x="80" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-right-margin" x="82" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-bottom-margin" x="89" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-left-margin" x="91" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-top-inset" x="98" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-right-inset" x="100" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-bottom-inset" x="107" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-left-inset" x="109" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-focus-hint-stretch-borders" x="116" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-attention-topleft" d="M126 192V198H120V198A6 6 0 0 1 126 192Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-top" x="126" y="192" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="west-attention-topright" d="M138 192A6 6 0 0 1 144 198H138Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-left" x="120" y="198" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-center" x="126" y="198" width="12" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-right" x="138" y="198" width="6" height="12" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="west-attention-bottomleft" d="M120 210H126V216A6 6 0 0 1 120 210Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-bottom" x="126" y="210" width="12" height="6" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <path id="west-attention-bottomright" d="M138 210H144A6 6 0 0 1 138 216Z" class="ColorScheme-ViewHover" fill="currentColor" fill-opacity="0.42"/>
+  <rect id="west-attention-hint-top-margin" x="120" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-right-margin" x="122" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-bottom-margin" x="129" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-left-margin" x="131" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-top-inset" x="138" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-right-inset" x="140" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-bottom-inset" x="147" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-left-inset" x="149" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-attention-hint-stretch-borders" x="156" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-minimized-topleft" d="M166 192V198H160V198A6 6 0 0 1 166 192Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-top" x="166" y="192" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="west-minimized-topright" d="M178 192A6 6 0 0 1 184 198H178Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-left" x="160" y="198" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-center" x="166" y="198" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-right" x="178" y="198" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="west-minimized-bottomleft" d="M160 210H166V216A6 6 0 0 1 160 210Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-bottom" x="166" y="210" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <path id="west-minimized-bottomright" d="M178 210H184A6 6 0 0 1 178 216Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.24"/>
+  <rect id="west-minimized-hint-top-margin" x="160" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-right-margin" x="162" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-bottom-margin" x="169" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-left-margin" x="171" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-top-inset" x="178" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-right-inset" x="180" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-bottom-inset" x="187" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-left-inset" x="189" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-minimized-hint-stretch-borders" x="196" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="west-progress-topleft" d="M206 192V198H200V198A6 6 0 0 1 206 192Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-progress-top" x="206" y="192" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-progress-topright" d="M218 192A6 6 0 0 1 224 198H218Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="west-progress-left"><rect x="200" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="200" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="west-progress-center" x="206" y="198" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-progress-right" x="218" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-progress-bottomleft" d="M200 210H206V216A6 6 0 0 1 200 210Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-progress-bottom" x="206" y="210" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-progress-bottomright" d="M218 210H224A6 6 0 0 1 218 216Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="west-progress-hint-top-margin" x="200" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-right-margin" x="202" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-bottom-margin" x="209" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-left-margin" x="211" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-top-inset" x="218" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-right-inset" x="220" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-bottom-inset" x="227" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-left-inset" x="229" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-progress-hint-stretch-borders" x="236" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

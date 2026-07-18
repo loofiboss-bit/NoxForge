@@ -4,12 +4,15 @@
 #include <QComboBox>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QHeaderView>
+#include <QHBoxLayout>
 #include <QImage>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QMenu>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QRadioButton>
@@ -18,8 +21,11 @@
 #include <QSpinBox>
 #include <QStyleFactory>
 #include <QTabWidget>
+#include <QTableWidget>
+#include <QTextEdit>
 #include <QToolBar>
 #include <QToolButton>
+#include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -58,7 +64,8 @@ int main(int argc, char **argv)
     rootLayout->addWidget(tabs);
     auto *controls = new QWidget;
     tabs->addTab(controls, QStringLiteral("Controls"));
-    tabs->addTab(new QLabel(QStringLiteral("Secondary identity surface")), QStringLiteral("Details"));
+    auto *dataPage = new QWidget;
+    tabs->addTab(dataPage, QStringLiteral("Data"));
     auto *layout = new QFormLayout(controls);
     layout->setContentsMargins(18, 18, 18, 18);
     layout->setSpacing(10);
@@ -103,7 +110,70 @@ int main(int argc, char **argv)
     list->setMaximumHeight(110);
     layout->addRow(QStringLiteral("Items"), list);
 
+    auto *dataLayout = new QVBoxLayout(dataPage);
+    dataLayout->setContentsMargins(18, 18, 18, 18);
+    dataLayout->setSpacing(12);
+    auto *dataHeading = new QLabel(QStringLiteral("Dense application surfaces"));
+    QFont headingFont = dataHeading->font();
+    headingFont.setBold(true);
+    dataHeading->setFont(headingFont);
+    dataLayout->addWidget(dataHeading);
+    auto *table = new QTableWidget(3, 3);
+    table->setHorizontalHeaderLabels({QStringLiteral("State"), QStringLiteral("Owner"), QStringLiteral("Result")});
+    table->horizontalHeader()->setStretchLastSection(true);
+    const QStringList tableValues = {
+        QStringLiteral("Ready"), QStringLiteral("Forge"), QStringLiteral("Passed"),
+        QStringLiteral("Waiting"), QStringLiteral("Shell"), QStringLiteral("Pending"),
+        QStringLiteral("Disabled"), QStringLiteral("System"), QStringLiteral("Unavailable"),
+    };
+    for (int row = 0; row < 3; ++row)
+        for (int column = 0; column < 3; ++column)
+            table->setItem(row, column, new QTableWidgetItem(tableValues.at(row * 3 + column)));
+    table->setCurrentCell(0, 0);
+    table->setMaximumHeight(150);
+    dataLayout->addWidget(table);
+    auto *tree = new QTreeWidget;
+    tree->setHeaderLabels({QStringLiteral("Component"), QStringLiteral("Coverage")});
+    auto *shell = new QTreeWidgetItem(tree, {QStringLiteral("Plasma shell"), QStringLiteral("Complete")});
+    new QTreeWidgetItem(shell, {QStringLiteral("Panel edges"), QStringLiteral("4")});
+    new QTreeWidgetItem(shell, {QStringLiteral("Scale captures"), QStringLiteral("4")});
+    shell->setExpanded(true);
+    tree->setMaximumHeight(120);
+    dataLayout->addWidget(tree);
+    auto *notes = new QTextEdit;
+    notes->setPlainText(QStringLiteral("Long-form editable content remains readable without nested decoration."));
+    notes->setMaximumHeight(88);
+    dataLayout->addWidget(notes);
+    auto *stateRow = new QHBoxLayout;
+    auto *verticalSlider = new QSlider(Qt::Vertical);
+    verticalSlider->setValue(64);
+    verticalSlider->setMaximumHeight(100);
+    stateRow->addWidget(verticalSlider);
+    auto *verticalScroll = new QScrollBar(Qt::Vertical);
+    verticalScroll->setRange(0, 100);
+    verticalScroll->setPageStep(25);
+    verticalScroll->setValue(40);
+    verticalScroll->setMaximumHeight(100);
+    stateRow->addWidget(verticalScroll);
+    auto *popupButton = new QToolButton;
+    popupButton->setText(QStringLiteral("Popup states"));
+    popupButton->setPopupMode(QToolButton::InstantPopup);
+    auto *popupMenu = new QMenu(popupButton);
+    auto *checkedAction = popupMenu->addAction(QStringLiteral("Checked action"));
+    checkedAction->setCheckable(true);
+    checkedAction->setChecked(true);
+    auto *disabledAction = popupMenu->addAction(QStringLiteral("Disabled action with a deliberately long label"));
+    disabledAction->setEnabled(false);
+    popupButton->setMenu(popupMenu);
+    stateRow->addWidget(popupButton, 1);
+    dataLayout->addLayout(stateRow);
+
+    if (QCoreApplication::arguments().contains(QStringLiteral("--data")))
+        tabs->setCurrentWidget(dataPage);
+
     window.show();
+    if (!QCoreApplication::arguments().contains(QStringLiteral("--data")))
+        primary->setFocus(Qt::OtherFocusReason);
     app.processEvents();
     QImage image(window.size() * window.devicePixelRatioF(), QImage::Format_ARGB32_Premultiplied);
     image.setDevicePixelRatio(window.devicePixelRatioF());

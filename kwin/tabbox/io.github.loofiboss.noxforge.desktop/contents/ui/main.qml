@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// qmllint disable unqualified
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
@@ -8,7 +9,7 @@ import org.kde.plasma.core as PlasmaCore
 
 KWin.TabBoxSwitcher {
     id: tabBox
-    currentIndex: (dialogLoader.object as NoxForgeDialog)?.currentIndex ?? currentIndex
+    currentIndex: (dialogLoader.object as NoxForgeDialog)?.currentIndex ?? 0
 
     Instantiator {
         id: dialogLoader
@@ -24,40 +25,69 @@ KWin.TabBoxSwitcher {
         x: tabBox.screenGeometry.x + (tabBox.screenGeometry.width - width) / 2
         y: tabBox.screenGeometry.y + (tabBox.screenGeometry.height - height) / 2
 
-        mainItem: ListView {
-            id: windowList
+        mainItem: Item {
             width: Math.min(tabBox.screenGeometry.width * 0.72, Kirigami.Units.gridUnit * 54)
-            height: Math.min(contentHeight, tabBox.screenGeometry.height * 0.66)
-            model: tabBox.model
-            spacing: Kirigami.Units.smallSpacing
-            clip: true
-            focus: true
-            highlightMoveDuration: 140
+            height: Math.min(Math.max(windowList.contentHeight, emptyState.implicitHeight), tabBox.screenGeometry.height * 0.66)
+            Tokens { id: tokens }
 
-            delegate: Rectangle {
-                id: windowDelegate
-                required property int index
-                required property string caption
-                required property var icon
-                required property bool minimized
-                width: windowList.width
-                height: Kirigami.Units.gridUnit * 3
-                color: index === windowList.currentIndex ? "#26361D" : "#141B21"
-                border.color: index === windowList.currentIndex ? "#A3FF47" : "#2B3942"
-                border.width: 1
-                radius: 6
+            Text {
+                id: emptyState
+                anchors.centerIn: parent
+                visible: windowList.count === 0
+                text: qsTr("No windows available")
+                color: tokens.textSecondary
+            }
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: Kirigami.Units.smallSpacing
-                    spacing: Kirigami.Units.smallSpacing
-                    Kirigami.Icon { source: windowDelegate.icon; Layout.preferredWidth: 24; Layout.preferredHeight: 24 }
-                    Text { text: windowDelegate.caption; color: windowDelegate.minimized ? "#6F7C82" : "#E8F0F2"; elide: Text.ElideRight; Layout.fillWidth: true }
-                }
-                TapHandler {
-                    onTapped: {
-                        windowList.currentIndex = windowDelegate.index
-                        windowList.model.activate(windowDelegate.index)
+            ListView {
+                id: windowList
+                anchors.fill: parent
+                model: tabBox.model
+                spacing: Kirigami.Units.smallSpacing
+                clip: true
+                focus: true
+                boundsBehavior: Flickable.StopAtBounds
+                highlightMoveDuration: tokens.hoverDuration
+                LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
+                LayoutMirroring.childrenInherit: true
+
+                delegate: Rectangle {
+                    id: windowDelegate
+                    required property int index
+                    required property string caption
+                    required property var icon
+                    required property bool minimized
+                    width: windowList.width
+                    height: Kirigami.Units.gridUnit * 3
+                    color: index === windowList.currentIndex ? tokens.surfaceSelected : tokens.surface
+                    border.color: index === windowList.currentIndex ? tokens.borderStrong : tokens.border
+                    border.width: tokens.borderWidth
+                    radius: tokens.radius
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: tokens.activeMarkerWidth
+                        height: parent.height - Kirigami.Units.gridUnit
+                        color: tokens.accent
+                        visible: windowDelegate.index === windowList.currentIndex
+                    }
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.smallSpacing * 2
+                        spacing: Kirigami.Units.smallSpacing
+                        Kirigami.Icon { source: windowDelegate.icon; Layout.preferredWidth: 24; Layout.preferredHeight: 24 }
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+                            Text { text: windowDelegate.caption; color: windowDelegate.minimized ? tokens.textSecondary : tokens.textPrimary; elide: Text.ElideRight; Layout.fillWidth: true }
+                            Text { text: qsTr("Minimized"); visible: windowDelegate.minimized; color: tokens.textDisabled; font.pixelSize: 11 }
+                        }
+                    }
+                    TapHandler {
+                        onTapped: {
+                            windowList.currentIndex = windowDelegate.index
+                            windowList.model.activate(windowDelegate.index)
+                        }
                     }
                 }
             }

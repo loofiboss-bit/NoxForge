@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PhaseNineIntegrationTests(unittest.TestCase):
-    def test_all_public_metadata_is_v1(self) -> None:
+    def test_all_public_metadata_is_v2(self) -> None:
         self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "2.0.0")
         self.assertEqual(json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))["version"], "2.0.0")
         for path in (
@@ -36,6 +36,8 @@ class PhaseNineIntegrationTests(unittest.TestCase):
         self.assertEqual(parser["SddmGreeterTheme"]["QtVersion"], "6")
         qml = (root / "Main.qml").read_text(encoding="utf-8")
         for value in ("userModel", "sessionModel", "keyboard.layouts", "sddm.login", "sddm.powerOff"):
+            self.assertIn(value, qml)
+        for value in ('qsTr("Username")', 'qsTr("Password")', "Accessible.name", "activeFocusOnTab"):
             self.assertIn(value, qml)
         self.assertNotIn("Breeze", qml)
 

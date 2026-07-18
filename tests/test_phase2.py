@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -21,6 +22,14 @@ def ids(path: Path) -> set[str]:
 
 
 class PhaseTwoTests(unittest.TestCase):
+    def test_plasma_67_family_contract_is_complete(self) -> None:
+        contract = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["plasmaVersion"], "6.7")
+        self.assertEqual(len(contract["widgetFamilies"]), 43)
+        for family in contract["widgetFamilies"]:
+            self.assertTrue((THEME / f"widgets/{family}.svg").is_file(), family)
+        self.assertTrue((THEME / "weather/wind-arrows.svg").is_file())
+
     def test_background_frames_and_masks_are_complete(self) -> None:
         for relative in ("dialogs/background.svg", "widgets/panel-background.svg", "widgets/background.svg", "widgets/tooltip.svg"):
             with self.subTest(relative=relative):
@@ -34,6 +43,13 @@ class PhaseTwoTests(unittest.TestCase):
                 found = ids(THEME / relative)
                 for state in states:
                     self.assertTrue({f"{state}-{position}" for position in POSITIONS}.issubset(found))
+
+    def test_task_states_cover_every_panel_edge(self) -> None:
+        found = ids(THEME / "widgets/tasks.svg")
+        for orientation in ("north", "south", "east", "west"):
+            for state in EXPECTED_STATES["widgets/tasks.svg"]:
+                prefix = f"{orientation}-{state}"
+                self.assertTrue({f"{prefix}-{position}" for position in POSITIONS}.issubset(found))
 
     def test_assets_use_system_and_accent_classes(self) -> None:
         for path in sorted(THEME.rglob("*.svg")):

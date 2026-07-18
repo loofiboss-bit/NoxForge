@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <title>NoxForge grabbing cursor source</title>
+  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 19v-8c0-2 3-2 3 0V9c0-2 3-2 3 0v2-1c0-2 3-2 3 0v2-1c0-2 3-2 3 0v5c0 4-3 6-7 6-2 0-4-1-5-3z"/><path class="accent-line" d="M9 13h8"/>
+  </g>
+  <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
+</svg>

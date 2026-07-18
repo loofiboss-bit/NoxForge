@@ -9,6 +9,8 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
   <path id="normal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="1"/>
@@ -24,6 +26,11 @@
   <rect id="normal-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="normal-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="hover-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.22"/>
   <rect id="hover-top" x="46" y="0" width="12" height="6" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.22"/>
   <path id="hover-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.22"/>
@@ -37,32 +44,47 @@
   <rect id="hover-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="hover-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="hover-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="focus-topleft" d="M86 0V6H80V6A6 6 0 0 1 86 0Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <rect id="focus-top" x="86" y="0" width="12" height="6" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <path id="focus-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <rect id="focus-left" x="80" y="6" width="6" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <rect id="focus-center" x="86" y="6" width="12" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <rect id="focus-right" x="98" y="6" width="6" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <path id="focus-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <rect id="focus-bottom" x="86" y="18" width="12" height="6" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
-  <path id="focus-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.28"/>
+  <rect id="hover-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hover-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="focus-topleft" d="M84 0H86V6H80V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-top" x="86" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="focus-left"><rect x="80" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="80" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="focus-center" x="86" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-right" x="98" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="focus-bottom" x="86" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="focus-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="focus-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="focus-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="pressed-topleft" d="M124 0H126V6H120V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <rect id="pressed-top" x="126" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <path id="pressed-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <rect id="pressed-left" x="120" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <rect id="pressed-center" x="126" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <rect id="pressed-right" x="138" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <path id="pressed-bottomleft" d="M120 18H126V24A6 6 0 0 1 120 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <rect id="pressed-bottom" x="126" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
-  <path id="pressed-bottomright" d="M138 18H144A6 6 0 0 1 138 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.38"/>
+  <rect id="focus-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="focus-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="pressed-topleft" d="M124 0H126V6H120V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="pressed-top" x="126" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="pressed-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="pressed-left"><rect x="120" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="120" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="pressed-center" x="126" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="pressed-right" x="138" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="pressed-bottomleft" d="M120 18H126V24A6 6 0 0 1 120 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="pressed-bottom" x="126" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="pressed-bottomright" d="M138 18H144A6 6 0 0 1 138 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="pressed-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="pressed-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="pressed-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="pressed-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-top-inset" x="138" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-right-inset" x="140" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-bottom-inset" x="147" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-left-inset" x="149" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="pressed-hint-stretch-borders" x="156" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <path id="toolbutton-hover-topleft" d="M166 0V6H160V6A6 6 0 0 1 166 0Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.2"/>
   <rect id="toolbutton-hover-top" x="166" y="0" width="12" height="6" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.2"/>
   <path id="toolbutton-hover-topright" d="M178 0A6 6 0 0 1 184 6H178Z" class="ColorScheme-ButtonHover" fill="currentColor" fill-opacity="0.2"/>
@@ -76,30 +98,45 @@
   <rect id="toolbutton-hover-hint-right-margin" x="162" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-hover-hint-bottom-margin" x="169" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-hover-hint-left-margin" x="171" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="toolbutton-focus-topleft" d="M206 0V6H200V6A6 6 0 0 1 206 0Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <rect id="toolbutton-focus-top" x="206" y="0" width="12" height="6" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <path id="toolbutton-focus-topright" d="M218 0A6 6 0 0 1 224 6H218Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <rect id="toolbutton-focus-left" x="200" y="6" width="6" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <rect id="toolbutton-focus-center" x="206" y="6" width="12" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <rect id="toolbutton-focus-right" x="218" y="6" width="6" height="12" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <path id="toolbutton-focus-bottomleft" d="M200 18H206V24A6 6 0 0 1 200 18Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <rect id="toolbutton-focus-bottom" x="206" y="18" width="12" height="6" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
-  <path id="toolbutton-focus-bottomright" d="M218 18H224A6 6 0 0 1 218 24Z" class="ColorScheme-ButtonFocus" fill="currentColor" fill-opacity="0.25"/>
+  <rect id="toolbutton-hover-hint-top-inset" x="178" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-hover-hint-right-inset" x="180" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-hover-hint-bottom-inset" x="187" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-hover-hint-left-inset" x="189" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-hover-hint-stretch-borders" x="196" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="toolbutton-focus-topleft" d="M204 0H206V6H200V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-focus-top" x="206" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-focus-topright" d="M218 0A6 6 0 0 1 224 6H218Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="toolbutton-focus-left"><rect x="200" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="200" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="toolbutton-focus-center" x="206" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-focus-right" x="218" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-focus-bottomleft" d="M200 18H206V24A6 6 0 0 1 200 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-focus-bottom" x="206" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-focus-bottomright" d="M218 18H224A6 6 0 0 1 218 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="toolbutton-focus-hint-top-margin" x="200" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-focus-hint-right-margin" x="202" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-focus-hint-bottom-margin" x="209" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-focus-hint-left-margin" x="211" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <path id="toolbutton-pressed-topleft" d="M244 0H246V6H240V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <rect id="toolbutton-pressed-top" x="246" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <path id="toolbutton-pressed-topright" d="M258 0A6 6 0 0 1 264 6H258Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <rect id="toolbutton-pressed-left" x="240" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <rect id="toolbutton-pressed-center" x="246" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <rect id="toolbutton-pressed-right" x="258" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <path id="toolbutton-pressed-bottomleft" d="M240 18H246V24A6 6 0 0 1 240 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <rect id="toolbutton-pressed-bottom" x="246" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
-  <path id="toolbutton-pressed-bottomright" d="M258 18H264A6 6 0 0 1 258 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.35"/>
+  <rect id="toolbutton-focus-hint-top-inset" x="218" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-focus-hint-right-inset" x="220" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-focus-hint-bottom-inset" x="227" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-focus-hint-left-inset" x="229" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-focus-hint-stretch-borders" x="236" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <path id="toolbutton-pressed-topleft" d="M244 0H246V6H240V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-pressed-top" x="246" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-pressed-topright" d="M258 0A6 6 0 0 1 264 6H258Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="toolbutton-pressed-left"><rect x="240" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="240" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="toolbutton-pressed-center" x="246" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-pressed-right" x="258" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-pressed-bottomleft" d="M240 18H246V24A6 6 0 0 1 240 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <rect id="toolbutton-pressed-bottom" x="246" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="toolbutton-pressed-bottomright" d="M258 18H264A6 6 0 0 1 258 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="toolbutton-pressed-hint-top-margin" x="240" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-pressed-hint-right-margin" x="242" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-pressed-hint-bottom-margin" x="249" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="toolbutton-pressed-hint-left-margin" x="251" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-pressed-hint-top-inset" x="258" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-pressed-hint-right-inset" x="260" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-pressed-hint-bottom-inset" x="267" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-pressed-hint-left-inset" x="269" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="toolbutton-pressed-hint-stretch-borders" x="276" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

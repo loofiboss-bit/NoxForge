@@ -3,22 +3,33 @@
 
 from __future__ import annotations
 
+import argparse
+import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
-SVG_HEADER = """<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
+COLORS = TOKENS["colors"]
+GLYPHS = json.loads((ROOT / "design/plasma-glyphs.json").read_text(encoding="utf-8"))
+CHECK_MODE = False
+DRIFT: list[str] = []
+
+SVG_HEADER = f"""<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background { color: #141B21; }
-      .ColorScheme-ViewBackground { color: #0E1318; }
-      .ColorScheme-ButtonBackground { color: #1A232B; }
-      .ColorScheme-Text { color: #E8F0F2; }
-      .ColorScheme-Highlight { color: #A3FF47; }
-      .ColorScheme-ViewHover { color: #22D3EE; }
-      .ColorScheme-ButtonHover { color: #22D3EE; }
-      .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .ColorScheme-Background {{ color: {COLORS['surface']}; }}
+      .ColorScheme-ViewBackground {{ color: {COLORS['background']}; }}
+      .ColorScheme-ButtonBackground {{ color: {COLORS['surfaceRaised']}; }}
+      .ColorScheme-Text {{ color: {COLORS['textPrimary']}; }}
+      .ColorScheme-Highlight {{ color: {COLORS['accent']}; }}
+      .ColorScheme-ViewHover {{ color: {COLORS['detailCyan']}; }}
+      .ColorScheme-ButtonHover {{ color: {COLORS['detailCyan']}; }}
+      .ColorScheme-ButtonFocus {{ color: {COLORS['accent']}; }}
+      .NoxForge-Selected {{ color: {COLORS['surfaceSelected']}; }}
+      .NoxForge-Border {{ color: {COLORS['border']}; }}
     ]]></style>
   </defs>
 """
@@ -38,7 +49,7 @@ def paint_attrs(paint: Paint) -> str:
     return f'class="{paint.css_class}" fill="currentColor" fill-opacity="{paint.opacity:g}"'
 
 
-def frame(prefix: str, x: int, y: int, paint: Paint, *, notch: bool = False) -> str:
+def frame(prefix: str, x: int, y: int, paint: Paint, *, notch: bool = False, marker: bool = False) -> str:
     """Return a self-contained 6/12/6 nine-slice frame."""
     attrs = paint_attrs(paint)
     top_left = (
@@ -46,12 +57,18 @@ def frame(prefix: str, x: int, y: int, paint: Paint, *, notch: bool = False) -> 
         if notch
         else f'<path id="{element_id(prefix, "topleft")}" d="M{x + 6} {y}V{y + 6}H{x}V{y + 6}A6 6 0 0 1 {x + 6} {y}Z" {attrs}/>'
     )
+    left = f'<rect id="{element_id(prefix, "left")}" x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>'
+    if marker:
+        left = (
+            f'<g id="{element_id(prefix, "left")}"><rect x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>'
+            f'<rect x="{x}" y="{y + 7}" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>'
+        )
     return "\n".join(
         [
             top_left,
             f'<rect id="{element_id(prefix, "top")}" x="{x + 6}" y="{y}" width="12" height="6" {attrs}/>',
             f'<path id="{element_id(prefix, "topright")}" d="M{x + 18} {y}A6 6 0 0 1 {x + 24} {y + 6}H{x + 18}Z" {attrs}/>',
-            f'<rect id="{element_id(prefix, "left")}" x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>',
+            left,
             f'<rect id="{element_id(prefix, "center")}" x="{x + 6}" y="{y + 6}" width="12" height="12" {attrs}/>',
             f'<rect id="{element_id(prefix, "right")}" x="{x + 18}" y="{y + 6}" width="6" height="12" {attrs}/>',
             f'<path id="{element_id(prefix, "bottomleft")}" d="M{x} {y + 18}H{x + 6}V{y + 24}A6 6 0 0 1 {x} {y + 18}Z" {attrs}/>',
@@ -69,6 +86,11 @@ def margins(prefix: str, x: int, y: int, size: int = 6) -> str:
             f'<rect id="{element_id(prefix, "hint-right-margin")}" x="{x + 2}" y="{y}" width="{size}" height="1" {hidden}/>',
             f'<rect id="{element_id(prefix, "hint-bottom-margin")}" x="{x + 9}" y="{y}" width="1" height="{size}" {hidden}/>',
             f'<rect id="{element_id(prefix, "hint-left-margin")}" x="{x + 11}" y="{y}" width="{size}" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-top-inset")}" x="{x + 18}" y="{y}" width="1" height="{size}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-right-inset")}" x="{x + 20}" y="{y}" width="{size}" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-bottom-inset")}" x="{x + 27}" y="{y}" width="1" height="{size}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-left-inset")}" x="{x + 29}" y="{y}" width="{size}" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-stretch-borders")}" x="{x + 36}" y="{y}" width="1" height="1" {hidden}/>',
         ]
     )
 
@@ -77,20 +99,23 @@ def svg(body: str) -> str:
     return SVG_HEADER + "  " + body.replace("\n", "\n  ") + "\n</svg>\n"
 
 
-def background(paint: Paint, *, notch: bool = True, mask: bool = True) -> str:
+def background(paint: Paint, *, notch: bool = False, mask: bool = True) -> str:
     parts = [frame("", 0, 0, paint, notch=notch), margins("", 0, 32)]
     if mask:
         parts.extend([frame("mask", 40, 0, Paint("ColorScheme-Text"), notch=notch), margins("mask", 40, 32)])
     return svg("\n".join(parts))
 
 
-def state_sheet(states: list[tuple[str, Paint]], *, notch_states: set[str] | None = None) -> str:
+def state_sheet(states: list[tuple[str, Paint]], *, notch_states: set[str] | None = None,
+                marker_states: set[str] | None = None) -> str:
     parts: list[str] = []
     notch_states = notch_states or set()
+    marker_states = marker_states or set()
     for index, (name, paint) in enumerate(states):
         x = (index % 8) * 40
         y = (index // 8) * 64
-        parts.extend([frame(name, x, y, paint, notch=name in notch_states), margins(name, x, y + 32, 4)])
+        parts.extend([frame(name, x, y, paint, notch=name in notch_states,
+                            marker=name in marker_states), margins(name, x, y + 32, 4)])
     return svg("\n".join(parts))
 
 
@@ -124,19 +149,12 @@ def control_sheet(states: list[tuple[str, Paint]]) -> str:
 
 def semantic_symbols(names: list[str]) -> str:
     """Draw compact original symbols from the versioned contract for shell-owned semantic element IDs."""
-    import json
-    contract_path = ROOT / "design/plasma-semantic-contract.json"
-    try:
-        contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    except Exception:
-        contract = {}
-
     body: list[str] = []
     for index, name in enumerate(names):
         x = (index % 12) * 32
         y = (index // 12) * 32
         css_class = "ColorScheme-Highlight" if any(word in name for word in ("active", "hover", "pressed", "event")) else "ColorScheme-Text"
-        path_d = contract.get(name, "M12 12l1 1")
+        path_d = GLYPHS.get(name, "M12 12l1 1")
         body.append(
             f'<g id="{name}" transform="translate({x} {y})" class="{css_class}" '
             'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">'
@@ -147,14 +165,18 @@ def semantic_symbols(names: list[str]) -> str:
 
 def write(relative: str, content: str) -> None:
     path = THEME / relative
+    if CHECK_MODE:
+        if not path.is_file() or path.read_text(encoding="utf-8") != content:
+            DRIFT.append(relative)
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
 def main() -> None:
-    write("dialogs/background.svg", background(Paint("ColorScheme-Background", 0.98)))
+    write("dialogs/background.svg", background(Paint("ColorScheme-Background", 0.98), notch=True))
     write("widgets/panel-background.svg", background(Paint("ColorScheme-Background", 0.96)))
-    write("widgets/background.svg", background(Paint("ColorScheme-Background", 0.98)))
+    write("widgets/background.svg", background(Paint("ColorScheme-Background", 0.98), notch=True))
     write("widgets/tooltip.svg", background(Paint("ColorScheme-ButtonBackground", 0.98), notch=False))
     write(
         "widgets/button.svg",
@@ -162,13 +184,14 @@ def main() -> None:
             [
                 ("normal", Paint("ColorScheme-ButtonBackground")),
                 ("hover", Paint("ColorScheme-ButtonHover", 0.22)),
-                ("focus", Paint("ColorScheme-ButtonFocus", 0.28)),
-                ("pressed", Paint("ColorScheme-Highlight", 0.38)),
+                ("focus", Paint("NoxForge-Selected")),
+                ("pressed", Paint("NoxForge-Selected")),
                 ("toolbutton-hover", Paint("ColorScheme-ButtonHover", 0.2)),
-                ("toolbutton-focus", Paint("ColorScheme-ButtonFocus", 0.25)),
-                ("toolbutton-pressed", Paint("ColorScheme-Highlight", 0.35)),
+                ("toolbutton-focus", Paint("NoxForge-Selected")),
+                ("toolbutton-pressed", Paint("NoxForge-Selected")),
             ],
-            notch_states={"pressed", "toolbutton-pressed"},
+            notch_states={"focus", "pressed", "toolbutton-focus", "toolbutton-pressed"},
+            marker_states={"focus", "pressed", "toolbutton-focus", "toolbutton-pressed"},
         ),
     )
     write(
@@ -177,12 +200,27 @@ def main() -> None:
             [
                 ("normal", Paint("ColorScheme-ButtonBackground", 0.45)),
                 ("hover", Paint("ColorScheme-ViewHover", 0.22)),
-                ("focus", Paint("ColorScheme-Highlight", 0.32)),
+                ("focus", Paint("NoxForge-Selected")),
                 ("attention", Paint("ColorScheme-ViewHover", 0.42)),
                 ("minimized", Paint("ColorScheme-ButtonBackground", 0.24)),
-                ("progress", Paint("ColorScheme-Highlight", 0.5)),
+                ("progress", Paint("NoxForge-Selected")),
+            ] + [
+                (f"{orientation}-{state}", paint)
+                for orientation in ("north", "south", "east", "west")
+                for state, paint in (
+                    ("normal", Paint("ColorScheme-ButtonBackground", 0.45)),
+                    ("hover", Paint("ColorScheme-ViewHover", 0.22)),
+                    ("focus", Paint("NoxForge-Selected")),
+                    ("attention", Paint("ColorScheme-ViewHover", 0.42)),
+                    ("minimized", Paint("ColorScheme-ButtonBackground", 0.24)),
+                    ("progress", Paint("NoxForge-Selected")),
+                )
             ],
             notch_states={"focus", "progress"},
+            marker_states={"focus", "progress"} | {
+                f"{orientation}-{state}" for orientation in ("north", "south", "east", "west")
+                for state in ("focus", "progress")
+            },
         ),
     )
     write(
@@ -191,10 +229,11 @@ def main() -> None:
             [
                 ("normal", Paint("ColorScheme-ViewBackground", 0.08)),
                 ("hover", Paint("ColorScheme-ViewHover", 0.18)),
-                ("selected", Paint("ColorScheme-Highlight", 0.32)),
-                ("selected+hover", Paint("ColorScheme-Highlight", 0.42)),
+                ("selected", Paint("NoxForge-Selected")),
+                ("selected+hover", Paint("NoxForge-Selected")),
             ],
             notch_states={"selected", "selected+hover"},
+            marker_states={"selected", "selected+hover"},
         ),
     )
     write(
@@ -203,9 +242,10 @@ def main() -> None:
             [
                 ("base", Paint("ColorScheme-ViewBackground", 0.96)),
                 ("hover", Paint("ColorScheme-ViewHover", 0.16)),
-                ("focus", Paint("ColorScheme-Highlight", 0.24)),
+                ("focus", Paint("NoxForge-Selected")),
             ],
             notch_states={"focus"},
+            marker_states={"focus"},
         ),
     )
     write("widgets/plasmoidheading.svg", heading())
@@ -261,7 +301,7 @@ def main() -> None:
                 ("slider", Paint("ColorScheme-Text", 0.36)),
                 ("mouseover-slider", Paint("ColorScheme-Highlight", 0.62)),
             ]
-        ),
+        ).replace("</svg>", '<rect id="hint-scrollbar-size" x="220" y="220" width="10" height="10" fill="#000" fill-opacity="0"/></svg>'),
     )
     write(
         "widgets/slider.svg",
@@ -271,7 +311,7 @@ def main() -> None:
                 ("groove-highlight", Paint("ColorScheme-Highlight", 0.78)),
             ]
         )
-        .replace("</svg>", '<circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
+        .replace("</svg>", '<rect id="hint-handle-size" x="160" y="160" width="18" height="18" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
     )
     write(
         "widgets/switch.svg",
@@ -281,7 +321,7 @@ def main() -> None:
                 ("active", Paint("ColorScheme-Highlight", 0.72)),
             ]
         )
-        .replace("</svg>", '<circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
+        .replace("</svg>", '<rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
     )
     write(
         "widgets/radiobutton.svg",
@@ -350,7 +390,7 @@ def main() -> None:
         ("translucent/widgets/panel-background.svg", Paint("ColorScheme-Background", 0.9), False),
         ("translucent/widgets/tooltip.svg", Paint("ColorScheme-ButtonBackground", 0.94), False),
     ):
-        write(relative, background(paint, notch="tooltip" not in relative, mask=mask))
+        write(relative, background(paint, notch="dialogs/" in relative, mask=mask))
 
     symbol_assets = {
         "widgets/calendar.svg": ["event"],
@@ -383,6 +423,25 @@ def main() -> None:
     for relative, names in symbol_assets.items():
         write(relative, semantic_symbols(names))
 
+    write("widgets/dragger.svg", state_sheet([
+        ("vertical", Paint("ColorScheme-Text", 0.4)),
+        ("horizontal", Paint("ColorScheme-Text", 0.4)),
+    ]))
+    write("widgets/glowbar.svg", state_sheet([
+        (edge, Paint("ColorScheme-Highlight", 0.72)) for edge in ("north", "south", "east", "west")
+    ], notch_states={"north", "south", "east", "west"}))
+    write("widgets/margins-highlight.svg", state_sheet([
+        (edge, Paint("ColorScheme-Highlight", 0.24)) for edge in ("north", "south", "east", "west")
+    ]))
+    write("widgets/monitor.svg", state_sheet([
+        ("monitor", Paint("ColorScheme-ButtonBackground", 0.96)),
+        ("monitor-active", Paint("NoxForge-Selected")),
+    ], notch_states={"monitor-active"}, marker_states={"monitor-active"}))
+    write("weather/wind-arrows.svg", semantic_symbols([
+        "wind-north", "wind-north-east", "wind-east", "wind-south-east",
+        "wind-south", "wind-south-west", "wind-west", "wind-north-west",
+    ]))
+
     write("widgets/plot-background.svg", background(Paint("ColorScheme-ViewBackground"), notch=False, mask=False))
     write("widgets/translucentbackground.svg", background(Paint("ColorScheme-Background", 0.9)))
     write("widgets/pager.svg", state_sheet([
@@ -401,8 +460,15 @@ def main() -> None:
             ("bar-inactive", Paint("ColorScheme-Text", 0.18)),
             ("bar-active", Paint("ColorScheme-Highlight", 0.78)),
         ]))
-    print(f"Generated {len(list(THEME.rglob('*.svg')))} original Plasma Style SVG assets")
+    if CHECK_MODE and DRIFT:
+        raise SystemExit("stale Plasma SVG assets: " + ", ".join(DRIFT))
+    if not CHECK_MODE:
+        print(f"Generated {len(list(THEME.rglob('*.svg')))} original Plasma Style SVG assets")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    arguments = parser.parse_args()
+    CHECK_MODE = arguments.check
     main()
