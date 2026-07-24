@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "candidate": {
     "version": "3.0.0",
-    "sourceCommit": "cbcdef6f1456c682049e6653b88586938231fd2d",
+    "sourceCommit": "472726d4b3a51000a5f7f82515dfabbd4da5cb02",
+    "sourceRef": "v3.0.0",
     "worktreeDirty": true,
     "package": "local Fedora RPM candidate"
   },
@@ -14,11 +15,11 @@
     "qt": "6.11.1",
     "kernel": "7.1.4-204.fc44.x86_64",
     "session": "Wayland",
-    "displayScale": "not collected from active user session",
-    "layout": "not collected from active user session",
-    "panelEdge": "not collected from active user session",
-    "blur": "not collected from active user session",
-    "rtl": "not collected from active user session"
+    "displayScale": "1.0 and 1.4 in isolated virtual outputs",
+    "layout": "isolated default panel plus explicit compact layout",
+    "panelEdge": "bottom, top, left, and right",
+    "blur": "blocked by virtual framebuffer",
+    "rtl": "requested live but shell did not mirror; offscreen matrix passed"
   },
   "automatedEvidence": {
     "result": "passed",
@@ -28,115 +29,106 @@
   "liveCases": [
     {
       "id": "global-theme-discovery-apply",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Requires explicit application in a disposable Fedora KDE user session.",
-      "blocker": "No disposable graphical test user or VM is available; the active maintainer desktop must remain unchanged."
+      "result": "passed",
+      "evidence": "live-plasma-multi-output.png",
+      "observation": "The theme applied in an isolated KWin/Plasma Wayland session without changing the maintainer desktop."
     },
     {
       "id": "existing-panel-preservation",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Requires before/after panel state in the same disposable session.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-session.md",
+      "observation": "The panel configuration hash and panel count were identical before and after Global Theme application."
     },
     {
       "id": "compact-layout-all-panel-edges",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Requires explicit optional layout application and every panel edge.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-panel-edges.png",
+      "observation": "The isolated 40 px panel rendered at bottom, top, left, and right without a visible seam."
     },
     {
       "id": "plasma-popups-blur-on-off",
       "result": "blocked",
       "evidence": null,
-      "observation": "Solid and translucent assets pass structural checks, but KWin composition is not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "observation": "Solid and translucent assets pass structural checks, but the virtual framebuffer cannot prove blur quality.",
+      "blocker": "No isolated hardware-composited blur output is available."
     },
     {
       "id": "qt-controls-100-140",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "The offscreen 100/140 percent gallery passes; real-session composition remains unqualified.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-qt-wayland-140.png",
+      "observation": "System Settings rendered with the native NoxForge Qt style and Aurorae decoration at 100 and 140 percent."
     },
     {
       "id": "keyboard-navigation-focus",
       "result": "blocked",
       "evidence": null,
       "observation": "Focus rendering passes offscreen; keyboard-only interaction is not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "blocker": "The isolated compositor has no keyboard-injection tool."
     },
     {
       "id": "rtl-shell",
       "result": "blocked",
       "evidence": null,
       "observation": "RTL Qt geometry passes offscreen; live Plasma mirroring is not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "blocker": "The requested live RTL environment did not mirror the Plasma shell."
     },
     {
       "id": "no-visible-fallback-artwork",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Package metadata has no explicit fallback, but runtime rendering must be observed.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-plasma-multi-output.png",
+      "observation": "The isolated Plasma desktop, panel, launcher icons, wallpaper, and system-tray surfaces rendered without visible missing artwork."
     },
     {
       "id": "aurorae-window-states",
       "result": "blocked",
       "evidence": null,
       "observation": "Aurorae sprite states validate structurally; KWin composition is not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "blocker": "Keyboard/pointer injection is unavailable for hover, pressed, inactive, and maximized transitions."
     },
     {
       "id": "alt-tab-long-multiple-empty",
       "result": "blocked",
       "evidence": null,
       "observation": "Requires live KWin switcher behavior.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "blocker": "A held Alt+Tab cycle cannot be injected into the isolated compositor."
     },
     {
       "id": "icon-required-sizes",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Physical and rendered icon evidence passes; live shell clarity remains unqualified.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-panel-edges.png",
+      "observation": "Required panel icons remained distinct and legible on horizontal and vertical live panels; the optical-size contact sheet covers exact sizes."
     },
     {
       "id": "cursor-100-140-200",
       "result": "blocked",
       "evidence": null,
       "observation": "Physical cursor files and animation frames validate; live compositor scaling is not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "blocker": "The virtual compositor exposes no controllable pointer for live scale captures."
     },
     {
       "id": "sound-routing-volume",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Ogg streams validate; audible routing and restraint require output hardware.",
-      "blocker": "No isolated audio test environment is available."
+      "result": "passed",
+      "evidence": "live-session.md",
+      "observation": "PipeWire routed the volume event successfully and its true peak measured -18.1 dBFS."
     },
     {
       "id": "splash-logout-lock",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "QML and offscreen surfaces pass; live shell flows are not exercised.",
-      "blocker": "No disposable graphical test user or VM is available."
+      "result": "passed",
+      "evidence": "live-logout-test.png",
+      "observation": "The real lock greeter testing mode, logout greeter, and splash process rendered successfully; each capture is indexed in live-session.md."
     },
     {
       "id": "multi-monitor-placement",
-      "result": "blocked",
-      "evidence": null,
-      "observation": "Requires an isolated multi-output Wayland setup.",
-      "blocker": "No disposable multi-monitor test environment is available."
+      "result": "passed",
+      "evidence": "live-plasma-multi-output.png",
+      "observation": "KWin composed two independent 1280 by 720 virtual Wayland outputs without panel or wallpaper placement failure."
     },
     {
       "id": "sddm-login-flows",
       "result": "blocked",
       "evidence": null,
-      "observation": "The runtime-mocked QML surface passes; authentication, session, error, and power flows are not exercised.",
-      "blocker": "No recoverable SDDM VM or test-mode login environment is available."
+      "observation": "The real SDDM greeter rendered the NoxForge theme in test mode, including user, session, input, and power surfaces.",
+      "blocker": "Test mode cannot prove PAM authentication or real power actions, and the maintainer login screen was not changed."
     }
   ]
 }

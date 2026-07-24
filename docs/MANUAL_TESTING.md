@@ -7,8 +7,8 @@ Capture evidence before any tag or publication. Results must be `passed`,
 a live result.
 
 Current candidate: v3 implementation worktree on Fedora KDE 44, 2026-07-24.
-Live qualification is **Blocked** because no disposable graphical user or VM is
-available. The active maintainer desktop has not been changed.
+The available live matrix was run in isolated KWin/Plasma Wayland sessions with
+temporary HOME/XDG state. The active maintainer desktop was not changed.
 
 ## Structural and offscreen checks (not full interactive gate)
 
@@ -20,22 +20,22 @@ structural evidence and do not prove a composed window decoration.
 
 | Check | 100% | 140% | Notes |
 | --- | --- | --- | --- |
-| NoxForge appears and applies from Global Theme | Blocked | Blocked | Requires a disposable session and explicit selection |
-| Existing panel is preserved without resetLayout | Blocked | Blocked | Requires before/after state in a disposable session |
-| Optional compact panel has no edge seams | Blocked | Blocked | Explicit optional layout in a disposable session only |
+| NoxForge appears and applies from Global Theme | Passed | Passed | Isolated live apply; two-output capture recorded |
+| Existing panel is preserved without resetLayout | Passed | Passed | Panel hash and count were identical before/after |
+| Optional compact panel has no edge seams | Passed | Passed | Bottom, top, left, and right captured |
 | Popups and dialogs read correctly with blur on/off | Blocked | Blocked | Solid/translucent assets pass; live KWin blur is unqualified |
-| Qt buttons, inputs, menus, tabs and lists show every state | Offscreen | Offscreen | Real widget gallery rendered at 100/125/140/200%; controls and data page are non-empty and unclipped |
+| Qt buttons, inputs, menus, tabs and lists show every state | Passed | Passed | Native style composed live at 100/140%; full state matrix also passes offscreen |
 | Keyboard focus and keyboard-only navigation remain visible | Blocked | Blocked | Focus ring passes offscreen; interaction requires a disposable session |
 | RTL mirrors asymmetric controls and Forge Notch safely | Offscreen | Blocked | Eight-capture matrix passes; live shell mirroring is unqualified |
-| Plasma widgets load no visible default-theme fallback | Blocked | Blocked | Structural no-fallback checks pass; runtime observation is required |
+| Plasma widgets load no visible default-theme fallback | Passed | Passed | Live Plasma shell, horizontal/vertical panels, and two outputs captured |
 | Aurorae active/inactive/maximized/button states are intact | Blocked | Blocked | Sprite validation passes; live KWin is unqualified |
 | Alt+Tab switcher handles icons, long titles and no windows | Blocked | Blocked | Requires live KWin |
-| Icons are clear at 16, 22, 24, 32 and 48 px | Offscreen | Offscreen | Contact sheet uses physical 16/22px assets and scalable 24/32/48px renders |
+| Icons are clear at 16, 22, 24, 32 and 48 px | Passed | Passed | Live horizontal/vertical panels plus exact-size contact sheet |
 | Cursors are clear at 100%, 140% and 200% | Blocked | Blocked | Physical files pass; live compositor scaling is unqualified |
-| System sounds are restrained and correctly routed | Blocked | Blocked | 32 Ogg events pass; audible routing is unqualified |
-| Splash, logout and lock-screen surfaces remain coherent | Blocked | Blocked | QML passes structurally; live Plasma is unqualified |
+| System sounds are restrained and correctly routed | Passed | Passed | PipeWire route succeeded; volume event true peak was -18.1 dBFS |
+| Splash, logout and lock-screen surfaces remain coherent | Passed | Passed | Real testing/windowed processes captured in isolated session |
 | SDDM user/session/layout/error/power flows work | Blocked | Blocked | Runtime-mocked preview passes; recoverable live SDDM is unavailable |
-| Multi-monitor placement and all panel edges work | Blocked | Blocked | Requires an isolated multi-output session |
+| Multi-monitor placement and all panel edges work | Passed | Passed | Two virtual outputs and all four panel edges captured |
 
 ## Evidence captured (2026-07-18, local offscreen gate)
 
@@ -49,6 +49,8 @@ structural evidence and do not prove a composed window decoration.
 
 Current automated results are summarized in
 `docs/evidence/v3/automated-gate.md` and validated separately from live cases.
+Available live results and limitations are recorded in
+`docs/evidence/v3/live-session.md`.
 
 ## Remaining interactive checks (require live Plasma application)
 
