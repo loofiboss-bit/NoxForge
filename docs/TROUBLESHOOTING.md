@@ -46,8 +46,10 @@ mode in a recoverable environment.
 Then remove the package:
 
 ```bash
-sudo dnf remove noxforge
+sudo dnf remove --no-autoremove noxforge
 ```
 
 Removal deletes only RPM-owned files. It does not rewrite active KDE or SDDM
-settings, which is why explicit rollback comes first.
+settings, which is why explicit rollback comes first. Dependency cleanup stays
+disabled so DNF cannot remove KDE packages that were installed independently
+or first encountered as NoxForge dependencies.

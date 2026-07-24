@@ -30,9 +30,11 @@ rpmbuild -ba --define "_sourcedir $PWD/dist" packaging/noxforge.spec
 Select another Global Theme and login screen first, then remove the package:
 
 ```bash
-sudo dnf remove noxforge
+sudo dnf remove --no-autoremove noxforge
 ```
 
 Removal deletes only RPM-owned paths and does not rewrite active KDE or SDDM
-configuration. See `docs/INSTALL_FEDORA.md` for upgrade and downgrade commands,
-and `docs/TROUBLESHOOTING.md` for old user-local source copies.
+configuration. Dependency cleanup is deliberately disabled so DNF cannot prune
+KDE packages on a minimal or manually assembled installation. See
+`docs/INSTALL_FEDORA.md` for upgrade and downgrade commands, and
+`docs/TROUBLESHOOTING.md` for old user-local source copies.

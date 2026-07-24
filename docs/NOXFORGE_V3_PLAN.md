@@ -3,7 +3,23 @@
 **Repository:** `loofiboss-bit/NoxForge`
 **Reviewed baseline:** `main` / `v2.0.0` at `259dfd8f47d1fbd301197b751a7d5d02ce1fe935`
 **Target:** Fedora KDE 44, Plasma 6.7+, Qt 6.11, Wayland
-**Plan status:** Ready for Codex implementation, one phase at a time
+**Plan status:** Released on 2026-07-24
+
+## Release Closure
+
+- Annotated tag `v3.0.0` resolves to
+  `54cc84e36777584c7db1f87518837faeac3ec2df`.
+- Exact-commit CI run `30092958810` passed all three required checks.
+- Release workflow run `30093255186` published the GitHub release from the
+  exact tag after the full Fedora 44 gate passed.
+- All six public release assets passed `SHA256SUMS` verification.
+- COPR build `10770449` succeeded for `fedora-44-x86_64` from the public source
+  RPM.
+- Public COPR install, RPM verification, doctor, reinstall, safe removal, and
+  v2 source-install migration passed in disposable Fedora KDE 44 containers.
+- Nine available live Wayland cases passed. Seven unavailable hardware or
+  input/authentication cases remain explicitly blocked with evidence and are
+  listed as release limitations.
 
 ## Outcome
 
@@ -301,7 +317,7 @@ rpmlint <source-rpm> <binary-rpm>
 rpm -qlp <binary-rpm>
 sudo dnf install ./<binary-rpm>
 rpm -V noxforge
-sudo dnf remove noxforge
+sudo dnf remove --no-autoremove noxforge
 ```
 
 Run install/remove verification only in a disposable VM, container, or explicit
@@ -546,22 +562,22 @@ explicitly approved actions.
 
 v3.0.0 is complete only when all of the following are true:
 
-- [ ] Clean checkout has no generator drift.
-- [ ] Python validation and all unit tests pass.
-- [ ] CMake/Ninja build and every CTest pass.
-- [ ] Supported QML surfaces pass lint/runtime checks.
-- [ ] Two independent source builds are byte-identical.
-- [ ] CI passes from the exact release commit.
-- [ ] SRPM/RPM build and `rpmlint` checks pass.
-- [ ] Disposable RPM install, upgrade, verify, and removal checks pass.
-- [ ] Package installation changes no active desktop or SDDM setting.
-- [ ] Every available Fedora KDE 44 Wayland live case has evidence.
-- [ ] No critical live case is failed, unexplained, or represented only by a
+- [x] Clean checkout has no generator drift.
+- [x] Python validation and all unit tests pass.
+- [x] CMake/Ninja build and every CTest pass.
+- [x] Supported QML surfaces pass lint/runtime checks.
+- [x] Two independent source builds are byte-identical.
+- [x] CI passes from the exact release commit.
+- [x] SRPM/RPM build and `rpmlint` checks pass.
+- [x] Disposable RPM install, upgrade, verify, and removal checks pass.
+- [x] Package installation changes no active desktop or SDDM setting.
+- [x] Every available Fedora KDE 44 Wayland live case has evidence.
+- [x] No critical live case is failed, unexplained, or represented only by a
       mockup.
-- [ ] Diagnostic output is read-only and actionable.
-- [ ] Version and repository metadata are consistent.
-- [ ] Release notes and rollback instructions are current.
-- [ ] Publication receives explicit maintainer approval.
+- [x] Diagnostic output is read-only and actionable.
+- [x] Version and repository metadata are consistent.
+- [x] Release notes and rollback instructions are current.
+- [x] Publication receives explicit maintainer approval.
 
 ## Risks and Open Decisions
 

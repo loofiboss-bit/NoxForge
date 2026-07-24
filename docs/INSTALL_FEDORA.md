@@ -17,8 +17,10 @@ rpmbuild -ba \
   packaging/noxforge.spec
 ```
 
-Installation only places package-owned files. It does not select NoxForge,
-change a panel, activate SDDM, clear caches, or restart Plasma.
+The NoxForge RPM owns only its theme, plugin, diagnostic, and documentation
+files and has no installation scriptlets. On the supported Fedora KDE target,
+DNF reuses the installed Plasma, KWin, Qt, and SDDM packages. NoxForge does not
+select a theme, change a panel, activate SDDM, clear caches, or restart Plasma.
 
 ## Select the theme
 
@@ -56,16 +58,20 @@ Before downgrading or removing NoxForge, select a known-good non-NoxForge
 Global Theme and any components you selected separately. Restore a known-good
 SDDM theme first if you explicitly activated NoxForge SDDM.
 
-Downgrade to a retained package:
+For a later NoxForge update, downgrade to an older build retained in the
+enabled repository:
 
 ```bash
-sudo dnf downgrade ./noxforge-2.0.0-1.fc44.x86_64.rpm
+sudo dnf downgrade --refresh noxforge
 ```
 
-Or remove NoxForge:
+NoxForge v2 did not have an RPM channel, so the v3.0.0 rollback is explicit
+theme selection followed by package removal. Disable dependency cleanup so a
+minimal or manually assembled KDE installation cannot lose desktop packages
+that DNF first encountered as NoxForge dependencies:
 
 ```bash
-sudo dnf remove noxforge
+sudo dnf remove --no-autoremove noxforge
 ```
 
 See [Troubleshooting](TROUBLESHOOTING.md) for mixed source/RPM installations

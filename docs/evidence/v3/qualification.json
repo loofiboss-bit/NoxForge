@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "candidate": {
     "version": "3.0.0",
-    "sourceCommit": "472726d4b3a51000a5f7f82515dfabbd4da5cb02",
+    "sourceCommit": "54cc84e36777584c7db1f87518837faeac3ec2df",
     "sourceRef": "v3.0.0",
-    "worktreeDirty": true,
-    "package": "local Fedora RPM candidate"
+    "worktreeDirty": false,
+    "package": "GitHub v3.0.0 release and COPR build 10770449"
   },
   "environment": {
     "fedora": "44",
