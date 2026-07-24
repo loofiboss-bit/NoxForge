@@ -1,8 +1,14 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge v3 makes the RPM package the primary installation authority. Until a
-public repository is approved and published, build and test the package from a
-clean source archive:
+NoxForge v3 makes the RPM package the primary installation authority. Enable
+the Fedora 44 COPR and install the package:
+
+```bash
+sudo dnf copr enable loofitheboss/noxforge
+sudo dnf install noxforge
+```
+
+To build the exact package locally from a clean source archive instead:
 
 ```bash
 python3 scripts/build.py
@@ -11,18 +17,8 @@ rpmbuild -ba \
   packaging/noxforge.spec
 ```
 
-Install the resulting architecture-specific RPM only in a disposable Fedora
-KDE test environment:
-
-```bash
-sudo dnf install ~/rpmbuild/RPMS/*/noxforge-*.rpm
-```
-
 Installation only places package-owned files. It does not select NoxForge,
 change a panel, activate SDDM, clear caches, or restart Plasma.
-
-Public DNF/COPR commands will be added only after the repository owner and
-Fedora 44 project are confirmed and publication is explicitly approved.
 
 ## Select the theme
 
@@ -46,10 +42,10 @@ The doctor is read-only and exits non-zero when components are absent or mixed.
 
 ## Upgrade
 
-Upgrade from a local candidate with:
+Upgrade from COPR with:
 
 ```bash
-sudo dnf upgrade ./noxforge-3.0.0-1.fc44.x86_64.rpm
+sudo dnf upgrade --refresh noxforge
 rpm -V noxforge
 noxforge-doctor
 ```

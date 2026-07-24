@@ -3,21 +3,11 @@
 NoxForge 3.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
 is the primary installation authority.
 
-## Build the local release candidate
-
-```bash
-python3 scripts/release-check.py
-python3 scripts/build.py
-rpmbuild -ba --define "_sourcedir $PWD/dist" packaging/noxforge.spec
-```
-
 ## Install
 
-Until a public repository is explicitly approved, install the locally built RPM
-only in a disposable Fedora KDE test environment:
-
 ```bash
-sudo dnf install ~/rpmbuild/RPMS/*/noxforge-3.0.0-1.fc44.*.rpm
+sudo dnf copr enable loofitheboss/noxforge
+sudo dnf install noxforge
 rpm -V noxforge
 noxforge-doctor
 ```
@@ -26,6 +16,14 @@ Package installation changes no settings. Select **NoxForge** explicitly in
 System Settings → Colors & Themes → Global Theme. Keep panel-layout replacement
 disabled unless the optional compact layout is deliberately wanted. Select and
 test NoxForge SDDM separately in a recoverable VM.
+
+## Build locally
+
+```bash
+python3 scripts/release-check.py
+python3 scripts/build.py
+rpmbuild -ba --define "_sourcedir $PWD/dist" packaging/noxforge.spec
+```
 
 ## Roll back
 

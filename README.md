@@ -28,17 +28,18 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 2.0.0 remains the current published stable release. The local 3.0.0
-candidate preserves its visual system and adds Fedora 44 CI, a package-managed
-RPM path, structured live evidence and read-only diagnostics. It is not yet a
-published release.
+NoxForge 3.0.0 is the current stable release. It preserves the v2 visual system
+and adds Fedora 44 CI, a package-managed RPM path, structured live evidence and
+read-only diagnostics.
 
 The automated v3 gate covers deterministic generation, Python and CTest suites,
 QML lint, isolated staging, byte-identical source archives, SRPM/RPM build and
-`rpmlint`. Real Plasma, KWin, cursor, audio, multi-monitor and SDDM cases remain
-blocked until a disposable graphical test environment is available; offscreen
-evidence does not close them. Tagging and publication also remain separately
-approval-gated.
+`rpmlint`. Isolated live KWin/Plasma Wayland qualification covers theme
+application, panel preservation and edges, 100/140 percent Qt composition,
+multi-output placement, sound routing, and the real lock/logout/splash/SDDM
+test processes. Hardware blur, injected keyboard/Alt+Tab interaction, live RTL
+shell mirroring, cursor motion, and real SDDM authentication remain explicitly
+unclaimed.
 
 ## License
 
