@@ -30,6 +30,11 @@ byte-reproducible archive. Live Plasma, KWin and interactive SDDM checks that
 require applying the theme remain honestly Pending and are not replaced by
 structural or offscreen evidence.
 
+Phase 0 of the [v3 implementation plan](docs/NOXFORGE_V3_PLAN.md) preserves the
+Industrial Precision design while making Aurorae generation byte-reproducible
+across supported Python environments and enforcing canonical repository URLs.
+Packaging, CI, live qualification and publication remain later-phase work.
+
 ## License
 
 See [LICENSES.md](LICENSES.md). All NoxForge artwork and generated audio are

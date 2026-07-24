@@ -31,6 +31,11 @@ Offscreen SDDM test-mode startup passes. Live Wayland, scaling, interactive
 SDDM and visual fallback checks remain recorded in `docs/MANUAL_TESTING.md`;
 structural validation cannot mark them passed.
 
+The Aurorae generation contract is exercised with Python 3.12 and Fedora 44's
+Python 3.14. Its `.svgz` files use a canonical gzip stream with a fixed
+timestamp, empty filename, maximum compression and platform-neutral OS header,
+so committed assets are byte-identical across these Python environments.
+
 ## Sources
 
 - <https://develop.kde.org/docs/plasma/theme/theme-porting-to-plasma6/>

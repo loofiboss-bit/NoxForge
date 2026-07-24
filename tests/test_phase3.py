@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import configparser
 import gzip
+import importlib.util
 import json
 import struct
 import unittest
@@ -12,6 +13,15 @@ ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 ICONS = ROOT / "icons/NoxForge"
 WALLPAPER = ROOT / "wallpapers/NoxForge"
+
+SPEC = importlib.util.spec_from_file_location(
+    "noxforge_generate_visual_assets",
+    ROOT / "scripts/generate_visual_assets.py",
+)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("cannot load visual asset generator")
+GENERATOR = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(GENERATOR)
 
 
 def ids(path: Path) -> set[str]:
@@ -33,8 +43,16 @@ class PhaseThreeTests(unittest.TestCase):
         for svg in sorted(AURORAE.glob("*.svg")):
             with self.subTest(svg=svg.name):
                 svgz = svg.with_suffix(".svgz")
-                self.assertEqual(gzip.decompress(svgz.read_bytes()), svg.read_bytes())
-                self.assertEqual(struct.unpack("<I", svgz.read_bytes()[4:8])[0], 0)
+                source = svg.read_bytes()
+                committed = svgz.read_bytes()
+                generated = GENERATOR.canonical_gzip(source)
+                self.assertEqual(committed, generated)
+                self.assertEqual(generated, GENERATOR.canonical_gzip(source))
+                self.assertEqual(gzip.decompress(committed), source)
+                self.assertEqual(committed[:4], b"\x1f\x8b\x08\x00")
+                self.assertEqual(struct.unpack("<I", committed[4:8])[0], 0)
+                self.assertEqual(committed[8], 2)
+                self.assertEqual(committed[9], 255)
 
     def test_icon_theme_has_system_coverage_and_neutral_app_fallback(self) -> None:
         parser = configparser.ConfigParser(interpolation=None)

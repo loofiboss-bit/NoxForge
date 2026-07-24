@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
 
 
 class PhaseNineIntegrationTests(unittest.TestCase):
@@ -18,7 +19,10 @@ class PhaseNineIntegrationTests(unittest.TestCase):
             ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/metadata.json",
             ROOT / "wallpapers/NoxForge/metadata.json",
         ):
-            self.assertEqual(json.loads(path.read_text(encoding="utf-8"))["KPlugin"]["Version"], "2.0.0")
+            plugin = json.loads(path.read_text(encoding="utf-8"))["KPlugin"]
+            self.assertEqual(plugin["Version"], "2.0.0")
+            if "Website" in plugin:
+                self.assertEqual(plugin["Website"], REPOSITORY_URL)
 
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(
@@ -26,8 +30,10 @@ class PhaseNineIntegrationTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.assertEqual(parser["Desktop Entry"]["X-KDE-PluginInfo-Version"], "2.0.0")
+        self.assertEqual(parser["Desktop Entry"]["X-KDE-PluginInfo-Website"], REPOSITORY_URL)
         parser.read(ROOT / "sddm/NoxForge/metadata.desktop", encoding="utf-8")
         self.assertEqual(parser["SddmGreeterTheme"]["Version"], "2.0.0")
+        self.assertEqual(parser["SddmGreeterTheme"]["Website"], REPOSITORY_URL)
 
     def test_sddm_has_required_original_flows(self) -> None:
         root = ROOT / "sddm/NoxForge"

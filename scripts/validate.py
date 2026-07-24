@@ -16,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
+REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PACKAGE_ROOTS = (
     ROOT / "plasma",
@@ -176,6 +177,31 @@ def validate_metadata(version: str) -> None:
         raise ValidationError("Plasma Style directory must match KPlugin.Id")
     if metadata.get("X-Plasma-API") != "5.0":
         raise ValidationError("Plasma Style metadata has an unexpected X-Plasma-API")
+
+
+def validate_repository_urls() -> None:
+    json_metadata = (
+        ROOT / f"plasma/desktoptheme/{THEME_ID}/metadata.json",
+        ROOT / f"look-and-feel/{THEME_ID}/metadata.json",
+    )
+    for path in json_metadata:
+        metadata = load_json(path)
+        plugin = metadata.get("KPlugin") if isinstance(metadata, dict) else None
+        if not isinstance(plugin, dict) or plugin.get("Website") != REPOSITORY_URL:
+            raise ValidationError(f"{path.relative_to(ROOT)} has the wrong repository URL")
+
+    desktop_metadata = (
+        (
+            ROOT / f"aurorae/{THEME_ID}/metadata.desktop",
+            "Desktop Entry",
+            "x-kde-plugininfo-website",
+        ),
+        (ROOT / "sddm/NoxForge/metadata.desktop", "SddmGreeterTheme", "website"),
+    )
+    for path, section, key in desktop_metadata:
+        metadata = load_colors(path)
+        if metadata[section].get(key) != REPOSITORY_URL:
+            raise ValidationError(f"{path.relative_to(ROOT)} has the wrong repository URL")
 
 
 def svg_ids(path: Path) -> set[str]:
@@ -628,6 +654,7 @@ def validate() -> None:
     ).read_bytes():
         raise ValidationError("standalone and Plasma Style color schemes differ")
     validate_metadata(version)
+    validate_repository_urls()
     validate_plasma_style()
     validate_look_and_feel(version)
     validate_tabbox(version)

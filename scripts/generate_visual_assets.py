@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import io
 import json
 import sys
 from pathlib import Path
@@ -367,10 +368,24 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
+def canonical_gzip(payload: bytes) -> bytes:
+    """Return a platform-independent gzip stream with a canonical header."""
+    stream = io.BytesIO()
+    with gzip.GzipFile(
+        filename="",
+        mode="wb",
+        compresslevel=9,
+        fileobj=stream,
+        mtime=0,
+    ) as archive:
+        archive.write(payload)
+    return stream.getvalue()
+
+
 def write_aurorae_svg(name: str, content: str) -> None:
     write(AURORAE / f"{name}.svg", content)
     compressed_path = AURORAE / f"{name}.svgz"
-    compressed = gzip.compress(content.encode("utf-8"), mtime=0)
+    compressed = canonical_gzip(content.encode("utf-8"))
     if CHECK:
         if not compressed_path.is_file() or compressed_path.read_bytes() != compressed:
             DRIFT.append(compressed_path)
