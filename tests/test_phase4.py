@@ -104,10 +104,11 @@ class PhaseFourTests(unittest.TestCase):
                 self.assertIn("Dry run complete", result.stdout)
             self.assertEqual(list(root.iterdir()), [])
 
-    def test_live_graphical_checks_are_pending(self) -> None:
+    def test_live_graphical_checks_use_structured_evidence(self) -> None:
         checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-        self.assertGreaterEqual(checklist.count("Pending"), 9)
-        self.assertNotIn("Passed", checklist)
+        self.assertIn("docs/evidence/v3/qualification.json", checklist)
+        self.assertIn("Blocked", checklist)
+        self.assertNotIn("unavailable checks remain **Pending**", checklist)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,36 @@
+.TH NOXFORGE-DOCTOR 1 "July 2026" "NoxForge 3.0.0" "User Commands"
+.SH NAME
+noxforge-doctor \- inspect a NoxForge installation without changing it
+.SH SYNOPSIS
+.B noxforge-doctor
+.RB [ \-\-json ]
+.RB [ \-\-root
+.IR path ]
+.SH DESCRIPTION
+.B noxforge-doctor
+reports the installed package version, discovery and versions of NoxForge
+components, safely readable active theme names, and a concise session summary.
+It does not write files, apply a theme, clear caches, restart services, or
+request privileges.
+.SH OPTIONS
+.TP
+.B \-\-json
+Emit machine-readable JSON.
+.TP
+.BI \-\-root " path"
+Inspect an absolute staged or system root instead of the running system.
+.TP
+.BR \-h ", " \-\-help
+Show command help.
+.SH EXIT STATUS
+Returns 0 for a complete, version-consistent installation, 1 for an absent,
+partial, or mixed-version installation, and 2 for invalid command arguments.
+.SH PRIVACY
+The report omits usernames, hostnames, personal paths, and display contents.
+.SH FILES
+.TP
+.I /usr/share/noxforge/VERSION
+Expected installed NoxForge version.
+.SH SEE ALSO
+.BR rpm (8),
+.BR dnf (8)

@@ -561,13 +561,20 @@ def validate_wallpaper(version: str) -> None:
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
+        ROOT / "scripts/release-check.py",
+        ROOT / "scripts/sync_version.py",
         ROOT / "scripts/generate_design_system.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
         ROOT / "scripts/uninstall-system.sh",
         ROOT / "docs/QUICKSTART.md",
+        ROOT / "docs/INSTALL_FEDORA.md",
+        ROOT / "docs/TROUBLESHOOTING.md",
         ROOT / "docs/MANUAL_TESTING.md",
+        ROOT / "docs/evidence/v3/qualification.json",
+        ROOT / "packaging/noxforge.spec",
+        ROOT / "tools/noxforge-doctor",
     )
     missing = [path.relative_to(ROOT) for path in required if not path.is_file()]
     if missing:
@@ -589,12 +596,29 @@ def validate_tooling() -> None:
         if command in system_install or command in system_uninstall:
             raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-    if checklist.count("Pending") < 9:
-        raise ValidationError("manual graphical checks must remain explicitly pending")
+    if "docs/evidence/v3/qualification.json" not in checklist or "Blocked" not in checklist:
+        raise ValidationError("manual graphical checks must use the structured v3 evidence manifest")
+    evidence = load_json(ROOT / "docs/evidence/v3/qualification.json")
+    cases = evidence.get("liveCases") if isinstance(evidence, dict) else None
+    if not isinstance(cases, list) or len(cases) < 16:
+        raise ValidationError("v3 evidence manifest does not contain the required live matrix")
+    allowed_results = {"passed", "failed", "blocked", "not-applicable"}
+    for case in cases:
+        if not isinstance(case, dict) or case.get("result") not in allowed_results:
+            raise ValidationError("v3 evidence manifest has an invalid live result")
+        if case.get("result") == "blocked" and not case.get("blocker"):
+            raise ValidationError("blocked live evidence must record its blocker")
+        if case.get("result") == "passed":
+            linked = case.get("evidence")
+            if not isinstance(linked, str) or not (
+                ROOT / "docs/evidence/v3" / linked
+            ).is_file():
+                raise ValidationError("passed live evidence must link a real evidence file")
 
 
 def validate_generated_sources() -> None:
     for script in (
+        "scripts/sync_version.py",
         "scripts/generate_design_system.py",
         "scripts/generate_plasma_svgs.py",
         "scripts/generate_visual_assets.py",

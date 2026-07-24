@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create deterministic local NoxForge v2.0.0 build artifacts."""
+"""Create deterministic local NoxForge source artifacts."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ SOURCE_PATHS = (
     Path("AGENTS.md"),
     Path("CMakeLists.txt"),
     Path("DESIGN.md"),
+    Path("packaging"),
     Path("docs"),
     Path("design"),
     Path("color-schemes"),
@@ -105,7 +106,21 @@ def build(build_root: Path, dist_root: Path) -> tuple[Path, Path, str]:
 
 def main() -> int:
     subprocess.run(["python3", str(ROOT / "scripts/validate.py")], cwd=ROOT, check=True)
-    subprocess.run(["cmake", "-S", str(ROOT), "-B", str(ROOT / "build/cmake"), "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release"], cwd=ROOT, check=True)
+    subprocess.run(
+        [
+            "cmake",
+            "-S",
+            str(ROOT),
+            "-B",
+            str(ROOT / "build/cmake"),
+            "-G",
+            "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-DCMAKE_INSTALL_PREFIX=/usr",
+        ],
+        cwd=ROOT,
+        check=True,
+    )
     subprocess.run(["cmake", "--build", str(ROOT / "build/cmake")], cwd=ROOT, check=True)
     subprocess.run(["ctest", "--test-dir", str(ROOT / "build/cmake"), "--output-on-failure"], cwd=ROOT, check=True)
     archive, checksum_path, checksum = build(ROOT / "build", ROOT / "dist")

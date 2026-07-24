@@ -1,0 +1,123 @@
+name: Release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Exact signed or annotated release tag
+        required: true
+        type: string
+      publish:
+        description: Publish the already-qualified GitHub release
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build exact Fedora 44 artifacts
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    timeout-minutes: 40
+    steps:
+      - name: Install declared dependencies
+        run: >-
+          dnf install -y
+          cmake
+          ffmpeg-free
+          gcc-c++
+          git
+          ImageMagick
+          ninja-build
+          python3
+          qt6-qtbase-devel
+          qt6-qtdeclarative-devel
+          rpm-build
+          rpmlint
+          xz
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Refuse tag or metadata mismatch
+        shell: bash
+        run: |
+          version=$(<VERSION)
+          test "${{ inputs.ref }}" = "v${version}"
+          test "$(git describe --tags --exact-match)" = "v${version}"
+          python3 scripts/sync_version.py --check
+
+      - name: Run the full gate
+        run: python3 scripts/release-check.py
+
+      - name: Build source and Fedora package artifacts
+        shell: bash
+        run: |
+          python3 scripts/build.py
+          mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} release
+          cp dist/noxforge-*.tar.xz rpmbuild/SOURCES/
+          rpmbuild -ba --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
+          cp dist/noxforge-*.tar.xz rpmbuild/SRPMS/*.src.rpm rpmbuild/RPMS/*/noxforge-[0-9]*.rpm release/
+          cp docs/evidence/v3/automated-gate.md release/
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          source = Path("docs/evidence/v3/qualification.json")
+          destination = Path("release/qualification.json")
+          evidence = json.loads(source.read_text(encoding="utf-8"))
+          evidence["candidate"]["sourceCommit"] = os.environ["GITHUB_SHA"]
+          evidence["candidate"]["sourceRef"] = os.environ["GITHUB_REF_NAME"]
+          evidence["candidate"]["worktreeDirty"] = False
+          destination.write_text(
+              json.dumps(evidence, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          (
+            cd release
+            find . -maxdepth 1 -type f ! -name SHA256SUMS -printf '%f\0' \
+              | sort -z \
+              | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: noxforge-${{ inputs.ref }}
+          path: release/
+          if-no-files-found: error
+
+  publish-github:
+    name: Publish approved GitHub release
+    needs: build
+    if: ${{ inputs.publish }}
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: noxforge-${{ inputs.ref }}
+          path: release
+
+      - name: Publish exact approved artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${{ inputs.ref }}"
+          release/*
+          --verify-tag
+          --title "NoxForge ${{ inputs.ref }}"
+          --notes-file docs/releases/v3.0.0.md

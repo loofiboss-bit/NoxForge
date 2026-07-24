@@ -20,7 +20,8 @@ the next phase.
   v2.0.0 visual rebuild scope and gates.
 - [`releases/v2.0.0.md`](releases/v2.0.0.md) records the stable release outcome.
 - [`MANUAL_TESTING.md`](MANUAL_TESTING.md) remains authoritative for live checks;
-  unavailable graphical checks stay Pending.
+  unavailable graphical checks stay honestly `blocked` in the structured v3
+  evidence manifest.
 
 Normal installation remains non-applying and reversible. No plan authorizes
 automatic theme application, panel changes, SDDM activation, Plasma restarts,

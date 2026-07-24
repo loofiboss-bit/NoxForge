@@ -3,6 +3,9 @@ set -euo pipefail
 
 dry_run=false
 system_mode=false
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+source_root=$(cd -- "${script_dir}/.." && pwd)
+manifest="${source_root}/build/cmake/install_manifest.txt"
 
 usage() {
     printf 'Usage: %s --system [--dry-run]\n' "${0##*/}"
@@ -32,16 +35,28 @@ if [[ "${dry_run}" != true && -z "${system_root}" && ${EUID} -ne 0 ]]; then
     exit 2
 fi
 
-plugin_target="${system_root}/usr/lib64/qt6/plugins/styles/libnoxforge6.so"
-sddm_target="${system_root}/usr/share/sddm/themes/NoxForge"
+if [[ ! -f "${manifest}" && "${dry_run}" != true ]]; then
+    printf 'Missing CMake install manifest; refusing an unscoped uninstall.\n' >&2
+    exit 1
+fi
 
 if [[ "${dry_run}" == true ]]; then
-    printf 'Would remove %s\n' "${plugin_target}"
-    printf 'Would remove %s\n' "${sddm_target}"
+    printf 'Would remove only paths recorded in %s below %s\n' "${manifest}" "${system_root:-<system root>}"
     printf 'Dry run complete; no files or settings were changed.\n'
     exit 0
 fi
 
-rm -f -- "${plugin_target}"
-rm -rf -- "${sddm_target}"
-printf 'Removed only the NoxForge Qt style plugin and SDDM theme. Settings were not changed.\n'
+while IFS= read -r installed_path; do
+    [[ -n "${installed_path}" && "${installed_path}" == /* ]] || {
+        printf 'Unsafe CMake manifest entry: %s\n' "${installed_path}" >&2
+        exit 1
+    }
+    target="${system_root}${installed_path}"
+    case "${target}" in
+        "${system_root}/usr/"*) ;;
+        *) printf 'Refusing unsafe uninstall target: %s\n' "${target}" >&2; exit 1 ;;
+    esac
+    rm -f -- "${target}"
+done < "${manifest}"
+
+printf 'Removed only files from the NoxForge CMake install manifest. Settings were not changed.\n'

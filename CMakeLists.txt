@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(NoxForge VERSION 2.0.0 LANGUAGES CXX)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" NOXFORGE_VERSION LIMIT_COUNT 1)
+project(NoxForge VERSION "${NOXFORGE_VERSION}" LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -69,5 +70,60 @@ set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=of
 
 include(GNUInstallDirs)
 install(TARGETS noxforge_style
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/qt6/plugins/styles"
+    LIBRARY DESTINATION "${QT6_INSTALL_PLUGINS}/styles"
+)
+
+set(NOXFORGE_THEME_ID "io.github.loofiboss.noxforge.desktop")
+
+install(
+    FILES color-schemes/NoxForgeDark.colors
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/color-schemes"
+)
+install(
+    DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
+)
+install(
+    DIRECTORY "aurorae/${NOXFORGE_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/aurorae/themes/${NOXFORGE_THEME_ID}"
+)
+install(
+    DIRECTORY icons/NoxForge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/NoxForge"
+)
+install(
+    DIRECTORY cursors/NoxForge-Cursors/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/NoxForge-Cursors"
+)
+install(
+    DIRECTORY sounds/NoxForge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/sounds/NoxForge"
+)
+install(
+    DIRECTORY "look-and-feel/${NOXFORGE_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/look-and-feel/${NOXFORGE_THEME_ID}"
+)
+install(
+    DIRECTORY "kwin/tabbox/${NOXFORGE_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/kwin/tabbox/${NOXFORGE_THEME_ID}"
+)
+install(
+    DIRECTORY wallpapers/NoxForge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge"
+)
+install(
+    DIRECTORY sddm/NoxForge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/NoxForge"
+)
+install(
+    PROGRAMS tools/noxforge-doctor
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+install(
+    FILES VERSION
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
+)
+install(
+    FILES docs/man/noxforge-doctor.1
+    DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
 )

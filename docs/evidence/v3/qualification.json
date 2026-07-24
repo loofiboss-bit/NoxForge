@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "candidate": {
+    "version": "3.0.0",
+    "sourceCommit": "cbcdef6f1456c682049e6653b88586938231fd2d",
+    "worktreeDirty": true,
+    "package": "local Fedora RPM candidate"
+  },
+  "environment": {
+    "fedora": "44",
+    "plasma": "6.7.3",
+    "kwin": "6.7.3",
+    "frameworks": "6.28.0",
+    "qt": "6.11.1",
+    "kernel": "7.1.4-204.fc44.x86_64",
+    "session": "Wayland",
+    "displayScale": "not collected from active user session",
+    "layout": "not collected from active user session",
+    "panelEdge": "not collected from active user session",
+    "blur": "not collected from active user session",
+    "rtl": "not collected from active user session"
+  },
+  "automatedEvidence": {
+    "result": "passed",
+    "evidence": "automated-gate.md",
+    "observation": "Structural, offscreen, source archive, RPM build, rpmlint, and disposable package filesystem checks passed."
+  },
+  "liveCases": [
+    {
+      "id": "global-theme-discovery-apply",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Requires explicit application in a disposable Fedora KDE user session.",
+      "blocker": "No disposable graphical test user or VM is available; the active maintainer desktop must remain unchanged."
+    },
+    {
+      "id": "existing-panel-preservation",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Requires before/after panel state in the same disposable session.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "compact-layout-all-panel-edges",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Requires explicit optional layout application and every panel edge.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "plasma-popups-blur-on-off",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Solid and translucent assets pass structural checks, but KWin composition is not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "qt-controls-100-140",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "The offscreen 100/140 percent gallery passes; real-session composition remains unqualified.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "keyboard-navigation-focus",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Focus rendering passes offscreen; keyboard-only interaction is not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "rtl-shell",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "RTL Qt geometry passes offscreen; live Plasma mirroring is not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "no-visible-fallback-artwork",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Package metadata has no explicit fallback, but runtime rendering must be observed.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "aurorae-window-states",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Aurorae sprite states validate structurally; KWin composition is not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "alt-tab-long-multiple-empty",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Requires live KWin switcher behavior.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "icon-required-sizes",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Physical and rendered icon evidence passes; live shell clarity remains unqualified.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "cursor-100-140-200",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Physical cursor files and animation frames validate; live compositor scaling is not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "sound-routing-volume",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Ogg streams validate; audible routing and restraint require output hardware.",
+      "blocker": "No isolated audio test environment is available."
+    },
+    {
+      "id": "splash-logout-lock",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "QML and offscreen surfaces pass; live shell flows are not exercised.",
+      "blocker": "No disposable graphical test user or VM is available."
+    },
+    {
+      "id": "multi-monitor-placement",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "Requires an isolated multi-output Wayland setup.",
+      "blocker": "No disposable multi-monitor test environment is available."
+    },
+    {
+      "id": "sddm-login-flows",
+      "result": "blocked",
+      "evidence": null,
+      "observation": "The runtime-mocked QML surface passes; authentication, session, error, and power flows are not exercised.",
+      "blocker": "No recoverable SDDM VM or test-mode login environment is available."
+    }
+  ]
+}

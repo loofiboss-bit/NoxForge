@@ -10,9 +10,10 @@ REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
 
 
 class PhaseNineIntegrationTests(unittest.TestCase):
-    def test_all_public_metadata_is_v2(self) -> None:
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "2.0.0")
-        self.assertEqual(json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))["version"], "2.0.0")
+    def test_all_public_metadata_matches_version(self) -> None:
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(version, "3.0.0")
+        self.assertEqual(json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))["version"], version)
         for path in (
             ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/metadata.json",
             ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/metadata.json",
@@ -20,7 +21,7 @@ class PhaseNineIntegrationTests(unittest.TestCase):
             ROOT / "wallpapers/NoxForge/metadata.json",
         ):
             plugin = json.loads(path.read_text(encoding="utf-8"))["KPlugin"]
-            self.assertEqual(plugin["Version"], "2.0.0")
+            self.assertEqual(plugin["Version"], version)
             if "Website" in plugin:
                 self.assertEqual(plugin["Website"], REPOSITORY_URL)
 
@@ -29,10 +30,10 @@ class PhaseNineIntegrationTests(unittest.TestCase):
             ROOT / "aurorae/io.github.loofiboss.noxforge.desktop/metadata.desktop",
             encoding="utf-8",
         )
-        self.assertEqual(parser["Desktop Entry"]["X-KDE-PluginInfo-Version"], "2.0.0")
+        self.assertEqual(parser["Desktop Entry"]["X-KDE-PluginInfo-Version"], version)
         self.assertEqual(parser["Desktop Entry"]["X-KDE-PluginInfo-Website"], REPOSITORY_URL)
         parser.read(ROOT / "sddm/NoxForge/metadata.desktop", encoding="utf-8")
-        self.assertEqual(parser["SddmGreeterTheme"]["Version"], "2.0.0")
+        self.assertEqual(parser["SddmGreeterTheme"]["Version"], version)
         self.assertEqual(parser["SddmGreeterTheme"]["Website"], REPOSITORY_URL)
 
     def test_sddm_has_required_original_flows(self) -> None:

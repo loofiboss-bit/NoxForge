@@ -3,6 +3,7 @@ set -euo pipefail
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 source_root=$(cd -- "${script_dir}/.." && pwd)
+build_root="${source_root}/build/cmake"
 dry_run=false
 system_mode=false
 
@@ -34,28 +35,16 @@ if [[ "${dry_run}" != true && -z "${system_root}" && ${EUID} -ne 0 ]]; then
     exit 2
 fi
 
-plugin_source="${source_root}/build/cmake/plugins/styles/libnoxforge6.so"
-sddm_source="${source_root}/sddm/NoxForge"
-plugin_target="${system_root}/usr/lib64/qt6/plugins/styles/libnoxforge6.so"
-sddm_target="${system_root}/usr/share/sddm/themes/NoxForge"
-
-if [[ ! -f "${plugin_source}" && "${dry_run}" != true ]]; then
-    printf 'Missing built style plugin. Run cmake configure and build first.\n' >&2
-    exit 1
-fi
-if [[ ! -d "${sddm_source}" ]] || find "${sddm_source}" -type l -print -quit | grep -q .; then
-    printf 'Missing or unsafe SDDM source package.\n' >&2
+if [[ ! -f "${build_root}/cmake_install.cmake" && "${dry_run}" != true ]]; then
+    printf 'Missing configured CMake build. Run cmake configure and build first.\n' >&2
     exit 1
 fi
 
 if [[ "${dry_run}" == true ]]; then
-    printf 'Would install %s -> %s\n' "${plugin_source}" "${plugin_target}"
-    printf 'Would install %s -> %s\n' "${sddm_source}" "${sddm_target}"
+    printf 'Would run CMake install from %s with DESTDIR=%s\n' "${build_root}" "${system_root:-<system root>}"
     printf 'Dry run complete; no files or settings were changed.\n'
     exit 0
 fi
 
-install -D -m 0755 "${plugin_source}" "${plugin_target}"
-install -d -m 0755 "${sddm_target}"
-cp -a -- "${sddm_source}/." "${sddm_target}/"
-printf 'Installed the NoxForge Qt style and SDDM theme. No settings were changed.\n'
+DESTDIR="${system_root}" cmake --install "${build_root}"
+printf 'Installed NoxForge through the CMake staging contract. No settings were changed.\n'

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-gate:
+    name: Fedora 44 release gate
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    timeout-minutes: 30
+    steps:
+      - name: Install declared dependencies
+        run: >-
+          dnf install -y
+          cmake
+          ffmpeg-free
+          gcc-c++
+          git
+          ImageMagick
+          ninja-build
+          python3
+          qt6-qtbase-devel
+          qt6-qtdeclarative-devel
+          rpm-build
+          rpmlint
+          xz
+
+      - uses: actions/checkout@v4
+
+      - name: Run the authoritative release gate
+        shell: bash
+        run: python3 scripts/release-check.py
+
+  gzip-determinism:
+    name: Canonical gzip on Python ${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - "3.12"
+          - "3.14"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Verify committed Aurorae streams
+        run: python -m unittest tests.test_phase3.PhaseThreeTests.test_aurorae_compression_is_reproducible -v

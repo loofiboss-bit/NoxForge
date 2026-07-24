@@ -8,17 +8,18 @@ supported.
 
 | Component | Installed path |
 | --- | --- |
-| Global Theme | `~/.local/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/` |
-| Plasma Style | `~/.local/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` |
-| Color scheme | `~/.local/share/color-schemes/NoxForgeDark.colors` |
-| Aurorae | `~/.local/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
-| KWin switcher | `~/.local/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
-| Icons | `~/.local/share/icons/NoxForge/` |
-| Cursors | `~/.local/share/icons/NoxForge-Cursors/` |
-| Sounds | `~/.local/share/sounds/NoxForge/` |
-| Wallpaper | `~/.local/share/wallpapers/NoxForge/` |
+| Global Theme | `/usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/` |
+| Plasma Style | `/usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` |
+| Color scheme | `/usr/share/color-schemes/NoxForgeDark.colors` |
+| Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
+| KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
+| Icons | `/usr/share/icons/NoxForge/` |
+| Cursors | `/usr/share/icons/NoxForge-Cursors/` |
+| Sounds | `/usr/share/sounds/NoxForge/` |
+| Wallpaper | `/usr/share/wallpapers/NoxForge/` |
 | Qt style plugin | `/usr/lib64/qt6/plugins/styles/libnoxforge6.so` |
 | SDDM | `/usr/share/sddm/themes/NoxForge/` |
+| Doctor | `/usr/bin/noxforge-doctor` |
 
 The Look-and-Feel package declares `Plasma/LookAndFeel`; the task switcher
 declares `KWin/WindowSwitcher`. Packages contain no symlinks. The icon theme
@@ -28,8 +29,15 @@ The Qt style is a native `QCommonStyle`/`QStylePlugin` implementation with the
 public key `NoxForge`. It does not link against Breeze or Kvantum.
 
 Offscreen SDDM test-mode startup passes. Live Wayland, scaling, interactive
-SDDM and visual fallback checks remain recorded in `docs/MANUAL_TESTING.md`;
-structural validation cannot mark them passed.
+SDDM and visual fallback checks remain `blocked` in
+`docs/evidence/v3/qualification.json`; structural validation cannot mark them
+passed.
+
+The Fedora RPM and CMake staging contract own system paths and contain no
+installation scriptlets. Installation, upgrade and removal do not apply or
+activate NoxForge and do not edit KDE or SDDM configuration. The legacy
+user-local source installer remains a developer/migration fallback rather than
+a competing production path.
 
 The Aurorae generation contract is exercised with Python 3.12 and Fedora 44's
 Python 3.14. Its `.svgz` files use a canonical gzip stream with a fixed

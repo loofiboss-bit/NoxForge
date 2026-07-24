@@ -20,20 +20,25 @@ restarts Plasma. See [Quick start](docs/QUICKSTART.md), the authoritative
 [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the live
 [manual testing gate](docs/MANUAL_TESTING.md). The historical issues that drove
 the rebuild are recorded in the [v2 visual baseline](docs/V2_VISUAL_BASELINE.md).
+Contributors run the same local and Fedora 44 CI gate documented in
+[CONTRIBUTING.md](docs/CONTRIBUTING.md).
+Fedora installation, explicit selection, verification and rollback are covered
+in [INSTALL_FEDORA.md](docs/INSTALL_FEDORA.md); read-only diagnostics and
+recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 2.0.0 is the current stable release. Its visual rebuild passes the full
-automated release gate, including deterministic generation, the Python and
-CTest suites, the LTR/RTL scale matrix, isolated repeat installs and a
-byte-reproducible archive. Live Plasma, KWin and interactive SDDM checks that
-require applying the theme remain honestly Pending and are not replaced by
-structural or offscreen evidence.
+NoxForge 2.0.0 remains the current published stable release. The local 3.0.0
+candidate preserves its visual system and adds Fedora 44 CI, a package-managed
+RPM path, structured live evidence and read-only diagnostics. It is not yet a
+published release.
 
-Phase 0 of the [v3 implementation plan](docs/NOXFORGE_V3_PLAN.md) preserves the
-Industrial Precision design while making Aurorae generation byte-reproducible
-across supported Python environments and enforcing canonical repository URLs.
-Packaging, CI, live qualification and publication remain later-phase work.
+The automated v3 gate covers deterministic generation, Python and CTest suites,
+QML lint, isolated staging, byte-identical source archives, SRPM/RPM build and
+`rpmlint`. Real Plasma, KWin, cursor, audio, multi-monitor and SDDM cases remain
+blocked until a disposable graphical test environment is available; offscreen
+evidence does not close them. Tagging and publication also remain separately
+approval-gated.
 
 ## License
 

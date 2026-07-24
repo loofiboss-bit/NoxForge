@@ -3,7 +3,7 @@
   "KPlugin": {
     "Id": "io.github.loofiboss.noxforge.desktop",
     "Name": "NoxForge",
-    "Version": "2.0.0",
+    "Version": "3.0.0",
     "License": "MIT"
   },
   "X-Plasma-API-Minimum-Version": "6.0"
