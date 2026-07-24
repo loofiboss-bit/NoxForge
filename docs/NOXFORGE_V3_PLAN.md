@@ -10,6 +10,8 @@
 - Annotated tag `v3.0.0` resolves to
   `54cc84e36777584c7db1f87518837faeac3ec2df`.
 - Exact-commit CI run `30092958810` passed all three required checks.
+- Post-release closure CI run `30115055468` passed all three required checks on
+  `main`.
 - Release workflow run `30093255186` published the GitHub release from the
   exact tag after the full Fedora 44 gate passed.
 - All six public release assets passed `SHA256SUMS` verification.
@@ -42,7 +44,10 @@ The end state is:
 - GitHub and COPR artifacts are produced only from a tagged, fully qualified
   release candidate.
 
-## Current State
+## Reviewed v2 Baseline
+
+The following inventory records the state reviewed before v3 implementation.
+The release closure above is authoritative for the delivered v3 state.
 
 ### Completed and worth preserving
 
@@ -579,25 +584,27 @@ v3.0.0 is complete only when all of the following are true:
 - [x] Release notes and rollback instructions are current.
 - [x] Publication receives explicit maintainer approval.
 
-## Risks and Open Decisions
+## Resolved Decisions and Deferred Risks
 
-1. **COPR owner/namespace:** confirm the actual COPR account before writing public
-   installation commands. Do not invent it.
-2. **SDDM live testing:** use a VM/test mode and a documented recovery path before
-   activation on a real login screen.
-3. **RPM package split:** default to one coherent Fedora package. Split SDDM only
-   if dependency/safety testing proves a clear benefit.
-4. **Supported Python range:** define it from actual Fedora/CI environments and
-   test the canonical gzip writer across that range.
-5. **Live evidence storage:** keep evidence compact. Do not turn the repository
-   into a large screenshot archive.
-6. **KDE Store:** reconsider after v3 only if a clearly named data-only edition
-   can coexist without users believing it includes the native Qt style and SDDM.
+1. **COPR owner/namespace:** confirmed and published as
+   `loofitheboss/noxforge`.
+2. **SDDM live testing:** the real greeter passed isolated test mode. PAM
+   authentication and power actions remain an explicit known limitation because
+   test mode cannot prove them and the active login screen was not changed.
+3. **RPM package split:** v3 ships one coherent Fedora package; no safety or
+   dependency evidence justified splitting SDDM.
+4. **Supported Python range:** canonical gzip generation passed Python 3.12 and
+   3.14 in required CI checks.
+5. **Live evidence storage:** the committed evidence set is compact and indexed
+   by the structured qualification manifest.
+6. **KDE Store:** remains deferred. A future data-only edition requires a clear
+   product boundary because it cannot include the native Qt style or system SDDM
+   component.
 
-## Recommended Codex Execution
+## Historical Execution Guidance
 
-Use **Goal/direct implementation mode**, because the scope is now defined.
-Implement one phase per Codex session and stop after its gate.
+The original execution prompt is retained below for audit history. The plan is
+released and these implementation phases must not be rerun as pending work.
 
 Initial prompt:
 

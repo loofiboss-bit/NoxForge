@@ -20,6 +20,7 @@ Plasma/KWin 6.7.3 and KDE Frameworks 6.28.
 - Exact release commit:
   `54cc84e36777584c7db1f87518837faeac3ec2df`.
 - Required-check CI run `30092958810`: passed.
+- Post-release closure CI run `30115055468`: passed on `main`.
 - Exact-tag release workflow run `30093255186`: passed.
 - GitHub release `v3.0.0`: six public assets downloaded independently and
   verified against `SHA256SUMS`.
