@@ -50,7 +50,7 @@ jobs:
         run: |
           version=$(<VERSION)
           test "${{ inputs.ref }}" = "v${version}"
-          test "$(git describe --tags --exact-match)" = "v${version}"
+          test "$(git -c safe.directory="$GITHUB_WORKSPACE" describe --tags --exact-match)" = "v${version}"
           python3 scripts/sync_version.py --check
 
       - name: Run the full gate
