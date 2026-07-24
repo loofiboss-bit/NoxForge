@@ -199,7 +199,7 @@ def main() -> int:
             check_rpm(temporary, source_archive)
 
     if shutil.which("git") and (ROOT / ".git").exists():
-        run(["git", "diff", "--check"])
+        run(["git", "-c", f"safe.directory={ROOT}", "diff", "--check"])
 
     print("NoxForge release check passed")
     return 0

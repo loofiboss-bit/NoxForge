@@ -30,6 +30,7 @@ jobs:
           ffmpeg-free
           gcc-c++
           git
+          glibc-langpack-en
           ImageMagick
           ninja-build
           python3
