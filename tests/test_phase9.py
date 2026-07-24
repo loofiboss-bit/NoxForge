@@ -55,6 +55,16 @@ class PhaseNineIntegrationTests(unittest.TestCase):
             for command in forbidden:
                 self.assertNotIn(command, text)
 
+    def test_rpm_removal_preserves_desktop_dependencies(self) -> None:
+        for path in (
+            ROOT / "docs" / "INSTALL_FEDORA.md",
+            ROOT / "docs" / "QUICKSTART.md",
+            ROOT / "docs" / "TROUBLESHOOTING.md",
+        ):
+            text = path.read_text(encoding="utf-8")
+            self.assertIn("dnf remove --no-autoremove noxforge", text)
+            self.assertNotIn("noxforge-2.0.0-1.fc44", text)
+
 
 if __name__ == "__main__":
     unittest.main()
