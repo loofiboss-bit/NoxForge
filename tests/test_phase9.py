@@ -12,7 +12,6 @@ REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
 class PhaseNineIntegrationTests(unittest.TestCase):
     def test_all_public_metadata_matches_version(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "3.0.0")
         self.assertEqual(json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))["version"], version)
         for path in (
             ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/metadata.json",

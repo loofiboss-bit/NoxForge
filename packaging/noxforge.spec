@@ -1,5 +1,5 @@
 Name:           noxforge
-Version:        3.0.0
+Version:        4.0.0
 Release:        1%{?dist}
 Summary:        Industrial Precision global theme for KDE Plasma 6
 

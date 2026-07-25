@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "iconCount": 165,
-  "opticalCount": 170,
+  "iconCount": 166,
+  "opticalCount": 172,
   "opticalSizes": [
     16,
     22
@@ -15,7 +15,7 @@
     "mimetypes": 21,
     "places": 15,
     "preferences": 13,
-    "status": 23
+    "status": 24
   },
   "icons": [
     "actions/configure.svg",
@@ -173,6 +173,7 @@
     "status/dialog-password.svg",
     "status/dialog-question.svg",
     "status/dialog-warning.svg",
+    "status/network-offline.svg",
     "status/network-wired-activated.svg",
     "status/network-wired-disconnected.svg",
     "status/network-wired.svg",
@@ -228,6 +229,10 @@
     [
       "categories/applications-internet.svg",
       "preferences/preferences-system-network.svg"
+    ],
+    [
+      "devices/input-keyboard.svg",
+      "preferences/preferences-desktop-keyboard.svg"
     ],
     [
       "devices/network-wired.svg",

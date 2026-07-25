@@ -459,13 +459,25 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         return;
     }
     case CE_TabBarTabShape:
-    case CE_HeaderSection:
-        if (option->state.testFlag(State_Selected))
+        if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                                  option->direction, option->state.testFlag(State_HasFocus));
-        else
+        } else if (option->state.testFlag(State_MouseOver)) {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         stateSurface(option), NP::border());
+                         NP::surfaceHover(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                         option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
+                         option->state.testFlag(State_HasFocus));
+        } else {
+            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                         NP::surfaceRaised(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                         option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
+                         option->state.testFlag(State_HasFocus));
+        }
+        return;
+    case CE_HeaderSection:
+        paintSurface(painter, option->rect.adjusted(0, 0, 0, -1),
+                     option->state.testFlag(State_MouseOver) ? NP::surfaceHover() : NP::surface(),
+                     NP::border());
         return;
     case CE_ToolBar:
         painter->fillRect(option->rect, NP::surface());
@@ -539,6 +551,8 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
                 ? QRect(groove.left(), handle.center().y(), groove.width(), groove.bottom() - handle.center().y() + 1)
                 : QRect(groove.left(), groove.top(), groove.width(), handle.center().y() - groove.top() + 1);
         }
+        const bool focused = option->state.testFlag(State_HasFocus);
+        const bool hovered = option->state.testFlag(State_MouseOver);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
@@ -546,19 +560,25 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         painter->drawRoundedRect(groove, 3, 3);
         painter->setBrush(NP::accent());
         painter->drawRoundedRect(highlight, 3, 3);
-        painter->setBrush(option->state.testFlag(State_MouseOver) ? NP::accent() : NP::textPrimary());
+        painter->setBrush(focused || hovered ? NP::accent() : NP::textPrimary());
         painter->drawEllipse(handle.adjusted(2, 2, -2, -2));
+        if (focused) {
+            painter->setPen(QPen(NP::accent(), NP::focusWidth));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawEllipse(handle);
+        }
         painter->restore();
         return;
     }
     case CC_ScrollBar: {
-        const QRect groove = subControlRect(CC_ScrollBar, option, SC_ScrollBarGroove, widget);
         const QRect slider = subControlRect(CC_ScrollBar, option, SC_ScrollBarSlider, widget);
         painter->fillRect(option->rect, NP::background());
+        const bool hover = option->state.testFlag(State_MouseOver);
+        const bool active = option->state.testFlag(State_Sunken);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(option->state.testFlag(State_MouseOver) ? NP::accent() : NP::borderStrong());
+        painter->setBrush(active ? NP::accentPressed() : (hover ? NP::accent() : NP::borderStrong()));
         painter->drawRoundedRect(slider, 4, 4);
         painter->restore();
         return;
