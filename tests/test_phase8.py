@@ -48,7 +48,7 @@ class PhaseEightAssetsTests(unittest.TestCase):
         self.assertEqual(coverage["schemaVersion"], 2)
         self.assertEqual(coverage["opticalSizes"], [16, 22])
         self.assertEqual(len(coverage["aliases"]), 12)
-        self.assertEqual(len(coverage["duplicateAllowlist"]), 10)
+        self.assertEqual(len(coverage["duplicateAllowlist"]), 11)
         optical = [path for size in (16, 22) for path in (root / f"{size}x{size}").glob("*/*.svg")]
         self.assertEqual(len(optical), coverage["opticalCount"])
         self.assertFalse(any(path.is_symlink() for path in optical))
