@@ -6,11 +6,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github/workflows/release.yml"
+CI_WORKFLOW = ROOT / ".github/workflows/ci.yml"
 
 
 class ReleaseWorkflowTests(unittest.TestCase):
     def setUp(self) -> None:
         self.workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.ci_workflow = CI_WORKFLOW.read_text(encoding="utf-8")
+
+    def test_javascript_actions_use_node24_compatible_majors(self) -> None:
+        combined = self.ci_workflow + self.workflow
+        self.assertNotIn("actions/checkout@v4", combined)
+        self.assertNotIn("actions/setup-python@v5", combined)
+        self.assertEqual(combined.count("actions/checkout@v7"), 4)
+        self.assertEqual(combined.count("actions/setup-python@v7"), 1)
 
     def test_release_metadata_is_selected_from_the_requested_version(self) -> None:
         self.assertNotIn("docs/evidence/v3/", self.workflow)
