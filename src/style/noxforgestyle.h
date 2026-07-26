@@ -23,6 +23,10 @@ public:
     QRect subControlRect(ComplexControl control, const QStyleOptionComplex *option,
                          SubControl subControl,
                          const QWidget *widget = nullptr) const override;
+    SubControl hitTestComplexControl(ComplexControl control,
+                                     const QStyleOptionComplex *option,
+                                     const QPoint &position,
+                                     const QWidget *widget = nullptr) const override;
     QRect subElementRect(SubElement element, const QStyleOption *option,
                          const QWidget *widget = nullptr) const override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption *option,

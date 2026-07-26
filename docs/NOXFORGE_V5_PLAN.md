@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 1 complete; Phase 2 is not authorized
+**Plan status:** Phase 2 complete; Phase 3 is not authorized
 
 ## Product direction
 
@@ -73,6 +73,14 @@ release check without archive/RPM packaging passed.
 
 **Gate:** CTest, geometry/state probes and approved LTR/RTL 100/125/140/200
 percent reference renders pass.
+
+**Outcome (2026-07-26):** The native Qt style now covers common labels,
+header sort and tab-close indicators, tri-state checks, static busy progress,
+mirrored subcontrol geometry and hit testing while retaining `QCommonStyle`
+fallbacks. Animation policy falls through to Qt/system settings. The authentic
+gallery covers control, data, menu, state and stress surfaces; all 12 reviewed
+LTR/RTL scale and page renders have unique image data. The focused CTest,
+geometry/state probe, visual-evidence tests and broader local validation passed.
 
 ## Phase 3 — Plasma Style and shell surfaces
 

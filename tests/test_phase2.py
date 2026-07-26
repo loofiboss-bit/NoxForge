@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -78,6 +79,40 @@ class PhaseTwoTests(unittest.TestCase):
 
         light, dark = sorted((luminance(foreground), luminance(opaque_surface)), reverse=True)
         self.assertGreaterEqual((light + 0.05) / (dark + 0.05), 7.0)
+
+
+class V5PhaseTwoTests(unittest.TestCase):
+    def test_native_style_exposes_phase_two_contracts(self) -> None:
+        header = (ROOT / "src/style/noxforgestyle.h").read_text(encoding="utf-8")
+        implementation = (ROOT / "src/style/noxforgestyle.cpp").read_text(encoding="utf-8")
+        self.assertIn("hitTestComplexControl", header)
+        for contract in (
+            "PE_IndicatorHeaderArrow",
+            "PE_IndicatorTabClose",
+            "State_NoChange",
+            "CE_CheckBoxLabel",
+            "CE_RadioButtonLabel",
+            "CE_HeaderLabel",
+        ):
+            self.assertIn(contract, implementation)
+        self.assertNotRegex(
+            implementation,
+            re.compile(r"case\s+SH_Widget_Animate\s*:"),
+            "animation policy must fall back to Qt/system settings",
+        )
+
+    def test_gallery_covers_all_authorized_surfaces(self) -> None:
+        gallery = (ROOT / "tools/widget_gallery.cpp").read_text(encoding="utf-8")
+        for page in ("controls", "data", "menu", "states", "stress"):
+            self.assertIn(f'QStringLiteral("{page}")', gallery)
+        self.assertIn("Qt::PartiallyChecked", gallery)
+        self.assertIn("setSortIndicatorShown(true)", gallery)
+        self.assertIn("setTabsClosable(true)", gallery)
+
+    def test_phase_plan_records_completed_gate(self) -> None:
+        plan = (ROOT / "docs/NOXFORGE_V5_PLAN.md").read_text(encoding="utf-8")
+        self.assertIn("Plan status:** Phase 2 complete; Phase 3 is not authorized", plan)
+        self.assertIn("**Outcome (2026-07-26):**", plan.split("## Phase 2", 1)[1])
 
 
 if __name__ == "__main__":

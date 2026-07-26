@@ -54,6 +54,19 @@ Current automated results are summarized in
 Available live results and limitations are recorded in
 `docs/evidence/v3/live-session.md`.
 
+## Current v5 Phase 2 offscreen evidence (2026-07-26)
+
+The native Qt style gate renders the control surface in LTR and RTL at
+100/125/140/200 percent, plus separate data, menu, state and stress surfaces at
+100 percent. All 12 captures use authentic Qt 6 widgets, have the expected
+pixel dimensions and have unique hashes. The matrix covers mirrored
+subcontrols, sort and close indicators, tri-state checkboxes, static busy
+progress, disabled content, long labels and dense geometry.
+
+These reviewed reference renders are automated structural evidence only. They
+do not change the blocked v5 live qualification manifest and do not claim
+keyboard interaction, compositor behavior or desktop integration.
+
 ## Remaining interactive checks (require live Plasma application)
 
 The following cannot be closed without explicitly applying the Global Theme in

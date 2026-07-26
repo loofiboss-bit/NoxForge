@@ -29,6 +29,18 @@ class VisualEvidenceTests(unittest.TestCase):
         hashes = {hashlib.sha256(path.read_bytes()).digest() for path in captures}
         self.assertEqual(len(hashes), len(captures))
 
+    def test_all_native_gallery_surfaces_have_authentic_reference_renders(self) -> None:
+        captures = []
+        for page in ("data", "menu", "states", "stress"):
+            path = EVIDENCE / f"gallery_{page}_ltr_100pct.png"
+            self.assertEqual(png_dimensions(path), (960, 760))
+            self.assertGreater(path.stat().st_size, 20_000)
+            captures.append(path)
+        self.assertEqual(
+            len({hashlib.sha256(path.read_bytes()).digest() for path in captures}),
+            len(captures),
+        )
+
     def test_authentic_sddm_and_contact_sheet_evidence_is_nonempty(self) -> None:
         self.assertEqual(png_dimensions(EVIDENCE / "sddm_login_100pct.png"), (960, 540))
         self.assertEqual(png_dimensions(EVIDENCE / "icons_16_22_24_32_48px.png"), (400, 480))
