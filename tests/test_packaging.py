@@ -88,6 +88,8 @@ class PackagingTests(unittest.TestCase):
             self.assertNotIn(command, spec)
         self.assertIn("%{_qt6_plugindir}/styles/libnoxforge6.so", spec)
         self.assertIn("%{_datadir}/sddm/themes/NoxForge/", spec)
+        self.assertIn("BuildRequires:  kf6-kirigami", spec)
+        self.assertIn("BuildRequires:  libplasma", spec)
 
     def test_source_archive_contains_packaging_contract(self) -> None:
         build_script = (ROOT / "scripts/build.py").read_text(encoding="utf-8")
