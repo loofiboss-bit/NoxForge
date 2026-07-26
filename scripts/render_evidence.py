@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture authentic offscreen Qt and SDDM surfaces for the v2 visual gate."""
+"""Capture authentic offscreen Qt and SDDM surfaces for the visual gate."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "build/cmake"
 EVIDENCE = ROOT / "docs/evidence"
 SCALES = (("100", "1.0"), ("125", "1.25"), ("140", "1.4"), ("200", "2.0"))
+GALLERY_PAGES = ("data", "menu", "states", "stress")
 ICON_NAMES = (
     "actions/go-previous.svg",
     "actions/media-playback-pause.svg",
@@ -46,18 +47,19 @@ def main() -> int:
                     "QT_PLUGIN_PATH": str(BUILD / "plugins"),
                     "QT_SCALE_FACTOR": scale,
                 })
-                command = [str(gallery)]
+                command = [str(gallery), "--page=controls"]
                 if direction == "rtl":
                     command.append("--rtl")
                 command.append(str(output))
                 run(command, env=env)
                 gallery_outputs.append(output)
 
-        data_output = temp / "gallery_data_ltr_100pct.png"
         env = os.environ.copy()
         env.update({"QT_QPA_PLATFORM": "offscreen", "QT_PLUGIN_PATH": str(BUILD / "plugins"), "QT_SCALE_FACTOR": "1.0"})
-        run([str(gallery), "--data", str(data_output)], env=env)
-        gallery_outputs.append(data_output)
+        for page in GALLERY_PAGES:
+            output = temp / f"gallery_{page}_ltr_100pct.png"
+            run([str(gallery), f"--page={page}", str(output)], env=env)
+            gallery_outputs.append(output)
 
         sddm_output = temp / "sddm_login_100pct.png"
         run(
@@ -95,7 +97,7 @@ def main() -> int:
             shutil.copyfile(path, EVIDENCE / path.name)
         shutil.copyfile(sddm_output, ROOT / "sddm/NoxForge/preview.png")
         run([magick, str(gallery_outputs[0]), "-resize", "480x380", str(ROOT / f"look-and-feel/{THEME_ID}/contents/previews/preview.png")])
-    print("Rendered 9 Qt matrix captures, authentic SDDM preview, icon contact sheet, and Aurorae structural evidence")
+    print("Rendered 12 Qt gallery captures, authentic SDDM preview, icon contact sheet, and Aurorae structural evidence")
     return 0
 
 

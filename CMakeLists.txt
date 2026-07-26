@@ -42,27 +42,28 @@ add_test(NAME style-plugin-discovery COMMAND noxforge_style_probe)
 set_tests_properties(style-plugin-discovery PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins")
 
-function(add_noxforge_gallery_test name scale rtl)
+function(add_noxforge_gallery_test name scale rtl page)
     if(rtl)
-        add_test(NAME ${name} COMMAND noxforge_widget_gallery --rtl)
+        add_test(NAME ${name} COMMAND noxforge_widget_gallery --rtl --page=${page})
     else()
-        add_test(NAME ${name} COMMAND noxforge_widget_gallery)
+        add_test(NAME ${name} COMMAND noxforge_widget_gallery --page=${page})
     endif()
     set_tests_properties(${name} PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_SCALE_FACTOR=${scale}")
 endfunction()
 
-add_noxforge_gallery_test(widget-gallery-ltr-100 1.0 FALSE)
-add_noxforge_gallery_test(widget-gallery-ltr-125 1.25 FALSE)
-add_noxforge_gallery_test(widget-gallery-ltr-140 1.4 FALSE)
-add_noxforge_gallery_test(widget-gallery-ltr-200 2.0 FALSE)
-add_noxforge_gallery_test(widget-gallery-rtl-100 1.0 TRUE)
-add_noxforge_gallery_test(widget-gallery-rtl-125 1.25 TRUE)
-add_noxforge_gallery_test(widget-gallery-rtl-140 1.4 TRUE)
-add_noxforge_gallery_test(widget-gallery-rtl-200 2.0 TRUE)
-add_test(NAME widget-gallery-data-page COMMAND noxforge_widget_gallery --data)
-set_tests_properties(widget-gallery-data-page PROPERTIES
-    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_SCALE_FACTOR=1.0")
+add_noxforge_gallery_test(widget-gallery-ltr-100 1.0 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-ltr-125 1.25 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-ltr-140 1.4 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-ltr-200 2.0 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-100 1.0 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-125 1.25 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-140 1.4 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-200 2.0 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-data-page 1.0 FALSE data)
+add_noxforge_gallery_test(widget-gallery-menu-page 1.0 FALSE menu)
+add_noxforge_gallery_test(widget-gallery-states-page 1.0 FALSE states)
+add_noxforge_gallery_test(widget-gallery-stress-page 1.0 FALSE stress)
 add_test(
     NAME sddm-qml-surface
     COMMAND noxforge_sddm_renderer

@@ -4,17 +4,20 @@
 #include "noxforgepalette.h"
 
 #include <QApplication>
+#include <QList>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 #include <QStyleOptionButton>
 #include <QStyleOptionComboBox>
 #include <QStyleOptionGroupBox>
+#include <QStyleOptionHeader>
 #include <QStyleOptionMenuItem>
 #include <QStyleOptionProgressBar>
 #include <QStyleOptionSlider>
 #include <QStyleOptionSpinBox>
 #include <QStyleOptionTab>
+#include <QStyleOptionToolButton>
 
 namespace NP = NoxForgePalette;
 
@@ -103,6 +106,31 @@ void paintArrow(QPainter *painter, const QRect &rect, Qt::ArrowType arrow, const
     painter->restore();
 }
 
+void paintCloseIndicator(QPainter *painter, const QRect &rect, const QColor &color)
+{
+    const int extent = qMax(6, qMin(rect.width(), rect.height()) / 3);
+    const QPoint center = rect.center();
+    painter->save();
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setPen(QPen(color, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+    painter->drawLine(center + QPoint(-extent, -extent), center + QPoint(extent, extent));
+    painter->drawLine(center + QPoint(extent, -extent), center + QPoint(-extent, extent));
+    painter->restore();
+}
+
+template<typename Option>
+void drawLabelWithPalette(const QCommonStyle *style, QStyle::ControlElement element,
+                          const Option &option, QPainter *painter,
+                          const QWidget *widget, QPalette::ColorRole role)
+{
+    Option copy = option;
+    const QColor text = enabled(&option) ? NP::textPrimary() : NP::textDisabled();
+    copy.palette.setColor(QPalette::Active, role, text);
+    copy.palette.setColor(QPalette::Inactive, role, text);
+    copy.palette.setColor(QPalette::Disabled, role, NP::textDisabled());
+    style->QCommonStyle::drawControl(element, &copy, painter, widget);
+}
+
 } // namespace
 
 NoxForgeStyle::NoxForgeStyle()
@@ -173,7 +201,6 @@ int NoxForgeStyle::styleHint(StyleHint hint, const QStyleOption *option,
     case SH_UnderlineShortcut: return 0;
     case SH_ItemView_ActivateItemOnSingleClick: return 0;
     case SH_MenuBar_AltKeyNavigation: return 1;
-    case SH_Widget_Animate: return 1;
     case SH_FocusFrame_AboveWidget: return 1;
     default: return QCommonStyle::styleHint(hint, option, widget, returnData);
     }
@@ -208,7 +235,8 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
 {
     if (control == CC_ScrollBar) {
         const auto *scroll = qstyleoption_cast<const QStyleOptionSlider *>(option);
-        if (!scroll) return QRect();
+        if (!scroll)
+            return QCommonStyle::subControlRect(control, option, subControl, widget);
         if (subControl == SC_ScrollBarAddLine || subControl == SC_ScrollBarSubLine) return QRect();
         const QRect groove = option->rect.adjusted(2, 2, -2, -2);
         if (subControl == SC_ScrollBarGroove) return groove;
@@ -255,7 +283,8 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
     }
     if (control == CC_Slider) {
         const auto *slider = qstyleoption_cast<const QStyleOptionSlider *>(option);
-        if (!slider) return QRect();
+        if (!slider)
+            return QCommonStyle::subControlRect(control, option, subControl, widget);
         constexpr int handleLength = 18;
         if (subControl == SC_SliderGroove) {
             return slider->orientation == Qt::Horizontal
@@ -277,7 +306,50 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
                         handleLength, handleLength);
         }
     }
+    if (control == CC_ToolButton) {
+        const auto *tool = qstyleoption_cast<const QStyleOptionToolButton *>(option);
+        if (!tool)
+            return QCommonStyle::subControlRect(control, option, subControl, widget);
+        const bool hasMenu = tool->features.testFlag(QStyleOptionToolButton::Menu)
+            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup);
+        const int menuWidth = hasMenu ? 24 : 0;
+        const QRect logicalMenu(option->rect.right() - menuWidth + 1, option->rect.top(),
+                                menuWidth, option->rect.height());
+        if (subControl == SC_ToolButtonMenu)
+            return hasMenu ? visualRect(option->direction, option->rect, logicalMenu) : QRect();
+        if (subControl == SC_ToolButton)
+            return visualRect(option->direction, option->rect,
+                              option->rect.adjusted(0, 0, -menuWidth, 0));
+    }
     return QCommonStyle::subControlRect(control, option, subControl, widget);
+}
+
+QStyle::SubControl NoxForgeStyle::hitTestComplexControl(
+    ComplexControl control, const QStyleOptionComplex *option,
+    const QPoint &position, const QWidget *widget) const
+{
+    const QList<SubControl> controls = [control] {
+        switch (control) {
+        case CC_ComboBox:
+            return QList<SubControl>{SC_ComboBoxArrow, SC_ComboBoxEditField, SC_ComboBoxFrame};
+        case CC_SpinBox:
+            return QList<SubControl>{SC_SpinBoxUp, SC_SpinBoxDown, SC_SpinBoxEditField,
+                                     SC_SpinBoxFrame};
+        case CC_Slider:
+            return QList<SubControl>{SC_SliderHandle, SC_SliderGroove};
+        case CC_ScrollBar:
+            return QList<SubControl>{SC_ScrollBarSlider, SC_ScrollBarGroove};
+        case CC_ToolButton:
+            return QList<SubControl>{SC_ToolButtonMenu, SC_ToolButton};
+        default:
+            return QList<SubControl>{};
+        }
+    }();
+    for (const SubControl subControl : controls) {
+        if (subControlRect(control, option, subControl, widget).contains(position))
+            return subControl;
+    }
+    return QCommonStyle::hitTestComplexControl(control, option, position, widget);
 }
 
 QRect NoxForgeStyle::subElementRect(SubElement element, const QStyleOption *option,
@@ -339,31 +411,60 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         // Owning controls paint their focus once; a second frame creates a neon halo.
         return;
     case PE_IndicatorCheckBox:
-    case PE_IndicatorRadioButton: {
+    case PE_IndicatorRadioButton:
+    case PE_IndicatorItemViewItemCheck: {
         const QRect box = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), option->rect);
+        const bool radio = element == PE_IndicatorRadioButton;
+        const bool mixed = option->state.testFlag(State_NoChange);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? NP::accent() : NP::borderStrong(), 1));
-        painter->setBrush(option->state.testFlag(State_On) ? NP::surfaceSelected() : NP::background());
-        element == PE_IndicatorRadioButton
+        painter->setBrush((option->state.testFlag(State_On) || mixed)
+                              ? NP::surfaceSelected() : NP::background());
+        radio
             ? painter->drawEllipse(box.adjusted(1, 1, -1, -1))
             : painter->drawPath(surfacePath(box.adjusted(1, 1, -1, -1),
                                             option->state.testFlag(State_HasFocus), 3));
-        if (option->state.testFlag(State_On)) {
+        if (mixed) {
+            painter->setPen(QPen(NP::cyan(), 2, Qt::SolidLine, Qt::SquareCap));
+            painter->drawLine(box.left() + 4, box.center().y(), box.right() - 4, box.center().y());
+        } else if (option->state.testFlag(State_On)) {
             painter->setPen(QPen(NP::accent(), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-            if (element == PE_IndicatorRadioButton) painter->drawEllipse(box.center(), 3, 3);
+            if (radio) painter->drawEllipse(box.center(), 3, 3);
             else painter->drawPolyline(QPolygon() << QPoint(box.left() + 4, box.center().y()) << QPoint(box.center().x() - 1, box.bottom() - 4) << QPoint(box.right() - 3, box.top() + 4));
         }
         painter->restore();
         return;
     }
+    case PE_IndicatorHeaderArrow: {
+        const auto *header = qstyleoption_cast<const QStyleOptionHeader *>(option);
+        if (!header) break;
+        const Qt::ArrowType arrow = header->sortIndicator == QStyleOptionHeader::SortDown
+            ? Qt::DownArrow : Qt::UpArrow;
+        paintArrow(painter, option->rect, arrow,
+                   enabled(option) ? NP::textPrimary() : NP::textDisabled());
+        return;
+    }
+    case PE_IndicatorTabClose:
+        if (option->state.testFlag(State_MouseOver))
+            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected()
+                                                             : NP::surfaceHover(),
+                         option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border());
+        paintCloseIndicator(painter, option->rect,
+                            enabled(option) ? NP::textPrimary() : NP::textDisabled());
+        return;
+    case PE_IndicatorProgressChunk:
+        paintSurface(painter, option->rect, NP::cyan(), NP::cyan());
+        return;
     case PE_IndicatorArrowDown: paintArrow(painter, option->rect, Qt::DownArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled()); return;
     case PE_IndicatorArrowUp: paintArrow(painter, option->rect, Qt::UpArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled()); return;
     case PE_IndicatorArrowLeft: paintArrow(painter, option->rect, Qt::LeftArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled()); return;
     case PE_IndicatorArrowRight: paintArrow(painter, option->rect, Qt::RightArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled()); return;
     default:
-        QCommonStyle::drawPrimitive(element, option, painter, widget);
+        break;
     }
+    QCommonStyle::drawPrimitive(element, option, painter, widget);
 }
 
 void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *option,
@@ -379,6 +480,25 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         copy.palette.setColor(QPalette::ButtonText, text);
         copy.palette.setColor(QPalette::WindowText, text);
         QCommonStyle::drawControl(element, &copy, painter, widget);
+        return;
+    }
+    case CE_CheckBoxLabel:
+    case CE_RadioButtonLabel: {
+        const auto *button = qstyleoption_cast<const QStyleOptionButton *>(option);
+        if (!button) break;
+        drawLabelWithPalette(this, element, *button, painter, widget, QPalette::WindowText);
+        return;
+    }
+    case CE_TabBarTabLabel: {
+        const auto *tab = qstyleoption_cast<const QStyleOptionTab *>(option);
+        if (!tab) break;
+        drawLabelWithPalette(this, element, *tab, painter, widget, QPalette::WindowText);
+        return;
+    }
+    case CE_HeaderLabel: {
+        const auto *header = qstyleoption_cast<const QStyleOptionHeader *>(option);
+        if (!header) break;
+        drawLabelWithPalette(this, element, *header, painter, widget, QPalette::ButtonText);
         return;
     }
     case CE_MenuBarItem: {
@@ -421,11 +541,22 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
             item->icon.paint(painter, leading, Qt::AlignCenter, mode);
         }
         const QStringList parts = item->text.split(QLatin1Char('\t'));
-        const QRect textRect = option->rect.adjusted(leadingWidth + 8, 0, -28, 0);
+        QRect logicalText = option->rect.adjusted(leadingWidth + 8, 0, -28, 0);
+        QRect logicalShortcut;
+        if (parts.size() > 1) {
+            const int shortcutWidth = option->fontMetrics.horizontalAdvance(parts.value(1));
+            logicalShortcut = QRect(logicalText.right() - shortcutWidth + 1,
+                                    logicalText.top(), shortcutWidth, logicalText.height());
+            logicalText.setRight(logicalShortcut.left() - 12);
+        }
+        const QRect textRect = visualRect(option->direction, option->rect, logicalText);
         painter->save();
         painter->setPen(enabled(option) ? NP::textPrimary() : NP::textDisabled());
         painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeading | Qt::TextShowMnemonic, parts.value(0));
-        if (parts.size() > 1) painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignTrailing, parts.value(1));
+        if (!logicalShortcut.isEmpty()) {
+            painter->drawText(visualRect(option->direction, option->rect, logicalShortcut),
+                              Qt::AlignVCenter | Qt::AlignLeading, parts.value(1));
+        }
         painter->restore();
         if (item->menuItemType == QStyleOptionMenuItem::SubMenu) {
             const QRect arrow = visualRect(option->direction, option->rect,
@@ -441,11 +572,18 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
     case CE_ProgressBarContents: {
         const auto *progress = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
         if (!progress) break;
+        const bool busy = progress->minimum == 0 && progress->maximum == 0;
         const int span = progress->maximum - progress->minimum;
         const qreal ratio = span > 0 ? qBound(0.0, qreal(progress->progress - progress->minimum) / span, 1.0) : 0.0;
         QRect fill = option->rect.adjusted(2, 2, -2, -2);
         const bool horizontal = option->state.testFlag(State_Horizontal);
-        if (horizontal) {
+        if (busy && horizontal) {
+            fill.setLeft(fill.center().x() - fill.width() / 6);
+            fill.setWidth(qMax(8, fill.width() / 3));
+        } else if (busy) {
+            fill.setTop(fill.center().y() - fill.height() / 6);
+            fill.setHeight(qMax(8, fill.height() / 3));
+        } else if (horizontal) {
             const int amount = qRound(fill.width() * ratio);
             const bool reverse = progress->invertedAppearance ^ (option->direction == Qt::RightToLeft);
             if (reverse) fill.setLeft(fill.right() - amount + 1);
@@ -456,6 +594,15 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
             else fill.setTop(fill.bottom() - amount + 1);
         }
         paintSurface(painter, fill, NP::cyan(), NP::cyan());
+        return;
+    }
+    case CE_ProgressBarLabel: {
+        painter->save();
+        painter->setPen(enabled(option) ? NP::textPrimary() : NP::textDisabled());
+        const auto *progress = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        if (progress)
+            painter->drawText(option->rect, Qt::AlignCenter, progress->text);
+        painter->restore();
         return;
     }
     case CE_TabBarTabShape:
@@ -484,8 +631,9 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         painter->fillRect(QRect(option->rect.left(), option->rect.bottom(), option->rect.width(), 1), NP::border());
         return;
     default:
-        QCommonStyle::drawControl(element, option, painter, widget);
+        break;
     }
+    QCommonStyle::drawControl(element, option, painter, widget);
 }
 
 void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
@@ -510,8 +658,10 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
                      option->state.testFlag(State_HasFocus));
         const QRect up = subControlRect(CC_SpinBox, option, SC_SpinBoxUp, widget);
         const QRect down = subControlRect(CC_SpinBox, option, SC_SpinBoxDown, widget);
-        painter->fillRect(visualRect(option->direction, option->rect,
-                                    QRect(qMin(up.left(), down.left()), option->rect.top() + 2, 1, option->rect.height() - 4)), NP::border());
+        const int separatorX = option->direction == Qt::RightToLeft
+            ? qMax(up.right(), down.right()) : qMin(up.left(), down.left());
+        painter->fillRect(QRect(separatorX, option->rect.top() + 2, 1,
+                                option->rect.height() - 4), NP::border());
         if (spin->stepEnabled.testFlag(QAbstractSpinBox::StepUpEnabled))
             paintArrow(painter, up, Qt::UpArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled());
         if (spin->stepEnabled.testFlag(QAbstractSpinBox::StepDownEnabled))
@@ -583,11 +733,22 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         painter->restore();
         return;
     }
-    case CC_ToolButton:
+    case CC_ToolButton: {
+        const auto *tool = qstyleoption_cast<const QStyleOptionToolButton *>(option);
+        if (!tool) break;
         drawPrimitive(PE_PanelButtonTool, option, painter, widget);
-        QCommonStyle::drawControl(CE_ToolButtonLabel, option, painter, widget);
+        QStyleOptionToolButton label = *tool;
+        label.rect = subControlRect(CC_ToolButton, option, SC_ToolButton, widget);
+        QCommonStyle::drawControl(CE_ToolButtonLabel, &label, painter, widget);
+        if (tool->features.testFlag(QStyleOptionToolButton::Menu)
+            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup)) {
+            paintArrow(painter, subControlRect(CC_ToolButton, option, SC_ToolButtonMenu, widget),
+                       Qt::DownArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled());
+        }
         return;
-    default:
-        QCommonStyle::drawComplexControl(control, option, painter, widget);
     }
+    default:
+        break;
+    }
+    QCommonStyle::drawComplexControl(control, option, painter, widget);
 }
