@@ -102,6 +102,23 @@ def validate_version() -> str:
     return version
 
 
+def relative_luminance(hex_color: str) -> float:
+    channels = [int(hex_color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
+    linear = [
+        value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+        for value in channels
+    ]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(first: str, second: str) -> float:
+    light, dark = sorted(
+        (relative_luminance(first), relative_luminance(second)),
+        reverse=True,
+    )
+    return (light + 0.05) / (dark + 0.05)
+
+
 def validate_tokens(version: str) -> dict[str, object]:
     tokens = load_json(ROOT / "design/tokens.json")
     if not isinstance(tokens, dict):
@@ -127,23 +144,226 @@ def validate_tokens(version: str) -> dict[str, object]:
         "negative": "#FF6B7A",
         "neutral": "#FBBF24",
     }
-    if tokens.get("schemaVersion") != 3 or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") != 4 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
     geometry = tokens.get("geometry")
+    semantic_roles = tokens.get("semanticRoles")
+    opacity = tokens.get("opacity")
+    elevation = tokens.get("elevation")
+    overlay = tokens.get("overlay")
+    shadow = tokens.get("shadow")
     motion = tokens.get("motion")
     states = tokens.get("states")
     typography = tokens.get("typography")
     iconography = tokens.get("iconography")
-    if not all(isinstance(value, dict) for value in (geometry, motion, states, typography, iconography)):
-        raise ValidationError("design tokens require geometry, state, typography, iconography and motion objects")
-    if geometry.get("forgeNotch") != 4 or geometry.get("controlHeight") != 32:
+    hallmark = tokens.get("hallmark")
+    if not all(
+        isinstance(value, dict)
+        for value in (
+            geometry,
+            semantic_roles,
+            opacity,
+            elevation,
+            overlay,
+            shadow,
+            motion,
+            states,
+            typography,
+            iconography,
+            hallmark,
+        )
+    ):
+        raise ValidationError("design token schema v4 objects are incomplete")
+    if (
+        geometry.get("forgeNotch") != 4
+        or geometry.get("compactSpacing") != 4
+        or geometry.get("standardSpacing") != 8
+        or geometry.get("controlHeight") != 32
+        or geometry.get("largeControlHeight") != 36
+    ):
         raise ValidationError("design geometry does not match Industrial Precision")
-    if motion != {"pressMs": 90, "hoverMs": 140, "popupMs": 180}:
+    if opacity != {
+        "enabled": 1.0,
+        "inactive": 0.72,
+        "disabled": 0.55,
+        "subtle": 0.12,
+        "scrim": 0.72,
+    }:
+        raise ValidationError("design opacity roles are incomplete")
+
+    role_names = {
+        "canvas",
+        "surface",
+        "control",
+        "controlHover",
+        "controlPressed",
+        "selection",
+        "primaryAction",
+        "primaryActionPressed",
+        "focus",
+        "disabled",
+        "busy",
+        "error",
+        "success",
+    }
+    if set(semantic_roles) != role_names:
+        raise ValidationError("semantic color roles are incomplete")
+    for name, role in semantic_roles.items():
+        if not isinstance(role, dict) or set(role) != {"background", "foreground", "border"}:
+            raise ValidationError(f"semantic role {name} is incomplete")
+        if any(reference not in required_colors for reference in role.values()):
+            raise ValidationError(f"semantic role {name} references an unknown color")
+
+    if set(elevation) != {"flat", "surface", "control", "popup"}:
+        raise ValidationError("elevation roles are incomplete")
+    for name, level in elevation.items():
+        if (
+            not isinstance(level, dict)
+            or set(level) != {"level", "shadow"}
+            or not isinstance(level.get("level"), int)
+            or level["level"] < 0
+            or level.get("shadow") not in shadow
+        ):
+            raise ValidationError(f"elevation role {name} is invalid")
+    if set(overlay) != {"none", "hover", "pressed", "busy", "scrim"}:
+        raise ValidationError("overlay roles are incomplete")
+    for name, layer in overlay.items():
+        if (
+            not isinstance(layer, dict)
+            or layer.get("color") not in required_colors
+            or not isinstance(layer.get("opacity"), (int, float))
+            or not 0 <= layer["opacity"] <= 1
+        ):
+            raise ValidationError(f"overlay role {name} is invalid")
+    if set(shadow) != {"none", "control", "popup"}:
+        raise ValidationError("shadow roles are incomplete")
+    for name, recipe in shadow.items():
+        if not isinstance(recipe, dict) or recipe.get("color") not in required_colors:
+            raise ValidationError(f"shadow role {name} is invalid")
+        if set(recipe) != {"color", "opacity", "offsetX", "offsetY", "blurRadius", "spreadRadius"}:
+            raise ValidationError(f"shadow role {name} is incomplete")
+        if (
+            not isinstance(recipe["opacity"], (int, float))
+            or not 0 <= recipe["opacity"] <= 1
+        ):
+            raise ValidationError(f"shadow role {name} has invalid opacity")
+        dimensions = [recipe[key] for key in ("offsetX", "offsetY", "blurRadius", "spreadRadius")]
+        if any(not isinstance(value, int) or value % 4 for value in dimensions):
+            raise ValidationError(f"shadow role {name} breaks the 4 px grid")
+
+    expected_motion = {
+        "noneMs": 0,
+        "pressMs": 90,
+        "hoverMs": 140,
+        "popupMs": 180,
+        "busyMs": 180,
+        "reducedMotion": {
+            "durationMs": 0,
+            "spatialMotion": False,
+            "busyIndicatorStatic": True,
+        },
+    }
+    if motion != expected_motion:
         raise ValidationError("design motion does not match Industrial Precision")
     if states.get("focusStyle") != "single-2px-outline" or states.get("normalNotch") is not False:
         raise ValidationError("design state hierarchy does not match Industrial Precision")
+    hierarchy = states.get("hierarchy")
+    state_names = {
+        "default",
+        "hover",
+        "focus",
+        "pressed",
+        "checked",
+        "selected",
+        "disabled",
+        "busy",
+        "error",
+        "success",
+    }
+    if not isinstance(hierarchy, dict) or set(hierarchy) != state_names:
+        raise ValidationError("interactive state hierarchy is incomplete")
+    motion_names = {"noneMs", "hoverMs", "pressMs", "busyMs"}
+    indicator_names = {
+        "none",
+        "singleFocusRing",
+        "checkGlyph",
+        "leadingMarker",
+        "busyGlyph",
+        "errorGlyph",
+        "successGlyph",
+    }
+    for name, state in hierarchy.items():
+        if not isinstance(state, dict) or set(state) != {
+            "role",
+            "opacity",
+            "elevation",
+            "overlay",
+            "indicator",
+            "motion",
+        }:
+            raise ValidationError(f"interactive state {name} is incomplete")
+        if (
+            state["role"] not in semantic_roles
+            or state["opacity"] not in opacity
+            or state["elevation"] not in elevation
+            or state["overlay"] not in overlay
+            or state["indicator"] not in indicator_names
+            or state["motion"] not in motion_names
+        ):
+            raise ValidationError(f"interactive state {name} has an invalid token reference")
     if iconography.get("grid") != 24 or iconography.get("opticalSizes") != [16, 22]:
         raise ValidationError("iconography tokens are incomplete")
+
+    contrast_pairs = tokens.get("contrastPairs")
+    if not isinstance(contrast_pairs, list) or not contrast_pairs:
+        raise ValidationError("documented contrast pairs are missing")
+    covered_pairs: set[tuple[str, str]] = set()
+    pair_names: set[str] = set()
+    for pair in contrast_pairs:
+        if not isinstance(pair, dict) or set(pair) != {
+            "name",
+            "foreground",
+            "background",
+            "minimumRatio",
+        }:
+            raise ValidationError("a documented contrast pair is incomplete")
+        foreground = pair["foreground"]
+        background = pair["background"]
+        minimum = pair["minimumRatio"]
+        if (
+            pair["name"] in pair_names
+            or foreground not in required_colors
+            or background not in required_colors
+            or not isinstance(minimum, (int, float))
+        ):
+            raise ValidationError("a documented contrast pair is invalid")
+        pair_names.add(pair["name"])
+        covered_pairs.add((foreground, background))
+        actual = contrast_ratio(required_colors[foreground], required_colors[background])
+        if actual < minimum:
+            raise ValidationError(
+                f"contrast pair {pair['name']} is {actual:.2f}:1, below {minimum:.2f}:1"
+            )
+    required_pairs = {
+        (role["foreground"], role["background"])
+        for role in semantic_roles.values()
+    }
+    if not required_pairs.issubset(covered_pairs):
+        raise ValidationError("contrast coverage does not include every semantic role")
+
+    score_names = {
+        "philosophy",
+        "hierarchy",
+        "execution",
+        "specificity",
+        "restraint",
+        "variety",
+    }
+    if set(hallmark) != score_names or any(
+        not isinstance(score, int) or not 4 <= score <= 5
+        for score in hallmark.values()
+    ):
+        raise ValidationError("Hallmark scores must be complete and at least 4/5")
     return tokens
 
 
