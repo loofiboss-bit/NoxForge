@@ -28,9 +28,12 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 5.0.0 is the current stable release candidate. Its complete local
-release gate and available isolated Wayland qualification passed; exact-tag
-GitHub and COPR publication is tracked in
+NoxForge 5.0.0 is the current stable release. The exact-tag
+[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v5.0.0)
+provides the verified source archive, SRPM, Fedora 44 RPM, qualification
+manifest, automated report and checksums. The Fedora package is available from
+COPR project `loofitheboss/noxforge`; exact publication and independent
+readback evidence is recorded in
 [`docs/NOXFORGE_V5_PLAN.md`](docs/NOXFORGE_V5_PLAN.md). The historical v4
 GitHub release contains no attached build artifacts and made no v4 COPR or
 fresh live-qualification claim.

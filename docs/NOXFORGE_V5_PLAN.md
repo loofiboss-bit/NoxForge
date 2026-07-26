@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 7 release candidate qualified; publication pending
+**Plan status:** Released on 2026-07-26
 
 ## Product direction
 
@@ -190,6 +190,22 @@ and the active desktop and SDDM settings were unchanged.
 
 **Gate:** GitHub, COPR, checksums, tag lineage, package installation,
 `rpm -V`, `noxforge-doctor` and non-applying removal all read back successfully.
+
+**Outcome (2026-07-26):** Annotated tag `v5.0.0` resolves to
+`c979515e6bb99f0201e630be269bb7ecc097c35c`. PR #7 merged the qualified
+candidate after all three required checks passed in CI run `30193489199`.
+Release workflow run `30193932579` rebuilt the exact tag, passed the full
+Fedora 44 gate, verified the commit/ref-bound payload and published exactly six
+assets. A fresh public download passed every `SHA256SUMS` entry and confirmed
+the source archive, SRPM, `noxforge-5.0.0-1.fc44.x86_64.rpm`, qualification
+manifest and automated report all name the exact release lineage. COPR build
+`10774386` reached terminal `succeeded` for `fedora-44-x86_64`, and the public
+repository exposed both source and binary packages. A disposable Fedora 44
+installation passed `rpm -V` and `noxforge-doctor` with no missing or mixed
+components. Removal with `dnf remove --no-autoremove` removed only NoxForge;
+KDE and SDDM configuration hashes remained unchanged before installation,
+after installation and after removal. The Phase 6 environment-blocked live
+cases remain release limitations and were not relabeled as passed.
 
 ## Permanent constraints
 

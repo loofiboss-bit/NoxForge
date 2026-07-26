@@ -10,8 +10,8 @@ Industrial Precision identity into a complete, measurable visual system across
 Qt, Plasma, session surfaces and original artwork. [`DESIGN.md`](../DESIGN.md)
 remains the locked visual authority.
 
-Implementation proceeded one phase at a time. Phase 7 is the stable release,
-publication and independent readback gate.
+Implementation proceeded one phase at a time. All seven v5 phases are complete;
+Phase 7 records the stable release, publication and independent readback gate.
 
 ## Historical release evidence
 

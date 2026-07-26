@@ -55,9 +55,12 @@ class V5PhaseSixTests(unittest.TestCase):
 
     def test_phase_plan_records_completed_gate(self) -> None:
         plan = (ROOT / "docs/NOXFORGE_V5_PLAN.md").read_text(encoding="utf-8")
-        self.assertIn("Plan status:** Phase 7 release candidate qualified", plan)
+        self.assertIn("Plan status:** Released on 2026-07-26", plan)
         phase = plan.split("## Phase 6", 1)[1].split("## Phase 7", 1)[0]
         self.assertIn("**Outcome (2026-07-26):**", phase)
+        release = plan.split("## Phase 7", 1)[1].split("## Permanent constraints", 1)[0]
+        self.assertIn("Release workflow run `30193932579`", release)
+        self.assertIn("COPR build\n`10774386`", release)
 
 
 if __name__ == "__main__":
