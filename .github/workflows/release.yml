@@ -49,9 +49,52 @@ jobs:
         shell: bash
         run: |
           version=$(<VERSION)
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Public releases require a stable VERSION, got: $version" >&2
+            exit 1
+          fi
           test "${{ inputs.ref }}" = "v${version}"
           test "$(git -c safe.directory="$GITHUB_WORKSPACE" describe --tags --exact-match)" = "v${version}"
           python3 scripts/sync_version.py --check
+          major=${version%%.*}
+          evidence_dir="docs/evidence/v${major}"
+          notes_file="docs/releases/v${version}.md"
+          test -s "${evidence_dir}/qualification.json"
+          test -s "${evidence_dir}/automated-gate.md"
+          test -s "${notes_file}"
+          grep -Fqx "Version: ${version}" "${evidence_dir}/automated-gate.md"
+          grep -Fqx "Commit: ${GITHUB_SHA}" "${evidence_dir}/automated-gate.md"
+          grep -Fq "${version}" "${notes_file}"
+          python3 - "$version" "$evidence_dir/qualification.json" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          version, manifest_path = sys.argv[1:]
+          manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+          candidate = manifest.get("candidate", {})
+          if manifest.get("schemaVersion") != 2:
+              raise SystemExit("qualification manifest must use schema version 2")
+          if manifest.get("releaseState") != "release":
+              raise SystemExit("qualification manifest is not release-ready")
+          if candidate.get("version") != version or candidate.get("sourceRef") != f"v{version}":
+              raise SystemExit("qualification version/ref does not match the requested tag")
+          if candidate.get("sourceCommit") != os.environ["GITHUB_SHA"]:
+              raise SystemExit("qualification commit does not match the requested tag")
+          if candidate.get("worktreeDirty") is not False:
+              raise SystemExit("qualification must describe a clean tagged worktree")
+          if not candidate.get("package") or len(candidate.get("artifacts", [])) != 6:
+              raise SystemExit("qualification package/artifacts are incomplete")
+          contract = manifest.get("releaseContract", {})
+          if contract.get("assetCount") != 6 or len(contract.get("assetKinds", [])) != 6:
+              raise SystemExit("qualification manifest does not define the six-asset contract")
+          PY
+          {
+            echo "NOXFORGE_VERSION=$version"
+            echo "NOXFORGE_EVIDENCE_DIR=$evidence_dir"
+            echo "NOXFORGE_NOTES_FILE=$notes_file"
+          } >> "$GITHUB_ENV"
 
       - name: Run the full gate
         run: python3 scripts/release-check.py
@@ -64,18 +107,39 @@ jobs:
           cp dist/noxforge-*.tar.xz rpmbuild/SOURCES/
           rpmbuild -ba --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
           cp dist/noxforge-*.tar.xz rpmbuild/SRPMS/*.src.rpm rpmbuild/RPMS/*/noxforge-[0-9]*.rpm release/
-          cp docs/evidence/v3/automated-gate.md release/
+          cp "$NOXFORGE_EVIDENCE_DIR/automated-gate.md" release/
           python3 - <<'PY'
           import json
           import os
           from pathlib import Path
 
-          source = Path("docs/evidence/v3/qualification.json")
+          source = Path(os.environ["NOXFORGE_EVIDENCE_DIR"]) / "qualification.json"
           destination = Path("release/qualification.json")
           evidence = json.loads(source.read_text(encoding="utf-8"))
+          version = os.environ["NOXFORGE_VERSION"]
+          release_files = sorted(path.name for path in Path("release").iterdir() if path.is_file())
+          expected_payloads = [
+              "automated-gate.md",
+              f"noxforge-{version}.tar.xz",
+              next(name for name in release_files if name.endswith(".src.rpm")),
+              next(
+                  name
+                  for name in release_files
+                  if name.endswith(".rpm") and not name.endswith(".src.rpm")
+              ),
+              "qualification.json",
+              "SHA256SUMS",
+          ]
+          evidence["releaseState"] = "release"
           evidence["candidate"]["sourceCommit"] = os.environ["GITHUB_SHA"]
           evidence["candidate"]["sourceRef"] = os.environ["GITHUB_REF_NAME"]
           evidence["candidate"]["worktreeDirty"] = False
+          evidence["candidate"]["package"] = next(
+              name
+              for name in release_files
+              if name.endswith(".rpm") and not name.endswith(".src.rpm")
+          )
+          evidence["candidate"]["artifacts"] = expected_payloads
           destination.write_text(
               json.dumps(evidence, indent=2, sort_keys=True) + "\n",
               encoding="utf-8",
@@ -88,12 +152,21 @@ jobs:
               | xargs -0 sha256sum > SHA256SUMS
             sha256sum --check SHA256SUMS
           )
+          mapfile -d '' assets < <(find release -maxdepth 1 -type f -printf '%f\0')
+          test "${#assets[@]}" -eq 6
+          test -s release/qualification.json
+          test -s release/automated-gate.md
+          test -s release/SHA256SUMS
+          test -s "release/noxforge-${NOXFORGE_VERSION}.tar.xz"
+          test "$(find release -maxdepth 1 -type f -name '*.src.rpm' | wc -l)" -eq 1
+          test "$(find release -maxdepth 1 -type f -name '*.rpm' ! -name '*.src.rpm' | wc -l)" -eq 1
 
       - uses: actions/upload-artifact@v4
         with:
           name: noxforge-${{ inputs.ref }}
           path: release/
           if-no-files-found: error
+          retention-days: 3
 
   publish-github:
     name: Publish approved GitHub release
@@ -113,6 +186,22 @@ jobs:
           name: noxforge-${{ inputs.ref }}
           path: release
 
+      - name: Verify the exact release payload
+        shell: bash
+        run: |
+          version=$(<VERSION)
+          test "${{ inputs.ref }}" = "v${version}"
+          mapfile -d '' assets < <(find release -maxdepth 1 -type f -printf '%f\0')
+          test "${#assets[@]}" -eq 6
+          test -s release/qualification.json
+          test -s release/automated-gate.md
+          test -s release/SHA256SUMS
+          test -s "release/noxforge-${version}.tar.xz"
+          test "$(find release -maxdepth 1 -type f -name '*.src.rpm' | wc -l)" -eq 1
+          test "$(find release -maxdepth 1 -type f -name '*.rpm' ! -name '*.src.rpm' | wc -l)" -eq 1
+          (cd release && sha256sum --check SHA256SUMS)
+          echo "NOXFORGE_NOTES_FILE=docs/releases/v${version}.md" >> "$GITHUB_ENV"
+
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
@@ -121,4 +210,4 @@ jobs:
           release/*
           --verify-tag
           --title "NoxForge ${{ inputs.ref }}"
-          --notes-file docs/releases/v3.0.0.md
+          --notes-file "$NOXFORGE_NOTES_FILE"

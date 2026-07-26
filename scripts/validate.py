@@ -17,7 +17,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
-SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
+SEMVER = re.compile(
+    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
+)
 PACKAGE_ROOTS = (
     ROOT / "plasma",
     ROOT / "aurorae",
@@ -95,7 +98,7 @@ def load_colors(path: Path) -> configparser.ConfigParser:
 def validate_version() -> str:
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     if not SEMVER.fullmatch(version):
-        raise ValidationError(f"VERSION is not stable SemVer: {version!r}")
+        raise ValidationError(f"VERSION is not SemVer: {version!r}")
     return version
 
 
@@ -572,7 +575,7 @@ def validate_tooling() -> None:
         ROOT / "docs/INSTALL_FEDORA.md",
         ROOT / "docs/TROUBLESHOOTING.md",
         ROOT / "docs/MANUAL_TESTING.md",
-        ROOT / "docs/evidence/v3/qualification.json",
+        ROOT / "docs/evidence/v5/qualification.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -596,24 +599,78 @@ def validate_tooling() -> None:
         if command in system_install or command in system_uninstall:
             raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-    if "docs/evidence/v3/qualification.json" not in checklist or "Blocked" not in checklist:
-        raise ValidationError("manual graphical checks must use the structured v3 evidence manifest")
-    evidence = load_json(ROOT / "docs/evidence/v3/qualification.json")
+    if "docs/evidence/v5/qualification.json" not in checklist or "blocked" not in checklist.lower():
+        raise ValidationError("manual graphical checks must use the structured v5 evidence manifest")
+    evidence_root = ROOT / "docs/evidence/v5"
+    evidence = load_json(evidence_root / "qualification.json")
+    if not isinstance(evidence, dict) or evidence.get("schemaVersion") != 2:
+        raise ValidationError("v5 evidence manifest must use schema version 2")
+    release_state = evidence.get("releaseState")
+    if release_state not in {"development", "release"}:
+        raise ValidationError("v5 evidence manifest has an invalid release state")
+    candidate = evidence.get("candidate")
+    if not isinstance(candidate, dict) or candidate.get("version") != (ROOT / "VERSION").read_text(encoding="utf-8").strip():
+        raise ValidationError("v5 evidence candidate version does not match VERSION")
+    if not isinstance(candidate.get("worktreeDirty"), bool):
+        raise ValidationError("v5 evidence candidate must record worktreeDirty")
+    release_contract = evidence.get("releaseContract")
+    expected_asset_kinds = {
+        "source-archive",
+        "source-rpm",
+        "binary-rpm",
+        "qualification",
+        "automated-gate",
+        "checksums",
+    }
+    if (
+        not isinstance(release_contract, dict)
+        or release_contract.get("assetCount") != 6
+        or set(release_contract.get("assetKinds", [])) != expected_asset_kinds
+    ):
+        raise ValidationError("v5 evidence manifest must define the six-asset release contract")
+    if release_state == "development":
+        if not str(candidate["version"]).endswith("-dev"):
+            raise ValidationError("development evidence requires a -dev version")
+        if any(candidate.get(field) is not None for field in ("sourceCommit", "package")):
+            raise ValidationError("development evidence must not invent a release commit or package")
+        if candidate.get("sourceRef") != "main" or candidate.get("artifacts") != []:
+            raise ValidationError("development evidence must target main with no release artifacts")
+    else:
+        source_commit = candidate.get("sourceCommit")
+        if str(candidate["version"]).endswith("-dev"):
+            raise ValidationError("release evidence requires a stable version")
+        if candidate.get("sourceRef") != f"v{candidate['version']}":
+            raise ValidationError("release evidence tag does not match its version")
+        if not isinstance(source_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+            raise ValidationError("release evidence requires an exact source commit")
+        if not isinstance(candidate.get("package"), str) or not candidate["package"]:
+            raise ValidationError("release evidence requires a package description")
+        if not isinstance(candidate.get("artifacts"), list) or len(candidate["artifacts"]) != 6:
+            raise ValidationError("release evidence requires exactly six artifacts")
     cases = evidence.get("liveCases") if isinstance(evidence, dict) else None
     if not isinstance(cases, list) or len(cases) < 16:
-        raise ValidationError("v3 evidence manifest does not contain the required live matrix")
+        raise ValidationError("v5 evidence manifest does not contain the required live matrix")
     allowed_results = {"passed", "failed", "blocked", "not-applicable"}
     for case in cases:
         if not isinstance(case, dict) or case.get("result") not in allowed_results:
-            raise ValidationError("v3 evidence manifest has an invalid live result")
+            raise ValidationError("v5 evidence manifest has an invalid live result")
         if case.get("result") == "blocked" and not case.get("blocker"):
             raise ValidationError("blocked live evidence must record its blocker")
         if case.get("result") == "passed":
             linked = case.get("evidence")
             if not isinstance(linked, str) or not (
-                ROOT / "docs/evidence/v3" / linked
+                evidence_root / linked
             ).is_file():
                 raise ValidationError("passed live evidence must link a real evidence file")
+    automated = evidence.get("automatedEvidence")
+    if not isinstance(automated, dict) or automated.get("result") not in allowed_results:
+        raise ValidationError("v5 automated evidence has an invalid result")
+    if automated.get("result") == "passed":
+        linked = automated.get("evidence")
+        if not isinstance(linked, str) or not (evidence_root / linked).is_file():
+            raise ValidationError("passed automated evidence must link a real evidence file")
+    elif automated.get("result") == "blocked" and not automated.get("blocker"):
+        raise ValidationError("blocked automated evidence must record its blocker")
 
 
 def validate_generated_sources() -> None:

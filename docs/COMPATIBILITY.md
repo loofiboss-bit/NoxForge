@@ -30,8 +30,9 @@ public key `NoxForge`. It does not link against Breeze or Kvantum.
 
 Offscreen SDDM test-mode startup passes. Live Wayland, scaling, interactive
 SDDM and visual fallback checks remain `blocked` in
-`docs/evidence/v3/qualification.json`; structural validation cannot mark them
-passed.
+`docs/evidence/v5/qualification.json` until v5 qualification is performed;
+structural validation cannot mark them passed. Completed v3 evidence remains
+under `docs/evidence/v3/` as historical release evidence.
 
 The Fedora RPM and CMake staging contract own system paths and contain no
 installation scriptlets. Installation, upgrade and removal do not apply or

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "candidate": {
-    "version": "4.0.0",
+    "version": "3.0.0",
     "sourceCommit": "54cc84e36777584c7db1f87518837faeac3ec2df",
     "sourceRef": "v3.0.0",
     "worktreeDirty": false,

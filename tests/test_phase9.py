@@ -34,6 +34,10 @@ class PhaseNineIntegrationTests(unittest.TestCase):
         parser.read(ROOT / "sddm/NoxForge/metadata.desktop", encoding="utf-8")
         self.assertEqual(parser["SddmGreeterTheme"]["Version"], version)
         self.assertEqual(parser["SddmGreeterTheme"]["Website"], REPOSITORY_URL)
+        spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
+        rpm_version = version.replace("-", "~", 1)
+        self.assertIn(f"%global upstream_version {version}", spec)
+        self.assertIn(f"Version:        {rpm_version}", spec)
 
     def test_sddm_has_required_original_flows(self) -> None:
         root = ROOT / "sddm/NoxForge"

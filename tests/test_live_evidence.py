@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "docs/evidence/v3/qualification.json"
+MANIFEST = ROOT / "docs/evidence/v5/qualification.json"
 REQUIRED_CASES = {
     "global-theme-discovery-apply",
     "existing-panel-preservation",
@@ -31,13 +31,20 @@ class LiveEvidenceTests(unittest.TestCase):
         self.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
     def test_manifest_records_candidate_and_environment(self) -> None:
-        self.assertEqual(self.manifest["schemaVersion"], 1)
+        self.assertEqual(self.manifest["schemaVersion"], 2)
+        self.assertEqual(self.manifest["releaseState"], "development")
         candidate = self.manifest["candidate"]
         self.assertEqual(
             candidate["version"],
             (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
         )
-        self.assertRegex(candidate["sourceCommit"], r"^[0-9a-f]{40}$")
+        self.assertIsNone(candidate["sourceCommit"])
+        self.assertEqual(candidate["sourceRef"], "main")
+        self.assertIsNone(candidate["package"])
+        self.assertEqual(candidate["artifacts"], [])
+        self.assertTrue(candidate["worktreeDirty"])
+        self.assertEqual(self.manifest["releaseContract"]["assetCount"], 6)
+        self.assertEqual(len(self.manifest["releaseContract"]["assetKinds"]), 6)
         for field in (
             "fedora",
             "plasma",
@@ -73,11 +80,15 @@ class LiveEvidenceTests(unittest.TestCase):
 
     def test_automated_evidence_is_not_used_as_live_evidence(self) -> None:
         automated = self.manifest["automatedEvidence"]
-        self.assertEqual(automated["result"], "passed")
-        self.assertTrue((MANIFEST.parent / automated["evidence"]).is_file())
-        self.assertTrue(
-            all(case["evidence"] != automated["evidence"] for case in self.manifest["liveCases"])
-        )
+        self.assertEqual(automated["result"], "blocked")
+        self.assertIsNone(automated["evidence"])
+        self.assertTrue(automated["blocker"])
+        live_evidence = {
+            case["evidence"]
+            for case in self.manifest["liveCases"]
+            if case["evidence"] is not None
+        }
+        self.assertNotIn(automated["evidence"], live_evidence)
 
 
 if __name__ == "__main__":

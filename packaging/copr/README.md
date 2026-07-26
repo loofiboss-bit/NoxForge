@@ -12,13 +12,20 @@ copr-cli create noxforge \
   --instructions "Enable the repository, install noxforge, then select NoxForge explicitly in System Settings."
 ```
 
-Submit only the SRPM built from the exact qualified `v3.0.0` tag:
+Submit only the SRPM built from an exact stable, qualified tag. Refuse
+development versions:
 
 ```bash
+version=$(<VERSION)
+case "$version" in
+  *-*) echo "Refusing development version: $version" >&2; exit 1 ;;
+esac
+test "$(git describe --tags --exact-match)" = "v${version}"
 copr-cli build loofitheboss/noxforge \
-  rpmbuild/SRPMS/noxforge-3.0.0-1.fc44.src.rpm
+  "rpmbuild/SRPMS/noxforge-${version}-1.fc44.src.rpm"
 ```
 
-After the public build succeeds, install it in the isolated live-test
-environment, run `rpm -V noxforge` and `noxforge-doctor`, and confirm that no
-active KDE or SDDM setting changed.
+After submission, require COPR's authoritative build state to be terminal
+`succeeded` and confirm that the binary package is downloadable. Then install
+it in the isolated live-test environment, run `rpm -V noxforge` and
+`noxforge-doctor`, and confirm that no active KDE or SDDM setting changed.

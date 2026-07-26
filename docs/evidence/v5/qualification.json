@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "releaseState": "development",
+  "candidate": {
+    "version": "5.0.0-dev",
+    "sourceCommit": null,
+    "sourceRef": "main",
+    "worktreeDirty": true,
+    "package": null,
+    "artifacts": []
+  },
+  "releaseContract": {
+    "assetCount": 6,
+    "assetKinds": [
+      "source-archive",
+      "source-rpm",
+      "binary-rpm",
+      "qualification",
+      "automated-gate",
+      "checksums"
+    ]
+  },
+  "environment": {
+    "fedora": "44",
+    "plasma": "6.7.3",
+    "kwin": "6.7.3",
+    "frameworks": "6.28.0",
+    "qt": "6.11.1",
+    "kernel": "7.1.4-204.fc44.x86_64",
+    "session": "Wayland",
+    "displayScale": "not yet qualified for v5",
+    "layout": "not yet qualified for v5",
+    "panelEdge": "not yet qualified for v5",
+    "blur": "not yet qualified for v5",
+    "rtl": "not yet qualified for v5"
+  },
+  "automatedEvidence": {
+    "result": "blocked",
+    "evidence": null,
+    "observation": "The v5 automated release evidence has not been captured.",
+    "blocker": "Phase 6 has not been authorized or run."
+  },
+  "liveCases": [
+    {"id": "global-theme-discovery-apply", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "existing-panel-preservation", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "compact-layout-all-panel-edges", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "plasma-popups-blur-on-off", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "qt-controls-100-140", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "keyboard-navigation-focus", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "rtl-shell", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "no-visible-fallback-artwork", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "aurorae-window-states", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "alt-tab-long-multiple-empty", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "icon-required-sizes", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "cursor-100-140-200", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "sound-routing-volume", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "splash-logout-lock", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "multi-monitor-placement", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
+    {"id": "sddm-login-flows", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."}
+  ]
+}
