@@ -157,14 +157,14 @@
   <rect id="north-hover-hint-bottom-inset" x="307" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-hover-hint-left-inset" x="309" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="north-hover-hint-stretch-borders" x="316" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="north-focus-topleft" d="M6 64V70H0V70A6 6 0 0 1 6 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-focus-topleft" d="M4 64H6V70H0V68Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-focus-top" x="6" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="north-focus-topright" d="M18 64A6 6 0 0 1 24 70H18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="north-focus-left"><rect x="0" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="0" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="north-focus-left" x="0" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-focus-center" x="6" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-focus-right" x="18" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="north-focus-bottomleft" d="M0 82H6V88A6 6 0 0 1 0 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="north-focus-bottom" x="6" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="north-focus-bottom"><rect x="6" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="7" y="85" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="north-focus-bottomright" d="M18 82H24A6 6 0 0 1 18 88Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-focus-hint-top-margin" x="0" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-focus-hint-right-margin" x="2" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
@@ -211,14 +211,14 @@
   <rect id="north-minimized-hint-bottom-inset" x="107" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-minimized-hint-left-inset" x="109" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="north-minimized-hint-stretch-borders" x="116" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="north-progress-topleft" d="M126 64V70H120V70A6 6 0 0 1 126 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="north-progress-topleft" d="M124 64H126V70H120V68Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-progress-top" x="126" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="north-progress-topright" d="M138 64A6 6 0 0 1 144 70H138Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="north-progress-left"><rect x="120" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="120" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="north-progress-left" x="120" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-progress-center" x="126" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-progress-right" x="138" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="north-progress-bottomleft" d="M120 82H126V88A6 6 0 0 1 120 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="north-progress-bottom" x="126" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="north-progress-bottom"><rect x="126" y="82" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="127" y="85" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="north-progress-bottomright" d="M138 82H144A6 6 0 0 1 138 88Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="north-progress-hint-top-margin" x="120" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-progress-hint-right-margin" x="122" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
@@ -265,10 +265,10 @@
   <rect id="south-hover-hint-bottom-inset" x="227" y="96" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="south-hover-hint-left-inset" x="229" y="96" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="south-hover-hint-stretch-borders" x="236" y="96" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="south-focus-topleft" d="M246 64V70H240V70A6 6 0 0 1 246 64Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="south-focus-top" x="246" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-focus-topleft" d="M244 64H246V70H240V68Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="south-focus-top"><rect x="246" y="64" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="247" y="64" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="south-focus-topright" d="M258 64A6 6 0 0 1 264 70H258Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="south-focus-left"><rect x="240" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="240" y="71" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="south-focus-left" x="240" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="south-focus-center" x="246" y="70" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="south-focus-right" x="258" y="70" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="south-focus-bottomleft" d="M240 82H246V88A6 6 0 0 1 240 82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
@@ -319,10 +319,10 @@
   <rect id="south-minimized-hint-bottom-inset" x="27" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="south-minimized-hint-left-inset" x="29" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="south-minimized-hint-stretch-borders" x="36" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="south-progress-topleft" d="M46 128V134H40V134A6 6 0 0 1 46 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="south-progress-top" x="46" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="south-progress-topleft" d="M44 128H46V134H40V132Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="south-progress-top"><rect x="46" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="47" y="128" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="south-progress-topright" d="M58 128A6 6 0 0 1 64 134H58Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="south-progress-left"><rect x="40" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="40" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="south-progress-left" x="40" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="south-progress-center" x="46" y="134" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="south-progress-right" x="58" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="south-progress-bottomleft" d="M40 146H46V152A6 6 0 0 1 40 146Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
@@ -373,7 +373,7 @@
   <rect id="east-hover-hint-bottom-inset" x="147" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="east-hover-hint-left-inset" x="149" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="east-hover-hint-stretch-borders" x="156" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="east-focus-topleft" d="M166 128V134H160V134A6 6 0 0 1 166 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-focus-topleft" d="M164 128H166V134H160V132Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="east-focus-top" x="166" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="east-focus-topright" d="M178 128A6 6 0 0 1 184 134H178Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <g id="east-focus-left"><rect x="160" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="160" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
@@ -427,7 +427,7 @@
   <rect id="east-minimized-hint-bottom-inset" x="267" y="160" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="east-minimized-hint-left-inset" x="269" y="160" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="east-minimized-hint-stretch-borders" x="276" y="160" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="east-progress-topleft" d="M286 128V134H280V134A6 6 0 0 1 286 128Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="east-progress-topleft" d="M284 128H286V134H280V132Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="east-progress-top" x="286" y="128" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="east-progress-topright" d="M298 128A6 6 0 0 1 304 134H298Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <g id="east-progress-left"><rect x="280" y="134" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="280" y="135" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
@@ -481,12 +481,12 @@
   <rect id="west-hover-hint-bottom-inset" x="67" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="west-hover-hint-left-inset" x="69" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="west-hover-hint-stretch-borders" x="76" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="west-focus-topleft" d="M86 192V198H80V198A6 6 0 0 1 86 192Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-focus-topleft" d="M84 192H86V198H80V196Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-focus-top" x="86" y="192" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="west-focus-topright" d="M98 192A6 6 0 0 1 104 198H98Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="west-focus-left"><rect x="80" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="80" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="west-focus-left" x="80" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-focus-center" x="86" y="198" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="west-focus-right" x="98" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="west-focus-right"><rect x="98" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="101" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="west-focus-bottomleft" d="M80 210H86V216A6 6 0 0 1 80 210Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-focus-bottom" x="86" y="210" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="west-focus-bottomright" d="M98 210H104A6 6 0 0 1 98 216Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
@@ -535,12 +535,12 @@
   <rect id="west-minimized-hint-bottom-inset" x="187" y="224" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="west-minimized-hint-left-inset" x="189" y="224" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="west-minimized-hint-stretch-borders" x="196" y="224" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="west-progress-topleft" d="M206 192V198H200V198A6 6 0 0 1 206 192Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <path id="west-progress-topleft" d="M204 192H206V198H200V196Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-progress-top" x="206" y="192" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="west-progress-topright" d="M218 192A6 6 0 0 1 224 198H218Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <g id="west-progress-left"><rect x="200" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="200" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <rect id="west-progress-left" x="200" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-progress-center" x="206" y="198" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
-  <rect id="west-progress-right" x="218" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
+  <g id="west-progress-right"><rect x="218" y="198" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="221" y="199" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <path id="west-progress-bottomleft" d="M200 210H206V216A6 6 0 0 1 200 210Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <rect id="west-progress-bottom" x="206" y="210" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>
   <path id="west-progress-bottomright" d="M218 210H224A6 6 0 0 1 218 216Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/>

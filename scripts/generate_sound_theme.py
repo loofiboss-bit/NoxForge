@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import hashlib
 import math
@@ -10,12 +11,16 @@ import random
 import shutil
 import struct
 import subprocess
+import sys
+import tempfile
 import wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "sounds/NoxForge"
-RATE = 48_000
+ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
+SOUND_CONTRACT = ARTWORK["sounds"]
+RATE = SOUND_CONTRACT["sampleRate"]
 
 SPECS = {
     "tick": (0.08, ((880.0, 0.16), (1320.0, 0.05))),
@@ -85,6 +90,27 @@ def synthesize(name: str, duration: float, tones: tuple[tuple[float, float], ...
     return bytes(frames)
 
 
+def normalize(frames: bytes, target_dbfs: float) -> bytes:
+    samples = struct.unpack(f"<{len(frames) // 2}h", frames)
+    rms = math.sqrt(sum(sample * sample for sample in samples) / len(samples))
+    peak = max(abs(sample) for sample in samples)
+    target = 32767 * 10 ** (target_dbfs / 20)
+    ceiling = 32767 * 10 ** (SOUND_CONTRACT["peakCeilingDbfs"] / 20)
+    gain = min(target / rms, ceiling / peak)
+    normalized = (max(-32768, min(32767, round(sample * gain))) for sample in samples)
+    return struct.pack(f"<{len(samples)}h", *normalized)
+
+
+def metrics(frames: bytes) -> dict[str, float]:
+    samples = struct.unpack(f"<{len(frames) // 2}h", frames)
+    rms = math.sqrt(sum(sample * sample for sample in samples) / len(samples)) / 32767
+    peak = max(abs(sample) for sample in samples) / 32767
+    return {
+        "rmsDbfs": round(20 * math.log10(rms), 3),
+        "peakDbfs": round(20 * math.log10(peak), 3),
+    }
+
+
 def write_wav(path: Path, frames: bytes) -> None:
     with wave.open(str(path), "wb") as output:
         output.setnchannels(1)
@@ -133,34 +159,86 @@ def normalize_ogg(path: Path, stream_name: str) -> None:
     path.write_bytes(content)
 
 
-def main() -> None:
-    source_dir = THEME / "source"
-    stereo_dir = THEME / "stereo"
+def generate(theme: Path) -> None:
+    source_dir = theme / "source"
+    stereo_dir = theme / "stereo"
     source_dir.mkdir(parents=True, exist_ok=True)
     stereo_dir.mkdir(parents=True, exist_ok=True)
     encoded: dict[str, Path] = {}
+    measurements: dict[str, dict[str, float]] = {}
     for name, (duration, tones) in SPECS.items():
         wav_path = source_dir / f"{name}.wav"
         oga_path = stereo_dir / f"_{name}.oga"
-        write_wav(wav_path, synthesize(name, duration, tones))
+        target = SOUND_CONTRACT["alarmTargetRmsDbfs"] if name == "alarm" else SOUND_CONTRACT["targetRmsDbfs"]
+        frames = normalize(synthesize(name, duration, tones), target)
+        write_wav(wav_path, frames)
         encode(wav_path, oga_path)
         normalize_ogg(oga_path, name)
         encoded[name] = oga_path
+        measurements[name] = metrics(frames)
     for event, source in EVENTS.items():
         shutil.copyfile(encoded[source], stereo_dir / f"{event}.oga")
     for path in encoded.values():
         path.unlink()
-    (THEME / "index.theme").write_text(
+    (theme / "index.theme").write_text(
         "[Sound Theme]\nName=NoxForge\nComment=Original restrained forge tones for KDE Plasma\nDirectories=stereo\nExample=theme-demo\n\n[stereo]\nOutputProfile=stereo\n",
         encoding="utf-8",
         newline="\n",
     )
-    (THEME / "coverage.json").write_text(
-        json.dumps({"schemaVersion": 1, "sampleRate": RATE, "events": EVENTS}, indent=2, sort_keys=True) + "\n",
+    (theme / "coverage.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 2,
+                "sampleRate": RATE,
+                "events": EVENTS,
+                "normalization": {
+                    "targetRmsDbfs": SOUND_CONTRACT["targetRmsDbfs"],
+                    "alarmTargetRmsDbfs": SOUND_CONTRACT["alarmTargetRmsDbfs"],
+                    "peakCeilingDbfs": SOUND_CONTRACT["peakCeilingDbfs"],
+                    "toleranceDb": SOUND_CONTRACT["toleranceDb"],
+                },
+                "sources": {
+                    name: {
+                        "durationMs": round(duration * 1000),
+                        "frequenciesHz": [frequency for frequency, _gain in tones],
+                        **measurements[name],
+                    }
+                    for name, (duration, tones) in SPECS.items()
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        ) + "\n",
         encoding="utf-8",
         newline="\n",
     )
-    print(f"Generated {len(EVENTS)} original NoxForge sound events")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true", help="fail when generated sound files drift")
+    args = parser.parse_args()
+    if not shutil.which("ffmpeg"):
+        print("ffmpeg is required to generate the sound theme", file=sys.stderr)
+        raise SystemExit(1)
+    if not args.check:
+        generate(THEME)
+        print(f"Generated {len(EVENTS)} normalized original NoxForge sound events")
+        return
+    with tempfile.TemporaryDirectory(prefix="noxforge-sounds-") as temporary:
+        generated = Path(temporary) / "NoxForge"
+        generate(generated)
+        expected = sorted(path.relative_to(generated) for path in generated.rglob("*") if path.is_file())
+        drift = [
+            relative
+            for relative in expected
+            if not (THEME / relative).is_file()
+            or (generated / relative).read_bytes() != (THEME / relative).read_bytes()
+        ]
+        if drift:
+            print("Sound generator drift: " + ", ".join(map(str, drift)), file=sys.stderr)
+            raise SystemExit(1)
+    print(f"Verified {len(EVENTS)} normalized original NoxForge sound events")
 
 
 if __name__ == "__main__":

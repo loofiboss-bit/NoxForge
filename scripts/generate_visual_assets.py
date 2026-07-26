@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 ICONS = ROOT / "icons/NoxForge"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
+ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
 COLORS = TOKENS["colors"]
 CHECK = "--check" in sys.argv[1:]
 DRIFT: list[Path] = []
@@ -109,6 +110,28 @@ STATE_ICON_SPECS = {
     "status/battery-charging.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M13 8l-4 5h3l-1 4 4-6h-3z"/><path class="accent" d="M13 8l-2 3"/>',
     "status/network-wireless-disconnected.svg": '<path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0M4 4l16 16"/><path class="accent" d="M4 4l5 5"/>',
     "status/network-wired-disconnected.svg": '<path d="M4 4h16v10h-6v3h3v3H7v-3h3v-3H4zM5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
+}
+
+V5_RUNTIME_ICON_SPECS = {
+    "actions/application-exit.svg": '<path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M14 8l4 4"/>',
+    "actions/help-about.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/><path class="accent" d="M12 7h.01"/>',
+    "actions/help-contents.svg": '<path d="M5 4h6c2 0 3 1 3 3v13c0-2-1-3-3-3H5zM19 4h-5v16c0-2 1-3 3-3h2z"/><path class="accent" d="M14 7v6"/>',
+    "actions/system-run.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/><path class="accent" d="M7 9l3 3"/>',
+    "actions/view-filter.svg": '<path d="M4 5h16l-6 7v6l-4 2v-8z"/><path class="accent" d="M4 5h7"/>',
+    "actions/view-grid.svg": '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><path class="accent" d="M14 3h7"/>',
+    "actions/view-list-tree.svg": '<path d="M5 5v14M5 8h5M5 16h5M10 6h10v4H10zM10 14h10v4H10z"/><path class="accent" d="M5 8h5"/>',
+    "applets/keyboard-layout.svg": '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M5 10h2M9 10h2M13 10h2M17 10h2M6 14h12"/><path class="accent" d="M6 14h5"/>',
+    "categories/applications-accessories.svg": '<path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/><path class="accent" d="M6 4h5"/>',
+    "categories/applications-education.svg": '<path d="M3 9l9-5 9 5-9 5zM6 11v5c4 3 8 3 12 0v-5"/><path class="accent" d="M12 4l5 3"/>',
+    "devices/drive-optical.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/><path class="accent" d="M12 7a5 5 0 0 1 4 2"/>',
+    "devices/scanner.svg": '<path d="M5 4h14l2 8H3zM3 12h18v8H3zM7 16h10"/><path class="accent" d="M5 4h6"/>',
+    "devices/tablet.svg": '<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="18" r="1"/><path d="M8 5h8v10H8z"/><path class="accent" d="M16 5v5"/>',
+    "preferences/preferences-desktop-accessibility.svg": '<circle cx="12" cy="5" r="2"/><path d="M4 9h16M12 7v13M7 20l5-7 5 7"/><path class="accent" d="M4 9h6"/>',
+    "preferences/preferences-desktop-display-randr.svg": '<rect x="3" y="4" width="18" height="13" rx="1"/><path d="M9 21h6M12 17v4M7 8h10M7 12h6"/><path class="accent" d="M3 4h6"/>',
+    "status/printer-error.svg": '<path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/><path d="M16 10l4 4M20 10l-4 4"/><path class="accent" d="M16 10l4 4"/>',
+    "status/software-update-none.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5M7 12h10"/><path class="accent" d="M7 12h5"/>',
+    "status/user-available.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="accent" d="M16.5 17l1 1 2-2"/>',
+    "status/user-away.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="accent" d="M18 15v2l1.5 1"/>',
 }
 
 ICON_ALIASES = {
@@ -397,7 +420,7 @@ def write_aurorae_svg(name: str, content: str) -> None:
 
 
 def main() -> None:
-    specs = {**ICON_SPECS, **CORE_ICON_SPECS, **STATE_ICON_SPECS}
+    specs = {**ICON_SPECS, **CORE_ICON_SPECS, **STATE_ICON_SPECS, **V5_RUNTIME_ICON_SPECS}
     effective_aliases: dict[str, str] = {}
 
     def resolve_body(relative: str) -> str:
@@ -415,11 +438,17 @@ def main() -> None:
                 specs[relative] = semantic_variant(base, relative)
     for relative, body in sorted(specs.items()):
         write(ICONS / "scalable" / relative, icon_svg(body))
+    fixture = ARTWORK["runtimeIconFixture"]
+    required = set(fixture["required"])
+    missing_fixture = sorted(required - set(specs))
+    if missing_fixture:
+        raise SystemExit("Runtime icon fixture is missing generated icons: " + ", ".join(missing_fixture))
+    optical_contexts = tuple(f"{context}/" for context in fixture["opticalContexts"])
     optical = {
         relative: body for relative, body in specs.items()
-        if relative.startswith(("actions/", "applets/", "status/"))
+        if relative.startswith(optical_contexts)
     }
-    for size in (16, 22):
+    for size in fixture["opticalSizes"]:
         for relative, body in sorted(optical.items()):
             write(ICONS / f"{size}x{size}" / relative, icon_svg(body))
     categories: dict[str, int] = {}
@@ -430,10 +459,12 @@ def main() -> None:
         ICONS / "coverage.json",
         json.dumps(
             {
-                "schemaVersion": 2,
+                "schemaVersion": 3,
                 "iconCount": len(specs),
                 "opticalCount": len(optical) * 2,
-                "opticalSizes": [16, 22],
+                "opticalSizes": fixture["opticalSizes"],
+                "runtimeFixture": sorted(required),
+                "runtimeFixtureSource": fixture["source"],
                 "categories": dict(sorted(categories.items())),
                 "icons": sorted(specs),
                 "aliases": dict(sorted(effective_aliases.items())),

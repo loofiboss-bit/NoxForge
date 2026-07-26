@@ -1,0 +1,25 @@
+{
+  "phase": 4,
+  "reviewAssertions": [
+    "The N/F mark remains legible at all declared optical sizes.",
+    "The 16:9 and ultrawide wallpapers are independent compositions with quiet workspace regions.",
+    "Every fixed runtime-fixture icon is present and semantically recognizable.",
+    "Canonical cursor silhouettes and accent details remain distinct."
+  ],
+  "reviewStatus": "reviewed",
+  "schemaVersion": 1,
+  "sheets": {
+    "docs/evidence/artwork-brand-wallpaper.png": "cf68d5ee4294abaf4417439ad400393aaa1f6af549b72674c6c2d65ea5d88bb3",
+    "docs/evidence/artwork-cursors.png": "608f898ce3be2e776c8f4c57acb69d110dd3d335ac3fab758cb78af47c7a34f0",
+    "docs/evidence/artwork-icons.png": "da5023abc868fe2e397d270c475b40bbf0973a71173085bb2c4f39a6a71db86d"
+  },
+  "sources": {
+    "cursors/NoxForge-Cursors/coverage.json": "51340c1e5f3f3568e488b416075e7462d438b4f5d7ce37ab9f0d55d0f5d2717f",
+    "design/artwork-contract.json": "944a515e89552fa67865d8b6f505d23cb8190eeffdb0b8fa84e06f376a98de1a",
+    "design/brand/noxforge-mark.svg": "b1322599b034e71125693b3b9057fe764e32c23058883f1d1f7b077e2deb7972",
+    "icons/NoxForge/coverage.json": "ee8b1123abb8c43625b000092dbfbbe2a704c51291d4f7f2b54bc2a1d6640721",
+    "sounds/NoxForge/coverage.json": "bb58af0d6751cd3cb6df89399c1007c612df153854906fca56d2755b2845c1db",
+    "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg": "c5e2dbef203d8d9942f6390f983b386374b2e58bd3511b714a431a1c9803c0b9",
+    "wallpapers/NoxForge/contents/source/NoxForge.svg": "65641ae533f7cfd6d04a48a6c630857996824fe88b39a0527d1c98bb00fbfc23"
+  }
+}

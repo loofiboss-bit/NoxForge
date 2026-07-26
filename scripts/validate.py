@@ -7,10 +7,12 @@ import configparser
 import gzip
 import hashlib
 import json
+import math
 import re
 import struct
 import subprocess
 import sys
+import wave
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -437,18 +439,36 @@ def svg_ids(path: Path) -> set[str]:
 def validate_plasma_style() -> None:
     theme = ROOT / f"plasma/desktoptheme/{THEME_ID}"
     contract = load_json(ROOT / "design/plasma-semantic-contract.json")
-    if not isinstance(contract, dict) or contract.get("schemaVersion") != 2 or contract.get("plasmaVersion") != "6.7":
-        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 2")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 3 or contract.get("plasmaVersion") != "6.7":
+        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 3")
     widget_families = contract.get("widgetFamilies")
     weather_families = contract.get("weatherFamilies")
     if not isinstance(widget_families, list) or len(widget_families) != 43:
         raise ValidationError("Plasma semantic contract must declare all 43 widget families")
     if not isinstance(weather_families, list) or weather_families != ["wind-arrows"]:
         raise ValidationError("Plasma weather artwork contract is incomplete")
+    recipes = contract.get("semanticRecipes")
+    family_recipes = contract.get("familyRecipes")
+    if not isinstance(recipes, dict) or not isinstance(family_recipes, dict):
+        raise ValidationError("Plasma semantic recipe maps are missing")
+    if set(family_recipes) != set(widget_families):
+        raise ValidationError("Plasma semantic recipes must cover exactly all 43 widget families")
+    invalid_recipes = sorted(
+        family for family, recipe_name in family_recipes.items() if recipe_name not in recipes
+    )
+    if invalid_recipes:
+        raise ValidationError(f"Plasma families reference unknown semantic recipes: {invalid_recipes}")
+    qualified_surfaces = contract.get("qualifiedSurfaces")
+    required_surfaces = {"panels", "popups", "tooltips", "calendar", "notifications", "scrollable"}
+    if not isinstance(qualified_surfaces, dict) or set(qualified_surfaces) != required_surfaces:
+        raise ValidationError("Plasma shell surface qualification map is incomplete")
     missing_families = [name for name in widget_families if not (theme / f"widgets/{name}.svg").is_file()]
     missing_weather = [name for name in weather_families if not (theme / f"weather/{name}.svg").is_file()]
     if missing_families or missing_weather:
         raise ValidationError(f"Plasma asset families are incomplete: {missing_families + missing_weather}")
+    for surface, paths in qualified_surfaces.items():
+        if not isinstance(paths, list) or not paths or any(not (theme / relative).is_file() for relative in paths):
+            raise ValidationError(f"Plasma shell surface qualification is incomplete: {surface}")
     backgrounds = {
         "dialogs/background.svg",
         "widgets/panel-background.svg",
@@ -460,6 +480,18 @@ def validate_plasma_style() -> None:
         required = POSITIONS | {f"mask-{position}" for position in POSITIONS}
         if not required.issubset(found):
             raise ValidationError(f"{relative} has an incomplete background or blur mask frame")
+    background_variants = contract.get("backgroundVariants")
+    if not isinstance(background_variants, list) or len(background_variants) != 11:
+        raise ValidationError("Plasma Style requires all opaque, solid and translucent background variants")
+    for relative in background_variants:
+        path = theme / relative
+        found = svg_ids(path)
+        if not POSITIONS.issubset(found):
+            raise ValidationError(f"{relative} has an incomplete seam-free background frame")
+        elements = {element.get("id"): element for element in ET.parse(path).iter() if element.get("id") in POSITIONS}
+        paints = {(element.get("class"), element.get("fill-opacity")) for element in elements.values()}
+        if len(elements) != len(POSITIONS) or len(paints) != 1:
+            raise ValidationError(f"{relative} uses inconsistent frame paints that can create dark seams")
     for relative, states in PLASMA_STATES.items():
         found = svg_ids(theme / relative)
         for state in states:
@@ -615,6 +647,12 @@ def validate_aurorae(version: str) -> None:
 
 def validate_icons() -> None:
     theme = ROOT / "icons/NoxForge"
+    artwork = load_json(ROOT / "design/artwork-contract.json")
+    if not isinstance(artwork, dict):
+        raise ValidationError("artwork contract is invalid")
+    fixture = artwork.get("runtimeIconFixture")
+    if not isinstance(fixture, dict):
+        raise ValidationError("runtime icon fixture is missing")
     index = load_colors(theme / "index.theme")
     inherited = index["Icon Theme"].get("inherits", "").split(",")
     if inherited != ["hicolor"]:
@@ -633,7 +671,7 @@ def validate_icons() -> None:
     if {path.parent.name for path in icons} != expected_categories:
         raise ValidationError("system icon categories are incomplete")
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 2 or coverage.get("iconCount") != len(icons):
+    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 3 or coverage.get("iconCount") != len(icons):
         raise ValidationError("icon coverage manifest does not match generated files")
     if coverage.get("opticalSizes") != [16, 22] or not isinstance(coverage.get("aliases"), dict):
         raise ValidationError("icon optical-size or alias coverage is incomplete")
@@ -648,6 +686,12 @@ def validate_icons() -> None:
         optical_count += len(optical)
     if optical_count != coverage.get("opticalCount"):
         raise ValidationError("icon optical manifest does not match generated files")
+    required_fixture = sorted(fixture.get("required", []))
+    if not required_fixture or coverage.get("runtimeFixture") != required_fixture:
+        raise ValidationError("icon coverage does not bind the fixed runtime fixture")
+    generated = {path.relative_to(theme / "scalable").as_posix() for path in icons}
+    if not set(required_fixture).issubset(generated):
+        raise ValidationError("fixed KDE/Plasma/System Settings runtime fixture is incomplete")
     distinct_pairs = (
         ("actions/go-next.svg", "actions/go-previous.svg"),
         ("actions/media-playback-start.svg", "actions/media-playback-pause.svg"),
@@ -697,8 +741,11 @@ def validate_cursors() -> None:
             raise ValidationError(f"cursor {path.name} lacks required sizes")
         cursor_counts[path.name] = count
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 2 or coverage.get("sizes") != [24, 32, 48]:
+    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 3 or coverage.get("sizes") != [24, 32, 48]:
         raise ValidationError("cursor coverage manifest is invalid")
+    hotspots = coverage.get("hotspots")
+    if not isinstance(hotspots, dict):
+        raise ValidationError("cursor hotspot manifest is missing")
     animations = coverage.get("animations")
     if not isinstance(animations, dict):
         raise ValidationError("cursor animation manifest is missing")
@@ -719,6 +766,21 @@ def validate_cursors() -> None:
         raise ValidationError("editable cursor SVG sources are incomplete")
     if len({hashlib.sha256(path.read_bytes()).digest() for path in source_files}) != len(source_files):
         raise ValidationError("editable cursor sources must represent distinct canonical glyphs")
+    for name in canonical:
+        data = (theme / "cursors" / name).read_bytes()
+        _, _, _, count = struct.unpack("<4I", data[:16])
+        declared = hotspots.get(name)
+        if not isinstance(declared, dict):
+            raise ValidationError(f"cursor {name} has no declared hotspots")
+        observed: dict[str, list[int]] = {}
+        for offset in range(count):
+            position = struct.unpack("<3I", data[16 + offset * 12 : 28 + offset * 12])[2]
+            _, _, size, _, _, _, xhot, yhot, _ = struct.unpack("<9I", data[position : position + 36])
+            observed[str(size)] = [xhot, yhot]
+            if xhot >= size or yhot >= size:
+                raise ValidationError(f"cursor {name} hotspot lies outside its physical image")
+        if observed != declared:
+            raise ValidationError(f"cursor {name} hotspots differ from the coverage manifest")
 
 
 def validate_sounds() -> None:
@@ -728,7 +790,12 @@ def validate_sounds() -> None:
         raise ValidationError("sound theme index is invalid")
     sounds = sorted((theme / "stereo").glob("*.oga"))
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or not isinstance(coverage.get("events"), dict):
+    if (
+        not isinstance(coverage, dict)
+        or coverage.get("schemaVersion") != 2
+        or not isinstance(coverage.get("events"), dict)
+        or not isinstance(coverage.get("sources"), dict)
+    ):
         raise ValidationError("sound coverage manifest is invalid")
     if len(sounds) != len(coverage["events"]) or len(sounds) < 30:
         raise ValidationError("sound event coverage does not match encoded files")
@@ -738,6 +805,40 @@ def validate_sounds() -> None:
     sources = sorted((theme / "source").glob("*.wav"))
     if len(sources) < 10 or any(path.read_bytes()[:4] != b"RIFF" for path in sources):
         raise ValidationError("editable WAV sound sources are incomplete")
+    normalization = coverage.get("normalization")
+    if not isinstance(normalization, dict):
+        raise ValidationError("sound loudness normalization contract is missing")
+    tolerance = normalization.get("toleranceDb")
+    if not isinstance(tolerance, (int, float)):
+        raise ValidationError("sound loudness tolerance is invalid")
+    measured_signatures: set[tuple[int, tuple[float, ...]]] = set()
+    for path in sources:
+        name = path.stem
+        details = coverage["sources"].get(name)
+        if not isinstance(details, dict):
+            raise ValidationError(f"sound source metrics are missing: {name}")
+        target = (
+            normalization["alarmTargetRmsDbfs"]
+            if name == "alarm"
+            else normalization["targetRmsDbfs"]
+        )
+        if abs(details.get("rmsDbfs", 999) - target) > tolerance:
+            raise ValidationError(f"sound {name} is outside its RMS loudness target")
+        if details.get("peakDbfs", 999) > normalization["peakCeilingDbfs"] + 0.01:
+            raise ValidationError(f"sound {name} exceeds its peak ceiling")
+        with wave.open(str(path), "rb") as handle:
+            frames = handle.readframes(handle.getnframes())
+            if handle.getframerate() != coverage["sampleRate"] or handle.getnchannels() != 1:
+                raise ValidationError(f"sound {name} source format is invalid")
+        samples = struct.unpack(f"<{len(frames) // 2}h", frames)
+        rms = math.sqrt(sum(sample * sample for sample in samples) / len(samples)) / 32767
+        measured_dbfs = 20 * math.log10(rms)
+        if abs(measured_dbfs - details["rmsDbfs"]) > 0.01:
+            raise ValidationError(f"sound {name} measured loudness differs from its manifest")
+        signature = (details.get("durationMs"), tuple(details.get("frequenciesHz", [])))
+        if signature in measured_signatures:
+            raise ValidationError(f"sound {name} loses semantic distinction in duration and pitch")
+        measured_signatures.add(signature)
 
 
 def validate_sddm(version: str) -> None:
@@ -767,18 +868,58 @@ def png_dimensions(path: Path) -> tuple[int, int]:
 
 def validate_wallpaper(version: str) -> None:
     package = ROOT / "wallpapers/NoxForge"
+    contract = load_json(ROOT / "design/artwork-contract.json")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 1:
+        raise ValidationError("artwork contract must use schema version 1")
     metadata = load_json(package / "metadata.json")
     if not isinstance(metadata, dict) or not isinstance(metadata.get("KPlugin"), dict):
         raise ValidationError("wallpaper metadata requires a KPlugin object")
     plugin = metadata["KPlugin"]
     if plugin.get("Id") != "NoxForge" or plugin.get("Version") != version or plugin.get("License") != "MIT":
         raise ValidationError("wallpaper metadata identity, version, or license mismatch")
-    source = ET.parse(package / "contents/source/NoxForge.svg").getroot()
-    if source.get("viewBox") != "0 0 2560 1440":
-        raise ValidationError("editable wallpaper source must use a 2560x1440 viewBox")
+    compositions = contract.get("wallpapers")
+    if not isinstance(compositions, dict) or set(compositions) != {"16:9", "ultrawide"}:
+        raise ValidationError("wallpaper contract requires separate 16:9 and ultrawide compositions")
+    sources = [ROOT / details["source"] for details in compositions.values()]
+    if len({path.read_bytes() for path in sources}) != 2:
+        raise ValidationError("16:9 and ultrawide wallpaper sources must be independent compositions")
+    expected_viewboxes = {"16:9": "0 0 2560 1440", "ultrawide": "0 0 3440 1440"}
+    for name, details in compositions.items():
+        source = ET.parse(ROOT / details["source"]).getroot()
+        if source.get("viewBox") != expected_viewboxes[name]:
+            raise ValidationError(f"editable {name} wallpaper source has the wrong viewBox")
     for width, height in ((2560, 1440), (3840, 2160), (3440, 1440)):
         if png_dimensions(package / f"contents/images/{width}x{height}.png") != (width, height):
             raise ValidationError(f"wallpaper output must be exactly {width}x{height}")
+
+
+def validate_artwork_evidence() -> None:
+    manifest_path = ROOT / "docs/evidence/artwork-contact-sheets.json"
+    manifest = load_json(manifest_path)
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("phase") != 4
+        or manifest.get("reviewStatus") != "reviewed"
+    ):
+        raise ValidationError("Phase 4 artwork contact-sheet manifest is invalid")
+    assertions = manifest.get("reviewAssertions")
+    if not isinstance(assertions, list) or len(assertions) < 4:
+        raise ValidationError("Phase 4 artwork review assertions are incomplete")
+    for section in ("sources", "sheets"):
+        entries = manifest.get(section)
+        if not isinstance(entries, dict) or not entries:
+            raise ValidationError(f"Phase 4 artwork {section} hashes are missing")
+        for relative, expected in entries.items():
+            path = ROOT / relative
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise ValidationError(f"Phase 4 artwork evidence hash mismatch: {relative}")
+    if len(manifest["sheets"]) != 3:
+        raise ValidationError("Phase 4 requires three reviewed contact sheets")
+    for relative in manifest["sheets"]:
+        width, height = png_dimensions(ROOT / relative)
+        if width < 400 or height < 200:
+            raise ValidationError(f"Phase 4 artwork contact sheet is too small: {relative}")
 
 
 def validate_tooling() -> None:
@@ -900,7 +1041,9 @@ def validate_generated_sources() -> None:
         "scripts/generate_plasma_svgs.py",
         "scripts/generate_visual_assets.py",
         "scripts/generate_cursors.py",
+        "scripts/generate_sound_theme.py",
         "scripts/render_wallpaper.py",
+        "scripts/render_artwork_evidence.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -965,6 +1108,7 @@ def validate() -> None:
     validate_sounds()
     validate_sddm(version)
     validate_wallpaper(version)
+    validate_artwork_evidence()
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()

@@ -1,0 +1,432 @@
+{
+  "assetCount": 56,
+  "assets": [
+    {
+      "path": "widgets/action-overlays.svg",
+      "recipe": "glyph",
+      "sha256": "0784fc8cf988386917eec057367ff0bc9b80c8c0da08084fdf0f2eb47cca39ba"
+    },
+    {
+      "path": "widgets/actionbutton.svg",
+      "recipe": "glyph",
+      "sha256": "ba1bff3461129e1659361705cd10b61781caa8fc487c7b19f9528418cdd126cc"
+    },
+    {
+      "path": "widgets/analog_meter.svg",
+      "recipe": "glyph",
+      "sha256": "fdef5214201cf28a81b2939f65c6a3e33f24f10fe9c04db33c89118cf55f7b66"
+    },
+    {
+      "path": "widgets/arrows.svg",
+      "recipe": "glyph",
+      "sha256": "89c5fec8183cf8d7e4edb63d5f767887f0327a9cc7e83bfcabcb92ad796daa8a"
+    },
+    {
+      "path": "widgets/background.svg",
+      "recipe": "shell",
+      "sha256": "6a709f1f680e281a6f8e263f874fa26e48c5f55c7407b5d7e4785579bf22dadc"
+    },
+    {
+      "path": "widgets/bar_meter_horizontal.svg",
+      "recipe": "progress",
+      "sha256": "563287032fc34f55d2a7c4c567b68dd82bde7987fc4db6bdc3246dd35abe2fdd"
+    },
+    {
+      "path": "widgets/bar_meter_vertical.svg",
+      "recipe": "progress",
+      "sha256": "563287032fc34f55d2a7c4c567b68dd82bde7987fc4db6bdc3246dd35abe2fdd"
+    },
+    {
+      "path": "widgets/branding.svg",
+      "recipe": "glyph",
+      "sha256": "cc42474e94184b4e778e36aae0250dd1f898444c655f0f2fc8b908fc814a44f3"
+    },
+    {
+      "path": "widgets/busywidget.svg",
+      "recipe": "glyph",
+      "sha256": "b58dcbec7694542772c82a4aa34c493d5342e0f995cf0919595cb0f37dd6fc7d"
+    },
+    {
+      "path": "widgets/button.svg",
+      "recipe": "control",
+      "sha256": "ce6d303dc0e89a7224731989831d41a0d7c30f518e3b262fa36f9aa843e33aac"
+    },
+    {
+      "path": "widgets/calendar.svg",
+      "recipe": "glyph",
+      "sha256": "574fb424e3d0bdeaff8e59f0db2918be52415992867433c56f75252d43f9a6a5"
+    },
+    {
+      "path": "widgets/checkmarks.svg",
+      "recipe": "glyph",
+      "sha256": "aabc388025121e9ece96c6931a1fe1e20cf1ebb2b6b023e5d2d7b0e29f897960"
+    },
+    {
+      "path": "widgets/clock.svg",
+      "recipe": "glyph",
+      "sha256": "bbb6d07cb180f437915f78ce82775075dd5f7d1f9a728478628eaba0a2fded63"
+    },
+    {
+      "path": "widgets/configuration-icons.svg",
+      "recipe": "glyph",
+      "sha256": "228d9c49159c297bce412222b96ab7d2fc13c9fd17cbc282282f5309eac84698"
+    },
+    {
+      "path": "widgets/containment-controls.svg",
+      "recipe": "glyph",
+      "sha256": "d26b1245fd65fad4da0e579c432b0fe210209470b47dcd41f1faef9f847c45bb"
+    },
+    {
+      "path": "widgets/dragger.svg",
+      "recipe": "glyph",
+      "sha256": "1d54d610519a6caf8bcad3670b849703b87ab30d820818174b8c66e518585aa6"
+    },
+    {
+      "path": "widgets/frame.svg",
+      "recipe": "shell",
+      "sha256": "6cd730180b4091c1c6ee22ec42e31f95edf59557fce57d44b9df18f51097072a"
+    },
+    {
+      "path": "widgets/glowbar.svg",
+      "recipe": "focus",
+      "sha256": "71fe8566994ad6af10e6efb0a495675c17cd77b4a4f268b94490a18d216ab09c"
+    },
+    {
+      "path": "widgets/line.svg",
+      "recipe": "glyph",
+      "sha256": "23749bfd6493e53da137452bb44f9154ed176ab99c0618c82f4327f0a6194cea"
+    },
+    {
+      "path": "widgets/lineedit.svg",
+      "recipe": "canvas",
+      "sha256": "c0bc3be47d1c7ed33e24d7bb501b6b0ed4ee70da1f6bd937000fca742696b1a8"
+    },
+    {
+      "path": "widgets/listitem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "736b65eac690abcc2a497b2df7711fc628134235384af794412b825a611c45cb"
+    },
+    {
+      "path": "widgets/margins-highlight.svg",
+      "recipe": "focus",
+      "sha256": "db2ffee18f4d8d1be3dd678adca12e10836186a9382f0bde64d01dfa3ccc43f5"
+    },
+    {
+      "path": "widgets/media-delegate.svg",
+      "recipe": "controlRaised",
+      "sha256": "94669e4b0148769cad9a27d978256e328e8e2c80c780bafa9576bb145c38b83a"
+    },
+    {
+      "path": "widgets/menubaritem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "286a1aa36a91166a31bf9d297392d7c060972fdbb0788ac536ef3220fd56de03"
+    },
+    {
+      "path": "widgets/monitor.svg",
+      "recipe": "controlRaised",
+      "sha256": "ab1134781ee995ea25bddba74ad8b235f4466caac8fd6778c1ad789d456d8af4"
+    },
+    {
+      "path": "widgets/notes.svg",
+      "recipe": "glyph",
+      "sha256": "e1a5c0d0016f636a4334724a9f747e489029e74fd59ff03b64c1fdec3d64177f"
+    },
+    {
+      "path": "widgets/pager.svg",
+      "recipe": "controlQuiet",
+      "sha256": "0ef4ee1f0433580c927406b149a9d9e2229fa3532b504347b84087521c73660f"
+    },
+    {
+      "path": "widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "f7ae53932046ae74270fdc1fc5e02175cfef74c78f270fd8c6612d116dd1277d"
+    },
+    {
+      "path": "widgets/picker.svg",
+      "recipe": "controlRaised",
+      "sha256": "99e37e5f5b708511f111000859bf5364e59f9df9004746550ada2949d68c45a2"
+    },
+    {
+      "path": "widgets/plasmoidheading.svg",
+      "recipe": "tooltip",
+      "sha256": "4f2421d046c30abf4a1a717cb182fdbe965d9660140ae1cfeb3b58fb67073b22"
+    },
+    {
+      "path": "widgets/plot-background.svg",
+      "recipe": "canvas",
+      "sha256": "db2613873f44081bb608353897ca2f347c7f448a41ba74725f3bdc5fc1d78d04"
+    },
+    {
+      "path": "widgets/radiobutton.svg",
+      "recipe": "glyph",
+      "sha256": "efd20a3d7a30a95cb1a3d7a8224362cf424b68b8e335dae17fe70c2b8a5a2579"
+    },
+    {
+      "path": "widgets/scrollbar.svg",
+      "recipe": "disabled",
+      "sha256": "6840d2f62bb89c48735ef9d3f588f5882ea217602eee6a6343988b06ebecdb75"
+    },
+    {
+      "path": "widgets/scrollwidget.svg",
+      "recipe": "scrollSurface",
+      "sha256": "e40470eae4c1b8bc31d3fed0fe51a4694de1864d307cc3a3ac2113627b22b8ba"
+    },
+    {
+      "path": "widgets/slider.svg",
+      "recipe": "disabled",
+      "sha256": "4bdff107ba33a5edf875fed2a278818d27fbc7c2f713cae0971a69a6ec9586c9"
+    },
+    {
+      "path": "widgets/switch.svg",
+      "recipe": "disabled",
+      "sha256": "67148f513be4a870707d3986584ec833e5e83649f5e4deddb0296dc4eae86de3"
+    },
+    {
+      "path": "widgets/tabbar.svg",
+      "recipe": "focus",
+      "sha256": "85ba88b93bd0cc48b66179f62c0113a3a8ede60ef1f66ee3496ecf95d5fe18a3"
+    },
+    {
+      "path": "widgets/tasks.svg",
+      "recipe": "controlQuiet",
+      "sha256": "a05f1b9a616ff5d14d3ceb50625ea5558a2a69beae5bafbb1669adfa5287887f"
+    },
+    {
+      "path": "widgets/timer.svg",
+      "recipe": "glyph",
+      "sha256": "a25c7d596a4e47f02ccffaecbebd2c818338b844c5d0b15d2d7da94c02e57074"
+    },
+    {
+      "path": "widgets/toolbar.svg",
+      "recipe": "controlQuiet",
+      "sha256": "dfe7160e40d348bcc28bd8dd3d642b18c82bdb05985b24278560d8ecd4c8968c"
+    },
+    {
+      "path": "widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "18bc5c41a31800b8c4e0310b053582027732a08ce7856e8caff8572e361e9431"
+    },
+    {
+      "path": "widgets/translucentbackground.svg",
+      "recipe": "translucent",
+      "sha256": "b7a0a821e9228025d5230a08b7972dd47b1ec4aac8599702771d9477adb1fe82"
+    },
+    {
+      "path": "widgets/viewitem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "7d2994597cc429b6ced388c6c168ea038f270986c9f0365a8394e04a434873d9"
+    },
+    {
+      "path": "weather/wind-arrows.svg",
+      "recipe": null,
+      "sha256": "ca411fa5c821e12bb10f33390f81de837c56ebdef63b582bdcfb771341ff7940"
+    },
+    {
+      "path": "dialogs/background.svg",
+      "recipe": "shell",
+      "sha256": "6a709f1f680e281a6f8e263f874fa26e48c5f55c7407b5d7e4785579bf22dadc"
+    },
+    {
+      "path": "opaque/dialogs/background.svg",
+      "recipe": "shell",
+      "sha256": "efc571554d45980190ec606220176acd42d0bf7685a25ad19794da302025bcdf"
+    },
+    {
+      "path": "opaque/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "e749b0c336bc7bfd85414e9b93ba1585ea7bcc096b0c8786e5d42ef08dafee2f"
+    },
+    {
+      "path": "opaque/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "226332cd88cddf8b2d7d6a4c0a43b718e3dd359fa800e9062292ae02d1a39c4c"
+    },
+    {
+      "path": "solid/dialogs/background.svg",
+      "recipe": "shell",
+      "sha256": "efc571554d45980190ec606220176acd42d0bf7685a25ad19794da302025bcdf"
+    },
+    {
+      "path": "solid/widgets/background.svg",
+      "recipe": "shell",
+      "sha256": "e749b0c336bc7bfd85414e9b93ba1585ea7bcc096b0c8786e5d42ef08dafee2f"
+    },
+    {
+      "path": "solid/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "e749b0c336bc7bfd85414e9b93ba1585ea7bcc096b0c8786e5d42ef08dafee2f"
+    },
+    {
+      "path": "solid/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "226332cd88cddf8b2d7d6a4c0a43b718e3dd359fa800e9062292ae02d1a39c4c"
+    },
+    {
+      "path": "translucent/dialogs/background.svg",
+      "recipe": "shell",
+      "sha256": "ee5ba8fa9e88ac7565ae235487031bc5e008ced6bdbc49224e59509b9b56d6ac"
+    },
+    {
+      "path": "translucent/widgets/background.svg",
+      "recipe": "shell",
+      "sha256": "3b6632fb2a24fe79afa694b510fc274810b28f6f9f772636190abb4e1be4f863"
+    },
+    {
+      "path": "translucent/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "1fca136d606f835ea573b2af8703767652813534418610c6f94770ec28cb3e30"
+    },
+    {
+      "path": "translucent/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "88bb949df20c925a726639046a6c711f21d761a4dbf655f36e06afd59fc137b1"
+    }
+  ],
+  "atlases": [
+    {
+      "file": "plasma-style-atlas-100pct.png",
+      "height": 872,
+      "scale": 1.0,
+      "sha256": "fe6068df110915cbb5d3aab4867c1058e20cb7deae229e5599985777eb77b457",
+      "width": 1316
+    },
+    {
+      "file": "plasma-style-atlas-125pct.png",
+      "height": 1082,
+      "scale": 1.25,
+      "sha256": "e21ef435e71acfb31eed39b1200f85a9e686c4b1322ba116f75c586960be1761",
+      "width": 1636
+    },
+    {
+      "file": "plasma-style-atlas-140pct.png",
+      "height": 1208,
+      "scale": 1.4,
+      "sha256": "816c505c2dafe0bd66ccd86b1236940e0b50044b144c5077108fbfd8f5ccb380",
+      "width": 1828
+    },
+    {
+      "file": "plasma-style-atlas-200pct.png",
+      "height": 1712,
+      "scale": 2.0,
+      "sha256": "ff8433092dfe0d3e9a738630d747ec2c32d6eeff3562eaab2e6e3649cc5b3fe4",
+      "width": 2596
+    }
+  ],
+  "columns": 8,
+  "orientedTaskStates": {
+    "orientations": [
+      "north",
+      "south",
+      "east",
+      "west"
+    ],
+    "states": [
+      "normal",
+      "hover",
+      "focus",
+      "attention",
+      "minimized",
+      "progress"
+    ]
+  },
+  "plasmaVersion": "6.7",
+  "qualifiedSurfaces": {
+    "calendar": [
+      "widgets/calendar.svg",
+      "widgets/viewitem.svg"
+    ],
+    "notifications": [
+      "dialogs/background.svg",
+      "widgets/button.svg",
+      "widgets/actionbutton.svg"
+    ],
+    "panels": [
+      "widgets/panel-background.svg",
+      "widgets/tasks.svg"
+    ],
+    "popups": [
+      "dialogs/background.svg",
+      "widgets/background.svg"
+    ],
+    "scrollable": [
+      "widgets/scrollwidget.svg",
+      "widgets/scrollbar.svg",
+      "widgets/viewitem.svg"
+    ],
+    "tooltips": [
+      "widgets/tooltip.svg"
+    ]
+  },
+  "schemaVersion": 1,
+  "stateFrames": {
+    "button": [
+      "normal",
+      "hover",
+      "focus",
+      "pressed",
+      "toolbutton-hover",
+      "toolbutton-focus",
+      "toolbutton-pressed"
+    ],
+    "frame": [
+      "plain",
+      "raised",
+      "sunken"
+    ],
+    "lineedit": [
+      "base",
+      "hover",
+      "focus"
+    ],
+    "listitem": [
+      "normal",
+      "hover",
+      "pressed",
+      "section"
+    ],
+    "menubaritem": [
+      "normal",
+      "hover",
+      "pressed"
+    ],
+    "plasmoidheading": [
+      "header",
+      "footer"
+    ],
+    "scrollbar": [
+      "background-horizontal",
+      "background-vertical",
+      "slider",
+      "mouseover-slider"
+    ],
+    "slider": [
+      "groove",
+      "groove-highlight"
+    ],
+    "switch": [
+      "inactive",
+      "active"
+    ],
+    "tabbar": [
+      "north-active-tab",
+      "south-active-tab",
+      "east-active-tab",
+      "west-active-tab"
+    ],
+    "tasks": [
+      "normal",
+      "hover",
+      "focus",
+      "attention",
+      "minimized",
+      "progress"
+    ],
+    "viewitem": [
+      "normal",
+      "hover",
+      "selected",
+      "selected+hover"
+    ]
+  },
+  "themeId": "io.github.loofiboss.noxforge.desktop"
+}
