@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 3.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
+NoxForge 5.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
 is the primary installation authority.
 
 ## Install

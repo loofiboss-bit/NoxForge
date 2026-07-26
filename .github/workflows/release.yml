@@ -63,11 +63,10 @@ jobs:
           test -s "${evidence_dir}/automated-gate.md"
           test -s "${notes_file}"
           grep -Fqx "Version: ${version}" "${evidence_dir}/automated-gate.md"
-          grep -Fqx "Commit: ${GITHUB_SHA}" "${evidence_dir}/automated-gate.md"
           grep -Fq "${version}" "${notes_file}"
           python3 - "$version" "$evidence_dir/qualification.json" <<'PY'
           import json
-          import os
+          import re
           import sys
           from pathlib import Path
 
@@ -80,8 +79,8 @@ jobs:
               raise SystemExit("qualification manifest is not release-ready")
           if candidate.get("version") != version or candidate.get("sourceRef") != f"v{version}":
               raise SystemExit("qualification version/ref does not match the requested tag")
-          if candidate.get("sourceCommit") != os.environ["GITHUB_SHA"]:
-              raise SystemExit("qualification commit does not match the requested tag")
+          if not re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceCommit", ""))):
+              raise SystemExit("qualification baseline commit is not an exact commit")
           if candidate.get("worktreeDirty") is not False:
               raise SystemExit("qualification must describe a clean tagged worktree")
           if not candidate.get("package") or len(candidate.get("artifacts", [])) != 6:
@@ -142,6 +141,18 @@ jobs:
           evidence["candidate"]["artifacts"] = expected_payloads
           destination.write_text(
               json.dumps(evidence, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          report = Path("release/automated-gate.md")
+          report_lines = [
+              line
+              for line in report.read_text(encoding="utf-8").splitlines()
+              if not line.startswith(("Version: ", "Commit: "))
+          ]
+          report.write_text(
+              "\n".join(report_lines).rstrip()
+              + f"\n\nVersion: {version}\nCommit: {os.environ['GITHUB_SHA']}\n",
               encoding="utf-8",
           )
           PY

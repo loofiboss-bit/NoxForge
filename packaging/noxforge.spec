@@ -1,7 +1,7 @@
-%global upstream_version 5.0.0-dev
+%global upstream_version 5.0.0
 
 Name:           noxforge
-Version:        5.0.0~dev
+Version:        5.0.0
 Release:        1%{?dist}
 Summary:        Industrial Precision global theme for KDE Plasma 6
 
@@ -58,6 +58,9 @@ and an SDDM theme. Package installation does not apply or activate the theme.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Sun Jul 26 2026 Loofi <noreply@example.invalid> - 5.0.0-1
+- Release the complete NoxForge v5 visual system and qualification evidence
+
 * Sun Jul 26 2026 Loofi <noreply@example.invalid> - 5.0.0~dev-1
 - Start the phase-gated NoxForge v5 development cycle
 

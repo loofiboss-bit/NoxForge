@@ -28,20 +28,20 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 4.0.0 is the latest tagged source release. Its public GitHub release
-contains no attached build artifacts, and no v4 COPR or fresh live
-qualification is claimed. NoxForge 5.0.0 is now in phase-gated development;
-the active scope and gate status are recorded in
-[`docs/NOXFORGE_V5_PLAN.md`](docs/NOXFORGE_V5_PLAN.md).
+NoxForge 5.0.0 is the current stable release candidate. Its complete local
+release gate and available isolated Wayland qualification passed; exact-tag
+GitHub and COPR publication is tracked in
+[`docs/NOXFORGE_V5_PLAN.md`](docs/NOXFORGE_V5_PLAN.md). The historical v4
+GitHub release contains no attached build artifacts and made no v4 COPR or
+fresh live-qualification claim.
 
 The local release gate covers deterministic generation, Python and CTest suites,
 QML lint, isolated staging, byte-identical source archives, SRPM/RPM build and
-`rpmlint`. Historical v3 isolated KWin/Plasma Wayland qualification covers theme
-application, panel preservation and edges, 100/140 percent Qt composition,
-multi-output placement, sound routing, and the real lock/logout/splash/SDDM
-test processes. Hardware blur, injected keyboard/Alt+Tab interaction, live RTL
-shell mirroring, cursor motion, and real SDDM authentication remain explicitly
-unclaimed.
+`rpmlint`. Current v5 isolated KWin/Plasma Wayland qualification covers theme
+application, panel preservation and edges, 100/140 percent Qt composition and
+multi-output placement. Hardware blur, injected keyboard/Alt+Tab interaction,
+live RTL shell mirroring, cursor motion, isolated audio, production splash
+integration and real SDDM authentication remain explicitly blocked.
 
 ## License
 

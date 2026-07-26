@@ -32,17 +32,17 @@ class LiveEvidenceTests(unittest.TestCase):
 
     def test_manifest_records_candidate_and_environment(self) -> None:
         self.assertEqual(self.manifest["schemaVersion"], 2)
-        self.assertEqual(self.manifest["releaseState"], "development")
+        self.assertEqual(self.manifest["releaseState"], "release")
         candidate = self.manifest["candidate"]
         self.assertEqual(
             candidate["version"],
             (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
         )
-        self.assertIsNone(candidate["sourceCommit"])
-        self.assertEqual(candidate["sourceRef"], "main")
-        self.assertIsNone(candidate["package"])
-        self.assertEqual(candidate["artifacts"], [])
-        self.assertTrue(candidate["worktreeDirty"])
+        self.assertRegex(candidate["sourceCommit"], r"^[0-9a-f]{40}$")
+        self.assertEqual(candidate["sourceRef"], f"v{candidate['version']}")
+        self.assertIn(candidate["version"], candidate["package"])
+        self.assertEqual(len(candidate["artifacts"]), 6)
+        self.assertFalse(candidate["worktreeDirty"])
         self.assertEqual(self.manifest["releaseContract"]["assetCount"], 6)
         self.assertEqual(len(self.manifest["releaseContract"]["assetKinds"]), 6)
         for field in (

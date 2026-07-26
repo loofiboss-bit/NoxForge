@@ -55,7 +55,7 @@ class V5PhaseSixTests(unittest.TestCase):
 
     def test_phase_plan_records_completed_gate(self) -> None:
         plan = (ROOT / "docs/NOXFORGE_V5_PLAN.md").read_text(encoding="utf-8")
-        self.assertIn("Plan status:** Phase 6 complete; Phase 7 is not authorized", plan)
+        self.assertIn("Plan status:** Phase 7 release candidate qualified", plan)
         phase = plan.split("## Phase 6", 1)[1].split("## Phase 7", 1)[0]
         self.assertIn("**Outcome (2026-07-26):**", phase)
 

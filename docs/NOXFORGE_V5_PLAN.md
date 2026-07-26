@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 6 complete; Phase 7 is not authorized
+**Plan status:** Phase 7 release candidate qualified; publication pending
 
 ## Product direction
 

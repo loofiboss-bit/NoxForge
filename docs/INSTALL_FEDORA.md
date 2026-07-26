@@ -1,6 +1,6 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge v3 makes the RPM package the primary installation authority. Enable
+NoxForge v5 uses the RPM package as the primary installation authority. Enable
 the Fedora 44 COPR and install the package:
 
 ```bash
@@ -65,9 +65,9 @@ enabled repository:
 sudo dnf downgrade --refresh noxforge
 ```
 
-NoxForge v2 did not have an RPM channel, so the v3.0.0 rollback is explicit
-theme selection followed by package removal. Disable dependency cleanup so a
-minimal or manually assembled KDE installation cannot lose desktop packages
+NoxForge v2 did not have an RPM channel. For all package-managed releases,
+explicitly select another theme before removal. Disable dependency cleanup so
+a minimal or manually assembled KDE installation cannot lose desktop packages
 that DNF first encountered as NoxForge dependencies:
 
 ```bash

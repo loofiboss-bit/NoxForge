@@ -2,17 +2,16 @@
 
 This file is the canonical scope and release-gate index.
 
-## Active development scope
+## Active release scope
 
-The active, phase-gated development authority is
+The active, phase-gated release authority is
 [`NOXFORGE_V5_PLAN.md`](NOXFORGE_V5_PLAN.md). NoxForge v5 develops the existing
 Industrial Precision identity into a complete, measurable visual system across
 Qt, Plasma, session surfaces and original artwork. [`DESIGN.md`](../DESIGN.md)
 remains the locked visual authority.
 
-Implementation must proceed one phase at a time. A later phase is not
-authorized until the current phase gate passes and the user explicitly requests
-the next phase.
+Implementation proceeded one phase at a time. Phase 7 is the stable release,
+publication and independent readback gate.
 
 ## Historical release evidence
 
