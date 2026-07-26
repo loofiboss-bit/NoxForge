@@ -17,3 +17,6 @@ control rendering and QML first-frame medians must each remain at or below
 
 This report is automated and offscreen evidence. It never substitutes for a
 live Plasma, KWin, cursor, audio or SDDM result.
+
+Version: 5.0.0
+Qualified baseline commit: 98da2ffcf3129974d9cc2489cf56b59c5ef9a857

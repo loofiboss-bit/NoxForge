@@ -1,13 +1,20 @@
 {
   "schemaVersion": 2,
-  "releaseState": "development",
+  "releaseState": "release",
   "candidate": {
-    "version": "5.0.0-dev",
-    "sourceCommit": null,
-    "sourceRef": "main",
-    "worktreeDirty": true,
-    "package": null,
-    "artifacts": []
+    "version": "5.0.0",
+    "sourceCommit": "98da2ffcf3129974d9cc2489cf56b59c5ef9a857",
+    "sourceRef": "v5.0.0",
+    "worktreeDirty": false,
+    "package": "noxforge-5.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [
+      "automated-gate.md",
+      "noxforge-5.0.0.tar.xz",
+      "noxforge-5.0.0-1.fc44.src.rpm",
+      "noxforge-5.0.0-1.fc44.x86_64.rpm",
+      "qualification.json",
+      "SHA256SUMS"
+    ]
   },
   "releaseContract": {
     "assetCount": 6,
