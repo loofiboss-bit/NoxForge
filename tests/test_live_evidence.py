@@ -80,9 +80,9 @@ class LiveEvidenceTests(unittest.TestCase):
 
     def test_automated_evidence_is_not_used_as_live_evidence(self) -> None:
         automated = self.manifest["automatedEvidence"]
-        self.assertEqual(automated["result"], "blocked")
-        self.assertIsNone(automated["evidence"])
-        self.assertTrue(automated["blocker"])
+        self.assertEqual(automated["result"], "passed")
+        self.assertTrue(automated["evidence"])
+        self.assertTrue((MANIFEST.parent / automated["evidence"]).is_file())
         live_evidence = {
             case["evidence"]
             for case in self.manifest["liveCases"]

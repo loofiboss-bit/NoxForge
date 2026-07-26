@@ -28,34 +28,33 @@
     "qt": "6.11.1",
     "kernel": "7.1.4-204.fc44.x86_64",
     "session": "Wayland",
-    "displayScale": "not yet qualified for v5",
-    "layout": "not yet qualified for v5",
-    "panelEdge": "not yet qualified for v5",
-    "blur": "not yet qualified for v5",
-    "rtl": "not yet qualified for v5"
+    "displayScale": "1.0 and 1.4 in isolated virtual outputs",
+    "layout": "isolated default panel without resetLayout",
+    "panelEdge": "bottom, top, left and right",
+    "blur": "blocked by the virtual framebuffer",
+    "rtl": "offscreen structure passed; live shell mirroring blocked"
   },
   "automatedEvidence": {
-    "result": "blocked",
-    "evidence": null,
-    "observation": "The v5 automated release evidence has not been captured.",
-    "blocker": "Phase 6 has not been authorized or run."
+    "result": "passed",
+    "evidence": "automated-gate.md",
+    "observation": "The full release gate, sanitizers, accessibility review and Phase 0 performance comparison passed."
   },
   "liveCases": [
-    {"id": "global-theme-discovery-apply", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "existing-panel-preservation", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "compact-layout-all-panel-edges", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "plasma-popups-blur-on-off", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "qt-controls-100-140", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "keyboard-navigation-focus", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "rtl-shell", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "no-visible-fallback-artwork", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "aurorae-window-states", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "alt-tab-long-multiple-empty", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "icon-required-sizes", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "cursor-100-140-200", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "sound-routing-volume", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "splash-logout-lock", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "multi-monitor-placement", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."},
-    {"id": "sddm-login-flows", "result": "blocked", "evidence": null, "observation": "Not run for v5.", "blocker": "Phase 6 has not been authorized or run."}
+    {"id": "global-theme-discovery-apply", "result": "passed", "evidence": "live/plasma-multi-output.png", "observation": "The Global Theme applied in a separate KWin/Plasma Wayland session without changing the maintainer desktop."},
+    {"id": "existing-panel-preservation", "result": "passed", "evidence": "live/live-session.md", "observation": "The isolated panel configuration hash and panel count were identical before and after theme application."},
+    {"id": "compact-layout-all-panel-edges", "result": "passed", "evidence": "live/panel-edges.png", "observation": "The live isolated panel rendered at bottom, top, left and right without a visible seam."},
+    {"id": "plasma-popups-blur-on-off", "result": "blocked", "evidence": null, "observation": "Solid and translucent assets pass, but the virtual framebuffer cannot prove blur quality.", "blocker": "No isolated hardware-composited blur output is available."},
+    {"id": "qt-controls-100-140", "result": "passed", "evidence": "live/live-session.md", "observation": "Real System Settings processes were composed by KWin at scale 1.0 and 1.4."},
+    {"id": "keyboard-navigation-focus", "result": "blocked", "evidence": null, "observation": "Keyboard structure and focus rendering pass automated checks; full live traversal was not exercised.", "blocker": "The isolated compositor has no keyboard input injector."},
+    {"id": "rtl-shell", "result": "blocked", "evidence": null, "observation": "RTL geometry passes authentic offscreen renders, but live Plasma mirroring was not proven.", "blocker": "The isolated Plasma shell did not provide a trustworthy live RTL result."},
+    {"id": "no-visible-fallback-artwork", "result": "passed", "evidence": "live/plasma-multi-output.png", "observation": "The isolated desktop, panel, wallpaper and required shell icons rendered without visible missing artwork."},
+    {"id": "aurorae-window-states", "result": "blocked", "evidence": null, "observation": "Aurorae composed live and its sprites validate structurally, but the complete interactive state sequence was not exercised.", "blocker": "Pointer injection is unavailable for hover, pressed, inactive and maximized transitions."},
+    {"id": "alt-tab-long-multiple-empty", "result": "blocked", "evidence": null, "observation": "Long-title live applications opened, but the D-Bus shortcut attempt did not leave a visible switcher capture.", "blocker": "A held Alt+Tab cycle and empty-state transition cannot be injected into the isolated compositor."},
+    {"id": "icon-required-sizes", "result": "passed", "evidence": "live/panel-edges.png", "observation": "Required panel icons remained distinct and legible on horizontal and vertical live panels."},
+    {"id": "cursor-100-140-200", "result": "blocked", "evidence": null, "observation": "Physical cursor sizes and animation frames validate, but live motion and scale transitions were not exercised.", "blocker": "The virtual compositor exposes no controllable pointer for live scale captures."},
+    {"id": "sound-routing-volume", "result": "blocked", "evidence": null, "observation": "Sound sources pass normalization and semantic checks, but no isolated physical route was qualified.", "blocker": "The isolated runtime has no independently qualified PipeWire speaker or headphone route."},
+    {"id": "splash-logout-lock", "result": "blocked", "evidence": null, "observation": "The real logout greeter and inherited lock screen rendered; the splash test runner showed only its generic test presentation.", "blocker": "The isolated runner did not prove the v5 splash through its production login integration."},
+    {"id": "multi-monitor-placement", "result": "passed", "evidence": "live/plasma-multi-output.png", "observation": "KWin composed two independent 1280 by 720 outputs without panel or wallpaper placement failure."},
+    {"id": "sddm-login-flows", "result": "blocked", "evidence": null, "observation": "The real SDDM greeter rendered NoxForge in test mode with user, session, input and power surfaces.", "blocker": "Test mode cannot prove PAM authentication or real power actions, and the maintainer login screen was not changed."}
   ]
 }

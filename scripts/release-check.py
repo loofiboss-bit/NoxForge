@@ -30,6 +30,7 @@ QML_SURFACES = (
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml",
 )
 
 

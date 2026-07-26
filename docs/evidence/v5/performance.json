@@ -1,0 +1,114 @@
+{
+  "baselineCommit": "e3faefd481026cffafb9b48e11aa79987781fa78",
+  "environment": {
+    "platform": "Linux-7.1.4-204.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.14.6",
+    "qt": "6.11.1"
+  },
+  "maximumRatio": 1.1,
+  "method": "Eleven warmed offscreen process medians; identical probes and host. The QML probe exits on the first frameSwapped signal.",
+  "metrics": {
+    "controlRendering": {
+      "baselineMedianMs": 108.229,
+      "baselineSamplesMs": [
+        114.89,
+        129.428,
+        108.229,
+        107.889,
+        131.759,
+        107.088,
+        108.546,
+        88.229,
+        121.552,
+        88.588,
+        104.195
+      ],
+      "currentMedianMs": 108.188,
+      "currentSamplesMs": [
+        103.706,
+        102.7,
+        103.919,
+        111.535,
+        115.831,
+        111.918,
+        96.681,
+        111.033,
+        108.188,
+        107.929,
+        110.611
+      ],
+      "limit": 1.1,
+      "ratio": 0.9996,
+      "result": "passed"
+    },
+    "galleryStartup": {
+      "baselineMedianMs": 32.23,
+      "baselineSamplesMs": [
+        31.74,
+        30.417,
+        25.17,
+        25.582,
+        32.711,
+        53.878,
+        32.23,
+        39.33,
+        37.148,
+        26.437,
+        35.894
+      ],
+      "currentMedianMs": 28.236,
+      "currentSamplesMs": [
+        47.389,
+        28.236,
+        28.143,
+        32.907,
+        25.942,
+        25.658,
+        28.094,
+        26.363,
+        41.48,
+        43.722,
+        50.42
+      ],
+      "limit": 1.1,
+      "ratio": 0.8761,
+      "result": "passed"
+    },
+    "qmlFirstFrame": {
+      "baselineMedianMs": 186.078,
+      "baselineSamplesMs": [
+        186.078,
+        196.424,
+        158.281,
+        160.264,
+        200.513,
+        188.935,
+        193.852,
+        205.307,
+        179.264,
+        165.062,
+        172.302
+      ],
+      "currentMedianMs": 187.268,
+      "currentSamplesMs": [
+        165.93,
+        213.342,
+        199.04,
+        201.43,
+        193.933,
+        187.268,
+        161.003,
+        159.948,
+        201.885,
+        163.944,
+        162.067
+      ],
+      "limit": 1.1,
+      "ratio": 1.0064,
+      "result": "passed"
+    }
+  },
+  "phase": 6,
+  "result": "passed",
+  "schemaVersion": 1
+}

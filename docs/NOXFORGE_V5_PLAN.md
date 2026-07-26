@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 4 complete; Phase 5 is not authorized
+**Plan status:** Phase 6 complete; Phase 7 is not authorized
 
 ## Product direction
 
@@ -138,6 +138,20 @@ packaging passed. No package symlink or copied artwork was introduced.
 **Gate:** available QML lint, authentic QML renders and structural Aurorae state
 validation pass. No private lock-screen implementation is introduced.
 
+**Outcome (2026-07-26):** SDDM, Splash, Logout and KWin TabBox retain their
+public login, session, language, power and cancellation contracts while adding
+bounded long/empty text, explicit keyboard traversal, mirrored RTL layouts,
+system-duration reduced motion and a stable two-line login status region.
+Aurorae preserves its active/inactive frame and eight button states with
+canonical compressed assets. Sixteen reviewed authentic QML renders cover all
+four surfaces at 1280x720, 1920x1080, 2560x1440 and 3440x1440 across long RTL,
+keyboard focus, standard and empty reduced-motion scenarios. QML lint, focused
+Phase 5 tests, deterministic evidence regeneration, CMake/CTest and the broader
+local release check without archive/RPM packaging passed. No private lock
+screen was introduced. These offscreen renders are structural evidence, not
+live session qualification; the live matrix remains blocked until Phase 6 is
+explicitly authorized and run.
+
 ## Phase 6 — Accessibility, performance and live qualification
 
 - Run the full release gate plus sanitizers, contrast/font checks,
@@ -149,6 +163,21 @@ validation pass. No private lock-screen implementation is introduced.
 
 **Gate:** no failed case; every unavailable case remains `blocked` with a
 specific blocker. Offscreen evidence never substitutes for live evidence.
+
+**Outcome (2026-07-26):** The complete source/archive/RPM gate and the separate
+AddressSanitizer/UndefinedBehaviorSanitizer CTest build passed. Source-bound
+accessibility evidence covers all contrast pairs, the KDE system-font policy,
+keyboard and RTL structure, scale compositions, reduced motion and non-color
+state indicators. Eleven-sample medians stayed within the ten-percent Phase 0
+budget: gallery startup 0.8761x, control rendering 0.9996x and QML first frame
+1.0064x. Isolated KWin/Plasma Wayland runs passed theme application, exact
+panel preservation, all four panel edges, two virtual outputs, shell artwork,
+required icon clarity and real Qt composition at 100/140 percent. Hardware
+blur, injected keyboard and pointer transitions, live RTL, a held visible
+Alt+Tab cycle, isolated audio routing, complete splash integration and real
+SDDM authentication/power actions remain explicitly `blocked` with specific
+environmental limitations. No offscreen capture was promoted to live evidence,
+and the active desktop and SDDM settings were unchanged.
 
 ## Phase 7 — Public v5 release and readback
 

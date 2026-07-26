@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "contract": "design/session-surface-contract.json",
+  "renderer": "tools/session_renderer.cpp",
+  "authenticQml": true,
+  "liveSession": false,
+  "reviewStatus": "reviewed",
+  "captures": [
+    {
+      "file": "session/sddm-1280x720-long-rtl.png",
+      "surface": "sddm",
+      "width": 1280,
+      "height": 720,
+      "scenario": "long-rtl",
+      "sha256": "95088096f61b10d4128b1caace342e8fa3a7735c7ffb9503093afa941c3fc335"
+    },
+    {
+      "file": "session/sddm-1920x1080-keyboard.png",
+      "surface": "sddm",
+      "width": 1920,
+      "height": 1080,
+      "scenario": "keyboard",
+      "sha256": "721d9de93bd67059c5bb656987b49d9741006714d6755951999c2d597b05108c"
+    },
+    {
+      "file": "session/sddm-2560x1440-standard.png",
+      "surface": "sddm",
+      "width": 2560,
+      "height": 1440,
+      "scenario": "standard",
+      "sha256": "164d582b165f3f6e40f1c3b13b2c068326f8bad739397137b94f3ce8439a9973"
+    },
+    {
+      "file": "session/sddm-3440x1440-empty-reduced.png",
+      "surface": "sddm",
+      "width": 3440,
+      "height": 1440,
+      "scenario": "empty-reduced",
+      "sha256": "659d2a52660048e77c6f99c3e0ec19d05bcca2cebaa841be9b09c9d3ee82e441"
+    },
+    {
+      "file": "session/splash-1280x720-long-rtl.png",
+      "surface": "splash",
+      "width": 1280,
+      "height": 720,
+      "scenario": "long-rtl",
+      "sha256": "fe692917c1b670074a44a26ae364d7264eae2ca9a67c7f383024bfbb46db2fc6"
+    },
+    {
+      "file": "session/splash-1920x1080-keyboard.png",
+      "surface": "splash",
+      "width": 1920,
+      "height": 1080,
+      "scenario": "keyboard",
+      "sha256": "e24c9418c2d2d258879c5c0042e098b6472a1fab372d00521b75ebf11710533a"
+    },
+    {
+      "file": "session/splash-2560x1440-standard.png",
+      "surface": "splash",
+      "width": 2560,
+      "height": 1440,
+      "scenario": "standard",
+      "sha256": "2f97d9263cb38a1d5e3e24550545c23620279cd20d91882befcb8d51faca3cce"
+    },
+    {
+      "file": "session/splash-3440x1440-empty-reduced.png",
+      "surface": "splash",
+      "width": 3440,
+      "height": 1440,
+      "scenario": "empty-reduced",
+      "sha256": "edeb3b7f7b47c3608a1acee9e823e315dad9ebe67b2880613cbedd5fa7bad358"
+    },
+    {
+      "file": "session/logout-1280x720-long-rtl.png",
+      "surface": "logout",
+      "width": 1280,
+      "height": 720,
+      "scenario": "long-rtl",
+      "sha256": "3326be5414a8336f934b1466f7310be2df5f1ea6d5d920181384adfac155ce42"
+    },
+    {
+      "file": "session/logout-1920x1080-keyboard.png",
+      "surface": "logout",
+      "width": 1920,
+      "height": 1080,
+      "scenario": "keyboard",
+      "sha256": "9855a7227373f610c078c583e1685d45647baa391b6ce2a896fa7b067d31544f"
+    },
+    {
+      "file": "session/logout-2560x1440-standard.png",
+      "surface": "logout",
+      "width": 2560,
+      "height": 1440,
+      "scenario": "standard",
+      "sha256": "66797f26f033a3ba8058578b710934a84519ef5503ee0fd8c3712477b8646905"
+    },
+    {
+      "file": "session/logout-3440x1440-empty-reduced.png",
+      "surface": "logout",
+      "width": 3440,
+      "height": 1440,
+      "scenario": "empty-reduced",
+      "sha256": "f95b46efaba562b742d28efd80730f8304f644911906a4d24d922c3d5b72107a"
+    },
+    {
+      "file": "session/tabbox-1280x720-long-rtl.png",
+      "surface": "tabbox",
+      "width": 1280,
+      "height": 720,
+      "scenario": "long-rtl",
+      "sha256": "5691adafcfc4aaba78fedf1106c6f199069daa8031d4f604348272a185b94064"
+    },
+    {
+      "file": "session/tabbox-1920x1080-keyboard.png",
+      "surface": "tabbox",
+      "width": 1920,
+      "height": 1080,
+      "scenario": "keyboard",
+      "sha256": "c9de89484378eab7f1a44dcf021a9ffd9df4d992c3b9ba46c82db38a5ffe874b"
+    },
+    {
+      "file": "session/tabbox-2560x1440-standard.png",
+      "surface": "tabbox",
+      "width": 2560,
+      "height": 1440,
+      "scenario": "standard",
+      "sha256": "71baad36eef509232fc88acdc6adf17a6db72d8d9ad3a8245181407f9c7025dd"
+    },
+    {
+      "file": "session/tabbox-3440x1440-empty-reduced.png",
+      "surface": "tabbox",
+      "width": 3440,
+      "height": 1440,
+      "scenario": "empty-reduced",
+      "sha256": "2b504133b00469452d04afcf1d0475142fc40196a67682bafa8195cef9a04fd3"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ class VisualContractTests(unittest.TestCase):
         files = (
             ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
             ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
-            ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/main.qml",
+            ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
             ROOT / "sddm/NoxForge/Main.qml",
         )
         for path in files:

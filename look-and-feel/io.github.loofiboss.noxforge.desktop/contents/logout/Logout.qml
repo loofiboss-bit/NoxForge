@@ -22,6 +22,13 @@ Item {
     signal lockScreenRequested()
     signal cancelSoftwareUpdateRequested()
 
+    function focusFirstAction() {
+        lockButton.forceActiveFocus()
+    }
+
+    LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     Rectangle { anchors.fill: parent; color: tokens.background; opacity: 0.9 }
 
     Rectangle {
@@ -46,26 +53,26 @@ Item {
                 Image { source: "NoxForgeMark.svg"; Layout.preferredWidth: 48; Layout.preferredHeight: 36; fillMode: Image.PreserveAspectFit }
                 ColumnLayout {
                     PlasmaComponents.Label { text: qsTr("Session"); color: tokens.textPrimary; font.pixelSize: Kirigami.Units.gridUnit * 1.35; font.weight: Font.DemiBold }
-                    PlasmaComponents.Label { text: qsTr("Choose what should happen next"); color: tokens.textSecondary }
+                    PlasmaComponents.Label { text: qsTr("Choose what should happen next"); color: tokens.textSecondary; elide: Text.ElideRight; Layout.fillWidth: true }
                 }
             }
 
             PlasmaComponents.Label { text: qsTr("SESSION"); color: tokens.textSecondary; font.weight: Font.DemiBold; Layout.topMargin: Kirigami.Units.smallSpacing }
             RowLayout {
                 Layout.fillWidth: true
-                PlasmaComponents.Button { text: qsTr("Lock"); Layout.fillWidth: true; onClicked: root.lockScreenRequested() }
-                PlasmaComponents.Button { text: qsTr("Log Out"); Layout.fillWidth: true; onClicked: root.logoutRequested() }
+                PlasmaComponents.Button { id: lockButton; text: qsTr("Lock"); Layout.fillWidth: true; activeFocusOnTab: true; KeyNavigation.tab: logoutButton; onClicked: root.lockScreenRequested() }
+                PlasmaComponents.Button { id: logoutButton; text: qsTr("Log Out"); Layout.fillWidth: true; activeFocusOnTab: true; KeyNavigation.tab: sleepButton; onClicked: root.logoutRequested() }
             }
 
             PlasmaComponents.Label { text: qsTr("POWER"); color: tokens.textSecondary; font.weight: Font.DemiBold; Layout.topMargin: Kirigami.Units.largeSpacing }
             RowLayout {
                 Layout.fillWidth: true
-                PlasmaComponents.Button { text: qsTr("Sleep"); Layout.fillWidth: true; onClicked: root.suspendRequested(2) }
-                PlasmaComponents.Button { text: qsTr("Restart"); Layout.fillWidth: true; onClicked: root.rebootRequested() }
-                PlasmaComponents.Button { text: qsTr("Shut Down"); Layout.fillWidth: true; onClicked: root.haltRequested() }
+                PlasmaComponents.Button { id: sleepButton; text: qsTr("Sleep"); Layout.fillWidth: true; activeFocusOnTab: true; KeyNavigation.tab: restartButton; onClicked: root.suspendRequested(2) }
+                PlasmaComponents.Button { id: restartButton; text: qsTr("Restart"); Layout.fillWidth: true; activeFocusOnTab: true; KeyNavigation.tab: shutdownButton; onClicked: root.rebootRequested() }
+                PlasmaComponents.Button { id: shutdownButton; text: qsTr("Shut Down"); Layout.fillWidth: true; activeFocusOnTab: true; KeyNavigation.tab: cancelButton; onClicked: root.haltRequested() }
             }
 
-            PlasmaComponents.Button { text: qsTr("Cancel"); Layout.fillWidth: true; Layout.topMargin: Kirigami.Units.largeSpacing; onClicked: root.cancelRequested() }
+            PlasmaComponents.Button { id: cancelButton; text: qsTr("Cancel"); Layout.fillWidth: true; Layout.topMargin: Kirigami.Units.largeSpacing; activeFocusOnTab: true; KeyNavigation.tab: lockButton; onClicked: root.cancelRequested() }
         }
     }
 }

@@ -1,7 +1,7 @@
 [General]
 TitleAlignment=Left
 TitleVerticalAlignment=Center
-Animation=120
+Animation=140
 ActiveTextColor=232,240,242,255
 InactiveTextColor=166,180,185,255
 UseTextShadow=false

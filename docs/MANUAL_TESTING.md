@@ -6,11 +6,13 @@ Capture evidence before any tag or publication. Results must be `passed`,
 `docs/evidence/v5/qualification.json`; automated evidence never substitutes for
 a live result.
 
-Current candidate: v5 development worktree on Fedora KDE 44. No v5 live case
-has been run yet, so every current case remains honestly `blocked` in the v5
-manifest. The table and captures below are the historical v3 baseline only;
-they must not be presented as v5 results. The active maintainer desktop is not
-changed by automated or offscreen checks.
+Current candidate: v5 development worktree on Fedora KDE 44. The Phase 6
+isolated Wayland matrix is recorded in
+`docs/evidence/v5/live/live-session.md`. Available virtual-compositor cases are
+passed and unavailable hardware, input, audio and authentication cases remain
+honestly `blocked` in the v5 manifest. The historical v3 table below remains a
+baseline only and must not be presented as v5 evidence. The active maintainer
+desktop was not changed.
 
 ## Historical v3 structural and live baseline
 
@@ -95,20 +97,34 @@ claim live cursor motion, audible speaker/headphone behavior, wallpaper
 placement by Plasma, or session-surface integration; those remain part of the
 explicit Phase 6 live matrix.
 
-## Remaining interactive checks (require live Plasma application)
+## Current v5 Phase 6 isolated live evidence (2026-07-26)
+
+Separate temporary HOME, XDG, D-Bus and KWin virtual Wayland environments
+qualified Global Theme application, exact panel preservation, all panel edges,
+two-output composition, shell artwork, required panel icons and real Qt
+composition at scale 1.0 and 1.4. The real windowed logout greeter and SDDM test
+mode also rendered, but their captures do not prove private lock-screen code,
+PAM authentication or power actions.
+
+Hardware blur, complete keyboard/pointer interaction, live RTL, a held visible
+Alt+Tab cycle, controllable cursor scaling, isolated PipeWire output and the v5
+splash through its production integration remain blocked with specific
+reasons in `docs/evidence/v5/qualification.json`.
+
+## Remaining interactive checks (require a physical or input-capable test environment)
 
 The following cannot be closed without explicitly applying the Global Theme in
 an isolated System Settings session and interacting with that desktop. No live
 check above has been marked passed. The test operator must:
 
-1. Open System Settings → Appearance → Global Theme → apply NoxForge
-2. Verify panel preserved (or explicitly reset layout and check edge seams)
-3. Open applications with blur enabled and disabled (System Settings → Desktop Effects)
-4. Navigate with keyboard only through System Settings dialogs
-5. Open KWin window and verify Aurorae active/inactive/hover/pressed states
-6. Use Alt+Tab with multiple windows, long titles and no windows
-7. Move windows to all panel edges and on multi-monitor setups
-8. Verify SDDM at login screen after reboot
+1. Compare popups with hardware blur enabled and disabled.
+2. Navigate with injected keyboard input through System Settings and session dialogs.
+3. Exercise Aurorae active/inactive/maximized/hover/pressed states.
+4. Hold Alt+Tab with multiple windows, long titles and the empty state.
+5. Verify cursor motion at 100, 140 and 200 percent.
+6. Verify speaker/headphone routing and volume.
+7. Verify the production splash integration in a disposable login.
+8. Verify SDDM authentication and power flows in a recoverable VM.
 
 Automated validation and offscreen rendering are structural evidence only and
 do not close these graphical checks.

@@ -37,6 +37,9 @@ target_link_libraries(noxforge_widget_gallery PRIVATE Qt6::Core Qt6::Gui Qt6::Wi
 add_executable(noxforge_sddm_renderer tools/sddm_renderer.cpp)
 target_link_libraries(noxforge_sddm_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
+add_executable(noxforge_session_renderer tools/session_renderer.cpp)
+target_link_libraries(noxforge_session_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
+
 enable_testing()
 add_test(NAME style-plugin-discovery COMMAND noxforge_style_probe)
 set_tests_properties(style-plugin-discovery PROPERTIES
@@ -72,6 +75,41 @@ add_test(
         "${CMAKE_BINARY_DIR}/sddm-qml-surface.png"
 )
 set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+function(add_noxforge_session_test name surface qml scenario)
+    add_test(
+        NAME ${name}
+        COMMAND noxforge_session_renderer
+            ${surface}
+            "${CMAKE_SOURCE_DIR}/${qml}"
+            "${CMAKE_SOURCE_DIR}/sddm/NoxForge/background.png"
+            "${CMAKE_BINARY_DIR}/${name}.png"
+            1280
+            720
+            ${scenario}
+    )
+    set_tests_properties(${name} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+endfunction()
+
+add_noxforge_session_test(session-sddm-surface sddm sddm/NoxForge/Main.qml long-rtl)
+add_noxforge_session_test(
+    session-splash-surface
+    splash
+    look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml
+    empty-reduced
+)
+add_noxforge_session_test(
+    session-logout-surface
+    logout
+    look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml
+    keyboard
+)
+add_noxforge_session_test(
+    session-tabbox-surface
+    tabbox
+    kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+    long-rtl
+)
 
 include(GNUInstallDirs)
 install(TARGETS noxforge_style

@@ -6,8 +6,13 @@ Rectangle {
     id: root
     color: tokens.background
     property int stage: 0
-    readonly property int animationDuration: Kirigami.Units.shortDuration
+    property bool reducedMotion: Kirigami.Units.longDuration <= 0
+    readonly property int animationDuration: reducedMotion
+        ? tokens.reducedMotionDuration
+        : Math.min(tokens.hoverDuration, Kirigami.Units.shortDuration)
     Tokens { id: tokens }
+
+    function focusFirstAction() {}
 
     Column {
         anchors.centerIn: parent
@@ -22,7 +27,10 @@ Rectangle {
             font.letterSpacing: tokens.brandTracking
             text: "NOXFORGE"
         }
-        Behavior on opacity { NumberAnimation { duration: root.animationDuration } }
+        Behavior on opacity {
+            enabled: root.animationDuration > 0
+            NumberAnimation { duration: root.animationDuration }
+        }
     }
 
     Rectangle {
@@ -31,6 +39,9 @@ Rectangle {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         color: tokens.accent
-        Behavior on width { NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic } }
+        Behavior on width {
+            enabled: root.animationDuration > 0
+            NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
+        }
     }
 }

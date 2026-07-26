@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "surfaces": {
+    "sddm": "sddm/NoxForge/Main.qml",
+    "splash": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
+    "logout": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
+    "tabbox": "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml"
+  },
+  "compositions": [
+    {
+      "width": 1280,
+      "height": 720,
+      "scenario": "long-rtl",
+      "covers": [
+        "long-text",
+        "localization",
+        "rtl",
+        "stable-status"
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "scenario": "keyboard",
+      "covers": [
+        "keyboard-only",
+        "focus"
+      ]
+    },
+    {
+      "width": 2560,
+      "height": 1440,
+      "scenario": "standard",
+      "covers": [
+        "default-state",
+        "session-contracts"
+      ]
+    },
+    {
+      "width": 3440,
+      "height": 1440,
+      "scenario": "empty-reduced",
+      "covers": [
+        "empty-text",
+        "reduced-motion",
+        "ultrawide"
+      ]
+    }
+  ],
+  "requiredCoverage": [
+    "long-text",
+    "empty-text",
+    "localization",
+    "keyboard-only",
+    "rtl",
+    "reduced-motion",
+    "stable-status",
+    "session-contracts"
+  ],
+  "sddmContracts": [
+    "login",
+    "session",
+    "keyboard-layout",
+    "suspend",
+    "reboot",
+    "power-off"
+  ],
+  "logoutContracts": [
+    "lock",
+    "logout",
+    "suspend",
+    "reboot",
+    "power-off",
+    "cancel",
+    "update"
+  ],
+  "privateLockScreen": false
+}
