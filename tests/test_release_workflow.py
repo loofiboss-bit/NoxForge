@@ -32,12 +32,26 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn('re.fullmatch(r"[0-9a-f]{40}"', self.workflow)
         self.assertIn('candidate.get("worktreeDirty") is not False', self.workflow)
         self.assertIn('grep -Fqx "Version: ${version}"', self.workflow)
-        self.assertIn('NOXFORGE_SOURCE_COMMIT=$(git rev-parse HEAD)', self.workflow)
+        self.assertIn(
+            'source_commit=$(git -c safe.directory="$GITHUB_WORKSPACE" rev-parse HEAD)',
+            self.workflow,
+        )
+        self.assertIn('[[ ! "$source_commit" =~ ^[0-9a-f]{40}$ ]]', self.workflow)
+        self.assertIn('echo "NOXFORGE_RELEASE_REF=${{ inputs.ref }}"', self.workflow)
         self.assertIn(
             'evidence["candidate"]["sourceCommit"] = os.environ["NOXFORGE_SOURCE_COMMIT"]',
             self.workflow,
         )
+        self.assertIn(
+            'evidence["candidate"]["sourceRef"] = os.environ["NOXFORGE_RELEASE_REF"]',
+            self.workflow,
+        )
         self.assertIn("Commit: {os.environ['NOXFORGE_SOURCE_COMMIT']}", self.workflow)
+        self.assertIn(
+            'candidate.get("sourceCommit") != expected_commit',
+            self.workflow,
+        )
+        self.assertIn('candidate.get("sourceRef") != expected_ref', self.workflow)
 
     def test_public_release_refuses_development_versions(self) -> None:
         self.assertIn("Public releases require a stable VERSION", self.workflow)

@@ -90,11 +90,17 @@ jobs:
           if contract.get("assetCount") != 6 or len(contract.get("assetKinds", [])) != 6:
               raise SystemExit("qualification manifest does not define the six-asset contract")
           PY
+          source_commit=$(git -c safe.directory="$GITHUB_WORKSPACE" rev-parse HEAD)
+          if [[ ! "$source_commit" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Unable to resolve the exact checked-out release commit" >&2
+            exit 1
+          fi
           {
             echo "NOXFORGE_VERSION=$version"
             echo "NOXFORGE_EVIDENCE_DIR=$evidence_dir"
             echo "NOXFORGE_NOTES_FILE=$notes_file"
-            echo "NOXFORGE_SOURCE_COMMIT=$(git rev-parse HEAD)"
+            echo "NOXFORGE_RELEASE_REF=${{ inputs.ref }}"
+            echo "NOXFORGE_SOURCE_COMMIT=$source_commit"
           } >> "$GITHUB_ENV"
 
       - name: Run the full gate
@@ -133,7 +139,7 @@ jobs:
           ]
           evidence["releaseState"] = "release"
           evidence["candidate"]["sourceCommit"] = os.environ["NOXFORGE_SOURCE_COMMIT"]
-          evidence["candidate"]["sourceRef"] = os.environ["GITHUB_REF_NAME"]
+          evidence["candidate"]["sourceRef"] = os.environ["NOXFORGE_RELEASE_REF"]
           evidence["candidate"]["worktreeDirty"] = False
           evidence["candidate"]["package"] = next(
               name
@@ -213,6 +219,21 @@ jobs:
           test "$(find release -maxdepth 1 -type f -name '*.src.rpm' | wc -l)" -eq 1
           test "$(find release -maxdepth 1 -type f -name '*.rpm' ! -name '*.src.rpm' | wc -l)" -eq 1
           (cd release && sha256sum --check SHA256SUMS)
+          python3 - "$(git rev-parse HEAD)" "${{ inputs.ref }}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          expected_commit, expected_ref = sys.argv[1:]
+          manifest = json.loads(
+              Path("release/qualification.json").read_text(encoding="utf-8")
+          )
+          candidate = manifest.get("candidate", {})
+          if candidate.get("sourceCommit") != expected_commit:
+              raise SystemExit("release payload commit does not match the checked-out tag")
+          if candidate.get("sourceRef") != expected_ref:
+              raise SystemExit("release payload ref does not match the requested tag")
+          PY
           echo "NOXFORGE_NOTES_FILE=docs/releases/v${version}.md" >> "$GITHUB_ENV"
 
       - name: Publish exact approved artifacts
