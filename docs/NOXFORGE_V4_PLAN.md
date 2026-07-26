@@ -3,7 +3,19 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v3.0.0` at `7e5d51b5d3204cb20c19a80b665e7b02207cd4a3`  
 **Target:** Fedora KDE 44, Plasma 6.7+, Qt 6.11, Wayland  
-**Plan status:** In Progress (Active Release Authority)
+**Plan status:** Closed (superseded by v5)
+
+## Closure record
+
+The v4 implementation landed at commit
+`e3faefd481026cffafb9b48e11aa79987781fa78` and is tagged `v4.0.0`. The local
+release gate passes for that source state. The public GitHub release was
+published on 2026-07-25 without attached artifacts, and this repository has no
+v4-specific COPR or fresh live-qualification record. Those surfaces are not
+retroactively claimed as complete.
+
+The original phase list below is retained as historical scope. It is no longer
+an active execution authority.
 
 ## Executive Summary
 

@@ -3,14 +3,16 @@
 Run after RPM installation in a disposable Plasma 6.7+ Wayland session.
 Capture evidence before any tag or publication. Results must be `passed`,
 `failed`, `blocked`, or `not-applicable` in
-`docs/evidence/v3/qualification.json`; automated evidence never substitutes for
+`docs/evidence/v5/qualification.json`; automated evidence never substitutes for
 a live result.
 
-Current candidate: v3 implementation worktree on Fedora KDE 44, 2026-07-24.
-The available live matrix was run in isolated KWin/Plasma Wayland sessions with
-temporary HOME/XDG state. The active maintainer desktop was not changed.
+Current candidate: v5 development worktree on Fedora KDE 44. No v5 live case
+has been run yet, so every current case remains honestly `blocked` in the v5
+manifest. The table and captures below are the historical v3 baseline only;
+they must not be presented as v5 results. The active maintainer desktop is not
+changed by automated or offscreen checks.
 
-## Structural and offscreen checks (not full interactive gate)
+## Historical v3 structural and live baseline
 
 The evidence committed before the v2 visual rebuild was invalidated. The old
 140 percent gallery file duplicated the 100 percent capture. It has now been

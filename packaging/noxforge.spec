@@ -1,11 +1,13 @@
+%global upstream_version 5.0.0-dev
+
 Name:           noxforge
-Version:        4.0.0
+Version:        5.0.0~dev
 Release:        1%{?dist}
 Summary:        Industrial Precision global theme for KDE Plasma 6
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
-Source0:        %{url}/releases/download/v%{version}/noxforge-%{version}.tar.xz
+Source0:        %{url}/releases/download/v%{upstream_version}/noxforge-%{upstream_version}.tar.xz
 
 BuildRequires:  cmake >= 3.24
 BuildRequires:  gcc-c++
@@ -25,7 +27,7 @@ KWin switcher, icons, cursors, sounds, wallpaper, a native Qt 6 style plugin,
 and an SDDM theme. Package installation does not apply or activate the theme.
 
 %prep
-%autosetup -n NoxForge-%{version}
+%autosetup -n NoxForge-%{upstream_version}
 
 %build
 %cmake -GNinja -DCMAKE_BUILD_TYPE=Release
@@ -56,6 +58,12 @@ and an SDDM theme. Package installation does not apply or activate the theme.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Sun Jul 26 2026 Loofi <noreply@example.invalid> - 5.0.0~dev-1
+- Start the phase-gated NoxForge v5 development cycle
+
+* Sat Jul 25 2026 Loofi <noreply@example.invalid> - 4.0.0-1
+- Refine native Qt controls and expand original icon coverage
+
 * Fri Jul 24 2026 Loofi <noreply@example.invalid> - 3.0.0-1
 - Add Fedora packaging, CI, structured qualification, and read-only diagnostics
 
