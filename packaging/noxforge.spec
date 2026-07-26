@@ -11,6 +11,8 @@ Source0:        %{url}/releases/download/v%{upstream_version}/noxforge-%{upstrea
 
 BuildRequires:  cmake >= 3.24
 BuildRequires:  gcc-c++
+BuildRequires:  kf6-kirigami
+BuildRequires:  libplasma
 BuildRequires:  ninja-build
 BuildRequires:  qt6-qtbase-devel >= 6.7
 BuildRequires:  qt6-qtdeclarative-devel >= 6.7
