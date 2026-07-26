@@ -569,7 +569,7 @@ def validate_qml_design_consumers() -> None:
     qml_files = (
         ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
         ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
-        ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/main.qml",
+        ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
         ROOT / "sddm/NoxForge/Main.qml",
     )
     raw_color = re.compile(r"#[0-9A-Fa-f]{6,8}")

@@ -1,0 +1,89 @@
+{
+  "colorVisionReview": {
+    "indicators": {
+      "busy": "busyGlyph",
+      "checked": "checkGlyph",
+      "error": "errorGlyph",
+      "focus": "singleFocusRing",
+      "selected": "leadingMarker",
+      "success": "successGlyph"
+    },
+    "method": "Every semantic color state also has a named non-color indicator.",
+    "result": "passed"
+  },
+  "contrastPairs": {
+    "busy-on-control": {
+      "actual": 8.81,
+      "minimum": 4.5
+    },
+    "disabled-on-control": {
+      "actual": 3.7,
+      "minimum": 3.0
+    },
+    "error-on-control": {
+      "actual": 5.79,
+      "minimum": 4.5
+    },
+    "pressed-primary-action": {
+      "actual": 10.6,
+      "minimum": 7.0
+    },
+    "primary-action": {
+      "actual": 15.07,
+      "minimum": 7.0
+    },
+    "primary-on-canvas": {
+      "actual": 16.16,
+      "minimum": 7.0
+    },
+    "primary-on-control": {
+      "actual": 13.78,
+      "minimum": 7.0
+    },
+    "primary-on-hover": {
+      "actual": 12.35,
+      "minimum": 7.0
+    },
+    "primary-on-selection": {
+      "actual": 11.17,
+      "minimum": 7.0
+    },
+    "primary-on-surface": {
+      "actual": 15.04,
+      "minimum": 7.0
+    },
+    "secondary-on-canvas": {
+      "actual": 8.76,
+      "minimum": 4.5
+    },
+    "secondary-on-surface": {
+      "actual": 8.15,
+      "minimum": 4.5
+    },
+    "success-on-control": {
+      "actual": 12.85,
+      "minimum": 4.5
+    }
+  },
+  "hardcodedRuntimeFontFamilies": [],
+  "phase": 6,
+  "reviewStatus": "passed",
+  "reviews": {
+    "colorIndependentStates": true,
+    "keyboardOnly": true,
+    "reducedMotion": true,
+    "rtl": true,
+    "scaleCoverage": true
+  },
+  "schemaVersion": 1,
+  "sources": {
+    "DESIGN.md": "6833adfb38eb6b30ac6359721925a290fbe993bb7479451ec7be9c719ec14e81",
+    "design/tokens.json": "6fc6e973a8780b7ae8fb714e8cb4e9f442fc0b6e20e446270e1d49e3b5c38e4f",
+    "docs/evidence/v5/session-surfaces.json": "e90e80dee1dd7f2e6dc878a28cf1ff56568c42c6cd3fb331c11296f34cc17d6b",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "39498711fb415bafe5d37c0abc819e76595a4591d35d6fad3234fb31e0ce748b",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "1a329e1ec64f5fda483bd8ed98b7daddad4934df893a5f342e642b7ce4fcdd03",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "16d5d6bcaa7f70bd61203e7ff2fc3b8bfd760e7b786d38222f052be069ad2d7d",
+    "sddm/NoxForge/Main.qml": "3d11c274f88ff4f4af72f131a1a6bda72651741e2f1b730e58e68030ff203994"
+  },
+  "systemFont": "Noto Sans"
+}

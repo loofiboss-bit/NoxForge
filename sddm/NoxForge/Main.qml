@@ -16,6 +16,8 @@ Rectangle {
     property bool statusDanger: false
     property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
     property bool sessionMenuOpen: false
+    property bool freezeClock: false
+    property date currentDateTime: new Date()
 
     LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
@@ -29,6 +31,10 @@ Rectangle {
         statusMessage = qsTr("Authenticating…")
         statusDanger = false
         sddm.login(usernameInput.text, passwordInput.text, sessionIndex)
+    }
+
+    function focusFirstAction() {
+        usernameField.editor.forceActiveFocus()
     }
 
     component ForgeButton: Rectangle {
@@ -52,9 +58,12 @@ Rectangle {
 
         Text {
             anchors.centerIn: parent
+            width: parent.width - tokens.standardSpacing * 2
             text: button.label
             color: button.primary ? tokens.accentInk : button.danger && (mouse.containsMouse || button.activeFocus) ? tokens.negative : tokens.textPrimary
             font.weight: button.primary ? Font.DemiBold : Font.Normal
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
         }
         MouseArea { id: mouse; anchors.fill: parent; hoverEnabled: true; enabled: button.interactive; onClicked: button.clicked() }
         Keys.onReturnPressed: if (interactive) clicked()
@@ -67,7 +76,7 @@ Rectangle {
         property alias editor: editor
         property bool password: false
         spacing: tokens.compactSpacing
-        Text { text: field.label; color: tokens.textSecondary; font.pixelSize: 12 }
+        Text { text: field.label; color: tokens.textSecondary; font.pixelSize: 12; elide: Text.ElideRight; Layout.fillWidth: true }
         Rectangle {
             Layout.fillWidth: true
             implicitHeight: tokens.largeControlHeight
@@ -118,15 +127,11 @@ Rectangle {
         anchors.top: parent.top
         anchors.margins: 32
         spacing: tokens.compactSpacing
-        Text { id: clockText; anchors.right: parent.right; color: tokens.textPrimary; font.pixelSize: 30; font.weight: Font.DemiBold }
-        Text { id: dateText; anchors.right: parent.right; color: tokens.textSecondary; font.pixelSize: 13 }
+        Text { id: clockText; anchors.right: parent.right; text: Qt.formatTime(root.currentDateTime, "HH:mm"); color: tokens.textPrimary; font.pixelSize: 30; font.weight: Font.DemiBold }
+        Text { id: dateText; anchors.right: parent.right; text: Qt.formatDate(root.currentDateTime, "dddd d MMMM yyyy"); color: tokens.textSecondary; font.pixelSize: 13 }
         Timer {
             interval: 1000; running: true; repeat: true; triggeredOnStart: true
-            onTriggered: {
-                const now = new Date()
-                clockText.text = Qt.formatTime(now, "HH:mm")
-                dateText.text = Qt.formatDate(now, "dddd d MMMM yyyy")
-            }
+            onTriggered: if (!root.freezeClock) root.currentDateTime = new Date()
         }
     }
 
@@ -155,6 +160,7 @@ Rectangle {
                 editor.text: userModel.lastUser
                 editor.focus: true
                 editor.KeyNavigation.tab: passwordField.editor
+                editor.KeyNavigation.backtab: powerOffButton
             }
             ForgeField {
                 id: passwordField
@@ -162,6 +168,7 @@ Rectangle {
                 password: true
                 Layout.fillWidth: true
                 editor.KeyNavigation.tab: sessionButton
+                editor.KeyNavigation.backtab: usernameField.editor
                 editor.onAccepted: root.requestLogin()
             }
 
@@ -169,6 +176,8 @@ Rectangle {
                 id: sessionButton
                 label: qsTr("Choose session") + " · " + (root.sessionIndex + 1)
                 Layout.fillWidth: true
+                KeyNavigation.tab: loginButton
+                KeyNavigation.backtab: passwordField.editor
                 onClicked: root.sessionMenuOpen = !root.sessionMenuOpen
             }
             ColumnLayout {
@@ -190,14 +199,27 @@ Rectangle {
 
             Text {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 20
+                Layout.minimumHeight: 40
+                Layout.maximumHeight: 40
                 text: root.statusMessage
                 color: root.statusDanger ? tokens.negative : tokens.textSecondary
                 font.pixelSize: 12
+                wrapMode: Text.Wrap
+                maximumLineCount: 2
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
                 Accessible.role: Accessible.StaticText
                 Accessible.name: text
             }
-            ForgeButton { id: loginButton; label: qsTr("Sign in"); primary: true; Layout.fillWidth: true; onClicked: root.requestLogin() }
+            ForgeButton {
+                id: loginButton
+                label: qsTr("Sign in")
+                primary: true
+                Layout.fillWidth: true
+                KeyNavigation.tab: keyboardButton.visible ? keyboardButton : sleepButton
+                KeyNavigation.backtab: sessionButton
+                onClicked: root.requestLogin()
+            }
         }
     }
 
@@ -206,10 +228,10 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 24
         spacing: tokens.standardSpacing
-        ForgeButton { label: keyboard.layouts[keyboard.currentLayout]?.longName ?? qsTr("Keyboard"); visible: keyboard.layouts.length > 1; onClicked: keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length }
-        ForgeButton { label: qsTr("Sleep"); interactive: sddm.canSuspend; onClicked: sddm.suspend() }
-        ForgeButton { label: qsTr("Restart"); danger: true; interactive: sddm.canReboot; onClicked: sddm.reboot() }
-        ForgeButton { label: qsTr("Shut down"); danger: true; interactive: sddm.canPowerOff; onClicked: sddm.powerOff() }
+        ForgeButton { id: keyboardButton; label: keyboard.layouts[keyboard.currentLayout]?.longName ?? qsTr("Keyboard"); visible: keyboard.layouts.length > 1; KeyNavigation.tab: sleepButton; KeyNavigation.backtab: loginButton; onClicked: keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length }
+        ForgeButton { id: sleepButton; label: qsTr("Sleep"); interactive: sddm.canSuspend; KeyNavigation.tab: rebootButton; KeyNavigation.backtab: keyboardButton.visible ? keyboardButton : loginButton; onClicked: sddm.suspend() }
+        ForgeButton { id: rebootButton; label: qsTr("Restart"); danger: true; interactive: sddm.canReboot; KeyNavigation.tab: powerOffButton; KeyNavigation.backtab: sleepButton; onClicked: sddm.reboot() }
+        ForgeButton { id: powerOffButton; label: qsTr("Shut down"); danger: true; interactive: sddm.canPowerOff; KeyNavigation.tab: usernameField.editor; KeyNavigation.backtab: rebootButton; onClicked: sddm.powerOff() }
     }
 
     Connections {

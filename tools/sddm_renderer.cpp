@@ -85,7 +85,9 @@ private:
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
-    if (argc != 4) return 2;
+    if (argc != 4 && argc != 5) return 2;
+    const bool firstFrame = argc == 5 && QString::fromLocal8Bit(argv[4]) == QStringLiteral("--first-frame");
+    if (argc == 5 && !firstFrame) return 2;
     const QUrl qml = QUrl::fromLocalFile(QString::fromLocal8Bit(argv[1]));
     Config config(QUrl::fromLocalFile(QString::fromLocal8Bit(argv[2])));
     SessionModel sessions;
@@ -103,6 +105,14 @@ int main(int argc, char **argv)
     if (view.status() == QQuickView::Error) return 3;
     view.resize(960, 540);
     view.show();
+    if (firstFrame) {
+        QObject::connect(&view, &QQuickView::frameSwapped, &app, [&]() {
+            const QImage image = view.grabWindow();
+            app.exit(!image.isNull() && image.save(QString::fromLocal8Bit(argv[3])) ? 0 : 4);
+        }, Qt::SingleShotConnection);
+        QTimer::singleShot(5000, &app, [&]() { app.exit(5); });
+        return app.exec();
+    }
     QTimer::singleShot(450, &app, [&]() {
         const QImage image = view.grabWindow();
         app.exit(!image.isNull() && image.save(QString::fromLocal8Bit(argv[3])) ? 0 : 4);
