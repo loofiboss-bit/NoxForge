@@ -5,13 +5,14 @@ under the repository's MIT License. No artwork from Breeze or another theme is
 included. Installed KDE assets and upstream documentation were inspected only
 for package layout and required identifiers.
 
-The wallpaper composition was explored with an OpenAI-generated concept using
-the locked NoxForge palette. The concept image is not shipped. The final
-wallpaper was authored separately as editable project-owned vector geometry in
-`wallpapers/NoxForge/contents/source/NoxForge.svg` and is deterministically
-rendered to 2560x1440, 3840x2160, and 3440x1440 release images. SDDM uses a
-deterministically dimmed derivative, while its preview is captured from the
-real QML surface with mock runtime models.
+The original wallpaper direction was explored with an OpenAI-generated concept
+using the locked NoxForge palette. The concept image is not shipped. The final
+wallpapers were authored separately as project-owned vector geometry:
+`NoxForge.svg` is the 16:9 composition and `NoxForge-Ultrawide.svg` is an
+independent panoramic composition rather than a stretched crop. They render
+deterministically to 2560x1440, 3840x2160, and 3440x1440 release images. SDDM
+uses a deterministically dimmed 16:9 derivative, while its preview is captured
+from the real QML surface with mock runtime models.
 
 The Aurorae decoration and all system icon SVGs are emitted from original geometry
 in `scripts/generate_visual_assets.py`. Their generated SVG files are committed
@@ -20,14 +21,26 @@ access.
 
 ## Icon, cursor and sound coverage
 
-The generated icon manifest covers KDE actions, applets, categories, devices,
-emblems, MIME types, places, preferences and status names. Canonical original
-glyph families are reused for semantic aliases by writing physical SVG files;
-no symlinks or artwork from another theme are used. Only `hicolor` is inherited
-so third-party applications retain their own product icons.
+`design/artwork-contract.json` fixes the Fedora KDE 44, Plasma 6.7 and System
+Settings 6.7 runtime fixture used by the generated icon manifest. The 185
+scalable icons cover actions, applets, categories, devices, emblems, MIME
+types, places, preferences and status names. The 196 physical 16/22 px optical
+variants are limited to dense action, applet and status contexts. Canonical
+original glyph families are reused only for genuine semantic synonyms; broader
+related names receive a deterministic optical discriminator. No symlinks or
+artwork from another theme are used. Only `hicolor` is inherited so third-party
+applications retain their own product icons.
 
 The NoxForge cursor generator writes original 24, 32 and 48 pixel Xcursor image
-chunks plus physical alias files. Wait and progress contain twelve 80 ms frames
-at each size. Canonical cursor SVG sources match their corresponding distinct
-glyph geometry. The sound generator synthesizes editable WAV
-masters and deterministic Ogg/Vorbis event files from project-owned waveforms.
+chunks plus physical alias files. Its manifest records and validates every
+canonical hotspot. Wait and progress contain twelve 80 ms frames at each size.
+Canonical cursor SVG sources match their corresponding distinct glyph geometry.
+The sound generator synthesizes editable WAV masters, normalizes ordinary
+events to -23 dBFS RMS and the alarm to -20 dBFS RMS under a -3 dBFS peak
+ceiling, and emits deterministic Ogg/Vorbis files. Duration and frequency
+signatures keep each of the ten semantic source sounds distinct.
+
+The reviewed Phase 4 evidence is committed as three deterministic contact
+sheets and `docs/evidence/artwork-contact-sheets.json`. The manifest binds
+contract, source, coverage and sheet hashes; these are structural/offscreen
+artwork reviews and do not claim live Plasma or cursor interaction.

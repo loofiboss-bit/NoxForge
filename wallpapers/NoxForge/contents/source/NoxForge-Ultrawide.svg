@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3440" height="1440" viewBox="0 0 3440 1440">
+  <defs>
+    <linearGradient id="background-depth" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#141B21"/>
+      <stop offset="0.5" stop-color="#0E1318"/>
+      <stop offset="1" stop-color="#090D11"/>
+    </linearGradient>
+    <linearGradient id="graphite-edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1A232B"/>
+      <stop offset="1" stop-color="#141B21"/>
+    </linearGradient>
+  </defs>
+  <rect width="3440" height="1440" fill="url(#background-depth)"/>
+
+  <!-- The ultrawide composition is authored independently to keep the visual
+       mass on the outer thirds instead of stretching the 16:9 geometry. -->
+  <path d="M0 210L520 520L474 600L0 330Z" fill="#1A232B"/>
+  <path d="M0 352L468 628L858 568L1540 520L1410 604L520 698L0 474Z" fill="url(#graphite-edge)"/>
+  <path d="M0 520L420 758L604 710L1030 1036L930 1098L548 830L410 882L0 670Z" fill="#141B21"/>
+  <path d="M0 704L348 900L554 866L1200 1440H918L510 1068L418 1102L0 830Z" fill="#1A232B"/>
+  <path d="M0 890L300 1044L474 1024L902 1440H650L426 1224L334 1240L0 1012Z" fill="#11171C"/>
+
+  <path d="M594 700L1450 544L1280 640L690 754L650 812L1044 1132L1006 1172L608 826L642 748Z" fill="#A3FF47"/>
+  <path d="M650 812L1044 1132L1006 1172L620 848Z" fill="#79BE37" opacity="0.55"/>
+  <path d="M758 792L1150 754L1538 1088L1462 1120L1110 830L834 854L1268 1224L1184 1252Z" fill="#1A232B"/>
+  <path d="M758 792L1150 754L1178 780L834 818Z" fill="#2A3640"/>
+  <path d="M1118 838L1466 1124L1440 1140L1094 856Z" fill="#0E1318"/>
+
+  <!-- A restrained counterweight makes the panoramic crop deliberate while
+       preserving the quiet central workspace. -->
+  <path d="M3440 292L3152 478L3210 540L3440 412Z" fill="#141B21"/>
+  <path d="M3440 428L3260 540L3068 504L2840 668L2904 714L3282 618L3440 534Z" fill="#1A232B"/>
+  <path d="M3440 586L3290 666L3102 626L2952 752L3008 792L3130 704L3314 744L3440 682Z" fill="#11171C"/>
+
+  <path d="M416 650L466 642" stroke="#22D3EE" stroke-width="5"/>
+  <path d="M318 928L380 966" stroke="#A78BFA" stroke-width="6" stroke-dasharray="12 10"/>
+  <path d="M1040 1038L1082 1078" stroke="#22D3EE" stroke-width="5"/>
+  <path d="M1324 1052L1464 1172" stroke="#A78BFA" stroke-width="5"/>
+  <path d="M3104 620L3160 604" stroke="#22D3EE" stroke-width="4"/>
+
+  <g fill="none" stroke="#2A3640" stroke-width="2" opacity="0.8">
+    <path d="M0 208L522 518L474 600L0 332"/>
+    <path d="M0 518L420 756L604 708L1032 1036"/>
+    <path d="M0 702L348 898L554 864L1202 1440"/>
+    <path d="M758 790L1150 752L1540 1088"/>
+    <path d="M3440 290L3150 478L3210 542"/>
+  </g>
+</svg>

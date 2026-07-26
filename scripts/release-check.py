@@ -20,7 +20,9 @@ GENERATOR_CHECKS = (
     ("generate_plasma_svgs.py", "--check"),
     ("generate_visual_assets.py", "--check"),
     ("generate_cursors.py", "--check"),
+    ("generate_sound_theme.py", "--check"),
     ("render_wallpaper.py", "--check"),
+    ("render_artwork_evidence.py", "--check"),
     ("check_plasma_rasters.py",),
 )
 QML_SURFACES = (

@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 2 complete; Phase 3 is not authorized
+**Plan status:** Phase 4 complete; Phase 5 is not authorized
 
 ## Product direction
 
@@ -92,6 +92,17 @@ geometry/state probe, visual-evidence tests and broader local validation passed.
 **Gate:** deterministic generation and a complete state/orientation/scale raster
 atlas pass.
 
+**Outcome (2026-07-26):** All 43 Plasma 6.7 widget families now resolve through
+the versioned semantic recipe contract. Opaque, solid and translucent shell
+variants use consistent nine-slice paints; focused controls retain one
+indicator, and task focus/progress markers follow all four panel edges. The
+committed deterministic atlas covers 56 widget, weather, dialog and background
+assets at 100/125/140/200 percent, including every declared state sheet and
+oriented task state. Generator drift, focused Phase 3 tests, the Python suite,
+CMake/CTest, QML lint and the broader local release check without archive/RPM
+packaging passed. Live Plasma fallback and compositor qualification remain
+blocked for Phase 6.
+
 ## Phase 4 — Original artwork system
 
 - Optically refine the N/F mark and author separate deterministic 16:9 and
@@ -103,6 +114,18 @@ atlas pass.
 
 **Gate:** byte-identical outputs, semantic duplicate checks and reviewed contact
 sheets pass. No copied artwork or package symlinks are allowed.
+
+**Outcome (2026-07-26):** The N/F mark was optically balanced while preserving
+its physical cross-surface identity. Independent 16:9 and ultrawide vector
+compositions now produce byte-identical wallpaper outputs. A versioned Fedora
+KDE 44, Plasma 6.7 and System Settings 6.7 runtime fixture expands coverage to
+185 scalable icons with 196 explicitly scoped 16/22 px optical variants.
+Cursor manifests bind every canonical hotspot, all 24/32/48 px images and both
+12-frame 80 ms animations. Original sound masters are RMS-normalized with a
+measured peak ceiling while retaining distinct duration and pitch signatures.
+All generators, semantic duplicate checks, three reviewed contact sheets, the
+focused Phase 4 suite and the broader local release check without archive/RPM
+packaging passed. No package symlink or copied artwork was introduced.
 
 ## Phase 5 — Session and window surfaces
 

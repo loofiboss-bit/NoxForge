@@ -185,12 +185,12 @@ def brand_mark(tokens: dict[str, object]) -> str:
     colors = tokens["colors"]
     assert isinstance(colors, dict)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="192" height="144" viewBox="0 0 192 144">
-  <title>NoxForge angled N/F mark</title>
+  <title>NoxForge optically balanced N/F mark</title>
   <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M20 116L48 28l52 78 28-78" stroke="{colors['textPrimary']}" stroke-width="16"/>
-    <path d="M116 116l28-88h40M134 68h36" stroke="{colors['textPrimary']}" stroke-width="16"/>
-    <path d="M46 28l54 78" stroke="{colors['accent']}" stroke-width="7"/>
-    <path d="M144 28h40" stroke="{colors['accent']}" stroke-width="7"/>
+    <path d="M20 116L47 28l53 78 27-78" stroke="{colors['textPrimary']}" stroke-width="15"/>
+    <path d="M116 116l27-88h41M132 70h37" stroke="{colors['textPrimary']}" stroke-width="15"/>
+    <path d="M46 29l53 77" stroke="{colors['accent']}" stroke-width="6"/>
+    <path d="M143 28h41" stroke="{colors['accent']}" stroke-width="6"/>
   </g>
 </svg>
 '''

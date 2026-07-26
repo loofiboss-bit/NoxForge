@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "target": {
+    "desktop": "Fedora KDE 44",
+    "plasma": "6.7",
+    "systemSettings": "6.7"
+  },
+  "brand": {
+    "source": "design/brand/noxforge-mark.svg",
+    "viewBox": "0 0 192 144",
+    "minimumClearSpace": 12,
+    "opticalSizes": [48, 96, 192]
+  },
+  "wallpapers": {
+    "16:9": {
+      "source": "wallpapers/NoxForge/contents/source/NoxForge.svg",
+      "outputs": ["2560x1440", "3840x2160"]
+    },
+    "ultrawide": {
+      "source": "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg",
+      "outputs": ["3440x1440"]
+    }
+  },
+  "runtimeIconFixture": {
+    "source": "KDE Plasma and System Settings runtime names",
+    "required": [
+      "actions/application-exit.svg",
+      "actions/configure.svg",
+      "actions/dialog-cancel.svg",
+      "actions/dialog-ok.svg",
+      "actions/document-new.svg",
+      "actions/document-open.svg",
+      "actions/document-save.svg",
+      "actions/edit-copy.svg",
+      "actions/edit-cut.svg",
+      "actions/edit-paste.svg",
+      "actions/help-about.svg",
+      "actions/help-contents.svg",
+      "actions/media-playback-pause.svg",
+      "actions/media-playback-start.svg",
+      "actions/media-playback-stop.svg",
+      "actions/system-run.svg",
+      "actions/system-search.svg",
+      "actions/view-filter.svg",
+      "actions/view-grid.svg",
+      "actions/view-list-tree.svg",
+      "applets/battery.svg",
+      "applets/bluetooth-active.svg",
+      "applets/clock.svg",
+      "applets/keyboard-layout.svg",
+      "applets/network.svg",
+      "applets/notifications.svg",
+      "applets/systemtray.svg",
+      "categories/applications-accessories.svg",
+      "categories/applications-development.svg",
+      "categories/applications-education.svg",
+      "categories/applications-graphics.svg",
+      "categories/applications-internet.svg",
+      "categories/applications-multimedia.svg",
+      "categories/applications-office.svg",
+      "categories/applications-system.svg",
+      "categories/applications-utilities.svg",
+      "devices/audio-card.svg",
+      "devices/computer.svg",
+      "devices/drive-harddisk.svg",
+      "devices/drive-optical.svg",
+      "devices/input-keyboard.svg",
+      "devices/input-mouse.svg",
+      "devices/printer.svg",
+      "devices/scanner.svg",
+      "devices/tablet.svg",
+      "places/folder.svg",
+      "places/folder-download.svg",
+      "places/folder-pictures.svg",
+      "places/folder-videos.svg",
+      "places/user-desktop.svg",
+      "places/user-home.svg",
+      "preferences/preferences-desktop-accessibility.svg",
+      "preferences/preferences-desktop-color.svg",
+      "preferences/preferences-desktop-display-randr.svg",
+      "preferences/preferences-desktop-icons.svg",
+      "preferences/preferences-desktop-keyboard.svg",
+      "preferences/preferences-desktop-mouse.svg",
+      "preferences/preferences-desktop-theme.svg",
+      "preferences/preferences-system-bluetooth.svg",
+      "preferences/preferences-system-network.svg",
+      "preferences/preferences-system-power-management.svg",
+      "preferences/preferences-system-sound.svg",
+      "status/audio-volume-high.svg",
+      "status/audio-volume-muted.svg",
+      "status/battery-charging.svg",
+      "status/battery-good.svg",
+      "status/dialog-error.svg",
+      "status/dialog-information.svg",
+      "status/dialog-warning.svg",
+      "status/network-wired.svg",
+      "status/network-wireless.svg",
+      "status/network-wireless-disconnected.svg",
+      "status/printer-error.svg",
+      "status/software-update-available.svg",
+      "status/software-update-none.svg",
+      "status/user-available.svg",
+      "status/user-away.svg"
+    ],
+    "opticalContexts": ["actions", "applets", "status"],
+    "opticalSizes": [16, 22]
+  },
+  "cursors": {
+    "physicalSizes": [24, 32, 48],
+    "animation": {
+      "frames": 12,
+      "delayMs": 80
+    }
+  },
+  "sounds": {
+    "sampleRate": 48000,
+    "targetRmsDbfs": -23.0,
+    "alarmTargetRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "toleranceDb": 0.15
+  },
+  "evidence": {
+    "manifest": "docs/evidence/artwork-contact-sheets.json",
+    "sheets": [
+      "docs/evidence/artwork-brand-wallpaper.png",
+      "docs/evidence/artwork-icons.png",
+      "docs/evidence/artwork-cursors.png"
+    ]
+  }
+}

@@ -13,15 +13,15 @@
       .NoxForge-Border { color: #2B3942; }
     ]]></style>
   </defs>
-  <path id="normal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <rect id="normal-top" x="6" y="0" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <path id="normal-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <rect id="normal-left" x="0" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <rect id="normal-center" x="6" y="6" width="12" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <rect id="normal-right" x="18" y="6" width="6" height="12" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <path id="normal-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <rect id="normal-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
-  <path id="normal-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-top" x="6" y="0" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-left" x="0" y="6" width="6" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-center" x="6" y="6" width="12" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-right" x="18" y="6" width="6" height="12" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <rect id="normal-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
+  <path id="normal-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="0.04"/>
   <rect id="normal-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="normal-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>

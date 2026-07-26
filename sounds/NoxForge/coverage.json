@@ -33,6 +33,108 @@
     "theme-demo": "login",
     "trash-empty": "device-removed"
   },
+  "normalization": {
+    "alarmTargetRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "targetRmsDbfs": -23.0,
+    "toleranceDb": 0.15
+  },
   "sampleRate": 48000,
-  "schemaVersion": 1
+  "schemaVersion": 2,
+  "sources": {
+    "alarm": {
+      "durationMs": 700,
+      "frequenciesHz": [
+        440.0,
+        880.0,
+        440.0
+      ],
+      "peakDbfs": -7.511,
+      "rmsDbfs": -20.0
+    },
+    "device-added": {
+      "durationMs": 240,
+      "frequenciesHz": [
+        349.23,
+        698.46
+      ],
+      "peakDbfs": -13.404,
+      "rmsDbfs": -23.0
+    },
+    "device-removed": {
+      "durationMs": 240,
+      "frequenciesHz": [
+        698.46,
+        349.23
+      ],
+      "peakDbfs": -13.382,
+      "rmsDbfs": -23.0
+    },
+    "error": {
+      "durationMs": 320,
+      "frequenciesHz": [
+        196.0,
+        155.56
+      ],
+      "peakDbfs": -12.861,
+      "rmsDbfs": -23.0
+    },
+    "login": {
+      "durationMs": 520,
+      "frequenciesHz": [
+        261.63,
+        392.0,
+        659.25
+      ],
+      "peakDbfs": -12.414,
+      "rmsDbfs": -23.0
+    },
+    "logout": {
+      "durationMs": 440,
+      "frequenciesHz": [
+        523.25,
+        329.63,
+        220.0
+      ],
+      "peakDbfs": -12.605,
+      "rmsDbfs": -23.0
+    },
+    "message": {
+      "durationMs": 200,
+      "frequenciesHz": [
+        740.0,
+        987.77
+      ],
+      "peakDbfs": -13.053,
+      "rmsDbfs": -23.0
+    },
+    "success": {
+      "durationMs": 280,
+      "frequenciesHz": [
+        523.25,
+        783.99,
+        1046.5
+      ],
+      "peakDbfs": -13.709,
+      "rmsDbfs": -23.0
+    },
+    "tick": {
+      "durationMs": 80,
+      "frequenciesHz": [
+        880.0,
+        1320.0
+      ],
+      "peakDbfs": -14.174,
+      "rmsDbfs": -23.0
+    },
+    "warning": {
+      "durationMs": 340,
+      "frequenciesHz": [
+        440.0,
+        329.63
+      ],
+      "peakDbfs": -12.194,
+      "rmsDbfs": -23.0
+    }
+  }
 }

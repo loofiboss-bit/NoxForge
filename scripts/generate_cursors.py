@@ -11,7 +11,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "cursors/NoxForge-Cursors"
-SIZES = (24, 32, 48)
+ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
+SIZES = tuple(ARTWORK["cursors"]["physicalSizes"])
 XCURSOR_IMAGE_TYPE = 0xFFFD0002
 
 COLORS = {
@@ -231,11 +232,18 @@ def main() -> None:
     outputs[THEME / "coverage.json"] = (
         json.dumps(
             {
-                "schemaVersion": 2,
+                "schemaVersion": 3,
                 "sizes": list(SIZES),
                 "canonical": list(CANONICAL),
                 "aliases": ALIASES,
-                "animations": {"wait": {"frames": 12, "delayMs": 80}, "progress": {"frames": 12, "delayMs": 80}},
+                "hotspots": {
+                    kind: {str(size): list(hotspot(kind, size)) for size in SIZES}
+                    for kind in CANONICAL
+                },
+                "animations": {
+                    "wait": ARTWORK["cursors"]["animation"],
+                    "progress": ARTWORK["cursors"]["animation"],
+                },
             },
             indent=2,
             sort_keys=True,

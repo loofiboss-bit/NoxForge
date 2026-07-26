@@ -10,7 +10,7 @@ The repository provides:
 - a strict Plasma 6 Look-and-Feel package and optional compact panel layout;
 - NoxForge Dark colors and an expanded Plasma Style without an explicit theme fallback;
 - a native Qt 6 `QStylePlugin`, Aurorae decoration and KWin task switcher;
-- 166 scalable system icons, 172 physical 16/22 px variants and only `hicolor` application-logo inheritance;
+- 185 scalable system icons, 196 physical 16/22 px variants and only `hicolor` application-logo inheritance;
 - 96 physical multi-size cursors, 32 original system sounds and three wallpaper resolutions;
 - original splash, logout and Qt 6 SDDM experiences;
 - safe user-local and separate explicit system installation tooling.

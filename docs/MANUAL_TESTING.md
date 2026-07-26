@@ -67,6 +67,34 @@ These reviewed reference renders are automated structural evidence only. They
 do not change the blocked v5 live qualification manifest and do not claim
 keyboard interaction, compositor behavior or desktop integration.
 
+## Current v5 Phase 3 offscreen evidence (2026-07-26)
+
+`docs/evidence/plasma-style-atlas.json` inventories all 43 Plasma 6.7 widget
+families, weather artwork, the dialog background and every opaque, solid and
+translucent background variant. Its four committed atlases contain 56 sources
+at 100/125/140/200 percent and bind the complete declared state and panel-edge
+orientation contracts to source and raster hashes.
+
+This deterministic atlas qualifies generated source coverage, rasterization,
+nine-slice paint consistency and edge-specific task markers. It is not live
+Plasma evidence. Compositor blur, actual panel placement, interactive shell
+states and visible fallback behavior remain blocked until the Phase 6 isolated
+Wayland matrix is explicitly authorized and run.
+
+## Current v5 Phase 4 artwork evidence (2026-07-26)
+
+`docs/evidence/artwork-contact-sheets.json` binds the canonical N/F mark,
+independent 16:9 and ultrawide wallpaper sources, fixed KDE/Plasma/System
+Settings icon fixture, cursor coverage and normalized sound metrics to three
+reviewed contact sheets. Generator checks reproduce every output byte for byte,
+and validation rejects unlisted semantic duplicates, invalid cursor hotspots,
+animation timing drift, loudness drift, copied package links and stale sheets.
+
+The sheets establish editable-source and optical-review evidence. They do not
+claim live cursor motion, audible speaker/headphone behavior, wallpaper
+placement by Plasma, or session-surface integration; those remain part of the
+explicit Phase 6 live matrix.
+
 ## Remaining interactive checks (require live Plasma application)
 
 The following cannot be closed without explicitly applying the Global Theme in
