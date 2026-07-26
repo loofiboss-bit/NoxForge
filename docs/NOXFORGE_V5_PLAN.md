@@ -5,7 +5,7 @@
 **Repository:** `loofiboss-bit/NoxForge`  
 **Reviewed baseline:** `main` / `v4.0.0` at `e3faefd481026cffafb9b48e11aa79987781fa78`  
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland  
-**Plan status:** Phase 0 complete; Phase 1 is not authorized
+**Plan status:** Phase 1 complete; Phase 2 is not authorized
 
 ## Product direction
 
@@ -52,6 +52,14 @@ authorized or run; no offscreen result is promoted to live evidence.
 
 **Gate:** zero generator drift, full token parity and contrast coverage for all
 documented foreground/background pairs.
+
+**Outcome (2026-07-26):** Schema v4 preserves the locked palette and four-pixel
+grid while adding semantic roles, opacity, elevation, overlay, shadow,
+reduced-motion and the complete ten-state hierarchy. Generated C++ and QML
+consumers have exact canonical token parity, every semantic foreground and
+background pair is covered by a passing contrast contract, and all six
+Hallmark scores are at least 4/5. The focused Phase 1 gate and the broader local
+release check without archive/RPM packaging passed.
 
 ## Phase 2 — Complete native Qt 6 style
 
