@@ -3,6 +3,7 @@
   "contract": "design/session-surface-contract.json",
   "renderer": "tools/session_renderer.cpp",
   "authenticQml": true,
+  "themeContext": "isolated NoxForge Plasma and icon context",
   "liveSession": false,
   "reviewStatus": "reviewed",
   "captures": [
@@ -76,7 +77,7 @@
       "width": 1280,
       "height": 720,
       "scenario": "long-rtl",
-      "sha256": "3326be5414a8336f934b1466f7310be2df5f1ea6d5d920181384adfac155ce42"
+      "sha256": "9383c16afa5ab810ce0047d5ca9d2dd5197755d4ee905ece8c52e97c8d597f9a"
     },
     {
       "file": "session/logout-1920x1080-keyboard.png",
@@ -84,7 +85,7 @@
       "width": 1920,
       "height": 1080,
       "scenario": "keyboard",
-      "sha256": "9855a7227373f610c078c583e1685d45647baa391b6ce2a896fa7b067d31544f"
+      "sha256": "56138402b47962c47225de328e7d26d83c1698f3946fc2fdc0188216a4be4d81"
     },
     {
       "file": "session/logout-2560x1440-standard.png",
@@ -92,7 +93,7 @@
       "width": 2560,
       "height": 1440,
       "scenario": "standard",
-      "sha256": "66797f26f033a3ba8058578b710934a84519ef5503ee0fd8c3712477b8646905"
+      "sha256": "e6aaecfad8e505d88cca9544357b621747a84c47aad9497700a7e9a64a21a385"
     },
     {
       "file": "session/logout-3440x1440-empty-reduced.png",
@@ -100,7 +101,7 @@
       "width": 3440,
       "height": 1440,
       "scenario": "empty-reduced",
-      "sha256": "f95b46efaba562b742d28efd80730f8304f644911906a4d24d922c3d5b72107a"
+      "sha256": "8be2182a6f66cfde15389bba4fb893db01d95267fdafe73736ed80745f7eb1e2"
     },
     {
       "file": "session/tabbox-1280x720-long-rtl.png",
@@ -108,7 +109,7 @@
       "width": 1280,
       "height": 720,
       "scenario": "long-rtl",
-      "sha256": "5691adafcfc4aaba78fedf1106c6f199069daa8031d4f604348272a185b94064"
+      "sha256": "7fea81f5396387907464145ea2be59774a582733727160d0339c999b84f68f9e"
     },
     {
       "file": "session/tabbox-1920x1080-keyboard.png",
@@ -116,7 +117,7 @@
       "width": 1920,
       "height": 1080,
       "scenario": "keyboard",
-      "sha256": "c9de89484378eab7f1a44dcf021a9ffd9df4d992c3b9ba46c82db38a5ffe874b"
+      "sha256": "80f41dbd541b61f0a184c098d4a45a888d261b30868adbf5c9669f410201828f"
     },
     {
       "file": "session/tabbox-2560x1440-standard.png",
@@ -124,7 +125,7 @@
       "width": 2560,
       "height": 1440,
       "scenario": "standard",
-      "sha256": "71baad36eef509232fc88acdc6adf17a6db72d8d9ad3a8245181407f9c7025dd"
+      "sha256": "5e59c8ba10ca4894f171d547fab2c33e16584ea9e3104b9f49c13dde82f514a1"
     },
     {
       "file": "session/tabbox-3440x1440-empty-reduced.png",

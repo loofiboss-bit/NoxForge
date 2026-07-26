@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: MIT
 #include <QAbstractListModel>
 #include <QDateTime>
+#include <QDir>
+#include <QFile>
 #include <QGuiApplication>
 #include <QImage>
+#include <QIcon>
 #include <QLocale>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QQuickView>
 #include <QRect>
 #include <QTimer>
+#include <QTemporaryDir>
 #include <QUrl>
 #include <QVariantList>
 
@@ -192,15 +196,41 @@ static void setPropertyIfPresent(QObject *object, const char *name, const QVaria
 
 int main(int argc, char **argv)
 {
-    if (argc != 8) {
+    if (argc != 9) {
         return 2;
     }
+    QTemporaryDir isolatedRuntime(QStringLiteral("noxforge-session-renderer-XXXXXX"));
+    if (!isolatedRuntime.isValid()) {
+        return 5;
+    }
+    const QString repositoryRoot = QString::fromLocal8Bit(argv[8]);
+    const QString configRoot = isolatedRuntime.path() + QStringLiteral("/config");
+    QDir().mkpath(configRoot);
+    QFile plasmaConfig(configRoot + QStringLiteral("/plasmarc"));
+    if (!plasmaConfig.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return 5;
+    }
+    plasmaConfig.write(
+        "[Theme]\n"
+        "name=io.github.loofiboss.noxforge.desktop\n");
+    plasmaConfig.close();
+    qputenv("XDG_CONFIG_HOME", configRoot.toUtf8());
+    const QByteArray existingDataDirs = qgetenv("XDG_DATA_DIRS");
+    qputenv(
+        "XDG_DATA_DIRS",
+        repositoryRoot.toUtf8() + ":"
+            + (existingDataDirs.isEmpty() ? QByteArray("/usr/share") : existingDataDirs));
+    qputenv("KDE_SESSION_VERSION", "6");
     const QString scenario = QString::fromLocal8Bit(argv[7]);
     const bool rtl = scenario == QStringLiteral("long-rtl");
     if (rtl) {
         QLocale::setDefault(QLocale(QStringLiteral("ar_EG")));
     }
     QGuiApplication app(argc, argv);
+    QStringList iconPaths = QIcon::themeSearchPaths();
+    iconPaths.prepend(repositoryRoot + QStringLiteral("/icons"));
+    QIcon::setThemeSearchPaths(iconPaths);
+    QIcon::setThemeName(QStringLiteral("NoxForge"));
     if (rtl) {
         app.setLayoutDirection(Qt::RightToLeft);
     }

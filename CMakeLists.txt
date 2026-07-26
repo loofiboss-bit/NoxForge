@@ -87,6 +87,7 @@ function(add_noxforge_session_test name surface qml scenario)
             1280
             720
             ${scenario}
+            "${CMAKE_SOURCE_DIR}"
     )
     set_tests_properties(${name} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endfunction()

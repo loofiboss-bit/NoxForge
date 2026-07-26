@@ -64,6 +64,9 @@ class V5PhaseFiveTests(unittest.TestCase):
         self.assertIn("maximumLineCount: 2", sddm)
         self.assertIn("KeyNavigation.tab", sddm)
         self.assertIn("KeyNavigation.backtab", sddm)
+        self.assertIn("id: sessionChoices", sddm)
+        self.assertIn("sessionChoices.itemAt(index + 1)", sddm)
+        self.assertIn("sessionChoices.itemAt(index - 1)", sddm)
         self.assertIn("LayoutMirroring.enabled", sddm)
 
         logout = (
@@ -93,6 +96,10 @@ class V5PhaseFiveTests(unittest.TestCase):
 
     def test_authentic_qml_matrix_covers_all_four_compositions(self) -> None:
         self.assertTrue(EVIDENCE["authenticQml"])
+        self.assertEqual(
+            EVIDENCE["themeContext"],
+            "isolated NoxForge Plasma and icon context",
+        )
         self.assertFalse(EVIDENCE["liveSession"])
         self.assertEqual(EVIDENCE["reviewStatus"], "reviewed")
         expected = {

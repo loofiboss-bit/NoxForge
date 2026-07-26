@@ -30,7 +30,6 @@ jobs:
           glibc-langpack-en
           ImageMagick
           kf6-kirigami
-          libplasma
           ninja-build
           python3
           qt6-qtbase-devel

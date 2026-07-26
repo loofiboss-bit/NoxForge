@@ -176,15 +176,23 @@ Rectangle {
                 id: sessionButton
                 label: qsTr("Choose session") + " · " + (root.sessionIndex + 1)
                 Layout.fillWidth: true
-                KeyNavigation.tab: loginButton
+                KeyNavigation.tab: root.sessionMenuOpen && sessionChoices.count > 0
+                    ? sessionChoices.itemAt(0)
+                    : loginButton
                 KeyNavigation.backtab: passwordField.editor
-                onClicked: root.sessionMenuOpen = !root.sessionMenuOpen
+                onClicked: {
+                    root.sessionMenuOpen = !root.sessionMenuOpen
+                    if (root.sessionMenuOpen && sessionChoices.count > 0) {
+                        sessionChoices.itemAt(0).forceActiveFocus()
+                    }
+                }
             }
             ColumnLayout {
                 visible: root.sessionMenuOpen
                 Layout.fillWidth: true
                 spacing: tokens.compactSpacing
                 Repeater {
+                    id: sessionChoices
                     model: sessionModel
                     ForgeButton {
                         required property int index
@@ -192,6 +200,12 @@ Rectangle {
                         label: name
                         primary: index === root.sessionIndex
                         Layout.fillWidth: true
+                        KeyNavigation.tab: index + 1 < sessionChoices.count
+                            ? sessionChoices.itemAt(index + 1)
+                            : loginButton
+                        KeyNavigation.backtab: index > 0
+                            ? sessionChoices.itemAt(index - 1)
+                            : sessionButton
                         onClicked: { root.sessionIndex = index; root.sessionMenuOpen = false; sessionButton.forceActiveFocus() }
                     }
                 }
@@ -217,7 +231,9 @@ Rectangle {
                 primary: true
                 Layout.fillWidth: true
                 KeyNavigation.tab: keyboardButton.visible ? keyboardButton : sleepButton
-                KeyNavigation.backtab: sessionButton
+                KeyNavigation.backtab: root.sessionMenuOpen && sessionChoices.count > 0
+                    ? sessionChoices.itemAt(sessionChoices.count - 1)
+                    : sessionButton
                 onClicked: root.requestLogin()
             }
         }

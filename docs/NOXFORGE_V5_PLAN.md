@@ -169,8 +169,8 @@ AddressSanitizer/UndefinedBehaviorSanitizer CTest build passed. Source-bound
 accessibility evidence covers all contrast pairs, the KDE system-font policy,
 keyboard and RTL structure, scale compositions, reduced motion and non-color
 state indicators. Eleven-sample medians stayed within the ten-percent Phase 0
-budget: gallery startup 0.8761x, control rendering 0.9996x and QML first frame
-1.0064x. Isolated KWin/Plasma Wayland runs passed theme application, exact
+budget: gallery startup 1.0692x, control rendering 0.9986x and QML first frame
+0.9220x. Isolated KWin/Plasma Wayland runs passed theme application, exact
 panel preservation, all four panel edges, two virtual outputs, shell artwork,
 required icon clarity and real Qt composition at 100/140 percent. Hardware
 blur, injected keyboard and pointer transitions, live RTL, a held visible
