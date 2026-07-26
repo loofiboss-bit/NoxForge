@@ -33,7 +33,6 @@ jobs:
           glibc-langpack-en
           ImageMagick
           kf6-kirigami
-          libplasma
           ninja-build
           python3
           qt6-qtbase-devel
@@ -95,6 +94,7 @@ jobs:
             echo "NOXFORGE_VERSION=$version"
             echo "NOXFORGE_EVIDENCE_DIR=$evidence_dir"
             echo "NOXFORGE_NOTES_FILE=$notes_file"
+            echo "NOXFORGE_SOURCE_COMMIT=$(git rev-parse HEAD)"
           } >> "$GITHUB_ENV"
 
       - name: Run the full gate
@@ -132,7 +132,7 @@ jobs:
               "SHA256SUMS",
           ]
           evidence["releaseState"] = "release"
-          evidence["candidate"]["sourceCommit"] = os.environ["GITHUB_SHA"]
+          evidence["candidate"]["sourceCommit"] = os.environ["NOXFORGE_SOURCE_COMMIT"]
           evidence["candidate"]["sourceRef"] = os.environ["GITHUB_REF_NAME"]
           evidence["candidate"]["worktreeDirty"] = False
           evidence["candidate"]["package"] = next(
@@ -154,7 +154,7 @@ jobs:
           ]
           report.write_text(
               "\n".join(report_lines).rstrip()
-              + f"\n\nVersion: {version}\nCommit: {os.environ['GITHUB_SHA']}\n",
+              + f"\n\nVersion: {version}\nCommit: {os.environ['NOXFORGE_SOURCE_COMMIT']}\n",
               encoding="utf-8",
           )
           PY

@@ -122,8 +122,8 @@ def measure() -> dict[str, object]:
         output = temp / "capture.png"
         metrics = {
             "galleryStartup": metric(
-                [str(baseline_build / "noxforge_style_probe")],
-                [str(current_build / "noxforge_style_probe")],
+                [str(baseline_build / "noxforge_widget_gallery"), "--page=controls"],
+                [str(current_build / "noxforge_widget_gallery"), "--page=controls"],
                 baseline_source=baseline_source,
                 current_source=ROOT,
                 baseline_env=base_env,
@@ -160,7 +160,10 @@ def measure() -> dict[str, object]:
         }
     failed = [name for name, value in metrics.items() if value["result"] != "passed"]
     if failed:
-        raise RuntimeError(f"Phase 6 performance regression exceeds ten percent: {failed}")
+        ratios = {name: metrics[name]["ratio"] for name in failed}
+        raise RuntimeError(
+            f"Phase 6 performance regression exceeds ten percent: {ratios}"
+        )
     qt_version = subprocess.run(
         ["qmake6", "-query", "QT_VERSION"],
         cwd=ROOT,
@@ -173,7 +176,7 @@ def measure() -> dict[str, object]:
         "phase": 6,
         "result": "passed",
         "baselineCommit": BASELINE_COMMIT,
-        "method": "Eleven warmed offscreen process medians; identical probes and host. The QML probe exits on the first frameSwapped signal.",
+        "method": "Eleven warmed offscreen process medians on one host. Gallery startup uses each source version's gallery executable; control rendering uses one fixed current gallery harness with the Phase 0 and current style plugins; the QML probe exits on the first frameSwapped signal.",
         "maximumRatio": MAX_RATIO,
         "environment": {
             "platform": platform.platform(),

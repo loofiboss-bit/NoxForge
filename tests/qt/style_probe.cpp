@@ -81,6 +81,15 @@ int main(int argc, char **argv)
     if (scrollGroove.width() < 190 || scrollThumb.width() < 18) return 4;
     if (style->hitTestComplexControl(QStyle::CC_ScrollBar, &scroll,
                                      scrollThumb.center()) != QStyle::SC_ScrollBarSlider) return 5;
+    const QRect scrollSubPage = style->subControlRect(
+        QStyle::CC_ScrollBar, &scroll, QStyle::SC_ScrollBarSubPage);
+    const QRect scrollAddPage = style->subControlRect(
+        QStyle::CC_ScrollBar, &scroll, QStyle::SC_ScrollBarAddPage);
+    if (scrollSubPage.isEmpty() || scrollAddPage.isEmpty()) return 21;
+    if (style->hitTestComplexControl(QStyle::CC_ScrollBar, &scroll,
+                                     scrollSubPage.center()) != QStyle::SC_ScrollBarSubPage) return 22;
+    if (style->hitTestComplexControl(QStyle::CC_ScrollBar, &scroll,
+                                     scrollAddPage.center()) != QStyle::SC_ScrollBarAddPage) return 23;
 
     QStyleOptionSlider slider;
     slider.rect = QRect(0, 0, 220, 32);

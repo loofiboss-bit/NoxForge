@@ -254,6 +254,22 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
                 ? QRect(groove.left() + position, groove.top(), thumb, groove.height())
                 : QRect(groove.left(), groove.top() + position, groove.width(), thumb);
         }
+        if (subControl == SC_ScrollBarSubPage || subControl == SC_ScrollBarAddPage) {
+            const bool horizontal = scroll->orientation == Qt::Horizontal;
+            const QRect slider = subControlRect(control, option, SC_ScrollBarSlider, widget);
+            const QRect before = horizontal
+                ? QRect(groove.left(), groove.top(),
+                        qMax(0, slider.left() - groove.left()), groove.height())
+                : QRect(groove.left(), groove.top(), groove.width(),
+                        qMax(0, slider.top() - groove.top()));
+            const QRect after = horizontal
+                ? QRect(slider.right() + 1, groove.top(),
+                        qMax(0, groove.right() - slider.right()), groove.height())
+                : QRect(groove.left(), slider.bottom() + 1, groove.width(),
+                        qMax(0, groove.bottom() - slider.bottom()));
+            const bool subPageIsBefore = !scroll->upsideDown;
+            return (subControl == SC_ScrollBarSubPage) == subPageIsBefore ? before : after;
+        }
     }
     if (control == CC_ComboBox) {
         const int arrowWidth = 30;
@@ -338,7 +354,8 @@ QStyle::SubControl NoxForgeStyle::hitTestComplexControl(
         case CC_Slider:
             return QList<SubControl>{SC_SliderHandle, SC_SliderGroove};
         case CC_ScrollBar:
-            return QList<SubControl>{SC_ScrollBarSlider, SC_ScrollBarGroove};
+            return QList<SubControl>{SC_ScrollBarSlider, SC_ScrollBarSubPage,
+                                     SC_ScrollBarAddPage, SC_ScrollBarGroove};
         case CC_ToolButton:
             return QList<SubControl>{SC_ToolButtonMenu, SC_ToolButton};
         default:
