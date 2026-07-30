@@ -66,18 +66,19 @@ class V6PhaseZeroTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), entry["sha256"])
             self.assertEqual(entry["v6Result"], "pending")
 
-    def test_every_v6_result_starts_pending_or_blocked(self) -> None:
-        qualification = json.loads(
-            (ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8")
+    def test_phase_zero_records_every_v6_result_as_initially_unqualified(self) -> None:
+        plan = (ROOT / "docs/NOXFORGE_V6_PLAN.md").read_text(encoding="utf-8")
+        phase_zero = plan.split("## Phase 0", 1)[1].split("## Phase 1", 1)[0]
+        self.assertIn("All v6 automated results remain `pending`", phase_zero)
+        self.assertIn("live cases remain specifically `blocked`", phase_zero)
+        baseline = json.loads(
+            (ROOT / "docs/evidence/v6/baseline/manifest.json").read_text(
+                encoding="utf-8"
+            )
         )
-        statuses = {
-            case["status"]
-            for group in ("automatedCases", "liveCases")
-            for case in qualification[group]
-        }
-        self.assertLessEqual(statuses, {"pending", "blocked"})
-        self.assertIn("pending", statuses)
-        self.assertIn("blocked", statuses)
+        self.assertEqual(baseline["evidencePolicy"]["initialV6Result"], "pending")
+        self.assertFalse(baseline["evidencePolicy"]["v5ResultsPromotedToV6"])
+        self.assertFalse(baseline["evidencePolicy"]["interactiveOrLiveEvidence"])
 
     def test_visual_scorecard_covers_every_required_category(self) -> None:
         scorecard = json.loads(

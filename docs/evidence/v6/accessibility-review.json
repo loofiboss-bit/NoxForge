@@ -1,0 +1,118 @@
+{
+  "contrastPairs": {
+    "busy-on-control": {
+      "actual": 8.62,
+      "minimum": 4.5
+    },
+    "disabled-on-control": {
+      "actual": 3.93,
+      "minimum": 3.0
+    },
+    "error-on-control": {
+      "actual": 5.67,
+      "minimum": 4.5
+    },
+    "pressed-primary-action": {
+      "actual": 10.6,
+      "minimum": 7.0
+    },
+    "primary-action": {
+      "actual": 15.07,
+      "minimum": 7.0
+    },
+    "primary-on-canvas": {
+      "actual": 16.16,
+      "minimum": 7.0
+    },
+    "primary-on-control": {
+      "actual": 13.49,
+      "minimum": 7.0
+    },
+    "primary-on-hover": {
+      "actual": 11.87,
+      "minimum": 7.0
+    },
+    "primary-on-overlay": {
+      "actual": 12.16,
+      "minimum": 7.0
+    },
+    "primary-on-selection": {
+      "actual": 12.58,
+      "minimum": 7.0
+    },
+    "primary-on-sunken": {
+      "actual": 15.65,
+      "minimum": 7.0
+    },
+    "primary-on-surface": {
+      "actual": 14.76,
+      "minimum": 7.0
+    },
+    "secondary-on-canvas": {
+      "actual": 8.76,
+      "minimum": 4.5
+    },
+    "secondary-on-surface": {
+      "actual": 8.0,
+      "minimum": 4.5
+    },
+    "success-on-control": {
+      "actual": 12.58,
+      "minimum": 4.5
+    }
+  },
+  "hardcodedRuntimeFontFamilies": [],
+  "highContrastPreference": {
+    "api": "QGuiApplication::styleHints()->accessibility()->contrastPreference()",
+    "exposed": false,
+    "observation": "The Qt offscreen platform reported NoPreference; high contrast is not claimed.",
+    "preference": "NoPreference",
+    "result": "not-exposed"
+  },
+  "kind": "automated-source-and-offscreen-platform-review",
+  "liveInteraction": false,
+  "nonColorIndicators": {
+    "busy": "busyGlyph",
+    "checked": "checkGlyph",
+    "error": "errorGlyph",
+    "focus": "singleFocusRing",
+    "selected": "leadingMarker",
+    "success": "successGlyph"
+  },
+  "phase": 7,
+  "platformProbe": {
+    "contrastPreference": "NoPreference",
+    "highContrastExposed": false,
+    "platform": "offscreen",
+    "style": "noxforge",
+    "systemFont": "Sans Serif",
+    "tabFocusBehavior": 255
+  },
+  "reviewStatus": "passed",
+  "reviews": {
+    "colorIndependentStates": true,
+    "keyboardTraversal": true,
+    "reducedMotion": true,
+    "rtl": true,
+    "scaleCoverage": true,
+    "scenarioCoverage": true,
+    "systemFont": true
+  },
+  "schemaVersion": 1,
+  "sources": {
+    "CMakeLists.txt": "42ec434c69cabd51e31f930ceb8856bd352f34398dae5a4adb8cd2818153c5fc",
+    "DESIGN.md": "938a9b9d64ff00d051c3d44a9bb16ef2dd343ad3fc8744307b7080a530126edb",
+    "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
+    "design/tokens.json": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
+    "docs/evidence/v6/session/manifest.json": "650e38f849241d5c6a10568f1f7bcd48f9723d6e1f5643488882c99797bd94d5",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "67ad711c8ad68fbd3b07a9244f0e8caae69288e7c8d5eb747c6c96d507d0fbcb",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",
+    "scripts/check_v6_accessibility.py": "4c442cb568c3dae88201a70f26dd42819529effd6cbe9e3c0d2de3fe0ef8aea1",
+    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "tests/qt/accessibility_probe.cpp": "09d8cff86657beefd0f672ee4c97b01570db723a747dfb3968b0279ba9f06bee",
+    "tests/qt/motion_probe.cpp": "79051bcfb508b08a3cb4e5bf67fbaf8a986b12022cdc14792543fb6682d60d69"
+  },
+  "version": "6.0.0-dev"
+}

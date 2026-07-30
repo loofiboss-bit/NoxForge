@@ -142,6 +142,28 @@ maximize, restore, and close button source state. It is not a composed KWin
 window. Live active/inactive/maximized/shaded composition and compositor cursor
 scaling remain blocked for Phase 7.
 
+## Current v6 Phase 7 automated qualification (2026-07-30)
+
+`docs/evidence/v6/accessibility-review.json` records all token contrast pairs,
+non-color state indicators, the system-font contract, keyboard traversal
+structure, RTL, 100/125/140/200 percent coverage, and zero-duration reduced
+motion. Its Qt 6.11 offscreen platform probe reported `NoPreference`, so it
+does not claim that a live high-contrast preference was exercised.
+
+`docs/evidence/v6/performance.json` compares the complete v6 tree with the
+immutable reviewed v5 baseline using eleven warmed, interleaved medians.
+Gallery startup, control rendering, and SDDM first frame remain within ten
+percent. A native 500-cycle input and animation stress probe reports no failed
+case, no retained widget, a stopped idle timer, and heap growth within its
+fixed budget. These are automated offscreen and sanitizer-backed results, not
+interactive frame or input evidence.
+
+Every live case in `docs/evidence/v6/qualification.json` remains `blocked`.
+The required disposable Wayland session, injected pointer/keyboard input,
+hardware-composited blur, real SDDM authentication/power actions, composed
+Aurorae interaction, live cursor scaling, animation-speed variants, and
+two-output placement were not run and are not claimed.
+
 ## Remaining interactive checks (require a physical or input-capable test environment)
 
 The following cannot be closed without explicitly applying the Global Theme in

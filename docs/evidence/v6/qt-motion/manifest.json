@@ -32,7 +32,7 @@
   ],
   "schemaVersion": 1,
   "sources": {
-    "CMakeLists.txt": "3b8f2ff5504812f4e7e6e9e55254a3514986266334abf96e2b927b2509c413ef",
+    "CMakeLists.txt": "42ec434c69cabd51e31f930ceb8856bd352f34398dae5a4adb8cd2818153c5fc",
     "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
     "src/style/noxforgemotion.cpp": "298d4137054786db65a3b801256dedd32dbcbccae1bd8784df6f44d9f232cb19",
     "src/style/noxforgemotion.h": "c53c05f4a09b839d9845ce034362708009ca8e62ff04a5a52a1c5f40bc881996",

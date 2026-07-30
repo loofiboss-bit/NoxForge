@@ -829,6 +829,24 @@ Motion cannot be declared complete using only start/end screenshots.
 - Static evidence is never relabeled as interactive evidence.
 - Active desktop, panel layout, and SDDM configuration remain unchanged.
 
+**Outcome (2026-07-30):** The automated Phase 7 qualification is complete
+without installing or applying NoxForge. A v6-specific accessibility report
+passes all 15 contrast pairs, non-color semantic indicators, KDE system-font
+behavior, keyboard structure, RTL, 100/125/140/200 percent coverage, and
+zero-duration reduced motion. Qt 6.11's offscreen accessibility API reported
+`NoPreference`; live high-contrast mode is therefore not claimed. Complete-tree
+performance medians for gallery startup, control rendering, and SDDM first
+frame are respectively 1.0138, 1.0199, and 1.0270 times the immutable reviewed
+v5 baseline, within the 1.10 ceiling. A sanitizer-covered native probe completes
+500 input and animation cycles with zero failed cases, no retained widgets, a
+stopped idle timer, and zero measured heap growth after warmup. The full local
+gate passed with 135 Python tests, 21 CTest cases, ASan/UBSan, deterministic
+evidence, QML lint, non-mutating install/uninstall dry-runs, byte-identical
+source archives, and clean Fedora SRPM/RPM `rpmlint`. Required live Wayland,
+Plasma/KWin, SDDM, input-injection, animation-speed, high-contrast, cursor, and
+two-output cases remain `blocked` with specific reasons. No desktop, panel,
+theme, or SDDM configuration was changed.
+
 ## Phase 8 — Product presentation and controlled 6.0.0 release
 
 ### Objective

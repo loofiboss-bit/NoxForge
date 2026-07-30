@@ -103,9 +103,9 @@ class V6PhaseFourTests(unittest.TestCase):
         )
         live = {case["id"]: case for case in qualification["liveCases"]}
         self.assertEqual(live["plasma-blur-on-off"]["status"], "blocked")
-        self.assertIn("Phase 7", live["plasma-blur-on-off"]["reason"])
+        self.assertIn("authorized", live["plasma-blur-on-off"]["reason"])
         self.assertEqual(live["plasma-layout-and-fallback"]["status"], "blocked")
-        self.assertIn("Phase 7", live["plasma-layout-and-fallback"]["reason"])
+        self.assertIn("authorized", live["plasma-layout-and-fallback"]["reason"])
 
 
 if __name__ == "__main__":

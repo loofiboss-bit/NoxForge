@@ -49,8 +49,28 @@ add_executable(
 target_include_directories(noxforge_motion_probe PRIVATE src/style)
 target_link_libraries(noxforge_motion_probe PRIVATE Qt6::Core Qt6::Widgets)
 
+add_executable(
+    noxforge_motion_qualification_probe
+    tests/qt/motion_qualification_probe.cpp
+    src/style/noxforgepalette.h
+    src/style/noxforgemotion.h
+    src/style/noxforgemotion.cpp
+)
+target_include_directories(noxforge_motion_qualification_probe PRIVATE src/style)
+target_link_libraries(noxforge_motion_qualification_probe PRIVATE Qt6::Core Qt6::Widgets)
+
+add_executable(noxforge_accessibility_probe tests/qt/accessibility_probe.cpp)
+target_link_libraries(noxforge_accessibility_probe PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+
 if(NOXFORGE_ENABLE_SANITIZERS)
-    foreach(target noxforge_style noxforge_style_probe noxforge_motion_probe)
+    foreach(
+        target
+        noxforge_style
+        noxforge_style_probe
+        noxforge_motion_probe
+        noxforge_motion_qualification_probe
+        noxforge_accessibility_probe
+    )
         target_compile_options(${target} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
         target_link_options(${target} PRIVATE -fsanitize=address,undefined)
     endforeach()
@@ -113,6 +133,14 @@ add_test(
 add_test(NAME motion-controller-lifecycle COMMAND noxforge_motion_probe)
 set_tests_properties(motion-controller-lifecycle PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+)
+add_test(NAME motion-qualification-500-cycles COMMAND noxforge_motion_qualification_probe)
+set_tests_properties(motion-qualification-500-cycles PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+)
+add_test(NAME accessibility-platform-preference COMMAND noxforge_accessibility_probe)
+set_tests_properties(accessibility-platform-preference PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_STYLE_OVERRIDE=NoxForge"
 )
 set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 

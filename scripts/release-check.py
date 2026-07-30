@@ -32,6 +32,8 @@ GENERATOR_CHECKS = (
     ("render_v6_session_evidence.py", "--check"),
     ("measure_v6_phase5_performance.py", "--check"),
     ("render_v6_edge_evidence.py", "--check"),
+    ("check_v6_accessibility.py", "--check"),
+    ("measure_v6_phase7_performance.py", "--check"),
 )
 QML_SURFACES = (
     "sddm/NoxForge/Main.qml",
