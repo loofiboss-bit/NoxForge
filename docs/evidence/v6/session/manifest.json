@@ -1,0 +1,448 @@
+{
+  "authenticQml": true,
+  "captureCount": 46,
+  "captures": [
+    {
+      "file": "sddm-resolution-1280x720.png",
+      "height": 720,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "5f6a363849bd65fd35d82fcd0a645cb22cef4f46c836c32046472b210297370b",
+      "surface": "sddm",
+      "width": 1280
+    },
+    {
+      "file": "sddm-resolution-1920x1080.png",
+      "height": 1080,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "821c6a604cb9e768729d5d2dcc1bca1a824c0c99dbbf3da6664e3296df490caa",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-resolution-2560x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "dd7f7fc13122ff3d739b616f63c90500043692a62b3f9d06e9a8f2c2269a5284",
+      "surface": "sddm",
+      "width": 2560
+    },
+    {
+      "file": "sddm-resolution-3440x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "cfe7c76906d64c5c0c7bb8e1eec4c7e2bf4a34ae31f4e19df56c0d56ef27d772",
+      "surface": "sddm",
+      "width": 3440
+    },
+    {
+      "file": "splash-resolution-1280x720.png",
+      "height": 720,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "b504d77e55d4af2aede254a346e55cb4098f0b468039877d5139364e02bb04cc",
+      "surface": "splash",
+      "width": 1280
+    },
+    {
+      "file": "splash-resolution-1920x1080.png",
+      "height": 1080,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "181260740957aa465fa60b82f70d457d49be5fa3cf85af74d6ba982ad4bf2df8",
+      "surface": "splash",
+      "width": 1920
+    },
+    {
+      "file": "splash-resolution-2560x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "b5bc2ad0ff23ae0334a6266992d7c5896725c3c170f2383adcf3f96e14fd6730",
+      "surface": "splash",
+      "width": 2560
+    },
+    {
+      "file": "splash-resolution-3440x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "ccfe26e93dab2b9fa350387cd937fc805aa3b353a8a4d6307dbf0b3d5fe65400",
+      "surface": "splash",
+      "width": 3440
+    },
+    {
+      "file": "logout-resolution-1280x720.png",
+      "height": 720,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "ed2283e0d2d2fc6a1b425d1d986fd2e5eef325c476b64120b0b5b347e6de3e9f",
+      "surface": "logout",
+      "width": 1280
+    },
+    {
+      "file": "logout-resolution-1920x1080.png",
+      "height": 1080,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "surface": "logout",
+      "width": 1920
+    },
+    {
+      "file": "logout-resolution-2560x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "ea422271f671519000112f013bb43ed99a61823d6b7182f1624685251a7d7548",
+      "surface": "logout",
+      "width": 2560
+    },
+    {
+      "file": "logout-resolution-3440x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "b228b0d525b8b545fd8a40c5af09f9883462958754798894ff84b6690a8c04a5",
+      "surface": "logout",
+      "width": 3440
+    },
+    {
+      "file": "tabbox-resolution-1280x720.png",
+      "height": 720,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "fb983e01d9b96c2ad3eb539734260058286946ff8803d795db52fd6b29e052db",
+      "surface": "tabbox",
+      "width": 1280
+    },
+    {
+      "file": "tabbox-resolution-1920x1080.png",
+      "height": 1080,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "ea620cf0f2f344bab74d40f3ef1cf7c756b932b1d5394064f05c1e3d13c30d2a",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-resolution-2560x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "f71d7ede7be0a8ea5a12ae0eb46822284aa4952b46775d571bcb8f43164ba43a",
+      "surface": "tabbox",
+      "width": 2560
+    },
+    {
+      "file": "tabbox-resolution-3440x1440.png",
+      "height": 1440,
+      "kind": "resolution",
+      "scenario": "standard-end",
+      "sha256": "f011cae63818551b3f59913cd23a4df0f8588e1ef4c07b4df5ec75c974464f4e",
+      "surface": "tabbox",
+      "width": 3440
+    },
+    {
+      "file": "sddm-scenario-standard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "standard-end",
+      "sha256": "821c6a604cb9e768729d5d2dcc1bca1a824c0c99dbbf3da6664e3296df490caa",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-scenario-long-rtl.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "long-rtl-end",
+      "sha256": "c1e4088301d14e2f01ea74006382c5ae3cdd418351a17e816626783131aa90ba",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-scenario-keyboard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "keyboard-end",
+      "sha256": "84008a79d963d951507694a8bc28b39db2771c794964a004fff8843a7c9eca3e",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-scenario-error.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "error-end",
+      "sha256": "9b36d45f7d70df1f487a875af7de4c07241db77c9cf7a40a8d0c0fa2c94c88a7",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-scenario-busy.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "busy-end",
+      "sha256": "f450eb35ef6575fa53ab40d7aed71ac002072e975b2b436223abcfde79593b49",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "sddm-scenario-reduced.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "reduced-end",
+      "sha256": "821c6a604cb9e768729d5d2dcc1bca1a824c0c99dbbf3da6664e3296df490caa",
+      "surface": "sddm",
+      "width": 1920
+    },
+    {
+      "file": "splash-scenario-standard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "standard-end",
+      "sha256": "181260740957aa465fa60b82f70d457d49be5fa3cf85af74d6ba982ad4bf2df8",
+      "surface": "splash",
+      "width": 1920
+    },
+    {
+      "file": "splash-scenario-reduced.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "reduced-end",
+      "sha256": "181260740957aa465fa60b82f70d457d49be5fa3cf85af74d6ba982ad4bf2df8",
+      "surface": "splash",
+      "width": 1920
+    },
+    {
+      "file": "logout-scenario-standard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "standard-end",
+      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "surface": "logout",
+      "width": 1920
+    },
+    {
+      "file": "logout-scenario-long-rtl.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "long-rtl-end",
+      "sha256": "939b8a3ad3f0eda25ed16f3e9f726197bf815b008a0be3dc2f343c993539e1f4",
+      "surface": "logout",
+      "width": 1920
+    },
+    {
+      "file": "logout-scenario-keyboard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "keyboard-end",
+      "sha256": "c86a87c7bf9f50031efb00b118322d0bb77c735613d292f9147e710803c9ee16",
+      "surface": "logout",
+      "width": 1920
+    },
+    {
+      "file": "logout-scenario-reduced.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "reduced-end",
+      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "surface": "logout",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-standard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "standard-end",
+      "sha256": "ea620cf0f2f344bab74d40f3ef1cf7c756b932b1d5394064f05c1e3d13c30d2a",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-long-rtl.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "long-rtl-end",
+      "sha256": "bcec707bc86e281e29a521fc1ad4565ea67c82a129f86b700a5187db17964d0a",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-keyboard.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "keyboard-end",
+      "sha256": "ea620cf0f2f344bab74d40f3ef1cf7c756b932b1d5394064f05c1e3d13c30d2a",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-empty.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "empty-end",
+      "sha256": "0c836dc249f39b91fc4fc29831cff88fc7b597d3312ea95a98008b171c8dd6df",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-many.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "many-end",
+      "sha256": "13898d29f1d93a678b094660a332d70fc783fe9782cd9f23a1463f78fdb301fa",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "tabbox-scenario-reduced.png",
+      "height": 1080,
+      "kind": "scenario",
+      "scenario": "reduced-end",
+      "sha256": "ea620cf0f2f344bab74d40f3ef1cf7c756b932b1d5394064f05c1e3d13c30d2a",
+      "surface": "tabbox",
+      "width": 1920
+    },
+    {
+      "file": "sddm-choreography-start.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-start",
+      "sha256": "b72e571e85c1bb85b9c1c73be15e2fdc11535f26f46680d71513799eff03784d",
+      "surface": "sddm",
+      "width": 2560
+    },
+    {
+      "file": "sddm-choreography-mid.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-mid",
+      "sha256": "4caec906da1d0878649eeea1cc5e0bcbf4fccaec8e6044067e90aca3285e30e3",
+      "surface": "sddm",
+      "width": 2560
+    },
+    {
+      "file": "sddm-choreography-end.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-end",
+      "sha256": "dd7f7fc13122ff3d739b616f63c90500043692a62b3f9d06e9a8f2c2269a5284",
+      "surface": "sddm",
+      "width": 2560
+    },
+    {
+      "file": "splash-choreography-start.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-start",
+      "sha256": "9884bd9edafb9d3c5cd276456f450165b7f2e1c3986b9ffd5daf3d69560be82f",
+      "surface": "splash",
+      "width": 2560
+    },
+    {
+      "file": "splash-choreography-mid.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-mid",
+      "sha256": "d45a573407a05ae8543918f6ed89a52bcfb353985ee753efa26bb656c9098746",
+      "surface": "splash",
+      "width": 2560
+    },
+    {
+      "file": "splash-choreography-end.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-end",
+      "sha256": "b5bc2ad0ff23ae0334a6266992d7c5896725c3c170f2383adcf3f96e14fd6730",
+      "surface": "splash",
+      "width": 2560
+    },
+    {
+      "file": "logout-choreography-start.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-start",
+      "sha256": "335f8a81282c3b67c9f38124c50cca3ae30fe47c5c6bc2c24c7eff56d198df44",
+      "surface": "logout",
+      "width": 2560
+    },
+    {
+      "file": "logout-choreography-mid.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-mid",
+      "sha256": "1c66381e4aebffa039c42f137e35cf1fb4855ef879aa4af12d3c318bda89ba96",
+      "surface": "logout",
+      "width": 2560
+    },
+    {
+      "file": "logout-choreography-end.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-end",
+      "sha256": "ea422271f671519000112f013bb43ed99a61823d6b7182f1624685251a7d7548",
+      "surface": "logout",
+      "width": 2560
+    },
+    {
+      "file": "tabbox-choreography-start.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-start",
+      "sha256": "335f8a81282c3b67c9f38124c50cca3ae30fe47c5c6bc2c24c7eff56d198df44",
+      "surface": "tabbox",
+      "width": 2560
+    },
+    {
+      "file": "tabbox-choreography-mid.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-mid",
+      "sha256": "3da3ec32fccfa5694028c843b9e1c55e017f12446f311c42ca0f605eef9b7326",
+      "surface": "tabbox",
+      "width": 2560
+    },
+    {
+      "file": "tabbox-choreography-end.png",
+      "height": 1440,
+      "kind": "choreography",
+      "scenario": "standard-end",
+      "sha256": "f71d7ede7be0a8ea5a12ae0eb46822284aa4952b46775d571bcb8f43164ba43a",
+      "surface": "tabbox",
+      "width": 2560
+    }
+  ],
+  "contract": "design/session-surface-contract.json",
+  "kind": "authentic-offscreen-qml",
+  "liveSession": false,
+  "release": "6.0.0-dev",
+  "renderer": "tools/session_renderer.cpp",
+  "reviewStatus": "reviewed-offscreen",
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
+    "design/tokens.json": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "67ad711c8ad68fbd3b07a9244f0e8caae69288e7c8d5eb747c6c96d507d0fbcb",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
+    "scripts/generate_design_system.py": "90d56f0bf1038cc5d5e3b28d9e7916eeba67ae1f80c473f50436bbf143254813",
+    "scripts/measure_v6_phase5_performance.py": "668c9927bd7b4fa686cc6a6f43bf68b10e1edaadbcdf5aa6f9e59b8c973a537c",
+    "scripts/render_v6_session_evidence.py": "b4219c616d741b7aa7ee4b33fe121144c8be126741d51daac59d05e60013cde8",
+    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "sddm/NoxForge/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
+    "tools/session_renderer.cpp": "67feb66dfc882dbf912b0d92a70fddaba0e4aabf350edb4eab7c13cb57eca84c"
+  },
+  "themeContext": "isolated NoxForge Plasma and icon context"
+}

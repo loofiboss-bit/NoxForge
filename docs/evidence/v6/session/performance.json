@@ -1,0 +1,46 @@
+{
+  "baselineCommit": "6a113e71980d106c38a2bbdece6df171c0ae9ed3",
+  "environment": {
+    "platform": "Linux-7.1.5-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.14.6",
+    "qt": "6.11.1"
+  },
+  "maximumRatio": 1.1,
+  "method": "Eleven warmed, interleaved SDDM offscreen first-frame process medians on one host.",
+  "metric": {
+    "baselineMedianMs": 177.124,
+    "baselineSamplesMs": [
+      177.124,
+      166.558,
+      170.828,
+      173.914,
+      173.173,
+      185.283,
+      172.084,
+      180.011,
+      177.585,
+      190.486,
+      180.703
+    ],
+    "currentMedianMs": 188.129,
+    "currentSamplesMs": [
+      187.801,
+      188.129,
+      187.605,
+      173.164,
+      191.989,
+      198.059,
+      196.8,
+      189.15,
+      179.733,
+      197.509,
+      180.689
+    ],
+    "limit": 1.1,
+    "ratio": 1.0621,
+    "result": "passed"
+  },
+  "phase": 5,
+  "result": "passed",
+  "schemaVersion": 1
+}

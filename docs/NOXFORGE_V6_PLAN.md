@@ -686,6 +686,25 @@ runtime contract.
 - No hard-coded palette values or per-file easing curves appear in runtime QML.
 - First-frame median remains within 10 percent of v5.
 
+**Outcome (2026-07-30):** Splash, SDDM, Logout, and TabBox now consume the
+canonical v6 motion policy without package symlinks or runtime palette values.
+Splash stages the N/F mark, wordmark, and thin progress rail; SDDM preserves
+login, session, keyboard, power, focus, stable error, and genuine busy
+contracts in an adaptive card; Logout groups authoritative session and power
+decisions; and TabBox uses only KWin caption, icon, and minimized roles in a
+responsive horizontal or vertical rail. Production test progress remains
+disabled at `-1`. The authentic offscreen renderer injects deterministic
+start/mid/end progress and records 46 source-bound captures across all four
+required resolutions and the standard, long RTL, keyboard, empty, error, busy,
+many-window, and reduced-motion scenarios. Repeated drift checks pass. The
+SDDM first-frame median is 1.0621 times the reviewed v5 baseline, below the
+1.10 limit. The full local phase gate passed with 123 Python tests, 19 CTest
+cases, generated-source checks, QML lint, non-mutating install/uninstall
+dry-runs, a reproducible source archive, and clean SRPM/RPM `rpmlint`. Real
+SDDM authentication and power, production splash integration, injected
+keyboard/pointer Logout, and held KWin Alt+Tab remain blocked for Phase 7 and
+are not claimed here.
+
 ## Phase 6 — Window chrome, icon, and cursor optical polish
 
 ### Objective

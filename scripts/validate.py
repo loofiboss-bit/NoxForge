@@ -1371,6 +1371,115 @@ def validate_v6_motion_evidence(version: str) -> None:
             raise ValidationError(f"v6 native Qt performance metric failed: {name}")
 
 
+def validate_v6_session_evidence(version: str) -> None:
+    root = ROOT / "docs/evidence/v6/session"
+    contract = load_json(ROOT / "design/session-surface-contract.json")
+    manifest = load_json(root / "manifest.json")
+    if (
+        not isinstance(contract, dict)
+        or contract.get("schemaVersion") != 2
+        or not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("release") != version
+        or manifest.get("kind") != "authentic-offscreen-qml"
+        or manifest.get("authenticQml") is not True
+        or manifest.get("liveSession") is not False
+        or manifest.get("reviewStatus") != "reviewed-offscreen"
+        or manifest.get("captureCount") != 46
+    ):
+        raise ValidationError("v6 session evidence identity is invalid")
+
+    captures = manifest.get("captures")
+    if not isinstance(captures, list) or len(captures) != 46:
+        raise ValidationError("v6 session evidence capture matrix is incomplete")
+    expected_resolutions = {
+        (size["width"], size["height"])
+        for size in contract.get("v6ResolutionMatrix", [])
+    }
+    expected_scenarios = {
+        (surface, scenario)
+        for surface, scenarios in contract.get("v6ScenarioMatrix", {}).items()
+        for scenario in scenarios
+    }
+    resolution_captures = set()
+    scenario_captures = set()
+    choreography: dict[str, set[str]] = {}
+    choreography_hashes: dict[str, set[str]] = {}
+    for capture in captures:
+        if not isinstance(capture, dict):
+            raise ValidationError("v6 session evidence contains an invalid capture")
+        path = root / capture.get("file", "")
+        width = capture.get("width")
+        height = capture.get("height")
+        digest = capture.get("sha256")
+        if (
+            not path.is_file()
+            or not isinstance(width, int)
+            or not isinstance(height, int)
+            or png_dimensions(path) != (width, height)
+            or digest != hashlib.sha256(path.read_bytes()).hexdigest()
+        ):
+            raise ValidationError(f"v6 session render drift: {capture.get('file')}")
+        kind = capture.get("kind")
+        surface = capture.get("surface")
+        scenario = capture.get("scenario")
+        if kind == "resolution":
+            resolution_captures.add((surface, width, height))
+        elif kind == "scenario":
+            if not isinstance(scenario, str) or not scenario.endswith("-end"):
+                raise ValidationError("v6 session scenario is not a settled frame")
+            scenario_captures.add((surface, scenario.removesuffix("-end")))
+        elif kind == "choreography":
+            if not isinstance(scenario, str) or not scenario.startswith("standard-"):
+                raise ValidationError("v6 session choreography scenario is invalid")
+            frame = scenario.removeprefix("standard-")
+            choreography.setdefault(surface, set()).add(frame)
+            choreography_hashes.setdefault(surface, set()).add(digest)
+        else:
+            raise ValidationError(f"unknown v6 session evidence kind: {kind}")
+
+    surfaces = set(contract.get("surfaces", {}))
+    if resolution_captures != {
+        (surface, width, height)
+        for surface in surfaces
+        for width, height in expected_resolutions
+    }:
+        raise ValidationError("v6 session four-resolution matrix is incomplete")
+    if scenario_captures != expected_scenarios:
+        raise ValidationError("v6 session scenario matrix is incomplete")
+    for surface in surfaces:
+        if choreography.get(surface) != {"start", "mid", "end"}:
+            raise ValidationError(f"v6 session choreography is incomplete: {surface}")
+        if len(choreography_hashes.get(surface, set())) != 3:
+            raise ValidationError(f"v6 session choreography states are not distinct: {surface}")
+
+    sources = manifest.get("sourceHashes")
+    if not isinstance(sources, dict) or len(sources) < 18:
+        raise ValidationError("v6 session evidence source lineage is incomplete")
+    for relative, digest in sources.items():
+        path = ROOT / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise ValidationError(f"v6 session evidence source drift: {relative}")
+
+    performance = load_json(root / "performance.json")
+    metric = performance.get("metric") if isinstance(performance, dict) else None
+    if (
+        not isinstance(performance, dict)
+        or performance.get("schemaVersion") != 1
+        or performance.get("phase") != 5
+        or performance.get("result") != "passed"
+        or performance.get("baselineCommit")
+        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("maximumRatio") != 1.1
+        or not isinstance(metric, dict)
+        or metric.get("result") != "passed"
+        or metric.get("ratio", 99) > 1.1
+        or len(metric.get("baselineSamplesMs", [])) != 11
+        or len(metric.get("currentSamplesMs", [])) != 11
+    ):
+        raise ValidationError("v6 session first-frame performance evidence is invalid")
+
+
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
@@ -1382,6 +1491,8 @@ def validate_tooling() -> None:
         ROOT / "scripts/render_v6_motion_evidence.py",
         ROOT / "scripts/check_v6_phase3_sanitizers.py",
         ROOT / "scripts/measure_v6_phase3_performance.py",
+        ROOT / "scripts/render_v6_session_evidence.py",
+        ROOT / "scripts/measure_v6_phase5_performance.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -1397,6 +1508,8 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/brand/preview-manifest.json",
         ROOT / "docs/evidence/v6/qt-motion/manifest.json",
         ROOT / "docs/evidence/v6/qt-motion/performance.json",
+        ROOT / "docs/evidence/v6/session/manifest.json",
+        ROOT / "docs/evidence/v6/session/performance.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1538,6 +1651,8 @@ def validate_generated_sources() -> None:
         "scripts/render_v6_previews.py",
         "scripts/render_v6_motion_evidence.py",
         "scripts/measure_v6_phase3_performance.py",
+        "scripts/render_v6_session_evidence.py",
+        "scripts/measure_v6_phase5_performance.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1607,6 +1722,7 @@ def validate() -> None:
     validate_v6_brand_previews(version)
     validate_v6_north_star(version)
     validate_v6_motion_evidence(version)
+    validate_v6_session_evidence(version)
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()

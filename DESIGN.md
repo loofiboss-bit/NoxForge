@@ -169,6 +169,30 @@ event lifecycle probes, sanitizer results, and v5-relative medians live under
 `docs/evidence/v6/qt-motion/`. These files are structural evidence and do not
 claim live pointer, keyboard, compositor, or desktop qualification.
 
+### Session QML choreography
+
+Splash, Logout, and TabBox receive physical generated `MotionPolicy.qml`
+copies; package symlinks remain forbidden. The helper derives its duration
+scale from KDE's configured short animation duration, resolves reduced motion
+to zero, and exposes one normalized segment function for staged composition.
+SDDM uses the same rule through the lightweight Kirigami platform units module
+to keep first-frame cost within the v5-relative limit.
+
+- Splash reveals the N/F mark, then the wordmark, above one thin progress rail.
+- SDDM preserves login, session, keyboard, power, status, error, and busy
+  contracts in an adaptive edge-aware card with at most eight pixels of entry
+  travel.
+- Logout groups session and power decisions in one authoritative overlay;
+  destructive color appears only during interaction.
+- TabBox uses only KWin's caption, icon, and minimized roles in a responsive
+  horizontal or vertical card rail. It does not invent window previews.
+
+Production QML keeps deterministic test progress disabled at `-1`. The
+offscreen renderer injects start, mid, or end progress only for the 46-capture
+matrix under `docs/evidence/v6/session/`. That matrix and the SDDM first-frame
+comparison are structural evidence, not live SDDM, KWin, keyboard, pointer, or
+power-flow qualification.
+
 ## Contrast contract
 
 Ratios are computed from the locked sRGB anchors. Primary reading text and

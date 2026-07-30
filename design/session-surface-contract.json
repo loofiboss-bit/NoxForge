@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "surfaces": {
     "sddm": "sddm/NoxForge/Main.qml",
     "splash": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
@@ -57,6 +57,29 @@
     "stable-status",
     "session-contracts"
   ],
+  "v6ResolutionMatrix": [
+    {"width": 1280, "height": 720},
+    {"width": 1920, "height": 1080},
+    {"width": 2560, "height": 1440},
+    {"width": 3440, "height": 1440}
+  ],
+  "v6ScenarioMatrix": {
+    "sddm": ["standard", "long-rtl", "keyboard", "error", "busy", "reduced"],
+    "splash": ["standard", "reduced"],
+    "logout": ["standard", "long-rtl", "keyboard", "reduced"],
+    "tabbox": ["standard", "long-rtl", "keyboard", "empty", "many", "reduced"]
+  },
+  "choreographyFrames": [
+    {"name": "start", "progress": 0.0},
+    {"name": "mid", "progress": 0.5},
+    {"name": "end", "progress": 1.0}
+  ],
+  "v6EvidencePolicy": {
+    "kind": "authentic-offscreen-qml",
+    "testProgressProductionDefault": -1,
+    "qualifiesLiveSession": false,
+    "liveInteractionRemainsPhase7": true
+  },
   "sddmContracts": [
     "login",
     "session",

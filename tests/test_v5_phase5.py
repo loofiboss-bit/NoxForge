@@ -82,8 +82,16 @@ class V5PhaseFiveTests(unittest.TestCase):
             ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml"
         ).read_text(encoding="utf-8")
         for qml in (splash, switcher):
-            self.assertIn("Kirigami.Units.longDuration <= 0", qml)
-            self.assertIn("tokens.reducedMotionDuration", qml)
+            self.assertIn("MotionPolicy { id: motion }", qml)
+            self.assertIn("property bool reducedMotion", qml)
+        for policy in (
+            ROOT / f"look-and-feel/{THEME_ID}/contents/splash/MotionPolicy.qml",
+            ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/MotionPolicy.qml",
+        ):
+            text = policy.read_text(encoding="utf-8")
+            self.assertIn("Kirigami.Units.shortDuration <= 0", text)
+            self.assertIn("return reducedMotion ? 0", text)
+        self.assertIn("tokens.reducedMotionDuration", switcher)
         for value in ('qsTr("No windows available")', "Text.ElideRight", "LayoutMirroring.enabled"):
             self.assertIn(value, switcher)
 

@@ -10,36 +10,54 @@ Item {
     property int currentIndex: 0
     property rect screenGeometry: Qt.rect(0, 0, 1280, 720)
     property bool compositionMode: false
-    property bool reducedMotion: Kirigami.Units.longDuration <= 0
-    readonly property int cardWidth: Math.min(screenGeometry.width * 0.72, Kirigami.Units.gridUnit * 54)
-    readonly property int cardHeight: Math.min(
-        Math.max(windowList.contentHeight, Kirigami.Units.gridUnit * 5),
-        screenGeometry.height * 0.66
-    )
+    property bool reducedMotion: motion.reducedMotion
+    property real testProgress: -1
+    property bool entryReady: false
+    property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
+    readonly property bool horizontalMode: screenGeometry.width >= 1000
+    readonly property int horizontalCardWidth: Kirigami.Units.gridUnit * 13
+    readonly property int horizontalCardHeight: Kirigami.Units.gridUnit * 8
+    readonly property int cardWidth: horizontalMode
+        ? Math.min(
+            screenGeometry.width * 0.88,
+            Math.max(Kirigami.Units.gridUnit * 26, windowList.count * (horizontalCardWidth + tokens.compactSpacing))
+        )
+        : Math.min(screenGeometry.width * 0.82, Kirigami.Units.gridUnit * 34)
+    readonly property int cardHeight: horizontalMode
+        ? horizontalCardHeight + Kirigami.Units.gridUnit * 4
+        : Math.min(
+            Math.max(windowList.contentHeight, Kirigami.Units.gridUnit * 5) + Kirigami.Units.gridUnit * 2,
+            screenGeometry.height * 0.7
+        )
     width: compositionMode ? screenGeometry.width : cardWidth
     height: compositionMode ? screenGeometry.height : cardHeight
+
+    Tokens { id: tokens }
+    MotionPolicy { id: motion }
 
     function focusFirstAction() {
         windowList.forceActiveFocus()
     }
 
-    Tokens { id: tokens }
-
     Rectangle {
         anchors.fill: parent
         visible: root.compositionMode
         color: tokens.background
+        opacity: tokens.scrimOpacity
     }
 
     Rectangle {
         id: card
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
         width: root.cardWidth
         height: root.cardHeight
-        color: tokens.surface
-        border.color: tokens.border
+        y: (parent.height - height) / 2
+            + (root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress))
+        opacity: root.entryProgress
+        color: tokens.surfaceOverlay
+        border.color: tokens.edgeHighlight
         border.width: tokens.borderWidth
-        radius: tokens.radius
+        radius: tokens.overlayRadius
 
         Text {
             id: emptyState
@@ -48,6 +66,7 @@ Item {
             visible: windowList.count === 0
             text: qsTr("No windows available")
             color: tokens.textSecondary
+            font.pixelSize: tokens.bodySize
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
         }
@@ -55,19 +74,33 @@ Item {
         ListView {
             id: windowList
             anchors.fill: parent
-            anchors.margins: tokens.standardSpacing
+            anchors.margins: Kirigami.Units.gridUnit
             model: root.windowModel
             currentIndex: root.currentIndex
-            spacing: Kirigami.Units.smallSpacing
+            orientation: root.horizontalMode ? ListView.Horizontal : ListView.Vertical
+            spacing: tokens.compactSpacing
             clip: true
             focus: true
             boundsBehavior: Flickable.StopAtBounds
+            highlightRangeMode: ListView.ApplyRange
+            preferredHighlightBegin: 0
+            preferredHighlightEnd: root.horizontalMode
+                ? width - root.horizontalCardWidth
+                : height - Kirigami.Units.gridUnit * 4
             highlightMoveDuration: root.reducedMotion
                 ? tokens.reducedMotionDuration
-                : Math.min(tokens.hoverDuration, Kirigami.Units.shortDuration)
+                : motion.duration(tokens.selectionDuration)
+            highlightMoveVelocity: -1
             onCurrentIndexChanged: root.currentIndex = currentIndex
             LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
             LayoutMirroring.childrenInherit: true
+
+            highlight: Rectangle {
+                color: "transparent"
+                border.color: tokens.accent
+                border.width: tokens.focusWidth
+                radius: tokens.radius
+            }
 
             delegate: Rectangle {
                 id: windowDelegate
@@ -75,46 +108,86 @@ Item {
                 required property string caption
                 required property var icon
                 required property bool minimized
-                width: windowList.width
-                height: Kirigami.Units.gridUnit * 3
-                color: index === windowList.currentIndex ? tokens.surfaceSelected : tokens.surface
-                border.color: index === windowList.currentIndex ? tokens.borderStrong : tokens.border
+                width: root.horizontalMode ? root.horizontalCardWidth : windowList.width
+                height: root.horizontalMode
+                    ? root.horizontalCardHeight
+                    : Kirigami.Units.gridUnit * 4
+                color: tokens.surfaceRaised
+                border.color: tokens.outlineMuted
                 border.width: tokens.borderWidth
                 radius: tokens.radius
+                state: index === windowList.currentIndex ? "selected" : "normal"
+                states: [
+                    State {
+                        name: "normal"
+                        PropertyChanges {
+                            windowDelegate.color: tokens.surfaceRaised
+                        }
+                    },
+                    State {
+                        name: "selected"
+                        PropertyChanges {
+                            windowDelegate.color: tokens.surfaceSelected
+                        }
+                    }
+                ]
+                transitions: Transition {
+                    ColorAnimation {
+                        target: windowDelegate
+                        property: "color"
+                        duration: root.reducedMotion
+                            ? tokens.reducedMotionDuration
+                            : motion.duration(tokens.selectionDuration)
+                    }
+                }
 
                 Rectangle {
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: tokens.activeMarkerWidth
-                    height: parent.height - Kirigami.Units.gridUnit
+                    anchors.left: root.horizontalMode ? parent.left : parent.left
+                    anchors.right: root.horizontalMode ? parent.right : undefined
+                    anchors.bottom: root.horizontalMode ? parent.bottom : undefined
+                    anchors.verticalCenter: root.horizontalMode ? undefined : parent.verticalCenter
+                    width: root.horizontalMode ? parent.width - tokens.standardSpacing * 2 : tokens.activeMarkerWidth
+                    height: root.horizontalMode ? tokens.activeMarkerWidth : parent.height - tokens.standardSpacing * 2
                     color: tokens.accent
-                    visible: windowDelegate.index === windowList.currentIndex
+                    opacity: windowDelegate.index === windowList.currentIndex ? 1 : 0
+                    Behavior on opacity {
+                        enabled: !root.reducedMotion
+                        NumberAnimation { duration: motion.duration(tokens.productiveDuration) }
+                    }
                 }
-                RowLayout {
+
+                ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: Kirigami.Units.smallSpacing * 2
-                    spacing: Kirigami.Units.smallSpacing
+                    anchors.margins: tokens.standardSpacing
+                    spacing: tokens.compactSpacing
                     Kirigami.Icon {
                         source: windowDelegate.icon
-                        Layout.preferredWidth: 24
-                        Layout.preferredHeight: 24
+                        Layout.preferredWidth: root.horizontalMode
+                            ? Kirigami.Units.iconSizes.large
+                            : Kirigami.Units.iconSizes.medium
+                        Layout.preferredHeight: Layout.preferredWidth
+                        Layout.alignment: root.horizontalMode ? Qt.AlignHCenter : Qt.AlignVCenter
                     }
-                    ColumnLayout {
+                    Text {
+                        text: windowDelegate.caption
+                        color: windowDelegate.minimized ? tokens.textSecondary : tokens.textPrimary
+                        font.pixelSize: tokens.controlLabelSize
+                        font.weight: windowDelegate.index === windowList.currentIndex
+                            ? tokens.headingWeight
+                            : tokens.bodyWeight
+                        horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
+                        elide: Text.ElideRight
                         Layout.fillWidth: true
-                        spacing: 0
-                        Text {
-                            text: windowDelegate.caption
-                            color: windowDelegate.minimized ? tokens.textSecondary : tokens.textPrimary
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
-                        }
-                        Text {
-                            text: qsTr("Minimized")
-                            visible: windowDelegate.minimized
-                            color: tokens.textDisabled
-                            font.pixelSize: 11
-                        }
                     }
+                    Text {
+                        text: qsTr("Minimized")
+                        visible: windowDelegate.minimized
+                        color: tokens.textDisabled
+                        font.pixelSize: tokens.microLabelSize
+                        horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
+                        Layout.fillWidth: true
+                    }
+                    Item { Layout.fillHeight: true; visible: root.horizontalMode }
                 }
                 TapHandler {
                     onTapped: {
@@ -125,4 +198,14 @@ Item {
             }
         }
     }
+
+    Behavior on entryProgress {
+        enabled: root.testProgress < 0 && !root.reducedMotion
+        NumberAnimation {
+            duration: motion.duration(tokens.containerDuration)
+            easing.type: Easing.Bezier
+            easing.bezierCurve: tokens.productiveEnterCurve
+        }
+    }
+    Component.onCompleted: entryReady = true
 }

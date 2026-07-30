@@ -106,7 +106,8 @@ class V6PhaseTwoTests(unittest.TestCase):
             "wallpapers/NoxForge/contents/images/2560x1440.png",
             readme,
         )
-        self.assertIn('source: "NoxForgeLockup.svg"', splash)
+        self.assertIn('source: "NoxForgeMark.svg"', splash)
+        self.assertIn('text: "NOXFORGE"', splash)
         self.assertIn('source: "NoxForgeLockup.svg"', sddm)
         preview = json.loads(
             (ROOT / "docs/evidence/v6/brand/preview-manifest.json").read_text(
