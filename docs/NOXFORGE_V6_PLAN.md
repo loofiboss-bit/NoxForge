@@ -597,6 +597,25 @@ by Plasma/KWin.
 - Blur-on and blur-off evidence is recorded separately and honestly.
 - Raster/source generation remains deterministic.
 
+**Outcome (2026-07-30):** Plasma semantic contract schema 4 now maps all 43
+widget families onto the canonical v6 canvas, sunken, surface, raised, and
+overlay hierarchy. Generated panels, task states, panel buttons, applet
+backgrounds, popups, dialogs, notifications, tooltips, calendar/weather
+artwork, inputs, busy indicators, OSD, and containment controls use quieter
+neutral state fills, edge-aware task/tab markers, one neutral edge highlight,
+and a controlled filter-free overlay shadow. Opaque and solid variants remain
+independent of compositor blur, and no fallback theme is declared. Authentic
+generated SVG sources pass deterministic raster comparison across
+100/125/140/200 percent; blur-on and blur-off material atlases are committed
+separately. The source contract covers four panel edges, standard/compact
+layouts, and primary/secondary virtual outputs as 128 static scenarios, while
+explicitly stating that this evidence does not qualify a running Plasma shell.
+The targeted local gate passed with 116 Python tests. Live compositor blur,
+compact-panel, multi-output, and visible-fallback qualification remains
+blocked for Phase 7 and is not claimed here. The phase is locally complete
+only when the authoritative release check passes on this exact tree before its
+single local commit.
+
 ## Phase 5 — Signature QML surfaces and choreography
 
 ### Objective

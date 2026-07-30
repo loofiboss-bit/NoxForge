@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
-ATLAS_PATH = ROOT / "docs/evidence/plasma-style-atlas.json"
+ATLAS_PATH = ROOT / "docs/evidence/v6/plasma-shell/atlas-manifest.json"
 POSITIONS = {"top", "topright", "right", "bottomright", "bottom", "bottomleft", "left", "topleft", "center"}
 
 
@@ -23,7 +23,7 @@ class V5PhaseThreeTests(unittest.TestCase):
         cls.contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
 
     def test_all_43_families_use_versioned_semantic_recipes(self) -> None:
-        self.assertEqual(self.contract["schemaVersion"], 3)
+        self.assertEqual(self.contract["schemaVersion"], 4)
         families = set(self.contract["widgetFamilies"])
         family_recipes = self.contract["familyRecipes"]
         recipes = self.contract["semanticRecipes"]
@@ -40,10 +40,14 @@ class V5PhaseThreeTests(unittest.TestCase):
             with self.subTest(relative=relative):
                 found = elements(THEME / relative)
                 self.assertTrue(POSITIONS.issubset(found))
-                paints = {
-                    (found[position].get("class"), found[position].get("fill-opacity"))
-                    for position in POSITIONS
-                }
+                paints = set()
+                for position in POSITIONS:
+                    base = next(
+                        node
+                        for node in found[position].iter()
+                        if node.tag.endswith(("path", "rect")) and node.get("class")
+                    )
+                    paints.add((base.get("class"), base.get("fill-opacity")))
                 self.assertEqual(len(paints), 1, "one paint across a nine-slice prevents dark seams")
 
     def test_task_focus_markers_follow_every_panel_edge(self) -> None:
@@ -95,13 +99,21 @@ class V5PhaseThreeTests(unittest.TestCase):
         self.assertEqual(manifest["qualifiedSurfaces"], self.contract["qualifiedSurfaces"])
         self.assertEqual(
             set(manifest["qualifiedSurfaces"]),
-            {"panels", "popups", "tooltips", "calendar", "notifications", "scrollable"},
+            {
+                "panels",
+                "popups",
+                "notifications",
+                "tooltips",
+                "calendarWeather",
+                "inputs",
+                "osdContainment",
+            },
         )
         self.assertEqual(manifest["stateFrames"], self.contract["stateFrames"])
         self.assertEqual(manifest["orientedTaskStates"], self.contract["orientedTaskStates"])
         self.assertEqual([entry["scale"] for entry in manifest["atlases"]], [1.0, 1.25, 1.4, 2.0])
         for entry in manifest["atlases"]:
-            atlas = ROOT / "docs/evidence" / entry["file"]
+            atlas = ATLAS_PATH.parent / entry["file"]
             self.assertTrue(atlas.is_file())
             self.assertEqual(hashlib.sha256(atlas.read_bytes()).hexdigest(), entry["sha256"])
 

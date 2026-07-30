@@ -1,27 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-Background { color: #151D23; }
       .ColorScheme-ViewBackground { color: #0E1318; }
-      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-ButtonBackground { color: #1B252C; }
       .ColorScheme-Text { color: #E8F0F2; }
       .ColorScheme-Highlight { color: #A3FF47; }
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
-      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Sunken { color: #10171C; }
+      .NoxForge-Overlay { color: #222D35; }
+      .NoxForge-Hover { color: #232F36; }
+      .NoxForge-Selected { color: #1E2B31; }
+      .NoxForge-AccentSoft { color: #243528; }
+      .NoxForge-Attention { color: #FBBF24; }
+      .NoxForge-Progress { color: #22D3EE; }
       .NoxForge-Border { color: #2B3942; }
+      .NoxForge-EdgeHighlight { color: #3C4B53; }
+      .NoxForge-OverlayShadow { color: #050708; }
     ]]></style>
   </defs>
-  <path id="vertical-topleft" d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="vertical-top" x="6" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="vertical-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="vertical-left" x="0" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="vertical-center" x="6" y="6" width="12" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="vertical-right" x="18" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="vertical-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="vertical-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="vertical-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
+  <g id="vertical-topleft"><path d="M6 0V6H0V6A6 6 0 0 1 6 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-top"><rect x="6" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-topright"><path d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-left"><rect x="0" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-center"><rect x="6" y="6" width="12" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-right"><rect x="18" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-bottomleft"><path d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-bottom"><rect x="6" y="18" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="vertical-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
   <rect id="vertical-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="vertical-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="vertical-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
@@ -31,15 +39,15 @@
   <rect id="vertical-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="vertical-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="vertical-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="horizontal-topleft" d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="horizontal-top" x="46" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="horizontal-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="horizontal-left" x="40" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="horizontal-center" x="46" y="6" width="12" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="horizontal-right" x="58" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="horizontal-bottomleft" d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <rect id="horizontal-bottom" x="46" y="18" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
-  <path id="horizontal-bottomright" d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/>
+  <g id="horizontal-topleft"><path d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-top"><rect x="46" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-left"><rect x="40" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-center"><rect x="46" y="6" width="12" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-right"><rect x="58" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-bottom"><rect x="46" y="18" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
+  <g id="horizontal-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.4"/></g>
   <rect id="horizontal-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="horizontal-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="horizontal-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>

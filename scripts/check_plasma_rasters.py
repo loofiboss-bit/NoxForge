@@ -17,8 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
-EVIDENCE = ROOT / "docs/evidence"
-MANIFEST = EVIDENCE / "plasma-style-atlas.json"
+EVIDENCE = ROOT / "docs/evidence/v6/plasma-shell"
+MANIFEST = EVIDENCE / "atlas-manifest.json"
 SCALES = ((1.0, "100"), (1.25, "125"), (1.4, "140"), (2.0, "200"))
 COLUMNS = 8
 GUTTER = 4
@@ -52,16 +52,25 @@ def render_asset(magick: str, source: Path, output: Path, scale: float) -> tuple
     root = ET.parse(source).getroot()
     width = round(dimension(root.get("width")) * scale / 4)
     height = round(dimension(root.get("height")) * scale / 4)
+    inset = max(8, round(12 * scale))
     subprocess.run(
         [
             magick,
             "-background",
             "none",
             str(source),
+            "-trim",
+            "+repage",
             "-resize",
-            f"{width}x{height}!",
+            "400%",
+            "-resize",
+            f"{width - inset * 2}x{height - inset * 2}>",
+            "-gravity",
+            "center",
+            "-extent",
+            f"{width}x{height}",
             "-strip",
-            str(output),
+            f"PNG32:{output}",
         ],
         check=True,
     )
@@ -108,6 +117,7 @@ def render_all(target: Path, magick: str, contract: dict[str, object]) -> tuple[
         raise RuntimeError("Plasma atlas asset inventory is incomplete or duplicated")
 
     atlas_entries: list[dict[str, object]] = []
+    material_entries: list[dict[str, object]] = []
     outputs: list[Path] = []
     source_entries = [
         {
@@ -119,6 +129,7 @@ def render_all(target: Path, magick: str, contract: dict[str, object]) -> tuple[
     ]
     for scale, label in SCALES:
         tiles: list[Path] = []
+        tiles_by_asset: dict[str, Path] = {}
         cell: tuple[int, int] | None = None
         for index, relative in enumerate(assets):
             output = target / f"{index:02d}-{label}.png"
@@ -128,6 +139,7 @@ def render_all(target: Path, magick: str, contract: dict[str, object]) -> tuple[
             elif rendered != cell:
                 raise RuntimeError(f"Plasma atlas source dimensions differ: {relative}")
             tiles.append(output)
+            tiles_by_asset[relative] = output
         assert cell is not None
         atlas = target / f"plasma-style-atlas-{label}pct.png"
         width, height = compose_atlas(magick, tiles, atlas, cell)
@@ -141,18 +153,58 @@ def render_all(target: Path, magick: str, contract: dict[str, object]) -> tuple[
                 "sha256": digest(atlas),
             }
         )
+        variants = contract["backgroundVariantRecipes"]
+        for blur in ("on", "off"):
+            material_tiles = [
+                tiles_by_asset[relative]
+                for relative in contract["backgroundVariants"]
+                if variants[relative]["blur"] == blur
+            ]
+            material_atlas = target / f"material-atlas-blur-{blur}-{label}pct.png"
+            material_width, material_height = compose_atlas(
+                magick,
+                material_tiles,
+                material_atlas,
+                cell,
+            )
+            outputs.append(material_atlas)
+            material_entries.append(
+                {
+                    "scale": scale,
+                    "blur": blur,
+                    "file": material_atlas.name,
+                    "assetCount": len(material_tiles),
+                    "width": material_width,
+                    "height": material_height,
+                    "sha256": digest(material_atlas),
+                }
+            )
 
+    capture_matrix = contract["sourceCaptureMatrix"]
+    scenario_count = math.prod(
+        len(capture_matrix[key])
+        for key in ("scales", "panelEdges", "layouts", "virtualOutputs", "blur")
+    )
     manifest = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "plasmaVersion": contract["plasmaVersion"],
         "themeId": contract["themeId"],
+        "evidenceClass": capture_matrix["evidenceClass"],
+        "qualifiesLivePlasma": capture_matrix["qualifiesLivePlasma"],
+        "limitations": [
+            "Static SVG source rasterization does not prove a running Plasma shell or compositor.",
+            "Live panel, blur, compact-layout, and multi-output checks remain blocked until Phase 7.",
+        ],
         "assetCount": len(assets),
         "columns": COLUMNS,
         "assets": source_entries,
         "qualifiedSurfaces": contract["qualifiedSurfaces"],
         "stateFrames": contract["stateFrames"],
         "orientedTaskStates": contract["orientedTaskStates"],
+        "sourceCaptureMatrix": capture_matrix,
+        "staticScenarioCount": scenario_count,
         "atlases": atlas_entries,
+        "materialAtlases": material_entries,
     }
     return manifest, outputs
 

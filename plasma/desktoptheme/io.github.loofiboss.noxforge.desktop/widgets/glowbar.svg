@@ -1,27 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background { color: #141B21; }
+      .ColorScheme-Background { color: #151D23; }
       .ColorScheme-ViewBackground { color: #0E1318; }
-      .ColorScheme-ButtonBackground { color: #1A232B; }
+      .ColorScheme-ButtonBackground { color: #1B252C; }
       .ColorScheme-Text { color: #E8F0F2; }
       .ColorScheme-Highlight { color: #A3FF47; }
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
-      .NoxForge-Selected { color: #26361D; }
+      .NoxForge-Sunken { color: #10171C; }
+      .NoxForge-Overlay { color: #222D35; }
+      .NoxForge-Hover { color: #232F36; }
+      .NoxForge-Selected { color: #1E2B31; }
+      .NoxForge-AccentSoft { color: #243528; }
+      .NoxForge-Attention { color: #FBBF24; }
+      .NoxForge-Progress { color: #22D3EE; }
       .NoxForge-Border { color: #2B3942; }
+      .NoxForge-EdgeHighlight { color: #3C4B53; }
+      .NoxForge-OverlayShadow { color: #050708; }
     ]]></style>
   </defs>
-  <path id="north-topleft" d="M4 0H6V6H0V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="north-top" x="6" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="north-topright" d="M18 0A6 6 0 0 1 24 6H18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="north-left" x="0" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="north-center" x="6" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="north-right" x="18" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="north-bottomleft" d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="north-bottom" x="6" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="north-bottomright" d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
+  <g id="north-topleft"><path d="M4 0H6V6H0V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-top"><rect x="6" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-topright"><path d="M18 0A6 6 0 0 1 24 6H18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-left"><rect x="0" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-center"><rect x="6" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-right"><rect x="18" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-bottomleft"><path d="M0 18H6V24A6 6 0 0 1 0 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-bottom"><rect x="6" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="north-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
   <rect id="north-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="north-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
@@ -31,15 +39,15 @@
   <rect id="north-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="north-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="north-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="south-topleft" d="M44 0H46V6H40V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="south-top" x="46" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="south-topright" d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="south-left" x="40" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="south-center" x="46" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="south-right" x="58" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="south-bottomleft" d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="south-bottom" x="46" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="south-bottomright" d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
+  <g id="south-topleft"><path d="M44 0H46V6H40V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-center"><rect x="46" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-right"><rect x="58" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="south-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
   <rect id="south-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="south-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="south-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
@@ -49,15 +57,15 @@
   <rect id="south-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="south-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="south-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="east-topleft" d="M84 0H86V6H80V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="east-top" x="86" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="east-topright" d="M98 0A6 6 0 0 1 104 6H98Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="east-left" x="80" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="east-center" x="86" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="east-right" x="98" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="east-bottomleft" d="M80 18H86V24A6 6 0 0 1 80 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="east-bottom" x="86" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="east-bottomright" d="M98 18H104A6 6 0 0 1 98 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
+  <g id="east-topleft"><path d="M84 0H86V6H80V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-top"><rect x="86" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-topright"><path d="M98 0A6 6 0 0 1 104 6H98Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-left"><rect x="80" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-center"><rect x="86" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-right"><rect x="98" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-bottomleft"><path d="M80 18H86V24A6 6 0 0 1 80 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-bottom"><rect x="86" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="east-bottomright"><path d="M98 18H104A6 6 0 0 1 98 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
   <rect id="east-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="east-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="east-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
@@ -67,15 +75,15 @@
   <rect id="east-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="east-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="east-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <path id="west-topleft" d="M124 0H126V6H120V4Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="west-top" x="126" y="0" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="west-topright" d="M138 0A6 6 0 0 1 144 6H138Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="west-left" x="120" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="west-center" x="126" y="6" width="12" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="west-right" x="138" y="6" width="6" height="12" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="west-bottomleft" d="M120 18H126V24A6 6 0 0 1 120 18Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <rect id="west-bottom" x="126" y="18" width="12" height="6" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
-  <path id="west-bottomright" d="M138 18H144A6 6 0 0 1 138 24Z" class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.72"/>
+  <g id="west-topleft"><path d="M124 0H126V6H120V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-top"><rect x="126" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-topright"><path d="M138 0A6 6 0 0 1 144 6H138Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-left"><rect x="120" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-center"><rect x="126" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-right"><rect x="138" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-bottomleft"><path d="M120 18H126V24A6 6 0 0 1 120 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-bottom"><rect x="126" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
+  <g id="west-bottomright"><path d="M138 18H144A6 6 0 0 1 138 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.72"/></g>
   <rect id="west-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
   <rect id="west-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
   <rect id="west-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
