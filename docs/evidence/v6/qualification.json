@@ -58,7 +58,12 @@
     {
       "id": "aurorae-composed-motion",
       "status": "blocked",
-      "reason": "Phase 7 live composed window-decoration qualification has not run."
+      "reason": "Phase 6 deterministic Aurorae materials, geometry, button states, and structural source sheet pass; Phase 7 live composed window-decoration qualification has not run."
+    },
+    {
+      "id": "cursor-live-scale",
+      "status": "blocked",
+      "reason": "Phase 6 cursor sources, physical 24/32/48 px files, hotspots, and animation timing pass; Phase 7 live compositor scaling and motion qualification has not run."
     }
   ]
 }

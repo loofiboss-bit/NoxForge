@@ -79,7 +79,7 @@
       "height": 720,
       "kind": "resolution",
       "scenario": "standard-end",
-      "sha256": "ed2283e0d2d2fc6a1b425d1d986fd2e5eef325c476b64120b0b5b347e6de3e9f",
+      "sha256": "a80065a9826d00a2821614c7fb6d2ab711c0a74ba158ea957d6010571df441a2",
       "surface": "logout",
       "width": 1280
     },
@@ -88,7 +88,7 @@
       "height": 1080,
       "kind": "resolution",
       "scenario": "standard-end",
-      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "sha256": "0973b66be8446851340cd40c4f4e76db86ec69e4dc7061638b48f46c7c7d7e42",
       "surface": "logout",
       "width": 1920
     },
@@ -97,7 +97,7 @@
       "height": 1440,
       "kind": "resolution",
       "scenario": "standard-end",
-      "sha256": "ea422271f671519000112f013bb43ed99a61823d6b7182f1624685251a7d7548",
+      "sha256": "71f87ae3c73648f8862d3682309e226657e822e5d5461e60135eea9499567928",
       "surface": "logout",
       "width": 2560
     },
@@ -106,7 +106,7 @@
       "height": 1440,
       "kind": "resolution",
       "scenario": "standard-end",
-      "sha256": "b228b0d525b8b545fd8a40c5af09f9883462958754798894ff84b6690a8c04a5",
+      "sha256": "e8994decc21c65858d505e82fbbe7ca7ea590408633faae500d57d8e1be2d2b0",
       "surface": "logout",
       "width": 3440
     },
@@ -223,7 +223,7 @@
       "height": 1080,
       "kind": "scenario",
       "scenario": "standard-end",
-      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "sha256": "0973b66be8446851340cd40c4f4e76db86ec69e4dc7061638b48f46c7c7d7e42",
       "surface": "logout",
       "width": 1920
     },
@@ -232,7 +232,7 @@
       "height": 1080,
       "kind": "scenario",
       "scenario": "long-rtl-end",
-      "sha256": "939b8a3ad3f0eda25ed16f3e9f726197bf815b008a0be3dc2f343c993539e1f4",
+      "sha256": "66790e57c71482c393866d3fc9da68e5fb44a603ed25adec2564858800cb2e03",
       "surface": "logout",
       "width": 1920
     },
@@ -241,7 +241,7 @@
       "height": 1080,
       "kind": "scenario",
       "scenario": "keyboard-end",
-      "sha256": "c86a87c7bf9f50031efb00b118322d0bb77c735613d292f9147e710803c9ee16",
+      "sha256": "64dd4a37d38589b131833cca324c10413b93cf53c57cec61909416c58bd9a075",
       "surface": "logout",
       "width": 1920
     },
@@ -250,7 +250,7 @@
       "height": 1080,
       "kind": "scenario",
       "scenario": "reduced-end",
-      "sha256": "8de08da1e1c8fc3e4c55d7309beb9c33e888c44d4bdee5ccb34cf613c632f2a0",
+      "sha256": "0973b66be8446851340cd40c4f4e76db86ec69e4dc7061638b48f46c7c7d7e42",
       "surface": "logout",
       "width": 1920
     },
@@ -376,7 +376,7 @@
       "height": 1440,
       "kind": "choreography",
       "scenario": "standard-mid",
-      "sha256": "1c66381e4aebffa039c42f137e35cf1fb4855ef879aa4af12d3c318bda89ba96",
+      "sha256": "dbbbe9761aad3d9ac9ca322be9ca18650ea4c404e28ccfee0afa78e3d9137f29",
       "surface": "logout",
       "width": 2560
     },
@@ -385,7 +385,7 @@
       "height": 1440,
       "kind": "choreography",
       "scenario": "standard-end",
-      "sha256": "ea422271f671519000112f013bb43ed99a61823d6b7182f1624685251a7d7548",
+      "sha256": "71f87ae3c73648f8862d3682309e226657e822e5d5461e60135eea9499567928",
       "surface": "logout",
       "width": 2560
     },
@@ -428,6 +428,13 @@
     "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
     "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
     "design/tokens.json": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
+    "icons/NoxForge/coverage.json": "d52a64dfdefb0cf36f5fa7fdcf531c7900276b04fcad844bb39be5ceb6b71468",
+    "icons/NoxForge/scalable/actions/application-exit.svg": "7c27929a1a998af58fcbf22747d1da143701be258bd39e1f859da3c7f9ffc353",
+    "icons/NoxForge/scalable/actions/dialog-cancel.svg": "587483e4e3dbd84e09783a42fa562cf8d964f01d343bf2cbafe2d1b3a418a944",
+    "icons/NoxForge/scalable/actions/view-refresh.svg": "55c34320f12ef5182d783aeecce394a92330611cdd83551afd281127812b73a0",
+    "icons/NoxForge/scalable/categories/applications-system.svg": "8a6816ecba0faa64643da6cce602ad794d2b0ed8ec57b320762d6cb6ade5c0a4",
+    "icons/NoxForge/scalable/preferences/preferences-system-power-management.svg": "f51e37bc3ee1fbc15efea3986eb347acdbad78d81641a312650f02c86f69f2ee",
+    "icons/NoxForge/scalable/status/security-high.svg": "07887d0784625ba7946a961012f3b330f93a31fce1923d9d96bf1bca9cfe3d71",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
@@ -439,7 +446,7 @@
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
     "scripts/generate_design_system.py": "90d56f0bf1038cc5d5e3b28d9e7916eeba67ae1f80c473f50436bbf143254813",
     "scripts/measure_v6_phase5_performance.py": "668c9927bd7b4fa686cc6a6f43bf68b10e1edaadbcdf5aa6f9e59b8c973a537c",
-    "scripts/render_v6_session_evidence.py": "b4219c616d741b7aa7ee4b33fe121144c8be126741d51daac59d05e60013cde8",
+    "scripts/render_v6_session_evidence.py": "645790a9448d179450452a781f2b5e20b473bc3c25ec900f515c82ec83b38435",
     "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
     "sddm/NoxForge/Tokens.qml": "ae9890a4b2dbc9e3d93fc2f69e99776b5995f368031715508046dd6dd7ed3b57",
     "tools/session_renderer.cpp": "67feb66dfc882dbf912b0d92a70fddaba0e4aabf350edb4eab7c13cb57eca84c"

@@ -43,8 +43,8 @@
   "sheets": {
     "docs/evidence/artwork-brand-optical-sizes.png": "06e4cf080b5ca5b80256254f61d753eb43da1c9721f4107b82f9b32de85f3475",
     "docs/evidence/artwork-brand-wallpaper.png": "cb0254718e6a89bee001a98f5dd9fa0f70e9f3ce5918e6bfef60d3f8f2cebd81",
-    "docs/evidence/artwork-cursors.png": "608f898ce3be2e776c8f4c57acb69d110dd3d335ac3fab758cb78af47c7a34f0",
-    "docs/evidence/artwork-icons.png": "da5023abc868fe2e397d270c475b40bbf0973a71173085bb2c4f39a6a71db86d"
+    "docs/evidence/artwork-cursors.png": "84b9dec1e6ab92708c14e3f743c92edc46f983a94cd543b51d1a92a8d75c7922",
+    "docs/evidence/artwork-icons.png": "04c546a14730211bcc94409277cf3f39dd546ef87a0a2ea61075c71c37ca5cc7"
   },
   "sources": {
     "cursors/NoxForge-Cursors/coverage.json": "51340c1e5f3f3568e488b416075e7462d438b4f5d7ce37ab9f0d55d0f5d2717f",
@@ -52,7 +52,7 @@
     "design/brand/noxforge-lockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
     "design/brand/noxforge-mark-mono.svg": "69b480a264f50e1376d3fbfd320ec93d05eeb85a78063e4e6cb88992f61bf43b",
     "design/brand/noxforge-mark.svg": "a45dd5d73e82457387059efac353c2b63190754d806d4a1fb84357a4881ed900",
-    "icons/NoxForge/coverage.json": "ee8b1123abb8c43625b000092dbfbbe2a704c51291d4f7f2b54bc2a1d6640721",
+    "icons/NoxForge/coverage.json": "d52a64dfdefb0cf36f5fa7fdcf531c7900276b04fcad844bb39be5ceb6b71468",
     "sounds/NoxForge/coverage.json": "bb58af0d6751cd3cb6df89399c1007c612df153854906fca56d2755b2845c1db",
     "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg": "3892676816c0fa3aa8d5cb3c1319618e83adf0d4044330c97fe86fd7eb922ada",
     "wallpapers/NoxForge/contents/source/NoxForge.svg": "bbf7dc06874549a5375ff26310657a6f5b12b7cbb6c6e93c216520f9a725470f"

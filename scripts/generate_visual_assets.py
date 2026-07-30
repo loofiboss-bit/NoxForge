@@ -15,7 +15,8 @@ AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 ICONS = ROOT / "icons/NoxForge"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
-COLORS = TOKENS.get("assetGenerationPalette", TOKENS["colors"])
+EDGE_POLISH = json.loads((ROOT / "design/edge-polish-contract.json").read_text(encoding="utf-8"))
+COLORS = TOKENS["colors"]
 CHECK = "--check" in sys.argv[1:]
 DRIFT: list[Path] = []
 
@@ -132,6 +133,24 @@ V5_RUNTIME_ICON_SPECS = {
     "status/software-update-none.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5M7 12h10"/><path class="accent" d="M7 12h5"/>',
     "status/user-available.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="accent" d="M16.5 17l1 1 2-2"/>',
     "status/user-away.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="accent" d="M18 15v2l1.5 1"/>',
+}
+
+PHASE6_PRIORITY_ICON_SPECS = {
+    "actions/dialog-cancel.svg": '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 8l8 8M16 8l-8 8"/><path class="accent" d="M8 8l4 4"/>',
+    "actions/dialog-ok.svg": '<circle cx="12" cy="12" r="9"/><path d="M7 12l3 3 7-7"/><path class="accent" d="M7 12l3 3"/>',
+    "applets/battery.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M7 10v4M11 10v4M15 10v4"/><path class="accent" d="M15 10v4"/>',
+    "applets/clock.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/><path class="accent" d="M12 7v6"/>',
+    "applets/network.svg": '<circle cx="5" cy="17" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="19" cy="17" r="2"/><path d="M6 15l5-6M13 9l5 6M7 17h10"/><path class="accent" d="M7 17h5"/>',
+    "applets/notifications.svg": '<path d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/><path class="accent" d="M8 13h8"/>',
+    "applets/systemtray.svg": '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/><path class="accent" d="M14 4h6v3"/>',
+    "places/folder-download.svg": '<path d="M3 6h7l2 2h9v11H3zM12 10v6M9 13l3 3 3-3"/><path class="accent" d="M9 13l3 3"/>',
+    "places/folder-pictures.svg": '<path d="M3 6h7l2 2h9v11H3z"/><circle cx="9" cy="12" r="1.5"/><path d="M6 17l4-3 3 2 3-4 3 5"/><path class="accent" d="M16 12l3 5"/>',
+    "places/folder-videos.svg": '<path d="M3 6h7l2 2h9v11H3z"/><path d="M9 11l6 3-6 3z"/><path class="accent" d="M9 11v3"/>',
+    "preferences/preferences-desktop-color.svg": '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="8" r="1"/><circle cx="15" cy="8" r="1"/><circle cx="8" cy="14" r="1"/><path d="M12 21c-2-3 1-5 4-4"/><path class="accent" d="M16 17l3 1"/>',
+    "preferences/preferences-desktop-icons.svg": '<rect x="3" y="4" width="18" height="16"/><rect x="6" y="7" width="4" height="4"/><rect x="14" y="7" width="4" height="4"/><rect x="6" y="14" width="4" height="3"/><rect x="14" y="14" width="4" height="3"/><path class="accent" d="M14 7h4v2"/>',
+    "preferences/preferences-desktop-mouse.svg": '<rect x="7" y="2" width="10" height="20" rx="5"/><path d="M12 2v7M7 9h10M19 7v10"/><circle cx="19" cy="12" r="1.5"/><path class="accent" d="M19 10.5v3"/>',
+    "preferences/preferences-system-bluetooth.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 7l8 10V7L8 17l8-10"/><path class="accent" d="M8 7l8 10"/>',
+    "preferences/preferences-system-sound.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 7v10M20 5v14"/><circle cx="16" cy="11" r="1.5"/><circle cx="20" cy="14" r="1.5"/><path class="accent" d="M16 9.5v3"/>',
 }
 
 ICON_ALIASES = {
@@ -305,7 +324,12 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
     attr = f'class="{css_class}" fill="currentColor" fill-opacity="{opacity:g}"'
     top = f'<g id="{name("top")}"><rect x="{x + 6}" y="{y}" width="28" height="6" {attr}/>'
     if active:
-        top += f'<path d="M{x + 8} {y + 1}h10" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="1"/>'
+        rail = EDGE_POLISH["aurorae"]
+        top += (
+            f'<path d="M{x + 8} {y + 1}h{rail["activeRailLength"]}" '
+            'class="ColorScheme-Highlight" stroke="currentColor" '
+            f'stroke-width="{rail["activeRailThickness"]}"/>'
+        )
     top += "</g>"
     return "\n".join(
         [
@@ -323,20 +347,23 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
 
 
 def decoration_svg() -> str:
-    active = decoration_frame("decoration", 0, 0, "ColorScheme-Background", 1.0, active=True)
-    inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-ViewBackground", 0.96, active=False)
+    active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True)
+    inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-Sunken", 0.9, active=False)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background {{ color: {COLORS["surface"]}; }}
-      .ColorScheme-ViewBackground {{ color: {COLORS["background"]}; }}
+      .ColorScheme-Raised {{ color: {COLORS["surfaceRaised"]}; }}
+      .ColorScheme-Sunken {{ color: {COLORS["surfaceSunken"]}; }}
       .ColorScheme-Highlight {{ color: {COLORS["accent"]}; }}
     ]]></style>
   </defs>
   {active}
   {inactive}
-  <rect id="decoration-maximized-center" x="104" y="0" width="28" height="28" class="ColorScheme-Background" fill="currentColor"/>
-  <rect id="decoration-maximized-inactive-center" x="104" y="36" width="28" height="28" class="ColorScheme-ViewBackground" fill="currentColor"/>
+  <g id="decoration-maximized-center">
+    <rect x="104" y="0" width="28" height="28" class="ColorScheme-Raised" fill="currentColor"/>
+    <path d="M106 1h{EDGE_POLISH["aurorae"]["activeRailLength"]}" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="{EDGE_POLISH["aurorae"]["activeRailThickness"]}"/>
+  </g>
+  <rect id="decoration-maximized-inactive-center" x="104" y="36" width="28" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
 </svg>
 '''
 
@@ -353,6 +380,7 @@ BUTTON_STATES = (
 )
 
 GLYPHS = {
+    "menu": '<path d="M8 8h8M8 12h8M8 16h8"/>',
     "close": '<path d="M8 8l8 8M16 8l-8 8"/>',
     "minimize": '<path d="M7 15h10"/>',
     "maximize": '<path d="M7 7h10v10H7zM7 10l3-3"/>',
@@ -364,14 +392,21 @@ def button_svg(kind: str) -> str:
     groups = []
     for index, (state, color_class, opacity) in enumerate(BUTTON_STATES):
         x = index * 32
-        foreground = COLORS["negative"] if kind == "close" and state in {"hover", "pressed"} else "currentColor"
+        foreground = (
+            COLORS["negative"]
+            if kind == "close" and state in {"hover", "pressed"}
+            else COLORS["textSecondary"]
+            if "inactive" in state or state.startswith("deactivated")
+            else COLORS["textPrimary"]
+        )
         groups.append(
             f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="{COLORS['textPrimary']}">
       <rect width="24" height="24" rx="{TOKENS['geometry']['compactRadius']}" fill="currentColor" fill-opacity="{opacity:g}"/>
-      <g fill="none" stroke="{foreground}" stroke-width="1.7" stroke-linecap="square" stroke-linejoin="miter">{GLYPHS[kind]}</g>
+      <g fill="none" stroke="{foreground}" stroke-width="{TOKENS['iconography']['strokeWidth']}" stroke-linecap="round" stroke-linejoin="round">{GLYPHS[kind]}</g>
     </g>'''
         )
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="256" height="24" viewBox="0 0 256 24">
+    width = len(BUTTON_STATES) * 32
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="24" viewBox="0 0 {width} 24">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Text {{ color: {COLORS["textPrimary"]}; }}
@@ -420,7 +455,13 @@ def write_aurorae_svg(name: str, content: str) -> None:
 
 
 def main() -> None:
-    specs = {**ICON_SPECS, **CORE_ICON_SPECS, **STATE_ICON_SPECS, **V5_RUNTIME_ICON_SPECS}
+    specs = {
+        **ICON_SPECS,
+        **CORE_ICON_SPECS,
+        **STATE_ICON_SPECS,
+        **V5_RUNTIME_ICON_SPECS,
+        **PHASE6_PRIORITY_ICON_SPECS,
+    }
     effective_aliases: dict[str, str] = {}
 
     def resolve_body(relative: str) -> str:
@@ -465,6 +506,8 @@ def main() -> None:
                 "opticalSizes": fixture["opticalSizes"],
                 "runtimeFixture": sorted(required),
                 "runtimeFixtureSource": fixture["source"],
+                "phase6Priority": EDGE_POLISH["icons"]["priority"],
+                "phase6ReviewSizes": EDGE_POLISH["icons"]["reviewSizes"],
                 "categories": dict(sorted(categories.items())),
                 "icons": sorted(specs),
                 "aliases": dict(sorted(effective_aliases.items())),
@@ -480,9 +523,15 @@ def main() -> None:
         print("Visual asset generator drift: " + ", ".join(str(path.relative_to(ROOT)) for path in DRIFT), file=sys.stderr)
         raise SystemExit(1)
     if CHECK:
-        print(f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants and 5 Aurorae pairs")
+        print(
+            f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+            f"and {1 + len(GLYPHS)} Aurorae pairs"
+        )
         return
-    print(f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants and 5 Aurorae pairs")
+    print(
+        f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+        f"and {1 + len(GLYPHS)} Aurorae pairs"
+    )
 
 
 if __name__ == "__main__":

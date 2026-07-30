@@ -12,13 +12,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "cursors/NoxForge-Cursors"
 ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
+EDGE_POLISH = json.loads((ROOT / "design/edge-polish-contract.json").read_text(encoding="utf-8"))
+TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 SIZES = tuple(ARTWORK["cursors"]["physicalSizes"])
 XCURSOR_IMAGE_TYPE = 0xFFFD0002
 
+
+def argb(color: str) -> int:
+    return 0xFF000000 | int(color.removeprefix("#"), 16)
+
+
 COLORS = {
-    "outline": 0xFFE8F0F2,
-    "fill": 0xFF141B21,
-    "accent": 0xFFA3FF47,
+    "outline": argb(TOKENS["colors"]["textPrimary"]),
+    "fill": argb(TOKENS["colors"]["background"]),
+    "accent": argb(TOKENS["colors"]["accent"]),
     "transparent": 0x00000000,
 }
 
@@ -88,8 +95,8 @@ def pixel(kind: str, x: float, y: float, size: int, frame: int = 0) -> int:
             return COLORS["outline"]
         if 9 <= px <= 11 and 3 <= py <= 6: return COLORS["accent"]
     elif kind == "text":
-        if abs(px - center) <= 1.2 or (5 <= px <= 19 and (abs(py - 4) <= 1.2 or abs(py - 20) <= 1.2)):
-            return COLORS["accent"] if abs(px - center) <= 1.2 and 8 <= py <= 12 else COLORS["outline"]
+        if abs(px - center) <= 1.35 or (5 <= px <= 19 and (abs(py - 4) <= 1.35 or abs(py - 20) <= 1.35)):
+            return COLORS["accent"] if abs(px - center) <= 1.35 and 8 <= py <= 12 else COLORS["outline"]
     elif kind in {"wait", "progress"}:
         radius = math.hypot(px - center, py - center)
         if 6 <= radius <= 9:
@@ -99,7 +106,7 @@ def pixel(kind: str, x: float, y: float, size: int, frame: int = 0) -> int:
             return COLORS["accent"] if distance < math.tau / 4 else COLORS["outline"]
         if kind == "progress" and point_in_polygon(px, py, [(2, 2), (2, 14), (6, 11), (8, 16), (11, 14), (8, 9), (14, 9)]): return COLORS["fill"]
     elif kind == "crosshair":
-        if (abs(px - center) <= 1 and 3 <= py <= 21) or (abs(py - center) <= 1 and 3 <= px <= 21):
+        if (abs(px - center) <= 1.15 and 3 <= py <= 21) or (abs(py - center) <= 1.15 and 3 <= px <= 21):
             return COLORS["accent"] if 10 <= px <= 14 and 10 <= py <= 14 else COLORS["outline"]
     elif kind in {"ew-resize", "ns-resize", "nwse-resize", "nesw-resize", "move"}:
         segments = []
@@ -107,22 +114,22 @@ def pixel(kind: str, x: float, y: float, size: int, frame: int = 0) -> int:
         if kind in {"ns-resize", "move"}: segments.append(((12, 3), (12, 21)))
         if kind == "nwse-resize": segments.append(((4, 4), (20, 20)))
         if kind == "nesw-resize": segments.append(((20, 4), (4, 20)))
-        if any(distance_to_segment(px, py, start, end) <= 1.5 for start, end in segments): return COLORS["outline"]
+        if any(distance_to_segment(px, py, start, end) <= 1.65 for start, end in segments): return COLORS["outline"]
         if math.hypot(px - center, py - center) <= 2.5: return COLORS["accent"]
     elif kind == "forbidden":
         radius = math.hypot(px - center, py - center)
-        if 7 <= radius <= 10 or distance_to_segment(px, py, (6, 6), (18, 18)) <= 1.4:
-            return COLORS["accent"] if distance_to_segment(px, py, (6, 6), (18, 18)) <= 1.4 else COLORS["outline"]
+        if 7 <= radius <= 10 or distance_to_segment(px, py, (6, 6), (18, 18)) <= 1.55:
+            return COLORS["accent"] if distance_to_segment(px, py, (6, 6), (18, 18)) <= 1.55 else COLORS["outline"]
     elif kind in {"zoom-in", "zoom-out"}:
         radius = math.hypot(px - 9.5, py - 9.5)
-        if 5 <= radius <= 7 or distance_to_segment(px, py, (14, 14), (21, 21)) <= 1.4:
+        if 5 <= radius <= 7 or distance_to_segment(px, py, (14, 14), (21, 21)) <= 1.55:
             return COLORS["outline"]
         if abs(py - 9.5) <= 1 and 6 <= px <= 13:
             return COLORS["accent"]
         if kind == "zoom-in" and abs(px - 9.5) <= 1 and 6 <= py <= 13:
             return COLORS["accent"]
     elif kind == "color-picker":
-        if distance_to_segment(px, py, (5, 19), (18, 6)) <= 2.2:
+        if distance_to_segment(px, py, (5, 19), (18, 6)) <= 2.35:
             return COLORS["outline"]
         if point_in_polygon(px, py, [(16, 4), (20, 8), (18, 10), (14, 6)]):
             return COLORS["accent"]
@@ -203,10 +210,10 @@ def source_svg(kind: str) -> str:
     }
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
   <title>NoxForge {kind} cursor source</title>
-  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="{TOKENS["colors"]["background"]}" stroke="{TOKENS["colors"]["textPrimary"]}" stroke-width="{EDGE_POLISH["cursors"]["outlineWidth"]}" stroke-linecap="round" stroke-linejoin="round">
     {glyphs[kind]}
   </g>
-  <style>.accent {{ fill: #A3FF47; stroke: none; }} .accent-line {{ fill: none; stroke: #A3FF47; }}</style>
+  <style>.accent {{ fill: {TOKENS["colors"]["accent"]}; stroke: none; }} .accent-line {{ fill: none; stroke: {TOKENS["colors"]["accent"]}; }}</style>
 </svg>
 '''
 
@@ -227,7 +234,7 @@ def main() -> None:
             target = ALIASES[target]
         outputs[cursor_dir / alias] = data[target]
     outputs[THEME / "index.theme"] = (
-        "[Icon Theme]\nName=NoxForge\nComment=Original Industrial Precision cursors\n",
+        "[Icon Theme]\nName=NoxForge\nComment=Original Kinetic Precision cursors\n",
     )[0].encode()
     outputs[THEME / "coverage.json"] = (
         json.dumps(

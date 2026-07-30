@@ -751,6 +751,28 @@ Finish the desktop edges after the core material and motion language is stable.
 - No unallowlisted semantic duplicate or package symlink is introduced.
 - Cursor hotspot, frame count, duration, and scale checks pass.
 
+**Outcome (2026-07-30):** `design/edge-polish-contract.json` freezes the Phase
+6 scope. Aurorae now uses a 26 px raised active titlebar, sunken inactive
+material, one 12×2 px active lime rail, and six canonical source/compressed
+pairs covering decoration plus menu, minimize, maximize, restore, and close.
+Every button retains all eight Aurorae states; hover and press are neutral
+except for the destructive close glyph, and no glow/filter is used. The
+185-icon scalable inventory, 77-name runtime fixture, and 196-file 16/22 px
+optical inventory remain unchanged. Fifty-six panel, System Settings, Dolphin,
+and session icons are ranked and rendered at 16/22/24/32/48 px; fifteen
+formerly fallback-derived high-visibility roles now have simpler
+role-specific masters. All 96 physical cursor names preserve canonical
+24/32/48 px hotspots plus 12-frame, 80 ms busy timing while using a normalized
+1.75 px source outline and canonical canvas fill. The qualified sound tree is
+byte-identical and explicitly unchanged. Three deterministic source-bound
+optical sheets pass repeated drift checks, and dependent Logout evidence was
+regenerated against the new session icons. The full local phase gate passed
+with 129 Python tests, 19 CTest cases, generated-source checks, QML lint,
+non-mutating install/uninstall dry-runs, a reproducible source archive, and
+clean SRPM/RPM `rpmlint`. A composed active/inactive/maximized/shaded KWin
+decoration and live cursor scaling remain blocked for Phase 7 under the
+explicit no-live boundary and are not claimed here.
+
 ## Phase 7 — Accessibility, performance, and real motion qualification
 
 ### Objective

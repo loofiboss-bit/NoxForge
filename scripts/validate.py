@@ -820,7 +820,7 @@ def validate_aurorae(version: str) -> None:
         "deactivated",
         "deactivated-inactive",
     }
-    for name in ("close", "minimize", "maximize", "restore"):
+    for name in ("menu", "close", "minimize", "maximize", "restore"):
         svg_path = theme / f"{name}.svg"
         if not {f"{state}-center" for state in states}.issubset(svg_ids(svg_path)):
             raise ValidationError(f"Aurorae {name}.svg has incomplete button states")
@@ -864,6 +864,13 @@ def validate_icons() -> None:
         raise ValidationError("icon coverage manifest does not match generated files")
     if coverage.get("opticalSizes") != [16, 22] or not isinstance(coverage.get("aliases"), dict):
         raise ValidationError("icon optical-size or alias coverage is incomplete")
+    edge_polish = load_json(ROOT / "design/edge-polish-contract.json")
+    if not isinstance(edge_polish, dict) or edge_polish.get("schemaVersion") != 1:
+        raise ValidationError("edge-polish contract is invalid")
+    priority = coverage.get("phase6Priority")
+    review_sizes = coverage.get("phase6ReviewSizes")
+    if priority != edge_polish.get("icons", {}).get("priority") or review_sizes != [16, 22, 24, 32, 48]:
+        raise ValidationError("icon priority ranking or review sizes drifted")
     duplicate_allowlist = coverage.get("duplicateAllowlist")
     if not isinstance(duplicate_allowlist, list):
         raise ValidationError("icon duplicate allowlist is missing")
@@ -1480,6 +1487,141 @@ def validate_v6_session_evidence(version: str) -> None:
         raise ValidationError("v6 session first-frame performance evidence is invalid")
 
 
+def validate_v6_edge_evidence(version: str) -> None:
+    contract = load_json(ROOT / "design/edge-polish-contract.json")
+    root = ROOT / "docs/evidence/v6/edge-polish"
+    manifest = load_json(root / "manifest.json")
+    if (
+        not isinstance(contract, dict)
+        or contract.get("schemaVersion") != 1
+        or contract.get("version") != version
+        or contract.get("phase") != 6
+        or not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("version") != version
+        or manifest.get("phase") != 6
+        or manifest.get("kind") != "deterministic-source-optical-review"
+        or manifest.get("reviewStatus") != "reviewed-offscreen"
+        or manifest.get("liveDecoration") is not False
+        or manifest.get("liveDecorationRemainsPhase7") is not True
+    ):
+        raise ValidationError("v6 edge-polish evidence identity is invalid")
+
+    aurorae = contract.get("aurorae")
+    if (
+        not isinstance(aurorae, dict)
+        or aurorae.get("titleHeight") != 26
+        or aurorae.get("buttonSize") != 26
+        or aurorae.get("activeMaterial") != "surfaceRaised"
+        or aurorae.get("inactiveMaterial") != "surfaceSunken"
+        or aurorae.get("coloredGlow") is not False
+        or aurorae.get("buttons") != ["menu", "minimize", "maximize", "restore", "close"]
+    ):
+        raise ValidationError("v6 Aurorae polish contract is invalid")
+    theme = ROOT / f"aurorae/{THEME_ID}"
+    settings = load_colors(theme / f"{THEME_ID}rc")
+    layout = settings["Layout"]
+    if (
+        layout.get("titleheight") != "26"
+        or layout.get("buttonheight") != "26"
+        or any(layout.get(key) != "26" for key in (
+            "buttonwidth",
+            "buttonwidthmenu",
+            "buttonwidthminimize",
+            "buttonwidthmaximizerestore",
+            "buttonwidthclose",
+        ))
+    ):
+        raise ValidationError("v6 Aurorae title or button geometry drifted")
+    decoration = (theme / "decoration.svg").read_text(encoding="utf-8")
+    for required in (
+        "ColorScheme-Raised",
+        "ColorScheme-Sunken",
+        "ColorScheme-Highlight",
+    ):
+        if required not in decoration:
+            raise ValidationError(f"v6 Aurorae material is missing {required}")
+    if "filter=" in decoration:
+        raise ValidationError("v6 Aurorae must not use SVG glow or filters")
+
+    icon_contract = contract.get("icons")
+    icon_coverage = load_json(ROOT / "icons/NoxForge/coverage.json")
+    if not isinstance(icon_contract, dict) or not isinstance(icon_coverage, dict):
+        raise ValidationError("v6 icon polish contract is invalid")
+    priority_groups = icon_contract.get("priority")
+    if not isinstance(priority_groups, dict):
+        raise ValidationError("v6 icon priority groups are missing")
+    priority = [
+        relative
+        for group in ("panel", "systemSettings", "dolphin", "session")
+        for relative in priority_groups.get(group, [])
+    ]
+    frozen = icon_contract.get("coverageFrozen")
+    if (
+        len(priority) != 56
+        or len(set(priority)) != 56
+        or icon_coverage.get("phase6Priority") != priority_groups
+        or icon_coverage.get("phase6ReviewSizes") != [16, 22, 24, 32, 48]
+        or not isinstance(frozen, dict)
+        or icon_coverage.get("iconCount") != frozen.get("scalable")
+        or icon_coverage.get("opticalCount") != frozen.get("optical")
+        or len(icon_coverage.get("runtimeFixture", [])) != frozen.get("runtimeFixture")
+        or not set(priority).issubset(icon_coverage.get("runtimeFixture", []))
+    ):
+        raise ValidationError("v6 priority icon inventory or frozen coverage drifted")
+
+    cursor_contract = contract.get("cursors")
+    cursor_coverage = load_json(ROOT / "cursors/NoxForge-Cursors/coverage.json")
+    if (
+        not isinstance(cursor_contract, dict)
+        or not isinstance(cursor_coverage, dict)
+        or cursor_contract.get("physicalSizes") != [24, 32, 48]
+        or cursor_contract.get("outlineWidth") != 1.75
+        or cursor_contract.get("hotspotsFrozen") is not True
+        or cursor_coverage.get("sizes") != cursor_contract.get("physicalSizes")
+        or cursor_coverage.get("animations", {}).get("wait")
+        != cursor_contract.get("animation")
+        or cursor_coverage.get("animations", {}).get("progress")
+        != cursor_contract.get("animation")
+    ):
+        raise ValidationError("v6 cursor optical contract drifted")
+
+    sound_contract = contract.get("sound")
+    sound_root = ROOT / "sounds/NoxForge"
+    sound_digest = hashlib.sha256()
+    for path in sorted(candidate for candidate in sound_root.rglob("*") if candidate.is_file()):
+        sound_digest.update(path.relative_to(sound_root).as_posix().encode())
+        sound_digest.update(b"\0")
+        sound_digest.update(path.read_bytes())
+    if (
+        not isinstance(sound_contract, dict)
+        or sound_contract.get("policy") != "unchanged"
+        or sound_digest.hexdigest() != sound_contract.get("treeSha256")
+    ):
+        raise ValidationError("Phase 6 must keep the qualified sound theme unchanged")
+
+    expected_outputs = set(contract.get("evidence", {}).get("outputs", []))
+    outputs = manifest.get("outputs")
+    if not isinstance(outputs, dict) or set(outputs) != expected_outputs:
+        raise ValidationError("v6 edge-polish output matrix is incomplete")
+    for relative, details in outputs.items():
+        path = ROOT / relative
+        if (
+            not path.is_file()
+            or details.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
+            or png_dimensions(path) != (details.get("width"), details.get("height"))
+        ):
+            raise ValidationError(f"v6 edge-polish output drift: {relative}")
+
+    sources = manifest.get("sourceHashes")
+    if not isinstance(sources, dict) or len(sources) < 100:
+        raise ValidationError("v6 edge-polish evidence source lineage is incomplete")
+    for relative, digest in sources.items():
+        path = ROOT / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise ValidationError(f"v6 edge-polish source drift: {relative}")
+
+
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
@@ -1493,6 +1635,7 @@ def validate_tooling() -> None:
         ROOT / "scripts/measure_v6_phase3_performance.py",
         ROOT / "scripts/render_v6_session_evidence.py",
         ROOT / "scripts/measure_v6_phase5_performance.py",
+        ROOT / "scripts/render_v6_edge_evidence.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -1510,6 +1653,7 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/qt-motion/performance.json",
         ROOT / "docs/evidence/v6/session/manifest.json",
         ROOT / "docs/evidence/v6/session/performance.json",
+        ROOT / "docs/evidence/v6/edge-polish/manifest.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1653,6 +1797,7 @@ def validate_generated_sources() -> None:
         "scripts/measure_v6_phase3_performance.py",
         "scripts/render_v6_session_evidence.py",
         "scripts/measure_v6_phase5_performance.py",
+        "scripts/render_v6_edge_evidence.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1723,6 +1868,7 @@ def validate() -> None:
     validate_v6_north_star(version)
     validate_v6_motion_evidence(version)
     validate_v6_session_evidence(version)
+    validate_v6_edge_evidence(version)
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()
