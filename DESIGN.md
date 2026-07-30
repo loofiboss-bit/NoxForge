@@ -211,3 +211,24 @@ comes from semantic state recipes, not decorative palettes or effects.
 - Destructive buttons become red only on interaction or confirmation.
 - All artwork is original NoxForge work. Installed themes may be inspected only
   for technical contracts, identifiers, and package structure.
+
+### Plasma material implementation
+
+`design/plasma-semantic-contract.json` schema 4 binds every one of the 43
+widget families to the canonical v6 palette. Plasma source generation no longer
+uses the temporary phase 1 `assetGenerationPalette` freeze.
+
+- Canvas, sunken, surface, raised, and overlay recipes express depth tonally.
+- Popup, notification, and tooltip frames use one neutral outer edge highlight
+  plus a controlled neutral bottom/trailing shadow strip.
+- The shadow is deterministic vector geometry, not an SVG filter or colored
+  glow.
+- Parent and child surfaces do not both receive complete keylines.
+- Opaque and solid recipes remain fully readable without compositor blur.
+- Active task and tab markers follow the physical panel edge with identical
+  intent.
+
+The committed source atlas renders all states, panel orientations, and scales
+from the authentic generated SVG files. Its blur-on and blur-off material
+atlases are static source evidence only; they do not qualify a running Plasma
+shell, compositor, compact panel, or multi-output arrangement.

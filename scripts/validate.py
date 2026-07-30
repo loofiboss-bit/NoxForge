@@ -564,11 +564,33 @@ def svg_ids(path: Path) -> set[str]:
         raise ValidationError(f"invalid SVG {path.relative_to(ROOT)}: {error}") from error
 
 
+def frame_base_paint(element: ET.Element) -> tuple[str | None, str | None]:
+    """Return the semantic base paint from a direct shape or grouped frame part."""
+    candidates = [element, *element.iter()]
+    for candidate in candidates:
+        if candidate.tag.endswith(("path", "rect")) and candidate.get("class"):
+            return candidate.get("class"), candidate.get("fill-opacity")
+    raise ValidationError("Plasma frame part has no semantic base paint")
+
+
 def validate_plasma_style() -> None:
     theme = ROOT / f"plasma/desktoptheme/{THEME_ID}"
     contract = load_json(ROOT / "design/plasma-semantic-contract.json")
-    if not isinstance(contract, dict) or contract.get("schemaVersion") != 3 or contract.get("plasmaVersion") != "6.7":
-        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 3")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 4 or contract.get("plasmaVersion") != "6.7":
+        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 4")
+    material_policy = contract.get("materialPolicy")
+    if not isinstance(material_policy, dict) or material_policy.get("hierarchy") != [
+        "canvas", "sunken", "surface", "raised", "overlay"
+    ]:
+        raise ValidationError("Plasma material hierarchy is incomplete")
+    if (
+        material_policy.get("edgeHighlightRecipe") != "edgeHighlight"
+        or material_policy.get("overlayShadowRecipe") != "overlayShadow"
+        or material_policy.get("coloredShadows") is not False
+        or material_policy.get("runtimeSvgFilters") is not False
+        or material_policy.get("blurRequiredForReadability") is not False
+    ):
+        raise ValidationError("Plasma material safety and depth policy is incomplete")
     widget_families = contract.get("widgetFamilies")
     weather_families = contract.get("weatherFamilies")
     if not isinstance(widget_families, list) or len(widget_families) != 43:
@@ -587,7 +609,15 @@ def validate_plasma_style() -> None:
     if invalid_recipes:
         raise ValidationError(f"Plasma families reference unknown semantic recipes: {invalid_recipes}")
     qualified_surfaces = contract.get("qualifiedSurfaces")
-    required_surfaces = {"panels", "popups", "tooltips", "calendar", "notifications", "scrollable"}
+    required_surfaces = {
+        "panels",
+        "popups",
+        "notifications",
+        "tooltips",
+        "calendarWeather",
+        "inputs",
+        "osdContainment",
+    }
     if not isinstance(qualified_surfaces, dict) or set(qualified_surfaces) != required_surfaces:
         raise ValidationError("Plasma shell surface qualification map is incomplete")
     missing_families = [name for name in widget_families if not (theme / f"widgets/{name}.svg").is_file()]
@@ -611,15 +641,28 @@ def validate_plasma_style() -> None:
     background_variants = contract.get("backgroundVariants")
     if not isinstance(background_variants, list) or len(background_variants) != 11:
         raise ValidationError("Plasma Style requires all opaque, solid and translucent background variants")
+    variant_recipes = contract.get("backgroundVariantRecipes")
+    if not isinstance(variant_recipes, dict) or set(variant_recipes) != set(background_variants):
+        raise ValidationError("Plasma background variants lack material recipes")
+    if {value.get("blur") for value in variant_recipes.values()} != {"on", "off"}:
+        raise ValidationError("Plasma background recipes must separate blur-on and blur-off variants")
     for relative in background_variants:
         path = theme / relative
         found = svg_ids(path)
         if not POSITIONS.issubset(found):
             raise ValidationError(f"{relative} has an incomplete seam-free background frame")
         elements = {element.get("id"): element for element in ET.parse(path).iter() if element.get("id") in POSITIONS}
-        paints = {(element.get("class"), element.get("fill-opacity")) for element in elements.values()}
+        paints = {frame_base_paint(element) for element in elements.values()}
         if len(elements) != len(POSITIONS) or len(paints) != 1:
             raise ValidationError(f"{relative} uses inconsistent frame paints that can create dark seams")
+        variant = variant_recipes[relative]
+        if set(variant) != {"recipe", "opacity", "edgeHighlight", "overlayShadow", "blur"}:
+            raise ValidationError(f"{relative} has an incomplete material recipe")
+        text = path.read_text(encoding="utf-8")
+        if variant["edgeHighlight"] and "NoxForge-EdgeHighlight" not in text:
+            raise ValidationError(f"{relative} lacks its neutral edge highlight")
+        if variant["overlayShadow"] and "NoxForge-OverlayShadow" not in text:
+            raise ValidationError(f"{relative} lacks its controlled overlay shadow")
     for relative, states in PLASMA_STATES.items():
         found = svg_ids(theme / relative)
         for state in states:
@@ -658,6 +701,17 @@ def validate_plasma_style() -> None:
             raise ValidationError(f"{path.relative_to(ROOT)} does not use Plasma color classes")
         if "filter=" in text:
             raise ValidationError(f"{path.relative_to(ROOT)} uses unsupported runtime SVG filters")
+    capture_matrix = contract.get("sourceCaptureMatrix")
+    if not isinstance(capture_matrix, dict) or capture_matrix != {
+        "scales": [1.0, 1.25, 1.4, 2.0],
+        "panelEdges": ["top", "bottom", "left", "right"],
+        "layouts": ["standard", "compact"],
+        "virtualOutputs": ["primary", "secondary"],
+        "blur": ["on", "off"],
+        "evidenceClass": "deterministic-static-svg-source",
+        "qualifiesLivePlasma": False,
+    }:
+        raise ValidationError("Plasma static source capture matrix is incomplete or claims live evidence")
     plasmarc = (theme / "plasmarc").read_text(encoding="utf-8")
     if "FallbackTheme" in plasmarc:
         raise ValidationError("complete Plasma Style must not declare a fallback theme")

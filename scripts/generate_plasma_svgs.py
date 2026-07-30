@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-COLORS = TOKENS.get("assetGenerationPalette", TOKENS["colors"])
+COLORS = TOKENS["colors"]
 GLYPHS = json.loads((ROOT / "design/plasma-glyphs.json").read_text(encoding="utf-8"))
 CONTRACT = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
 RECIPES = CONTRACT["semanticRecipes"]
@@ -31,8 +31,16 @@ SVG_HEADER = f"""<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480
       .ColorScheme-ViewHover {{ color: {COLORS['detailCyan']}; }}
       .ColorScheme-ButtonHover {{ color: {COLORS['detailCyan']}; }}
       .ColorScheme-ButtonFocus {{ color: {COLORS['accent']}; }}
+      .NoxForge-Sunken {{ color: {COLORS['surfaceSunken']}; }}
+      .NoxForge-Overlay {{ color: {COLORS['surfaceOverlay']}; }}
+      .NoxForge-Hover {{ color: {COLORS['surfaceHover']}; }}
       .NoxForge-Selected {{ color: {COLORS['surfaceSelected']}; }}
+      .NoxForge-AccentSoft {{ color: {COLORS['accentSoft']}; }}
+      .NoxForge-Attention {{ color: {COLORS['neutral']}; }}
+      .NoxForge-Progress {{ color: {COLORS['detailCyan']}; }}
       .NoxForge-Border {{ color: {COLORS['border']}; }}
+      .NoxForge-EdgeHighlight {{ color: {COLORS['edgeHighlight']}; }}
+      .NoxForge-OverlayShadow {{ color: {COLORS['shadowOverlay']}; }}
     ]]></style>
   </defs>
 """
@@ -72,53 +80,60 @@ def frame(
     notch: bool = False,
     marker: bool = False,
     marker_edge: str | None = None,
+    edge_highlight: bool = False,
+    overlay_shadow: bool = False,
 ) -> str:
-    """Return a self-contained 6/12/6 nine-slice frame."""
+    """Return a self-contained 6/12/6 frame with filter-free material depth."""
     attrs = paint_attrs(paint)
     marker_edge = marker_edge or ("left" if marker else None)
-    top_left = (
-        f'<path id="{element_id(prefix, "topleft")}" d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attrs}/>'
+    parts = {
+        "topleft": (
+        f'<path d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attrs}/>'
         if notch
-        else f'<path id="{element_id(prefix, "topleft")}" d="M{x + 6} {y}V{y + 6}H{x}V{y + 6}A6 6 0 0 1 {x + 6} {y}Z" {attrs}/>'
-    )
-    top = f'<rect id="{element_id(prefix, "top")}" x="{x + 6}" y="{y}" width="12" height="6" {attrs}/>'
-    left = f'<rect id="{element_id(prefix, "left")}" x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>'
-    right = f'<rect id="{element_id(prefix, "right")}" x="{x + 18}" y="{y + 6}" width="6" height="12" {attrs}/>'
-    bottom = f'<rect id="{element_id(prefix, "bottom")}" x="{x + 6}" y="{y + 18}" width="12" height="6" {attrs}/>'
+        else f'<path d="M{x + 6} {y}V{y + 6}H{x}V{y + 6}A6 6 0 0 1 {x + 6} {y}Z" {attrs}/>'
+        ),
+        "top": f'<rect x="{x + 6}" y="{y}" width="12" height="6" {attrs}/>',
+        "topright": f'<path d="M{x + 18} {y}A6 6 0 0 1 {x + 24} {y + 6}H{x + 18}Z" {attrs}/>',
+        "left": f'<rect x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>',
+        "center": f'<rect x="{x + 6}" y="{y + 6}" width="12" height="12" {attrs}/>',
+        "right": f'<rect x="{x + 18}" y="{y + 6}" width="6" height="12" {attrs}/>',
+        "bottomleft": f'<path d="M{x} {y + 18}H{x + 6}V{y + 24}A6 6 0 0 1 {x} {y + 18}Z" {attrs}/>',
+        "bottom": f'<rect x="{x + 6}" y="{y + 18}" width="12" height="6" {attrs}/>',
+        "bottomright": f'<path d="M{x + 18} {y + 18}H{x + 24}A6 6 0 0 1 {x + 18} {y + 24}Z" {attrs}/>',
+    }
+    extras = {position: [] for position in parts}
+    if edge_highlight:
+        highlight = paint_attrs(recipe("edgeHighlight"))
+        extras["topleft"].append(f'<path d="M{x + 1} {y + 5}A5 5 0 0 1 {x + 6} {y}" fill="none" stroke-width="1" stroke="currentColor" class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>')
+        extras["top"].append(f'<rect x="{x + 6}" y="{y}" width="12" height="1" {highlight}/>')
+        extras["topright"].append(f'<path d="M{x + 18} {y}A5 5 0 0 1 {x + 23} {y + 5}" fill="none" stroke-width="1" stroke="currentColor" class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>')
+        extras["left"].append(f'<rect x="{x}" y="{y + 6}" width="1" height="12" {highlight}/>')
+    if overlay_shadow:
+        shadow = paint_attrs(recipe("overlayShadow"))
+        extras["right"].append(f'<rect x="{x + 22}" y="{y + 6}" width="2" height="12" {shadow}/>')
+        extras["bottom"].append(f'<rect x="{x + 6}" y="{y + 22}" width="12" height="2" {shadow}/>')
+        extras["bottomright"].append(f'<path d="M{x + 18} {y + 22}H{x + 22}V{y + 18}A4 4 0 0 1 {x + 18} {y + 22}Z" {shadow}/>')
     if marker_edge == "left":
-        left = (
-            f'<g id="{element_id(prefix, "left")}"><rect x="{x}" y="{y + 6}" width="6" height="12" {attrs}/>'
-            f'<rect x="{x}" y="{y + 7}" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>'
+        extras["left"].append(
+            f'<rect x="{x}" y="{y + 7}" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/>'
         )
     elif marker_edge == "right":
-        right = (
-            f'<g id="{element_id(prefix, "right")}"><rect x="{x + 18}" y="{y + 6}" width="6" height="12" {attrs}/>'
-            f'<rect x="{x + 21}" y="{y + 7}" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>'
+        extras["right"].append(
+            f'<rect x="{x + 21}" y="{y + 7}" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/>'
         )
     elif marker_edge == "top":
-        top = (
-            f'<g id="{element_id(prefix, "top")}"><rect x="{x + 6}" y="{y}" width="12" height="6" {attrs}/>'
-            f'<rect x="{x + 7}" y="{y}" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>'
+        extras["top"].append(
+            f'<rect x="{x + 7}" y="{y}" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/>'
         )
     elif marker_edge == "bottom":
-        bottom = (
-            f'<g id="{element_id(prefix, "bottom")}"><rect x="{x + 6}" y="{y + 18}" width="12" height="6" {attrs}/>'
-            f'<rect x="{x + 7}" y="{y + 21}" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>'
+        extras["bottom"].append(
+            f'<rect x="{x + 7}" y="{y + 21}" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/>'
         )
     elif marker_edge is not None:
         raise ValueError(f"unsupported frame marker edge: {marker_edge}")
     return "\n".join(
-        [
-            top_left,
-            top,
-            f'<path id="{element_id(prefix, "topright")}" d="M{x + 18} {y}A6 6 0 0 1 {x + 24} {y + 6}H{x + 18}Z" {attrs}/>',
-            left,
-            f'<rect id="{element_id(prefix, "center")}" x="{x + 6}" y="{y + 6}" width="12" height="12" {attrs}/>',
-            right,
-            f'<path id="{element_id(prefix, "bottomleft")}" d="M{x} {y + 18}H{x + 6}V{y + 24}A6 6 0 0 1 {x} {y + 18}Z" {attrs}/>',
-            bottom,
-            f'<path id="{element_id(prefix, "bottomright")}" d="M{x + 18} {y + 18}H{x + 24}A6 6 0 0 1 {x + 18} {y + 24}Z" {attrs}/>',
-        ]
+        f'<g id="{element_id(prefix, position)}">{parts[position]}{"".join(extras[position])}</g>'
+        for position in ("topleft", "top", "topright", "left", "center", "right", "bottomleft", "bottom", "bottomright")
     )
 
 
@@ -143,8 +158,26 @@ def svg(body: str) -> str:
     return SVG_HEADER + "  " + body.replace("\n", "\n  ") + "\n</svg>\n"
 
 
-def background(paint: Paint, *, notch: bool = False, mask: bool = True) -> str:
-    parts = [frame("", 0, 0, paint, notch=notch), margins("", 0, 32)]
+def background(
+    paint: Paint,
+    *,
+    notch: bool = False,
+    mask: bool = True,
+    edge_highlight: bool = False,
+    overlay_shadow: bool = False,
+) -> str:
+    parts = [
+        frame(
+            "",
+            0,
+            0,
+            paint,
+            notch=notch,
+            edge_highlight=edge_highlight,
+            overlay_shadow=overlay_shadow,
+        ),
+        margins("", 0, 32),
+    ]
     if mask:
         parts.extend([frame("mask", 40, 0, recipe("glyph"), notch=notch), margins("mask", 40, 32)])
     return svg("\n".join(parts))
@@ -211,7 +244,13 @@ def semantic_symbols(names: list[str]) -> str:
     for index, name in enumerate(names):
         x = (index % 12) * 32
         y = (index // 12) * 32
-        css_class = "ColorScheme-Highlight" if any(word in name for word in ("active", "hover", "pressed", "event")) else "ColorScheme-Text"
+        css_class = (
+            "NoxForge-Progress"
+            if "busy" in name
+            else "ColorScheme-Highlight"
+            if any(word in name for word in ("active", "hover", "pressed", "event"))
+            else "ColorScheme-Text"
+        )
         path_d = GLYPHS.get(name, "M12 12l1 1")
         body.append(
             f'<g id="{name}" transform="translate({x} {y})" class="{css_class}" '
@@ -239,21 +278,42 @@ def main() -> None:
     declared = set(CONTRACT["widgetFamilies"])
     if declared != set(FAMILY_RECIPES):
         raise RuntimeError("Plasma family recipe coverage differs from the 43-family contract")
-    write("dialogs/background.svg", background(recipe("shell"), notch=True))
-    write("widgets/panel-background.svg", background(family_paint("widgets/panel-background.svg")))
-    write("widgets/background.svg", background(family_paint("widgets/background.svg"), notch=True))
-    write("widgets/tooltip.svg", background(family_paint("widgets/tooltip.svg"), notch=False))
+    write(
+        "dialogs/background.svg",
+        background(recipe("overlay"), notch=True, edge_highlight=True, overlay_shadow=True),
+    )
+    write(
+        "widgets/panel-background.svg",
+        background(family_paint("widgets/panel-background.svg"), edge_highlight=True),
+    )
+    write(
+        "widgets/background.svg",
+        background(
+            family_paint("widgets/background.svg"),
+            notch=True,
+            edge_highlight=True,
+            overlay_shadow=True,
+        ),
+    )
+    write(
+        "widgets/tooltip.svg",
+        background(
+            family_paint("widgets/tooltip.svg"),
+            edge_highlight=True,
+            overlay_shadow=True,
+        ),
+    )
     write(
         "widgets/button.svg",
         state_sheet(
             [
-                ("normal", family_paint("widgets/button.svg")),
-                ("hover", recipe("hover", opacity=0.22)),
+                ("normal", family_paint("widgets/button.svg", opacity=0.18)),
+                ("hover", recipe("hoverQuiet", opacity=0.5)),
                 ("focus", recipe("selected")),
-                ("pressed", recipe("selected")),
-                ("toolbutton-hover", recipe("hover")),
+                ("pressed", recipe("sunken")),
+                ("toolbutton-hover", recipe("hoverQuiet", opacity=0.44)),
                 ("toolbutton-focus", recipe("selected")),
-                ("toolbutton-pressed", recipe("selected")),
+                ("toolbutton-pressed", recipe("sunken")),
             ],
             notch_states={"focus", "pressed", "toolbutton-focus", "toolbutton-pressed"},
             marker_states={"focus", "pressed", "toolbutton-focus", "toolbutton-pressed"},
@@ -273,21 +333,21 @@ def main() -> None:
         "widgets/tasks.svg",
         state_sheet(
             [
-                ("normal", family_paint("widgets/tasks.svg", opacity=0.45)),
-                ("hover", recipe("hoverQuiet", opacity=0.22)),
+                ("normal", family_paint("widgets/tasks.svg", opacity=0.08)),
+                ("hover", recipe("hoverQuiet", opacity=0.46)),
                 ("focus", recipe("selected")),
                 ("attention", recipe("attention")),
-                ("minimized", recipe("controlQuiet", opacity=0.24)),
+                ("minimized", recipe("controlQuiet", opacity=0.05)),
                 ("progress", recipe("selected")),
             ] + [
                 (f"{orientation}-{state}", paint)
                 for orientation in ("north", "south", "east", "west")
                 for state, paint in (
-                    ("normal", family_paint("widgets/tasks.svg", opacity=0.45)),
-                    ("hover", recipe("hoverQuiet", opacity=0.22)),
+                    ("normal", family_paint("widgets/tasks.svg", opacity=0.08)),
+                    ("hover", recipe("hoverQuiet", opacity=0.46)),
                     ("focus", recipe("selected")),
                     ("attention", recipe("attention")),
-                    ("minimized", recipe("controlQuiet", opacity=0.24)),
+                    ("minimized", recipe("controlQuiet", opacity=0.05)),
                     ("progress", recipe("selected")),
                 )
             ],
@@ -304,7 +364,7 @@ def main() -> None:
         state_sheet(
             [
                 ("normal", family_paint("widgets/viewitem.svg")),
-                ("hover", recipe("hoverQuiet")),
+                ("hover", recipe("hoverQuiet", opacity=0.42)),
                 ("selected", recipe("selected")),
                 ("selected+hover", recipe("selected")),
             ],
@@ -317,7 +377,7 @@ def main() -> None:
         state_sheet(
             [
                 ("base", family_paint("widgets/lineedit.svg", opacity=0.96)),
-                ("hover", recipe("hoverQuiet", opacity=0.16)),
+                ("hover", recipe("hoverQuiet", opacity=0.38)),
                 ("focus", recipe("selected")),
             ],
             notch_states={"focus"},
@@ -325,15 +385,18 @@ def main() -> None:
         ),
     )
     write("widgets/plasmoidheading.svg", heading())
-    write("widgets/toolbar.svg", background(family_paint("widgets/toolbar.svg", opacity=0.82), notch=False, mask=False))
+    write(
+        "widgets/toolbar.svg",
+        background(family_paint("widgets/toolbar.svg", opacity=0.12), notch=False, mask=False),
+    )
     write(
         "widgets/listitem.svg",
         control_sheet(
             [
-                ("normal", family_paint("widgets/listitem.svg", opacity=0.04)),
-                ("hover", recipe("hover", opacity=0.14)),
-                ("pressed", recipe("focus", opacity=0.18)),
-                ("section", recipe("controlQuiet", opacity=0.78)),
+                ("normal", family_paint("widgets/listitem.svg", opacity=0.02)),
+                ("hover", recipe("hoverQuiet", opacity=0.36)),
+                ("pressed", recipe("sunken", opacity=0.72)),
+                ("section", recipe("controlQuiet", opacity=0.08)),
             ]
         ),
     )
@@ -341,9 +404,9 @@ def main() -> None:
         "widgets/menubaritem.svg",
         control_sheet(
             [
-                ("normal", family_paint("widgets/menubaritem.svg", opacity=0.04)),
-                ("hover", recipe("hover", opacity=0.16)),
-                ("pressed", recipe("focus", opacity=0.2)),
+                ("normal", family_paint("widgets/menubaritem.svg", opacity=0.02)),
+                ("hover", recipe("hoverQuiet", opacity=0.34)),
+                ("pressed", recipe("sunken", opacity=0.72)),
             ]
         ),
     )
@@ -351,31 +414,39 @@ def main() -> None:
         "widgets/frame.svg",
         control_sheet(
             [
-                ("plain", family_paint("widgets/frame.svg", opacity=0.86)),
+                ("plain", family_paint("widgets/frame.svg", opacity=0.1)),
                 ("raised", recipe("controlRaised")),
-                ("sunken", recipe("canvas", opacity=0.96)),
+                ("sunken", recipe("sunken")),
             ]
         ),
     )
     write(
         "widgets/tabbar.svg",
-        control_sheet(
+        state_sheet(
             [
-                ("north-active-tab", family_paint("widgets/tabbar.svg", opacity=0.18)),
-                ("south-active-tab", family_paint("widgets/tabbar.svg", opacity=0.18)),
-                ("east-active-tab", family_paint("widgets/tabbar.svg", opacity=0.18)),
-                ("west-active-tab", family_paint("widgets/tabbar.svg", opacity=0.18)),
-            ]
+                ("north-active-tab", recipe("selected")),
+                ("south-active-tab", recipe("selected")),
+                ("east-active-tab", recipe("selected")),
+                ("west-active-tab", recipe("selected")),
+            ],
+            notch_states={"north-active-tab", "south-active-tab", "east-active-tab", "west-active-tab"},
+            marker_states={"north-active-tab", "south-active-tab", "east-active-tab", "west-active-tab"},
+            marker_edges={
+                "north-active-tab": "bottom",
+                "south-active-tab": "top",
+                "east-active-tab": "left",
+                "west-active-tab": "right",
+            },
         ),
     )
     write(
         "widgets/scrollbar.svg",
         control_sheet(
             [
-                ("background-horizontal", recipe("canvas", opacity=0.35)),
-                ("background-vertical", recipe("canvas", opacity=0.35)),
-                ("slider", family_paint("widgets/scrollbar.svg", opacity=0.36)),
-                ("mouseover-slider", recipe("progress", opacity=0.62)),
+                ("background-horizontal", recipe("sunken", opacity=0.28)),
+                ("background-vertical", recipe("sunken", opacity=0.28)),
+                ("slider", family_paint("widgets/scrollbar.svg", opacity=0.3)),
+                ("mouseover-slider", recipe("progress", opacity=0.7)),
             ]
         ).replace("</svg>", '<rect id="hint-scrollbar-size" x="220" y="220" width="10" height="10" fill="#000" fill-opacity="0"/></svg>'),
     )
@@ -383,7 +454,7 @@ def main() -> None:
         "widgets/slider.svg",
         control_sheet(
             [
-                ("groove", family_paint("widgets/slider.svg", opacity=0.2)),
+                ("groove", recipe("sunken", opacity=0.72)),
                 ("groove-highlight", recipe("progress")),
             ]
         )
@@ -453,20 +524,17 @@ def main() -> None:
             ]
         ),
     )
-    for relative, paint, mask in (
-        ("opaque/dialogs/background.svg", recipe("shell", opacity=1.0), False),
-        ("opaque/widgets/panel-background.svg", recipe("panel", opacity=1.0), False),
-        ("opaque/widgets/tooltip.svg", recipe("tooltip", opacity=1.0), False),
-        ("solid/dialogs/background.svg", recipe("shell", opacity=1.0), False),
-        ("solid/widgets/background.svg", recipe("shell", opacity=1.0), False),
-        ("solid/widgets/panel-background.svg", recipe("panel", opacity=1.0), False),
-        ("solid/widgets/tooltip.svg", recipe("tooltip", opacity=1.0), False),
-        ("translucent/dialogs/background.svg", recipe("shell", opacity=0.94), False),
-        ("translucent/widgets/background.svg", recipe("shell", opacity=0.92), False),
-        ("translucent/widgets/panel-background.svg", recipe("panel", opacity=0.9), False),
-        ("translucent/widgets/tooltip.svg", recipe("tooltip", opacity=0.94), False),
-    ):
-        write(relative, background(paint, notch="dialogs/" in relative, mask=mask))
+    for relative, variant in CONTRACT["backgroundVariantRecipes"].items():
+        write(
+            relative,
+            background(
+                recipe(variant["recipe"], opacity=variant["opacity"]),
+                notch="dialogs/" in relative,
+                mask=False,
+                edge_highlight=variant["edgeHighlight"],
+                overlay_shadow=variant["overlayShadow"],
+            ),
+        )
 
     symbol_assets = {
         "widgets/calendar.svg": ["event"],

@@ -1,26 +1,38 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "plasmaVersion": "6.7",
   "themeId": "io.github.loofiboss.noxforge.desktop",
+  "materialPolicy": {
+    "hierarchy": ["canvas", "sunken", "surface", "raised", "overlay"],
+    "edgeHighlightRecipe": "edgeHighlight",
+    "overlayShadowRecipe": "overlayShadow",
+    "coloredShadows": false,
+    "runtimeSvgFilters": false,
+    "blurRequiredForReadability": false
+  },
   "semanticRecipes": {
     "canvas": {"cssClass": "ColorScheme-ViewBackground", "opacity": 1.0},
-    "shell": {"cssClass": "ColorScheme-Background", "opacity": 0.98},
-    "panel": {"cssClass": "ColorScheme-Background", "opacity": 0.96},
-    "translucent": {"cssClass": "ColorScheme-Background", "opacity": 0.9},
-    "control": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 1.0},
-    "controlQuiet": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.7},
-    "controlRaised": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.96},
-    "tooltip": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.98},
-    "hover": {"cssClass": "ColorScheme-ButtonHover", "opacity": 0.2},
-    "hoverQuiet": {"cssClass": "ColorScheme-ViewHover", "opacity": 0.18},
+    "sunken": {"cssClass": "NoxForge-Sunken", "opacity": 1.0},
+    "shell": {"cssClass": "ColorScheme-Background", "opacity": 1.0},
+    "panel": {"cssClass": "ColorScheme-Background", "opacity": 0.98},
+    "overlay": {"cssClass": "NoxForge-Overlay", "opacity": 0.99},
+    "translucent": {"cssClass": "NoxForge-Overlay", "opacity": 0.92},
+    "control": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.94},
+    "controlQuiet": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.18},
+    "controlRaised": {"cssClass": "ColorScheme-ButtonBackground", "opacity": 0.98},
+    "tooltip": {"cssClass": "NoxForge-Overlay", "opacity": 1.0},
+    "hover": {"cssClass": "NoxForge-Hover", "opacity": 0.62},
+    "hoverQuiet": {"cssClass": "NoxForge-Hover", "opacity": 0.34},
     "selected": {"cssClass": "NoxForge-Selected", "opacity": 1.0},
-    "focus": {"cssClass": "ColorScheme-Highlight", "opacity": 0.24},
-    "attention": {"cssClass": "ColorScheme-ViewHover", "opacity": 0.42},
-    "disabled": {"cssClass": "ColorScheme-Text", "opacity": 0.18},
+    "focus": {"cssClass": "NoxForge-AccentSoft", "opacity": 0.76},
+    "attention": {"cssClass": "NoxForge-Attention", "opacity": 0.46},
+    "disabled": {"cssClass": "ColorScheme-Text", "opacity": 0.22},
     "glyph": {"cssClass": "ColorScheme-Text", "opacity": 1.0},
-    "progress": {"cssClass": "ColorScheme-Highlight", "opacity": 0.78},
-    "viewQuiet": {"cssClass": "ColorScheme-ViewBackground", "opacity": 0.08},
-    "scrollSurface": {"cssClass": "ColorScheme-Background", "opacity": 0.92}
+    "progress": {"cssClass": "NoxForge-Progress", "opacity": 0.86},
+    "viewQuiet": {"cssClass": "NoxForge-Hover", "opacity": 0.1},
+    "scrollSurface": {"cssClass": "NoxForge-Sunken", "opacity": 0.96},
+    "edgeHighlight": {"cssClass": "NoxForge-EdgeHighlight", "opacity": 0.72},
+    "overlayShadow": {"cssClass": "NoxForge-OverlayShadow", "opacity": 0.42}
   },
   "widgetFamilies": [
     "action-overlays",
@@ -72,11 +84,11 @@
     "actionbutton": "glyph",
     "analog_meter": "glyph",
     "arrows": "glyph",
-    "background": "shell",
+    "background": "overlay",
     "bar_meter_horizontal": "progress",
     "bar_meter_vertical": "progress",
     "branding": "glyph",
-    "busywidget": "glyph",
+    "busywidget": "progress",
     "button": "control",
     "calendar": "glyph",
     "checkmarks": "glyph",
@@ -87,7 +99,7 @@
     "frame": "shell",
     "glowbar": "focus",
     "line": "glyph",
-    "lineedit": "canvas",
+    "lineedit": "sunken",
     "listitem": "viewQuiet",
     "margins-highlight": "focus",
     "media-delegate": "controlRaised",
@@ -97,7 +109,7 @@
     "pager": "controlQuiet",
     "panel-background": "panel",
     "picker": "controlRaised",
-    "plasmoidheading": "tooltip",
+    "plasmoidheading": "overlay",
     "plot-background": "canvas",
     "radiobutton": "glyph",
     "scrollbar": "disabled",
@@ -113,12 +125,13 @@
     "viewitem": "viewQuiet"
   },
   "qualifiedSurfaces": {
-    "panels": ["widgets/panel-background.svg", "widgets/tasks.svg"],
+    "panels": ["widgets/panel-background.svg", "widgets/tasks.svg", "widgets/button.svg"],
     "popups": ["dialogs/background.svg", "widgets/background.svg"],
-    "tooltips": ["widgets/tooltip.svg"],
-    "calendar": ["widgets/calendar.svg", "widgets/viewitem.svg"],
     "notifications": ["dialogs/background.svg", "widgets/button.svg", "widgets/actionbutton.svg"],
-    "scrollable": ["widgets/scrollwidget.svg", "widgets/scrollbar.svg", "widgets/viewitem.svg"]
+    "tooltips": ["widgets/tooltip.svg"],
+    "calendarWeather": ["widgets/calendar.svg", "widgets/viewitem.svg", "weather/wind-arrows.svg"],
+    "inputs": ["widgets/lineedit.svg", "widgets/slider.svg", "widgets/scrollbar.svg", "widgets/busywidget.svg"],
+    "osdContainment": ["widgets/background.svg", "widgets/containment-controls.svg", "widgets/configuration-icons.svg"]
   },
   "weatherFamilies": [
     "wind-arrows"
@@ -136,6 +149,19 @@
     "translucent/widgets/panel-background.svg",
     "translucent/widgets/tooltip.svg"
   ],
+  "backgroundVariantRecipes": {
+    "opaque/dialogs/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "opaque/widgets/panel-background.svg": {"recipe": "panel", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": false, "blur": "off"},
+    "opaque/widgets/tooltip.svg": {"recipe": "tooltip", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "solid/dialogs/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "solid/widgets/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "solid/widgets/panel-background.svg": {"recipe": "panel", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": false, "blur": "off"},
+    "solid/widgets/tooltip.svg": {"recipe": "tooltip", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "translucent/dialogs/background.svg": {"recipe": "overlay", "opacity": 0.94, "edgeHighlight": true, "overlayShadow": true, "blur": "on"},
+    "translucent/widgets/background.svg": {"recipe": "overlay", "opacity": 0.92, "edgeHighlight": true, "overlayShadow": true, "blur": "on"},
+    "translucent/widgets/panel-background.svg": {"recipe": "panel", "opacity": 0.94, "edgeHighlight": true, "overlayShadow": false, "blur": "on"},
+    "translucent/widgets/tooltip.svg": {"recipe": "tooltip", "opacity": 0.96, "edgeHighlight": true, "overlayShadow": true, "blur": "on"}
+  },
   "framePositions": [
     "top",
     "topright",
@@ -164,6 +190,15 @@
   "orientedTaskStates": {
     "orientations": ["north", "south", "east", "west"],
     "states": ["normal", "hover", "focus", "attention", "minimized", "progress"]
+  },
+  "sourceCaptureMatrix": {
+    "scales": [1.0, 1.25, 1.4, 2.0],
+    "panelEdges": ["top", "bottom", "left", "right"],
+    "layouts": ["standard", "compact"],
+    "virtualOutputs": ["primary", "secondary"],
+    "blur": ["on", "off"],
+    "evidenceClass": "deterministic-static-svg-source",
+    "qualifiesLivePlasma": false
   },
   "requiredHints": {
     "background": ["hint-top-margin", "hint-right-margin", "hint-bottom-margin", "hint-left-margin", "hint-top-inset", "hint-right-inset", "hint-bottom-inset", "hint-left-inset", "hint-stretch-borders"],

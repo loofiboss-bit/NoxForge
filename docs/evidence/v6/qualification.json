@@ -33,7 +33,12 @@
     {
       "id": "plasma-blur-on-off",
       "status": "blocked",
-      "reason": "Phase 7 disposable Plasma compositor qualification has not run."
+      "reason": "Phase 4 static blur-on and blur-off SVG source atlases pass, but Phase 7 disposable Plasma compositor qualification has not run."
+    },
+    {
+      "id": "plasma-layout-and-fallback",
+      "status": "blocked",
+      "reason": "All 43 source families, four edge-oriented task states, compact-layout contract, and two-output source matrix are complete; Phase 7 live shell fallback, panel, and multi-output qualification has not run."
     },
     {
       "id": "sddm-authentication-and-power",
