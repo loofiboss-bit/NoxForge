@@ -1,0 +1,24 @@
+{
+  "kind": "authentic-offscreen-preview",
+  "liveEvidence": false,
+  "outputs": {
+    "globalTheme": {
+      "path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/preview.png",
+      "sha256": "6caa68432e290d1548ef135c7ed4c4a3d87ed7a57281bcf6160d1eaab2ee005f"
+    },
+    "sddm": {
+      "path": "sddm/NoxForge/preview.png",
+      "sha256": "d0b60fea60cf93f1a788dd7a83237186053b9428784fe5cacec8fdf0ae172c22"
+    }
+  },
+  "phase": 2,
+  "release": "6.0.0-dev",
+  "schemaVersion": 1,
+  "sources": {
+    "sddm/NoxForge/Main.qml": "a0db204eb4b536e58bd7657e44915b9764953a7026d70e61049b95b43fe385dd",
+    "sddm/NoxForge/NoxForgeLockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
+    "sddm/NoxForge/background.png": "4319f4d098ea237e23705a43ae2568499f4f2ac6981719ce0c9fcf111538d396",
+    "tools/sddm_renderer.cpp": "f64c4085a673494647876630d3ec553ed613ac14ae8d0d7a4ea277eb1d8346c1",
+    "wallpapers/NoxForge/contents/images/2560x1440.png": "8ba08447cb431fb19ee14a5d814bc92d32ede82e915bba996ca442d588b62a71"
+  }
+}

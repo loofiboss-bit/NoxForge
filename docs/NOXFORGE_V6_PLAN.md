@@ -444,6 +444,21 @@ identity.
 - Every composition retains a quiet work area.
 - All artwork remains original and editable.
 
+**Outcome (2026-07-30):** The refined N/F mark uses one continuous shared
+geometry, with editable semantic-lime and monochrome masters plus a
+font-independent horizontal vector lockup. Physical mark and lockup copies are
+generated for their package consumers, and deterministic optical renders cover
+16, 24, 48, 128, and 512 px. Independent original 16:9 and ultrawide
+forged-plane compositions preserve declared quiet workspace regions and render
+byte-identically at 1920×1080, 2560×1440, 3840×2160, and 3440×1440. The
+dim SDDM derivative, Global Theme previews, and README hero are bound to shipped
+outputs. The SDDM and Global Theme preview manifest is authentic offscreen
+evidence and explicitly not live qualification; its renderer now freezes the
+mock clock for reproducibility. Four source-bound artwork contact sheets passed
+review. The full local phase gate passed with 106 Python tests, 18 CTest cases,
+generator and QML checks, byte-identical source archives, Fedora 44 RPM/SRPM
+construction, `rpmlint`, and `git diff --check`.
+
 ## Phase 3 — Native Qt visual polish and motion kernel
 
 ### Objective

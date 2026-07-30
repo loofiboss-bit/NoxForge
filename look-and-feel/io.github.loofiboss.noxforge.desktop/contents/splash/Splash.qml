@@ -18,14 +18,11 @@ Rectangle {
         anchors.centerIn: parent
         spacing: Kirigami.Units.largeSpacing
         opacity: root.stage >= 1 ? 1 : 0
-        Image { source: "NoxForgeMark.svg"; width: Kirigami.Units.gridUnit * 10; height: Kirigami.Units.gridUnit * 7.5; fillMode: Image.PreserveAspectFit }
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: tokens.textPrimary
-            font.pixelSize: Kirigami.Units.gridUnit
-            font.weight: Font.DemiBold
-            font.letterSpacing: tokens.brandTracking
-            text: "NOXFORGE"
+        Image {
+            source: "NoxForgeLockup.svg"
+            width: Kirigami.Units.gridUnit * 22
+            height: Kirigami.Units.gridUnit * 5.3
+            fillMode: Image.PreserveAspectFit
         }
         Behavior on opacity {
             enabled: root.animationDuration > 0

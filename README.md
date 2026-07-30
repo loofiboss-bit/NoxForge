@@ -1,9 +1,11 @@
 # NoxForge KDE
 
 NoxForge is an original complete Global Theme for Fedora KDE 44, Plasma 6.7+
-and Qt 6.11. Its Industrial Precision system combines graphite surfaces,
+and Qt 6.11. Its Kinetic Precision system combines layered graphite surfaces,
 precision lime focus markers, restrained cyan/violet detail and the angular
 Forge Notch.
+
+![NoxForge Kinetic Precision forged-planes wallpaper](wallpapers/NoxForge/contents/images/2560x1440.png)
 
 The repository provides:
 
@@ -11,7 +13,7 @@ The repository provides:
 - NoxForge Dark colors and an expanded Plasma Style without an explicit theme fallback;
 - a native Qt 6 `QStylePlugin`, Aurorae decoration and KWin task switcher;
 - 185 scalable system icons, 196 physical 16/22 px variants and only `hicolor` application-logo inheritance;
-- 96 physical multi-size cursors, 32 original system sounds and three wallpaper resolutions;
+- 96 physical multi-size cursors, 32 original system sounds and four wallpaper resolutions;
 - original splash, logout and Qt 6 SDDM experiences;
 - safe user-local and separate explicit system installation tooling.
 

@@ -24,10 +24,17 @@ class V5PhaseFourTests(unittest.TestCase):
             ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",
             ROOT / "sddm/NoxForge/NoxForgeMark.svg",
         )
-        self.assertEqual(CONTRACT["brand"]["opticalSizes"], [48, 96, 192])
+        self.assertEqual(CONTRACT["brand"]["opticalSizes"], [16, 24, 48, 128, 512])
         self.assertEqual(CONTRACT["brand"]["minimumClearSpace"], 12)
         self.assertEqual(len({path.read_bytes() for path in paths}), 1)
         self.assertEqual(ET.parse(paths[0]).getroot().get("viewBox"), CONTRACT["brand"]["viewBox"])
+        lockups = (
+            ROOT / CONTRACT["brand"]["lockupSource"],
+            ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/NoxForgeLockup.svg",
+            ROOT / "sddm/NoxForge/NoxForgeLockup.svg",
+        )
+        self.assertEqual(len({path.read_bytes() for path in lockups}), 1)
+        self.assertFalse(ET.parse(lockups[0]).getroot().findall(".//{http://www.w3.org/2000/svg}text"))
 
     def test_wallpaper_compositions_are_separate_and_deterministic(self) -> None:
         compositions = CONTRACT["wallpapers"]
@@ -91,7 +98,8 @@ class V5PhaseFourTests(unittest.TestCase):
 
     def test_reviewed_contact_sheets_are_current(self) -> None:
         manifest = json.loads((ROOT / CONTRACT["evidence"]["manifest"]).read_text(encoding="utf-8"))
-        self.assertEqual(manifest["reviewStatus"], "reviewed")
+        self.assertEqual(manifest["reviewStatus"], "reviewed-offscreen")
+        self.assertFalse(manifest["liveEvidence"])
         self.assertEqual(set(manifest["sheets"]), set(CONTRACT["evidence"]["sheets"]))
         for relative, expected in {**manifest["sources"], **manifest["sheets"]}.items():
             self.assertEqual(hashlib.sha256((ROOT / relative).read_bytes()).hexdigest(), expected)

@@ -719,6 +719,13 @@ def validate_qml_design_consumers() -> None:
     )
     if len({path.read_bytes() for path in marks}) != 1:
         raise ValidationError("physical canonical N/F mark copies differ")
+    lockups = (
+        ROOT / "design/brand/noxforge-lockup.svg",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/splash/NoxForgeLockup.svg",
+        ROOT / "sddm/NoxForge/NoxForgeLockup.svg",
+    )
+    if len({path.read_bytes() for path in lockups}) != 1:
+        raise ValidationError("physical canonical NoxForge lockup copies differ")
 
 
 def validate_tabbox(version: str) -> None:
@@ -997,8 +1004,8 @@ def png_dimensions(path: Path) -> tuple[int, int]:
 def validate_wallpaper(version: str) -> None:
     package = ROOT / "wallpapers/NoxForge"
     contract = load_json(ROOT / "design/artwork-contract.json")
-    if not isinstance(contract, dict) or contract.get("schemaVersion") != 1:
-        raise ValidationError("artwork contract must use schema version 1")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 2:
+        raise ValidationError("artwork contract must use schema version 2")
     metadata = load_json(package / "metadata.json")
     if not isinstance(metadata, dict) or not isinstance(metadata.get("KPlugin"), dict):
         raise ValidationError("wallpaper metadata requires a KPlugin object")
@@ -1016,38 +1023,152 @@ def validate_wallpaper(version: str) -> None:
         source = ET.parse(ROOT / details["source"]).getroot()
         if source.get("viewBox") != expected_viewboxes[name]:
             raise ValidationError(f"editable {name} wallpaper source has the wrong viewBox")
-    for width, height in ((2560, 1440), (3840, 2160), (3440, 1440)):
-        if png_dimensions(package / f"contents/images/{width}x{height}.png") != (width, height):
-            raise ValidationError(f"wallpaper output must be exactly {width}x{height}")
+        if details.get("original") is not True or details.get("editable") is not True:
+            raise ValidationError(f"{name} wallpaper lacks original/editable provenance")
+        quiet = details.get("quietWorkspace")
+        width, height = map(int, expected_viewboxes[name].split()[2:])
+        if (
+            not isinstance(quiet, dict)
+            or set(quiet) != {"x", "y", "width", "height"}
+            or quiet["x"] < 1000
+            or quiet["width"] < 1200
+            or quiet["x"] + quiet["width"] > width
+            or quiet["y"] + quiet["height"] > height
+        ):
+            raise ValidationError(f"{name} wallpaper quiet workspace is invalid")
+        for output in details.get("outputs", []):
+            output_width, output_height = map(int, output.split("x"))
+            path = package / f"contents/images/{output}.png"
+            if png_dimensions(path) != (output_width, output_height):
+                raise ValidationError(f"wallpaper output must be exactly {output}")
+    brand = contract.get("brand")
+    if (
+        not isinstance(brand, dict)
+        or brand.get("opticalSizes") != [16, 24, 48, 128, 512]
+        or brand.get("viewBox") != "0 0 192 144"
+        or brand.get("lockupViewBox") != "0 0 600 144"
+        or brand.get("original") is not True
+        or brand.get("editable") is not True
+    ):
+        raise ValidationError("Kinetic Precision brand contract is invalid")
+    semantic = ET.parse(ROOT / brand["source"]).getroot()
+    monochrome = ET.parse(ROOT / brand["monochromeSource"]).getroot()
+    lockup = ET.parse(ROOT / brand["lockupSource"]).getroot()
+    namespace = "{http://www.w3.org/2000/svg}"
+    if (
+        semantic.get("viewBox") != brand["viewBox"]
+        or monochrome.get("viewBox") != brand["viewBox"]
+        or lockup.get("viewBox") != brand["lockupViewBox"]
+        or semantic.find(f".//{namespace}path").get("d")
+        != monochrome.find(f".//{namespace}path").get("d")
+        or lockup.findall(f".//{namespace}text")
+    ):
+        raise ValidationError("Kinetic Precision brand masters are inconsistent")
+    for kind, paths in brand.get("physicalCopies", {}).items():
+        source_path = ROOT / (
+            brand["source"] if kind == "mark" else brand["lockupSource"]
+        )
+        if any((ROOT / path).read_bytes() != source_path.read_bytes() for path in paths):
+            raise ValidationError(f"physical {kind} copies differ from their master")
+    derived = contract.get("derivedArtwork")
+    expected_derived = {
+        "sessionBackground": "sddm/NoxForge/background.png",
+        "sddmPreview": "sddm/NoxForge/preview.png",
+        "globalThemeTile": f"look-and-feel/{THEME_ID}/contents/previews/preview.png",
+        "globalThemePreview": (
+            f"look-and-feel/{THEME_ID}/contents/previews/fullscreenpreview.png"
+        ),
+        "readmeHero": "wallpapers/NoxForge/contents/images/2560x1440.png",
+    }
+    if derived != expected_derived or any(
+        not (ROOT / relative).is_file() for relative in expected_derived.values()
+    ):
+        raise ValidationError("Kinetic Precision derived artwork contract is invalid")
 
 
-def validate_artwork_evidence() -> None:
+def validate_artwork_evidence(version: str) -> None:
     manifest_path = ROOT / "docs/evidence/artwork-contact-sheets.json"
     manifest = load_json(manifest_path)
     if (
         not isinstance(manifest, dict)
-        or manifest.get("schemaVersion") != 1
-        or manifest.get("phase") != 4
-        or manifest.get("reviewStatus") != "reviewed"
+        or manifest.get("schemaVersion") != 2
+        or manifest.get("release") != version
+        or manifest.get("phase") != 2
+        or manifest.get("reviewStatus") != "reviewed-offscreen"
+        or manifest.get("liveEvidence") is not False
+        or manifest.get("originalEditable") is not True
     ):
-        raise ValidationError("Phase 4 artwork contact-sheet manifest is invalid")
+        raise ValidationError("Phase 2 artwork contact-sheet manifest is invalid")
     assertions = manifest.get("reviewAssertions")
     if not isinstance(assertions, list) or len(assertions) < 4:
-        raise ValidationError("Phase 4 artwork review assertions are incomplete")
+        raise ValidationError("Phase 2 artwork review assertions are incomplete")
     for section in ("sources", "sheets"):
         entries = manifest.get(section)
         if not isinstance(entries, dict) or not entries:
-            raise ValidationError(f"Phase 4 artwork {section} hashes are missing")
+            raise ValidationError(f"Phase 2 artwork {section} hashes are missing")
         for relative, expected in entries.items():
             path = ROOT / relative
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
-                raise ValidationError(f"Phase 4 artwork evidence hash mismatch: {relative}")
-    if len(manifest["sheets"]) != 3:
-        raise ValidationError("Phase 4 requires three reviewed contact sheets")
+                raise ValidationError(f"Phase 2 artwork evidence hash mismatch: {relative}")
+    if len(manifest["sheets"]) != 4:
+        raise ValidationError("Phase 2 requires four reviewed contact sheets")
+    optical = manifest.get("brandOpticalRenders")
+    if (
+        not isinstance(optical, dict)
+        or set(optical) != {"16", "24", "48", "128", "512"}
+        or any(
+            details.get("width") != int(size)
+            or details.get("height") != round(int(size) * 0.75)
+            or not re.fullmatch(r"[0-9a-f]{64}", details.get("sha256", ""))
+            for size, details in optical.items()
+        )
+    ):
+        raise ValidationError("Phase 2 optical-size render evidence is incomplete")
     for relative in manifest["sheets"]:
         width, height = png_dimensions(ROOT / relative)
-        if width < 400 or height < 200:
-            raise ValidationError(f"Phase 4 artwork contact sheet is too small: {relative}")
+        minimum_height = 120 if relative.endswith("artwork-brand-optical-sizes.png") else 200
+        if width < 400 or height < minimum_height:
+            raise ValidationError(f"Phase 2 artwork contact sheet is too small: {relative}")
+
+
+def validate_v6_brand_previews(version: str) -> None:
+    manifest = load_json(ROOT / "docs/evidence/v6/brand/preview-manifest.json")
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("release") != version
+        or manifest.get("phase") != 2
+        or manifest.get("kind") != "authentic-offscreen-preview"
+        or manifest.get("liveEvidence") is not False
+    ):
+        raise ValidationError("v6 brand preview identity is invalid")
+    sources = manifest.get("sources")
+    outputs = manifest.get("outputs")
+    if not isinstance(sources, dict) or not isinstance(outputs, dict):
+        raise ValidationError("v6 brand preview lineage is incomplete")
+    for relative, expected in sources.items():
+        path = ROOT / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValidationError(f"v6 brand preview source drift: {relative}")
+    expected_outputs = {
+        "globalTheme": (
+            f"look-and-feel/{THEME_ID}/contents/previews/preview.png",
+            (480, 380),
+        ),
+        "sddm": ("sddm/NoxForge/preview.png", (960, 540)),
+    }
+    if set(outputs) != set(expected_outputs):
+        raise ValidationError("v6 brand preview outputs are incomplete")
+    for name, (relative, expected_size) in expected_outputs.items():
+        details = outputs[name]
+        path = ROOT / relative
+        if (
+            not isinstance(details, dict)
+            or details.get("path") != relative
+            or details.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
+            or png_dimensions(path) != expected_size
+        ):
+            raise ValidationError(f"v6 brand preview is invalid: {name}")
 
 
 def validate_v6_north_star(version: str) -> None:
@@ -1136,6 +1257,7 @@ def validate_tooling() -> None:
         ROOT / "scripts/sync_version.py",
         ROOT / "scripts/generate_design_system.py",
         ROOT / "scripts/render_v6_north_star.py",
+        ROOT / "scripts/render_v6_previews.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -1148,6 +1270,7 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/qualification.json",
         ROOT / "docs/evidence/v6/baseline/manifest.json",
         ROOT / "docs/evidence/v6/north-star/manifest.json",
+        ROOT / "docs/evidence/v6/brand/preview-manifest.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1286,6 +1409,7 @@ def validate_generated_sources() -> None:
         "scripts/render_artwork_evidence.py",
         "scripts/capture_v6_baseline.py",
         "scripts/render_v6_north_star.py",
+        "scripts/render_v6_previews.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1351,7 +1475,8 @@ def validate() -> None:
     validate_sounds()
     validate_sddm(version)
     validate_wallpaper(version)
-    validate_artwork_evidence()
+    validate_artwork_evidence(version)
+    validate_v6_brand_previews(version)
     validate_v6_north_star(version)
     validate_tooling()
     validate_generated_sources()

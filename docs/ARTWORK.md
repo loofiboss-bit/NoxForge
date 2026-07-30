@@ -10,9 +10,16 @@ using the locked NoxForge palette. The concept image is not shipped. The final
 wallpapers were authored separately as project-owned vector geometry:
 `NoxForge.svg` is the 16:9 composition and `NoxForge-Ultrawide.svg` is an
 independent panoramic composition rather than a stretched crop. They render
-deterministically to 2560x1440, 3840x2160, and 3440x1440 release images. SDDM
+deterministically to 1920x1080, 2560x1440, 3840x2160, and 3440x1440 release
+images. SDDM
 uses a deterministically dimmed 16:9 derivative, while its preview is captured
 from the real QML surface with mock runtime models.
+
+The Kinetic Precision N/F mark is authored as editable semantic and monochrome
+SVG masters with one continuous N-to-F geometry. A separate horizontal lockup
+uses vector paths rather than a bundled or forced font. Generated physical
+copies are committed for Splash, Logout, SDDM, and TabBox, and optical review
+covers 16, 24, 48, 128, and 512 pixels.
 
 The Aurorae decoration and all system icon SVGs are emitted from original geometry
 in `scripts/generate_visual_assets.py`. Their generated SVG files are committed
@@ -40,7 +47,7 @@ events to -23 dBFS RMS and the alarm to -20 dBFS RMS under a -3 dBFS peak
 ceiling, and emits deterministic Ogg/Vorbis files. Duration and frequency
 signatures keep each of the ten semantic source sounds distinct.
 
-The reviewed Phase 4 evidence is committed as three deterministic contact
+The reviewed v6 Phase 2 evidence is committed as four deterministic contact
 sheets and `docs/evidence/artwork-contact-sheets.json`. The manifest binds
 contract, source, coverage and sheet hashes; these are structural/offscreen
 artwork reviews and do not claim live Plasma or cursor interaction.

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -11,11 +12,13 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 SOURCES = {
     "16:9": ROOT / "wallpapers/NoxForge/contents/source/NoxForge.svg",
     "ultrawide": ROOT / "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg",
 }
 OUTPUTS = (
+    ("16:9", 1920, 1080),
     ("16:9", 2560, 1440),
     ("16:9", 3840, 2160),
     ("ultrawide", 3440, 1440),
@@ -38,7 +41,7 @@ def render(
         "-resize", f"{width}x{height}!",
     ]
     if dim:
-        command += ["-fill", "#0E1318", "-colorize", "58"]
+        command += ["-fill", TOKENS["colors"]["background"], "-colorize", "58"]
     command += [
         "-strip",
         "-define", "png:exclude-chunks=date,time",

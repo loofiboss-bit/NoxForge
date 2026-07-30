@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="144" viewBox="0 0 192 144">
-  <title>NoxForge optically balanced N/F mark</title>
+  <title>NoxForge Kinetic Precision N/F mark</title>
   <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M20 116L47 28l53 78 27-78" stroke="#E8F0F2" stroke-width="15"/>
-    <path d="M116 116l27-88h41M132 70h37" stroke="#E8F0F2" stroke-width="15"/>
-    <path d="M46 29l53 77" stroke="#A3FF47" stroke-width="6"/>
-    <path d="M143 28h41" stroke="#A3FF47" stroke-width="6"/>
+    <path d="M18 116L46 28l62 88 28-88h48M123 70h45"
+          stroke="#E8F0F2" stroke-width="14"/>
+    <path d="M47 30l59 84M136 28h48"
+          stroke="#A3FF47" stroke-width="4"/>
   </g>
 </svg>
