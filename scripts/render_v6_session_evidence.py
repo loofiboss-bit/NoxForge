@@ -145,6 +145,13 @@ def render(renderer: Path, destination: Path) -> dict[str, object]:
         ROOT / "scripts/render_v6_session_evidence.py",
         ROOT / "scripts/measure_v6_phase5_performance.py",
         ROOT / "tools/session_renderer.cpp",
+        ROOT / "icons/NoxForge/coverage.json",
+        ROOT / "icons/NoxForge/scalable/actions/application-exit.svg",
+        ROOT / "icons/NoxForge/scalable/actions/dialog-cancel.svg",
+        ROOT / "icons/NoxForge/scalable/actions/view-refresh.svg",
+        ROOT / "icons/NoxForge/scalable/categories/applications-system.svg",
+        ROOT / "icons/NoxForge/scalable/preferences/preferences-system-power-management.svg",
+        ROOT / "icons/NoxForge/scalable/status/security-high.svg",
         *surfaces.values(),
         ROOT / "sddm/NoxForge/Tokens.qml",
         *[

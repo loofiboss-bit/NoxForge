@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
   <title>NoxForge nesw-resize cursor source</title>
-  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="#0E1318" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <path d="M20 4L4 20M20 4v7M20 4h-7M4 20v-7M4 20h7"/><circle class="accent" cx="12" cy="12" r="2"/>
   </g>
   <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>

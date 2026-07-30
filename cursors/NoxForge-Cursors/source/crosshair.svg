@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
   <title>NoxForge crosshair cursor source</title>
-  <g fill="#141B21" stroke="#E8F0F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="#0E1318" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 3v18M3 12h18"/><rect class="accent" x="10" y="10" width="4" height="4"/>
   </g>
   <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>

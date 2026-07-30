@@ -128,6 +128,20 @@ pointer or keyboard interaction, a held KWin Alt+Tab cycle, production splash
 integration, or any running SDDM/Plasma session. Those cases remain explicitly
 blocked for Phase 7.
 
+## Current v6 Phase 6 edge-polish evidence (2026-07-30)
+
+`docs/evidence/v6/edge-polish/manifest.json` binds the exact Aurorae sources,
+56 ranked high-visibility icons, all canonical cursor sources, and the
+byte-frozen sound tree to three deterministic optical sheets. The icon sheet
+covers 16/22/24/32/48 px without expanding the runtime fixture or optical
+variant inventory. Cursor checks parse the physical Xcursor files and preserve
+24/32/48 px payloads, canonical hotspots, 12 busy frames, and 80 ms timing.
+
+The Aurorae sheet covers active/inactive materials and every menu, minimize,
+maximize, restore, and close button source state. It is not a composed KWin
+window. Live active/inactive/maximized/shaded composition and compositor cursor
+scaling remain blocked for Phase 7.
+
 ## Remaining interactive checks (require a physical or input-capable test environment)
 
 The following cannot be closed without explicitly applying the Global Theme in

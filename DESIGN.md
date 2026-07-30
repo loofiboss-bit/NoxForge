@@ -256,3 +256,31 @@ The committed source atlas renders all states, panel orientations, and scales
 from the authentic generated SVG files. Its blur-on and blur-off material
 atlases are static source evidence only; they do not qualify a running Plasma
 shell, compositor, compact panel, or multi-output arrangement.
+
+### Window-edge optical polish
+
+`design/edge-polish-contract.json` freezes the Phase 6 edge inventory and
+review scope. Aurorae uses a 26 px neutral titlebar and matching controls,
+separates active raised material from inactive sunken material, and reserves
+one 12×2 px lime rail for the active frame. Menu, minimize, maximize, restore,
+and close use the same rounded 1.7 px geometry across all eight Aurorae button
+states. Close turns red only for hover and press. No decoration uses a glow or
+SVG filter.
+
+The scalable icon inventory remains 185 files, the Fedora KDE runtime fixture
+remains 77 names, and the 16/22 px physical optical inventory remains 196
+files. A ranked set of 56 panel, System Settings, Dolphin, and session icons
+receives the Phase 6 optical review. Fifteen formerly generic fallback-derived
+glyphs now have simpler role-specific masters; semantic distinction takes
+priority over superficial consistency. The review sheet renders every ranked
+icon at 16, 22, 24, 32, and 48 px.
+
+Cursors keep their canonical 24/32/48 px payloads, hotspots, 12-frame busy
+sequences, and 80 ms frame duration. Their source outline is normalized to
+1.75 px, the interior uses the canonical canvas color, and lime remains a
+small hotspot or semantic detail. The qualified sound tree is byte-frozen
+because no Phase 6 interaction exposed a mismatch.
+
+The Aurorae, icon, and cursor sheets under
+`docs/evidence/v6/edge-polish/` are deterministic source evidence only. They
+do not qualify a composed KWin decoration or live cursor scaling.
