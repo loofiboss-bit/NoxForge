@@ -537,6 +537,25 @@ Do not animate:
 - Gallery startup and control-render medians remain within 10 percent of the v5
   baseline unless an explicit measurement justifies the difference.
 
+**Outcome (2026-07-30):** `NoxForgeMotion` now provides one shared,
+idle-stopping public-Qt timer for hover, immediate focus, press, checked, and
+genuine visible busy-progress state. `polish(QWidget *)`, `unpolish(QWidget *)`,
+event filtering, destruction cleanup, the effective
+`SH_Widget_Animation_Duration`, and `QStyleHints::useHoverEffects()` are covered
+without Qt private animation classes. Native control rendering now separates
+filled primary actions from focused secondary actions, reduces dense
+item/header borders, and refines tabs, inputs, sliders, scrollbars, progress,
+menus, groups, and toolbars while preserving the existing LTR/RTL geometry and
+hit-testing contracts. Deterministic authentic offscreen renders cover
+0/50/100 percent transition states and remain explicitly non-live evidence.
+The lifecycle probe covers enter, leave, focus, press, release, disable, busy,
+hide, unpolish, destroy, idle, and zero-duration behavior. Interleaved
+v5-relative medians passed at 1.0342× gallery startup and 1.0346× control
+rendering. The full local phase gate passed with 111 Python tests, 19 CTest
+cases, ASan/UBSan probes, generator and QML checks, byte-identical source
+archives, Fedora 44 RPM/SRPM construction, `rpmlint`, and
+`git diff --check`.
+
 ## Phase 4 — Plasma shell material and state refinement
 
 ### Objective

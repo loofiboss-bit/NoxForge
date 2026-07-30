@@ -48,7 +48,7 @@ QWidget *controlsPage(QPushButton **focusTarget)
     auto *disabled = new QPushButton(QStringLiteral("Secondary action"));
     disabled->setEnabled(false);
     layout->addRow(QStringLiteral("Disabled"), disabled);
-    layout->addRow(QStringLiteral("Input"), new QLineEdit(QStringLiteral("Industrial precision")));
+    layout->addRow(QStringLiteral("Input"), new QLineEdit(QStringLiteral("Kinetic precision")));
     auto *combo = new QComboBox;
     combo->addItems({QStringLiteral("Graphite"), QStringLiteral("Lime"), QStringLiteral("Cyan")});
     layout->addRow(QStringLiteral("Combo"), combo);

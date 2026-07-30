@@ -152,6 +152,23 @@ eight pixels. Reduced motion resolves every state immediately, suppresses
 opacity and spatial transitions, and replaces continuous busy movement with a
 static semantic glyph.
 
+### Native Qt motion implementation
+
+`NoxForgeMotion` is an internal public-Qt-only event filter used by the
+`QCommonStyle` plugin. It tracks hover, immediate focus, press, checked, and
+genuine indeterminate-progress state for supported controls. One shared
+`QBasicTimer` runs only while a transition or visible busy progress is active;
+hidden, unpolished, disabled, and destroyed widgets are cleaned up without a
+recurring idle wakeup.
+
+The style derives its duration scale from
+`SH_Widget_Animation_Duration`, returns zero when the effective Qt/KDE duration
+is disabled, and respects `QStyleHints::useHoverEffects()`. It never uses Qt
+private animation classes. Deterministic 0/50/100 percent offscreen renders,
+event lifecycle probes, sanitizer results, and v5-relative medians live under
+`docs/evidence/v6/qt-motion/`. These files are structural evidence and do not
+claim live pointer, keyboard, compositor, or desktop qualification.
+
 ## Contrast contract
 
 Ratios are computed from the locked sRGB anchors. Primary reading text and

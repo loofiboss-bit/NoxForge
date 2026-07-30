@@ -1250,6 +1250,73 @@ def validate_v6_north_star(version: str) -> None:
         raise ValidationError("v6 visual scorecard is not linked to north-star evidence")
 
 
+def validate_v6_motion_evidence(version: str) -> None:
+    root = ROOT / "docs/evidence/v6/qt-motion"
+    manifest = load_json(root / "manifest.json")
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("version") != version
+        or manifest.get("phase") != 3
+        or manifest.get("kind") != "authentic-offscreen-native-qt-motion"
+        or manifest.get("liveEvidence") is not False
+        or manifest.get("deterministicProgress") != [0, 50, 100]
+    ):
+        raise ValidationError("v6 native Qt motion evidence identity is invalid")
+    renders = manifest.get("renders")
+    if (
+        not isinstance(renders, list)
+        or [render.get("progressPercent") for render in renders] != [0, 50, 100]
+    ):
+        raise ValidationError("v6 native Qt motion evidence is incomplete")
+    hashes = set()
+    for render in renders:
+        path = ROOT / render.get("path", "")
+        if (
+            not path.is_file()
+            or render.get("width") != 960
+            or render.get("height") != 540
+            or render.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
+        ):
+            raise ValidationError("v6 native Qt motion render drift")
+        hashes.add(render["sha256"])
+    if len(hashes) != 3:
+        raise ValidationError("v6 native Qt motion states are not visually distinct")
+    sources = manifest.get("sources")
+    if not isinstance(sources, dict) or len(sources) < 8:
+        raise ValidationError("v6 native Qt motion evidence has incomplete source lineage")
+    for relative, digest in sources.items():
+        path = ROOT / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise ValidationError(f"v6 native Qt motion source drift: {relative}")
+    performance = load_json(root / "performance.json")
+    if (
+        not isinstance(performance, dict)
+        or performance.get("schemaVersion") != 1
+        or performance.get("phase") != 3
+        or performance.get("result") != "passed"
+        or performance.get("baselineCommit")
+        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("maximumRatio") != 1.1
+        or performance.get("idleTimerExpected") is not False
+    ):
+        raise ValidationError("v6 native Qt performance evidence identity is invalid")
+    metrics = performance.get("metrics")
+    if not isinstance(metrics, dict) or set(metrics) != {
+        "galleryStartup",
+        "controlRendering",
+    }:
+        raise ValidationError("v6 native Qt performance metrics are incomplete")
+    for name, metric in metrics.items():
+        if (
+            metric.get("result") != "passed"
+            or metric.get("ratio", 99) > 1.1
+            or len(metric.get("baselineSamplesMs", [])) != 11
+            or len(metric.get("currentSamplesMs", [])) != 11
+        ):
+            raise ValidationError(f"v6 native Qt performance metric failed: {name}")
+
+
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
@@ -1258,6 +1325,9 @@ def validate_tooling() -> None:
         ROOT / "scripts/generate_design_system.py",
         ROOT / "scripts/render_v6_north_star.py",
         ROOT / "scripts/render_v6_previews.py",
+        ROOT / "scripts/render_v6_motion_evidence.py",
+        ROOT / "scripts/check_v6_phase3_sanitizers.py",
+        ROOT / "scripts/measure_v6_phase3_performance.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -1271,6 +1341,8 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/baseline/manifest.json",
         ROOT / "docs/evidence/v6/north-star/manifest.json",
         ROOT / "docs/evidence/v6/brand/preview-manifest.json",
+        ROOT / "docs/evidence/v6/qt-motion/manifest.json",
+        ROOT / "docs/evidence/v6/qt-motion/performance.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1410,6 +1482,8 @@ def validate_generated_sources() -> None:
         "scripts/capture_v6_baseline.py",
         "scripts/render_v6_north_star.py",
         "scripts/render_v6_previews.py",
+        "scripts/render_v6_motion_evidence.py",
+        "scripts/measure_v6_phase3_performance.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1478,6 +1552,7 @@ def validate() -> None:
     validate_artwork_evidence(version)
     validate_v6_brand_previews(version)
     validate_v6_north_star(version)
+    validate_v6_motion_evidence(version)
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()

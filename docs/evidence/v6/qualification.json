@@ -16,12 +16,12 @@
     {
       "id": "reduced-motion",
       "status": "pending",
-      "reason": "The v6 motion system has not been implemented or qualified."
+      "reason": "The native Qt zero-duration probe passes, but cross-surface reduced-motion qualification remains Phase 7 scope."
     },
     {
       "id": "deterministic-evidence",
       "status": "pending",
-      "reason": "Only the immutable v5 baseline has been captured."
+      "reason": "Native Qt 0/50/100 percent evidence is deterministic; final cross-surface candidate evidence is not complete."
     }
   ],
   "liveCases": [

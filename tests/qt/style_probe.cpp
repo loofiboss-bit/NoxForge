@@ -181,10 +181,12 @@ int main(int argc, char **argv)
     QCommonStyle common;
     if (style->styleHint(QStyle::SH_Widget_Animate)
         != common.styleHint(QStyle::SH_Widget_Animate)) return 19;
+    const int animationDuration = style->styleHint(QStyle::SH_Widget_Animation_Duration);
+    if (animationDuration <= 0 || animationDuration > 480) return 24;
 
     const QString className = QString::fromLatin1(app.style()->metaObject()->className());
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"
                         << "Loaded style class: " << className << '\n'
-                        << "Geometry, hit testing, RTL, states, indicators, busy, and high-DPI probes passed\n";
+                        << "Geometry, hit testing, RTL, states, motion duration, indicators, busy, and high-DPI probes passed\n";
     return className == QStringLiteral("NoxForgeStyle") ? 0 : 20;
 }
