@@ -403,6 +403,22 @@ Approve a real, render-backed direction before broad implementation.
 - Do not begin mass asset conversion while the target renders still look like
   v5 with only changed colors.
 
+**Outcome (2026-07-30):** Schema v5 locks five graphite surface layers, neutral
+selection with a three-pixel lime marker, distinct immediate focus, seven
+system-font roles, an eight-percent icon accent ceiling, and canonical semantic
+timings and curves. `design/motion-contract.json` gives every interactive state
+both bounded animated behavior and a zero-duration reduced-motion outcome; it
+forbids idle animation, spring, overshoot, layout-property motion, and animated
+focus. Six authentic Qt/QPainter north-star prototypes are byte-stable and
+compared to immutable Phase 0 captures at identical output sizes. Their linked
+scorecard is 4/5 or better in every category and explicitly records that static
+offscreen motion evidence is not live qualification. The temporary
+`assetGenerationPalette` preserves later-phase artwork and Plasma SVG outputs,
+so Phase 1 does not silently mass-convert production assets. The full local
+phase gate passed with 101 Python tests, 18 CTest cases, generated-source and
+QML checks, byte-identical source archives, Fedora 44 RPM/SRPM construction,
+`rpmlint`, and `git diff --check`.
+
 ## Phase 2 — Reforge the brand and wallpaper
 
 ### Objective

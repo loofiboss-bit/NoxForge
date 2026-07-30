@@ -21,11 +21,11 @@ def contrast(first: str, second: str) -> float:
 class PhaseFiveDesignTests(unittest.TestCase):
     def test_design_authority_and_schema(self) -> None:
         design = (ROOT / "DESIGN.md").read_text(encoding="utf-8")
-        self.assertIn("Industrial Precision", design)
+        self.assertIn("Kinetic Precision", design)
         self.assertIn("Hallmark", design)
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 4)
-        self.assertEqual(tokens["colors"]["surfaceSelected"], "#26361D")
+        self.assertEqual(tokens["schemaVersion"], 5)
+        self.assertEqual(tokens["colors"]["surfaceSelected"], "#1E2B31")
         self.assertEqual(tokens["geometry"]["forgeNotch"], 4)
         self.assertEqual(tokens["states"]["focusStyle"], "single-2px-outline")
         self.assertFalse(tokens["states"]["normalNotch"])

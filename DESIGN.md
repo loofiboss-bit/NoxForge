@@ -1,178 +1,196 @@
 # NoxForge Design System
 
-NoxForge uses an atmospheric, technical visual language called
-**Industrial Precision**. This file is the visual authority for every NoxForge
-component.
+NoxForge uses an atmospheric, technical visual language called **Kinetic
+Precision**. This file is the visual authority for every NoxForge component.
 
 <!-- Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 -->
 
-## Principles
+## Design character
 
-- Graphite surfaces establish depth; color never replaces hierarchy.
-- Electric lime is a precision signal for focus, primary action and active
-  state. It must not fill large navigation or selection areas.
-- The Forge Notch is a four-pixel clipped top-left detail used only on active,
-  selected or branded surfaces.
+The v5 system was coherent and technically disciplined, but broad olive
+selection fills, repeated container outlines, and nearly uniform typographic
+weight weakened hierarchy. Kinetic Precision keeps the recognizable
+graphite/lime identity while making state changes quieter, depth more tonal,
+and motion explicitly purposeful.
+
+- Graphite layers establish depth; color never replaces hierarchy.
+- Electric lime is a precision signal for focus, primary action, and active
+  markers. It is not a navigation or ambient surface material.
+- The Forge Notch is a four-pixel clipped detail used only on active, selected,
+  focused, or branded surfaces.
 - Cyan communicates information and progress. Violet is a rare secondary brand
   detail. Red is reserved for destructive and error states.
-- Controls stay compact, keyboard-visible and native to KDE behavior.
+- Controls remain compact, keyboard-visible, native to KDE behavior, and still
+  when idle.
 
-## Palette
+## Surface hierarchy
+
+| Layer | Token | Value | Use |
+| --- | --- | --- | --- |
+| Canvas | `background` | `#0E1318` | Deep workspace background |
+| Sunken | `surfaceSunken` | `#10171C` | Inputs, data wells, recessed regions |
+| Surface | `surface` | `#151D23` | Windows, panels, stable containers |
+| Raised | `surfaceRaised` | `#1B252C` | Controls and quiet raised regions |
+| Overlay | `surfaceOverlay` | `#222D35` | Menus, popups, switchers, session cards |
+
+Supporting surface tokens are `surfaceHover` `#232F36`,
+`surfaceSelected` `#1E2B31`, `edgeHighlight` `#3C4B53`, and
+`outlineMuted` `#314049`. Tonal separation does most of the work. Adjacent
+parent and child surfaces do not both draw complete borders. An overlay may use
+one outer keyline, one subtle top or leading highlight, and a neutral shadow.
+Colored shadows and ambient lime glow are forbidden.
+
+## Palette and accent budget
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `background` | `#0E1318` | Canvas and deep views |
-| `surface` | `#141B21` | Windows, panels and popups |
-| `surfaceRaised` | `#1A232B` | Controls and raised regions |
-| `surfaceHover` | `#202C34` | Hover without chromatic noise |
-| `surfaceSelected` | `#26361D` | Large selected regions |
-| `border` | `#2B3942` | Hairlines and separators |
-| `borderStrong` | `#3B4B55` | Focus-adjacent structure |
 | `textPrimary` | `#E8F0F2` | Primary content |
 | `textSecondary` | `#A6B4B9` | Supporting content |
-| `textDisabled` | `#6F7C82` | Disabled content |
-| `accent` | `#A3FF47` | Focus, primary action and active markers |
+| `textDisabled` | `#748289` | Disabled content |
+| `accent` | `#A3FF47` | Focus, one primary action, active markers |
 | `accentPressed` | `#82D936` | Pressed primary action |
-| `accentInk` | `#0E1318` | Text and glyphs on lime actions |
-| `detailCyan` | `#22D3EE` | Information and progress |
-| `detailViolet` | `#A78BFA` | Secondary identity detail |
+| `accentSoft` | `#243528` | Restrained small accent backing |
+| `accentMuted` | `#71994F` | Secondary accent detail |
+| `detailCyan` | `#22D3EE` | Information, busy, and progress |
+| `detailViolet` | `#A78BFA` | Rare identity counterpoint |
 | `negative` | `#FF6B7A` | Destructive and error states |
 | `neutral` | `#FBBF24` | Warning states |
 
-## Schema v4
+Lime may fill at most one primary action per decision group. A selected row uses
+a neutral surface and a three-pixel lime rail or short marker, never a broad
+olive fill. A focused control uses one immediate two-pixel lime treatment and
+does not also receive a lime fill. Icon accent coverage is eight percent or
+less unless the glyph communicates semantic success.
 
-`design/tokens.json` is the canonical schema. Generated C++ and QML token
-consumers carry the complete canonical schema payload as well as convenient
-typed properties, so parity is mechanically verifiable without maintaining
-parallel hand-authored values.
+## Schema v5
 
-The schema separates these responsibilities:
+`design/tokens.json` is canonical. Generated C++ and QML consumers carry the
+complete canonical payload plus typed properties, so parity is mechanically
+verifiable without parallel values.
 
-- `semanticRoles` maps canvas, surface, control, selection, action, focus,
-  disabled, busy, error and success roles to the locked anchor palette.
-- `opacity`, `elevation`, `overlay` and `shadow` define named recipes. Shadows
-  use neutral graphite only and their geometry remains on the four-pixel grid.
-- `states.hierarchy` composes roles and recipes into one interaction hierarchy.
-- `motion.reducedMotion` removes spatial motion and uses a static busy indicator.
-- `contrastPairs` is the exhaustive list of documented foreground/background
-  combinations; validation fails if a semantic role is not covered.
+- `semanticRoles` maps canvas, sunken, surface, raised, overlay, control,
+  selection, action, focus, disabled, busy, error, and success roles.
+- `opacity`, `elevation`, `overlay`, and `shadow` define named recipes.
+- `states.hierarchy` composes each interactive state from those recipes.
+- `typography.roles` defines seven system-font roles.
+- `motion` owns every duration and cubic curve.
+- `contrastPairs` exhaustively covers semantic foreground/background pairs.
 
-## Geometry and spacing
+`design/motion-contract.json` binds these tokens to supported Qt, Plasma, and
+session transitions. It is the authority for reduced-motion and performance
+limits.
+
+During phase 1 only, `assetGenerationPalette` freezes the v5 artwork and Plasma
+SVG inputs so approving the target system cannot silently mass-convert later
+phase assets. Each owning implementation phase removes that staging boundary.
+
+## Geometry and composition
 
 - Base grid: 4 px.
-- Standard radius: 6 px; compact radius: 4 px.
+- Compact radius: 4 px; standard radius: 6 px; overlay/session radius: 8 px.
 - Forge Notch: 4 px at the top-left corner.
 - Border: 1 px; focus ring: 2 px.
 - Standard control height: 32 px; large control height: 36 px.
-- Panels and toolbars remain compact and use spacing in 4 px increments.
+- Panels and toolbars remain compact and use spacing in four-pixel increments.
+- A surface has one containment layer. Card-in-card decoration is avoided.
+- Shell surfaces are edge-anchored where workflow permits; centering is
+  reserved for login, logout, and transient switchers.
 
 ## Typography
 
-- KDE's configured system font is the only application and shell typeface.
-- Body and control text use normal weight. Demi-bold is reserved for primary
-  headings, the NoxForge wordmark and the current time on login surfaces.
-- Letter spacing remains neutral except for the uppercase wordmark, which uses
-  three pixels of tracking. Labels and section titles are never italic.
-- Text must elide or wrap within its owner; interactive labels stay on one line.
+The KDE-configured system font is the only application and shell typeface.
+Weight, size, contrast, and spacing establish hierarchy before separators:
+
+| Role | Size / line | Weight | Use |
+| --- | --- | ---: | --- |
+| `displayClock` | 64 / 72 px | Light | Stable numeric time |
+| `surfaceTitle` | 24 / 32 px | Demi-bold | Window/session title |
+| `sectionTitle` | 16 / 24 px | Demi-bold | Content section |
+| `body` | 14 / 20 px | Regular | Reading text |
+| `controlLabel` | 14 / 20 px | Medium | Interactive label |
+| `metadata` | 12 / 16 px | Regular | Supporting status |
+| `microLabel` | 11 / 16 px | Demi-bold | Rare tracked label |
+
+Tracking remains neutral except for the `NOXFORGE` wordmark and rare
+micro-labels. Generic interface headings use sentence case. Text elides or
+wraps within its owner, and interactive labels stay on one line.
 
 ## State hierarchy
 
-1. Default uses the plain raised control role and one-pixel border.
-2. Hover changes surface lightness through the named hover overlay. It does not
-   add a glow or resize geometry.
-3. Focus uses one immediate two-pixel lime indicator. A control must never draw
-   both an accent border and a second focus frame.
-4. Pressed uses the dark selection surface and removes elevation; it does not
-   scale. A primary action uses `accentPressed` through its component role.
-5. Checked uses the selection role plus a check glyph.
-6. Selected uses `surfaceSelected` plus a three-pixel leading marker that
-   mirrors in RTL. Full lime outlines around large rows are forbidden.
-7. Disabled uses `textDisabled` and 55 percent opacity while preserving
-   geometry.
-8. Busy uses cyan plus a progress glyph. Reduced-motion environments keep that
-   glyph static.
-9. Error pairs red with text or an error glyph; color alone is not sufficient.
+1. Default uses a quiet raised control and muted outline.
+2. Hover changes color and opacity in 120 ms without glow or geometry changes.
+3. Focus draws one immediate two-pixel ring; focus is not animated.
+4. Pressed settles into the sunken layer in 90 ms and never scales.
+5. Checked adds a check glyph and does not rely on color alone.
+6. Selected uses a neutral surface, restrained overlay, and mirrored leading
+   marker over 140 ms.
+7. Disabled changes label and opacity immediately while preserving geometry.
+8. Busy uses cyan and a 900 ms purposeful progress cycle; reduced motion keeps
+   a static semantic glyph.
+9. Error pairs red with a label or glyph.
 10. Success remains quiet and pairs lime with a success glyph where needed.
+
+## Motion
+
+Motion feels machined: immediate response, controlled acceleration, and a soft
+landing. Bounce, spring, overshoot, stretch, glow pulses, layout-property
+animation, and infinite ambient animation are forbidden.
+
+| Token | Duration | Use |
+| --- | ---: | --- |
+| `instantMs` | 0 ms | Focus and reduced-motion changes |
+| `pressMs` | 90 ms | Press/release |
+| `productiveMs` | 120 ms | Hover, toggle, marker |
+| `selectionMs` | 140 ms | Tab, task, switcher selection |
+| `containerMs` | 180 ms | Menu, popup, session list |
+| `expressiveMs` | 260 ms | Rare splash/session choreography |
+| `staggerMs` | 24 ms | Small related sequences |
+| `busyCycleMs` | 900 ms | Genuine indeterminate progress |
+
+Only opacity, color, and transform are animated. Spatial travel is at most
+eight pixels. Reduced motion resolves every state immediately, suppresses
+opacity and spatial transitions, and replaces continuous busy movement with a
+static semantic glyph.
 
 ## Contrast contract
 
-Ratios below are computed from the locked sRGB anchors. Normal semantic text
-requires at least 4.5:1, primary reading text and action ink require 7:1, and
-disabled text requires 3:1 because it is non-interactive supporting content.
+Ratios are computed from the locked sRGB anchors. Primary reading text and
+action ink require 7:1, normal semantic text 4.5:1, and disabled supporting text
+3:1.
 
 | Pair | Foreground / background | Ratio | Minimum |
 | --- | --- | ---: | ---: |
 | `primary-on-canvas` | `textPrimary` / `background` | 16.16:1 | 7.0:1 |
-| `primary-on-surface` | `textPrimary` / `surface` | 15.04:1 | 7.0:1 |
-| `primary-on-control` | `textPrimary` / `surfaceRaised` | 13.78:1 | 7.0:1 |
-| `primary-on-hover` | `textPrimary` / `surfaceHover` | 12.35:1 | 7.0:1 |
-| `primary-on-selection` | `textPrimary` / `surfaceSelected` | 11.17:1 | 7.0:1 |
+| `primary-on-sunken` | `textPrimary` / `surfaceSunken` | 15.65:1 | 7.0:1 |
+| `primary-on-surface` | `textPrimary` / `surface` | 14.76:1 | 7.0:1 |
+| `primary-on-control` | `textPrimary` / `surfaceRaised` | 13.49:1 | 7.0:1 |
+| `primary-on-overlay` | `textPrimary` / `surfaceOverlay` | 12.16:1 | 7.0:1 |
+| `primary-on-hover` | `textPrimary` / `surfaceHover` | 11.87:1 | 7.0:1 |
+| `primary-on-selection` | `textPrimary` / `surfaceSelected` | 12.58:1 | 7.0:1 |
 | `secondary-on-canvas` | `textSecondary` / `background` | 8.76:1 | 4.5:1 |
-| `secondary-on-surface` | `textSecondary` / `surface` | 8.15:1 | 4.5:1 |
-| `disabled-on-control` | `textDisabled` / `surfaceRaised` | 3.70:1 | 3.0:1 |
+| `secondary-on-surface` | `textSecondary` / `surface` | 8.00:1 | 4.5:1 |
+| `disabled-on-control` | `textDisabled` / `surfaceRaised` | 3.93:1 | 3.0:1 |
 | `primary-action` | `accentInk` / `accent` | 15.07:1 | 7.0:1 |
 | `pressed-primary-action` | `accentInk` / `accentPressed` | 10.60:1 | 7.0:1 |
-| `busy-on-control` | `detailCyan` / `surfaceRaised` | 8.81:1 | 4.5:1 |
-| `error-on-control` | `negative` / `surfaceRaised` | 5.79:1 | 4.5:1 |
-| `success-on-control` | `accent` / `surfaceRaised` | 12.85:1 | 4.5:1 |
+| `busy-on-control` | `detailCyan` / `surfaceRaised` | 8.62:1 | 4.5:1 |
+| `error-on-control` | `negative` / `surfaceRaised` | 5.67:1 | 4.5:1 |
+| `success-on-control` | `accent` / `surfaceRaised` | 12.58:1 | 4.5:1 |
 
 ## Hallmark review
 
-The schema scores Philosophy 5/5, Hierarchy 5/5, Execution 5/5,
-Specificity 5/5, Restraint 5/5 and Variety 4/5. Variety is intentionally the
+The pre-emit review scores Philosophy 5/5, Hierarchy 5/5, Execution 5/5,
+Specificity 5/5, Restraint 5/5, and Variety 4/5. Variety is intentionally the
 lowest axis because NoxForge remains one restrained dark system; variation
-comes from semantic state recipes rather than extra palettes or decorative
-effects.
+comes from semantic state recipes, not decorative palettes or effects.
 
-## Forge Notch
+## Component and package contracts
 
-- The four-pixel clipped top-left corner is a signature, not the default shape.
-- It appears only on focused, selected, active-window or branded surfaces.
-- Normal inputs, buttons, cards, menus and toolbars retain the standard radius.
-- RTL mirrors leading markers, but the brand notch itself remains top-left.
-
-## Iconography
-
-- Canonical glyphs use a 24-pixel grid, 1.7-pixel round strokes and no embedded
-  raster or text nodes.
-- State-bearing icons must be semantically distinct. Connected/disconnected,
-  play/pause/stop, directional, volume and battery states may not alias each
-  other even when they share a family.
-- Dense action, status and applet glyphs receive optical 16- and 22-pixel
-  variants when the scalable source loses clarity at those sizes.
-- Lime is a detail and may cover at most 12 percent of an icon. Red, cyan and
-  violet keep their semantic roles from the palette.
-
-## Surface composition
-
-- Shell surfaces are left-biased or edge-anchored where the workflow allows it;
-  centred layouts are reserved for login, logout and transient switchers.
-- A surface has one containment layer. Card-in-card decoration is avoided.
-- Elevation comes from lighter graphite surfaces, not colored glow shadows.
-- Large lime fills are reserved for a single primary action, never navigation,
-  list selection or ambient decoration.
-
-## Component voice
-
-- Selected rows use `surfaceSelected`, primary text and a lime edge/notch.
-- Primary buttons use lime with graphite text; secondary buttons stay graphite.
-- Focus is always visible without relying on hover or color fill alone.
-- Destructive buttons become red only when hovered, pressed or confirmed.
-- Active windows receive a short lime title indicator; inactive windows lose it.
-- Motion is restrained: 90 ms press, 140 ms hover and 180 ms popup transitions.
-  Reduced-motion environments receive immediate state changes.
-
-## Component contracts
-
-- Plasma Style owns every Plasma 6.7 widget family used by core shell flows,
-  including edge-specific task and panel states and solid/translucent variants.
-- The Qt style must use the same metrics and state hierarchy as Plasma Style.
-- Splash, logout, Alt+Tab and SDDM consume generated physical token files; raw
-  palette values are not authored independently in those QML files.
-- Visible form labels, keyboard focus, RTL and stable error/status regions are
-  required on login and session surfaces.
-
-## Artwork
-
-All artwork is original NoxForge work. Installed themes may be inspected only
-for technical contracts, identifiers and package structure.
+- Plasma Style owns the Plasma 6.7 widget families used by core shell flows.
+- The Qt style uses the same metrics and state hierarchy as Plasma Style.
+- Splash, logout, Alt+Tab, and SDDM consume generated physical token files.
+- Visible form labels, immediate keyboard focus, RTL, stable status regions,
+  and blur-off readability are required.
+- Active windows receive a short lime indicator; inactive windows lose it.
+- Destructive buttons become red only on interaction or confirmation.
+- All artwork is original NoxForge work. Installed themes may be inspected only
+  for technical contracts, identifiers, and package structure.

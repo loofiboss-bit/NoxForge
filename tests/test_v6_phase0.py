@@ -97,8 +97,9 @@ class V6PhaseZeroTests(unittest.TestCase):
             },
         )
         for category in scorecard["categories"].values():
-            self.assertIsNone(category["v6Score"])
-            self.assertEqual(category["status"], "pending")
+            self.assertGreaterEqual(category["v6Score"], 4)
+            self.assertEqual(category["status"], "reviewed-prototype")
+            self.assertEqual(category["evidence"], "north-star/manifest.json")
 
 
 if __name__ == "__main__":

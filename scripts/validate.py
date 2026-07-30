@@ -129,24 +129,32 @@ def validate_tokens(version: str) -> dict[str, object]:
         raise ValidationError("token identity or version does not match repository metadata")
     required_colors = {
         "background": "#0E1318",
-        "surface": "#141B21",
-        "surfaceRaised": "#1A232B",
-        "surfaceHover": "#202C34",
-        "surfaceSelected": "#26361D",
+        "surfaceSunken": "#10171C",
+        "surface": "#151D23",
+        "surfaceRaised": "#1B252C",
+        "surfaceOverlay": "#222D35",
+        "surfaceHover": "#232F36",
+        "surfaceSelected": "#1E2B31",
         "border": "#2B3942",
-        "borderStrong": "#3B4B55",
+        "borderStrong": "#43535C",
+        "edgeHighlight": "#3C4B53",
+        "outlineMuted": "#314049",
         "textPrimary": "#E8F0F2",
         "textSecondary": "#A6B4B9",
-        "textDisabled": "#6F7C82",
+        "textDisabled": "#748289",
         "accent": "#A3FF47",
         "accentPressed": "#82D936",
         "accentInk": "#0E1318",
+        "accentSoft": "#243528",
+        "accentMuted": "#71994F",
         "detailCyan": "#22D3EE",
         "detailViolet": "#A78BFA",
         "negative": "#FF6B7A",
         "neutral": "#FBBF24",
+        "shadowAmbient": "#090C0F",
+        "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") != 4 or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") != 5 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
     geometry = tokens.get("geometry")
     semantic_roles = tokens.get("semanticRoles")
@@ -175,15 +183,16 @@ def validate_tokens(version: str) -> dict[str, object]:
             hallmark,
         )
     ):
-        raise ValidationError("design token schema v4 objects are incomplete")
+        raise ValidationError("design token schema v5 objects are incomplete")
     if (
         geometry.get("forgeNotch") != 4
         or geometry.get("compactSpacing") != 4
         or geometry.get("standardSpacing") != 8
+        or geometry.get("overlayRadius") != 8
         or geometry.get("controlHeight") != 32
         or geometry.get("largeControlHeight") != 36
     ):
-        raise ValidationError("design geometry does not match Industrial Precision")
+        raise ValidationError("design geometry does not match Kinetic Precision")
     if opacity != {
         "enabled": 1.0,
         "inactive": 0.72,
@@ -195,7 +204,10 @@ def validate_tokens(version: str) -> dict[str, object]:
 
     role_names = {
         "canvas",
+        "sunken",
         "surface",
+        "raised",
+        "overlay",
         "control",
         "controlHover",
         "controlPressed",
@@ -216,7 +228,7 @@ def validate_tokens(version: str) -> dict[str, object]:
         if any(reference not in required_colors for reference in role.values()):
             raise ValidationError(f"semantic role {name} references an unknown color")
 
-    if set(elevation) != {"flat", "surface", "control", "popup"}:
+    if set(elevation) != {"flat", "surface", "raised", "overlay"}:
         raise ValidationError("elevation roles are incomplete")
     for name, level in elevation.items():
         if (
@@ -227,7 +239,7 @@ def validate_tokens(version: str) -> dict[str, object]:
             or level.get("shadow") not in shadow
         ):
             raise ValidationError(f"elevation role {name} is invalid")
-    if set(overlay) != {"none", "hover", "pressed", "busy", "scrim"}:
+    if set(overlay) != {"none", "hover", "pressed", "busy", "selection", "scrim"}:
         raise ValidationError("overlay roles are incomplete")
     for name, layer in overlay.items():
         if (
@@ -237,7 +249,7 @@ def validate_tokens(version: str) -> dict[str, object]:
             or not 0 <= layer["opacity"] <= 1
         ):
             raise ValidationError(f"overlay role {name} is invalid")
-    if set(shadow) != {"none", "control", "popup"}:
+    if set(shadow) != {"none", "ambient", "overlay"}:
         raise ValidationError("shadow roles are incomplete")
     for name, recipe in shadow.items():
         if not isinstance(recipe, dict) or recipe.get("color") not in required_colors:
@@ -254,21 +266,31 @@ def validate_tokens(version: str) -> dict[str, object]:
             raise ValidationError(f"shadow role {name} breaks the 4 px grid")
 
     expected_motion = {
-        "noneMs": 0,
+        "instantMs": 0,
         "pressMs": 90,
-        "hoverMs": 140,
-        "popupMs": 180,
-        "busyMs": 180,
+        "productiveMs": 120,
+        "selectionMs": 140,
+        "containerMs": 180,
+        "expressiveMs": 260,
+        "staggerMs": 24,
+        "busyCycleMs": 900,
+        "curves": {
+            "productiveEnter": [0.2, 0.0, 0.0, 1.0],
+            "standard": [0.4, 0.0, 0.2, 1.0],
+            "exit": [0.4, 0.0, 1.0, 1.0],
+            "expressive": [0.2, 0.0, 0.0, 1.0],
+        },
         "reducedMotion": {
             "durationMs": 0,
             "spatialMotion": False,
             "busyIndicatorStatic": True,
+            "opacityTransitions": False,
         },
     }
     if motion != expected_motion:
-        raise ValidationError("design motion does not match Industrial Precision")
+        raise ValidationError("design motion does not match Kinetic Precision")
     if states.get("focusStyle") != "single-2px-outline" or states.get("normalNotch") is not False:
-        raise ValidationError("design state hierarchy does not match Industrial Precision")
+        raise ValidationError("design state hierarchy does not match Kinetic Precision")
     hierarchy = states.get("hierarchy")
     state_names = {
         "default",
@@ -284,7 +306,13 @@ def validate_tokens(version: str) -> dict[str, object]:
     }
     if not isinstance(hierarchy, dict) or set(hierarchy) != state_names:
         raise ValidationError("interactive state hierarchy is incomplete")
-    motion_names = {"noneMs", "hoverMs", "pressMs", "busyMs"}
+    motion_names = {
+        "instantMs",
+        "pressMs",
+        "productiveMs",
+        "selectionMs",
+        "busyCycleMs",
+    }
     indicator_names = {
         "none",
         "singleFocusRing",
@@ -313,8 +341,42 @@ def validate_tokens(version: str) -> dict[str, object]:
             or state["motion"] not in motion_names
         ):
             raise ValidationError(f"interactive state {name} has an invalid token reference")
-    if iconography.get("grid") != 24 or iconography.get("opticalSizes") != [16, 22]:
+    if (
+        iconography.get("grid") != 24
+        or iconography.get("opticalSizes") != [16, 22]
+        or iconography.get("accentCoveragePercentMax") != 8
+    ):
         raise ValidationError("iconography tokens are incomplete")
+    typography_roles = typography.get("roles")
+    expected_typography_roles = {
+        "displayClock",
+        "surfaceTitle",
+        "sectionTitle",
+        "body",
+        "controlLabel",
+        "metadata",
+        "microLabel",
+    }
+    if (
+        typography.get("family") != "system-ui"
+        or not isinstance(typography_roles, dict)
+        or set(typography_roles) != expected_typography_roles
+    ):
+        raise ValidationError("semantic typography roles are incomplete")
+    for name, role in typography_roles.items():
+        required = {"pixelSize", "weight", "tracking", "lineHeight"}
+        if name == "displayClock":
+            required.add("tabularNumbers")
+        if not isinstance(role, dict) or set(role) != required:
+            raise ValidationError(f"semantic typography role {name} is incomplete")
+        if (
+            not isinstance(role["pixelSize"], int)
+            or role["pixelSize"] <= 0
+            or not isinstance(role["lineHeight"], int)
+            or role["lineHeight"] <= 0
+            or role["lineHeight"] % 4
+        ):
+            raise ValidationError(f"semantic typography role {name} breaks the 4 px grid")
 
     contrast_pairs = tokens.get("contrastPairs")
     if not isinstance(contrast_pairs, list) or not contrast_pairs:
@@ -367,6 +429,72 @@ def validate_tokens(version: str) -> dict[str, object]:
     ):
         raise ValidationError("Hallmark scores must be complete and at least 4/5")
     return tokens
+
+
+def validate_motion_contract(tokens: dict[str, object], version: str) -> None:
+    contract = load_json(ROOT / "design/motion-contract.json")
+    if (
+        not isinstance(contract, dict)
+        or contract.get("schemaVersion") != 1
+        or contract.get("themeId") != THEME_ID
+        or contract.get("version") != version
+    ):
+        raise ValidationError("motion contract identity is invalid")
+    policy = contract.get("policy")
+    performance = contract.get("performance")
+    surfaces = contract.get("surfaces")
+    transitions = contract.get("transitions")
+    reduced = contract.get("reducedMotion")
+    if not all(
+        isinstance(value, dict)
+        for value in (policy, performance, surfaces, transitions, reduced)
+    ):
+        raise ValidationError("motion contract sections are incomplete")
+    if (
+        policy.get("idleAnimationAllowed") is not False
+        or policy.get("springAllowed") is not False
+        or policy.get("overshootAllowed") is not False
+        or policy.get("layoutPropertyAnimationAllowed") is not False
+        or policy.get("focusIndicatorAnimated") is not False
+    ):
+        raise ValidationError("motion policy permits a forbidden behavior")
+    if (
+        performance.get("targetFramesPerSecond") != 60
+        or performance.get("maximumTravelPx", 99) > 8
+        or performance.get("maximumConcurrentTransitionsPerSurface", 99) > 8
+    ):
+        raise ValidationError("motion performance limits are invalid")
+    state_names = set(tokens["states"]["hierarchy"])
+    if not state_names.issubset(transitions):
+        raise ValidationError("every semantic state must define animated behavior")
+    reduced_outcomes = reduced.get("stateOutcomes")
+    if not isinstance(reduced_outcomes, dict) or set(reduced_outcomes) != state_names:
+        raise ValidationError("every semantic state must define reduced-motion behavior")
+    motion = tokens["motion"]
+    duration_names = {
+        name
+        for name, value in motion.items()
+        if name.endswith("Ms") and isinstance(value, int)
+    }
+    curve_names = set(motion["curves"])
+    allowed_properties = {"opacity", "color", "transform"}
+    for name, transition in transitions.items():
+        if (
+            not isinstance(transition, dict)
+            or set(transition) != {"duration", "curve", "properties"}
+            or transition["duration"] not in duration_names
+            or transition["curve"] not in curve_names
+            or not isinstance(transition["properties"], list)
+            or not set(transition["properties"]).issubset(allowed_properties)
+        ):
+            raise ValidationError(f"motion transition {name} is invalid")
+    if (
+        reduced.get("duration") != "instantMs"
+        or reduced.get("spatialMotion") is not False
+        or reduced.get("opacityTransitions") is not False
+        or reduced.get("busyOutcome") != "static-semantic-glyph"
+    ):
+        raise ValidationError("reduced-motion behavior is incomplete")
 
 
 def validate_color_scheme(path: Path) -> None:
@@ -922,12 +1050,92 @@ def validate_artwork_evidence() -> None:
             raise ValidationError(f"Phase 4 artwork contact sheet is too small: {relative}")
 
 
+def validate_v6_north_star(version: str) -> None:
+    root = ROOT / "docs/evidence/v6/north-star"
+    manifest = load_json(root / "manifest.json")
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schemaVersion") != 1
+        or manifest.get("release") != version
+        or manifest.get("phase") != 1
+        or manifest.get("kind") != "rendered-north-star-prototype"
+        or manifest.get("prototype") is not True
+        or manifest.get("productionRuntime") is not False
+        or manifest.get("liveEvidence") is not False
+    ):
+        raise ValidationError("v6 north-star evidence identity is invalid")
+    comparisons = manifest.get("comparisons")
+    expected_files = {
+        "north-star-qt.png",
+        "north-star-plasma.png",
+        "north-star-session.png",
+        "north-star-tabbox.png",
+        "north-star-brand-wallpaper.png",
+        "north-star-motion-storyboard.png",
+    }
+    if (
+        not isinstance(comparisons, list)
+        or {entry.get("file") for entry in comparisons if isinstance(entry, dict)}
+        != expected_files
+    ):
+        raise ValidationError("v6 north-star comparison matrix is incomplete")
+    for entry in comparisons:
+        path = root / entry["file"]
+        baseline = (root / entry["baseline"]).resolve()
+        if (
+            not path.is_file()
+            or not baseline.is_file()
+            or entry.get("status") != "passed"
+            or entry.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
+            or entry.get("baselineSha256")
+            != hashlib.sha256(baseline.read_bytes()).hexdigest()
+            or png_dimensions(path) != png_dimensions(baseline)
+            or entry.get("rootMeanSquareDifference", 0) <= 0
+        ):
+            raise ValidationError(f"v6 north-star comparison is invalid: {entry['file']}")
+    sources = manifest.get("sources")
+    if not isinstance(sources, dict) or sources != {
+        "tokensSha256": hashlib.sha256((ROOT / "design/tokens.json").read_bytes()).hexdigest(),
+        "motionContractSha256": hashlib.sha256(
+            (ROOT / "design/motion-contract.json").read_bytes()
+        ).hexdigest(),
+        "rendererSha256": hashlib.sha256(
+            (ROOT / "tools/north_star_renderer.cpp").read_bytes()
+        ).hexdigest(),
+    }:
+        raise ValidationError("v6 north-star source lineage is stale")
+    scorecard = manifest.get("scorecard")
+    scores = scorecard.get("scores") if isinstance(scorecard, dict) else None
+    if (
+        not isinstance(scores, dict)
+        or scorecard.get("status") != "passed"
+        or any(not isinstance(score, int) or score < 4 for score in scores.values())
+    ):
+        raise ValidationError("v6 north-star scorecard does not meet the phase-one floor")
+    public_scorecard = load_json(ROOT / "docs/evidence/v6/visual-scorecard.json")
+    categories = (
+        public_scorecard.get("categories") if isinstance(public_scorecard, dict) else None
+    )
+    if (
+        not isinstance(categories, dict)
+        or set(categories) != set(scores)
+        or any(
+            category.get("v6Score") != scores[name]
+            or category.get("status") != "reviewed-prototype"
+            or category.get("evidence") != "north-star/manifest.json"
+            for name, category in categories.items()
+        )
+    ):
+        raise ValidationError("v6 visual scorecard is not linked to north-star evidence")
+
+
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
         ROOT / "scripts/release-check.py",
         ROOT / "scripts/sync_version.py",
         ROOT / "scripts/generate_design_system.py",
+        ROOT / "scripts/render_v6_north_star.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -939,6 +1147,7 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v5/qualification.json",
         ROOT / "docs/evidence/v6/qualification.json",
         ROOT / "docs/evidence/v6/baseline/manifest.json",
+        ROOT / "docs/evidence/v6/north-star/manifest.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1076,6 +1285,7 @@ def validate_generated_sources() -> None:
         "scripts/render_wallpaper.py",
         "scripts/render_artwork_evidence.py",
         "scripts/capture_v6_baseline.py",
+        "scripts/render_v6_north_star.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1122,7 +1332,8 @@ def validate_no_package_symlinks() -> None:
 
 def validate() -> None:
     version = validate_version()
-    validate_tokens(version)
+    tokens = validate_tokens(version)
+    validate_motion_contract(tokens, version)
     validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors")
     validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors")
     if (ROOT / "color-schemes/NoxForgeDark.colors").read_bytes() != (
@@ -1141,6 +1352,7 @@ def validate() -> None:
     validate_sddm(version)
     validate_wallpaper(version)
     validate_artwork_evidence()
+    validate_v6_north_star(version)
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()

@@ -55,12 +55,15 @@ def cpp_header(tokens: dict[str, object]) -> str:
     reduced_motion = motion["reducedMotion"]
     assert isinstance(reduced_motion, dict)
     functions = (
-        ("background", "background"), ("surface", "surface"),
-        ("surfaceRaised", "surfaceRaised"), ("surfaceHover", "surfaceHover"),
+        ("background", "background"), ("surfaceSunken", "surfaceSunken"),
+        ("surface", "surface"), ("surfaceRaised", "surfaceRaised"),
+        ("surfaceOverlay", "surfaceOverlay"), ("surfaceHover", "surfaceHover"),
         ("surfaceSelected", "surfaceSelected"), ("border", "border"),
-        ("borderStrong", "borderStrong"), ("textPrimary", "textPrimary"),
+        ("borderStrong", "borderStrong"), ("edgeHighlight", "edgeHighlight"),
+        ("outlineMuted", "outlineMuted"), ("textPrimary", "textPrimary"),
         ("textSecondary", "textSecondary"), ("textDisabled", "textDisabled"),
         ("accent", "accent"), ("accentPressed", "accentPressed"),
+        ("accentSoft", "accentSoft"), ("accentMuted", "accentMuted"),
         ("cyan", "detailCyan"), ("violet", "detailViolet"),
         ("negative", "negative"), ("warning", "neutral"),
     )
@@ -82,6 +85,7 @@ inline QColor accentInk() {{ return background(); }}
 
 constexpr int radius = {geometry["cornerRadius"]};
 constexpr int compactRadius = {geometry["compactRadius"]};
+constexpr int overlayRadius = {geometry["overlayRadius"]};
 constexpr int notch = {geometry["forgeNotch"]};
 constexpr int borderWidth = {geometry["borderWidth"]};
 constexpr int focusWidth = {geometry["focusWidth"]};
@@ -96,12 +100,20 @@ constexpr qreal scrimOpacity = {opacity["scrim"]};
 constexpr qreal hoverOverlayOpacity = {overlay["hover"]["opacity"]};
 constexpr qreal pressedOverlayOpacity = {overlay["pressed"]["opacity"]};
 constexpr qreal busyOverlayOpacity = {overlay["busy"]["opacity"]};
-constexpr int controlShadowOffsetY = {shadow["control"]["offsetY"]};
-constexpr int controlShadowBlurRadius = {shadow["control"]["blurRadius"]};
-constexpr qreal controlShadowOpacity = {shadow["control"]["opacity"]};
-constexpr int popupShadowOffsetY = {shadow["popup"]["offsetY"]};
-constexpr int popupShadowBlurRadius = {shadow["popup"]["blurRadius"]};
-constexpr qreal popupShadowOpacity = {shadow["popup"]["opacity"]};
+constexpr int controlShadowOffsetY = {shadow["ambient"]["offsetY"]};
+constexpr int controlShadowBlurRadius = {shadow["ambient"]["blurRadius"]};
+constexpr qreal controlShadowOpacity = {shadow["ambient"]["opacity"]};
+constexpr int popupShadowOffsetY = {shadow["overlay"]["offsetY"]};
+constexpr int popupShadowBlurRadius = {shadow["overlay"]["blurRadius"]};
+constexpr qreal popupShadowOpacity = {shadow["overlay"]["opacity"]};
+constexpr int instantDuration = {motion["instantMs"]};
+constexpr int pressDuration = {motion["pressMs"]};
+constexpr int productiveDuration = {motion["productiveMs"]};
+constexpr int selectionDuration = {motion["selectionMs"]};
+constexpr int containerDuration = {motion["containerMs"]};
+constexpr int expressiveDuration = {motion["expressiveMs"]};
+constexpr int staggerDuration = {motion["staggerMs"]};
+constexpr int busyCycleDuration = {motion["busyCycleMs"]};
 constexpr int reducedMotionDuration = {reduced_motion["durationMs"]};
 constexpr bool reducedSpatialMotion = {str(reduced_motion["spatialMotion"]).lower()};
 constexpr bool reducedBusyIndicatorStatic = {str(reduced_motion["busyIndicatorStatic"]).lower()};
@@ -129,7 +141,12 @@ def qml_tokens(tokens: dict[str, object]) -> str:
         for value in (colors, geometry, opacity, overlay, shadow, states, motion, typography)
     )
     reduced_motion = motion["reducedMotion"]
-    assert isinstance(reduced_motion, dict)
+    typography_roles = typography["roles"]
+    curves = motion["curves"]
+    assert all(
+        isinstance(value, dict)
+        for value in (reduced_motion, typography_roles, curves)
+    )
     color_lines = "\n".join(
         f'    readonly property color {name}: "{value}"' for name, value in colors.items()
     )
@@ -141,6 +158,7 @@ QtObject {{
 {color_lines}
     readonly property int radius: {geometry["cornerRadius"]}
     readonly property int compactRadius: {geometry["compactRadius"]}
+    readonly property int overlayRadius: {geometry["overlayRadius"]}
     readonly property int notch: {geometry["forgeNotch"]}
     readonly property int compactSpacing: {geometry["compactSpacing"]}
     readonly property int standardSpacing: {geometry["standardSpacing"]}
@@ -160,21 +178,40 @@ QtObject {{
     readonly property real pressedOverlayOpacity: {overlay["pressed"]["opacity"]}
     readonly property color busyOverlayColor: "{colors[overlay["busy"]["color"]]}"
     readonly property real busyOverlayOpacity: {overlay["busy"]["opacity"]}
-    readonly property int controlShadowOffsetY: {shadow["control"]["offsetY"]}
-    readonly property int controlShadowBlurRadius: {shadow["control"]["blurRadius"]}
-    readonly property real controlShadowOpacity: {shadow["control"]["opacity"]}
-    readonly property int popupShadowOffsetY: {shadow["popup"]["offsetY"]}
-    readonly property int popupShadowBlurRadius: {shadow["popup"]["blurRadius"]}
-    readonly property real popupShadowOpacity: {shadow["popup"]["opacity"]}
+    readonly property int controlShadowOffsetY: {shadow["ambient"]["offsetY"]}
+    readonly property int controlShadowBlurRadius: {shadow["ambient"]["blurRadius"]}
+    readonly property real controlShadowOpacity: {shadow["ambient"]["opacity"]}
+    readonly property int popupShadowOffsetY: {shadow["overlay"]["offsetY"]}
+    readonly property int popupShadowBlurRadius: {shadow["overlay"]["blurRadius"]}
+    readonly property real popupShadowOpacity: {shadow["overlay"]["opacity"]}
+    readonly property int instantDuration: {motion["instantMs"]}
     readonly property int pressDuration: {motion["pressMs"]}
-    readonly property int hoverDuration: {motion["hoverMs"]}
-    readonly property int popupDuration: {motion["popupMs"]}
-    readonly property int busyDuration: {motion["busyMs"]}
+    readonly property int productiveDuration: {motion["productiveMs"]}
+    readonly property int selectionDuration: {motion["selectionMs"]}
+    readonly property int containerDuration: {motion["containerMs"]}
+    readonly property int expressiveDuration: {motion["expressiveMs"]}
+    readonly property int staggerDuration: {motion["staggerMs"]}
+    readonly property int busyCycleDuration: {motion["busyCycleMs"]}
+    readonly property int hoverDuration: productiveDuration
+    readonly property int popupDuration: containerDuration
+    readonly property int busyDuration: busyCycleDuration
+    readonly property list<real> productiveEnterCurve: {json.dumps(curves["productiveEnter"])}
+    readonly property list<real> standardCurve: {json.dumps(curves["standard"])}
+    readonly property list<real> exitCurve: {json.dumps(curves["exit"])}
+    readonly property list<real> expressiveCurve: {json.dumps(curves["expressive"])}
     readonly property int reducedMotionDuration: {reduced_motion["durationMs"]}
     readonly property bool reducedSpatialMotion: {str(reduced_motion["spatialMotion"]).lower()}
     readonly property bool reducedBusyIndicatorStatic: {str(reduced_motion["busyIndicatorStatic"]).lower()}
-    readonly property int bodyWeight: {typography["bodyWeight"]}
-    readonly property int headingWeight: {typography["headingWeight"]}
+    readonly property bool reducedOpacityTransitions: {str(reduced_motion["opacityTransitions"]).lower()}
+    readonly property int bodyWeight: {typography_roles["body"]["weight"]}
+    readonly property int headingWeight: {typography_roles["sectionTitle"]["weight"]}
+    readonly property int displayClockSize: {typography_roles["displayClock"]["pixelSize"]}
+    readonly property int surfaceTitleSize: {typography_roles["surfaceTitle"]["pixelSize"]}
+    readonly property int sectionTitleSize: {typography_roles["sectionTitle"]["pixelSize"]}
+    readonly property int bodySize: {typography_roles["body"]["pixelSize"]}
+    readonly property int controlLabelSize: {typography_roles["controlLabel"]["pixelSize"]}
+    readonly property int metadataSize: {typography_roles["metadata"]["pixelSize"]}
+    readonly property int microLabelSize: {typography_roles["microLabel"]["pixelSize"]}
     readonly property int brandTracking: {typography["brandTracking"]}
     readonly property string canonicalTokensJson: '{canonical_tokens(tokens)}'
 }}

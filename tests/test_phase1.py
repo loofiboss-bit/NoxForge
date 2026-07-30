@@ -49,14 +49,16 @@ class PhaseOneTests(unittest.TestCase):
     def test_repository_validation(self) -> None:
         VALIDATE.validate()
 
-    def test_schema_v4_preserves_anchors_and_grid(self) -> None:
-        self.assertEqual(self.tokens["schemaVersion"], 4)
+    def test_schema_v5_preserves_identity_and_grid(self) -> None:
+        self.assertEqual(self.tokens["schemaVersion"], 5)
         self.assertEqual(self.tokens["colors"]["background"], "#0E1318")
         self.assertEqual(self.tokens["colors"]["accent"], "#A3FF47")
+        self.assertEqual(self.tokens["colors"]["surfaceSelected"], "#1E2B31")
         geometry = self.tokens["geometry"]
         self.assertEqual(geometry["forgeNotch"], 4)
         self.assertEqual(geometry["compactSpacing"], 4)
         self.assertEqual(geometry["standardSpacing"], 8)
+        self.assertEqual(geometry["overlayRadius"], 8)
         self.assertEqual(geometry["controlHeight"] % 4, 0)
         self.assertEqual(geometry["largeControlHeight"] % 4, 0)
 
@@ -84,6 +86,7 @@ class PhaseOneTests(unittest.TestCase):
             self.assertIn(state["overlay"], self.tokens["overlay"])
         self.assertEqual(hierarchy["focus"]["indicator"], "singleFocusRing")
         self.assertEqual(hierarchy["selected"]["indicator"], "leadingMarker")
+        self.assertEqual(hierarchy["focus"]["motion"], "instantMs")
         self.assertEqual(self.tokens["motion"]["reducedMotion"]["durationMs"], 0)
         self.assertFalse(self.tokens["motion"]["reducedMotion"]["spatialMotion"])
 
@@ -125,6 +128,17 @@ class PhaseOneTests(unittest.TestCase):
             cwd=ROOT,
             check=True,
         )
+
+    def test_motion_contract_covers_animated_and_reduced_states(self) -> None:
+        contract = json.loads(
+            (ROOT / "design/motion-contract.json").read_text(encoding="utf-8")
+        )
+        states = set(self.tokens["states"]["hierarchy"])
+        self.assertLessEqual(states, set(contract["transitions"]))
+        self.assertEqual(states, set(contract["reducedMotion"]["stateOutcomes"]))
+        self.assertFalse(contract["policy"]["idleAnimationAllowed"])
+        self.assertFalse(contract["policy"]["focusIndicatorAnimated"])
+        self.assertLessEqual(contract["performance"]["maximumTravelPx"], 8)
 
     def test_hallmark_scores_meet_phase_floor(self) -> None:
         scores = self.tokens["hallmark"]
@@ -169,8 +183,8 @@ class PhaseOneTests(unittest.TestCase):
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(standalone, encoding="utf-8")
         self.assertEqual(parser["General"]["ColorScheme"], "NoxForgeDark")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "38,54,29")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "38,54,29")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "30,43,49")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "30,43,49")
         self.assertEqual(parser["Colors:Selection"]["DecorationFocus"], "163,255,71")
 
 

@@ -25,6 +25,7 @@ GENERATOR_CHECKS = (
     ("render_artwork_evidence.py", "--check"),
     ("check_plasma_rasters.py",),
     ("capture_v6_baseline.py", "--check"),
+    ("render_v6_north_star.py", "--check"),
 )
 QML_SURFACES = (
     "sddm/NoxForge/Main.qml",
