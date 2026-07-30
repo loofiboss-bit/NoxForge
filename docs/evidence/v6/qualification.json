@@ -10,60 +10,75 @@
   "automatedCases": [
     {
       "id": "release-gate",
-      "status": "pending",
-      "reason": "V6 implementation and the exact candidate gate are not complete."
+      "status": "passed",
+      "evidence": "automated-gate.md",
+      "reason": "The complete Phase 7 local release gate passed without installation, activation, or live-session mutation."
     },
     {
       "id": "reduced-motion",
-      "status": "pending",
-      "reason": "Native Qt zero-duration and authentic offscreen QML reduced-motion scenarios pass, but live cross-surface interaction remains Phase 7 scope."
+      "status": "passed",
+      "evidence": "accessibility-review.json",
+      "reason": "Native Qt zero-duration behavior and all authentic offscreen QML reduced-motion scenarios pass; this does not promote them to live evidence."
     },
     {
       "id": "deterministic-evidence",
-      "status": "pending",
-      "reason": "Native Qt and session-surface start/mid/end evidence is deterministic; later v6 surfaces and the exact final candidate remain incomplete."
+      "status": "passed",
+      "evidence": "automated-gate.md",
+      "reason": "All current v6 generated sources and static evidence pass repeated drift checks; Phase 8 must rerun the gate for the exact final candidate."
+    },
+    {
+      "id": "accessibility",
+      "status": "passed",
+      "evidence": "accessibility-review.json",
+      "reason": "Contrast, non-color indicators, system font, keyboard structure, RTL, four scales, and reduced motion pass automated checks; offscreen Qt reported no high-contrast preference."
+    },
+    {
+      "id": "performance",
+      "status": "passed",
+      "evidence": "performance.json",
+      "reason": "Three complete-tree medians remain within ten percent of v5 and 500 native motion cycles pass memory, cleanup, input-state, and idle-timer budgets."
     }
   ],
   "liveCases": [
     {
       "id": "qt-interactive-motion",
       "status": "blocked",
-      "reason": "Phase 7 disposable Wayland input qualification has not run."
+      "reason": "A disposable Wayland session with injected keyboard and pointer input is unavailable within the authorized no-live environment; offscreen probes are not interactive evidence."
     },
     {
       "id": "plasma-blur-on-off",
       "status": "blocked",
-      "reason": "Phase 4 static blur-on and blur-off SVG source atlases pass, but Phase 7 disposable Plasma compositor qualification has not run."
+      "reason": "No authorized hardware-composited disposable Plasma session is available for live blur-on/off comparison; Phase 4 source atlases remain static evidence."
     },
     {
       "id": "plasma-layout-and-fallback",
       "status": "blocked",
-      "reason": "All 43 source families, four edge-oriented task states, compact-layout contract, and two-output source matrix are complete; Phase 7 live shell fallback, panel, and multi-output qualification has not run."
+      "reason": "All 43 source families and the static layout matrix pass, but authorized live Plasma panel, fallback, compact-layout, and two-output composition are unavailable."
     },
     {
       "id": "sddm-authentication-and-power",
       "status": "blocked",
-      "reason": "Authentic offscreen SDDM composition covers user, session, keyboard, busy, error, and power states, but real authentication and power flows remain unavailable until Phase 7."
+      "reason": "Real SDDM authentication and power actions require changing or driving a login environment, which is outside the explicit no-SDDM and no-live boundary."
     },
     {
       "id": "logout-keyboard-and-pointer",
       "status": "blocked",
-      "reason": "Authentic offscreen standard, long RTL, keyboard-focus, and reduced-motion states pass; Phase 7 injected keyboard and pointer qualification has not run."
+      "reason": "Authentic offscreen Logout states pass, but no authorized disposable Wayland input injector is available for real keyboard and pointer flow."
     },
     {
       "id": "held-alt-tab",
       "status": "blocked",
-      "reason": "Authentic offscreen long-title, empty, many-window, RTL, keyboard, and reduced-motion states pass; Phase 7 held Alt+Tab qualification has not run."
+      "reason": "Authentic offscreen TabBox scenarios pass, but a held Alt+Tab cycle needs an authorized KWin session and injected keyboard input that are unavailable."
     },
     {
       "id": "aurorae-composed-motion",
       "status": "blocked",
-      "reason": "Phase 6 deterministic Aurorae materials, geometry, button states, and structural source sheet pass; Phase 7 live composed window-decoration qualification has not run."
+      "reason": "Deterministic Aurorae sources pass, but active/inactive/maximized composition and pointer states require an authorized live KWin session that is unavailable."
     },
     {
       "id": "cursor-live-scale",
       "status": "blocked",
-      "reason": "Phase 6 cursor sources, physical 24/32/48 px files, hotspots, and animation timing pass; Phase 7 live compositor scaling and motion qualification has not run."
+      "reason": "Physical cursor payloads pass, but live 100/140 percent compositor scaling and motion require an authorized pointer-capable Wayland session that is unavailable."
     }
   ]
 }

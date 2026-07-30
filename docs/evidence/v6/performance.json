@@ -1,0 +1,139 @@
+{
+  "baselineCommit": "6a113e71980d106c38a2bbdece6df171c0ae9ed3",
+  "environment": {
+    "platform": "Linux-7.1.5-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.14.6",
+    "qt": "6.11.1"
+  },
+  "maximumRatio": 1.1,
+  "method": "Eleven warmed, interleaved offscreen process medians compare the complete v6 tree with the immutable reviewed v5 baseline. A separate native probe runs 500 input and animation cycles, checks semantic end states, trims and compares glibc heap allocation, and requires the shared timer to stop.",
+  "metrics": {
+    "controlRendering": {
+      "baselineMedianMs": 93.357,
+      "baselineSamplesMs": [
+        94.246,
+        95.657,
+        91.041,
+        93.947,
+        97.414,
+        91.785,
+        93.357,
+        91.68,
+        89.662,
+        89.386,
+        99.38
+      ],
+      "currentMedianMs": 95.211,
+      "currentSamplesMs": [
+        94.007,
+        95.389,
+        94.279,
+        94.994,
+        98.468,
+        96.042,
+        95.211,
+        95.823,
+        92.901,
+        95.978,
+        92.354
+      ],
+      "limit": 1.1,
+      "ratio": 1.0199,
+      "result": "passed"
+    },
+    "galleryStartup": {
+      "baselineMedianMs": 67.408,
+      "baselineSamplesMs": [
+        67.718,
+        70.365,
+        67.408,
+        68.634,
+        67.401,
+        69.414,
+        68.249,
+        64.2,
+        64.163,
+        64.419,
+        63.671
+      ],
+      "currentMedianMs": 68.341,
+      "currentSamplesMs": [
+        75.049,
+        68.341,
+        73.248,
+        76.49,
+        68.702,
+        76.447,
+        66.291,
+        65.921,
+        66.205,
+        67.102,
+        67.078
+      ],
+      "limit": 1.1,
+      "ratio": 1.0138,
+      "result": "passed"
+    },
+    "qmlFirstFrame": {
+      "baselineMedianMs": 175.388,
+      "baselineSamplesMs": [
+        170.645,
+        167.827,
+        167.695,
+        174.808,
+        175.749,
+        176.009,
+        175.388,
+        173.449,
+        186.152,
+        176.609,
+        175.807
+      ],
+      "currentMedianMs": 180.126,
+      "currentSamplesMs": [
+        173.44,
+        166.211,
+        180.258,
+        190.379,
+        213.617,
+        237.561,
+        180.126,
+        186.979,
+        179.153,
+        178.973,
+        175.055
+      ],
+      "limit": 1.1,
+      "ratio": 1.027,
+      "result": "passed"
+    }
+  },
+  "motionStress": {
+    "averageCycleMs": 0.408904174,
+    "cycles": 500,
+    "failedCases": 0,
+    "heapGrowthBytes": 0,
+    "heapGrowthLimitBytes": 262144,
+    "idleTimerActive": false,
+    "memoryResult": "passed",
+    "performanceResult": "passed",
+    "result": "passed",
+    "trackedWidgetsAfterCleanup": 0
+  },
+  "phase": 7,
+  "result": "passed",
+  "schemaVersion": 1,
+  "sources": {
+    "CMakeLists.txt": "42ec434c69cabd51e31f930ceb8856bd352f34398dae5a4adb8cd2818153c5fc",
+    "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "scripts/measure_v6_phase7_performance.py": "699c3f90a17aa3bc7fdca1401260056153617b6420acf179eb94b56171cac068",
+    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "src/style/noxforgemotion.cpp": "298d4137054786db65a3b801256dedd32dbcbccae1bd8784df6f44d9f232cb19",
+    "src/style/noxforgemotion.h": "c53c05f4a09b839d9845ce034362708009ca8e62ff04a5a52a1c5f40bc881996",
+    "src/style/noxforgestyle.cpp": "b8d0ddb41ee18129ad754d54cf3f5b42953baad1766524666dc1f27a73204adb",
+    "tests/qt/motion_qualification_probe.cpp": "b9692c1567d094e0761cb457203de012781c7313a9325c22f2aa5f513b63933d",
+    "tools/sddm_renderer.cpp": "f64c4085a673494647876630d3ec553ed613ac14ae8d0d7a4ea277eb1d8346c1",
+    "tools/widget_gallery.cpp": "2e2aa5ad055d9cf645e88431cf316700d0f2f69e7603f2fea3325f607272e256"
+  },
+  "version": "6.0.0-dev"
+}

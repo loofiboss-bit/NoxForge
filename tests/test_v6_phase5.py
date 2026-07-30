@@ -190,7 +190,8 @@ class V6PhaseFiveTests(unittest.TestCase):
             "held-alt-tab",
         ):
             self.assertEqual(live[case_id]["status"], "blocked")
-            self.assertIn("Phase 7", live[case_id]["reason"])
+            self.assertTrue(live[case_id]["reason"])
+            self.assertNotIn("passed", live[case_id]["reason"].lower())
 
 
 if __name__ == "__main__":

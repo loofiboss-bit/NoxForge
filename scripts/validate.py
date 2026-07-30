@@ -1622,6 +1622,70 @@ def validate_v6_edge_evidence(version: str) -> None:
             raise ValidationError(f"v6 edge-polish source drift: {relative}")
 
 
+def validate_v6_phase7_evidence(version: str) -> None:
+    accessibility = load_json(ROOT / "docs/evidence/v6/accessibility-review.json")
+    if (
+        not isinstance(accessibility, dict)
+        or accessibility.get("schemaVersion") != 1
+        or accessibility.get("version") != version
+        or accessibility.get("phase") != 7
+        or accessibility.get("reviewStatus") != "passed"
+        or accessibility.get("liveInteraction") is not False
+        or accessibility.get("hardcodedRuntimeFontFamilies") != []
+    ):
+        raise ValidationError("v6 Phase 7 accessibility evidence identity is invalid")
+    reviews = accessibility.get("reviews")
+    if not isinstance(reviews, dict) or not reviews or not all(reviews.values()):
+        raise ValidationError("v6 Phase 7 accessibility review is incomplete")
+    preference = accessibility.get("highContrastPreference")
+    if (
+        not isinstance(preference, dict)
+        or preference.get("preference") not in {"NoPreference", "HighContrast"}
+        or preference.get("result") not in {"passed", "not-exposed"}
+        or (preference.get("preference") == "NoPreference"
+            and preference.get("result") != "not-exposed")
+    ):
+        raise ValidationError("v6 Phase 7 high-contrast observation is not truthful")
+    for pair in accessibility.get("contrastPairs", {}).values():
+        if pair.get("actual", 0) < pair.get("minimum", 999):
+            raise ValidationError("v6 Phase 7 contrast evidence contains a failed pair")
+
+    performance = load_json(ROOT / "docs/evidence/v6/performance.json")
+    if (
+        not isinstance(performance, dict)
+        or performance.get("schemaVersion") != 1
+        or performance.get("version") != version
+        or performance.get("phase") != 7
+        or performance.get("result") != "passed"
+        or performance.get("baselineCommit")
+        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("maximumRatio") != 1.1
+    ):
+        raise ValidationError("v6 Phase 7 performance evidence identity is invalid")
+    metrics = performance.get("metrics")
+    if (
+        not isinstance(metrics, dict)
+        or set(metrics) != {"galleryStartup", "controlRendering", "qmlFirstFrame"}
+    ):
+        raise ValidationError("v6 Phase 7 performance metrics are incomplete")
+    for metric in metrics.values():
+        if metric.get("result") != "passed" or metric.get("ratio", 99) > 1.1:
+            raise ValidationError("v6 Phase 7 performance metric failed")
+    stress = performance.get("motionStress")
+    if (
+        not isinstance(stress, dict)
+        or stress.get("result") != "passed"
+        or stress.get("cycles") != 500
+        or stress.get("failedCases") != 0
+        or stress.get("idleTimerActive") is not False
+        or stress.get("trackedWidgetsAfterCleanup") != 0
+        or stress.get("heapGrowthBytes", -1) < 0
+        or stress.get("heapGrowthBytes", 999999999)
+        > stress.get("heapGrowthLimitBytes", -1)
+    ):
+        raise ValidationError("v6 Phase 7 motion stress evidence failed")
+
+
 def validate_tooling() -> None:
     required = (
         ROOT / "scripts/build.py",
@@ -1636,6 +1700,8 @@ def validate_tooling() -> None:
         ROOT / "scripts/render_v6_session_evidence.py",
         ROOT / "scripts/measure_v6_phase5_performance.py",
         ROOT / "scripts/render_v6_edge_evidence.py",
+        ROOT / "scripts/check_v6_accessibility.py",
+        ROOT / "scripts/measure_v6_phase7_performance.py",
         ROOT / "scripts/install.sh",
         ROOT / "scripts/uninstall.sh",
         ROOT / "scripts/install-system.sh",
@@ -1654,6 +1720,9 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/session/manifest.json",
         ROOT / "docs/evidence/v6/session/performance.json",
         ROOT / "docs/evidence/v6/edge-polish/manifest.json",
+        ROOT / "docs/evidence/v6/accessibility-review.json",
+        ROOT / "docs/evidence/v6/performance.json",
+        ROOT / "docs/evidence/v6/automated-gate.md",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1767,17 +1836,32 @@ def validate_tooling() -> None:
         or policy.get("unavailableCasesRemainBlocked") is not True
     ):
         raise ValidationError("v6 evidence policy is invalid")
-    for group in ("automatedCases", "liveCases"):
-        cases = v6.get(group)
-        if not isinstance(cases, list) or not cases:
-            raise ValidationError(f"v6 {group} are missing")
-        for case in cases:
-            if (
-                not isinstance(case, dict)
-                or case.get("status") not in {"pending", "blocked"}
-                or not case.get("reason")
-            ):
-                raise ValidationError(f"v6 {group} contains a prematurely promoted result")
+    automated_cases = v6.get("automatedCases")
+    if not isinstance(automated_cases, list) or not automated_cases:
+        raise ValidationError("v6 automatedCases are missing")
+    for case in automated_cases:
+        if (
+            not isinstance(case, dict)
+            or case.get("status") not in {"pending", "blocked", "passed"}
+            or not case.get("reason")
+        ):
+            raise ValidationError("v6 automatedCases contain an invalid result")
+        if case.get("status") == "passed":
+            linked = case.get("evidence")
+            if not isinstance(linked, str) or not (
+                ROOT / "docs/evidence/v6" / linked
+            ).is_file():
+                raise ValidationError("passed v6 automated evidence must link a real file")
+    live_cases = v6.get("liveCases")
+    if not isinstance(live_cases, list) or not live_cases:
+        raise ValidationError("v6 liveCases are missing")
+    for case in live_cases:
+        if (
+            not isinstance(case, dict)
+            or case.get("status") not in {"pending", "blocked"}
+            or not case.get("reason")
+        ):
+            raise ValidationError("v6 liveCases contain a prematurely promoted result")
 
 
 def validate_generated_sources() -> None:
@@ -1798,6 +1882,8 @@ def validate_generated_sources() -> None:
         "scripts/render_v6_session_evidence.py",
         "scripts/measure_v6_phase5_performance.py",
         "scripts/render_v6_edge_evidence.py",
+        "scripts/check_v6_accessibility.py",
+        "scripts/measure_v6_phase7_performance.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
@@ -1869,6 +1955,7 @@ def validate() -> None:
     validate_v6_motion_evidence(version)
     validate_v6_session_evidence(version)
     validate_v6_edge_evidence(version)
+    validate_v6_phase7_evidence(version)
     validate_tooling()
     validate_generated_sources()
     validate_json_and_xml()
