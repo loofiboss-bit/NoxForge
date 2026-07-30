@@ -27,6 +27,8 @@ GENERATOR_CHECKS = (
     ("capture_v6_baseline.py", "--check"),
     ("render_v6_north_star.py", "--check"),
     ("render_v6_previews.py", "--check"),
+    ("render_v6_motion_evidence.py", "--check"),
+    ("measure_v6_phase3_performance.py", "--check"),
 )
 QML_SURFACES = (
     "sddm/NoxForge/Main.qml",
@@ -155,6 +157,7 @@ def main() -> int:
     for command in GENERATOR_CHECKS:
         run([sys.executable, f"scripts/{command[0]}", *command[1:]])
     run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
+    run([sys.executable, "scripts/check_v6_phase3_sanitizers.py"])
 
     with tempfile.TemporaryDirectory(prefix="noxforge-release-check-") as temp:
         temporary = Path(temp)

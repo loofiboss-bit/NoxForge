@@ -14,12 +14,20 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
-add_library(noxforge_style MODULE
+option(NOXFORGE_ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" OFF)
+
+set(NOXFORGE_STYLE_SOURCES
     src/style/noxforgepalette.h
+    src/style/noxforgemotion.h
+    src/style/noxforgemotion.cpp
     src/style/noxforgestyle.h
     src/style/noxforgestyle.cpp
     src/style/noxforgestyleplugin.cpp
     src/style/noxforgestyleplugin.json
+)
+
+add_library(noxforge_style MODULE
+    ${NOXFORGE_STYLE_SOURCES}
 )
 target_link_libraries(noxforge_style PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 target_compile_definitions(noxforge_style PRIVATE QT_NO_KEYWORDS)
@@ -31,8 +39,28 @@ set_target_properties(noxforge_style PROPERTIES
 add_executable(noxforge_style_probe tests/qt/style_probe.cpp)
 target_link_libraries(noxforge_style_probe PRIVATE Qt6::Core Qt6::Widgets)
 
+add_executable(
+    noxforge_motion_probe
+    tests/qt/motion_probe.cpp
+    src/style/noxforgepalette.h
+    src/style/noxforgemotion.h
+    src/style/noxforgemotion.cpp
+)
+target_include_directories(noxforge_motion_probe PRIVATE src/style)
+target_link_libraries(noxforge_motion_probe PRIVATE Qt6::Core Qt6::Widgets)
+
+if(NOXFORGE_ENABLE_SANITIZERS)
+    foreach(target noxforge_style noxforge_style_probe noxforge_motion_probe)
+        target_compile_options(${target} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+        target_link_options(${target} PRIVATE -fsanitize=address,undefined)
+    endforeach()
+endif()
+
 add_executable(noxforge_widget_gallery tools/widget_gallery.cpp)
 target_link_libraries(noxforge_widget_gallery PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+
+add_executable(noxforge_motion_state_renderer tools/motion_state_renderer.cpp)
+target_link_libraries(noxforge_motion_state_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 
 add_executable(noxforge_sddm_renderer tools/sddm_renderer.cpp)
 target_link_libraries(noxforge_sddm_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
@@ -81,6 +109,10 @@ add_test(
         "${CMAKE_SOURCE_DIR}/sddm/NoxForge/Main.qml"
         "${CMAKE_SOURCE_DIR}/sddm/NoxForge/background.png"
         "${CMAKE_BINARY_DIR}/sddm-qml-surface.png"
+)
+add_test(NAME motion-controller-lifecycle COMMAND noxforge_motion_probe)
+set_tests_properties(motion-controller-lifecycle PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
 )
 set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 

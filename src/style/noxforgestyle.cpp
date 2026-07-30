@@ -3,10 +3,12 @@
 
 #include "noxforgepalette.h"
 
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QList>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStyleHints>
 #include <QStyleOption>
 #include <QStyleOptionButton>
 #include <QStyleOptionComboBox>
@@ -18,6 +20,7 @@
 #include <QStyleOptionSpinBox>
 #include <QStyleOptionTab>
 #include <QStyleOptionToolButton>
+#include <QWidget>
 
 namespace NP = NoxForgePalette;
 
@@ -50,18 +53,24 @@ bool enabled(const QStyleOption *option)
     return option->state.testFlag(QStyle::State_Enabled);
 }
 
-QColor stateSurface(const QStyleOption *option)
+QColor mixedColor(const QColor &from, const QColor &to, qreal progress)
+{
+    const qreal bounded = qBound(0.0, progress, 1.0);
+    return QColor::fromRgbF(
+        from.redF() + (to.redF() - from.redF()) * bounded,
+        from.greenF() + (to.greenF() - from.greenF()) * bounded,
+        from.blueF() + (to.blueF() - from.blueF()) * bounded,
+        from.alphaF() + (to.alphaF() - from.alphaF()) * bounded
+    );
+}
+
+QColor stateSurface(const QStyleOption *option, qreal hover, qreal press)
 {
     if (!enabled(option)) {
         return NP::surface();
     }
-    if (option->state.testFlag(QStyle::State_Sunken)) {
-        return NP::surfaceSelected();
-    }
-    if (option->state.testFlag(QStyle::State_MouseOver)) {
-        return NP::surfaceHover();
-    }
-    return NP::surfaceRaised();
+    const QColor hovered = mixedColor(NP::surfaceRaised(), NP::surfaceHover(), hover);
+    return mixedColor(hovered, NP::surfaceSunken(), press);
 }
 
 void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
@@ -134,6 +143,7 @@ void drawLabelWithPalette(const QCommonStyle *style, QStyle::ControlElement elem
 } // namespace
 
 NoxForgeStyle::NoxForgeStyle()
+    : m_motion(this)
 {
     setObjectName(QStringLiteral("NoxForge"));
 }
@@ -171,6 +181,36 @@ void NoxForgeStyle::polish(QPalette &palette)
     }
 }
 
+void NoxForgeStyle::polish(QWidget *widget)
+{
+    QCommonStyle::polish(widget);
+    m_motion.setDurationScale(motionScale(widget));
+    const bool hoverEffects = QApplication::styleHints()
+        ? QApplication::styleHints()->useHoverEffects() : true;
+    m_motion.polish(widget, hoverEffects);
+}
+
+void NoxForgeStyle::unpolish(QWidget *widget)
+{
+    m_motion.unpolish(widget);
+    QCommonStyle::unpolish(widget);
+}
+
+qreal NoxForgeStyle::motionScale(const QWidget *widget) const
+{
+    const int effectiveDuration = QCommonStyle::styleHint(
+        SH_Widget_Animation_Duration, nullptr, widget, nullptr);
+    if (effectiveDuration <= 0)
+        return 0.0;
+    return qBound(0.0, qreal(effectiveDuration) / 200.0, 4.0);
+}
+
+qreal NoxForgeStyle::motionValue(
+    const QWidget *widget, NoxForgeMotion::Channel channel, bool target) const
+{
+    return m_motion.value(widget, channel, target);
+}
+
 int NoxForgeStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
     switch (metric) {
@@ -202,6 +242,8 @@ int NoxForgeStyle::styleHint(StyleHint hint, const QStyleOption *option,
     case SH_ItemView_ActivateItemOnSingleClick: return 0;
     case SH_MenuBar_AltKeyNavigation: return 1;
     case SH_FocusFrame_AboveWidget: return 1;
+    case SH_Widget_Animation_Duration:
+        return qRound(NP::productiveDuration * motionScale(widget));
     default: return QCommonStyle::styleHint(hint, option, widget, returnData);
     }
 }
@@ -396,10 +438,22 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_PanelButtonTool: {
         const auto *button = qstyleoption_cast<const QStyleOptionButton *>(option);
         const bool primary = button && button->features.testFlag(QStyleOptionButton::DefaultButton);
-        QColor fill = primary ? (option->state.testFlag(State_Sunken) ? NP::accentPressed() : NP::accent()) : stateSurface(option);
+        const bool hoverTarget = option->state.testFlag(State_MouseOver);
+        const bool pressTarget = option->state.testFlag(State_Sunken);
+        const qreal hover = motionValue(widget, NoxForgeMotion::Channel::Hover, hoverTarget);
+        const qreal press = motionValue(widget, NoxForgeMotion::Channel::Press, pressTarget);
+        QColor fill = primary
+            ? mixedColor(NP::accent(), NP::accentPressed(), press)
+            : stateSurface(option, hover, press);
         QColor stroke = option->state.testFlag(State_HasFocus)
             ? (primary ? NP::background() : NP::accent()) : NP::border();
         const bool focused = option->state.testFlag(State_HasFocus);
+        if (enabled(option) && press < 0.98) {
+            const QColor shadow = mixedColor(QColor(8, 11, 14, 0),
+                                             QColor(8, 11, 14, 90), 1.0 - press);
+            paintSurface(painter, option->rect.translated(0, 1), shadow, Qt::transparent,
+                         0, false);
+        }
         paintSurface(painter, option->rect, fill, stroke,
                      focused ? NP::focusWidth : NP::borderWidth, focused);
         return;
@@ -413,8 +467,18 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         return;
     case PE_PanelMenu:
     case PE_PanelTipLabel:
-    case PE_Frame:
         paintSurface(painter, option->rect, NP::surface(), NP::border());
+        return;
+    case PE_Frame:
+        if (qobject_cast<const QAbstractItemView *>(widget)) {
+            painter->fillRect(option->rect, NP::background());
+            painter->fillRect(QRect(option->rect.left(), option->rect.top(),
+                                    option->rect.width(), 1), NP::border());
+            painter->fillRect(QRect(option->rect.left(), option->rect.bottom(),
+                                    option->rect.width(), 1), NP::border());
+        } else {
+            paintSurface(painter, option->rect, NP::surface(), NP::border());
+        }
         return;
     case PE_PanelItemViewItem:
         if (option->state.testFlag(State_Selected)) {
@@ -433,6 +497,9 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         const QRect box = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), option->rect);
         const bool radio = element == PE_IndicatorRadioButton;
         const bool mixed = option->state.testFlag(State_NoChange);
+        const bool checkedTarget = option->state.testFlag(State_On);
+        const qreal checkedProgress = mixed ? 1.0
+            : motionValue(widget, NoxForgeMotion::Channel::Checked, checkedTarget);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? NP::accent() : NP::borderStrong(), 1));
@@ -445,10 +512,23 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         if (mixed) {
             painter->setPen(QPen(NP::cyan(), 2, Qt::SolidLine, Qt::SquareCap));
             painter->drawLine(box.left() + 4, box.center().y(), box.right() - 4, box.center().y());
-        } else if (option->state.testFlag(State_On)) {
-            painter->setPen(QPen(NP::accent(), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-            if (radio) painter->drawEllipse(box.center(), 3, 3);
-            else painter->drawPolyline(QPolygon() << QPoint(box.left() + 4, box.center().y()) << QPoint(box.center().x() - 1, box.bottom() - 4) << QPoint(box.right() - 3, box.top() + 4));
+        } else if (checkedProgress > 0.0) {
+            QColor indicator = NP::accent();
+            indicator.setAlphaF(checkedProgress);
+            painter->setPen(QPen(indicator, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+            if (radio) {
+                const qreal radius = 1.0 + 2.0 * checkedProgress;
+                painter->drawEllipse(QPointF(box.center()), radius, radius);
+            } else {
+                const QPoint start(box.left() + 4, box.center().y());
+                const QPoint middle(box.center().x() - 1, box.bottom() - 4);
+                const QPoint end(box.right() - 3, box.top() + 4);
+                painter->drawLine(start, middle);
+                if (checkedProgress > 0.5) {
+                    const qreal second = (checkedProgress - 0.5) * 2.0;
+                    painter->drawLine(middle, middle + (end - middle) * second);
+                }
+            }
         }
         painter->restore();
         return;
@@ -595,11 +675,19 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         QRect fill = option->rect.adjusted(2, 2, -2, -2);
         const bool horizontal = option->state.testFlag(State_Horizontal);
         if (busy && horizontal) {
-            fill.setLeft(fill.center().x() - fill.width() / 6);
-            fill.setWidth(qMax(8, fill.width() / 3));
+            const int segment = qMax(8, fill.width() / 3);
+            const qreal phase = m_motion.busyProgress(widget, true);
+            const int travel = fill.width() + segment;
+            fill.setLeft(fill.left() + qRound(phase * travel) - segment);
+            fill.setWidth(segment);
+            fill = fill.intersected(option->rect.adjusted(2, 2, -2, -2));
         } else if (busy) {
-            fill.setTop(fill.center().y() - fill.height() / 6);
-            fill.setHeight(qMax(8, fill.height() / 3));
+            const int segment = qMax(8, fill.height() / 3);
+            const qreal phase = m_motion.busyProgress(widget, true);
+            const int travel = fill.height() + segment;
+            fill.setTop(fill.top() + qRound(phase * travel) - segment);
+            fill.setHeight(segment);
+            fill = fill.intersected(option->rect.adjusted(2, 2, -2, -2));
         } else if (horizontal) {
             const int amount = qRound(fill.width() * ratio);
             const bool reverse = progress->invertedAppearance ^ (option->direction == Qt::RightToLeft);
@@ -623,25 +711,31 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         return;
     }
     case CE_TabBarTabShape:
+    {
+        const qreal hover = motionValue(
+            widget, NoxForgeMotion::Channel::Hover,
+            option->state.testFlag(State_MouseOver));
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                                  option->direction, option->state.testFlag(State_HasFocus));
-        } else if (option->state.testFlag(State_MouseOver)) {
-            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         NP::surfaceHover(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
-                         option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
-                         option->state.testFlag(State_HasFocus));
         } else {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         NP::surfaceRaised(), option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
+                         mixedColor(NP::surfaceRaised(), NP::surfaceHover(), hover),
+                         option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                          option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                          option->state.testFlag(State_HasFocus));
         }
         return;
+    }
     case CE_HeaderSection:
-        paintSurface(painter, option->rect.adjusted(0, 0, 0, -1),
-                     option->state.testFlag(State_MouseOver) ? NP::surfaceHover() : NP::surface(),
-                     NP::border());
+        painter->fillRect(option->rect,
+                          option->state.testFlag(State_MouseOver)
+                              ? NP::surfaceHover() : NP::surface());
+        painter->fillRect(QRect(option->rect.left(), option->rect.bottom(),
+                                option->rect.width(), 1), NP::border());
+        painter->fillRect(QRect(option->direction == Qt::RightToLeft
+                                    ? option->rect.left() : option->rect.right(),
+                                option->rect.top(), 1, option->rect.height()), NP::border());
         return;
     case CE_ToolBar:
         painter->fillRect(option->rect, NP::surface());
@@ -658,7 +752,11 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
 {
     switch (control) {
     case CC_ComboBox: {
-        paintSurface(painter, option->rect, NP::background(),
+        const qreal hover = motionValue(
+            widget, NoxForgeMotion::Channel::Hover,
+            option->state.testFlag(State_MouseOver));
+        paintSurface(painter, option->rect,
+                     mixedColor(NP::background(), NP::surfaceSunken(), hover),
                      option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                      option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                      option->state.testFlag(State_HasFocus));
@@ -669,7 +767,11 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
     case CC_SpinBox: {
         const auto *spin = qstyleoption_cast<const QStyleOptionSpinBox *>(option);
         if (!spin) break;
-        paintSurface(painter, option->rect, NP::background(),
+        const qreal hover = motionValue(
+            widget, NoxForgeMotion::Channel::Hover,
+            option->state.testFlag(State_MouseOver));
+        paintSurface(painter, option->rect,
+                     mixedColor(NP::background(), NP::surfaceSunken(), hover),
                      option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                      option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                      option->state.testFlag(State_HasFocus));
@@ -719,7 +821,9 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
                 : QRect(groove.left(), groove.top(), groove.width(), handle.center().y() - groove.top() + 1);
         }
         const bool focused = option->state.testFlag(State_HasFocus);
-        const bool hovered = option->state.testFlag(State_MouseOver);
+        const bool hoverTarget = option->state.testFlag(State_MouseOver);
+        const qreal hovered = motionValue(
+            widget, NoxForgeMotion::Channel::Hover, hoverTarget);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
@@ -727,7 +831,9 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         painter->drawRoundedRect(groove, 3, 3);
         painter->setBrush(NP::accent());
         painter->drawRoundedRect(highlight, 3, 3);
-        painter->setBrush(focused || hovered ? NP::accent() : NP::textPrimary());
+        painter->setBrush(focused
+                              ? NP::accent()
+                              : mixedColor(NP::textPrimary(), NP::accent(), hovered));
         painter->drawEllipse(handle.adjusted(2, 2, -2, -2));
         if (focused) {
             painter->setPen(QPen(NP::accent(), NP::focusWidth));
@@ -740,12 +846,17 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
     case CC_ScrollBar: {
         const QRect slider = subControlRect(CC_ScrollBar, option, SC_ScrollBarSlider, widget);
         painter->fillRect(option->rect, NP::background());
-        const bool hover = option->state.testFlag(State_MouseOver);
-        const bool active = option->state.testFlag(State_Sunken);
+        const qreal hover = motionValue(
+            widget, NoxForgeMotion::Channel::Hover,
+            option->state.testFlag(State_MouseOver));
+        const qreal active = motionValue(
+            widget, NoxForgeMotion::Channel::Press,
+            option->state.testFlag(State_Sunken));
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(active ? NP::accentPressed() : (hover ? NP::accent() : NP::borderStrong()));
+        painter->setBrush(mixedColor(
+            mixedColor(NP::border(), NP::accent(), hover), NP::accentPressed(), active));
         painter->drawRoundedRect(slider, 4, 4);
         painter->restore();
         return;

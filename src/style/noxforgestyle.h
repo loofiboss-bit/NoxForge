@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 
+#include "noxforgemotion.h"
+
 #include <QCommonStyle>
 
 class NoxForgeStyle final : public QCommonStyle
@@ -12,6 +14,8 @@ public:
 
     QPalette standardPalette() const override;
     void polish(QPalette &palette) override;
+    void polish(QWidget *widget) override;
+    void unpolish(QWidget *widget) override;
     int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
                     const QWidget *widget = nullptr) const override;
     int styleHint(StyleHint hint, const QStyleOption *option = nullptr,
@@ -35,4 +39,11 @@ public:
                      QPainter *painter, const QWidget *widget = nullptr) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
                             QPainter *painter, const QWidget *widget = nullptr) const override;
+
+private:
+    qreal motionValue(const QWidget *widget, NoxForgeMotion::Channel channel,
+                      bool target) const;
+    qreal motionScale(const QWidget *widget = nullptr) const;
+
+    NoxForgeMotion m_motion;
 };
