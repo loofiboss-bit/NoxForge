@@ -937,6 +937,8 @@ def validate_tooling() -> None:
         ROOT / "docs/TROUBLESHOOTING.md",
         ROOT / "docs/MANUAL_TESTING.md",
         ROOT / "docs/evidence/v5/qualification.json",
+        ROOT / "docs/evidence/v6/qualification.json",
+        ROOT / "docs/evidence/v6/baseline/manifest.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -960,8 +962,8 @@ def validate_tooling() -> None:
         if command in system_install or command in system_uninstall:
             raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-    if "docs/evidence/v5/qualification.json" not in checklist or "blocked" not in checklist.lower():
-        raise ValidationError("manual graphical checks must use the structured v5 evidence manifest")
+    if "docs/evidence/v6/qualification.json" not in checklist or "blocked" not in checklist.lower():
+        raise ValidationError("manual graphical checks must use the active structured v6 evidence manifest")
     evidence_root = ROOT / "docs/evidence/v5"
     evidence = load_json(evidence_root / "qualification.json")
     if not isinstance(evidence, dict) or evidence.get("schemaVersion") != 2:
@@ -970,8 +972,8 @@ def validate_tooling() -> None:
     if release_state not in {"development", "release"}:
         raise ValidationError("v5 evidence manifest has an invalid release state")
     candidate = evidence.get("candidate")
-    if not isinstance(candidate, dict) or candidate.get("version") != (ROOT / "VERSION").read_text(encoding="utf-8").strip():
-        raise ValidationError("v5 evidence candidate version does not match VERSION")
+    if not isinstance(candidate, dict) or candidate.get("version") != "5.0.0":
+        raise ValidationError("historical v5 evidence candidate version drift")
     if not isinstance(candidate.get("worktreeDirty"), bool):
         raise ValidationError("v5 evidence candidate must record worktreeDirty")
     release_contract = evidence.get("releaseContract")
@@ -1033,6 +1035,35 @@ def validate_tooling() -> None:
     elif automated.get("result") == "blocked" and not automated.get("blocker"):
         raise ValidationError("blocked automated evidence must record its blocker")
 
+    v6 = load_json(ROOT / "docs/evidence/v6/qualification.json")
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    if (
+        not isinstance(v6, dict)
+        or v6.get("schemaVersion") != 1
+        or v6.get("version") != version
+        or v6.get("candidateCommit") is not None
+    ):
+        raise ValidationError("v6 development evidence identity is invalid")
+    policy = v6.get("evidencePolicy")
+    if (
+        not isinstance(policy, dict)
+        or policy.get("v5ResultsPromoted") is not False
+        or policy.get("offscreenIsLiveEvidence") is not False
+        or policy.get("unavailableCasesRemainBlocked") is not True
+    ):
+        raise ValidationError("v6 evidence policy is invalid")
+    for group in ("automatedCases", "liveCases"):
+        cases = v6.get(group)
+        if not isinstance(cases, list) or not cases:
+            raise ValidationError(f"v6 {group} are missing")
+        for case in cases:
+            if (
+                not isinstance(case, dict)
+                or case.get("status") not in {"pending", "blocked"}
+                or not case.get("reason")
+            ):
+                raise ValidationError(f"v6 {group} contains a prematurely promoted result")
+
 
 def validate_generated_sources() -> None:
     for script in (
@@ -1044,6 +1075,7 @@ def validate_generated_sources() -> None:
         "scripts/generate_sound_theme.py",
         "scripts/render_wallpaper.py",
         "scripts/render_artwork_evidence.py",
+        "scripts/capture_v6_baseline.py",
     ):
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],

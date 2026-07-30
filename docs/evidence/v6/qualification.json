@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "version": "6.0.0-dev",
+  "candidateCommit": null,
+  "evidencePolicy": {
+    "v5ResultsPromoted": false,
+    "offscreenIsLiveEvidence": false,
+    "unavailableCasesRemainBlocked": true
+  },
+  "automatedCases": [
+    {
+      "id": "release-gate",
+      "status": "pending",
+      "reason": "V6 implementation and the exact candidate gate are not complete."
+    },
+    {
+      "id": "reduced-motion",
+      "status": "pending",
+      "reason": "The v6 motion system has not been implemented or qualified."
+    },
+    {
+      "id": "deterministic-evidence",
+      "status": "pending",
+      "reason": "Only the immutable v5 baseline has been captured."
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "qt-interactive-motion",
+      "status": "blocked",
+      "reason": "Phase 7 disposable Wayland input qualification has not run."
+    },
+    {
+      "id": "plasma-blur-on-off",
+      "status": "blocked",
+      "reason": "Phase 7 disposable Plasma compositor qualification has not run."
+    },
+    {
+      "id": "sddm-authentication-and-power",
+      "status": "blocked",
+      "reason": "No real SDDM authentication or power flow is available in Phase 0."
+    },
+    {
+      "id": "logout-keyboard-and-pointer",
+      "status": "blocked",
+      "reason": "Phase 7 injected keyboard and pointer qualification has not run."
+    },
+    {
+      "id": "held-alt-tab",
+      "status": "blocked",
+      "reason": "Phase 7 held Alt+Tab qualification has not run."
+    },
+    {
+      "id": "aurorae-composed-motion",
+      "status": "blocked",
+      "reason": "Phase 7 live composed window-decoration qualification has not run."
+    }
+  ]
+}

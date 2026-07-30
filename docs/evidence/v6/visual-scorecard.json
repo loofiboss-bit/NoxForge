@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "release": "6.0.0-dev",
+  "scale": {
+    "minimum": 1,
+    "maximum": 5,
+    "phaseOneTargetMinimum": 4
+  },
+  "policy": {
+    "baselineIsV5": true,
+    "v6ScoresRequireAuthenticOutput": true,
+    "offscreenScoresDoNotQualifyLiveMotion": true
+  },
+  "categories": {
+    "hierarchy": {
+      "baselineScore": 3,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Parent, child, raised, and overlay surfaces have distinct visual weight."
+    },
+    "stateClarity": {
+      "baselineScore": 3,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Focus, primary, selected, checked, busy, error, and disabled states cannot be confused."
+    },
+    "cohesion": {
+      "baselineScore": 4,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Qt, Plasma, session, window, icon, cursor, brand, and wallpaper layers read as one system."
+    },
+    "branding": {
+      "baselineScore": 3,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "The mark and wallpaper are mature, original, legible, and quieter than application content."
+    },
+    "density": {
+      "baselineScore": 3,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Spacing and typography establish structure before borders and boxes."
+    },
+    "motion": {
+      "baselineScore": 2,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Supported transitions are purposeful, bounded, idle-free, and reduced-motion safe."
+    },
+    "accessibility": {
+      "baselineScore": 4,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Contrast, system font, keyboard, RTL, scale, and non-color cues remain complete."
+    },
+    "fallbackBehavior": {
+      "baselineScore": 4,
+      "v6Score": null,
+      "status": "pending",
+      "criterion": "Unsupported controls and blur-off or compositor-limited surfaces remain usable and honest."
+    }
+  }
+}

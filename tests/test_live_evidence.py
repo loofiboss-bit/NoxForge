@@ -34,10 +34,7 @@ class LiveEvidenceTests(unittest.TestCase):
         self.assertEqual(self.manifest["schemaVersion"], 2)
         self.assertEqual(self.manifest["releaseState"], "release")
         candidate = self.manifest["candidate"]
-        self.assertEqual(
-            candidate["version"],
-            (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
-        )
+        self.assertEqual(candidate["version"], "5.0.0")
         self.assertRegex(candidate["sourceCommit"], r"^[0-9a-f]{40}$")
         self.assertEqual(candidate["sourceRef"], f"v{candidate['version']}")
         self.assertIn(candidate["version"], candidate["package"])

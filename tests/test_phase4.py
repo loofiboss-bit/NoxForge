@@ -106,7 +106,7 @@ class PhaseFourTests(unittest.TestCase):
 
     def test_live_graphical_checks_use_structured_evidence(self) -> None:
         checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-        self.assertIn("docs/evidence/v5/qualification.json", checklist)
+        self.assertIn("docs/evidence/v6/qualification.json", checklist)
         self.assertIn("blocked", checklist.lower())
         self.assertNotIn("unavailable checks remain **Pending**", checklist)
 
