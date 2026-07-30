@@ -3,16 +3,16 @@
 Run after RPM installation in a disposable Plasma 6.7+ Wayland session.
 Capture evidence before any tag or publication. Results must be `passed`,
 `failed`, `blocked`, or `not-applicable` in
-`docs/evidence/v5/qualification.json`; automated evidence never substitutes for
+`docs/evidence/v6/qualification.json`; automated evidence never substitutes for
 a live result.
 
-Current candidate: v5 development worktree on Fedora KDE 44. The Phase 6
-isolated Wayland matrix is recorded in
-`docs/evidence/v5/live/live-session.md`. Available virtual-compositor cases are
-passed and unavailable hardware, input, audio and authentication cases remain
-honestly `blocked` in the v5 manifest. The historical v3 table below remains a
-baseline only and must not be presented as v5 evidence. The active maintainer
-desktop was not changed.
+Current candidate: v6 development worktree on Fedora KDE 44. Phase 0 contains
+authentic offscreen v5 baseline references only. Every v6 automated result is
+`pending`, and every unavailable interactive case is explicitly `blocked` in
+the v6 manifest. No v5 result is promoted to v6 evidence. The completed v5
+isolated Wayland matrix remains historical release evidence in
+`docs/evidence/v5/live/live-session.md`; the active maintainer desktop was not
+changed.
 
 ## Historical v3 structural and live baseline
 
