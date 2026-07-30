@@ -1,6 +1,6 @@
-# NoxForge v6 Phase 7 automated qualification
+# NoxForge 6.0.0 automated candidate gate
 
-The Phase 7 local gate ran against the `6.0.0-dev` source tree on 2026-07-30
+The local gate ran against the stable `6.0.0` source tree on 2026-07-30
 without installing or applying NoxForge. It covers the complete release check,
 ASan/UBSan, deterministic evidence, accessibility, scale and direction
 matrices, and performance against the immutable reviewed v5 baseline.
@@ -17,7 +17,7 @@ of the v5 baseline. Its native stress probe completed 500 input and animation
 cycles with no failed case, no active idle timer, no retained widget state, and
 heap growth within the fixed 256 KiB ceiling.
 
-The complete local gate passed with 135 Python tests, 21 CTest cases,
+The complete local gate passed with 141 Python tests, 21 CTest cases,
 ASan/UBSan, QML lint, generator and evidence drift checks, non-mutating install
 and uninstall dry-runs, byte-identical source archives, and clean Fedora
 SRPM/RPM `rpmlint`.
@@ -26,3 +26,8 @@ This is automated and offscreen evidence. It is not a disposable Wayland
 session, composed KWin/Plasma interaction, real SDDM authentication, injected
 keyboard/pointer input, multi-output placement, or live high-contrast proof.
 Every such case remains blocked in `qualification.json`.
+
+No annotated tag, GitHub Release, COPR build, installation, or public artifact
+readback is claimed by this local report.
+
+Version: 6.0.0

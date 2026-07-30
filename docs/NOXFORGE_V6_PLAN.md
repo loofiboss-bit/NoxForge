@@ -881,6 +881,24 @@ Present v6 as a coherent product and publish through the proven v5 pipeline.
   and after removal.
 - README screenshots come from the released build.
 
+**Local outcome (2026-07-30; Phase 8 remains incomplete):** The source tree and
+all current version consumers are promoted to stable `6.0.0`. README, Global
+Theme previews, release notes, compatibility, installation, rollback,
+reduced-motion, troubleshooting, and manual-testing documentation now present
+Kinetic Precision using exact generated or authentic offscreen v6 outputs.
+Every non-live image is labeled honestly; no fabricated live desktop screenshot
+is used. The compact six-asset release contract is preserved, and the complete
+stable local gate passes with 141 Python tests, 21 CTest cases, ASan/UBSan,
+QML lint, deterministic evidence, non-mutating install/uninstall dry-runs,
+byte-identical source archives, and clean Fedora SRPM/RPM `rpmlint`.
+
+Phase 8 is not complete and no public release is claimed. The annotated
+`v6.0.0` tag, exact-tag qualification, GitHub Release, COPR terminal success,
+public artifact/checksum readback, clean RPM installation, `rpm -V`,
+`noxforge-doctor`, removal, and before/after KDE/SDDM settings hashes remain
+`blocked` by the explicit no-tag, no-publish, no-install, and no-live
+authorization boundary.
+
 ## Cross-phase file map
 
 | Area | Primary files |

@@ -18,6 +18,14 @@ VERSION_FILES = {
         r'(?m)^(\s*"version":\s*)".*?"(,?)$',
         r'\g<1>"{version}"\g<2>',
     ),),
+    "design/motion-contract.json": ((
+        r'(?m)^(\s*"version":\s*)".*?"(,?)$',
+        r'\g<1>"{version}"\g<2>',
+    ),),
+    "design/edge-polish-contract.json": ((
+        r'(?m)^(\s*"version":\s*)".*?"(,?)$',
+        r'\g<1>"{version}"\g<2>',
+    ),),
     "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/metadata.json": ((
         r'(?m)^(\s*"Version":\s*)".*?"(,?)$',
         r'\g<1>"{version}"\g<2>',

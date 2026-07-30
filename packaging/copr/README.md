@@ -8,7 +8,7 @@ Create the project once:
 ```bash
 copr-cli create noxforge \
   --chroot fedora-44-x86_64 \
-  --description "NoxForge Industrial Precision theme for Fedora KDE" \
+  --description "NoxForge Kinetic Precision theme for Fedora KDE" \
   --instructions "Enable the repository, install noxforge, then select NoxForge explicitly in System Settings."
 ```
 

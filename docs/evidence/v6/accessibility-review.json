@@ -102,10 +102,10 @@
   "sources": {
     "CMakeLists.txt": "42ec434c69cabd51e31f930ceb8856bd352f34398dae5a4adb8cd2818153c5fc",
     "DESIGN.md": "938a9b9d64ff00d051c3d44a9bb16ef2dd343ad3fc8744307b7080a530126edb",
-    "design/motion-contract.json": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "design/motion-contract.json": "f5b65d99f08956f6ed2cc67ee64e16179f47880921512cfb3f30f8e6444c48e1",
     "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
-    "design/tokens.json": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
-    "docs/evidence/v6/session/manifest.json": "650e38f849241d5c6a10568f1f7bcd48f9723d6e1f5643488882c99797bd94d5",
+    "design/tokens.json": "6b037fbf2bf4de9e0ec1bba8b0bd33028c8dc301d4f1938e745d157f3f087818",
+    "docs/evidence/v6/session/manifest.json": "65e31ec6238bfe2a2fe97c9744aa120a664a594f18f8a146f5702539108376dd",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "67ad711c8ad68fbd3b07a9244f0e8caae69288e7c8d5eb747c6c96d507d0fbcb",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",
@@ -114,5 +114,5 @@
     "tests/qt/accessibility_probe.cpp": "09d8cff86657beefd0f672ee4c97b01570db723a747dfb3968b0279ba9f06bee",
     "tests/qt/motion_probe.cpp": "79051bcfb508b08a3cb4e5bf67fbaf8a986b12022cdc14792543fb6682d60d69"
   },
-  "version": "6.0.0-dev"
+  "version": "6.0.0"
 }

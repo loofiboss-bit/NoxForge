@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "6.0.0-dev",
+  "release": "6.0.0",
   "phase": 1,
   "kind": "rendered-north-star-prototype",
   "prototype": true,
@@ -14,8 +14,8 @@
     "systemFont": true
   },
   "sources": {
-    "tokensSha256": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
-    "motionContractSha256": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "tokensSha256": "6b037fbf2bf4de9e0ec1bba8b0bd33028c8dc301d4f1938e745d157f3f087818",
+    "motionContractSha256": "f5b65d99f08956f6ed2cc67ee64e16179f47880921512cfb3f30f8e6444c48e1",
     "rendererSha256": "951b6290429ae8a83985f9246f27b54f873fcdcce26c45c89bbfe0edd685df3f"
   },
   "comparisons": [

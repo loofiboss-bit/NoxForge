@@ -1,7 +1,7 @@
 # Contributing to NoxForge
 
 NoxForge targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. Keep changes
-focused, preserve the Industrial Precision design authority in `DESIGN.md`, and
+focused, preserve the Kinetic Precision design authority in `DESIGN.md`, and
 do not copy artwork from another theme.
 
 ## Required development tools

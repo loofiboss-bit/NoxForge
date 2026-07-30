@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 5.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
+NoxForge 6.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
 is the primary installation authority.
 
 ## Install
@@ -16,6 +16,10 @@ Package installation changes no settings. Select **NoxForge** explicitly in
 System Settings → Colors & Themes → Global Theme. Keep panel-layout replacement
 disabled unless the optional compact layout is deliberately wanted. Select and
 test NoxForge SDDM separately in a recoverable VM.
+
+NoxForge follows KDE's animation-duration preference. An instant/zero duration
+keeps focus, selection, busy, success, and error semantics visible while
+removing spatial and opacity transitions.
 
 ## Build locally
 

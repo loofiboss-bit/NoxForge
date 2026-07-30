@@ -1,11 +1,34 @@
-# NoxForge KDE
+# NoxForge 6 — Kinetic Precision
 
-NoxForge is an original complete Global Theme for Fedora KDE 44, Plasma 6.7+
-and Qt 6.11. Its Kinetic Precision system combines layered graphite surfaces,
-precision lime focus markers, restrained cyan/violet detail and the angular
-Forge Notch.
+NoxForge is an original, complete dark Global Theme for Fedora KDE 44,
+Plasma/KWin 6.7+, Qt 6.11, and Wayland. Kinetic Precision combines quiet
+graphite depth, exact lime state markers, restrained cyan/violet detail, and
+short motion that settles cleanly.
 
-![NoxForge Kinetic Precision forged-planes wallpaper](wallpapers/NoxForge/contents/images/2560x1440.png)
+![NoxForge Kinetic Precision Global Theme fullscreen preview](look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png)
+
+*Authentic generated Global Theme preview from the exact v6 wallpaper package;
+this is not live desktop or compositor evidence. Its canonical 16:9 source
+output is the [2560×1440 Kinetic Precision wallpaper](wallpapers/NoxForge/contents/images/2560x1440.png).*
+
+### Applications
+
+![NoxForge native Qt controls at the settled motion state](docs/evidence/v6/qt-motion/state-100.png)
+
+### Plasma shell
+
+![NoxForge Plasma Style source atlas at 100 percent](docs/evidence/v6/plasma-shell/plasma-style-atlas-100pct.png)
+
+### Sessions
+
+![NoxForge SDDM authentic offscreen QML composition](docs/evidence/v6/session/sddm-resolution-2560x1440.png)
+
+### Details
+
+![NoxForge high-visibility icon optical review](docs/evidence/v6/edge-polish/icon-priority.png)
+
+These focused images are deterministic source-bound or authentic offscreen
+outputs. They are not relabeled as a live Plasma, KWin, or SDDM session.
 
 The repository provides:
 
@@ -18,7 +41,9 @@ The repository provides:
 - safe user-local and separate explicit system installation tooling.
 
 Installation never applies the theme, changes the panel, edits SDDM settings or
-restarts Plasma. See [Quick start](docs/QUICKSTART.md), the authoritative
+restarts Plasma. Motion follows KDE's configured animation duration; setting it
+to zero produces immediate semantic states with no spatial motion. See
+[Quick start](docs/QUICKSTART.md), the authoritative
 [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the live
 [manual testing gate](docs/MANUAL_TESTING.md). The historical issues that drove
 the rebuild are recorded in the [v2 visual baseline](docs/V2_VISUAL_BASELINE.md).
@@ -30,7 +55,11 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 5.0.0 is the current stable release. The exact-tag
+This checkout contains the locally qualified NoxForge 6.0.0 source candidate.
+No v6 tag, GitHub release, COPR build, installation, or public readback is
+claimed here. NoxForge 5.0.0 remains the current verified public release until
+the controlled v6 release process is explicitly authorized and independently
+read back. The exact-tag
 [GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v5.0.0)
 provides the verified source archive, SRPM, Fedora 44 RPM, qualification
 manifest, automated report and checksums. The Fedora package is available from
@@ -40,13 +69,19 @@ readback evidence is recorded in
 GitHub release contains no attached build artifacts and made no v4 COPR or
 fresh live-qualification claim.
 
-The local release gate covers deterministic generation, Python and CTest suites,
-QML lint, isolated staging, byte-identical source archives, SRPM/RPM build and
-`rpmlint`. Current v5 isolated KWin/Plasma Wayland qualification covers theme
-application, panel preservation and edges, 100/140 percent Qt composition and
-multi-output placement. Hardware blur, injected keyboard/Alt+Tab interaction,
-live RTL shell mirroring, cursor motion, isolated audio, production splash
-integration and real SDDM authentication remain explicitly blocked.
+The v6 local release gate covers deterministic generation, 141 Python tests,
+21 CTest cases, ASan/UBSan, QML lint, isolated staging, byte-identical source
+archives, SRPM/RPM build, and `rpmlint`. Automated accessibility, reduced
+motion, 100/125/140/200 percent rendering, and complete-tree performance
+qualification pass. Live Wayland input, hardware blur, animation-speed
+variants, high-contrast mode, cursor composition, two-output placement,
+production splash integration, and real SDDM authentication remain explicitly
+blocked.
+
+Compatibility, COPR installation, explicit component selection, verification,
+upgrade, and safe rollback are documented in
+[INSTALL_FEDORA.md](docs/INSTALL_FEDORA.md). Always select a known-good theme
+and SDDM configuration before removing a theme you applied manually.
 
 ## License
 

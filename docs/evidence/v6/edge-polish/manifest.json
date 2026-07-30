@@ -178,8 +178,8 @@
     "cursors/NoxForge-Cursors/source/wait.svg": "42289dcf19fa5d3836d113923b343ff7ae332c76f77c69ad7466ee5f987cd05e",
     "cursors/NoxForge-Cursors/source/zoom-in.svg": "fc71995eb6929d513cad6d2b79d9c42148063dfdb2ef8840c03d0e4301edbaaa",
     "cursors/NoxForge-Cursors/source/zoom-out.svg": "56fd5cfd85277e5125934b984d2948285719f900bd088ee24d2894562dc6eada",
-    "design/edge-polish-contract.json": "b6b07d03be874076f8ce47a4f5f39cf3e9897c02b380d4e183d65f85ef05da9b",
-    "design/tokens.json": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
+    "design/edge-polish-contract.json": "4b75feb1ba3fc855021ef842157d6619b28eefc5dd6d72bcc7de7aa12718ed38",
+    "design/tokens.json": "6b037fbf2bf4de9e0ec1bba8b0bd33028c8dc301d4f1938e745d157f3f087818",
     "icons/NoxForge/16x16/actions/application-exit.svg": "7c27929a1a998af58fcbf22747d1da143701be258bd39e1f859da3c7f9ffc353",
     "icons/NoxForge/16x16/actions/configure.svg": "91e304f9ca37424fa4cf3e8e2bf8f0c0d09b53888d37ca97e672d1497248eefe",
     "icons/NoxForge/16x16/actions/dialog-cancel.svg": "587483e4e3dbd84e09783a42fa562cf8d964f01d343bf2cbafe2d1b3a418a944",
@@ -354,5 +354,5 @@
     "sounds/NoxForge/stereo/theme-demo.oga": "adeca043e46f7310f8726dd4ce6074864c08d158990156493bd3e9bca5f41142",
     "sounds/NoxForge/stereo/trash-empty.oga": "b8d8c7d831b57719dd90b6e438f2ec95eb5fc91b56c35523f8ed71e934ac09e6"
   },
-  "version": "6.0.0-dev"
+  "version": "6.0.0"
 }

@@ -1,6 +1,6 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge v5 uses the RPM package as the primary installation authority. Enable
+NoxForge v6 uses the RPM package as the primary installation authority. Enable
 the Fedora 44 COPR and install the package:
 
 ```bash
@@ -41,6 +41,10 @@ noxforge-doctor
 ```
 
 The doctor is read-only and exits non-zero when components are absent or mixed.
+
+NoxForge motion follows KDE's configured animation duration. A zero duration
+settles every native Qt and supported QML state immediately while preserving
+focus, selection, busy, success, and error indicators.
 
 ## Upgrade
 

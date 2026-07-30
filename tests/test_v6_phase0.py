@@ -25,16 +25,22 @@ class V6PhaseZeroTests(unittest.TestCase):
             " ".join(pointer.split()),
         )
 
-    def test_v6_development_version_does_not_relabel_v5_evidence(self) -> None:
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "6.0.0-dev")
+    def test_v6_stable_candidate_does_not_relabel_v5_or_baseline_evidence(self) -> None:
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "6.0.0")
         v5 = json.loads(
             (ROOT / "docs/evidence/v5/qualification.json").read_text(encoding="utf-8")
         )
         v6 = json.loads(
             (ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8")
         )
+        baseline = json.loads(
+            (ROOT / "docs/evidence/v6/baseline/manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
         self.assertEqual(v5["candidate"]["version"], "5.0.0")
-        self.assertEqual(v6["version"], "6.0.0-dev")
+        self.assertEqual(v6["candidate"]["version"], "6.0.0")
+        self.assertEqual(baseline["release"], "6.0.0-dev")
         self.assertFalse(v6["evidencePolicy"]["v5ResultsPromoted"])
 
     def test_baseline_manifest_and_capture_matrix_are_current(self) -> None:
