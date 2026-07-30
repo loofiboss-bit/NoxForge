@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 #include <QAbstractListModel>
+#include <QDateTime>
 #include <QGuiApplication>
 #include <QQmlContext>
+#include <QQuickItem>
 #include <QQuickView>
 #include <QTimer>
 #include <QUrl>
@@ -103,6 +105,11 @@ int main(int argc, char **argv)
     view.rootContext()->setContextProperty(QStringLiteral("sddm"), &sddm);
     view.setSource(qml);
     if (view.status() == QQuickView::Error) return 3;
+    view.rootObject()->setProperty("freezeClock", true);
+    view.rootObject()->setProperty(
+        "currentDateTime",
+        QDateTime::fromString(QStringLiteral("2026-07-30T10:42:00Z"), Qt::ISODate)
+    );
     view.resize(960, 540);
     view.show();
     if (firstFrame) {

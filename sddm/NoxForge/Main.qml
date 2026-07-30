@@ -104,22 +104,14 @@ Rectangle {
     Image { anchors.fill: parent; source: config.background; fillMode: Image.PreserveAspectCrop; asynchronous: true }
     Rectangle { anchors.fill: parent; color: Qt.rgba(tokens.background.r, tokens.background.g, tokens.background.b, 0.4) }
 
-    Row {
-        width: 220
-        height: 40
+    Image {
+        width: 250
+        height: 60
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 28
-        spacing: tokens.standardSpacing
-        Image { source: "NoxForgeMark.svg"; width: 48; height: 36; fillMode: Image.PreserveAspectFit }
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: "NOXFORGE"
-            color: tokens.textPrimary
-            font.pixelSize: 18
-            font.weight: Font.DemiBold
-            font.letterSpacing: tokens.brandTracking
-        }
+        source: "NoxForgeLockup.svg"
+        fillMode: Image.PreserveAspectFit
     }
 
     Column {
@@ -150,8 +142,8 @@ Rectangle {
             anchors.centerIn: parent
             width: parent.width - 64
             spacing: tokens.standardSpacing + tokens.compactSpacing
-            Text { text: qsTr("SIGN IN"); color: tokens.textPrimary; font.pixelSize: 22; font.weight: Font.DemiBold; font.letterSpacing: 2 }
-            Text { text: qsTr("Industrial Precision session"); color: tokens.textSecondary; font.pixelSize: 13; Layout.bottomMargin: 4 }
+            Text { text: qsTr("Sign in"); color: tokens.textPrimary; font.pixelSize: 22; font.weight: Font.DemiBold }
+            Text { text: qsTr("Kinetic Precision session"); color: tokens.textSecondary; font.pixelSize: 13; Layout.bottomMargin: 4 }
 
             ForgeField {
                 id: usernameField

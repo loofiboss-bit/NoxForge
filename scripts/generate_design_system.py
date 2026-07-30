@@ -27,6 +27,14 @@ MARK_TARGETS = (
     ROOT / "sddm/NoxForge/NoxForgeMark.svg",
 )
 
+LOCKUP_TARGETS = (
+    ROOT / "design/brand/noxforge-lockup.svg",
+    ROOT / f"look-and-feel/{THEME_ID}/contents/splash/NoxForgeLockup.svg",
+    ROOT / "sddm/NoxForge/NoxForgeLockup.svg",
+)
+
+MONO_MARK_TARGET = ROOT / "design/brand/noxforge-mark-mono.svg"
+
 
 def load_tokens() -> dict[str, object]:
     return json.loads(TOKENS_PATH.read_text(encoding="utf-8"))
@@ -222,12 +230,50 @@ def brand_mark(tokens: dict[str, object]) -> str:
     colors = tokens["colors"]
     assert isinstance(colors, dict)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="192" height="144" viewBox="0 0 192 144">
-  <title>NoxForge optically balanced N/F mark</title>
+  <title>NoxForge Kinetic Precision N/F mark</title>
   <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M20 116L47 28l53 78 27-78" stroke="{colors['textPrimary']}" stroke-width="15"/>
-    <path d="M116 116l27-88h41M132 70h37" stroke="{colors['textPrimary']}" stroke-width="15"/>
-    <path d="M46 29l53 77" stroke="{colors['accent']}" stroke-width="6"/>
-    <path d="M143 28h41" stroke="{colors['accent']}" stroke-width="6"/>
+    <path d="M18 116L46 28l62 88 28-88h48M123 70h45"
+          stroke="{colors['textPrimary']}" stroke-width="14"/>
+    <path d="M47 30l59 84M136 28h48"
+          stroke="{colors['accent']}" stroke-width="4"/>
+  </g>
+</svg>
+'''
+
+
+def monochrome_brand_mark(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    assert isinstance(colors, dict)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="192" height="144" viewBox="0 0 192 144">
+  <title>NoxForge Kinetic Precision monochrome N/F mark</title>
+  <path d="M18 116L46 28l62 88 28-88h48M123 70h45"
+        fill="none" stroke="{colors['textPrimary']}" stroke-width="14"
+        stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>
+'''
+
+
+def brand_lockup(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    assert isinstance(colors, dict)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="600" height="144" viewBox="0 0 600 144">
+  <title>NoxForge Kinetic Precision horizontal lockup</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M18 116L46 28l62 88 28-88h48M123 70h45"
+          stroke="{colors['textPrimary']}" stroke-width="14"/>
+    <path d="M47 30l59 84M136 28h48"
+          stroke="{colors['accent']}" stroke-width="4"/>
+  </g>
+  <g transform="translate(216 46)" fill="none" stroke="{colors['textPrimary']}"
+     stroke-width="5" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M0 52V0l28 52V0"/>
+    <path d="M44 0h28v52H44z"/>
+    <path d="M88 0l28 52M116 0L88 52"/>
+    <path d="M132 52V0h30M132 25h24"/>
+    <path d="M178 0h28v52h-28z"/>
+    <path d="M222 52V0h28l8 8v14l-8 8h-28M244 30l16 22"/>
+    <path d="M304 8l-8-8h-20v52h28V30h-14"/>
+    <path d="M320 0h30M320 0v52h30M320 25h24"/>
   </g>
 </svg>
 '''
@@ -318,6 +364,9 @@ def outputs(tokens: dict[str, object]) -> dict[Path, str]:
     generated.update({path: qml for path in QML_TARGETS})
     mark = brand_mark(tokens)
     generated.update({path: mark for path in MARK_TARGETS})
+    generated[MONO_MARK_TARGET] = monochrome_brand_mark(tokens)
+    lockup = brand_lockup(tokens)
+    generated.update({path: lockup for path in LOCKUP_TARGETS})
     return generated
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render deterministic Phase 4 artwork contact sheets and their hash manifest."""
+"""Render deterministic Kinetic Precision artwork contact sheets and manifest."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "design/artwork-contract.json"
 EVIDENCE = ROOT / "docs/evidence"
+TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 
 
 def run(command: list[str]) -> None:
@@ -30,7 +31,7 @@ def tile(magick: str, source: Path, target: Path, geometry: str, extent: str) ->
         [
             magick,
             "-background",
-            "#0E1318",
+            TOKENS["colors"]["background"],
             str(source),
             "-resize",
             geometry,
@@ -46,7 +47,13 @@ def tile(magick: str, source: Path, target: Path, geometry: str, extent: str) ->
     )
 
 
-def montage(magick: str, sources: list[Path], target: Path, columns: int) -> None:
+def montage(
+    magick: str,
+    sources: list[Path],
+    target: Path,
+    columns: int,
+    background: str,
+) -> None:
     run(
         [
             magick,
@@ -57,7 +64,7 @@ def montage(magick: str, sources: list[Path], target: Path, columns: int) -> Non
             "-geometry",
             "+4+4",
             "-background",
-            "#141B21",
+            background,
             str(target),
         ]
     )
@@ -82,6 +89,8 @@ def render(magick: str, output: Path, temporary: Path) -> None:
     brand_tiles: list[Path] = []
     brand_sources = [
         ROOT / contract["brand"]["source"],
+        ROOT / contract["brand"]["monochromeSource"],
+        ROOT / contract["brand"]["lockupSource"],
         ROOT / "wallpapers/NoxForge/contents/images/2560x1440.png",
         ROOT / "wallpapers/NoxForge/contents/images/3440x1440.png",
     ]
@@ -89,7 +98,53 @@ def render(magick: str, output: Path, temporary: Path) -> None:
         target = temporary / f"brand-{index}.png"
         tile(magick, source, target, "520x260", "560x300")
         brand_tiles.append(target)
-    montage(magick, brand_tiles, output / "artwork-brand-wallpaper.png", 1)
+    montage(
+        magick,
+        brand_tiles,
+        output / "artwork-brand-wallpaper.png",
+        1,
+        TOKENS["colors"]["surface"],
+    )
+
+    optical_tiles: list[Path] = []
+    optical_renders: dict[str, dict[str, object]] = {}
+    for size in contract["brand"]["opticalSizes"]:
+        rendered = temporary / f"brand-optical-render-{size}.png"
+        run(
+            [
+                magick,
+                "-background",
+                "none",
+                str(ROOT / contract["brand"]["source"]),
+                "-resize",
+                f"{size}x{size}",
+                "-strip",
+                "-define",
+                "png:exclude-chunks=date,time",
+                f"PNG24:{rendered}",
+            ]
+        )
+        target = temporary / f"brand-optical-{size}.png"
+        tile(
+            magick,
+            rendered,
+            target,
+            "112x112>",
+            "128x128",
+        )
+        optical_tiles.append(target)
+        optical_renders[str(size)] = {
+            "width": size,
+            "height": round(size * 0.75),
+            "sha256": sha256(rendered),
+        }
+    montage(
+        magick,
+        optical_tiles,
+        output / "artwork-brand-optical-sizes.png",
+        len(optical_tiles),
+        TOKENS["colors"]["surface"],
+    )
 
     icon_tiles: list[Path] = []
     fixture = sorted(contract["runtimeIconFixture"]["required"])
@@ -97,7 +152,13 @@ def render(magick: str, output: Path, temporary: Path) -> None:
         target = temporary / f"icon-{index:03d}.png"
         tile(magick, ROOT / "icons/NoxForge/scalable" / relative, target, "40x40", "56x56")
         icon_tiles.append(target)
-    montage(magick, icon_tiles, output / "artwork-icons.png", 10)
+    montage(
+        magick,
+        icon_tiles,
+        output / "artwork-icons.png",
+        10,
+        TOKENS["assetGenerationPalette"]["surface"],
+    )
 
     cursor_manifest = json.loads((ROOT / "cursors/NoxForge-Cursors/coverage.json").read_text(encoding="utf-8"))
     cursor_tiles: list[Path] = []
@@ -105,11 +166,19 @@ def render(magick: str, output: Path, temporary: Path) -> None:
         target = temporary / f"cursor-{index:03d}.png"
         tile(magick, ROOT / "cursors/NoxForge-Cursors/source" / f"{name}.svg", target, "48x48", "64x64")
         cursor_tiles.append(target)
-    montage(magick, cursor_tiles, output / "artwork-cursors.png", 8)
+    montage(
+        magick,
+        cursor_tiles,
+        output / "artwork-cursors.png",
+        8,
+        TOKENS["assetGenerationPalette"]["surface"],
+    )
 
     source_paths = [
         CONTRACT_PATH,
         ROOT / contract["brand"]["source"],
+        ROOT / contract["brand"]["monochromeSource"],
+        ROOT / contract["brand"]["lockupSource"],
         *(ROOT / details["source"] for details in contract["wallpapers"].values()),
         ROOT / "icons/NoxForge/coverage.json",
         ROOT / "cursors/NoxForge-Cursors/coverage.json",
@@ -117,19 +186,26 @@ def render(magick: str, output: Path, temporary: Path) -> None:
     ]
     sheets = [
         output / "artwork-brand-wallpaper.png",
+        output / "artwork-brand-optical-sizes.png",
         output / "artwork-icons.png",
         output / "artwork-cursors.png",
     ]
     manifest = {
-        "schemaVersion": 1,
-        "phase": 4,
-        "reviewStatus": "reviewed",
+        "schemaVersion": 2,
+        "release": (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
+        "phase": 2,
+        "reviewStatus": "reviewed-offscreen",
+        "liveEvidence": False,
+        "originalEditable": True,
         "reviewAssertions": [
-            "The N/F mark remains legible at all declared optical sizes.",
+            "The semantic and monochrome N/F masters share one clean continuous geometry.",
+            "The mark remains legible at 16, 24, 48, 128, and 512 px.",
+            "The horizontal lockup uses editable vector geometry without font dependencies.",
             "The 16:9 and ultrawide wallpapers are independent compositions with quiet workspace regions.",
             "Every fixed runtime-fixture icon is present and semantically recognizable.",
             "Canonical cursor silhouettes and accent details remain distinct.",
         ],
+        "brandOpticalRenders": optical_renders,
         "sources": {
             path.relative_to(ROOT).as_posix(): sha256(path)
             for path in source_paths
@@ -159,10 +235,11 @@ def main() -> int:
         generated = temporary / "evidence"
         render(magick, generated if args.check else EVIDENCE, temporary)
         if not args.check:
-            print("Rendered three reviewed Phase 4 artwork contact sheets")
+            print("Rendered four reviewed Kinetic Precision artwork contact sheets")
             return 0
         names = (
             "artwork-brand-wallpaper.png",
+            "artwork-brand-optical-sizes.png",
             "artwork-icons.png",
             "artwork-cursors.png",
             "artwork-contact-sheets.json",
@@ -176,7 +253,7 @@ def main() -> int:
         if drift:
             print("Artwork evidence drift: " + ", ".join(drift), file=sys.stderr)
             return 1
-    print("Verified three reviewed Phase 4 artwork contact sheets")
+    print("Verified four reviewed Kinetic Precision artwork contact sheets")
     return 0
 
 

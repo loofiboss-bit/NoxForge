@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "target": {
     "desktop": "Fedora KDE 44",
     "plasma": "6.7",
@@ -7,19 +7,60 @@
   },
   "brand": {
     "source": "design/brand/noxforge-mark.svg",
+    "monochromeSource": "design/brand/noxforge-mark-mono.svg",
+    "lockupSource": "design/brand/noxforge-lockup.svg",
     "viewBox": "0 0 192 144",
+    "lockupViewBox": "0 0 600 144",
     "minimumClearSpace": 12,
-    "opticalSizes": [48, 96, 192]
+    "opticalSizes": [16, 24, 48, 128, 512],
+    "semanticDetail": "accent",
+    "original": true,
+    "editable": true,
+    "physicalCopies": {
+      "mark": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/NoxForgeMark.svg",
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/NoxForgeMark.svg",
+        "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",
+        "sddm/NoxForge/NoxForgeMark.svg"
+      ],
+      "lockup": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/NoxForgeLockup.svg",
+        "sddm/NoxForge/NoxForgeLockup.svg"
+      ]
+    }
   },
   "wallpapers": {
     "16:9": {
       "source": "wallpapers/NoxForge/contents/source/NoxForge.svg",
-      "outputs": ["2560x1440", "3840x2160"]
+      "outputs": ["1920x1080", "2560x1440", "3840x2160"],
+      "quietWorkspace": {
+        "x": 1100,
+        "y": 120,
+        "width": 1340,
+        "height": 1200
+      },
+      "original": true,
+      "editable": true
     },
     "ultrawide": {
       "source": "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg",
-      "outputs": ["3440x1440"]
+      "outputs": ["3440x1440"],
+      "quietWorkspace": {
+        "x": 1200,
+        "y": 120,
+        "width": 1660,
+        "height": 1200
+      },
+      "original": true,
+      "editable": true
     }
+  },
+  "derivedArtwork": {
+    "sessionBackground": "sddm/NoxForge/background.png",
+    "sddmPreview": "sddm/NoxForge/preview.png",
+    "globalThemeTile": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/preview.png",
+    "globalThemePreview": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png",
+    "readmeHero": "wallpapers/NoxForge/contents/images/2560x1440.png"
   },
   "runtimeIconFixture": {
     "source": "KDE Plasma and System Settings runtime names",
@@ -123,6 +164,7 @@
     "manifest": "docs/evidence/artwork-contact-sheets.json",
     "sheets": [
       "docs/evidence/artwork-brand-wallpaper.png",
+      "docs/evidence/artwork-brand-optical-sizes.png",
       "docs/evidence/artwork-icons.png",
       "docs/evidence/artwork-cursors.png"
     ]

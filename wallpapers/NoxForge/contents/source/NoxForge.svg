@@ -1,44 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
+  <title>NoxForge Kinetic Precision 16:9 forged planes</title>
   <defs>
-    <linearGradient id="background-depth" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#141B21"/>
-      <stop offset="0.46" stop-color="#0E1318"/>
-      <stop offset="1" stop-color="#090D11"/>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151D23"/>
+      <stop offset="0.42" stop-color="#0E1318"/>
+      <stop offset="1" stop-color="#090C0F"/>
     </linearGradient>
-    <linearGradient id="graphite-edge" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#1A232B"/>
-      <stop offset="1" stop-color="#141B21"/>
+    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#222D35"/>
+      <stop offset="1" stop-color="#151D23"/>
     </linearGradient>
   </defs>
-  <rect width="2560" height="1440" fill="url(#background-depth)"/>
+  <rect width="2560" height="1440" fill="url(#canvas)"/>
 
-  <!-- Original lower-left forge plates: broad graphite geometry, quiet at desktop scale. -->
-  <path d="M0 180L510 540L468 612L0 298Z" fill="#1A232B"/>
-  <path d="M0 314L455 625L780 566L1320 520L1244 588L500 684L0 430Z" fill="url(#graphite-edge)"/>
-  <path d="M0 480L390 744L562 704L880 1014L782 1074L510 830L398 858L0 620Z" fill="#141B21"/>
-  <path d="M0 648L332 878L518 856L1108 1440H854L474 1046L394 1084L0 760Z" fill="#1A232B"/>
-  <path d="M0 820L304 1028L446 1016L838 1440H624L402 1206L332 1220L0 948Z" fill="#11171C"/>
+  <!-- Original left-anchored forged planes preserve a quiet central/right workspace. -->
+  <path d="M0 0H438L720 506L588 612L0 222Z" fill="#1B252C"/>
+  <path d="M0 226L572 606L846 526L1018 668L716 760L0 432Z" fill="url(#plate)"/>
+  <path d="M0 438L676 750L966 1128L790 1196L548 902L0 696Z" fill="#151D23"/>
+  <path d="M0 710L530 908L946 1440H630L408 1128L0 1012Z" fill="#1B252C"/>
+  <path d="M0 1014L396 1132L604 1440H0Z" fill="#10171C"/>
 
-  <!-- Forge Notch: a single lime cut through the graphite stack. -->
-  <path d="M548 692L1240 544L1110 632L642 752L606 806L934 1120L902 1156L526 816L566 740Z" fill="#A3FF47"/>
-  <path d="M606 806L934 1120L902 1156L574 842Z" fill="#79BE37" opacity="0.55"/>
+  <!-- One narrow energy seam; lime never becomes an ambient slab. -->
+  <path d="M432 0H448L734 508L716 522Z" fill="#A3FF47" opacity="0.72"/>
+  <path d="M716 522L736 512L854 536L836 542Z" fill="#A3FF47" opacity="0.48"/>
 
-  <!-- Raised plate crossing the notch without enclosing it in a neon border. -->
-  <path d="M690 786L1020 752L1352 1082L1284 1110L990 826L758 850L1124 1216L1052 1240Z" fill="#1A232B"/>
-  <path d="M690 786L1020 752L1044 776L758 812Z" fill="#2A3640"/>
-  <path d="M996 832L1286 1114L1264 1128L974 850Z" fill="#0E1318"/>
+  <!-- Subordinate detail is deliberately visible only on close inspection. -->
+  <path d="M218 728L330 766" fill="none" stroke="#22D3EE" stroke-width="3" opacity="0.34"/>
+  <path d="M668 966L734 1030" fill="none" stroke="#A78BFA" stroke-width="3" opacity="0.22"/>
+  <path d="M926 612L966 600" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.26"/>
 
-  <!-- Secondary details remain small and subordinate to lime. -->
-  <path d="M386 636L432 628" stroke="#22D3EE" stroke-width="5"/>
-  <path d="M292 902L350 940" stroke="#A78BFA" stroke-width="6" stroke-dasharray="12 10"/>
-  <path d="M918 1022L956 1060" stroke="#22D3EE" stroke-width="5"/>
-  <path d="M1196 1040L1320 1164" stroke="#A78BFA" stroke-width="5"/>
-
-  <!-- Fine graphite seams give structure without permanent luminous outlines. -->
-  <g fill="none" stroke="#2A3640" stroke-width="2" opacity="0.8">
-    <path d="M0 178L512 538L468 612L0 300"/>
-    <path d="M0 478L390 742L562 702L882 1014"/>
-    <path d="M0 646L332 876L518 854L1110 1440"/>
-    <path d="M690 784L1020 750L1354 1082"/>
+  <g fill="none" stroke="#3C4B53" stroke-width="2" opacity="0.36">
+    <path d="M0 224L572 604L846 524"/>
+    <path d="M0 436L676 748L968 1128"/>
+    <path d="M0 708L530 906L948 1440"/>
   </g>
 </svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="144" viewBox="0 0 600 144">
+  <title>NoxForge Kinetic Precision horizontal lockup</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M18 116L46 28l62 88 28-88h48M123 70h45"
+          stroke="#E8F0F2" stroke-width="14"/>
+    <path d="M47 30l59 84M136 28h48"
+          stroke="#A3FF47" stroke-width="4"/>
+  </g>
+  <g transform="translate(216 46)" fill="none" stroke="#E8F0F2"
+     stroke-width="5" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M0 52V0l28 52V0"/>
+    <path d="M44 0h28v52H44z"/>
+    <path d="M88 0l28 52M116 0L88 52"/>
+    <path d="M132 52V0h30M132 25h24"/>
+    <path d="M178 0h28v52h-28z"/>
+    <path d="M222 52V0h28l8 8v14l-8 8h-28M244 30l16 22"/>
+    <path d="M304 8l-8-8h-20v52h28V30h-14"/>
+    <path d="M320 0h30M320 0v52h30M320 25h24"/>
+  </g>
+</svg>
