@@ -12,7 +12,7 @@
     }
   },
   "phase": 2,
-  "release": "6.0.0-dev",
+  "release": "6.0.0",
   "schemaVersion": 1,
   "sources": {
     "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",

@@ -1,7 +1,43 @@
 {
-  "schemaVersion": 1,
-  "version": "6.0.0-dev",
-  "candidateCommit": null,
+  "schemaVersion": 2,
+  "releaseState": "candidate",
+  "candidate": {
+    "version": "6.0.0",
+    "sourceCommit": null,
+    "sourceRef": "v6.0.0",
+    "worktreeDirty": null,
+    "package": "noxforge-6.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [
+      "automated-gate.md",
+      "noxforge-6.0.0.tar.xz",
+      "noxforge-6.0.0-1.fc44.src.rpm",
+      "noxforge-6.0.0-1.fc44.x86_64.rpm",
+      "qualification.json",
+      "SHA256SUMS"
+    ]
+  },
+  "releaseContract": {
+    "assetCount": 6,
+    "assetKinds": [
+      "source-archive",
+      "source-rpm",
+      "binary-rpm",
+      "qualification",
+      "automated-gate",
+      "checksums"
+    ]
+  },
+  "automatedEvidence": {
+    "result": "passed",
+    "evidence": "automated-gate.md",
+    "observation": "The stable 6.0.0 local source, archive, SRPM, and RPM gate passes without installation or live-session mutation."
+  },
+  "releaseBlockers": [
+    "No authorized annotated v6.0.0 tag exists.",
+    "GitHub Release and COPR publication are not authorized.",
+    "Independent public artifact download, checksum, install, inspect, and removal are not authorized.",
+    "Every unavailable live case below remains blocked."
+  ],
   "evidencePolicy": {
     "v5ResultsPromoted": false,
     "offscreenIsLiveEvidence": false,
@@ -12,7 +48,7 @@
       "id": "release-gate",
       "status": "passed",
       "evidence": "automated-gate.md",
-      "reason": "The complete Phase 7 local release gate passed without installation, activation, or live-session mutation."
+      "reason": "The complete stable 6.0.0 local release gate passed without installation, activation, or live-session mutation."
     },
     {
       "id": "reduced-motion",
@@ -24,7 +60,7 @@
       "id": "deterministic-evidence",
       "status": "passed",
       "evidence": "automated-gate.md",
-      "reason": "All current v6 generated sources and static evidence pass repeated drift checks; Phase 8 must rerun the gate for the exact final candidate."
+      "reason": "All stable v6 generated sources and static evidence pass repeated drift checks; an authorized exact tag gate and public readback remain blocked."
     },
     {
       "id": "accessibility",

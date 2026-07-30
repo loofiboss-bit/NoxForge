@@ -1823,11 +1823,49 @@ def validate_tooling() -> None:
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     if (
         not isinstance(v6, dict)
-        or v6.get("schemaVersion") != 1
-        or v6.get("version") != version
-        or v6.get("candidateCommit") is not None
+        or v6.get("schemaVersion") != 2
+        or v6.get("releaseState") not in {"candidate", "release"}
     ):
-        raise ValidationError("v6 development evidence identity is invalid")
+        raise ValidationError("v6 qualification identity is invalid")
+    v6_candidate = v6.get("candidate")
+    expected_artifacts = {
+        "automated-gate.md",
+        f"noxforge-{version}.tar.xz",
+        f"noxforge-{version}-1.fc44.src.rpm",
+        f"noxforge-{version}-1.fc44.x86_64.rpm",
+        "qualification.json",
+        "SHA256SUMS",
+    }
+    if (
+        not isinstance(v6_candidate, dict)
+        or v6_candidate.get("version") != version
+        or v6_candidate.get("sourceRef") != f"v{version}"
+        or v6_candidate.get("package") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or set(v6_candidate.get("artifacts", [])) != expected_artifacts
+    ):
+        raise ValidationError("v6 candidate metadata is incomplete")
+    v6_release_contract = v6.get("releaseContract")
+    if (
+        not isinstance(v6_release_contract, dict)
+        or v6_release_contract.get("assetCount") != 6
+        or set(v6_release_contract.get("assetKinds", [])) != expected_asset_kinds
+    ):
+        raise ValidationError("v6 qualification must preserve the six-asset contract")
+    if v6["releaseState"] == "candidate":
+        if (
+            v6_candidate.get("sourceCommit") is not None
+            or v6_candidate.get("worktreeDirty") is not None
+            or not isinstance(v6.get("releaseBlockers"), list)
+            or len(v6["releaseBlockers"]) < 4
+        ):
+            raise ValidationError("v6 local candidate must keep remote/tag state blocked")
+    else:
+        if (
+            not isinstance(v6_candidate.get("sourceCommit"), str)
+            or not re.fullmatch(r"[0-9a-f]{40}", v6_candidate["sourceCommit"])
+            or v6_candidate.get("worktreeDirty") is not False
+        ):
+            raise ValidationError("v6 release evidence requires exact clean tag lineage")
     policy = v6.get("evidencePolicy")
     if (
         not isinstance(policy, dict)
@@ -1836,6 +1874,16 @@ def validate_tooling() -> None:
         or policy.get("unavailableCasesRemainBlocked") is not True
     ):
         raise ValidationError("v6 evidence policy is invalid")
+    v6_automated = v6.get("automatedEvidence")
+    if (
+        not isinstance(v6_automated, dict)
+        or v6_automated.get("result") != "passed"
+        or not isinstance(v6_automated.get("evidence"), str)
+        or not (
+            ROOT / "docs/evidence/v6" / v6_automated["evidence"]
+        ).is_file()
+    ):
+        raise ValidationError("v6 automated candidate evidence is invalid")
     automated_cases = v6.get("automatedCases")
     if not isinstance(automated_cases, list) or not automated_cases:
         raise ValidationError("v6 automatedCases are missing")

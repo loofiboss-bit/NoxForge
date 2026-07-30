@@ -2,11 +2,11 @@
   "KPackageStructure": "Plasma/LookAndFeel",
   "KPlugin": {
     "Authors": [{"Email": "loofi@loofi.com", "Name": "Loofi"}],
-    "Description": "Complete Industrial Precision desktop experience",
+    "Description": "Complete Kinetic Precision desktop experience",
     "Id": "io.github.loofiboss.noxforge.desktop",
     "License": "MIT",
     "Name": "NoxForge",
-    "Version": "6.0.0-dev",
+    "Version": "6.0.0",
     "Website": "https://github.com/loofiboss-bit/NoxForge"
   },
   "X-Plasma-API-Minimum-Version": "6.0"

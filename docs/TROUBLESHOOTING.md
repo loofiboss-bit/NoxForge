@@ -1,5 +1,7 @@
 # Troubleshooting NoxForge
 
+This guide covers the NoxForge v6 Kinetic Precision release line.
+
 ## Collect a read-only report
 
 Run:
@@ -13,6 +15,20 @@ active theme names, and a concise session summary. It does not write files,
 change KDE settings, apply a theme, clear caches, restart services, or request
 privileges. Attach its output to a bug report; it omits usernames, hostnames,
 personal paths, and display contents.
+
+## Motion does not follow the expected speed
+
+NoxForge uses KDE and Qt's configured animation duration; it does not maintain
+a separate animation-speed setting. Verify the global animation speed in
+System Settings, then close and reopen the affected application or session
+surface. At zero duration, focus, selection, busy, success, and error states
+remain visible but settle immediately.
+
+Do not edit QML files or clear caches to force reduced motion. If a surface
+still animates at zero duration, collect `noxforge-doctor` output and report
+the exact application or surface. Live animation-speed qualification remains
+explicitly blocked until it can run in an isolated input-capable Wayland
+session.
 
 ## A component is missing or versions are mixed
 

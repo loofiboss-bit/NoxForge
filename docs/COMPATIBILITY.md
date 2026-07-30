@@ -1,6 +1,6 @@
 # Plasma 6 compatibility record
 
-Verified structurally on 2026-07-18 against Fedora KDE 44: Plasma/KWin 6.7.3,
+Verified structurally on 2026-07-30 against Fedora KDE 44: Plasma/KWin 6.7.3,
 KDE Frameworks 6.28 and Qt 6.11.1. Plasma 5, Qt 5 and legacy metadata are not
 supported.
 
@@ -28,14 +28,19 @@ inherits only `hicolor`, and the Plasma Style declares no explicit fallback.
 The Qt style is a native `QCommonStyle`/`QStylePlugin` implementation with the
 public key `NoxForge`. It does not link against Breeze or Kvantum.
 
-Phase 6 isolated Wayland qualification passes theme application, panel
-preservation, every panel edge, two virtual outputs, shell artwork, required
-panel icons and real Qt composition at scale 1.0 and 1.4. Hardware blur,
-input-driven keyboard/Aurorae/Alt+Tab/cursor cases, live RTL, isolated audio,
-production splash integration and real SDDM authentication/power remain
-`blocked` in `docs/evidence/v5/qualification.json`; structural evidence cannot
-mark them passed. Completed v3 evidence remains under `docs/evidence/v3/` as
-historical release evidence.
+V6 automated qualification passes all documented contrast pairs, non-color
+state indicators, system-font behavior, keyboard structure, RTL,
+100/125/140/200 percent rendering, zero-duration reduced motion, ASan/UBSan,
+and complete-tree performance within ten percent of the reviewed v5 baseline.
+The native 500-cycle stress probe has no failed state, retained widget, active
+idle timer, or out-of-budget heap growth.
+
+No v6 live Wayland qualification is claimed. Hardware blur, injected
+keyboard/pointer motion, Aurorae and Alt+Tab interaction, animation-speed
+variants, live high contrast and RTL, cursor scaling, two-output placement,
+production splash integration, and real SDDM authentication/power remain
+`blocked` in `docs/evidence/v6/qualification.json`. Completed v5 and v3 live
+evidence remains historical and is not promoted to v6.
 
 The Fedora RPM and CMake staging contract own system paths and contain no
 installation scriptlets. Installation, upgrade and removal do not apply or

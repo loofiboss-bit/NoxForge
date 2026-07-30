@@ -164,6 +164,19 @@ hardware-composited blur, real SDDM authentication/power actions, composed
 Aurorae interaction, live cursor scaling, animation-speed variants, and
 two-output placement were not run and are not claimed.
 
+## Current v6 Phase 8 local candidate evidence (2026-07-30)
+
+The repository version and all current generated consumers are stable `6.0.0`.
+README and release-note images link to exact generated previews, source atlases,
+or authentic offscreen QML/native Qt output and identify their non-live status.
+The immutable Phase 0 baseline remains `6.0.0-dev` historical evidence.
+
+The complete local source/archive/SRPM/RPM gate passes, but Phase 8 is not a
+public release. No annotated `v6.0.0` tag, GitHub Release, COPR build,
+installation, or independent public download/readback is authorized or
+claimed. `docs/evidence/v6/qualification.json` remains in `candidate` state
+with those release blockers and all live cases explicit.
+
 ## Remaining interactive checks (require a physical or input-capable test environment)
 
 The following cannot be closed without explicitly applying the Global Theme in
