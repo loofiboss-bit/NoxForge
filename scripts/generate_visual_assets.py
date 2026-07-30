@@ -15,7 +15,7 @@ AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 ICONS = ROOT / "icons/NoxForge"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
-COLORS = TOKENS["colors"]
+COLORS = TOKENS.get("assetGenerationPalette", TOKENS["colors"])
 CHECK = "--check" in sys.argv[1:]
 DRIFT: list[Path] = []
 

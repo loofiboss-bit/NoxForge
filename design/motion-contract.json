@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "themeId": "io.github.loofiboss.noxforge.desktop",
+  "version": "6.0.0-dev",
+  "policy": {
+    "character": "machined",
+    "idleAnimationAllowed": false,
+    "springAllowed": false,
+    "overshootAllowed": false,
+    "layoutPropertyAnimationAllowed": false,
+    "focusIndicatorAnimated": false
+  },
+  "performance": {
+    "targetFramesPerSecond": 60,
+    "maximumConcurrentTransitionsPerSurface": 8,
+    "maximumTravelPx": 8,
+    "maximumBlurRadiusPx": 16,
+    "busyIndicatorDelayMs": 150,
+    "busyIndicatorMinimumVisibleMs": 300,
+    "preferredProperties": [
+      "opacity",
+      "color",
+      "transform"
+    ]
+  },
+  "surfaces": {
+    "qtWidgets": [
+      "hover",
+      "press",
+      "selection",
+      "indicator",
+      "popup"
+    ],
+    "plasmaShell": [
+      "hover",
+      "press",
+      "selection",
+      "popup"
+    ],
+    "session": [
+      "container",
+      "selection",
+      "expressive"
+    ],
+    "tabbox": [
+      "container",
+      "selection"
+    ]
+  },
+  "transitions": {
+    "default": {
+      "duration": "instantMs",
+      "curve": "standard",
+      "properties": []
+    },
+    "hover": {
+      "duration": "productiveMs",
+      "curve": "productiveEnter",
+      "properties": [
+        "color",
+        "opacity"
+      ]
+    },
+    "focus": {
+      "duration": "instantMs",
+      "curve": "standard",
+      "properties": []
+    },
+    "pressed": {
+      "duration": "pressMs",
+      "curve": "standard",
+      "properties": [
+        "color"
+      ]
+    },
+    "checked": {
+      "duration": "pressMs",
+      "curve": "productiveEnter",
+      "properties": [
+        "color",
+        "opacity"
+      ]
+    },
+    "selected": {
+      "duration": "selectionMs",
+      "curve": "productiveEnter",
+      "properties": [
+        "color",
+        "opacity",
+        "transform"
+      ]
+    },
+    "disabled": {
+      "duration": "instantMs",
+      "curve": "standard",
+      "properties": []
+    },
+    "busy": {
+      "duration": "busyCycleMs",
+      "curve": "standard",
+      "properties": [
+        "transform"
+      ]
+    },
+    "error": {
+      "duration": "productiveMs",
+      "curve": "standard",
+      "properties": [
+        "color",
+        "opacity"
+      ]
+    },
+    "success": {
+      "duration": "productiveMs",
+      "curve": "standard",
+      "properties": [
+        "color",
+        "opacity"
+      ]
+    },
+    "containerEnter": {
+      "duration": "containerMs",
+      "curve": "productiveEnter",
+      "properties": [
+        "opacity",
+        "transform"
+      ]
+    },
+    "containerExit": {
+      "duration": "productiveMs",
+      "curve": "exit",
+      "properties": [
+        "opacity",
+        "transform"
+      ]
+    },
+    "expressiveEnter": {
+      "duration": "expressiveMs",
+      "curve": "expressive",
+      "properties": [
+        "opacity",
+        "transform"
+      ]
+    }
+  },
+  "reducedMotion": {
+    "trigger": "Qt style-hint duration factor equals zero",
+    "duration": "instantMs",
+    "spatialMotion": false,
+    "opacityTransitions": false,
+    "busyOutcome": "static-semantic-glyph",
+    "stateOutcomes": {
+      "default": "immediate",
+      "hover": "immediate",
+      "focus": "immediate-visible-ring",
+      "pressed": "immediate",
+      "checked": "immediate-visible-glyph",
+      "selected": "immediate-visible-marker",
+      "disabled": "immediate-opacity-and-label",
+      "busy": "static-semantic-glyph",
+      "error": "immediate-visible-glyph-and-label",
+      "success": "immediate-visible-glyph-and-label"
+    }
+  }
+}

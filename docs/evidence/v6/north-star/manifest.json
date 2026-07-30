@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "release": "6.0.0-dev",
+  "phase": 1,
+  "kind": "rendered-north-star-prototype",
+  "prototype": true,
+  "productionRuntime": false,
+  "liveEvidence": false,
+  "renderer": {
+    "source": "tools/north_star_renderer.cpp",
+    "backend": "Qt QImage and QPainter",
+    "platform": "offscreen",
+    "qtVersion": "6.11.1",
+    "systemFont": true
+  },
+  "sources": {
+    "tokensSha256": "1eec69ab1c3353198a4dd28b94ca0b7ae33e41a71f5dc945854f212c8817ed7b",
+    "motionContractSha256": "475f968e504a876909e95d692e8c8c9868ed5d6a6acdb955f9af5e0368e93bc3",
+    "rendererSha256": "951b6290429ae8a83985f9246f27b54f873fcdcce26c45c89bbfe0edd685df3f"
+  },
+  "comparisons": [
+    {
+      "file": "north-star-qt.png",
+      "baseline": "../baseline/qt-controls-100pct.png",
+      "width": 960,
+      "height": 760,
+      "sha256": "6cf985ac7eab9b985c1e0a45b382eec85394507dba561866c27bf0a739daae9a",
+      "baselineSha256": "4bc51fa60d2e2daa62d14f558b2b0a57b9c729bb3d95df2b66697abc2ecb99c6",
+      "rootMeanSquareDifference": 0.146509,
+      "status": "passed"
+    },
+    {
+      "file": "north-star-plasma.png",
+      "baseline": "../baseline/plasma-shell-100pct.png",
+      "width": 1680,
+      "height": 256,
+      "sha256": "8e91f9142e4d0f70baa9549eecac19b948af78ffef8e6640d9a5ed2014a0e62e",
+      "baselineSha256": "494f5e0fe0df71211a1c0e455d9cd5ed32c18373c26add89ebc0da287f982e21",
+      "rootMeanSquareDifference": 0.081311,
+      "status": "passed"
+    },
+    {
+      "file": "north-star-session.png",
+      "baseline": "../baseline/session-sddm-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "sha256": "445994d6b41a28b62132df9de4db9f872a6f623aede86c9b115191459633b300",
+      "baselineSha256": "164d582b165f3f6e40f1c3b13b2c068326f8bad739397137b94f3ce8439a9973",
+      "rootMeanSquareDifference": 0.073446,
+      "status": "passed"
+    },
+    {
+      "file": "north-star-tabbox.png",
+      "baseline": "../baseline/session-tabbox-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "sha256": "28f24a8d1949726c4d6e33d1751e99da02e43d0340212ffacdc7b898773169db",
+      "baselineSha256": "5e59c8ba10ca4894f171d547fab2c33e16584ea9e3104b9f49c13dde82f514a1",
+      "rootMeanSquareDifference": 0.05022,
+      "status": "passed"
+    },
+    {
+      "file": "north-star-brand-wallpaper.png",
+      "baseline": "../baseline/brand-wallpaper.png",
+      "width": 568,
+      "height": 924,
+      "sha256": "cd4633c07af1eabd53bfa638b9328a418b0a876f5657fce61410d9737815f87c",
+      "baselineSha256": "cf68d5ee4294abaf4417439ad400393aaa1f6af549b72674c6c2d65ea5d88bb3",
+      "rootMeanSquareDifference": 0.180223,
+      "status": "passed"
+    },
+    {
+      "file": "north-star-motion-storyboard.png",
+      "baseline": "../baseline/session-splash-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "sha256": "c3abb23d65f1cd7b3f39b447be606da23bd9e6f97c7ada5175195375f20b1f8b",
+      "baselineSha256": "2f97d9263cb38a1d5e3e24550545c23620279cd20d91882befcb8d51faca3cce",
+      "rootMeanSquareDifference": 0.058584,
+      "status": "passed"
+    }
+  ],
+  "scorecard": {
+    "scale": {
+      "minimum": 1,
+      "maximum": 5,
+      "requiredMinimum": 4
+    },
+    "scores": {
+      "hierarchy": 5,
+      "stateClarity": 5,
+      "cohesion": 4,
+      "branding": 4,
+      "density": 4,
+      "motion": 4,
+      "accessibility": 4,
+      "fallbackBehavior": 4
+    },
+    "status": "passed",
+    "review": [
+      "Neutral selected surfaces replace broad olive fills.",
+      "Immediate focus rings remain distinct from filled primary actions.",
+      "Tonal layers reduce nested borders and keep overlays legible.",
+      "System-font roles establish hierarchy before separators.",
+      "Lime is limited to primary actions, rails, and narrow energy seams.",
+      "Motion evidence is a static storyboard; live motion remains unqualified."
+    ]
+  }
+}

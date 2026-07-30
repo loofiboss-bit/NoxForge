@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-COLORS = TOKENS["colors"]
+COLORS = TOKENS.get("assetGenerationPalette", TOKENS["colors"])
 GLYPHS = json.loads((ROOT / "design/plasma-glyphs.json").read_text(encoding="utf-8"))
 CONTRACT = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
 RECIPES = CONTRACT["semanticRecipes"]

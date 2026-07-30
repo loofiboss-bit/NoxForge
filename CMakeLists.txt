@@ -40,6 +40,14 @@ target_link_libraries(noxforge_sddm_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml
 add_executable(noxforge_session_renderer tools/session_renderer.cpp)
 target_link_libraries(noxforge_session_renderer PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
+add_executable(
+    noxforge_north_star_renderer
+    tools/north_star_renderer.cpp
+    src/style/noxforgepalette.h
+)
+target_include_directories(noxforge_north_star_renderer PRIVATE src/style)
+target_link_libraries(noxforge_north_star_renderer PRIVATE Qt6::Core Qt6::Gui)
+
 enable_testing()
 add_test(NAME style-plugin-discovery COMMAND noxforge_style_probe)
 set_tests_properties(style-plugin-discovery PROPERTIES
