@@ -6,11 +6,12 @@ Capture evidence before any tag or publication. Results must be `passed`,
 `docs/evidence/v6/qualification.json`; automated evidence never substitutes for
 a live result.
 
-Current candidate: v6 development worktree on Fedora KDE 44. Phase 0 contains
-authentic offscreen v5 baseline references only. Every v6 automated result is
-`pending`, and every unavailable interactive case is explicitly `blocked` in
-the v6 manifest. No v5 result is promoted to v6 evidence. The completed v5
-isolated Wayland matrix remains historical release evidence in
+Current candidate: v6 development worktree on Fedora KDE 44. Phases 0–5 add
+authentic local source, native Qt, Plasma SVG, artwork, and offscreen QML
+evidence. Every final-candidate automated result remains `pending`, and every
+unavailable interactive case is explicitly `blocked` in the v6 manifest. No v5
+result is promoted to v6 evidence. The completed v5 isolated Wayland matrix
+remains historical release evidence in
 `docs/evidence/v5/live/live-session.md`; the active maintainer desktop was not
 changed.
 
@@ -110,6 +111,22 @@ Hardware blur, complete keyboard/pointer interaction, live RTL, a held visible
 Alt+Tab cycle, controllable cursor scaling, isolated PipeWire output and the v5
 splash through its production integration remain blocked with specific
 reasons in `docs/evidence/v5/qualification.json`.
+
+## Current v6 Phase 5 offscreen session evidence (2026-07-30)
+
+`docs/evidence/v6/session/manifest.json` binds 46 authentic offscreen renders
+of the production Splash, SDDM, Logout, and TabBox QML to their exact source
+hashes. It covers start/mid/end choreography, 1280×720, 1920×1080, 2560×1440,
+and 3440×1440, plus standard, long RTL, keyboard-focus, empty, error, busy,
+many-window, and reduced-motion scenarios. The SDDM first-frame process median
+is separately compared with the reviewed v5 baseline and must remain within
+ten percent.
+
+This evidence qualifies deterministic QML composition and preserved mocked
+runtime contracts only. It does not qualify PAM authentication, power actions,
+pointer or keyboard interaction, a held KWin Alt+Tab cycle, production splash
+integration, or any running SDDM/Plasma session. Those cases remain explicitly
+blocked for Phase 7.
 
 ## Remaining interactive checks (require a physical or input-capable test environment)
 

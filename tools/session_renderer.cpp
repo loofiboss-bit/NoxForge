@@ -56,9 +56,9 @@ public:
         IconRole,
         MinimizedRole,
     };
-    explicit WindowModel(bool empty, bool longText, QObject *parent = nullptr)
+    explicit WindowModel(bool empty, bool longText, bool many, QObject *parent = nullptr)
         : QAbstractListModel(parent)
-        , m_count(empty ? 0 : 5)
+        , m_count(empty ? 0 : many ? 12 : 5)
         , m_longText(longText)
     {
     }
@@ -221,7 +221,18 @@ int main(int argc, char **argv)
         repositoryRoot.toUtf8() + ":"
             + (existingDataDirs.isEmpty() ? QByteArray("/usr/share") : existingDataDirs));
     qputenv("KDE_SESSION_VERSION", "6");
-    const QString scenario = QString::fromLocal8Bit(argv[7]);
+    const QString scenarioArgument = QString::fromLocal8Bit(argv[7]);
+    QString scenario = scenarioArgument;
+    qreal testProgress = 1.0;
+    if (scenario.endsWith(QStringLiteral("-start"))) {
+        scenario.chop(6);
+        testProgress = 0.0;
+    } else if (scenario.endsWith(QStringLiteral("-mid"))) {
+        scenario.chop(4);
+        testProgress = 0.5;
+    } else if (scenario.endsWith(QStringLiteral("-end"))) {
+        scenario.chop(4);
+    }
     const bool rtl = scenario == QStringLiteral("long-rtl");
     if (rtl) {
         QLocale::setDefault(QLocale(QStringLiteral("ar_EG")));
@@ -245,10 +256,14 @@ int main(int argc, char **argv)
     }
 
     const bool longText = scenario == QStringLiteral("long-rtl");
-    const bool empty = scenario == QStringLiteral("empty-reduced");
+    const bool empty = scenario == QStringLiteral("empty")
+        || scenario == QStringLiteral("empty-reduced");
+    const bool reduced = scenario == QStringLiteral("reduced")
+        || scenario == QStringLiteral("empty-reduced");
+    const bool many = scenario == QStringLiteral("many");
     Config config(QUrl::fromLocalFile(QString::fromLocal8Bit(argv[3])));
     SessionModel sessions(longText);
-    WindowModel windows(empty, longText);
+    WindowModel windows(empty, longText, many);
     UserModel users(longText);
     Keyboard keyboard(longText);
     Sddm sddm;
@@ -267,8 +282,9 @@ int main(int argc, char **argv)
     }
 
     QObject *root = view.rootObject();
+    setPropertyIfPresent(root, "testProgress", testProgress);
     if (surface == QStringLiteral("splash")) {
-        setPropertyIfPresent(root, "stage", 5);
+        setPropertyIfPresent(root, "stage", qRound(testProgress * 5));
     } else if (surface == QStringLiteral("tabbox")) {
         setPropertyIfPresent(root, "compositionMode", true);
         setPropertyIfPresent(root, "windowModel", QVariant::fromValue(static_cast<QObject *>(&windows)));
@@ -279,7 +295,7 @@ int main(int argc, char **argv)
         setPropertyIfPresent(root, "freezeClock", true);
         setPropertyIfPresent(root, "currentDateTime", QDateTime(QDate(2026, 7, 26), QTime(8, 30)));
     }
-    if (empty) {
+    if (reduced) {
         setPropertyIfPresent(root, "reducedMotion", true);
     }
     if (longText && surface == QStringLiteral("sddm")) {
@@ -289,6 +305,14 @@ int main(int argc, char **argv)
             QStringLiteral("Die Anmeldung ist vorübergehend nicht verfügbar. Bitte prüfen Sie Ihre Zugangsdaten."));
         setPropertyIfPresent(root, "statusDanger", true);
         setPropertyIfPresent(root, "sessionMenuOpen", true);
+    }
+    if (scenario == QStringLiteral("error") && surface == QStringLiteral("sddm")) {
+        setPropertyIfPresent(root, "statusMessage", QStringLiteral("Login failed"));
+        setPropertyIfPresent(root, "statusDanger", true);
+    }
+    if (scenario == QStringLiteral("busy") && surface == QStringLiteral("sddm")) {
+        setPropertyIfPresent(root, "statusMessage", QStringLiteral("Authenticating…"));
+        setPropertyIfPresent(root, "authenticating", true);
     }
 
     view.resize(width, height);

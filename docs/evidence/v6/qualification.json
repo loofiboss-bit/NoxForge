@@ -16,12 +16,12 @@
     {
       "id": "reduced-motion",
       "status": "pending",
-      "reason": "The native Qt zero-duration probe passes, but cross-surface reduced-motion qualification remains Phase 7 scope."
+      "reason": "Native Qt zero-duration and authentic offscreen QML reduced-motion scenarios pass, but live cross-surface interaction remains Phase 7 scope."
     },
     {
       "id": "deterministic-evidence",
       "status": "pending",
-      "reason": "Native Qt 0/50/100 percent evidence is deterministic; final cross-surface candidate evidence is not complete."
+      "reason": "Native Qt and session-surface start/mid/end evidence is deterministic; later v6 surfaces and the exact final candidate remain incomplete."
     }
   ],
   "liveCases": [
@@ -43,17 +43,17 @@
     {
       "id": "sddm-authentication-and-power",
       "status": "blocked",
-      "reason": "No real SDDM authentication or power flow is available in Phase 0."
+      "reason": "Authentic offscreen SDDM composition covers user, session, keyboard, busy, error, and power states, but real authentication and power flows remain unavailable until Phase 7."
     },
     {
       "id": "logout-keyboard-and-pointer",
       "status": "blocked",
-      "reason": "Phase 7 injected keyboard and pointer qualification has not run."
+      "reason": "Authentic offscreen standard, long RTL, keyboard-focus, and reduced-motion states pass; Phase 7 injected keyboard and pointer qualification has not run."
     },
     {
       "id": "held-alt-tab",
       "status": "blocked",
-      "reason": "Phase 7 held Alt+Tab qualification has not run."
+      "reason": "Authentic offscreen long-title, empty, many-window, RTL, keyboard, and reduced-motion states pass; Phase 7 held Alt+Tab qualification has not run."
     },
     {
       "id": "aurorae-composed-motion",
