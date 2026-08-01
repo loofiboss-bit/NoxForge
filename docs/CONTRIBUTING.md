@@ -10,7 +10,8 @@ On Fedora 44:
 
 ```bash
 sudo dnf install cmake ffmpeg-free gcc-c++ git ImageMagick ninja-build \
-  google-noto-sans-fonts python3 qt6-qtbase-devel qt6-qtdeclarative-devel \
+  google-noto-sans-fonts libasan libubsan python3 qt6-qtbase-devel \
+  qt6-qtdeclarative-devel \
   rpm-build rpmlint xz
 ```
 
