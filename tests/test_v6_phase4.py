@@ -97,15 +97,17 @@ class V6PhaseFourTests(unittest.TestCase):
             path = ATLAS_PATH.parent / entry["file"]
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), entry["sha256"])
 
-    def test_live_plasma_cases_remain_blocked(self) -> None:
+    def test_live_plasma_results_keep_blur_blocked_and_record_layout_pass(self) -> None:
         qualification = json.loads(
             (ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8")
         )
         live = {case["id"]: case for case in qualification["liveCases"]}
         self.assertEqual(live["plasma-blur-on-off"]["status"], "blocked")
-        self.assertIn("authorized", live["plasma-blur-on-off"]["reason"])
-        self.assertEqual(live["plasma-layout-and-fallback"]["status"], "blocked")
-        self.assertIn("authorized", live["plasma-layout-and-fallback"]["reason"])
+        self.assertIn("virtual framebuffer", live["plasma-blur-on-off"]["reason"])
+        self.assertEqual(live["plasma-layout-and-fallback"]["status"], "passed")
+        self.assertTrue(
+            (ROOT / "docs/evidence/v6" / live["plasma-layout-and-fallback"]["evidence"]).is_file()
+        )
 
 
 if __name__ == "__main__":

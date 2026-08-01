@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "releaseState": "candidate",
+  "releaseState": "release",
   "candidate": {
     "version": "6.0.0",
-    "sourceCommit": null,
+    "sourceCommit": "1ea3d3bf168b8d70f81e89e940452b1e466877be",
     "sourceRef": "v6.0.0",
-    "worktreeDirty": null,
+    "worktreeDirty": false,
     "package": "noxforge-6.0.0-1.fc44.x86_64.rpm",
     "artifacts": [
       "automated-gate.md",
@@ -27,17 +27,25 @@
       "checksums"
     ]
   },
+  "environment": {
+    "fedora": "44",
+    "plasma": "6.7.3",
+    "kwin": "6.7.3",
+    "frameworks": "6.28.0",
+    "qt": "6.11.1",
+    "kernel": "7.1.5-201.fc44.x86_64",
+    "session": "isolated virtual Wayland",
+    "displayScale": "1.0 with two outputs and 1.4 in a separate output",
+    "layout": "isolated default panel without resetLayout",
+    "panelEdge": "bottom, top, left, and right",
+    "blur": "blocked by the virtual framebuffer",
+    "input": "blocked by the absence of a trusted keyboard and pointer injector"
+  },
   "automatedEvidence": {
     "result": "passed",
     "evidence": "automated-gate.md",
     "observation": "The stable 6.0.0 local source, archive, SRPM, and RPM gate passes without installation or live-session mutation."
   },
-  "releaseBlockers": [
-    "No authorized annotated v6.0.0 tag exists.",
-    "GitHub Release and COPR publication are not authorized.",
-    "Independent public artifact download, checksum, install, inspect, and removal are not authorized.",
-    "Every unavailable live case below remains blocked."
-  ],
   "evidencePolicy": {
     "v5ResultsPromoted": false,
     "offscreenIsLiveEvidence": false,
@@ -60,7 +68,7 @@
       "id": "deterministic-evidence",
       "status": "passed",
       "evidence": "automated-gate.md",
-      "reason": "All stable v6 generated sources and static evidence pass repeated drift checks; an authorized exact tag gate and public readback remain blocked."
+      "reason": "All stable v6 generated sources and static evidence pass repeated drift checks; the exact tag workflow performs the final public lineage binding."
     },
     {
       "id": "accessibility",
@@ -79,42 +87,47 @@
     {
       "id": "qt-interactive-motion",
       "status": "blocked",
-      "reason": "A disposable Wayland session with injected keyboard and pointer input is unavailable within the authorized no-live environment; offscreen probes are not interactive evidence."
+      "evidence": "live/qt-composed-140.png",
+      "reason": "Real Qt controls composed under KWin at 140 percent, but the isolated compositor has no trusted keyboard or pointer injector for hover, press, toggle, slider, scrollbar, and busy transitions."
     },
     {
       "id": "plasma-blur-on-off",
       "status": "blocked",
-      "reason": "No authorized hardware-composited disposable Plasma session is available for live blur-on/off comparison; Phase 4 source atlases remain static evidence."
+      "reason": "The virtual framebuffer cannot prove hardware-composited blur-on/off quality; Phase 4 source atlases remain static evidence."
     },
     {
       "id": "plasma-layout-and-fallback",
-      "status": "blocked",
-      "reason": "All 43 source families and the static layout matrix pass, but authorized live Plasma panel, fallback, compact-layout, and two-output composition are unavailable."
+      "status": "passed",
+      "evidence": "live/live-session.md",
+      "reason": "The Global Theme applied in isolated KWin/Plasma Wayland, the panel hash and count stayed identical, all four panel edges rendered without seams, and two outputs showed no visible missing NoxForge shell artwork."
     },
     {
       "id": "sddm-authentication-and-power",
       "status": "blocked",
-      "reason": "Real SDDM authentication and power actions require changing or driving a login environment, which is outside the explicit no-SDDM and no-live boundary."
+      "evidence": "live/sddm-test-mode.png",
+      "reason": "The real SDDM greeter rendered NoxForge in test mode, but test mode cannot prove PAM authentication or real power actions."
     },
     {
       "id": "logout-keyboard-and-pointer",
       "status": "blocked",
-      "reason": "Authentic offscreen Logout states pass, but no authorized disposable Wayland input injector is available for real keyboard and pointer flow."
+      "evidence": "live/logout-test.png",
+      "reason": "The real windowed Plasma logout greeter rendered NoxForge, but the isolated compositor has no trusted keyboard or pointer injector for the complete interaction flow."
     },
     {
       "id": "held-alt-tab",
       "status": "blocked",
-      "reason": "Authentic offscreen TabBox scenarios pass, but a held Alt+Tab cycle needs an authorized KWin session and injected keyboard input that are unavailable."
+      "reason": "Authentic offscreen TabBox scenarios pass, but a held Alt+Tab cycle requires injected keyboard input that is unavailable in the isolated compositor."
     },
     {
       "id": "aurorae-composed-motion",
       "status": "blocked",
-      "reason": "Deterministic Aurorae sources pass, but active/inactive/maximized composition and pointer states require an authorized live KWin session that is unavailable."
+      "evidence": "live/aurorae-composed.png",
+      "reason": "Aurorae composed around real applications under KWin, but complete active, inactive, maximized, hover, and press transitions require the unavailable pointer injector."
     },
     {
       "id": "cursor-live-scale",
       "status": "blocked",
-      "reason": "Physical cursor payloads pass, but live 100/140 percent compositor scaling and motion require an authorized pointer-capable Wayland session that is unavailable."
+      "reason": "Physical cursor payloads pass, but controlled live 100/140 percent compositor scaling and motion require a pointer injector unavailable in the virtual compositor."
     }
   ]
 }

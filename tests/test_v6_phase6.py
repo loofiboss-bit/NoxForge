@@ -180,7 +180,7 @@ class V6PhaseSixTests(unittest.TestCase):
         live = {case["id"]: case for case in qualification["liveCases"]}
         for case_id in ("aurorae-composed-motion", "cursor-live-scale"):
             self.assertEqual(live[case_id]["status"], "blocked")
-            self.assertIn("authorized", live[case_id]["reason"])
+            self.assertIn("injector", live[case_id]["reason"])
 
 
 if __name__ == "__main__":

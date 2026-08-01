@@ -89,7 +89,7 @@ class V6PhaseSevenTests(unittest.TestCase):
         self.assertIn("motion-qualification-500-cycles", cmake)
         self.assertIn("noxforge_motion_qualification_probe", sanitizer)
 
-    def test_automated_cases_pass_while_every_live_case_remains_blocked(self) -> None:
+    def test_automated_cases_pass_and_live_results_remain_truthful(self) -> None:
         qualification = json.loads(
             (EVIDENCE_ROOT / "qualification.json").read_text(encoding="utf-8")
         )
@@ -99,11 +99,12 @@ class V6PhaseSevenTests(unittest.TestCase):
         )
         for case in qualification["automatedCases"]:
             self.assertTrue((EVIDENCE_ROOT / case["evidence"]).is_file())
-        self.assertEqual(
-            {case["status"] for case in qualification["liveCases"]},
-            {"blocked"},
-        )
+        live_statuses = {case["status"] for case in qualification["liveCases"]}
+        self.assertEqual(live_statuses, {"blocked", "passed"})
         self.assertTrue(all(case["reason"] for case in qualification["liveCases"]))
+        for case in qualification["liveCases"]:
+            if case["status"] == "passed":
+                self.assertTrue((EVIDENCE_ROOT / case["evidence"]).is_file())
         self.assertFalse(qualification["evidencePolicy"]["offscreenIsLiveEvidence"])
 
     def test_phase_gate_and_plan_record_the_truthful_boundary(self) -> None:

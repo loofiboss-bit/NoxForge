@@ -6,14 +6,13 @@ Capture evidence before any tag or publication. Results must be `passed`,
 `docs/evidence/v6/qualification.json`; automated evidence never substitutes for
 a live result.
 
-Current candidate: v6 development worktree on Fedora KDE 44. Phases 0–5 add
-authentic local source, native Qt, Plasma SVG, artwork, and offscreen QML
-evidence. Every final-candidate automated result remains `pending`, and every
-unavailable interactive case is explicitly `blocked` in the v6 manifest. No v5
-result is promoted to v6 evidence. The completed v5 isolated Wayland matrix
-remains historical release evidence in
-`docs/evidence/v5/live/live-session.md`; the active maintainer desktop was not
-changed.
+Current candidate: NoxForge 6.0.0 on Fedora KDE 44. Every automated result
+passes. The v6 isolated Wayland matrix passes Global Theme application, exact
+panel preservation, all four panel edges, two-output placement, visible shell
+fallback review, and real Qt composition at 140 percent. Unavailable
+hardware/input/authentication cases remain explicitly `blocked`; no v5 result
+is promoted to v6 evidence. The active maintainer KDE and SDDM configuration
+hash was unchanged.
 
 ## Historical v3 structural and live baseline
 
@@ -158,30 +157,43 @@ case, no retained widget, a stopped idle timer, and heap growth within its
 fixed budget. These are automated offscreen and sanitizer-backed results, not
 interactive frame or input evidence.
 
-Every live case in `docs/evidence/v6/qualification.json` remains `blocked`.
-The required disposable Wayland session, injected pointer/keyboard input,
-hardware-composited blur, real SDDM authentication/power actions, composed
-Aurorae interaction, live cursor scaling, animation-speed variants, and
-two-output placement were not run and are not claimed.
+The isolated live matrix described below closes the Plasma layout and fallback
+case. Hardware-composited blur, injected pointer/keyboard input, real SDDM
+authentication/power actions, complete Aurorae interaction, live cursor
+scaling, and animation-speed variants remain blocked.
 
-## Current v6 Phase 8 local candidate evidence (2026-07-30)
+## Current v6 isolated live evidence (2026-08-01)
+
+Separate temporary HOME, XDG, D-Bus, runtime, and KWin virtual Wayland
+environments qualified Global Theme application, exact panel hash/count
+preservation, all four panel edges, two-output composition, visible shell
+fallback review, and real Qt/Aurorae composition at 140 percent. The real
+windowed Logout greeter and SDDM test mode also rendered. Evidence and bounded
+claims are recorded in `docs/evidence/v6/live/live-session.md`.
+
+Hardware-composited blur, input-injected Qt motion, a held Alt+Tab cycle,
+controlled cursor scaling, production splash integration, live high-contrast
+mode, PAM authentication, and real SDDM power actions remain blocked. The
+generic splash test presentation was rejected rather than promoted to live
+v6 evidence.
+
+## Current v6 Phase 8 release candidate evidence (2026-08-01)
 
 The repository version and all current generated consumers are stable `6.0.0`.
 README and release-note images link to exact generated previews, source atlases,
 or authentic offscreen QML/native Qt output and identify their non-live status.
 The immutable Phase 0 baseline remains `6.0.0-dev` historical evidence.
 
-The complete local source/archive/SRPM/RPM gate passes, but Phase 8 is not a
-public release. No annotated `v6.0.0` tag, GitHub Release, COPR build,
-installation, or independent public download/readback is authorized or
-claimed. `docs/evidence/v6/qualification.json` remains in `candidate` state
-with those release blockers and all live cases explicit.
+The complete local source/archive/SRPM/RPM gate and the isolated Wayland matrix
+pass. `docs/evidence/v6/qualification.json` is release-ready with exact
+candidate lineage and the six-asset contract. The annotated `v6.0.0` tag,
+GitHub Release, COPR build, installation, and independent public
+download/readback remain the Phase 8 publication gate.
 
 ## Remaining interactive checks (require a physical or input-capable test environment)
 
-The following cannot be closed without explicitly applying the Global Theme in
-an isolated System Settings session and interacting with that desktop. No live
-check above has been marked passed. The test operator must:
+The following require physical hardware or a trusted input-capable disposable
+environment and remain blocked. The test operator must:
 
 1. Compare popups with hardware blur enabled and disabled.
 2. Navigate with injected keyboard input through System Settings and session dialogs.

@@ -41,7 +41,7 @@ class V6PhaseEightTests(unittest.TestCase):
         self.assertIn("# NoxForge 6.0.0", notes)
         self.assertIn("Kinetic Precision", notes)
         self.assertIn("141 Python tests", notes)
-        self.assertIn("no authorized v6 tag", notes)
+        self.assertIn("virtual framebuffer", notes)
         for relative in (
             "docs/QUICKSTART.md",
             "docs/INSTALL_FEDORA.md",
@@ -55,18 +55,18 @@ class V6PhaseEightTests(unittest.TestCase):
             (ROOT / "docs/INSTALL_FEDORA.md").read_text(encoding="utf-8"),
         )
 
-    def test_candidate_manifest_preserves_release_contract_and_blockers(self) -> None:
+    def test_release_manifest_preserves_contract_and_exact_candidate_lineage(self) -> None:
         manifest = json.loads(
             (ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["schemaVersion"], 2)
-        self.assertEqual(manifest["releaseState"], "candidate")
+        self.assertEqual(manifest["releaseState"], "release")
         self.assertEqual(manifest["candidate"]["version"], "6.0.0")
-        self.assertIsNone(manifest["candidate"]["sourceCommit"])
-        self.assertIsNone(manifest["candidate"]["worktreeDirty"])
+        self.assertRegex(manifest["candidate"]["sourceCommit"], r"^[0-9a-f]{40}$")
+        self.assertFalse(manifest["candidate"]["worktreeDirty"])
         self.assertEqual(manifest["releaseContract"]["assetCount"], 6)
         self.assertEqual(len(manifest["candidate"]["artifacts"]), 6)
-        self.assertGreaterEqual(len(manifest["releaseBlockers"]), 4)
+        self.assertNotIn("releaseBlockers", manifest)
 
     def test_public_release_workflow_remains_exact_tag_and_six_asset_gated(self) -> None:
         workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
@@ -78,11 +78,11 @@ class V6PhaseEightTests(unittest.TestCase):
     def test_phase_plan_records_local_completion_and_public_blockers(self) -> None:
         plan = (ROOT / "docs/NOXFORGE_V6_PLAN.md").read_text(encoding="utf-8")
         phase = plan.split("## Phase 8", 1)[1].split("## Cross-phase", 1)[0]
-        self.assertIn("**Local outcome (2026-07-30; Phase 8 remains incomplete):**", phase)
+        self.assertIn("**Release-ready outcome (2026-08-01; public readback pending):**", phase)
         self.assertIn("141 Python tests", phase)
-        self.assertIn("no public release is claimed", phase)
-        for blocker in ("tag", "GitHub Release", "COPR", "installation"):
-            self.assertIn(blocker, phase)
+        self.assertIn("public readback is pending", phase)
+        for gate in ("tag", "GitHub Release", "COPR", "installation"):
+            self.assertIn(gate, phase)
 
 
 if __name__ == "__main__":
