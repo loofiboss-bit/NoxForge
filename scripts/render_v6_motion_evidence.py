@@ -70,8 +70,19 @@ def render(destination: Path) -> dict[str, object]:
             stdout=subprocess.DEVNULL,
         )
         destination.mkdir(parents=True, exist_ok=True)
+        runtime = build / "runtime"
+        home = runtime / "home"
+        config = runtime / "config"
+        cache = runtime / "cache"
+        for path in (home, config, cache):
+            path.mkdir(parents=True)
         environment = {
-            **os.environ,
+            "PATH": os.environ.get("PATH", "/usr/bin"),
+            "HOME": str(home),
+            "XDG_CONFIG_HOME": str(config),
+            "XDG_CACHE_HOME": str(cache),
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
             "QT_QPA_PLATFORM": "offscreen",
             "QT_PLUGIN_PATH": str(build / "plugins"),
         }

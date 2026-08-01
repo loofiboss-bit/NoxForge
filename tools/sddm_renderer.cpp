@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     view.rootObject()->setProperty("freezeClock", true);
     view.rootObject()->setProperty(
         "currentDateTime",
-        QDateTime::fromString(QStringLiteral("2026-07-30T10:42:00Z"), Qt::ISODate)
+        QDateTime::fromString(QStringLiteral("2026-07-30T10:42:00"), Qt::ISODate)
     );
     view.resize(960, 540);
     view.show();

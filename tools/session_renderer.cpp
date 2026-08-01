@@ -199,7 +199,8 @@ int main(int argc, char **argv)
     if (argc != 9) {
         return 2;
     }
-    QTemporaryDir isolatedRuntime(QStringLiteral("noxforge-session-renderer-XXXXXX"));
+    QTemporaryDir isolatedRuntime(
+        QDir::tempPath() + QStringLiteral("/noxforge-session-renderer-XXXXXX"));
     if (!isolatedRuntime.isValid()) {
         return 5;
     }

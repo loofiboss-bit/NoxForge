@@ -12,21 +12,21 @@
       "height": 540,
       "path": "docs/evidence/v6/qt-motion/state-000.png",
       "progressPercent": 0,
-      "sha256": "bbd2c65eaff974deae7475be3071cd073990754414b7e786289653e7419c5bea",
+      "sha256": "a852fbb968ed907172075b325032c52acc9a192009368bf3f94ab32069a9ba3e",
       "width": 960
     },
     {
       "height": 540,
       "path": "docs/evidence/v6/qt-motion/state-050.png",
       "progressPercent": 50,
-      "sha256": "3fb40a18b6e879bff1f0d970665acf63630976f5b04dbcd3bd74a9f8205227a7",
+      "sha256": "539070002f5b527454cdc5a9600f13010bf651f72396f8b579b373d630b23071",
       "width": 960
     },
     {
       "height": 540,
       "path": "docs/evidence/v6/qt-motion/state-100.png",
       "progressPercent": 100,
-      "sha256": "4f61329cbfd3dfc53c1bd9f3d424eac99038e51f110bcd627813ddd6d3733424",
+      "sha256": "ae0a7d2c72b70dab3f5f66a5a48293de4a7c6a096dde92d7486c421fb725d27a",
       "width": 960
     }
   ],
