@@ -103,6 +103,7 @@ class V6PhaseFiveTests(unittest.TestCase):
         self.assertIn('scenario.endsWith(QStringLiteral("-start"))', renderer)
         self.assertIn('scenario.endsWith(QStringLiteral("-mid"))', renderer)
         self.assertIn('scenario.endsWith(QStringLiteral("-end"))', renderer)
+        self.assertIn("QDir::tempPath()", renderer)
 
     def test_runtime_session_contracts_and_model_roles_are_preserved(self) -> None:
         sddm = SURFACES["sddm"].read_text(encoding="utf-8")

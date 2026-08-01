@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import unittest
 import xml.etree.ElementTree as ET
@@ -93,6 +94,16 @@ class V6PhaseTwoTests(unittest.TestCase):
             ["python3", "scripts/render_v6_previews.py", "--check"],
         ):
             subprocess.run(command, cwd=ROOT, check=True)
+
+    def test_sddm_preview_is_timezone_independent(self) -> None:
+        for timezone in ("UTC", "Europe/Stockholm"):
+            environment = {**os.environ, "TZ": timezone}
+            subprocess.run(
+                ["python3", "scripts/render_v6_previews.py", "--check"],
+                cwd=ROOT,
+                env=environment,
+                check=True,
+            )
 
     def test_readme_and_session_brand_surfaces_use_v6_artwork(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

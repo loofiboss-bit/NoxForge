@@ -105,7 +105,7 @@
     "design/motion-contract.json": "f5b65d99f08956f6ed2cc67ee64e16179f47880921512cfb3f30f8e6444c48e1",
     "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
     "design/tokens.json": "6b037fbf2bf4de9e0ec1bba8b0bd33028c8dc301d4f1938e745d157f3f087818",
-    "docs/evidence/v6/session/manifest.json": "65e31ec6238bfe2a2fe97c9744aa120a664a594f18f8a146f5702539108376dd",
+    "docs/evidence/v6/session/manifest.json": "6df95305e323231afc8b6121c97caee0a389e12c32f4aabb16a7b881a1c91a04",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "67ad711c8ad68fbd3b07a9244f0e8caae69288e7c8d5eb747c6c96d507d0fbcb",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",

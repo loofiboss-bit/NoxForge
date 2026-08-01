@@ -66,6 +66,14 @@ class V6PhaseThreeTests(unittest.TestCase):
             hashes.add(digest)
         self.assertEqual(len(hashes), 3)
 
+    def test_motion_evidence_uses_an_isolated_render_environment(self) -> None:
+        script = (ROOT / "scripts/render_v6_motion_evidence.py").read_text(
+            encoding="utf-8"
+        )
+        for variable in ("HOME", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "LC_ALL"):
+            self.assertIn(f'"{variable}"', script)
+        self.assertIn('"QT_QPA_PLATFORM": "offscreen"', script)
+
     def test_performance_medians_remain_within_v5_budget(self) -> None:
         subprocess.run(
             ["python3", "scripts/measure_v6_phase3_performance.py", "--check"],
