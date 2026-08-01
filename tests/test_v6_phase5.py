@@ -29,6 +29,11 @@ MOTION_POLICIES = (
 
 
 class V6PhaseFiveTests(unittest.TestCase):
+    def test_sddm_session_menu_does_not_animate_layout_geometry(self) -> None:
+        qml = (ROOT / "sddm/NoxForge/Main.qml").read_text(encoding="utf-8")
+        self.assertNotIn("Behavior on implicitHeight", qml)
+        self.assertIn("Behavior on opacity", qml)
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))

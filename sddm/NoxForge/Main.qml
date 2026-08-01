@@ -249,14 +249,6 @@ Rectangle {
                 Layout.preferredHeight: implicitHeight
                 clip: true
                 opacity: root.sessionMenuOpen ? 1 : 0
-                Behavior on implicitHeight {
-                    enabled: !root.reducedMotion
-                    NumberAnimation {
-                        duration: motion.duration(tokens.containerDuration)
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: tokens.productiveEnterCurve
-                    }
-                }
                 Behavior on opacity {
                     enabled: !root.reducedMotion
                     NumberAnimation { duration: motion.duration(tokens.productiveDuration) }

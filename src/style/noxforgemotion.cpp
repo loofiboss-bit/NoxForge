@@ -8,7 +8,10 @@
 #include <QAbstractSpinBox>
 #include <QComboBox>
 #include <QEvent>
+#include <QKeyEvent>
+#include <QMouseEvent>
 #include <QProgressBar>
+#include <QPushButton>
 #include <QTabBar>
 #include <QTimerEvent>
 #include <QVariant>
@@ -133,8 +136,16 @@ void NoxForgeMotion::unpolish(QWidget *widget)
 
 void NoxForgeMotion::setDurationScale(qreal scale)
 {
+    const bool wasReduced = m_durationScale <= 0.0;
     m_durationScale = qMax(0.0, scale);
     if (m_durationScale > 0.0) {
+        if (wasReduced) {
+            for (auto state = m_states.begin(); state != m_states.end(); ++state) {
+                state->busyVisible = false;
+                state->busyPendingMs = 0;
+                state->busyVisibleMs = 0;
+            }
+        }
         updateTimer();
         return;
     }
@@ -147,7 +158,10 @@ void NoxForgeMotion::setDurationScale(qreal scale)
             item.elapsedMs = 0;
             item.durationMs = 0;
         }
+        state->busyVisible = state->busyRequested;
         state->busyPhase = 0.5;
+        state->busyPendingMs = 0;
+        state->busyVisibleMs = 0;
         state.key()->update();
     }
     updateTimer();
@@ -186,12 +200,24 @@ void NoxForgeMotion::synchronizeBusy(QWidget *widget)
     const auto *progress = qobject_cast<QProgressBar *>(widget);
     if (found == m_states.end() || !progress)
         return;
-    const bool busy = progress->minimum() == 0 && progress->maximum() == 0
+    const bool requested = progress->minimum() == 0 && progress->maximum() == 0
         && progress->isVisible() && progress->isEnabled();
-    if (found->busy == busy)
+    if (found->busyRequested == requested)
         return;
-    found->busy = busy;
-    found->busyPhase = m_durationScale > 0.0 ? 0.0 : 0.5;
+    found->busyRequested = requested;
+    if (requested) {
+        found->busyPendingMs = 0;
+        found->busyVisibleMs = 0;
+        found->busyVisible = m_durationScale <= 0.0;
+        found->busyPhase = m_durationScale > 0.0 ? 0.0 : 0.5;
+    } else if (!found->busyVisible
+               || m_durationScale <= 0.0
+               || found->busyVisibleMs >= busyIndicatorMinimumVisibleMs) {
+        found->busyVisible = false;
+        found->busyPendingMs = 0;
+        found->busyVisibleMs = 0;
+    }
+    widget->update();
     updateTimer();
 }
 
@@ -217,14 +243,31 @@ bool NoxForgeMotion::eventFilter(QObject *watched, QEvent *event)
         setTarget(widget, Channel::Focus, false);
         setTarget(widget, Channel::Press, false);
         break;
-    case QEvent::MouseButtonPress:
-        if (widget->isEnabled())
+    case QEvent::MouseButtonPress: {
+        const auto *mouse = static_cast<QMouseEvent *>(event);
+        if (widget->isEnabled() && mouse->button() == Qt::LeftButton)
             setTarget(widget, Channel::Press, true);
         break;
-    case QEvent::MouseButtonRelease:
-        setTarget(widget, Channel::Press, false);
-        setTarget(widget, Channel::Checked, checked(widget));
+    }
+    case QEvent::MouseButtonRelease: {
+        const auto *mouse = static_cast<QMouseEvent *>(event);
+        if (mouse->button() == Qt::LeftButton) {
+            setTarget(widget, Channel::Press, false);
+            setTarget(widget, Channel::Checked, checked(widget));
+        }
         break;
+    }
+    case QEvent::KeyPress:
+    case QEvent::KeyRelease: {
+        const auto *key = static_cast<QKeyEvent *>(event);
+        const auto *button = qobject_cast<QAbstractButton *>(widget);
+        const bool activationKey = key->key() == Qt::Key_Space
+            || (qobject_cast<const QPushButton *>(button)
+                && (key->key() == Qt::Key_Return || key->key() == Qt::Key_Enter));
+        if (button && button->isEnabled() && activationKey && !key->isAutoRepeat())
+            setTarget(widget, Channel::Press, event->type() == QEvent::KeyPress);
+        break;
+    }
     case QEvent::EnabledChange:
         if (!widget->isEnabled()) {
             setTarget(widget, Channel::Hover, false);
@@ -234,7 +277,10 @@ bool NoxForgeMotion::eventFilter(QObject *watched, QEvent *event)
     case QEvent::Hide: {
         auto found = m_states.find(widget);
         if (found != m_states.end()) {
-            found->busy = false;
+            found->busyRequested = false;
+            found->busyVisible = false;
+            found->busyPendingMs = 0;
+            found->busyVisibleMs = 0;
             for (Channel channel : {Channel::Hover, Channel::Focus, Channel::Press,
                                     Channel::Checked}) {
                 Transition &item = transition(found.value(), channel);
@@ -273,6 +319,19 @@ qreal NoxForgeMotion::value(const QWidget *widget, Channel channel, bool target)
     return target ? 1.0 : 0.0;
 }
 
+bool NoxForgeMotion::showsBusyIndicator(const QWidget *widget, bool requested) const
+{
+    if (widget) {
+        const QVariant forced = widget->property("_noxforgeMotionTestBusy");
+        if (forced.isValid())
+            return requested;
+        const auto found = m_states.constFind(const_cast<QWidget *>(widget));
+        if (found != m_states.cend())
+            return found->busyVisible;
+    }
+    return requested;
+}
+
 qreal NoxForgeMotion::busyProgress(const QWidget *widget, bool busy) const
 {
     if (!busy)
@@ -294,6 +353,7 @@ void NoxForgeMotion::advance(int elapsedMs)
         return;
     for (auto state = m_states.begin(); state != m_states.end(); ++state) {
         bool repaint = false;
+        bool becameBusyVisible = false;
         for (Channel channel : {Channel::Hover, Channel::Focus, Channel::Press,
                                 Channel::Checked}) {
             Transition &item = transition(state.value(), channel);
@@ -307,10 +367,27 @@ void NoxForgeMotion::advance(int elapsedMs)
                 item.current = item.target;
             repaint = true;
         }
-        if (state->busy && m_durationScale > 0.0) {
+        if (state->busyRequested && !state->busyVisible && m_durationScale > 0.0) {
+            state->busyPendingMs += elapsedMs;
+            if (state->busyPendingMs >= busyIndicatorDelayMs) {
+                state->busyVisible = true;
+                state->busyVisibleMs = state->busyPendingMs - busyIndicatorDelayMs;
+                state->busyPhase = 0.0;
+                becameBusyVisible = true;
+            }
+            repaint = true;
+        }
+        if (state->busyVisible && m_durationScale > 0.0) {
+            if (!becameBusyVisible)
+                state->busyVisibleMs += elapsedMs;
             const qreal cycle = qMax(1, qRound(NP::busyCycleDuration * m_durationScale));
             state->busyPhase = std::fmod(state->busyPhase + qreal(elapsedMs) / cycle, 1.0);
             repaint = true;
+            if (!state->busyRequested
+                && state->busyVisibleMs >= busyIndicatorMinimumVisibleMs) {
+                state->busyVisible = false;
+                state->busyVisibleMs = 0;
+            }
         }
         if (repaint)
             state.key()->update();
@@ -337,7 +414,9 @@ void NoxForgeMotion::updateTimer()
 {
     bool active = false;
     for (auto state = m_states.cbegin(); state != m_states.cend() && !active; ++state) {
-        active = state->busy && m_durationScale > 0.0;
+        active = m_durationScale > 0.0
+            && ((state->busyRequested && !state->busyVisible)
+                || state->busyVisible);
         for (Channel channel : {Channel::Hover, Channel::Focus, Channel::Press,
                                 Channel::Checked})
             active = active || transitionActive(transition(state.value(), channel));

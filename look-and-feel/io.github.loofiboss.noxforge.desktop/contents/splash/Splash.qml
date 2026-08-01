@@ -9,7 +9,7 @@ Rectangle {
     property real testProgress: -1
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
-    readonly property bool reducedMotion: motion.reducedMotion
+    property bool reducedMotion: motion.reducedMotion
     readonly property real stageProgress: Math.max(0, Math.min(1, stage / 5))
 
     Tokens { id: tokens }

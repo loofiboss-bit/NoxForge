@@ -42,7 +42,7 @@ def contrast(first: str, second: str) -> float:
     return (light + 0.05) / (dark + 0.05)
 
 
-def platform_probe() -> dict[str, object]:
+def platform_probe() -> tuple[dict[str, object], dict[str, object]]:
     with tempfile.TemporaryDirectory(prefix="noxforge-v6-accessibility-") as temporary:
         build = Path(temporary) / "build"
         subprocess.run(
@@ -68,6 +68,7 @@ def platform_probe() -> dict[str, object]:
                 "--target",
                 "noxforge_style",
                 "noxforge_accessibility_probe",
+                "noxforge_session_renderer",
             ],
             cwd=ROOT,
             check=True,
@@ -87,7 +88,42 @@ def platform_probe() -> dict[str, object]:
             capture_output=True,
             text=True,
         )
-    return json.loads(result.stdout)
+        surfaces = {
+            "sddm": ROOT / "sddm/NoxForge/Main.qml",
+            "splash": ROOT
+            / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
+            "logout": ROOT
+            / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
+            "tabbox": ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
+        }
+        reduced_results = {}
+        for surface, qml in surfaces.items():
+            output = Path(temporary) / f"{surface}-reduced-motion.json"
+            subprocess.run(
+                [
+                    str(build / "noxforge_session_renderer"),
+                    surface,
+                    str(qml),
+                    str(ROOT / "sddm/NoxForge/background.png"),
+                    str(output),
+                    "1280",
+                    "720",
+                    "reduced-probe",
+                    str(ROOT),
+                ],
+                cwd=ROOT,
+                env={**os.environ, "QT_QPA_PLATFORM": "offscreen"},
+                check=True,
+            )
+            reduced_results[surface] = json.loads(output.read_text(encoding="utf-8"))
+    return json.loads(result.stdout), {
+        "result": (
+            "passed"
+            if all(item["result"] == "passed" for item in reduced_results.values())
+            else "failed"
+        ),
+        "surfaces": reduced_results,
+    }
 
 
 def create_report() -> dict[str, object]:
@@ -138,6 +174,7 @@ def create_report() -> dict[str, object]:
         for scenarios in session_contract["v6ScenarioMatrix"].values()
         for scenario in scenarios
     }
+    probe, reduced_motion_probe = platform_probe()
     reviews = {
         "colorIndependentStates": all(
             tokens["states"]["hierarchy"][state]["indicator"] != "none"
@@ -161,6 +198,7 @@ def create_report() -> dict[str, object]:
                 for value in ("reducedMotion", "MotionPolicy { id: motion }")
             )
             and "reduced" in observed_scenarios
+            and reduced_motion_probe["result"] == "passed"
         ),
         "rtl": (
             all(
@@ -181,7 +219,6 @@ def create_report() -> dict[str, object]:
     if failed:
         raise RuntimeError(f"v6 accessibility assertions failed: {failed}")
 
-    probe = platform_probe()
     preference = probe["contrastPreference"]
     if preference not in {"NoPreference", "HighContrast"}:
         raise RuntimeError(f"unexpected Qt contrast preference: {preference}")
@@ -207,6 +244,7 @@ def create_report() -> dict[str, object]:
         ROOT / "scripts/check_v6_accessibility.py",
         ROOT / "tests/qt/accessibility_probe.cpp",
         ROOT / "tests/qt/motion_probe.cpp",
+        ROOT / "tools/session_renderer.cpp",
         *RUNTIME_QML,
     )
     return {
@@ -217,6 +255,7 @@ def create_report() -> dict[str, object]:
         "kind": "automated-source-and-offscreen-platform-review",
         "liveInteraction": False,
         "platformProbe": probe,
+        "reducedMotionProbe": reduced_motion_probe,
         "highContrastPreference": high_contrast,
         "hardcodedRuntimeFontFamilies": [],
         "contrastPairs": ratios,
