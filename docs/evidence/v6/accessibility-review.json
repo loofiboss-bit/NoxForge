@@ -88,6 +88,47 @@
     "systemFont": "Sans Serif",
     "tabFocusBehavior": 255
   },
+  "reducedMotionProbe": {
+    "result": "passed",
+    "surfaces": {
+      "logout": {
+        "animationObjectsObserved": 7,
+        "reducedMotion": true,
+        "result": "passed",
+        "runningAnimationCountAfterTransition": 0,
+        "runningAnimations": [],
+        "surface": "logout",
+        "testProgress": -1
+      },
+      "sddm": {
+        "animationObjectsObserved": 3,
+        "reducedMotion": true,
+        "result": "passed",
+        "runningAnimationCountAfterTransition": 0,
+        "runningAnimations": [],
+        "surface": "sddm",
+        "testProgress": -1
+      },
+      "splash": {
+        "animationObjectsObserved": 1,
+        "reducedMotion": true,
+        "result": "passed",
+        "runningAnimationCountAfterTransition": 0,
+        "runningAnimations": [],
+        "surface": "splash",
+        "testProgress": -1
+      },
+      "tabbox": {
+        "animationObjectsObserved": 1,
+        "reducedMotion": true,
+        "result": "passed",
+        "runningAnimationCountAfterTransition": 0,
+        "runningAnimations": [],
+        "surface": "tabbox",
+        "testProgress": -1
+      }
+    }
+  },
   "reviewStatus": "passed",
   "reviews": {
     "colorIndependentStates": true,
@@ -105,14 +146,15 @@
     "design/motion-contract.json": "f5b65d99f08956f6ed2cc67ee64e16179f47880921512cfb3f30f8e6444c48e1",
     "design/session-surface-contract.json": "c304fb6ce6cb3a770a85a626b277ea1248d2d22fe9fdde6df8e1986c61b46208",
     "design/tokens.json": "6b037fbf2bf4de9e0ec1bba8b0bd33028c8dc301d4f1938e745d157f3f087818",
-    "docs/evidence/v6/session/manifest.json": "6df95305e323231afc8b6121c97caee0a389e12c32f4aabb16a7b881a1c91a04",
+    "docs/evidence/v6/session/manifest.json": "ad9d42206beb2a51d1113eb4d42a0d9a893a1efeba154782b4727bff2edc1182",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "be55f41a87dcb1b3e83ddd1a2154a288837acd5ec0b403b0338b6c1cbc1579cf",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "67ad711c8ad68fbd3b07a9244f0e8caae69288e7c8d5eb747c6c96d507d0fbcb",
-    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",
-    "scripts/check_v6_accessibility.py": "4c442cb568c3dae88201a70f26dd42819529effd6cbe9e3c0d2de3fe0ef8aea1",
-    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "9bd88244622e96325c0f9c76b710e6a7ec48a7a0486deba54ffb7424facdd921",
+    "scripts/check_v6_accessibility.py": "5a4e59b4086d360972cb606bea6678908cb66cbcee83ec2950c26b0645851440",
+    "sddm/NoxForge/Main.qml": "2dd9b810f580ec62963d39d0d8b9c251fb808731f4c140cf655df4726d066024",
     "tests/qt/accessibility_probe.cpp": "09d8cff86657beefd0f672ee4c97b01570db723a747dfb3968b0279ba9f06bee",
-    "tests/qt/motion_probe.cpp": "79051bcfb508b08a3cb4e5bf67fbaf8a986b12022cdc14792543fb6682d60d69"
+    "tests/qt/motion_probe.cpp": "c16c93e118379e227a5f1a095d338ee40c66a943ea427650df7a303e3069c28c",
+    "tools/session_renderer.cpp": "42382e731fbde807d70e7892930f1db65c63ef6f0ab7b80c978bb0e8fe6f5dec"
   },
   "version": "6.0.0"
 }

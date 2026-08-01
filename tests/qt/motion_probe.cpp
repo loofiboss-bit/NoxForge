@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include <QEnterEvent>
 #include <QFocusEvent>
+#include <QKeyEvent>
 #include <QMouseEvent>
 #include <QProgressBar>
 #include <QPushButton>
@@ -23,12 +24,18 @@ void sendEnter(QWidget *widget)
     QApplication::sendEvent(widget, &event);
 }
 
-void sendMouse(QWidget *widget, QEvent::Type type)
+void sendMouse(QWidget *widget, QEvent::Type type, Qt::MouseButton button = Qt::LeftButton)
 {
     QMouseEvent event(type, QPointF(2, 2), QPointF(2, 2), QPointF(2, 2),
-                      Qt::LeftButton,
-                      type == QEvent::MouseButtonPress ? Qt::LeftButton : Qt::NoButton,
+                      button,
+                      type == QEvent::MouseButtonPress ? button : Qt::NoButton,
                       Qt::NoModifier);
+    QApplication::sendEvent(widget, &event);
+}
+
+void sendKey(QWidget *widget, QEvent::Type type, int key)
+{
+    QKeyEvent event(type, key, Qt::NoModifier);
     QApplication::sendEvent(widget, &event);
 }
 
@@ -64,6 +71,17 @@ int main(int argc, char **argv)
     motion.advanceForTest(120);
     if (motion.value(button, NoxForgeMotion::Channel::Press, true) != 0.0) return 7;
 
+    sendMouse(button, QEvent::MouseButtonPress, Qt::RightButton);
+    motion.advanceForTest(40);
+    if (motion.value(button, NoxForgeMotion::Channel::Press, true) != 0.0) return 22;
+    sendMouse(button, QEvent::MouseButtonRelease, Qt::RightButton);
+    sendKey(button, QEvent::KeyPress, Qt::Key_Space);
+    motion.advanceForTest(40);
+    if (!between(motion.value(button, NoxForgeMotion::Channel::Press, true))) return 23;
+    sendKey(button, QEvent::KeyRelease, Qt::Key_Space);
+    motion.advanceForTest(120);
+    if (motion.value(button, NoxForgeMotion::Channel::Press, true) != 0.0) return 24;
+
     button->setEnabled(false);
     motion.advanceForTest(160);
     if (motion.value(button, NoxForgeMotion::Channel::Hover, true) != 0.0
@@ -91,13 +109,23 @@ int main(int argc, char **argv)
     progress.show();
     application.processEvents();
     if (!motion.timerActive()) return 11;
+    if (motion.showsBusyIndicator(&progress, true)) return 25;
+    motion.advanceForTest(149);
+    if (motion.showsBusyIndicator(&progress, true)) return 26;
+    motion.advanceForTest(1);
+    if (!motion.showsBusyIndicator(&progress, true)) return 27;
     const qreal firstBusy = motion.busyProgress(&progress, true);
     motion.advanceForTest(100);
     if (qFuzzyCompare(firstBusy + 1.0, motion.busyProgress(&progress, true) + 1.0))
         return 12;
-    progress.hide();
+    progress.setRange(0, 100);
     application.processEvents();
-    if (motion.timerActive()) return 13;
+    if (!motion.timerActive() || !motion.showsBusyIndicator(&progress, false)) return 13;
+    motion.advanceForTest(199);
+    if (!motion.showsBusyIndicator(&progress, false)) return 28;
+    motion.advanceForTest(1);
+    if (motion.timerActive() || motion.showsBusyIndicator(&progress, false)) return 29;
+    progress.hide();
 
     motion.unpolish(&check);
     if (motion.trackedWidgetCount() != 2) return 14;
@@ -123,10 +151,12 @@ int main(int argc, char **argv)
     reducedMotion.polish(&reducedBusy, true);
     reducedBusy.show();
     application.processEvents();
-    if (reducedMotion.timerActive()) return 19;
+    if (reducedMotion.timerActive()
+        || !reducedMotion.showsBusyIndicator(&reducedBusy, true)
+        || reducedMotion.busyProgress(&reducedBusy, true) != 0.5) return 19;
     reducedMotion.setDurationScale(1.0);
     if (!reducedMotion.timerActive()) return 20;
-    reducedBusy.hide();
+    reducedBusy.setRange(0, 100);
     application.processEvents();
     if (reducedMotion.timerActive()) return 21;
 

@@ -27,6 +27,14 @@ class V6PhaseSevenTests(unittest.TestCase):
         self.assertEqual(review["hardcodedRuntimeFontFamilies"], [])
         self.assertTrue(all(review["reviews"].values()))
         self.assertGreaterEqual(len(review["contrastPairs"]), 15)
+        reduced_probe = review["reducedMotionProbe"]
+        self.assertEqual(reduced_probe["result"], "passed")
+        self.assertEqual(set(reduced_probe["surfaces"]), {"sddm", "splash", "logout", "tabbox"})
+        for surface in reduced_probe["surfaces"].values():
+            self.assertTrue(surface["reducedMotion"])
+            self.assertEqual(surface["testProgress"], -1)
+            self.assertGreater(surface["animationObjectsObserved"], 0)
+            self.assertEqual(surface["runningAnimationCountAfterTransition"], 0)
         for relative, digest in review["sources"].items():
             self.assertEqual(
                 hashlib.sha256((ROOT / relative).read_bytes()).hexdigest(),

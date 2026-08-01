@@ -442,14 +442,14 @@
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Tokens.qml": "78a9d804e26b43c84fbd1d942e449badcf6989dbad9a292ed461b82a4c6eee9c",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/MotionPolicy.qml": "b800a965a667d9bf040124a52068d1ac6ea3da7d54477acfafcd1471acd7cc98",
-    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "4b4922147d1c6967394a79a69195b537d022a57e99c804ca4002d9ce7125b6fe",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "9bd88244622e96325c0f9c76b710e6a7ec48a7a0486deba54ffb7424facdd921",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Tokens.qml": "78a9d804e26b43c84fbd1d942e449badcf6989dbad9a292ed461b82a4c6eee9c",
     "scripts/generate_design_system.py": "90d56f0bf1038cc5d5e3b28d9e7916eeba67ae1f80c473f50436bbf143254813",
     "scripts/measure_v6_phase5_performance.py": "668c9927bd7b4fa686cc6a6f43bf68b10e1edaadbcdf5aa6f9e59b8c973a537c",
     "scripts/render_v6_session_evidence.py": "645790a9448d179450452a781f2b5e20b473bc3c25ec900f515c82ec83b38435",
-    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "sddm/NoxForge/Main.qml": "2dd9b810f580ec62963d39d0d8b9c251fb808731f4c140cf655df4726d066024",
     "sddm/NoxForge/Tokens.qml": "78a9d804e26b43c84fbd1d942e449badcf6989dbad9a292ed461b82a4c6eee9c",
-    "tools/session_renderer.cpp": "7d20928fde2107d9e32f2dd932857f86abe86af4449cea3dd2664531180cf2ba"
+    "tools/session_renderer.cpp": "42382e731fbde807d70e7892930f1db65c63ef6f0ab7b80c978bb0e8fe6f5dec"
   },
   "themeContext": "isolated NoxForge Plasma and icon context"
 }

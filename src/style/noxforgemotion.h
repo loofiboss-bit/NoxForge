@@ -27,6 +27,7 @@ public:
     void setDurationScale(qreal scale);
 
     qreal value(const QWidget *widget, Channel channel, bool target) const;
+    bool showsBusyIndicator(const QWidget *widget, bool requested) const;
     qreal busyProgress(const QWidget *widget, bool busy) const;
 
     bool timerActive() const;
@@ -54,7 +55,10 @@ private:
         Transition press;
         Transition checked;
         qreal busyPhase = 0.0;
-        bool busy = false;
+        int busyPendingMs = 0;
+        int busyVisibleMs = 0;
+        bool busyRequested = false;
+        bool busyVisible = false;
         bool hoverEffectsEnabled = true;
         bool hoverAttributeWasSet = false;
     };
@@ -75,4 +79,7 @@ private:
     QBasicTimer m_timer;
     QElapsedTimer m_clock;
     qreal m_durationScale = 1.0;
+
+    static constexpr int busyIndicatorDelayMs = 150;
+    static constexpr int busyIndicatorMinimumVisibleMs = 300;
 };

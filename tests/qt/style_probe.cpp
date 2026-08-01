@@ -3,6 +3,7 @@
 #include <QCommonStyle>
 #include <QImage>
 #include <QPainter>
+#include <QSettings>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QStyleOptionButton>
@@ -13,6 +14,7 @@
 #include <QStyleOptionSpinBox>
 #include <QStyleOptionToolButton>
 #include <QTextStream>
+#include <QTemporaryDir>
 
 namespace {
 
@@ -56,6 +58,15 @@ QImage renderControl(QStyle *style, QStyle::ControlElement element,
 
 int main(int argc, char **argv)
 {
+    QTemporaryDir configRoot;
+    if (!configRoot.isValid()) return 25;
+    qputenv("XDG_CONFIG_HOME", configRoot.path().toUtf8());
+    const QString kdeglobals = configRoot.filePath(QStringLiteral("kdeglobals"));
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.setValue(QStringLiteral("KDE/AnimationDurationFactor"), 1.0);
+        settings.sync();
+    }
     QApplication app(argc, argv);
     if (!QStyleFactory::keys().contains(QStringLiteral("NoxForge"), Qt::CaseInsensitive)) return 1;
     QStyle *style = QStyleFactory::create(QStringLiteral("NoxForge"));
@@ -182,7 +193,19 @@ int main(int argc, char **argv)
     if (style->styleHint(QStyle::SH_Widget_Animate)
         != common.styleHint(QStyle::SH_Widget_Animate)) return 19;
     const int animationDuration = style->styleHint(QStyle::SH_Widget_Animation_Duration);
-    if (animationDuration <= 0 || animationDuration > 480) return 24;
+    if (animationDuration != 120) return 24;
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.setValue(QStringLiteral("KDE/AnimationDurationFactor"), 0.0);
+        settings.sync();
+    }
+    if (style->styleHint(QStyle::SH_Widget_Animation_Duration) != 0) return 26;
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.setValue(QStringLiteral("KDE/AnimationDurationFactor"), 2.0);
+        settings.sync();
+    }
+    if (style->styleHint(QStyle::SH_Widget_Animation_Duration) != 240) return 27;
 
     const QString className = QString::fromLatin1(app.style()->metaObject()->className());
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"

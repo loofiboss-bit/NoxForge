@@ -8,6 +8,8 @@
 #include <QList>
 #include <QPainter>
 #include <QPainterPath>
+#include <QSettings>
+#include <QStandardPaths>
 #include <QStyleHints>
 #include <QStyleOption>
 #include <QStyleOptionButton>
@@ -198,11 +200,17 @@ void NoxForgeStyle::unpolish(QWidget *widget)
 
 qreal NoxForgeStyle::motionScale(const QWidget *widget) const
 {
-    const int effectiveDuration = QCommonStyle::styleHint(
-        SH_Widget_Animation_Duration, nullptr, widget, nullptr);
-    if (effectiveDuration <= 0)
-        return 0.0;
-    return qBound(0.0, qreal(effectiveDuration) / 200.0, 4.0);
+    Q_UNUSED(widget)
+    const QString path = QStandardPaths::locate(
+        QStandardPaths::GenericConfigLocation, QStringLiteral("kdeglobals"));
+    if (path.isEmpty())
+        return 1.0;
+    QSettings settings(path, QSettings::IniFormat);
+    settings.beginGroup(QStringLiteral("KDE"));
+    bool valid = false;
+    const qreal factor = settings.value(
+        QStringLiteral("AnimationDurationFactor"), 1.0).toDouble(&valid);
+    return valid ? qBound(0.0, factor, 4.0) : 1.0;
 }
 
 qreal NoxForgeStyle::motionValue(
@@ -669,7 +677,8 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
     case CE_ProgressBarContents: {
         const auto *progress = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
         if (!progress) break;
-        const bool busy = progress->minimum == 0 && progress->maximum == 0;
+        const bool busyRequested = progress->minimum == 0 && progress->maximum == 0;
+        const bool busy = m_motion.showsBusyIndicator(widget, busyRequested);
         const int span = progress->maximum - progress->minimum;
         const qreal ratio = span > 0 ? qBound(0.0, qreal(progress->progress - progress->minimum) / span, 1.0) : 0.0;
         QRect fill = option->rect.adjusted(2, 2, -2, -2);
@@ -712,9 +721,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
     }
     case CE_TabBarTabShape:
     {
-        const qreal hover = motionValue(
-            widget, NoxForgeMotion::Channel::Hover,
-            option->state.testFlag(State_MouseOver));
+        const qreal hover = option->state.testFlag(State_MouseOver) ? 1.0 : 0.0;
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                                  option->direction, option->state.testFlag(State_HasFocus));

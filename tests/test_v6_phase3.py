@@ -42,6 +42,28 @@ class V6PhaseThreeTests(unittest.TestCase):
         self.assertIn("NOXFORGE_ENABLE_SANITIZERS", cmake)
         self.assertIn("-fsanitize=address,undefined", cmake)
 
+    def test_native_motion_honors_platform_policy_and_semantic_input(self) -> None:
+        source = (ROOT / "src/style/noxforgemotion.cpp").read_text(encoding="utf-8")
+        header = (ROOT / "src/style/noxforgemotion.h").read_text(encoding="utf-8")
+        style = (ROOT / "src/style/noxforgestyle.cpp").read_text(encoding="utf-8")
+        probe = (ROOT / "tests/qt/motion_probe.cpp").read_text(encoding="utf-8")
+        self.assertIn('QStringLiteral("AnimationDurationFactor")', style)
+        self.assertIn("QStandardPaths::GenericConfigLocation", style)
+        self.assertIn("Qt::LeftButton", source)
+        self.assertIn("Qt::Key_Space", source)
+        self.assertIn("Qt::Key_Return", source)
+        self.assertIn("busyIndicatorDelayMs = 150", header)
+        self.assertIn("busyIndicatorMinimumVisibleMs = 300", header)
+        self.assertIn("showsBusyIndicator", source + probe)
+
+    def test_tab_hover_is_derived_per_painted_tab(self) -> None:
+        style = (ROOT / "src/style/noxforgestyle.cpp").read_text(encoding="utf-8")
+        tab_shape = style.split("case CE_TabBarTabShape:", 1)[1].split(
+            "case CE_HeaderSection:", 1
+        )[0]
+        self.assertIn("State_MouseOver", tab_shape)
+        self.assertNotIn("motionValue", tab_shape)
+
     def test_motion_evidence_is_source_bound_and_byte_stable(self) -> None:
         subprocess.run(
             ["python3", "scripts/render_v6_motion_evidence.py", "--check"],

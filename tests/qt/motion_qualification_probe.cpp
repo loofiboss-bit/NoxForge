@@ -102,19 +102,24 @@ int exerciseCycle(
         return 3;
     }
 
+    progress.setRange(0, 0);
     progress.show();
     application.processEvents();
     if (!motion.timerActive())
         return 4;
+    motion.advanceForTest(150);
+    if (!motion.showsBusyIndicator(&progress, true))
+        return 5;
     const qreal busyBefore = motion.busyProgress(&progress, true);
     motion.advanceForTest(100);
     if (settled(motion.busyProgress(&progress, true), busyBefore))
-        return 5;
-    progress.hide();
+        return 6;
+    progress.setRange(0, 100);
     application.processEvents();
     motion.advanceForTest(500);
     if (motion.timerActive())
-        return 6;
+        return 7;
+    progress.hide();
 
     auto *ephemeral = new QPushButton(QStringLiteral("Ephemeral"));
     motion.polish(ephemeral, true);
@@ -123,7 +128,7 @@ int exerciseCycle(
     delete ephemeral;
     application.processEvents();
     if (motion.trackedWidgetCount() != 5 || motion.timerActive())
-        return 7;
+        return 8;
 
     return 0;
 }

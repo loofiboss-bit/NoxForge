@@ -35,11 +35,13 @@ and complete-tree performance within ten percent of the reviewed v5 baseline.
 The native 500-cycle stress probe has no failed state, retained widget, active
 idle timer, or out-of-budget heap growth.
 
-No v6 live Wayland qualification is claimed. Hardware blur, injected
+V6 isolated Wayland qualification passes Plasma theme application, panel
+preservation at every edge, two-output placement, shell artwork, required panel
+icons, and real Qt composition at scale 1.0 and 1.4. Hardware blur, injected
 keyboard/pointer motion, Aurorae and Alt+Tab interaction, animation-speed
-variants, live high contrast and RTL, cursor scaling, two-output placement,
-production splash integration, and real SDDM authentication/power remain
-`blocked` in `docs/evidence/v6/qualification.json`. Completed v5 and v3 live
+variants, live high contrast and RTL, cursor scaling, production splash
+integration, and real SDDM authentication/power remain `blocked` in
+`docs/evidence/v6/qualification.json`. Completed v5 and v3 live
 evidence remains historical and is not promoted to v6.
 
 The Fedora RPM and CMake staging contract own system paths and contain no

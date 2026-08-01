@@ -6,6 +6,9 @@
 #include <QGuiApplication>
 #include <QImage>
 #include <QIcon>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QLocale>
 #include <QQmlContext>
 #include <QQuickItem>
@@ -194,6 +197,36 @@ static void setPropertyIfPresent(QObject *object, const char *name, const QVaria
     }
 }
 
+static QJsonObject reducedMotionProbe(QObject *root, const QString &surface)
+{
+    int animationObjects = 0;
+    QJsonArray runningAnimations;
+    const auto descendants = root->findChildren<QObject *>();
+    for (QObject *object : descendants) {
+        const QString className = QString::fromLatin1(object->metaObject()->className());
+        if (!className.contains(QStringLiteral("Animation"), Qt::CaseInsensitive))
+            continue;
+        ++animationObjects;
+        const int runningProperty = object->metaObject()->indexOfProperty("running");
+        if (runningProperty >= 0 && object->property("running").toBool())
+            runningAnimations.append(className);
+    }
+    const bool reduced = root->property("reducedMotion").toBool();
+    const qreal progress = root->property("testProgress").toReal();
+    const bool passed = reduced && progress < 0.0
+        && animationObjects > 0 && runningAnimations.isEmpty();
+    return {
+        {QStringLiteral("surface"), surface},
+        {QStringLiteral("reducedMotion"), reduced},
+        {QStringLiteral("testProgress"), progress},
+        {QStringLiteral("animationObjectsObserved"), animationObjects},
+        {QStringLiteral("runningAnimationCountAfterTransition"), runningAnimations.size()},
+        {QStringLiteral("runningAnimations"), runningAnimations},
+        {QStringLiteral("result"), passed ? QStringLiteral("passed")
+                                           : QStringLiteral("failed")},
+    };
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 9) {
@@ -204,6 +237,7 @@ int main(int argc, char **argv)
     if (!isolatedRuntime.isValid()) {
         return 5;
     }
+    const QString scenarioArgument = QString::fromLocal8Bit(argv[7]);
     const QString repositoryRoot = QString::fromLocal8Bit(argv[8]);
     const QString configRoot = isolatedRuntime.path() + QStringLiteral("/config");
     QDir().mkpath(configRoot);
@@ -215,6 +249,15 @@ int main(int argc, char **argv)
         "[Theme]\n"
         "name=io.github.loofiboss.noxforge.desktop\n");
     plasmaConfig.close();
+    if (scenarioArgument == QStringLiteral("reduced-probe")) {
+        QFile kdeGlobals(configRoot + QStringLiteral("/kdeglobals"));
+        if (!kdeGlobals.open(QIODevice::WriteOnly | QIODevice::Text))
+            return 5;
+        kdeGlobals.write(
+            "[KDE]\n"
+            "AnimationDurationFactor=0\n");
+        kdeGlobals.close();
+    }
     qputenv("XDG_CONFIG_HOME", configRoot.toUtf8());
     const QByteArray existingDataDirs = qgetenv("XDG_DATA_DIRS");
     qputenv(
@@ -222,7 +265,6 @@ int main(int argc, char **argv)
         repositoryRoot.toUtf8() + ":"
             + (existingDataDirs.isEmpty() ? QByteArray("/usr/share") : existingDataDirs));
     qputenv("KDE_SESSION_VERSION", "6");
-    const QString scenarioArgument = QString::fromLocal8Bit(argv[7]);
     QString scenario = scenarioArgument;
     qreal testProgress = 1.0;
     if (scenario.endsWith(QStringLiteral("-start"))) {
@@ -262,6 +304,7 @@ int main(int argc, char **argv)
     const bool reduced = scenario == QStringLiteral("reduced")
         || scenario == QStringLiteral("empty-reduced");
     const bool many = scenario == QStringLiteral("many");
+    const bool reducedProbe = scenario == QStringLiteral("reduced-probe");
     Config config(QUrl::fromLocalFile(QString::fromLocal8Bit(argv[3])));
     SessionModel sessions(longText);
     WindowModel windows(empty, longText, many);
@@ -296,8 +339,11 @@ int main(int argc, char **argv)
         setPropertyIfPresent(root, "freezeClock", true);
         setPropertyIfPresent(root, "currentDateTime", QDateTime(QDate(2026, 7, 26), QTime(8, 30)));
     }
-    if (reduced) {
+    if (reduced || reducedProbe) {
         setPropertyIfPresent(root, "reducedMotion", true);
+    }
+    if (reducedProbe) {
+        setPropertyIfPresent(root, "testProgress", -1.0);
     }
     if (longText && surface == QStringLiteral("sddm")) {
         setPropertyIfPresent(
@@ -318,6 +364,34 @@ int main(int argc, char **argv)
 
     view.resize(width, height);
     view.show();
+    if (reducedProbe) {
+        QTimer::singleShot(100, root, [root, surface]() {
+            if (surface == QStringLiteral("sddm")) {
+                setPropertyIfPresent(root, "sessionMenuOpen", true);
+                setPropertyIfPresent(root, "authenticating", true);
+            } else if (surface == QStringLiteral("splash")) {
+                setPropertyIfPresent(root, "stage", 5);
+            } else if (surface == QStringLiteral("logout")) {
+                setPropertyIfPresent(root, "entryReady", false);
+                setPropertyIfPresent(root, "entryReady", true);
+            } else if (surface == QStringLiteral("tabbox")) {
+                setPropertyIfPresent(root, "currentIndex", 3);
+            }
+        });
+        QTimer::singleShot(125, &app, [&]() {
+            const QJsonObject report = reducedMotionProbe(root, surface);
+            QFile file(output);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                app.exit(4);
+                return;
+            }
+            file.write(QJsonDocument(report).toJson(QJsonDocument::Indented));
+            file.close();
+            app.exit(report.value(QStringLiteral("result")).toString()
+                    == QStringLiteral("passed") ? 0 : 6);
+        });
+        return app.exec();
+    }
     if (scenario == QStringLiteral("keyboard")) {
         QTimer::singleShot(150, root, [root]() {
             QMetaObject::invokeMethod(root, "focusFirstAction");

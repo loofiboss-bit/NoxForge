@@ -34,10 +34,10 @@
   "sources": {
     "CMakeLists.txt": "42ec434c69cabd51e31f930ceb8856bd352f34398dae5a4adb8cd2818153c5fc",
     "design/motion-contract.json": "f5b65d99f08956f6ed2cc67ee64e16179f47880921512cfb3f30f8e6444c48e1",
-    "src/style/noxforgemotion.cpp": "298d4137054786db65a3b801256dedd32dbcbccae1bd8784df6f44d9f232cb19",
-    "src/style/noxforgemotion.h": "c53c05f4a09b839d9845ce034362708009ca8e62ff04a5a52a1c5f40bc881996",
+    "src/style/noxforgemotion.cpp": "b7b8aa7c9e04656d3cc6ddd38835fe5257d5180c24ebe8c6ba1d85a411333af9",
+    "src/style/noxforgemotion.h": "476ccad20222bbe33f839374b0bdd459102eece2df4c3272a0665f19a52f1d5f",
     "src/style/noxforgepalette.h": "c9fe1e6230a82a14c5aafa9b74432bbfe8f7843847f3985db700b8c0850d7928",
-    "src/style/noxforgestyle.cpp": "b8d0ddb41ee18129ad754d54cf3f5b42953baad1766524666dc1f27a73204adb",
+    "src/style/noxforgestyle.cpp": "8f87cabbfa5839f109820f0278909ae3a881ac70305210a194bb9e56c6c8e86c",
     "src/style/noxforgestyle.h": "50130bf9df26695ddcfe38a6053ec03c0c899ff634c65c2e4f97768c4776ae0a",
     "tools/motion_state_renderer.cpp": "2120055d06bbd2b989911610caba455459d3c856a5b39389020e703033ef0106"
   },

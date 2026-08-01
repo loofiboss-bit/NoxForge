@@ -15,7 +15,7 @@
   "release": "6.0.0",
   "schemaVersion": 1,
   "sources": {
-    "sddm/NoxForge/Main.qml": "a3ea412834f16012b123343ed02a750831ad38e86679a65b5ab5f29540c82223",
+    "sddm/NoxForge/Main.qml": "2dd9b810f580ec62963d39d0d8b9c251fb808731f4c140cf655df4726d066024",
     "sddm/NoxForge/NoxForgeLockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
     "sddm/NoxForge/background.png": "4319f4d098ea237e23705a43ae2568499f4f2ac6981719ce0c9fcf111538d396",
     "tools/sddm_renderer.cpp": "ebf8fd9aa3cfff6eaadca10aa62db5ec37f5f9c637c25d7f052afaa68c12200c",
