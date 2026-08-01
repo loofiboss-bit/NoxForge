@@ -31,6 +31,8 @@ jobs:
           google-noto-sans-fonts
           ImageMagick
           kf6-kirigami
+          libasan
+          libubsan
           ninja-build
           python3
           qt6-qtbase-devel
