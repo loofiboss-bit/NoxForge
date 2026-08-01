@@ -55,11 +55,13 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-This checkout contains the locally qualified NoxForge 6.0.0 source candidate.
-No v6 tag, GitHub release, COPR build, installation, or public readback is
-claimed here. NoxForge 5.0.0 remains the current verified public release until
-the controlled v6 release process is explicitly authorized and independently
-read back. The exact-tag
+This checkout contains the qualified NoxForge 6.0.0 release candidate. Its
+isolated Wayland matrix passed theme application, exact panel preservation,
+all four panel edges, two-output placement, visible shell fallback review, and
+real Qt composition at 140 percent without changing the maintainer KDE or SDDM
+configuration. Exact-tag GitHub and COPR publication plus independent package
+readback are pending. NoxForge 5.0.0 remains the current verified public
+release until that controlled readback completes. The exact-tag
 [GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v5.0.0)
 provides the verified source archive, SRPM, Fedora 44 RPM, qualification
 manifest, automated report and checksums. The Fedora package is available from
@@ -73,10 +75,9 @@ The v6 local release gate covers deterministic generation, 141 Python tests,
 21 CTest cases, ASan/UBSan, QML lint, isolated staging, byte-identical source
 archives, SRPM/RPM build, and `rpmlint`. Automated accessibility, reduced
 motion, 100/125/140/200 percent rendering, and complete-tree performance
-qualification pass. Live Wayland input, hardware blur, animation-speed
-variants, high-contrast mode, cursor composition, two-output placement,
-production splash integration, and real SDDM authentication remain explicitly
-blocked.
+qualification pass. Live injected Wayland input, hardware blur,
+animation-speed variants, high-contrast mode, cursor composition, production
+splash integration, and real SDDM authentication remain explicitly blocked.
 
 Compatibility, COPR installation, explicit component selection, verification,
 upgrade, and safe rollback are documented in

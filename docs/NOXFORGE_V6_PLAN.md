@@ -842,10 +842,16 @@ v5 baseline, within the 1.10 ceiling. A sanitizer-covered native probe completes
 stopped idle timer, and zero measured heap growth after warmup. The full local
 gate passed with 135 Python tests, 21 CTest cases, ASan/UBSan, deterministic
 evidence, QML lint, non-mutating install/uninstall dry-runs, byte-identical
-source archives, and clean Fedora SRPM/RPM `rpmlint`. Required live Wayland,
-Plasma/KWin, SDDM, input-injection, animation-speed, high-contrast, cursor, and
-two-output cases remain `blocked` with specific reasons. No desktop, panel,
-theme, or SDDM configuration was changed.
+source archives, and clean Fedora SRPM/RPM `rpmlint`. The isolated Wayland
+follow-up on 2026-08-01 passed Global Theme application, exact panel
+preservation, all four panel edges, two-output placement, visible shell
+fallback review, and real Qt composition at 140 percent. The real windowed
+Logout greeter, composed Aurorae, and SDDM test mode rendered and are retained
+with bounded claims. Hardware blur, input-injected motion, held Alt+Tab,
+cursor scaling, production splash integration, high-contrast mode, PAM
+authentication, and real SDDM power actions remain `blocked` with specific
+environmental reasons. The active desktop, panel, theme, and SDDM
+configuration hashes were unchanged.
 
 ## Phase 8 — Product presentation and controlled 6.0.0 release
 
@@ -881,7 +887,7 @@ Present v6 as a coherent product and publish through the proven v5 pipeline.
   and after removal.
 - README screenshots come from the released build.
 
-**Local outcome (2026-07-30; Phase 8 remains incomplete):** The source tree and
+**Release-ready outcome (2026-08-01; public readback pending):** The source tree and
 all current version consumers are promoted to stable `6.0.0`. README, Global
 Theme previews, release notes, compatibility, installation, rollback,
 reduced-motion, troubleshooting, and manual-testing documentation now present
@@ -890,14 +896,14 @@ Every non-live image is labeled honestly; no fabricated live desktop screenshot
 is used. The compact six-asset release contract is preserved, and the complete
 stable local gate passes with 141 Python tests, 21 CTest cases, ASan/UBSan,
 QML lint, deterministic evidence, non-mutating install/uninstall dry-runs,
-byte-identical source archives, and clean Fedora SRPM/RPM `rpmlint`.
+byte-identical source archives, and clean Fedora SRPM/RPM `rpmlint`. The
+release qualification manifest now records exact candidate lineage, a clean
+worktree, the six-asset contract, and the isolated Wayland result.
 
-Phase 8 is not complete and no public release is claimed. The annotated
+Phase 8 public readback is pending. Its remaining gate is the annotated
 `v6.0.0` tag, exact-tag qualification, GitHub Release, COPR terminal success,
 public artifact/checksum readback, clean RPM installation, `rpm -V`,
-`noxforge-doctor`, removal, and before/after KDE/SDDM settings hashes remain
-`blocked` by the explicit no-tag, no-publish, no-install, and no-live
-authorization boundary.
+`noxforge-doctor`, removal, and before/after KDE/SDDM settings hashes.
 
 ## Cross-phase file map
 

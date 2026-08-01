@@ -1906,10 +1906,16 @@ def validate_tooling() -> None:
     for case in live_cases:
         if (
             not isinstance(case, dict)
-            or case.get("status") not in {"pending", "blocked"}
+            or case.get("status") not in {"pending", "blocked", "passed"}
             or not case.get("reason")
         ):
-            raise ValidationError("v6 liveCases contain a prematurely promoted result")
+            raise ValidationError("v6 liveCases contain an invalid result")
+        if case.get("status") == "passed":
+            linked = case.get("evidence")
+            if not isinstance(linked, str) or not (
+                ROOT / "docs/evidence/v6" / linked
+            ).is_file():
+                raise ValidationError("passed v6 live evidence must link a real file")
 
 
 def validate_generated_sources() -> None:
