@@ -1,5 +1,7 @@
 %global upstream_version 7.0.0
 %global use_source_date_epoch_as_buildtime 1
+%undefine _unique_build_ids
+%global _no_recompute_build_ids 1
 
 Name:           noxforge
 Version:        7.0.0
