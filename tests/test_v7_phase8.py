@@ -157,6 +157,8 @@ class V7PhaseEightTests(unittest.TestCase):
         self.assertIn("while (settle.elapsed() <= 40)", source)
         self.assertIn("stableSamples >= 2", source)
         self.assertIn('report.insert(QStringLiteral("immediateSettleMs")', source)
+        self.assertIn("Qt::WA_TransparentForMouseEvents", source)
+        self.assertIn("button->setFocusPolicy(Qt::NoFocus)", source)
 
     def test_user_install_cycle_preserves_kde_configuration(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-v7-user-cycle-") as name:

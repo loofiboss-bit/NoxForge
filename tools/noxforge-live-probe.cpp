@@ -142,6 +142,8 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     layout->addWidget(description);
     auto *button = new QPushButton(QStringLiteral("Measured press target"));
     button->setMinimumSize(360, 72);
+    button->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    button->setFocusPolicy(Qt::NoFocus);
     layout->addWidget(button, 0, Qt::AlignCenter);
     layout->addStretch(1);
     window.show();
