@@ -12,7 +12,7 @@
   "candidate": {
     "path": "noxforge-7.0.0-1.fc44.x86_64.rpm",
     "nevra": "noxforge-7.0.0-1.fc44.x86_64",
-    "sha256": "38b22e7541796a36c3df643d92f3e675e10a2897dce6819e402c9b5b92801629"
+    "sha256": "d19258df67fffa9674dd3b6b153ff84cc71012b4d0d4a53ceb272ebec88fe089"
   },
   "result": {
     "candidateNevra": "noxforge-7.0.0-1.fc44.x86_64",

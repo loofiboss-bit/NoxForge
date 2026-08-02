@@ -1,4 +1,4 @@
-Output: 1 Virtual-1 021cc541-85ab-497b-a6b1-1ec7a3921776
+Output: 1 Virtual-1 828ec86d-2074-4d4d-864a-15933f360256
 	enabled
 	connected
 	priority 2
@@ -23,7 +23,7 @@ Output: 1 Virtual-1 021cc541-85ab-497b-a6b1-1ec7a3921776
 	Automatic brightness: unsupported
 	Auto Rotate Policy: incapable
 	Adaptive backlight modulation: unsupported
-Output: 2 Virtual-0 7869e2f0-e1d3-46ee-a671-2b7499027768
+Output: 2 Virtual-0 908f1b0a-cd5e-41f2-82ca-499e02ff90fe
 	enabled
 	connected
 	priority 1
