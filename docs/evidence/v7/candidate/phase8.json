@@ -22,7 +22,7 @@
       "provenance": "passed"
     },
     "freshV6Upgrade": "passed",
-    "exactSourceCommit": "588fce15af86b8351ab0e549d85c4d0c953c2777"
+    "exactSourceCommit": "9fafaa2f2e8b0c765e3eb4c632675701841c92f6"
   },
   "artifactPolicy": {
     "output": "canonical release workflow",
@@ -103,7 +103,7 @@
   },
   "sourceHashes": {
     "contract": "e8c92588273f605925ded098beba142114a528fae975c95729b1670de08c03d9",
-    "qualification": "08da05a88bd8ade6d9022d2ef85ba1b1dcac1b9b078804182918b24b0c82db45",
+    "qualification": "0560e1e6ccc5f6ec93b7c5e33a2a16994813120a0e34bb442142643ffc95e921",
     "liveManifest": "73b4c3243f91f4c9e6bfd529128a0ae84080ac5098e66230c3f3cf1e83ecb1f1",
     "upgradeMatrix": "c1a4b0b3ade91ada6201e01f7b279a676e035183ce7e33320f98b75d325f2e0f",
     "releaseNotes": "a0ce2c4cceda5dec722f219f421a9e2d987c2b21b8e1edc79d837496ec260a9c",
