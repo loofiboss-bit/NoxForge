@@ -104,6 +104,31 @@ class V7PhaseEightTests(unittest.TestCase):
         ):
             self.assertIn(fragment, single_case)
         for fragment in (
+            "qualify_runtime_readback()",
+            '"doctor-runtime.json"',
+            '"iconless-window"',
+            '"applicationIconNull"',
+            '"windowIconNull"',
+        ):
+            self.assertIn(fragment, source)
+        for surface in (
+            "task-manager",
+            "tray",
+            "launcher",
+            "popup",
+            "calendar",
+            "notification",
+            "dialog",
+            "tooltip",
+            "osd",
+        ):
+            self.assertIn(f"plasma-{surface}-blur-", source)
+        splash = single_case.split('splash = session.launch(', 1)[1].split(
+            "session.stop_process(splash)", 1
+        )[0]
+        self.assertNotIn("require_running=False", splash)
+        self.assertIn('session.screenshot(f"splash-windowed-', splash)
+        for fragment in (
             "layout_qualification(session, label)",
             "motion_qualification(session, label)",
             "distinctTransitionFrames",

@@ -176,6 +176,29 @@ def read_active_components() -> dict[str, str]:
     return active
 
 
+def current_activity() -> str | None:
+    command = shutil.which("qdbus-qt6")
+    if not command:
+        return None
+    try:
+        result = subprocess.run(
+            [
+                command,
+                "org.kde.ActivityManager",
+                "/ActivityManager/Activities",
+                "org.kde.ActivityManager.Activities.CurrentActivity",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=2,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    value = result.stdout.strip()
+    return value if result.returncode == 0 and value else None
+
+
 def detect_wallpaper() -> str:
     config_root = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
     path = config_root / "plasma-org.kde.plasma.desktop-appletsrc"
@@ -183,10 +206,65 @@ def detect_wallpaper() -> str:
         lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
         return "not-detected"
-    images = [line.split("=", 1)[1] for line in lines if line.startswith("Image=")]
-    if any("/wallpapers/NoxForge/" in image for image in images):
+    containments: dict[str, dict[str, str]] = {}
+    current_id: str | None = None
+    current_kind: str | None = None
+    for line in lines:
+        section = re.fullmatch(r"\[Containments\]\[(\d+)\](.*)", line)
+        if section:
+            current_id = section.group(1)
+            suffix = section.group(2)
+            current_kind = "base" if not suffix else (
+                "wallpaper" if suffix.startswith("[Wallpaper]") else "other"
+            )
+            containments.setdefault(current_id, {})
+            continue
+        if current_id is None or current_kind not in ("base", "wallpaper") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        if current_kind == "base" and key in (
+            "activityId",
+            "lastScreen",
+            "plugin",
+            "wallpaperplugin",
+        ):
+            containments[current_id][key] = value
+        elif current_kind == "wallpaper" and key == "Image":
+            containments[current_id]["Image"] = value
+
+    activity = current_activity()
+    active: list[dict[str, str]] = []
+    unresolved_activity = False
+    for containment in containments.values():
+        if containment.get("plugin") == "org.kde.panel":
+            continue
+        if not containment.get("wallpaperplugin") and "Image" not in containment:
+            continue
+        try:
+            visible_screen = int(containment.get("lastScreen", "-1")) >= 0
+        except ValueError:
+            visible_screen = False
+        if not visible_screen:
+            continue
+        activity_id = containment.get("activityId", "")
+        if activity_id and activity is None:
+            unresolved_activity = True
+            continue
+        if not activity_id or activity_id == activity:
+            active.append(containment)
+    if unresolved_activity:
+        return "ambiguous"
+    if not active:
+        return "not-detected"
+    images = [containment.get("Image", "") for containment in active]
+    if any(not image for image in images):
+        return "ambiguous"
+    noxforge = ["/wallpapers/NoxForge/" in image for image in images]
+    if all(noxforge):
         return "NoxForge"
-    return "other" if images else "not-detected"
+    if not any(noxforge):
+        return "other"
+    return "ambiguous"
 
 
 def data_root_provenance(root: Path, data_root: Path) -> str:

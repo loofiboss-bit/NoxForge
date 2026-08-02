@@ -7,6 +7,7 @@
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QImage>
+#include <QIcon>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
@@ -273,6 +274,28 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     return application.exec();
 }
 
+int iconlessWindowProbe(QApplication &application, const QString &reportPath)
+{
+    application.setWindowIcon(QIcon());
+    QWidget window;
+    window.setWindowIcon(QIcon());
+    window.setWindowTitle(QStringLiteral("NoxForge genuine iconless client"));
+    window.resize(720, 420);
+    window.setStyleSheet(QStringLiteral("background: #0E1318;"));
+    window.show();
+    application.processEvents();
+
+    QJsonObject report = commonReport(application);
+    report.insert(QStringLiteral("mode"), QStringLiteral("iconless-window"));
+    report.insert(QStringLiteral("result"), QStringLiteral("passed"));
+    report.insert(QStringLiteral("title"), window.windowTitle());
+    report.insert(QStringLiteral("applicationIconNull"), QApplication::windowIcon().isNull());
+    report.insert(QStringLiteral("windowIconNull"), window.windowIcon().isNull());
+    if (!writeReport(reportPath, report))
+        return 3;
+    return application.exec();
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -283,7 +306,8 @@ int main(int argc, char **argv)
         QStringLiteral("Bounded live qualification for the installed NoxForge Qt style"));
     parser.addHelpOption();
     parser.addOption(
-        {QStringLiteral("mode"), QStringLiteral("layout or motion"), QStringLiteral("mode")});
+        {QStringLiteral("mode"), QStringLiteral("layout, motion, or iconless-window"),
+         QStringLiteral("mode")});
     parser.addOption(
         {QStringLiteral("report"), QStringLiteral("JSON report path"), QStringLiteral("path")});
     parser.addOption({QStringLiteral("frames-prefix"), QStringLiteral("motion frame path prefix"),
@@ -311,5 +335,7 @@ int main(int argc, char **argv)
                            parser.isSet(QStringLiteral("pseudo")));
     if (mode == QStringLiteral("motion"))
         return motionProbe(application, report, parser.value(QStringLiteral("frames-prefix")));
+    if (mode == QStringLiteral("iconless-window"))
+        return iconlessWindowProbe(application, report);
     return 2;
 }

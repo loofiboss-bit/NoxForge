@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +18,38 @@ EVIDENCE = json.loads(
 
 
 class V7PhaseSevenTests(unittest.TestCase):
+    def test_wallpaper_readback_never_promotes_stale_or_mixed_containments(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="noxforge-doctor-wallpaper-") as name:
+            config = Path(name)
+            (config / "plasma-org.kde.plasma.desktop-appletsrc").write_text(
+                "[Containments][1]\n"
+                "activityId=current\n"
+                "lastScreen=0\n"
+                "[Containments][1][Wallpaper][org.kde.image][General]\n"
+                "Image=file:///usr/share/wallpapers/Other/contents/images/a.png\n"
+                "[Containments][2]\n"
+                "activityId=stale\n"
+                "lastScreen=0\n"
+                "[Containments][2][Wallpaper][org.kde.image][General]\n"
+                "Image=file:///usr/share/wallpapers/NoxForge/contents/images/b.png\n"
+                "[Containments][3]\n"
+                "activityId=current\n"
+                "lastScreen=0\n"
+                "plugin=org.kde.panel\n",
+                encoding="utf-8",
+            )
+            script = (ROOT / "tools/noxforge-doctor").read_text(encoding="utf-8")
+            namespace = {"__name__": "noxforge_doctor_test"}
+            exec(compile(script, "tools/noxforge-doctor", "exec"), namespace)
+            with mock.patch.dict(os.environ, {"XDG_CONFIG_HOME": str(config)}), mock.patch.dict(
+                namespace, {"current_activity": lambda: "current"}
+            ):
+                self.assertEqual(namespace["detect_wallpaper"](), "other")
+            with mock.patch.dict(os.environ, {"XDG_CONFIG_HOME": str(config)}), mock.patch.dict(
+                namespace, {"current_activity": lambda: None}
+            ):
+                self.assertEqual(namespace["detect_wallpaper"](), "ambiguous")
+
     def test_doctor_covers_complete_active_state_and_provenance(self) -> None:
         source = (ROOT / "tools/noxforge-doctor").read_text(encoding="utf-8")
         for key in (

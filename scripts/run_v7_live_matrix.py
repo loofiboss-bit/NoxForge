@@ -162,6 +162,7 @@ def require_tools(injector: Path, probe: Path) -> None:
         "kscreen-doctor",
         "kwin_wayland",
         "plasma-apply-lookandfeel",
+        "plasma-apply-wallpaperimage",
         "plasmashell",
         "pipewire",
         "qdbus-qt6",
@@ -371,6 +372,15 @@ class LiveSession:
         if self.args.system_package and decoration != f"__aurorae__svg__{THEME_ID}":
             self.stage_headless_defaults()
             activation_method = "verified RPM defaults staged after headless apply limitation"
+        wallpaper = (
+            Path("/usr/share")
+            if self.args.system_package
+            else Path(os.environ["XDG_DATA_HOME"])
+        ) / "wallpapers/NoxForge/contents/images/1920x1080.png"
+        if not wallpaper.is_file():
+            raise RuntimeError(f"verified NoxForge wallpaper is missing: {wallpaper}")
+        run(["plasma-apply-wallpaperimage", str(wallpaper)], timeout=30)
+        activation_method += " plus verified wallpaper default"
         run(["qdbus-qt6", "org.kde.KWin", "/KWin", "reconfigure"])
         time.sleep(1)
         readback = {
@@ -450,7 +460,73 @@ class LiveSession:
         )
         time.sleep(2)
         self.record_runtime()
+        self.qualify_runtime_readback()
         self.desktop_capture = self.screenshot("desktop-baseline")
+
+    def qualify_runtime_readback(self) -> None:
+        containment_config = (
+            Path(os.environ["XDG_CONFIG_HOME"])
+            / "plasma-org.kde.plasma.desktop-appletsrc"
+        )
+        if not containment_config.is_file():
+            raise RuntimeError("composed-session Plasma containment config is missing")
+        shutil.copyfile(containment_config, self.evidence / "plasma-containments.ini")
+        report = json.loads(run([str(ROOT / "tools/noxforge-doctor"), "--json"]).stdout)
+        (self.evidence / "doctor-runtime.json").write_text(
+            json.dumps(report, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        expected_active = {
+            "qtStyle": "NoxForge",
+            "colorScheme": "NoxForgeDark",
+            "icons": "NoxForge",
+            "soundTheme": "NoxForge",
+            "plasmaStyle": THEME_ID,
+            "cursorTheme": "NoxForge-Cursors",
+            "aurorae": f"__aurorae__svg__{THEME_ID}",
+            "kwinSwitcher": THEME_ID,
+            "splash": THEME_ID,
+            "iconInheritance": "breeze-dark,breeze,hicolor",
+            "wallpaper": "NoxForge",
+        }
+        active = report.get("active", {})
+        drift = {
+            key: {"expected": value, "actual": active.get(key)}
+            for key, value in expected_active.items()
+            if active.get(key) != value
+        }
+        icons = report.get("criticalIcons", {})
+        display = report.get("session", {}).get("displayScales", {})
+        actual_scales = sorted(
+            float(output["scale"])
+            for output in display.get("outputs", [])
+            if output.get("enabled") and output.get("connected")
+        )
+        expected_scales = sorted(float(scale) for scale in self.args.scales)
+        if (
+            report.get("status") != "ok"
+            or report.get("missing")
+            or drift
+            or icons.get("status") != "ok"
+            or icons.get("unresolved")
+            or display.get("status") != "ok"
+            or actual_scales != expected_scales
+        ):
+            raise RuntimeError(
+                "composed-session doctor readback failed: "
+                + json.dumps(
+                    {
+                        "status": report.get("status"),
+                        "missing": report.get("missing"),
+                        "activeDrift": drift,
+                        "criticalIcons": icons,
+                        "expectedScales": expected_scales,
+                        "actualScales": actual_scales,
+                    },
+                    sort_keys=True,
+                )
+            )
 
     def record_runtime(self) -> None:
         outputs = run(["kscreen-doctor", "-o"], timeout=30).stdout
@@ -776,14 +852,157 @@ def set_blur_state(session: LiveSession, enabled: bool) -> None:
 
 
 def blur_state_capture(session: LiveSession, label: str) -> None:
-    dialog = session.launch(
-        ["kdialog", "--title", "NoxForge blur state", "--msgbox", "Translucent surface"]
-    )
-    set_blur_state(session, True)
-    session.screenshot(f"blur-enabled-{label}")
-    set_blur_state(session, False)
-    session.screenshot(f"blur-disabled-{label}")
-    session.stop_process(dialog)
+    scale = session.args.scales[0]
+    logical_width = round(1920 / scale)
+    logical_height = round(1080 / scale)
+    for enabled in (True, False):
+        state = "enabled" if enabled else "disabled"
+        set_blur_state(session, enabled)
+        baseline = session.screenshot(f"plasma-shell-baseline-blur-{state}-{label}")
+
+        task = session.launch(["systemsettings"])
+        session.kwin_script("workspace.activeWindow.minimized = true;")
+        task_capture = session.screenshot(f"plasma-task-manager-blur-{state}-{label}")
+        require_visual_change(baseline, task_capture, f"task manager with blur {state}")
+
+        tooltip_source = Path(os.environ["XDG_RUNTIME_DIR"]) / "noxforge-tooltip.qml"
+        tooltip_source.write_text(
+            "import QtQuick\n"
+            "import org.kde.plasma.core as PlasmaCore\n"
+            "Item {\n"
+            "    id: root\n"
+            "    property bool qualifyTooltip: false\n"
+            "    Timer {\n"
+            "        interval: 2500\n"
+            "        running: true\n"
+            "        onTriggered: root.qualifyTooltip = true\n"
+            "    }\n"
+            "    PlasmaCore.Dialog {\n"
+            "        visible: root.qualifyTooltip\n"
+            "        type: PlasmaCore.Dialog.Tooltip\n"
+            "        outputOnly: true\n"
+            "        mainItem: Rectangle {\n"
+            "            width: 420\n"
+            "            height: 112\n"
+            "            color: \"#151D23\"\n"
+            "            border.color: \"#A3FF47\"\n"
+            "            Text {\n"
+            "                anchors.centerIn: parent\n"
+            "                text: \"NoxForge Plasma tooltip surface\"\n"
+            "                color: \"#E8F0F2\"\n"
+            "            }\n"
+            "        }\n"
+            "    }\n"
+            "}\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        session.input("absolute", max(1, logical_width - 5), 5)
+        tooltip_process = session.launch(
+            [QML_LAUNCHER, str(tooltip_source)], wait_seconds=0.3
+        )
+        tooltip_baseline = session.screenshot(
+            f"plasma-tooltip-before-blur-{state}-{label}"
+        )
+        time.sleep(3)
+        tooltip = session.screenshot(f"plasma-tooltip-blur-{state}-{label}")
+        require_visual_change(
+            tooltip_baseline,
+            tooltip,
+            f"PlasmaCore tooltip with blur {state}",
+        )
+        session.stop_process(tooltip_process)
+
+        session.input("keys", "--hold-ms", 100, META)
+        time.sleep(1)
+        launcher = session.screenshot(f"plasma-launcher-blur-{state}-{label}")
+        require_visual_change(task_capture, launcher, f"launcher with blur {state}")
+        session.input("keys", "--hold-ms", 80, ESC)
+
+        session.input(
+            "absolute-click",
+            max(1, logical_width - 140),
+            max(1, logical_height - 20),
+        )
+        time.sleep(1)
+        tray = session.screenshot(f"plasma-tray-blur-{state}-{label}")
+        require_visual_change(task_capture, tray, f"system tray with blur {state}")
+        session.input("keys", "--hold-ms", 80, ESC)
+
+        session.input("absolute", logical_width // 2, logical_height // 2)
+        session.input("click", 273)
+        time.sleep(1)
+        popup = session.screenshot(f"plasma-popup-blur-{state}-{label}")
+        require_visual_change(task_capture, popup, f"desktop popup with blur {state}")
+        session.input("keys", "--hold-ms", 80, ESC)
+
+        notification = run(
+            [
+                "notify-send",
+                "--print-id",
+                "NoxForge v7",
+                f"Operational Precision blur {state}",
+            ]
+        )
+        time.sleep(1)
+        notification_capture = session.screenshot(
+            f"plasma-notification-blur-{state}-{label}"
+        )
+        require_visual_change(
+            task_capture,
+            notification_capture,
+            f"notification with blur {state}",
+        )
+        notification_id = notification.stdout.strip()
+        if notification_id.isdigit():
+            run(
+                [
+                    "qdbus-qt6",
+                    "org.freedesktop.Notifications",
+                    "/org/freedesktop/Notifications",
+                    "org.freedesktop.Notifications.CloseNotification",
+                    notification_id,
+                ],
+                check=False,
+            )
+
+        run(
+            [
+                "qdbus-qt6",
+                "org.kde.plasmashell",
+                "/org/kde/osdService",
+                "org.kde.osdService.showText",
+                "preferences-desktop-theme",
+                f"NoxForge v7 blur {state}",
+            ]
+        )
+        time.sleep(1)
+        osd = session.screenshot(f"plasma-osd-blur-{state}-{label}")
+        require_visual_change(task_capture, osd, f"OSD with blur {state}")
+
+        dialog = session.launch(
+            [
+                "kdialog",
+                "--title",
+                f"NoxForge blur {state}",
+                "--msgbox",
+                "Translucent dialog surface",
+            ]
+        )
+        dialog_capture = session.screenshot(f"plasma-dialog-blur-{state}-{label}")
+        require_visual_change(task_capture, dialog_capture, f"dialog with blur {state}")
+        session.stop_process(dialog)
+
+        session.input(
+            "absolute-click",
+            max(1, logical_width - 100),
+            max(1, logical_height - 20),
+        )
+        time.sleep(1)
+        calendar = session.screenshot(f"plasma-calendar-blur-{state}-{label}")
+        require_visual_change(task_capture, calendar, f"calendar with blur {state}")
+        session.input("keys", "--hold-ms", 80, ESC)
+        session.stop_process(task)
 
 
 def tabbox_window(session: LiveSession, name: str, title: str) -> subprocess.Popen[str]:
@@ -801,6 +1020,28 @@ def tabbox_window(session: LiveSession, name: str, title: str) -> subprocess.Pop
         newline="\n",
     )
     return session.launch([QML_LAUNCHER, str(source)])
+
+
+def iconless_tabbox_window(session: LiveSession, label: str) -> subprocess.Popen[str]:
+    report_path = session.evidence / f"tabbox-iconless-client-{label}.json"
+    process = session.launch(
+        [
+            str(session.args.probe),
+            "--mode",
+            "iconless-window",
+            "--report",
+            str(report_path),
+        ]
+    )
+    report = wait_for_json_report(report_path, process)
+    if (
+        report.get("result") != "passed"
+        or report.get("title") != "NoxForge genuine iconless client"
+        or report.get("applicationIconNull") is not True
+        or report.get("windowIconNull") is not True
+    ):
+        raise RuntimeError("TabBox client did not prove a genuinely null application/window icon")
+    return process
 
 
 def held_tabbox_capture(session: LiveSession, name: str) -> None:
@@ -825,8 +1066,15 @@ def tabbox_state_matrix(session: LiveSession, label: str) -> None:
     session.stop_process(single)
 
     normal = session.launch(["systemsettings"])
-    missing = tabbox_window(session, "missing-icon", "NoxForge missing-icon state")
-    held_tabbox_capture(session, f"tabbox-missing-icon-{label}")
+    missing = iconless_tabbox_window(session, label)
+    missing_capture = session.evidence / f"tabbox-missing-icon-{label}.png"
+    held_tabbox_capture(session, missing_capture.stem)
+    require_color_presence(
+        missing_capture,
+        (163, 255, 71),
+        "TabBox application-x-executable fallback glyph",
+        tolerance=18,
+    )
     session.stop_process(missing)
     session.stop_process(normal)
 
@@ -1083,51 +1331,7 @@ def single_case(session: LiveSession) -> None:
         session.screenshot(f"plasma-panel-{edge}-{label}")
     session.plasma_script('panels()[0].location = "bottom";')
 
-    session.input("keys", "--hold-ms", 100, META)
-    time.sleep(1)
-    session.screenshot(f"plasma-launcher-{label}")
-    session.input("keys", "--hold-ms", 80, ESC)
-
-    notification = run(
-        ["notify-send", "--print-id", "NoxForge v7", "Operational Precision live notification"]
-    )
-    time.sleep(1)
-    session.screenshot(f"plasma-notification-{label}")
-
-    run(
-        [
-            "qdbus-qt6",
-            "org.kde.plasmashell",
-            "/org/kde/osdService",
-            "org.kde.osdService.showText",
-            "preferences-desktop-theme",
-            "NoxForge v7 Operational Precision",
-        ]
-    )
-    time.sleep(1)
-    session.screenshot(f"plasma-osd-{label}")
     blur_state_capture(session, label)
-
-    notification_id = notification.stdout.strip()
-    if notification_id.isdigit():
-        run(
-            [
-                "qdbus-qt6",
-                "org.freedesktop.Notifications",
-                "/org/freedesktop/Notifications",
-                "org.freedesktop.Notifications.CloseNotification",
-                notification_id,
-            ],
-            check=False,
-        )
-    session.input("keys", "--hold-ms", 80, ESC)
-    time.sleep(0.5)
-    logical_width = round(1920 / scale)
-    logical_height = round(1080 / scale)
-    session.input("absolute-click", max(1, logical_width - 100), max(1, logical_height - 26))
-    time.sleep(1)
-    session.screenshot(f"plasma-calendar-{label}")
-    session.input("keys", "--hold-ms", 80, ESC)
 
     logout = session.launch(
         [
@@ -1203,10 +1407,8 @@ def single_case(session: LiveSession) -> None:
     splash = session.launch(
         ["ksplashqml", "--window", "--nofork", THEME_ID],
         wait_seconds=0.6,
-        require_running=False,
     )
-    if splash.poll() is None:
-        session.screenshot(f"splash-windowed-{label}")
+    session.screenshot(f"splash-windowed-{label}")
     session.stop_process(splash)
 
     motion_qualification(session, label)
