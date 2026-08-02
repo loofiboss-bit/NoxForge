@@ -4,15 +4,15 @@
   "status": "passed",
   "environment": {
     "distribution": "Fedora 44",
-    "containerImage": "localhost/noxforge-v7-live:fedora44",
-    "containerImageId": "01edc9979a553d0b02189543276ccfa8cdb00cd20af5ca4ba944ed5b928a8169",
+    "containerImage": "localhost/noxforge-v7-live:final",
+    "containerImageId": "1ad6e8acb283aa723a3d704262ec2e0b71ba82dea465bb6d111d17cf89060f03",
     "publicV6Repository": "copr:copr.fedorainfracloud.org:loofitheboss:noxforge",
     "networkPurpose": "resolve the already-public v6 package and Fedora dependencies"
   },
   "candidate": {
     "path": "noxforge-7.0.0-1.fc44.x86_64.rpm",
     "nevra": "noxforge-7.0.0-1.fc44.x86_64",
-    "sha256": "d19258df67fffa9674dd3b6b153ff84cc71012b4d0d4a53ceb272ebec88fe089"
+    "sha256": "2db535913ae2ab20479745c0df66d152f63367d25af4343e61c51f38a7c08c12"
   },
   "result": {
     "candidateNevra": "noxforge-7.0.0-1.fc44.x86_64",

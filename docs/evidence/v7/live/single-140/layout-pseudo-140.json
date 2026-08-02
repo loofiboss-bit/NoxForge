@@ -1,0 +1,15 @@
+{
+    "displayedText": "xx Operational precision requires deliberately expanded localized content xx",
+    "layoutDirection": "ltr",
+    "markerWidth": 18,
+    "markerX": 32,
+    "mode": "layout",
+    "normalTextWidth": 131,
+    "probe": "noxforge-live-probe",
+    "pseudoLocalized": true,
+    "result": "passed",
+    "styleClass": "NoxForgeStyle",
+    "styleObjectName": "noxforge",
+    "textWidth": 465,
+    "windowWidth": 900
+}

@@ -1,0 +1,15 @@
+{
+    "displayedText": "Operational precision",
+    "layoutDirection": "rtl",
+    "markerWidth": 18,
+    "markerX": 850,
+    "mode": "layout",
+    "normalTextWidth": 131,
+    "probe": "noxforge-live-probe",
+    "pseudoLocalized": false,
+    "result": "passed",
+    "styleClass": "NoxForgeStyle",
+    "styleObjectName": "noxforge",
+    "textWidth": 131,
+    "windowWidth": 900
+}

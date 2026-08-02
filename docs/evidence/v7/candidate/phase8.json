@@ -22,7 +22,7 @@
       "provenance": "passed"
     },
     "freshV6Upgrade": "passed",
-    "exactSourceCommit": "58d3dabc8dc41b066c1877e0567d735acae19b86"
+    "exactSourceCommit": "588fce15af86b8351ab0e549d85c4d0c953c2777"
   },
   "artifactPolicy": {
     "output": "canonical release workflow",
@@ -103,12 +103,12 @@
   },
   "sourceHashes": {
     "contract": "e8c92588273f605925ded098beba142114a528fae975c95729b1670de08c03d9",
-    "qualification": "8939f68ab3c96a54e4c8c6f9c8ca3aeb95c5a22308d19a7028efb23fbe9e229d",
-    "liveManifest": "8d0916ce6023aef43812dad25600c30d2955dd49bfe5033ded7c49eccc9c9bb4",
-    "upgradeMatrix": "85634925f60e1f9694532bc5476a78cc045bb5be3233de250747f31356dab1bd",
+    "qualification": "08da05a88bd8ade6d9022d2ef85ba1b1dcac1b9b078804182918b24b0c82db45",
+    "liveManifest": "73b4c3243f91f4c9e6bfd529128a0ae84080ac5098e66230c3f3cf1e83ecb1f1",
+    "upgradeMatrix": "c1a4b0b3ade91ada6201e01f7b279a676e035183ce7e33320f98b75d325f2e0f",
     "releaseNotes": "a0ce2c4cceda5dec722f219f421a9e2d987c2b21b8e1edc79d837496ec260a9c",
     "manualGate": "d4d9867e0d5526539904124c8d8e972cd7e859e89dc382a022ae41e7c7ba8d5c",
-    "candidateStaging": "a4903c5acef459b93db4bedfed9916aed8a0f24acf16d9f70c62e3062bbadb25",
+    "candidateStaging": "d01eb53ca48a7939ef81b91d31abdcfeb5d2374ffcfd81377de0665374fd034d",
     "isolatedInstall": "53b8618b3c30f39ce9ea88332e3e34375b0c3ddbf3428c607483ef27cbdd1408",
     "isolatedUninstall": "4073723502f5ce0da06eeb7d51431ae708747431cec9ddaac163f595969d9924"
   }
