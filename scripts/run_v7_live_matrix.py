@@ -677,29 +677,28 @@ def require_color_presence(
         raise RuntimeError(f"expected semantic color is absent from {subject}: {path}")
 
 
-def require_color_in_relative_region(
+def require_color_row_span(
     path: Path,
     color: tuple[int, int, int],
-    region: tuple[float, float, float, float],
     subject: str,
     *,
-    minimum: int = 100,
+    minimum: int = 400,
 ) -> None:
     with Image.open(path) as source:
         rgb = source.convert("RGB")
-        left, top, right, bottom = region
-        crop = rgb.crop(
-            (
-                round(rgb.width * left),
-                round(rgb.height * top),
-                round(rgb.width * right),
-                round(rgb.height * bottom),
-            )
+        top = round(rgb.height * 0.45)
+        bottom = round(rgb.height * 0.80)
+        widest = max(
+            dict(
+                (pixel, count)
+                for count, pixel in (
+                    rgb.crop((0, y, rgb.width, y + 1)).getcolors(maxcolors=rgb.width) or []
+                )
+            ).get(color, 0)
+            for y in range(top, bottom)
         )
-        colors = crop.getcolors(maxcolors=crop.width * crop.height)
-    count = 0 if colors is None else dict((pixel, total) for total, pixel in colors).get(color, 0)
-    if count < minimum:
-        raise RuntimeError(f"expected focused semantic region is absent from {subject}: {path}")
+    if widest < minimum:
+        raise RuntimeError(f"expected focused semantic span is absent from {subject}: {path}")
 
 
 def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
@@ -984,10 +983,9 @@ def single_case(session: LiveSession) -> None:
         session.input("keys", "--hold-ms", 80, TAB)
     time.sleep(0.5)
     logout_cancel = session.screenshot(f"logout-cancel-focus-{label}")
-    require_color_in_relative_region(
+    require_color_row_span(
         logout_cancel,
         (163, 255, 71),
-        (0.0, 0.64, 1.0, 0.78),
         "Logout cancel focus",
     )
     session.input("keys", "--hold-ms", 80, SPACE)

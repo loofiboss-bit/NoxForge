@@ -88,7 +88,7 @@ class V7PhaseEightTests(unittest.TestCase):
             "require_color_presence(sddm_validation, (255, 107, 122)",
             "for _ in range(4):",
             "time.sleep(0.5)",
-            "require_color_in_relative_region(",
+            "require_color_row_span(",
             "for _ in range(6):",
             "logout-cancel-focus",
         ):
