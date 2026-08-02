@@ -41,7 +41,7 @@ void usage(const char *program)
                  "  %s keys [--hold-ms N] KEYCODE [KEYCODE ...]\n"
                  "  %s move DX DY\n"
                  "  %s absolute X Y\n"
-                 "  %s absolute-click X Y\n"
+                 "  %s absolute-click X Y [BUTTON_CODE]\n"
                  "  %s click [BUTTON_CODE]\n"
                  "  %s double-click [BUTTON_CODE]\n",
                  program, program, program, program, program, program);
@@ -173,7 +173,8 @@ int main(int argc, char **argv)
     } else if (operation == "move" || operation == "absolute" ||
                operation == "absolute-click") {
         capabilities = pointerCapability;
-        if (argc != 4) {
+        const int maximumArguments = operation == "absolute-click" ? 5 : 4;
+        if (argc < 4 || argc > maximumArguments) {
             usage(argv[0]);
             return 2;
         }
@@ -182,6 +183,10 @@ int main(int argc, char **argv)
         dx = std::strtod(argv[2], &endX);
         dy = std::strtod(argv[3], &endY);
         if (!endX || *endX != '\0' || !endY || *endY != '\0') {
+            usage(argv[0]);
+            return 2;
+        }
+        if (argc == 5 && !parseInteger(argv[4], &button)) {
             usage(argv[0]);
             return 2;
         }

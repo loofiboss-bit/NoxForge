@@ -929,8 +929,12 @@ def blur_state_capture(session: LiveSession, label: str) -> None:
         require_visual_change(task_capture, tray, f"system tray with blur {state}")
         session.input("keys", "--hold-ms", 80, ESC)
 
-        session.input("absolute", logical_width // 2, logical_height // 2)
-        session.input("click", 273)
+        session.input(
+            "absolute-click",
+            logical_width // 2,
+            logical_height // 2,
+            273,
+        )
         time.sleep(1)
         popup = session.screenshot(f"plasma-popup-blur-{state}-{label}")
         require_visual_change(task_capture, popup, f"desktop popup with blur {state}")
