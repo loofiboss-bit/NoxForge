@@ -116,8 +116,14 @@ Rectangle {
             }
         }
         MouseArea { id: mouse; anchors.fill: parent; hoverEnabled: true; enabled: button.interactive; onClicked: button.clicked() }
-        Keys.onReturnPressed: if (interactive) clicked()
-        Keys.onSpacePressed: if (interactive) clicked()
+        Keys.onPressed: event => {
+            if (interactive && (event.key === Qt.Key_Return
+                    || event.key === Qt.Key_Enter
+                    || event.key === Qt.Key_Space)) {
+                clicked()
+                event.accepted = true
+            }
+        }
     }
 
     component ForgeField: ColumnLayout {

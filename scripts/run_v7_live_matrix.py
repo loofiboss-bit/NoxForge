@@ -657,6 +657,42 @@ def require_visual_change(before: Path, after: Path, subject: str) -> None:
         raise RuntimeError(f"keyboard activation produced no visible state change: {subject}")
 
 
+def exact_color_pixels(path: Path, color: tuple[int, int, int]) -> int:
+    with Image.open(path) as source:
+        rgb = source.convert("RGB")
+        colors = rgb.getcolors(maxcolors=rgb.width * rgb.height)
+    if colors is None:
+        raise RuntimeError(f"could not inspect semantic colors in {path}")
+    return dict((pixel, count) for count, pixel in colors).get(color, 0)
+
+
+def require_color_presence(
+    path: Path,
+    color: tuple[int, int, int],
+    subject: str,
+    *,
+    minimum: int = 16,
+) -> None:
+    if exact_color_pixels(path, color) < minimum:
+        raise RuntimeError(f"expected semantic color is absent from {subject}: {path}")
+
+
+def require_color_growth(
+    before: Path,
+    after: Path,
+    color: tuple[int, int, int],
+    subject: str,
+) -> None:
+    before_count = exact_color_pixels(before, color)
+    after_count = exact_color_pixels(after, color)
+    minimum_growth = max(1_000, before_count // 2)
+    if after_count - before_count < minimum_growth:
+        raise RuntimeError(
+            f"expected semantic color growth is absent from {subject}: "
+            f"{before_count} -> {after_count} pixels"
+        )
+
+
 def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
     try:
         returncode = process.wait(timeout=5)
@@ -956,21 +992,58 @@ def single_case(session: LiveSession) -> None:
         ],
         wait_seconds=2,
     )
-    session.screenshot(f"sddm-test-mode-{label}")
-    session.screenshot(f"sddm-username-focus-{label}")
-    for _ in range(3):
+    # In SDDM test mode the first injected Tab resumes from the final power
+    # action even though the inactive greeter still paints username focus.
+    # Traverse the explicit cyclic KeyNavigation chain to the primary action.
+    for _ in range(4):
         session.input("keys", "--hold-ms", 80, TAB)
-    sddm_before = session.screenshot(f"sddm-login-focus-{label}")
     session.input("keys", "--hold-ms", 80, ENTER)
     time.sleep(0.5)
     sddm_validation = session.screenshot(f"sddm-enter-validation-{label}")
-    require_visual_change(sddm_before, sddm_validation, "SDDM Enter validation")
-    session.input("keys", "--hold-ms", 80, SHIFT, TAB)
-    session.screenshot(f"sddm-session-focus-{label}")
+    require_color_presence(sddm_validation, (255, 107, 122), "SDDM Enter validation")
+    session.stop_process(sddm)
+
+    sddm = session.launch(
+        [
+            "sddm-greeter-qt6",
+            "--test-mode",
+            "--theme",
+            str(
+                Path("/usr/share/sddm/themes/NoxForge")
+                if session.args.system_package
+                else ROOT / "sddm/NoxForge"
+            ),
+        ],
+        wait_seconds=2,
+    )
+    for _ in range(3):
+        session.input("keys", "--hold-ms", 80, TAB)
     session.input("keys", "--hold-ms", 80, SPACE)
     time.sleep(0.5)
     sddm_menu = session.screenshot(f"sddm-space-session-menu-{label}")
-    require_visual_change(sddm_validation, sddm_menu, "SDDM Space session menu")
+    require_color_growth(
+        sddm_validation,
+        sddm_menu,
+        (163, 255, 71),
+        "SDDM Space session menu",
+    )
+    session.stop_process(sddm)
+
+    sddm = session.launch(
+        [
+            "sddm-greeter-qt6",
+            "--test-mode",
+            "--theme",
+            str(
+                Path("/usr/share/sddm/themes/NoxForge")
+                if session.args.system_package
+                else ROOT / "sddm/NoxForge"
+            ),
+        ],
+        wait_seconds=2,
+    )
+    session.screenshot(f"sddm-test-mode-{label}")
+    session.screenshot(f"sddm-username-focus-{label}")
     session.stop_process(sddm)
 
     splash = session.launch(

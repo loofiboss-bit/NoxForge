@@ -76,6 +76,9 @@ class V7PhaseFiveTests(unittest.TestCase):
 
     def test_phase_five_sources_do_not_mutate_or_activate_host_configuration(self) -> None:
         combined = "\n".join((SDDM, LOGOUT, TABBOX))
+        self.assertIn("Keys.onPressed", SDDM)
+        self.assertIn("Qt.Key_Enter", SDDM)
+        self.assertIn("Qt.Key_Space", SDDM)
         for forbidden in (
             "plasma-apply-lookandfeel",
             "kwriteconfig",

@@ -85,6 +85,9 @@ class V7PhaseEightTests(unittest.TestCase):
             "blur_state_capture(session, label)",
             "tabbox_state_matrix(session, label)",
             "sddm-enter-validation",
+            "require_color_presence(sddm_validation, (255, 107, 122)",
+            "require_color_growth(",
+            "for _ in range(4):",
             "logout-cancel-focus",
         ):
             self.assertIn(fragment, single_case)
