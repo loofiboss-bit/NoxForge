@@ -157,6 +157,7 @@ class V7PhaseEightTests(unittest.TestCase):
         self.assertIn("while (settle.elapsed() <= 40)", source)
         self.assertIn("immediateSettleMs = settle.elapsed()", source)
         self.assertIn("observationInitialHash = hash", source)
+        self.assertIn("renderMotionFrame(application, button, true)", source)
         self.assertIn('report.insert(QStringLiteral("immediateSettleMs")', source)
         self.assertIn("Qt::WA_TransparentForMouseEvents", source)
         self.assertIn("button->setFocusPolicy(Qt::NoFocus)", source)

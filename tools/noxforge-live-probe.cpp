@@ -11,11 +11,13 @@
 #include <QJsonObject>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QPushButton>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStyle>
 #include <QStyleFactory>
+#include <QStyleOptionButton>
 #include <QThread>
 #include <QVBoxLayout>
 
@@ -60,6 +62,28 @@ QJsonObject commonReport(QApplication &application)
          QString::fromLatin1(application.style()->metaObject()->className())},
         {QStringLiteral("styleObjectName"), application.style()->objectName()},
     };
+}
+
+QImage renderMotionFrame(QApplication &application, QPushButton *button, bool pressed)
+{
+    const qreal devicePixelRatio = button->devicePixelRatioF();
+    const QSize pixelSize = (QSizeF(button->size()) * devicePixelRatio).toSize();
+    QImage image(pixelSize, QImage::Format_RGBA8888);
+    image.setDevicePixelRatio(devicePixelRatio);
+    image.fill(Qt::transparent);
+
+    QStyleOptionButton option;
+    option.initFrom(button);
+    option.rect = QRect(QPoint(0, 0), button->size());
+    option.text = button->text();
+    option.state |= QStyle::State_Active | QStyle::State_Enabled;
+    option.state &= ~(QStyle::State_MouseOver | QStyle::State_HasFocus | QStyle::State_Sunken);
+    if (pressed)
+        option.state |= QStyle::State_Sunken;
+
+    QPainter painter(&image);
+    application.style()->drawControl(QStyle::CE_PushButton, &option, &painter, button);
+    return image;
 }
 
 int layoutProbe(QApplication &application, const QString &reportPath, bool rtl, bool pseudo)
@@ -162,7 +186,7 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
         QThread::msleep(4);
     }
 
-    const QImage initial = button->grab().toImage().convertToFormat(QImage::Format_RGBA8888);
+    const QImage initial = renderMotionFrame(application, button, false);
     const QString initialHash = imageHash(initial);
     if (!framesPrefix.isEmpty())
         initial.save(framesPrefix + QStringLiteral("-initial.png"));
@@ -178,8 +202,7 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
         QString previousSettleHash = initialHash;
         while (settle.elapsed() <= 40) {
             application.processEvents(QEventLoop::AllEvents, 8);
-            const QString hash = imageHash(
-                button->grab().toImage().convertToFormat(QImage::Format_RGBA8888));
+            const QString hash = imageHash(renderMotionFrame(application, button, true));
             if (hash != previousSettleHash)
                 immediateSettleMs = settle.elapsed();
             previousSettleHash = hash;
@@ -203,7 +226,7 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     while (timer.elapsed() <= observationWindow)
     {
         application.processEvents(QEventLoop::AllEvents, 8);
-        const QImage frame = button->grab().toImage().convertToFormat(QImage::Format_RGBA8888);
+        const QImage frame = renderMotionFrame(application, button, true);
         const QString hash = imageHash(frame);
         ++samples;
         if (!distinctHashes.contains(hash))
@@ -226,7 +249,7 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
         finalHash = hash;
         QThread::msleep(8);
     }
-    const QImage final = button->grab().toImage().convertToFormat(QImage::Format_RGBA8888);
+    const QImage final = renderMotionFrame(application, button, true);
     finalHash = imageHash(final);
     if (!framesPrefix.isEmpty())
         final.save(framesPrefix + QStringLiteral("-final.png"));
