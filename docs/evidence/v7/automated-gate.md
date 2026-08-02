@@ -2,7 +2,7 @@
 
 The stable local gate runs against the exact `7.0.0` source without installing
 or applying NoxForge on the maintainer host. It covers repository validation,
-142 active Python tests with nine historical v6 skips, four sanitizer probes,
+152 active Python tests with nine historical v6 skips, four sanitizer probes,
 46 CTest cases, QML lint, deterministic generators, byte-identical source
 archives, Fedora 44 SRPM/RPM construction, clean `rpmlint`, isolated user and
 system install trees, repeated install, rollback, uninstall, configuration

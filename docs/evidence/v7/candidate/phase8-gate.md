@@ -6,7 +6,7 @@ Date: 2026-08-02
 
 `LOCAL GATE PASSED; RELEASE GATE OPEN`.
 
-- 142 active Python tests passed; nine historical v6 modules skipped.
+- 152 active Python tests passed; nine historical v6 modules skipped.
 - Four sanitizer probes passed.
 - 46 CTest cases passed.
 - QML lint and every deterministic generator/evidence check passed.

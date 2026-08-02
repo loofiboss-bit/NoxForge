@@ -70,7 +70,7 @@ disposable Fedora 44 package matrix passes public v6 installation, v6-to-v7
 upgrade, repeated install, rollback, uninstall, fresh v7 install, `rpm -V`,
 `noxforge-doctor`, and KDE/SDDM configuration preservation.
 
-The v7 gate derives its counts from actual output: 142 active Python tests,
+The v7 gate derives its counts from actual output: 152 active Python tests,
 nine historical v6 skips, 46 CTest cases, four sanitizer probes, QML lint,
 deterministic generation, byte-identical archives, SRPM/RPM build, and clean
 `rpmlint`. Hardware blur, audible routing, physical cursor scaling, PAM

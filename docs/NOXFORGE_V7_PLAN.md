@@ -554,7 +554,7 @@ Prepare a local, exact-source candidate without publication or host mutation.
 `release: prepare the v7 operational precision candidate`
 
 **Outcome (2026-08-02):** Phase 8 is locally complete and the v7 release gate
-remains open. The full local gate passes 142 active Python tests with nine
+remains open. The full local gate passes 152 active Python tests with nine
 historical v6 modules skipped, four sanitizer probes, 46 CTest cases, QML lint,
 deterministic generators, byte-identical source archives, Fedora development
 SRPM/RPM construction, `rpmlint` with zero errors/warnings, isolated user and

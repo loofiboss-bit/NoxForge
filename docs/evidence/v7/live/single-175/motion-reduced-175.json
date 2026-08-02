@@ -14,7 +14,7 @@
     "observationWindowMs": 240,
     "probe": "noxforge-live-probe",
     "result": "passed",
-    "sampleCount": 28,
+    "sampleCount": 27,
     "styleClass": "NoxForgeStyle",
     "styleHintDurationMs": 0,
     "styleObjectName": "noxforge"

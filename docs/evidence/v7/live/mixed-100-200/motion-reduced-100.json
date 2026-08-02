@@ -3,7 +3,7 @@
     "distinctTransitionFrames": 1,
     "finalSha256": "219dba5bd1406e27568d25d11435c2e5a0f8b4f96cbe9cb200c26bc0b1336f0a",
     "firstChangeMs": -1,
-    "immediateSettleMs": 0,
+    "immediateSettleMs": 9,
     "initialSha256": "07b993480d1963cb493565dd98545d1eb00674c5b0243871efd09fc0ea073642",
     "intermediateFrameCaptured": false,
     "intermediateFrameMs": -1,
@@ -14,7 +14,7 @@
     "observationWindowMs": 240,
     "probe": "noxforge-live-probe",
     "result": "passed",
-    "sampleCount": 27,
+    "sampleCount": 26,
     "styleClass": "NoxForgeStyle",
     "styleHintDurationMs": 0,
     "styleObjectName": "noxforge"

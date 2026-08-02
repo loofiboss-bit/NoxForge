@@ -1,0 +1,10 @@
+{
+    "applicationIconNull": true,
+    "mode": "iconless-window",
+    "probe": "noxforge-live-probe",
+    "result": "passed",
+    "styleClass": "NoxForgeStyle",
+    "styleObjectName": "noxforge",
+    "title": "NoxForge genuine iconless client",
+    "windowIconNull": true
+}

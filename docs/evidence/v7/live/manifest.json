@@ -11,7 +11,7 @@
   },
   "package": {
     "nevra": "noxforge-7.0.0-1.fc44.x86_64",
-    "sha256": "2db535913ae2ab20479745c0df66d152f63367d25af4343e61c51f38a7c08c12",
+    "sha256": "02a617c66b034adad66c90779a6bdac68a1572b2db8b15a7139e2de096b20788",
     "rpmVerify": "passed",
     "doctorStatus": "ok",
     "expectedVersion": "7.0.0",
@@ -65,7 +65,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 199.052
+      "seconds": 216.405
     },
     {
       "id": "single-125",
@@ -87,7 +87,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 195.414
+      "seconds": 208.822
     },
     {
       "id": "single-140",
@@ -109,7 +109,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 177.453
+      "seconds": 206.707
     },
     {
       "id": "single-150",
@@ -131,7 +131,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 173.13
+      "seconds": 209.611
     },
     {
       "id": "single-175",
@@ -153,7 +153,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 173.026
+      "seconds": 206.736
     },
     {
       "id": "single-200",
@@ -175,7 +175,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 163.107
+      "seconds": 208.099
     },
     {
       "id": "mixed-100-140",
@@ -198,7 +198,7 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 204.276
+      "seconds": 275.118
     },
     {
       "id": "mixed-100-200",
@@ -221,105 +221,93 @@
         "rtl-layout",
         "runtime-readback"
       ],
-      "seconds": 202.769
+      "seconds": 265.172
     }
   ],
   "files": {
     "mixed-100-140/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "mixed-100-140/blur-disabled-100.png": {
-      "sha256": "6e4a68e8cdb24fb45f429b26b40ed69b2c3657734f3fc10aaa41b770e28a16e6",
-      "bytes": 461397,
-      "pixelSize": [
-        6582,
-        2160
-      ]
-    },
-    "mixed-100-140/blur-enabled-100.png": {
-      "sha256": "82a29cf2d8e1cfcbb28111f544bc75721fb7af376a18df66b0afa237183f5719",
-      "bytes": 512584,
-      "pixelSize": [
-        6582,
-        2160
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "mixed-100-140/core-icon-gallery-100.png": {
-      "sha256": "469d63a2af2068668424a829f48738632b6926c99e9dba519942cc1c5c68a90e",
-      "bytes": 338641,
+      "sha256": "db7f6e83a81dc51d79b55f0f9e5b96379595a1a0058b062afe0c81eb182299a1",
+      "bytes": 331667,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/desktop-baseline.png": {
-      "sha256": "03192ab50ccd11afd4af907c828ef39ed020176ca666c943abc95d5d99d101a8",
-      "bytes": 499303,
+      "sha256": "c8a76345347431029096e79144dd8deed431f3e4c73e6148ed7aa396b2107375",
+      "bytes": 494058,
       "pixelSize": [
         6582,
         2160
       ]
     },
+    "mixed-100-140/doctor-runtime.json": {
+      "sha256": "810531c6544464bedcff2c5e73028ef270a3da4f468d0d751cd1ab35334933d9",
+      "bytes": 3140
+    },
     "mixed-100-140/dolphin-maximized-100-restored-focus.png": {
-      "sha256": "b402ba405a1a2f615fe59af5ac10980c62283012b63e90c3dcb93b67e12b44a1",
-      "bytes": 565248,
+      "sha256": "b2ffaf0880062edcd1f36708c158a5bb1790dbd57e96792b671c150cc566f3d6",
+      "bytes": 557133,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/dolphin-maximized-100.png": {
-      "sha256": "ecaf4b46b509082a3a359b91c9362e2d45fa2ecdc7a60b06e884e2c9d002f0b0",
-      "bytes": 394908,
+      "sha256": "fb9b67ad027d1a77e017b47de23d5043e8ff4d1d673c4542666e289ccbffcd3d",
+      "bytes": 387234,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/firefox-maximized-100-restored-focus.png": {
-      "sha256": "77c89a0907f331430e082b46b372d17c81b576bfd8138b8af642e7d65accdd6c",
-      "bytes": 418810,
+      "sha256": "add4b411683508a64f2a723f6186948d9bbccd00f6b2c9729189b6b72d9b67de",
+      "bytes": 412587,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/firefox-maximized-100.png": {
-      "sha256": "289bc1a651e72c8f90d49140bff1edc9ecebe58c479bf1ba9ad3cd3e67ea6d89",
-      "bytes": 310779,
+      "sha256": "1d9bc9fdf728adba364dc421d9b65442705d3a632da3e6ec7a0279d73f949918",
+      "bytes": 304175,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/konsole-alt-mnemonic-100.png": {
-      "sha256": "403066634e0592bed77ddbd6627f8cb1a97115f8a1f84dc6534588cc174308ac",
-      "bytes": 491810,
+      "sha256": "75c95199320513ed52cd7e5e85fec25de7ebbdd4b5cf662507e5691517390e6b",
+      "bytes": 483486,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/konsole-fullscreen-100.png": {
-      "sha256": "ec1342a13a776ccc965c5a134522eb0e6a0461f93acd198f7ca5f5dc1ab6eaa2",
-      "bytes": 531939,
+      "sha256": "77149726df90b7ca06340663ddec8bb21bf55f409d4041b8a400c4093cc53984",
+      "bytes": 526296,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/konsole-maximized-100-restored-focus.png": {
-      "sha256": "f92e30a77ed6ca555b9ee6551da50fea5b0f2fe70934fc24282d3e1ccebe2dcb",
-      "bytes": 498008,
+      "sha256": "d35f5941e58d97e581e706f2188c60690f407333d8dcb6bd30c516defa3bb6ca",
+      "bytes": 490186,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/konsole-maximized-100.png": {
-      "sha256": "bcd85f139c8bca7bbe6868af1867d3630b04cb84548ceeff207adce96bfa6961",
-      "bytes": 320104,
+      "sha256": "b130b1fe06f1bbae4c8e10ca24518645d64d683f0001fbddf296509c2d2f20ad",
+      "bytes": 311973,
       "pixelSize": [
         6582,
         2160
@@ -334,8 +322,8 @@
       "bytes": 377
     },
     "mixed-100-140/layout-ltr-100.png": {
-      "sha256": "fa0a022b5cf33f3412bb192c79a9548d9cc50c3fb70e8b5674b6f8036f0e7338",
-      "bytes": 510567,
+      "sha256": "a53445732573999dc3492afaa85b05f292c478a3a2ee8cb9027ce2af3f8329d6",
+      "bytes": 503453,
       "pixelSize": [
         6582,
         2160
@@ -350,32 +338,32 @@
       "bytes": 378
     },
     "mixed-100-140/layout-rtl-100.png": {
-      "sha256": "0dacc46f5101ae993bee4d29535c7fdd26e367af1dce62354af552214e9a4f8e",
-      "bytes": 510529,
+      "sha256": "52b38a1ea4664ea2597981537a7609cb7aa47eb249dd9afebefdce3627f97909",
+      "bytes": 503457,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/layout-translation-expansion-100.png": {
-      "sha256": "1dd84baa5d0ec475139ea5a2f51d6c02c0d84e4508871aab43535fc380c5ceeb",
-      "bytes": 516296,
+      "sha256": "77590247a99449f64c61026149531c57c4f9ff9ece12046bdaab3d4e92b9b34f",
+      "bytes": 509466,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/logout-cancel-focus-100.png": {
-      "sha256": "fa2ad694aaa46bc2be50d9dfb0e3d5bd465a1cc3c7c6ed1bf9a79f7f218975a2",
-      "bytes": 414864,
+      "sha256": "4492ac8bed12758fcd2e5bdcf2959970065d0df2aceb686d3ad0b8161fb35861",
+      "bytes": 408392,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/logout-windowed-100.png": {
-      "sha256": "337ba535b8dfefe6e7cb091be6d0314df1b904002ed09291e127000a713e5a51",
-      "bytes": 414640,
+      "sha256": "4a281bc84e880d46bd93d9a74925ae37c073468ca9f6b5da07b97e3565301ecb",
+      "bytes": 408177,
       "pixelSize": [
         6582,
         2160
@@ -386,32 +374,32 @@
       "bytes": 1
     },
     "mixed-100-140/mixed-100-140-applications.png": {
-      "sha256": "b03426e62407eb015035fd72587388363a86a92de38fbfa9851ee0956bd35117",
-      "bytes": 502347,
+      "sha256": "6bcf84dcd8cad8e8ffd8a943a7d6be5899a32b9346b94366c4675976bf0e9d25",
+      "bytes": 496991,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/mixed-100-140-systemsettings-left.png": {
-      "sha256": "7de5524bd9e05428e4175c829a6fa7055c349a76c31c95c2214e1aa9429f297b",
-      "bytes": 540314,
+      "sha256": "e75c2f1c1afca98cf1c7c9ff5806ad1fbc1b3bb7328c0543d833f2692c057eef",
+      "bytes": 533294,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/mixed-100-140-systemsettings-right.png": {
-      "sha256": "4f51af62b1b571a7237d702a0296e6f12906ca8ca5e9d03253a5afe9e93e725e",
-      "bytes": 1114345,
+      "sha256": "67838083e7e9bc355bf7989598b06c43b8452cdae2c95505697222e335340ec0",
+      "bytes": 1112625,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/mixed-100-140-systemsettings-transition.png": {
-      "sha256": "0284382d4a06455af3d006ce6a80414b8d05e8e5cd4c6182367a9830f9f94e5e",
-      "bytes": 1088131,
+      "sha256": "9a825e3a84c71bb582cc2c6f15df35dddf2ef95ba0bfe1a6795bc2cf70ae1c4b",
+      "bytes": 1088143,
       "pixelSize": [
         6582,
         2160
@@ -442,12 +430,12 @@
       ]
     },
     "mixed-100-140/motion-normal-100.json": {
-      "sha256": "15c3870222d749c0c86b41728f5378158159a80628a61447b922cd1a66bc33c4",
+      "sha256": "62e3a2e5989b334609610d5c792863e6b16ee67619055864a98d2f923f894a81",
       "bytes": 759
     },
     "mixed-100-140/motion-normal-settled-100.png": {
-      "sha256": "29f39c9407c383b2b1da6dc829d0203a4acdb8a7635ad2a6e2ecc02c1586b7f9",
-      "bytes": 504903,
+      "sha256": "10054a0687d837bb9bb7e145ebbdbb321644d31812f14c4473c91e6fa76a9d20",
+      "bytes": 500701,
       "pixelSize": [
         6582,
         2160
@@ -470,12 +458,12 @@
       ]
     },
     "mixed-100-140/motion-reduced-100.json": {
-      "sha256": "bb4f852102161b18e12b857873c52b49b90bc946a9e81a6b3a35d247b5592ddf",
+      "sha256": "cffeb90da886c077390cacfcb0febed02afe0271aa8a97c3e8f51f5775e61c19",
       "bytes": 693
     },
     "mixed-100-140/motion-reduced-settled-100.png": {
-      "sha256": "29f39c9407c383b2b1da6dc829d0203a4acdb8a7635ad2a6e2ecc02c1586b7f9",
-      "bytes": 504903,
+      "sha256": "10054a0687d837bb9bb7e145ebbdbb321644d31812f14c4473c91e6fa76a9d20",
+      "bytes": 500701,
       "pixelSize": [
         6582,
         2160
@@ -498,20 +486,20 @@
       ]
     },
     "mixed-100-140/motion-slow-100-intermediate.png": {
-      "sha256": "9a1db1fbac425b22fee276e29da8ed3dfd597322f3f81956085781c7165b1de1",
-      "bytes": 3450,
+      "sha256": "08253b53067eca33e01b4cf2a210fbb92b072ac1f97f12ce21768c08e041852d",
+      "bytes": 3452,
       "pixelSize": [
         360,
         72
       ]
     },
     "mixed-100-140/motion-slow-100.json": {
-      "sha256": "d6776b31688cfb865e6695d71e9a76da09c0d8fb7ce9e85c63fdd8b2f6add976",
+      "sha256": "715dd415bc0fc82c0597cda0289f33228e0351ca9d40a3537a36b89a0e5b4e63",
       "bytes": 763
     },
     "mixed-100-140/motion-slow-settled-100.png": {
-      "sha256": "29f39c9407c383b2b1da6dc829d0203a4acdb8a7635ad2a6e2ecc02c1586b7f9",
-      "bytes": 504903,
+      "sha256": "10054a0687d837bb9bb7e145ebbdbb321644d31812f14c4473c91e6fa76a9d20",
+      "bytes": 500701,
       "pixelSize": [
         6582,
         2160
@@ -522,320 +510,460 @@
       "bytes": 36
     },
     "mixed-100-140/outputs.txt": {
-      "sha256": "50847a60d32a76acb7e24f6aa4d6161e8e81a4c93ac9a708d9b35bce57390d84",
+      "sha256": "c683c040f20814390b096470a2b51334b39bfa726e9ecf044721cca6bdd887f2",
       "bytes": 1190
     },
-    "mixed-100-140/plasma-calendar-100.png": {
-      "sha256": "872099b25990c70743fec6a67a7cbaffa3b5a2921315ad6b95797a735c7f3783",
-      "bytes": 487241,
+    "mixed-100-140/plasma-calendar-blur-disabled-100.png": {
+      "sha256": "64778facae3885271c026fa4bd95732e2d59d7a431f79a196cd9c62b17415124",
+      "bytes": 480433,
       "pixelSize": [
         6582,
         2160
       ]
     },
-    "mixed-100-140/plasma-launcher-100.png": {
-      "sha256": "c9eab930cf3b744fab5c2ea83c9d0fa71aaf6041de46d6d894bfe879f04a79c9",
-      "bytes": 731445,
+    "mixed-100-140/plasma-calendar-blur-enabled-100.png": {
+      "sha256": "8162fe7c1d3a5d57e3ea5dfafeeb794d9fd2f71f1628f226e3b96c9813ab9e16",
+      "bytes": 745464,
       "pixelSize": [
         6582,
         2160
       ]
     },
-    "mixed-100-140/plasma-notification-100.png": {
-      "sha256": "87ba2cbbc53c6fb947f8a8d261d8ad442e23aff012e27b7f559a9c0d2820b834",
-      "bytes": 532217,
+    "mixed-100-140/plasma-containments.ini": {
+      "sha256": "4a1a15e71858e3e0543c5a6558fe7844d95b59ed43773b565d4bf24c83de877c",
+      "bytes": 3435
+    },
+    "mixed-100-140/plasma-dialog-blur-disabled-100.png": {
+      "sha256": "0259a55fd617c8258ad5cf398df5ea875efbc09973e054cd2bd8c9bb6d91af3e",
+      "bytes": 456780,
       "pixelSize": [
         6582,
         2160
       ]
     },
-    "mixed-100-140/plasma-osd-100.png": {
-      "sha256": "fbbf4e658e6b06edd1874803dc85ceac5637f597126ccccc8d2d6390cfda624a",
-      "bytes": 541364,
+    "mixed-100-140/plasma-dialog-blur-enabled-100.png": {
+      "sha256": "becf8edd47468e50caea8d43ec5275a7376b02c32f5a0d4a3382a53ec1567e82",
+      "bytes": 508486,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-launcher-blur-disabled-100.png": {
+      "sha256": "765b7fe6a4ec616ea90729edec137cdc9c826516d06c501eceb4dff02d0b2bb1",
+      "bytes": 468502,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-launcher-blur-enabled-100.png": {
+      "sha256": "1810cb6d145aede280c1efe7bb69992b6fbed36886685d8cfd1563fc91bdca5b",
+      "bytes": 725871,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-notification-blur-disabled-100.png": {
+      "sha256": "6621755eb77f4cf6a555214e1033d80147bcd12a76b8a7f130ba364b56f8f251",
+      "bytes": 456727,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-notification-blur-enabled-100.png": {
+      "sha256": "de0b7e79ea4e0aa11ebe7423096672b808004df7a0b833053ed6636f9a339742",
+      "bytes": 525698,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-osd-blur-disabled-100.png": {
+      "sha256": "31ab2636a6f5cbce310e5fe1e16f5120eb46801dbb03c0b44dce105edcb309ac",
+      "bytes": 450877,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-osd-blur-enabled-100.png": {
+      "sha256": "6cbf7c8118356cde2dca9aaeeaccdf2f9877a9f7a34de55f428feff28e58fab3",
+      "bytes": 503003,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/plasma-panel-bottom-100.png": {
-      "sha256": "27ec3e4e426709efca853be90518680848950cd3ef2db1255c5eed668b696308",
-      "bytes": 499329,
+      "sha256": "6c2fce4dcf74d4ad4f488eea6815caf4d81c63081c856796c2deee56daafa753",
+      "bytes": 494034,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/plasma-panel-left-100.png": {
-      "sha256": "12e38bee14f21be30d0f1d7a2022e120dbd468c0886b30e4455afe2d8d36cb85",
-      "bytes": 490507,
+      "sha256": "868f5c64c9ba0a72b5fcfb9b4fc5a4c43f7de023d7cfd98caae9d315a3e2cf0a",
+      "bytes": 483670,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/plasma-panel-right-100.png": {
-      "sha256": "a85a1cfafa4bced561afeb62c4b57f26b79fbd12c9e23efeb97a21a4086db9f6",
-      "bytes": 488581,
+      "sha256": "7286f53b6df1fac222bb48d989f49915279274a08cd9faed2ba4e5ddd6c68624",
+      "bytes": 481241,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/plasma-panel-top-100.png": {
-      "sha256": "efb48b4b625aca95823ce83f23900721e200c6ee2332dd899d24d7c3a8c57b68",
-      "bytes": 500667,
+      "sha256": "71d7450169aebc25fc66a0b41c7be839e69facbdfd35715c063144eef4ae1c41",
+      "bytes": 494563,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-popup-blur-disabled-100.png": {
+      "sha256": "6a9a9ea2fa8b09c59f8d19afbf7fd30dcbf05c16242a7f2405449e05ffbeaaa9",
+      "bytes": 470683,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-popup-blur-enabled-100.png": {
+      "sha256": "96fd818781e0d45954d39f68767e8bab114e320c9edcb93f836c8dd131c24689",
+      "bytes": 522298,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-shell-baseline-blur-disabled-100.png": {
+      "sha256": "52888636c0b13ea4bb31b1d4bf7fe204917e01cefc4d26a36baaec0b02861e52",
+      "bytes": 442894,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-shell-baseline-blur-enabled-100.png": {
+      "sha256": "148775ffec705be989509a799fb9a33a3ad3ebed91dc4240351206073c47178d",
+      "bytes": 494074,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-task-manager-blur-disabled-100.png": {
+      "sha256": "8c525b328b85bbdd9f923b3e880ddd13d781f1ed5d6d15a7c24df574f274b46a",
+      "bytes": 443029,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-task-manager-blur-enabled-100.png": {
+      "sha256": "ebe928d1e896e609c1d2427856d1f9fe25fdf5dadd5ff3d0b955c90b660a5b39",
+      "bytes": 494515,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tooltip-before-blur-disabled-100.png": {
+      "sha256": "b4861f688cb136a4265f92dbd6f8b4b79bde17015f71debb7edbe58590334182",
+      "bytes": 438035,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tooltip-before-blur-enabled-100.png": {
+      "sha256": "de082e704c580e0138234c9418e6e271ac574d37df06c0a8ac17ff94aad6e334",
+      "bytes": 489628,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tooltip-blur-disabled-100.png": {
+      "sha256": "80314fd3d8cc8122308f2c00533e46792fc12e4fffbbc3a8990f2bdbf8343bb0",
+      "bytes": 435376,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tooltip-blur-enabled-100.png": {
+      "sha256": "0a897498ec105b36e895a1e8ec8bd2bafcd3e59d3c104d0a03ca53599016f560",
+      "bytes": 487087,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tray-blur-disabled-100.png": {
+      "sha256": "c70b039233fbd82484823753b1c5949a318639e9c66db4826630bb69c9dac75e",
+      "bytes": 471777,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/plasma-tray-blur-enabled-100.png": {
+      "sha256": "19be8b49e649abd389573fac9cfebafdfef00d0468a047742f8389a7d035402e",
+      "bytes": 681831,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/qt-dialog-enter-before-100.png": {
-      "sha256": "cd3b22dcf7035fd8d17b64d6644b702e6b8b2ddb9e9ea68f68ae1d5d36c82820",
-      "bytes": 512729,
+      "sha256": "e320ef0e9da8eb35ffb2f5958de348cb4628cecaa3a10906c7d2d3a820b6a276",
+      "bytes": 505911,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/qt-dialog-space-before-100.png": {
-      "sha256": "39121710e3384e7022cc292f69a771ed2e04540e674d336cf2a421af94f82b30",
-      "bytes": 513339,
+      "sha256": "57dd63d69e5bc00fd5732476997e6768b04e0009a94bc2d128683c1b82228d12",
+      "bytes": 506564,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/sddm-enter-validation-100.png": {
-      "sha256": "255ce70eb5d3c974fb8f558074670cd667f6a060ba9af45f9693ee00bbf05271",
-      "bytes": 440769,
+      "sha256": "005d688423ce6d3879b414e50e26b471724bf835fc43544feea2d8cfa8a0206a",
+      "bytes": 443295,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/sddm-test-mode-100.png": {
-      "sha256": "45ce9e4748138d21c657feddac2cc24d85fcb69f12b7e223ebb0adbc8778167e",
-      "bytes": 425113,
+      "sha256": "92eede0b76abaf60506f3a29977cea9448e30f1872cc4c4f1baf97690b63fce7",
+      "bytes": 426954,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/sddm-username-focus-100.png": {
-      "sha256": "45ce9e4748138d21c657feddac2cc24d85fcb69f12b7e223ebb0adbc8778167e",
-      "bytes": 425113,
+      "sha256": "92eede0b76abaf60506f3a29977cea9448e30f1872cc4c4f1baf97690b63fce7",
+      "bytes": 426954,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/splash-windowed-100.png": {
-      "sha256": "bf27f1a2b993b7671a330eecbbfb5240c8f899f7f6dd6da49c6b65bd5ea73281",
-      "bytes": 116841,
+      "sha256": "bdce75c9bf0c197609a79c791cb261cf6df3aa335bf8b4c64fe11a1718482095",
+      "bytes": 116844,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-keyboard-focus-100.png": {
-      "sha256": "458aa980db4a66fa411d037246708f1c26e8d778da3b8b0fb0777d863091be8e",
-      "bytes": 652456,
+      "sha256": "b1f5a3099b67e6d651ddefa23abd3ed782486d3876d5be4ecaa326751e781a1e",
+      "bytes": 645346,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-maximized-100-restored-focus.png": {
-      "sha256": "1cdbc4d3aa00922b7b27f67c0f2d1735b3d79f50881cb1db6bb4e98f9dd98a55",
-      "bytes": 652377,
+      "sha256": "b5b6dc24c29cf3ba7e9d4a85e899fc3e7d25a05225feace68e64428d6a9bae22",
+      "bytes": 645265,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-maximized-100.png": {
-      "sha256": "e800452f144772fef5ef77c920c346bb7ee2af54291fe4f8fe096cc2a24b4461",
-      "bytes": 540288,
+      "sha256": "a8909e9ed00bba5be63d79fa48413351227c0fcc968b7ea2f3fb47bfcc6ab7cc",
+      "bytes": 533257,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-minimized-task-100.png": {
-      "sha256": "49a6f304e062df9e4faddcc052556aab0fed50a3ab1f02abebf72dcee5173315",
-      "bytes": 499908,
+      "sha256": "ff4b5c7e6993b53ae0b943947fc805d2c2d19e949b6d7a0399f695afeb9d8981",
+      "bytes": 494473,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-quick-tile-left-100.png": {
-      "sha256": "b39b183f6478805a064c511b95dfe09e888530b972cd4b679f0eb95d8cb28f15",
-      "bytes": 572474,
+      "sha256": "eb929a945f1ac539f960d21ed9e895915523dd9223a0d93efeae50ef82b43789",
+      "bytes": 565929,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/systemsettings-quick-tile-right-100.png": {
-      "sha256": "d3a3badc054acb8c4b9b950b7a9ec5c367b27ceaf68353230f805f75cf14adfe",
-      "bytes": 1081399,
+      "sha256": "33780a871ac3f7c2f02a4c20af037ee023a3ca15dc2ddf91809ab18d2777d0c0",
+      "bytes": 1082149,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-empty-100.png": {
-      "sha256": "0f88c82903b102286166456e93bfee9d1964ae1a585eebf98749fdc97d580585",
-      "bytes": 461365,
+      "sha256": "44ad9db877d60b3145e376fa9930524c817065c8f2c8bea2782fbeb23aa75542",
+      "bytes": 454463,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-error-100.png": {
-      "sha256": "25397a8e73ef71104a5b570b907e356593d838514cdd485fe11c62468d66839f",
-      "bytes": 1046861,
+      "sha256": "150b471d8f922747d9d9ac50b7bfff1b322d66cfb9c1a917b7b58101ef2955d6",
+      "bytes": 1043951,
       "pixelSize": [
         6582,
         2160
       ]
     },
+    "mixed-100-140/tabbox-iconless-client-100.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "mixed-100-140/tabbox-long-title-100.png": {
-      "sha256": "82e2135e7ad0e65547e25a3efffbbbe852c40517718700bf88b9bc805c7f9112",
-      "bytes": 1059517,
+      "sha256": "c5b756b9819a45fead2822b1571bef75d593f620f5983159ced246119fe8b53c",
+      "bytes": 1057066,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-many-100.png": {
-      "sha256": "f56aa3c85b3a3c5e85c25706ef0cef0cfbe4dc1ec1efaf4005056815713d4270",
-      "bytes": 1037289,
+      "sha256": "2fd9931655aa9e9ad712170f1b14f069bb7ceb1dc138b301ceb8515959854012",
+      "bytes": 1028904,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-minimized-100.png": {
-      "sha256": "3d502a5c90f60a4bd8b8f7faf56d783738e74617ce5bda57d37559fe84d10e89",
-      "bytes": 784909,
+      "sha256": "cc2baafbab25819cb7c2c1b479a905aac3223383c3de2fab35b9500a08885565",
+      "bytes": 767389,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-missing-icon-100.png": {
-      "sha256": "ddf06e9f71a5aaca1e048f8ea429d12061786e8055098cd624be23db18afc034",
-      "bytes": 1056609,
+      "sha256": "d8c2617d3fd26fb6281355ead403fa0b434d2b744de64463e7a942d01b010e25",
+      "bytes": 1059096,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-140/tabbox-single-100.png": {
-      "sha256": "d9f31e38a87dc43bf9116eb2ec68049538acd836cc6ebaf0ffb993d9e8fdfd15",
-      "bytes": 459770,
+      "sha256": "52f874604998edf644182128f653aecc2b3e5777815046bebd9447ebe6b90504",
+      "bytes": 455156,
       "pixelSize": [
         6582,
         2160
       ]
     },
     "mixed-100-200/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "mixed-100-200/blur-disabled-100.png": {
-      "sha256": "709ece52ee7bdc8a4fdf9295cb8d6697747a2e256782c929e8a752ad8867c2be",
-      "bytes": 364736,
-      "pixelSize": [
-        5760,
-        2160
-      ]
-    },
-    "mixed-100-200/blur-enabled-100.png": {
-      "sha256": "9950efa71bfcad897450fe50c61f3b95ab67e522a9249967db7da9a3847323ae",
-      "bytes": 416105,
-      "pixelSize": [
-        5760,
-        2160
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "mixed-100-200/core-icon-gallery-100.png": {
-      "sha256": "1bf0c6859438c1717e77017a57c10a6034c877120e2cfdfa88637ac53ded9c34",
-      "bytes": 238246,
+      "sha256": "9dba87c3b74a1c03d051801fee9fdb4b230f3f1ddff967403cf3af2a5e335f26",
+      "bytes": 238173,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/desktop-baseline.png": {
-      "sha256": "92439c65f6b9e4fbc4fc4fce0c0299222c328cb1fec487e85b7fe0371adcc21b",
-      "bytes": 402468,
+      "sha256": "762b889303df54c6c83ba553fc3946a7da9a124c5f59ec61df83000d6f3b4db9",
+      "bytes": 402387,
       "pixelSize": [
         5760,
         2160
       ]
     },
+    "mixed-100-200/doctor-runtime.json": {
+      "sha256": "90687dfe8dde30e25ead48299cefc6f051feabbe7a6ce2c52af9cae09fbb586f",
+      "bytes": 3140
+    },
     "mixed-100-200/dolphin-maximized-100-restored-focus.png": {
-      "sha256": "2564657e7f898d99e22e8ba60fae6b3cf140465769e7490bfd89830670b6a064",
-      "bytes": 465143,
+      "sha256": "1e69f41ff195f5d14b1450974d30893285b371eb2dd4a50ec9546483c3128d8d",
+      "bytes": 463639,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/dolphin-maximized-100.png": {
-      "sha256": "5f2e43848ea4d66b96fbb0fbf733cc98676bbcf7d0fa1c733794ec4ea52990f6",
-      "bytes": 295003,
+      "sha256": "80ba80aeac730da1c7c961da52d402944a5a53b15d9bd4ca817414b36d935633",
+      "bytes": 293519,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/firefox-maximized-100-restored-focus.png": {
-      "sha256": "ddc6ae14ddb6dc2381577e838349fbd102a7bca7b52a2e1b03ffb5b1b067f195",
-      "bytes": 321183,
+      "sha256": "3afbafb0fc7c8961249dc596d28a90b1367bc862db6af61648798316805192f1",
+      "bytes": 321626,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/firefox-maximized-100.png": {
-      "sha256": "6285e46b130b1ff122721500afc1c233d6da6ed0266cef2f56fce4796e98f887",
-      "bytes": 211878,
+      "sha256": "24c3b522e3dcd6a4f0965f618102197374dd32e71e013800c9fdf5616e99fc97",
+      "bytes": 212165,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/konsole-alt-mnemonic-100.png": {
-      "sha256": "63c997cd6c7ed00e0a2a91f6f232258a67e3e7cdffc631d85bc106560656b553",
-      "bytes": 394395,
+      "sha256": "974f04ee12a4c9b07df9072742a54ab713c06745ce802e64584a156655c2b26a",
+      "bytes": 393756,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/konsole-fullscreen-100.png": {
-      "sha256": "6f1c2fee5a7493cae94c0977d43f0945999c31c172d09ea6b5234676cb400435",
-      "bytes": 329647,
+      "sha256": "5a01e56e9c860ecb024dfdb3867485c996271c2452d5cb775d806dc124d6f7e4",
+      "bytes": 327795,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/konsole-maximized-100-restored-focus.png": {
-      "sha256": "d22fe0b096634acc63bc0fd9fb9172f241f44ed8e8c4d36273865ea67d3e560b",
-      "bytes": 398744,
+      "sha256": "9428a60a388a47806864427ba56f20bfa607ec1b95f1dc3c8707ffc0df917fc0",
+      "bytes": 398198,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/konsole-maximized-100.png": {
-      "sha256": "af9a609e666decc569ed1153c1fa6151cf3fcd44386a300226d3a38667cea14b",
-      "bytes": 220305,
+      "sha256": "4baed6cde3fe50ed6d299c7d7e50693172e9c13f5112566ecb8e84c05d4cdd3d",
+      "bytes": 219842,
       "pixelSize": [
         5760,
         2160
@@ -850,8 +978,8 @@
       "bytes": 377
     },
     "mixed-100-200/layout-ltr-100.png": {
-      "sha256": "3af5025f96a190fc880a47e898ddcd508b80e1bd2536b850ae138ed43569a468",
-      "bytes": 412052,
+      "sha256": "3225ad5680369b80070429bfcdd5c361c40b06f0f3f16b58d2db235e00f5bb84",
+      "bytes": 412147,
       "pixelSize": [
         5760,
         2160
@@ -866,32 +994,32 @@
       "bytes": 378
     },
     "mixed-100-200/layout-rtl-100.png": {
-      "sha256": "d9cdd78037fe7fc0c0f34edc6a012f6947b4cc058a811dab2f86661156e24d59",
-      "bytes": 412017,
+      "sha256": "b5d5adf1f17d4242e6eeb84e0a13b3449778f0445412caee266213dc7203b77a",
+      "bytes": 412108,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/layout-translation-expansion-100.png": {
-      "sha256": "07df808f82124dee0f7cfd5745806224fdc0e58ce07c827202d1b710133c7e17",
-      "bytes": 417238,
+      "sha256": "0c7c4fea67049e883506cfc030c1c5fb1bd240462a44224c9923c9a32f4237b5",
+      "bytes": 417361,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/logout-cancel-focus-100.png": {
-      "sha256": "6baa6c103c387fe08afc821256d9b52556ba94ca7ec110fee6cd1b6408f148ab",
-      "bytes": 330511,
+      "sha256": "c01ba4d40b9424461c3555e33ef3f45d006867db88c266f88a7ea410fc2aa283",
+      "bytes": 330477,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/logout-windowed-100.png": {
-      "sha256": "3801ab61848f356bfc1b7dfd0d2feb2c57f1508f154861b9f3cf521d0ebada2e",
-      "bytes": 330269,
+      "sha256": "2350bd98db5d01202bde53c46242aa55dac0b220bab8b8720a38dfa8de8c91cd",
+      "bytes": 330209,
       "pixelSize": [
         5760,
         2160
@@ -902,32 +1030,32 @@
       "bytes": 1
     },
     "mixed-100-200/mixed-100-200-applications.png": {
-      "sha256": "6dfcd7d819563e8acb3045adcdba3ec6137e757e6993d3f026eb964e01cce4de",
-      "bytes": 403713,
+      "sha256": "8341fc6dd985dabf71ac8c995983205992fe0d10fd4e5d075dcf3a3f19c6db46",
+      "bytes": 402753,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/mixed-100-200-systemsettings-left.png": {
-      "sha256": "e11a0bd2e670837712fe5b42df20f22c837ed04885c31034bb19ee216cddb6f6",
-      "bytes": 436256,
+      "sha256": "6393d2c5bb085f20c168705de5f17d4ba6b83b92db642ef2d941a5bca8960321",
+      "bytes": 436307,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/mixed-100-200-systemsettings-right.png": {
-      "sha256": "feaa844c5f0bab3ffd79bc77d245a10962c04f247ec54f15277f5dc49aca34dd",
-      "bytes": 605259,
+      "sha256": "0e7dcdcf7ee4aa1c0440ceeb5489412d25134490a40b2c1835df178196a36ee6",
+      "bytes": 605433,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/mixed-100-200-systemsettings-transition.png": {
-      "sha256": "034c13967b3ff6cac30fce69815e6c876b7b8c3a86061987bc3b77dbef02c474",
-      "bytes": 587690,
+      "sha256": "f5c5ecf0380378eb72cc1a7f7485caae0b6e74b73ac4f362d5be329d67a6f728",
+      "bytes": 587808,
       "pixelSize": [
         5760,
         2160
@@ -950,20 +1078,20 @@
       ]
     },
     "mixed-100-200/motion-normal-100-intermediate.png": {
-      "sha256": "341c01ebae7720d386845952e57e37fe004448774353fd51f0c56beb20a01cfa",
-      "bytes": 3464,
+      "sha256": "08253b53067eca33e01b4cf2a210fbb92b072ac1f97f12ce21768c08e041852d",
+      "bytes": 3452,
       "pixelSize": [
         360,
         72
       ]
     },
     "mixed-100-200/motion-normal-100.json": {
-      "sha256": "6adcbcd8a70defdf2c7a3a5d216cc6ad51a9d13b8f4dc2a7066d91ea755a20a5",
+      "sha256": "fb1b8097702291a4867770565998d7f586d6ed5cc82953466cc7e3ae83daedbd",
       "bytes": 759
     },
     "mixed-100-200/motion-normal-settled-100.png": {
-      "sha256": "5a1caefa32a1e117beb993e402269bd214fa5e45c8dd4232c832dcb65984e766",
-      "bytes": 326348,
+      "sha256": "48051856ce3ad86351a803969b20e004ebff5dcefd1a37ef8dbfdb2b801e76a2",
+      "bytes": 326368,
       "pixelSize": [
         5760,
         2160
@@ -986,12 +1114,12 @@
       ]
     },
     "mixed-100-200/motion-reduced-100.json": {
-      "sha256": "15430ce7d9fca266280e23fa903dfc924c8bfbd2a6479f86cd36bfb7ac6aebdd",
+      "sha256": "a120b14fdee445ca3ef01b718fe73781253b28842f3c084061cd17ab3bb81e4f",
       "bytes": 693
     },
     "mixed-100-200/motion-reduced-settled-100.png": {
-      "sha256": "5a1caefa32a1e117beb993e402269bd214fa5e45c8dd4232c832dcb65984e766",
-      "bytes": 326348,
+      "sha256": "394a2c286d711fd7a960e38622267e77aaea6c5bf139adf5b1cc7b02d7582471",
+      "bytes": 326307,
       "pixelSize": [
         5760,
         2160
@@ -1014,20 +1142,20 @@
       ]
     },
     "mixed-100-200/motion-slow-100-intermediate.png": {
-      "sha256": "9a1db1fbac425b22fee276e29da8ed3dfd597322f3f81956085781c7165b1de1",
-      "bytes": 3450,
+      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
+      "bytes": 3466,
       "pixelSize": [
         360,
         72
       ]
     },
     "mixed-100-200/motion-slow-100.json": {
-      "sha256": "4b62f255726b70f8def8ddf4bdd7b274c82da104cd9e11a5e001d6e082d627cb",
+      "sha256": "ee8ec721f47dd0834c270bbaa1224c7121b3759320b49f4f3c0c4175f784cc7f",
       "bytes": 763
     },
     "mixed-100-200/motion-slow-settled-100.png": {
-      "sha256": "5a1caefa32a1e117beb993e402269bd214fa5e45c8dd4232c832dcb65984e766",
-      "bytes": 326348,
+      "sha256": "48051856ce3ad86351a803969b20e004ebff5dcefd1a37ef8dbfdb2b801e76a2",
+      "bytes": 326368,
       "pixelSize": [
         5760,
         2160
@@ -1038,320 +1166,460 @@
       "bytes": 36
     },
     "mixed-100-200/outputs.txt": {
-      "sha256": "8df990371e7f206771c7afca45658b82d729b630a33a8f86844206feba4d1e63",
+      "sha256": "d9ae7d8c8ceebcd3c24436197e9395ef5fcc498a9c1fecd695a6e922be97611a",
       "bytes": 1187
     },
-    "mixed-100-200/plasma-calendar-100.png": {
-      "sha256": "a2bbf0ee946c4424ca1f6537505905f5d154a226ac8d256009fbbf9e32c16bb4",
-      "bytes": 390190,
+    "mixed-100-200/plasma-calendar-blur-disabled-100.png": {
+      "sha256": "586eda67e90a36e13011e204da2ecacc8c9c11ffc68d1b4c04e4fc80733ece53",
+      "bytes": 390282,
       "pixelSize": [
         5760,
         2160
       ]
     },
-    "mixed-100-200/plasma-launcher-100.png": {
-      "sha256": "04b55b1fc64b49996bccb3502f53b4916ad035e6247d63a5287ae00a945afa3f",
-      "bytes": 627313,
+    "mixed-100-200/plasma-calendar-blur-enabled-100.png": {
+      "sha256": "7b835b6c8d9bc92a29d9c2da286eb5d3487dafdd1dc697dff28a1868ecb953b7",
+      "bytes": 649576,
       "pixelSize": [
         5760,
         2160
       ]
     },
-    "mixed-100-200/plasma-notification-100.png": {
-      "sha256": "eb3463823ed6318659d4278f39ef015a0d7d74ea733b501917b37b09546bf41c",
-      "bytes": 435498,
+    "mixed-100-200/plasma-containments.ini": {
+      "sha256": "42c823c28d17f219870af915b40ed1b3c0844101edf4d0440ef8790829c6f6a2",
+      "bytes": 3435
+    },
+    "mixed-100-200/plasma-dialog-blur-disabled-100.png": {
+      "sha256": "0344effcb5965d31d63c6593169d357a3f45da72903cd797540ba786eeda0337",
+      "bytes": 366424,
       "pixelSize": [
         5760,
         2160
       ]
     },
-    "mixed-100-200/plasma-osd-100.png": {
-      "sha256": "5067ecb6976cf28a5789d8d1a3421996b60dd48c69dbcf9a9ac2f9bcf5dd989d",
-      "bytes": 444595,
+    "mixed-100-200/plasma-dialog-blur-enabled-100.png": {
+      "sha256": "7633dba5b878440a1e979962a9261614f6e3095f4c20bbade309760d13769d7f",
+      "bytes": 417789,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-launcher-blur-disabled-100.png": {
+      "sha256": "bbe5c5f7c0f6e59d25b1eabbba50326456d4cee34718d21058f1507432828d69",
+      "bytes": 376669,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-launcher-blur-enabled-100.png": {
+      "sha256": "902d71ef2e46798d629c568a7d962e40decaf49b5ddc89a7fdb9f03ca4429dbd",
+      "bytes": 627736,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-notification-blur-disabled-100.png": {
+      "sha256": "1085e85803bab6a644c152adc2fed6ad936b6a35c02f399ba6e214d536096267",
+      "bytes": 365782,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-notification-blur-enabled-100.png": {
+      "sha256": "a4a1608f78a3448667c288865b982eb77b6e8358521dd8cc51dc17ba2dcf4fa6",
+      "bytes": 435994,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-osd-blur-disabled-100.png": {
+      "sha256": "83c9965be0517431ecafc06d2c1536a8af3b07192a9f6902ecf0c1a4c8139afb",
+      "bytes": 360699,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-osd-blur-enabled-100.png": {
+      "sha256": "dc7eb67fcb10ec9e247c7569dd3bbd166f8a8dc229ffd00263b63fc8a4718d56",
+      "bytes": 412673,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/plasma-panel-bottom-100.png": {
-      "sha256": "dc6f56ebc88c7aebcc69a47bea857e0500aff86cee74eb160ab39180e9023870",
-      "bytes": 402536,
+      "sha256": "9a19acd24f500b343c72f124b20539f6ebcc8da54c56400ddddb8c10071f748f",
+      "bytes": 402468,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/plasma-panel-left-100.png": {
-      "sha256": "f2b733b8671a4e89fd28da4831dc3229f921dadfc728a53ba29f86ab1d59a6ad",
-      "bytes": 396517,
+      "sha256": "dc53eb9e1728c61d453fcc0b50ec4dac56b41b8029ccc5e3a1ec4046eef25a56",
+      "bytes": 396440,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/plasma-panel-right-100.png": {
-      "sha256": "addcc49ddb291ba1f45459dce5ecd645dea47feeae22b5be10749941b8567ec3",
-      "bytes": 392303,
+      "sha256": "48bb21454c497e83b5d6d4148354fb0e02f08f36d500f605adf6054095c6d674",
+      "bytes": 392191,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/plasma-panel-top-100.png": {
-      "sha256": "8ea4f67eb2675d25a832dbcc77c19a1ff9a7447ccbef9d841897691101ee31f5",
-      "bytes": 402827,
+      "sha256": "50c119bbaed2efe9fa4585827cff3c4a632c2656a2b5fd704647446e3789f2a9",
+      "bytes": 402887,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-popup-blur-disabled-100.png": {
+      "sha256": "216c903f84eba5752937e19803ab3147219794a2f03f2064672f01adfc6f0133",
+      "bytes": 380436,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-popup-blur-enabled-100.png": {
+      "sha256": "bec278a5ecfe0aa6249ad0888bbba01b72421b959510dbed310ae93c002b1138",
+      "bytes": 431801,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-shell-baseline-blur-disabled-100.png": {
+      "sha256": "10ac542c225e06c56d9706167205e88cfb91bcd12c89ffd0c1ce8e07f85de9e3",
+      "bytes": 352689,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-shell-baseline-blur-enabled-100.png": {
+      "sha256": "9a19acd24f500b343c72f124b20539f6ebcc8da54c56400ddddb8c10071f748f",
+      "bytes": 402468,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-task-manager-blur-disabled-100.png": {
+      "sha256": "77c8fb4dcdb2b2b32b48f94ab4a3a10410100ce71414319c2462c1151bd6ebfe",
+      "bytes": 352827,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-task-manager-blur-enabled-100.png": {
+      "sha256": "a5dbcc4c314d7fc7718326ce9f8a569cbe794d03ef895275bd94af80dfdeefba",
+      "bytes": 403322,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tooltip-before-blur-disabled-100.png": {
+      "sha256": "9a9470993c45559a49010e40205ddc5c8de343efb2fa7e62b08970938703b301",
+      "bytes": 346579,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tooltip-before-blur-enabled-100.png": {
+      "sha256": "17fc326a24e7bd22d1a6429d8a6de967ab2735042bfab61d52326580fdae22c0",
+      "bytes": 397383,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tooltip-blur-disabled-100.png": {
+      "sha256": "248e636eeeb4c6177267597b6bbd5032c4369ffe82438f103572b852518433ab",
+      "bytes": 342780,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tooltip-blur-enabled-100.png": {
+      "sha256": "f5aa4a4ee3ff821de463e9cb58ae4325439d8394007fb2befc8e592e9dc34759",
+      "bytes": 392953,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tray-blur-disabled-100.png": {
+      "sha256": "5b064142546d730546d65a79541b00f9f80647a1eebd06f0533ff9b3b1e6efea",
+      "bytes": 381792,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/plasma-tray-blur-enabled-100.png": {
+      "sha256": "3baa72c94945cf99ea3c1f432dcc5decdba5c779d45c510d950358d54ce3be62",
+      "bytes": 589037,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/qt-dialog-enter-before-100.png": {
-      "sha256": "462583d008fbd5970fbe0092297bb9edf54a61d40fa5ba053ce53bb61d4d669f",
-      "bytes": 416029,
+      "sha256": "3c9920c7eda6b438482dbe7f343cbe2fc496f7f324ee2eef9c023220855f1718",
+      "bytes": 416059,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/qt-dialog-space-before-100.png": {
-      "sha256": "85d9b4146cab95b861a59f7c3e4bf0b26520e8b0c871e5af5e2190632867a478",
-      "bytes": 416519,
+      "sha256": "0e9557f75c74354579547851cc2e0585fa6c251447919506b4e112fb641fbec2",
+      "bytes": 416446,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/sddm-enter-validation-100.png": {
-      "sha256": "e9854bdf84dd6f698bf28e6f4202b21c0264ea045a8a317fa7e0b32df24aabaf",
-      "bytes": 285274,
+      "sha256": "3c021eed1ddce5b63eedba4c6c7de421f1981e34601f4e6a8bacc1e2ee15a76a",
+      "bytes": 284294,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/sddm-test-mode-100.png": {
-      "sha256": "58134b1ed4d7bfab5f3acebe9a421074de21e627512137c856500f42e9d46f48",
-      "bytes": 276211,
+      "sha256": "3f0dd44035bf5d7077baf33bb6b1f2682c7f1a2fa2025352fc6bf338ab90a0af",
+      "bytes": 274807,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/sddm-username-focus-100.png": {
-      "sha256": "bd9aaaba9486ac9fb8c58321923c77a36785eb98815777450e5538d6276639a9",
-      "bytes": 276193,
+      "sha256": "3f0dd44035bf5d7077baf33bb6b1f2682c7f1a2fa2025352fc6bf338ab90a0af",
+      "bytes": 274807,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/splash-windowed-100.png": {
-      "sha256": "2d4a8cc17a13fce2be0e8ca6a749b11765593a3f6469e1e316788a9be0290a59",
-      "bytes": 79379,
+      "sha256": "b16e30da0b498aa78e20d39e369f56053503e9325bad5b293fcf14b091801c1f",
+      "bytes": 79376,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-keyboard-focus-100.png": {
-      "sha256": "0c19b91402250e7fdcf74fe0d38c7da5c81602d9640f458cc8f809b864bef29c",
-      "bytes": 550391,
+      "sha256": "fd9479aa0f66b28df2330d0fede3ef5e71b71422b7dab2d0230e1b23d7ab96f6",
+      "bytes": 550518,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-maximized-100-restored-focus.png": {
-      "sha256": "fc27c1a7e2498d52216705abfcc2f1d0495f551103e4bd2ecee6cc51687333f4",
-      "bytes": 550270,
+      "sha256": "f91ed7cc38cae4ad7747fcd0c5f441c434ea85fe4e879d9b50c586616ee54bad",
+      "bytes": 550501,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-maximized-100.png": {
-      "sha256": "9d5c424c74462e8bbca04900b39e47247eb2e3c431419a01cc7c45655cfe45a4",
-      "bytes": 436241,
+      "sha256": "f84cf970ba7114ea30b76429e87aff0cd1124d87bb3d48ecb29ea174d40f010a",
+      "bytes": 436440,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-minimized-task-100.png": {
-      "sha256": "2939ae80548cf28bd83c076a2646ceb372b098836365fd45cc048c30d4fbcf13",
-      "bytes": 403157,
+      "sha256": "be713bf8d541a61277a3a1a29be3fb8283ee45a972d25ac1529b313610989dd8",
+      "bytes": 403300,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-quick-tile-left-100.png": {
-      "sha256": "41729d987ee62e74efa30198642ef4eba0799cc34a97237be2b547fbb2235d35",
-      "bytes": 470618,
+      "sha256": "f69180029b8a452bea0e6f8e9785c7b430587a9edf235079bb8d675bd96d23f1",
+      "bytes": 470712,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/systemsettings-quick-tile-right-100.png": {
-      "sha256": "9c510cabc46c594c4605ef376d58b87f54b28f8a4131b3a996338c063bf6efd7",
-      "bytes": 552679,
+      "sha256": "f02356eb772832c6630d70a2f404e9cf1a020f5a122c5a2b05310a94356574a5",
+      "bytes": 552854,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-empty-100.png": {
-      "sha256": "c0c2115a253608ae17b94fb36a129ab16b0dbe522d8428e9155f798957f9ecbf",
-      "bytes": 343747,
+      "sha256": "e32a22958e31a26dca11bee1718535ba3854e67974083a57a36732627e363d79",
+      "bytes": 343754,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-error-100.png": {
-      "sha256": "f518f259ae78c6a1a4042e9edf847e97d037165314d7d8ff97d1feb51a003bd7",
-      "bytes": 520487,
+      "sha256": "a9d15f5c02a76872a2e00040e7705c4052d38f6fc91bebededc5308db5dfcf43",
+      "bytes": 520747,
       "pixelSize": [
         5760,
         2160
       ]
     },
+    "mixed-100-200/tabbox-iconless-client-100.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "mixed-100-200/tabbox-long-title-100.png": {
-      "sha256": "21684a0755a4f6be12108425496ccee89202338f98e1b2a52e4e0ea5fabb1938",
-      "bytes": 541176,
+      "sha256": "681e8e0162eb3c242cc9dd2ed1b69001f7bac81ec290811039cd6779f21121f6",
+      "bytes": 541417,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-many-100.png": {
-      "sha256": "5d6d3ba3dfa6d3c5cec150d90ce9794cc5f48a903617bb2042864e9afd31f861",
-      "bytes": 472833,
+      "sha256": "fa607b98e3214148c283f98455411f71e6e219206915d18bc24b334fa41edd89",
+      "bytes": 469463,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-minimized-100.png": {
-      "sha256": "73b8a94da24fc691a2f806b91f012ec30da8fab0d0ae431000159b1ab01024b3",
-      "bytes": 411504,
+      "sha256": "95d22e3c274fcea1666b680b019f578493e492ba0acc069d164bfa5d448cd7c9",
+      "bytes": 404135,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-missing-icon-100.png": {
-      "sha256": "3be429c00c38c83aad89b45db0513c8ed15410459a7934f2b00b851fc43f04c2",
-      "bytes": 525104,
+      "sha256": "3470aed77868fe1e03e36b9f85bf616110b8b45769719628668ed2ad1315ff52",
+      "bytes": 527544,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "mixed-100-200/tabbox-single-100.png": {
-      "sha256": "d8e770763259a765318cb802766447b33677ed4b95c1139a9c4794ef7fcd58a4",
-      "bytes": 302181,
+      "sha256": "7a015e3509e69ba43bd740252c18fe14f47954e648da7ced505fbf5290f7d9ee",
+      "bytes": 302196,
       "pixelSize": [
         5760,
         2160
       ]
     },
     "single-100/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-100/blur-disabled-100.png": {
-      "sha256": "0aa01f6046eeaaf2aab8f3a78f197122edb71c7a703a484d767f7f357deddd2d",
-      "bytes": 143414,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-100/blur-enabled-100.png": {
-      "sha256": "61e247bfd0a59b81f5fddfb8fc27315c8be274f1ae1b3891080c1afbcf35695c",
-      "bytes": 157299,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-100/core-icon-gallery-100.png": {
-      "sha256": "77c39cd59c9c5e776e3dc96ce10b0e97d0d1a8b5d8f0ab58b3cf2ae337e0b5d7",
-      "bytes": 65745,
+      "sha256": "9176071de199c21c85aceeb8c913d3b988ebe04f8a2355fb930eae1966ee1445",
+      "bytes": 65965,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/desktop-baseline.png": {
-      "sha256": "56ca396415a85916f77ebbe04a1884d6eecd12d8b4bce14e56e63037374b5df7",
-      "bytes": 149666,
+      "sha256": "9a9f8129fa42a63aa703c45006fe041bf4a8fb908cc4d7b14a59cca6c2128b07",
+      "bytes": 150010,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-100/doctor-runtime.json": {
+      "sha256": "fd6ab6bd2a6f0b08037129aad9ccf7c7d69392eff976d2ba11e835ea24ee8c4e",
+      "bytes": 3009
+    },
     "single-100/dolphin-maximized-100-restored-focus.png": {
-      "sha256": "9f15ee715cecb5a710c7aa38f8a9c79746c40a66f3e6fec7b12ff78e4ad59847",
-      "bytes": 189488,
+      "sha256": "74b4a81e607639c8d7eb7d2ba203c35ead2e664cc1dd27b170859702ac485904",
+      "bytes": 188623,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/dolphin-maximized-100.png": {
-      "sha256": "bb7d2ae756aed021f1f33c6da43d297302942e627a2257d5eda6f9cbc4d46b20",
-      "bytes": 102031,
+      "sha256": "04eed97dbf2550e71c3ac0c51b0c0bd5a800a759e73e18cc75ffbde2c32daa7a",
+      "bytes": 101413,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/firefox-maximized-100-restored-focus.png": {
-      "sha256": "c0d0d30000d78613a4689a85b24dc88964455d53e4c1b22d3ec8e9745f3bf05b",
-      "bytes": 91777,
+      "sha256": "ce3dec82d747e29e346631ec6e9551d9fe22efc79825023b9b6efca06429c110",
+      "bytes": 92318,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/firefox-maximized-100.png": {
-      "sha256": "7d3eb6e31f2d5e73bb4ef4a5a17938f23c2037707dab9373364f995df0467a2d",
-      "bytes": 49743,
+      "sha256": "a2530cea1134d3e0ddbbdb7c8639821d9661c7ef469441a0778a10d4e273dc6e",
+      "bytes": 49214,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/konsole-alt-mnemonic-100.png": {
-      "sha256": "5c10bc892d65e188eafa2d9b5274694d5b30fe3b5d9e161c008ebd777cdc6e0e",
-      "bytes": 54179,
+      "sha256": "bef5db6b18b314313b8666edd88c3657623a11ea96a232e5cde724815ddaa7bb",
+      "bytes": 54209,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/konsole-fullscreen-100.png": {
-      "sha256": "a92c51c158975f58e504612ea91442bf03bcf71a1d803928c3b4841b65849864",
-      "bytes": 24442,
+      "sha256": "c7288c3037d3a6e14cd310ec43b5f54fc4bbe22496d13ecf4ac6893dd2a9625d",
+      "bytes": 24433,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/konsole-maximized-100-restored-focus.png": {
-      "sha256": "c1a0d11a944a245db4ca0bbd3113c7638e796f584eb0b7e260a8fa640ae7ad2b",
-      "bytes": 143684,
+      "sha256": "8f81af6bf5661ff2dedf5db77ee26408d769d3e44d6e6544672ecfda90b12d41",
+      "bytes": 143531,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/konsole-maximized-100.png": {
-      "sha256": "ed6f5a00bb16d0470d27d3456108df660930e20d2b2addc2125361080cae9a3e",
-      "bytes": 53924,
+      "sha256": "4fb214ed4f10a3e998755d363f0c682c34c35adb778b35c1edc6b86de5ffc7a5",
+      "bytes": 53678,
       "pixelSize": [
         1920,
         1080
@@ -1366,8 +1634,8 @@
       "bytes": 377
     },
     "single-100/layout-ltr-100.png": {
-      "sha256": "c037f6f87584b96caa04950e97095717831cff03164a8a5b6ea4f3dbf2ba8dc5",
-      "bytes": 154217,
+      "sha256": "dc002ecc78790462e6bd7624f233351213dc2ae8b4f758a88503fab5161016f6",
+      "bytes": 154449,
       "pixelSize": [
         1920,
         1080
@@ -1382,32 +1650,32 @@
       "bytes": 378
     },
     "single-100/layout-rtl-100.png": {
-      "sha256": "967880f7e04d0c2c33cf78e16e610ff0e657fa4c244dd98988ea6cee94931e02",
-      "bytes": 154180,
+      "sha256": "aaaea9da5de4c8b1168842eea6f276ee8f35019b17e1511d5f8817f9dd45235a",
+      "bytes": 154411,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/layout-translation-expansion-100.png": {
-      "sha256": "f435acb247934a82d61394d72751f4456ff1263972726cbd26534d427996904a",
-      "bytes": 158088,
+      "sha256": "84792166268e5091e0a7b5aa7534877036b4313c61b147c1018217b8b0b419bd",
+      "bytes": 158295,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/logout-cancel-focus-100.png": {
-      "sha256": "65edfb01db3d2e2dd91d6ee201ebe655ce65162ff8172368feb77e16ee2fa994",
-      "bytes": 112178,
+      "sha256": "611e01ec95cf5c612d0f4ad15c699639ab6f4fa615cf742fab1002bfd646d08a",
+      "bytes": 112280,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/logout-windowed-100.png": {
-      "sha256": "708382b09d5f929d93fbe952b531a35f050d8ccdccce21f5bcc68ba3de1c0526",
-      "bytes": 111900,
+      "sha256": "d647d9053b003e6a45fa15d1f95f56f29f3c6e073b9f28eb46af2c9c625e766d",
+      "bytes": 112014,
       "pixelSize": [
         1920,
         1080
@@ -1434,7 +1702,7 @@
       ]
     },
     "single-100/motion-normal-100-intermediate.png": {
-      "sha256": "54ee63816f5c959495bc7555bfd37c59bb9d80c8497429aff1310326300f3b98",
+      "sha256": "7da4d04243c78628136ae447b3643da6ee929418b97d7a749140834a44275449",
       "bytes": 3078,
       "pixelSize": [
         360,
@@ -1442,12 +1710,12 @@
       ]
     },
     "single-100/motion-normal-100.json": {
-      "sha256": "9358cb379c20c58d3eb0885b7c658b77eaf91a719cab1c61344f511f2769b770",
+      "sha256": "277751e2f51a136fdd33ca870395cc01b68045d84b35cba4d2fc1a8fbead86a7",
       "bytes": 759
     },
     "single-100/motion-normal-settled-100.png": {
-      "sha256": "bd0a7a3e7b94b3b1ed30a690b9ac4499a560b43f6039e0cfa1484c12a768ae40",
-      "bytes": 141516,
+      "sha256": "a5ac3f13ff57be3601dc923e00267b2f19b38c7f4031fa4f5e8043da263a727f",
+      "bytes": 141599,
       "pixelSize": [
         1920,
         1080
@@ -1470,12 +1738,12 @@
       ]
     },
     "single-100/motion-reduced-100.json": {
-      "sha256": "5a65118bcde5071cf9ad616aaef92cfb50ded8ebda476ce83bf98702775b4ee7",
+      "sha256": "8e3c1f04a296a7fc02ff01ab856a52645bb1a7c029a8f39670df44b2aced0772",
       "bytes": 693
     },
     "single-100/motion-reduced-settled-100.png": {
-      "sha256": "bd0a7a3e7b94b3b1ed30a690b9ac4499a560b43f6039e0cfa1484c12a768ae40",
-      "bytes": 141516,
+      "sha256": "a5ac3f13ff57be3601dc923e00267b2f19b38c7f4031fa4f5e8043da263a727f",
+      "bytes": 141599,
       "pixelSize": [
         1920,
         1080
@@ -1498,20 +1766,20 @@
       ]
     },
     "single-100/motion-slow-100-intermediate.png": {
-      "sha256": "6dae1b80ececeb5fe50f2a5781797d7e5431cda38c1fb1dceadf46cf2486692f",
-      "bytes": 3059,
+      "sha256": "5cbdebd86bef8430df0b202e11d91a143665957d562e6221954d4d4625de3139",
+      "bytes": 3076,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-100/motion-slow-100.json": {
-      "sha256": "32aa0cfea0e8d46f915f3895b30be6f3d10531811cbd4bb0c9ce15bbf11839a9",
+      "sha256": "d68acd7d713517fda9f212e7214c875094ba4571791d3b0ae0a60720494e0933",
       "bytes": 763
     },
     "single-100/motion-slow-settled-100.png": {
-      "sha256": "bd0a7a3e7b94b3b1ed30a690b9ac4499a560b43f6039e0cfa1484c12a768ae40",
-      "bytes": 141516,
+      "sha256": "a5ac3f13ff57be3601dc923e00267b2f19b38c7f4031fa4f5e8043da263a727f",
+      "bytes": 141599,
       "pixelSize": [
         1920,
         1080
@@ -1522,320 +1790,460 @@
       "bytes": 18
     },
     "single-100/outputs.txt": {
-      "sha256": "4381acbf89ca8774763af51c1746fba4b23170b308981997dc0daafa5f53302b",
+      "sha256": "5fd3a9ffada890c97a6c34647b9cc025445ede225ccef53349360d27e57edb3a",
       "bytes": 593
     },
-    "single-100/plasma-calendar-100.png": {
-      "sha256": "1c6b6decc64ae4e83b37fd375b3f2f215029dcccb33ec9f7cd4744fa60e384c8",
-      "bytes": 157106,
+    "single-100/plasma-calendar-blur-disabled-100.png": {
+      "sha256": "a2d60d586ced16d08747312419c8c1738cc1d66ce8ff875dcdcd11a7866229d4",
+      "bytes": 157287,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-100/plasma-launcher-100.png": {
-      "sha256": "d0e2a2af8cf264406a8ec570718593bf67d6ff2003b812b18d85afee0b51db3d",
-      "bytes": 219208,
+    "single-100/plasma-calendar-blur-enabled-100.png": {
+      "sha256": "184c38752da339bb13de47b627430564c25ef492b41f562517d22a44472cd773",
+      "bytes": 238045,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-100/plasma-notification-100.png": {
-      "sha256": "f07f28c02f74c02e6352f10869ce08d5a4378aed273c36c229845c92e36c1e69",
-      "bytes": 158606,
+    "single-100/plasma-containments.ini": {
+      "sha256": "4dc4a7ea72b13e79ba9043761ebd2dc83ff5d73b2d106792c51c01fb11344391",
+      "bytes": 3076
+    },
+    "single-100/plasma-dialog-blur-disabled-100.png": {
+      "sha256": "1e62e228f241c9af712de973ef8491391ebc97c4b1d83cdee1777252a9003918",
+      "bytes": 144487,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-100/plasma-osd-100.png": {
-      "sha256": "f3cad5ab71f94b61ba6c69de82322001eefc9330ddcc378c7fd57d35d88bb847",
-      "bytes": 164306,
+    "single-100/plasma-dialog-blur-enabled-100.png": {
+      "sha256": "f004991f7b5928aa0d6b464e4d767cb86bc9cabd11124ae5c439e25c66a2de54",
+      "bytes": 159067,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-launcher-blur-disabled-100.png": {
+      "sha256": "9f3b0de77bdaeb2bceee5d9d7ce3b0450c502d67a07e40054aea3f34202f440e",
+      "bytes": 140440,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-launcher-blur-enabled-100.png": {
+      "sha256": "51ba8d8aa3a35809315180a3e704e01ed03a92cdf05852e3b8029bc255e6411d",
+      "bytes": 220606,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-notification-blur-disabled-100.png": {
+      "sha256": "0cf7d5cf62a0e1373f1e5de6dad1b0f479eb47c77c1fef04fc57f617899f3472",
+      "bytes": 143999,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-notification-blur-enabled-100.png": {
+      "sha256": "c4c5acea05803b029a101438e76796eb3f54874cc4ede28eb3a1ca3b7dbfdb15",
+      "bytes": 159298,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-osd-blur-disabled-100.png": {
+      "sha256": "38e5249091ae5a9798612656cfddd7478cea12798d8b541e108986b4bf512b9f",
+      "bytes": 140505,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-osd-blur-enabled-100.png": {
+      "sha256": "678fdc782e6ef40f39990644ec273c8b493d50499205ed5b071d507cecb5990b",
+      "bytes": 158111,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/plasma-panel-bottom-100.png": {
-      "sha256": "36ecee3ce3ae79f9205db2f4b00a178312009e8744e2d1dd3431d77bcdf81af6",
-      "bytes": 149923,
+      "sha256": "50ecdb9c546bc0f10258178290542c9242ecdd686c8ff3d4d99b12657958bb1d",
+      "bytes": 150224,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/plasma-panel-left-100.png": {
-      "sha256": "4621e83474f5d834bf7e8da070f44623863aa033c209399191c2c1e4c2ac6808",
-      "bytes": 151629,
+      "sha256": "10b6745cef48b578df335f67e90de8b0786aa5935359002310caa257b6b42392",
+      "bytes": 151799,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/plasma-panel-right-100.png": {
-      "sha256": "f12b4955787086aeb9c057660a7800e23e925c27c024ac13a8e4d79e31f4ef3f",
-      "bytes": 149520,
+      "sha256": "1be2381acedd9b254c89fe47fa906a9916deef110d87b0e5da6efa6b5e1dfdd7",
+      "bytes": 149575,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/plasma-panel-top-100.png": {
-      "sha256": "d55bd45a30e3f75bd854f860d79cfd48dacb199c839331847db8000b30b7723c",
-      "bytes": 150593,
+      "sha256": "4df27ed4ae91252aefa5fe9fe002db8ac9db507ef7eae97307404e0e5a61fdc3",
+      "bytes": 150888,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-popup-blur-disabled-100.png": {
+      "sha256": "5296a809c96841ec557d64150a5f2e14d01385ed52f980f81cd0bc7eee5b8017",
+      "bytes": 158471,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-popup-blur-enabled-100.png": {
+      "sha256": "ba43ec539934fc41aed51a77b04f039afe0e26125b5fd47139aa4f94c99b0d5b",
+      "bytes": 178016,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-shell-baseline-blur-disabled-100.png": {
+      "sha256": "ce5c2f2d551b3889a204d707e18f6a94adf05cae6b3cc04acef92728cff21a01",
+      "bytes": 135889,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-shell-baseline-blur-enabled-100.png": {
+      "sha256": "50ecdb9c546bc0f10258178290542c9242ecdd686c8ff3d4d99b12657958bb1d",
+      "bytes": 150224,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-task-manager-blur-disabled-100.png": {
+      "sha256": "32c24970c52f76cd36693c5118f00bdae8bc732b9cf8320176626f246e19a927",
+      "bytes": 135995,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-task-manager-blur-enabled-100.png": {
+      "sha256": "ba73acd548698aaf18d9cb28943c9232abbc35402f4d45e0aecc9a1c40084d2b",
+      "bytes": 150993,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tooltip-before-blur-disabled-100.png": {
+      "sha256": "94995249f88a21f45034887e0ed13667e0f252552421ecac32fb5e20135c49f9",
+      "bytes": 129822,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tooltip-before-blur-enabled-100.png": {
+      "sha256": "ac31013814af6d6916bcea5ba2372254808495af2738f058733f9c11171c84d9",
+      "bytes": 144822,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tooltip-blur-disabled-100.png": {
+      "sha256": "a8106ce34e6def54ee7478e6d8cad7cf7a36b4f44f527b650584fcac186e4f99",
+      "bytes": 128684,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tooltip-blur-enabled-100.png": {
+      "sha256": "582d72048c28285a2209734c48eba5504680f03b25757ff3f893e819dbebfd7e",
+      "bytes": 143676,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tray-blur-disabled-100.png": {
+      "sha256": "b8f42ee74875c5f8cf0d0c6a6d28b99d4c8c4a68b9a81c136f18eada3a0c17e9",
+      "bytes": 143641,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/plasma-tray-blur-enabled-100.png": {
+      "sha256": "7a1c21d45b6df35830c8b540270f2ff99e2177e9c28eed9336590eee85dd7779",
+      "bytes": 198694,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/qt-dialog-enter-before-100.png": {
-      "sha256": "ce0660c76b22b61823f27b455677e759202fa659728b31050119ca29fc67df4b",
-      "bytes": 157324,
+      "sha256": "c6478c77f19000eaed69adcfc9d22311e16c1dbfd7bf3580b6e5a1b2add3a7a4",
+      "bytes": 157507,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/qt-dialog-space-before-100.png": {
-      "sha256": "a1fba5d1361df702fc3999d4df8007e0785c749a3f77decceb813893ec68c56f",
-      "bytes": 157595,
+      "sha256": "b1ad954a20611912010f7de5cbfb2027f12e505efe327af44e1315726cf6249a",
+      "bytes": 157780,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/sddm-enter-validation-100.png": {
-      "sha256": "265c7732e55557d2066d6a676928ea6204d519f29a50637cbf1096aa164eff93",
-      "bytes": 91332,
+      "sha256": "e0c215234fb523718b3bcb6e34795eb94fe14cfd932d13888a1d53ae54fc8c2d",
+      "bytes": 92058,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/sddm-test-mode-100.png": {
-      "sha256": "fcb6c3fac710b0adc38ac8f2d8b7a040db1a99ea39440688641251f002e270ae",
-      "bytes": 87502,
+      "sha256": "ef3f9cf6bbd94d4c130d5dc1049d906f49ba9c6949fa51f86ad92344f9bdc681",
+      "bytes": 88087,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/sddm-username-focus-100.png": {
-      "sha256": "fcb6c3fac710b0adc38ac8f2d8b7a040db1a99ea39440688641251f002e270ae",
-      "bytes": 87502,
+      "sha256": "4e24dbdf9bb1dd063396f13573418999ba3a769e6160688e9c291b34c5022229",
+      "bytes": 88074,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/splash-windowed-100.png": {
-      "sha256": "05d001e5d4f7a9ba10d6a02fe48c5dda4ebf64a6b8384016dd27870819103c1c",
-      "bytes": 18959,
+      "sha256": "7cd70223dca6adaaef99fb28f87675f4334963ce231399604bc4fbd86e9520ee",
+      "bytes": 18919,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-keyboard-focus-100.png": {
-      "sha256": "6b58234e3ead92b63b8e08ee4b5e36276316d8aa361ebf931f7c803477ff94b0",
-      "bytes": 239755,
+      "sha256": "58fac07d99c8642e2f1998923d35bdafb37f4a65d0e25a09d56a9ca5f9911d4e",
+      "bytes": 239990,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-maximized-100-restored-focus.png": {
-      "sha256": "1242827e79ff6fc097c993a57659b2b692929422e1734f261977b1d3e19751e9",
-      "bytes": 239632,
+      "sha256": "f3cbba6ebacd5aaa914266da5c0b72f2fd8736caad6dcd7de3755476703cf007",
+      "bytes": 239865,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-maximized-100.png": {
-      "sha256": "3f6aa98ae348859b174984e529b2ec209f5b28cf3c4ec9a74a84f6e8b7665266",
-      "bytes": 187322,
+      "sha256": "6504bc85066ae8a3bbbc5c822f7dc7475b17f36a72e3d749d9a73653928f1a5b",
+      "bytes": 187662,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-minimized-task-100.png": {
-      "sha256": "1cab0acddbca4d05b6bfa2681fb670c356ab248af587333b8761babca4b5acf1",
-      "bytes": 150422,
+      "sha256": "61aab74b3e54461764a3d0a8a807b1b8e4d036702faae439329a14f0adec6f28",
+      "bytes": 150783,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-quick-tile-left-100.png": {
-      "sha256": "e55f15e274897881609ea5b5eef133c6225aea9cebefe4f6d0ac4ebbec04cea6",
-      "bytes": 218695,
+      "sha256": "c197cddefed31d27544fdd4803d8900a7b525b451809b0cab1178fa07355e4c8",
+      "bytes": 219019,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/systemsettings-quick-tile-right-100.png": {
-      "sha256": "0a2dc5867db543744e3d39f1e0429d13ba8252cfc26acbfaf4ef0843e08635b3",
-      "bytes": 276881,
+      "sha256": "d51324fdb6b9bc5cfecfc569be6718279c5fb5c02a30285e5f2d82e8d3f91a00",
+      "bytes": 277200,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-empty-100.png": {
-      "sha256": "0241eacb43a4628088971bf4f4aaab9848a8e50e35f790a18abe09c56bb9f571",
-      "bytes": 135440,
+      "sha256": "6e56f3473677ca40f5bc19526ea8008716109f732cbb96957bbc49d4fa9c822b",
+      "bytes": 135541,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-error-100.png": {
-      "sha256": "c57b2bd596573301a8d68aa608c4e66e35fbd138a97f782a0faff74ef0835cf2",
-      "bytes": 225517,
+      "sha256": "fb7b5018dc8320d752de4e8331b96ce4f337f153cdda53294d90a19a5400dec7",
+      "bytes": 225280,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-100/tabbox-iconless-client-100.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-100/tabbox-long-title-100.png": {
-      "sha256": "29de71f0f66838239aab5966185d1874e279923c252c723d667dbb7288ebac84",
-      "bytes": 228564,
+      "sha256": "feba41b92a32d3506def0bb93c41d2aa6c86e3fc112c3edb3c871f8dc34bb1fc",
+      "bytes": 228339,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-many-100.png": {
-      "sha256": "e38746179a8cc7338b58d3d25ca8de2d3e76a2ee181d59eca73e63539767f8f4",
-      "bytes": 219304,
+      "sha256": "3351e5ccd0ff8b206d53486e48b687fa448ec575ec6cf060d1749623a8d31495",
+      "bytes": 219971,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-minimized-100.png": {
-      "sha256": "1c2407bb8567e7448acfd3f936576c1adcd9bce6dca90be7d22df97dd9657af8",
-      "bytes": 174097,
+      "sha256": "cf9f829370029b5a4e6e216e0369f49d08f0cd3d595731ce0579fe6351c2ce7c",
+      "bytes": 173022,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-missing-icon-100.png": {
-      "sha256": "2fb286d3475aa284cec5f4bd784c42ae28120435c10409646a385ecfad2a513d",
-      "bytes": 228534,
+      "sha256": "1d934c7f59e0db7addc9aa63ad4bbee2df5b6f3efb6bc08e750e2b670a48a557",
+      "bytes": 229154,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-100/tabbox-single-100.png": {
-      "sha256": "d66d6ff02fb61f0b369eb23ca9f69d89a9994377a9015116d8d0df0383bcc6e9",
-      "bytes": 135634,
+      "sha256": "7969a8e7956802a377fb3635351cf7655cdd3183c6f033218a8a4df9062ee923",
+      "bytes": 135699,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-125/blur-disabled-125.png": {
-      "sha256": "4c36cfbfacc9ff355b70b5a85c0ba535327b0af99021793533af7893ab9bd358",
-      "bytes": 151323,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-125/blur-enabled-125.png": {
-      "sha256": "04652f3ec7288c907eedd0ab1e6c8f469074a6c0000da420f4185ecea8008cae",
-      "bytes": 169465,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-125/core-icon-gallery-125.png": {
-      "sha256": "774dbd18437f286dc204b3bc63d53fdec17c7176205e92487a654c57b915c015",
-      "bytes": 91013,
+      "sha256": "22c2b0746c7824c430d220491633f581d559a46abfca61db950862435ece8e83",
+      "bytes": 91370,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/desktop-baseline.png": {
-      "sha256": "e072abfba71ceab6fdff2c93953cbb4a275e0effe29e0d1e3721b5d358302e29",
-      "bytes": 159205,
+      "sha256": "d3a4c99f1b328b5e1647d845c7751bd5e4255f44403f72ba53953a48e3457e74",
+      "bytes": 156588,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-125/doctor-runtime.json": {
+      "sha256": "f92b9a1e3ae30c8331e31902caefdadb0fb90a09b3de0d1255bef71493438c45",
+      "bytes": 3010
+    },
     "single-125/dolphin-maximized-125-restored-focus.png": {
-      "sha256": "0ca5c716be5167e7bc1bbbff6e687d47e80b00355b879b2e14e9ed99bc38cc0f",
-      "bytes": 200918,
+      "sha256": "e97ed40b02fe0ff70de287073dba9446e54c557b346fd0efd62e309b74f1c97b",
+      "bytes": 198376,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/dolphin-maximized-125.png": {
-      "sha256": "81df45edf678fad366b85d71e5376e77eb3e1c30e3f49825ee9f642555deba66",
-      "bytes": 143939,
+      "sha256": "4d7173d1dde1efdb989fa3382664d9490b9846896ecb4c71577a12cd71a79755",
+      "bytes": 143055,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/firefox-maximized-125-restored-focus.png": {
-      "sha256": "efdde92436af55765c9478bee9ae33c945db96e379674f62a57bc38cb4f76ad2",
-      "bytes": 84578,
+      "sha256": "5edf7da445715a4c5a729328afb67396bd60251073abb1289b13c2b45881cc82",
+      "bytes": 84252,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/firefox-maximized-125.png": {
-      "sha256": "343cb4a1dccc4333354d4edc3544673c4745275cbbe8b6040d29c4cded01d4ac",
-      "bytes": 59112,
+      "sha256": "545f3398a0fe60579de7dbd0ce1375549e68133840382d81bbc43ad77c740389",
+      "bytes": 61351,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/konsole-alt-mnemonic-125.png": {
-      "sha256": "7d3e6bd741a6a49873ca21c7fc63a4d21a4a65e2405ea50fcf4ed18c3a20140d",
-      "bytes": 74646,
+      "sha256": "639f4152f42baff479df9b883792eaf1d90b9902697438b27a3a22542fe4f46c",
+      "bytes": 73968,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/konsole-fullscreen-125.png": {
-      "sha256": "5783905fcaac19af77f6f9be21c13b27f637f5179e3bae791aa2db1d1f4af406",
-      "bytes": 31318,
+      "sha256": "203a2db324f1b6cd38315ad891f1538fd68f2a4c581e3573404fbe3638a9b5fd",
+      "bytes": 31308,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/konsole-maximized-125-restored-focus.png": {
-      "sha256": "92c4172b7ad1b2dce74d790257b914ac82e4a360f9e587884ea2393a081d0587",
-      "bytes": 142780,
+      "sha256": "5d224aa50eef3ff87072bcbd15a3f6aedcc5c831ac1b6e0a45406e45961fe787",
+      "bytes": 140639,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/konsole-maximized-125.png": {
-      "sha256": "82e1b4d4326b06164cb75f0fbac909d65db5ff6e116e50e9ec365dd1191c4a1c",
-      "bytes": 78087,
+      "sha256": "4b8dc486c1c84ea3e42dc6d5acd9af7f4d92b6a3441652afc1124cdbe0122857",
+      "bytes": 77518,
       "pixelSize": [
         1920,
         1080
@@ -1850,8 +2258,8 @@
       "bytes": 377
     },
     "single-125/layout-ltr-125.png": {
-      "sha256": "131d22a5bef8dc596435ee3fe4ff861b01afe057babf2814dbdc6290eaea9935",
-      "bytes": 154471,
+      "sha256": "8eea3b5f2962b9a83d3db9bdd004ac0b85abc11f441c0aa1367a35c631795c6d",
+      "bytes": 153770,
       "pixelSize": [
         1920,
         1080
@@ -1866,32 +2274,32 @@
       "bytes": 378
     },
     "single-125/layout-rtl-125.png": {
-      "sha256": "2473ac8af82ef59f31d6c3b92eb646de043f2157143f717e6920cd9bca4c6b23",
-      "bytes": 154456,
+      "sha256": "56ff62bf253e0860d4001750d04e5bdb08fd09474d2e3e0bd2a18f0b604034d3",
+      "bytes": 153748,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/layout-translation-expansion-125.png": {
-      "sha256": "0793f18bc5c4ea88472fccb5ea6b568ca866784f4d3a4b2e06821eaeb16ec7bf",
-      "bytes": 161209,
+      "sha256": "82503fe5884ebe48bf02ae6c755fc8d73998bc51e494b27c34d20728fc501c8a",
+      "bytes": 159686,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/logout-cancel-focus-125.png": {
-      "sha256": "027d06d738a4a2a03bbd6a5b75a2131c52aa57c543c8503e099d49866d2a53d8",
-      "bytes": 126651,
+      "sha256": "8d973bb5b3cf5877d43378acf130cf71748e89fe790ae08c92b58bfc6ec7f59b",
+      "bytes": 125530,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/logout-windowed-125.png": {
-      "sha256": "4f0def661cbb36bb360b5c1442760a9e416a38b5e32bb27e09924df596697a48",
-      "bytes": 126551,
+      "sha256": "628a2099607ad3597d6c73516b165f40b59d3e1a58d0280f1888c7499f0fe0b3",
+      "bytes": 125454,
       "pixelSize": [
         1920,
         1080
@@ -1918,20 +2326,20 @@
       ]
     },
     "single-125/motion-normal-125-intermediate.png": {
-      "sha256": "5462b6af575f32a5f4d7c3c2837c2a1671232b44e21ab0feffe54229cb6b080a",
-      "bytes": 3464,
+      "sha256": "928041c502cacff2a144df39416c0a806b166d2e956bf40634805a6c6cb4ec75",
+      "bytes": 3465,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-125/motion-normal-125.json": {
-      "sha256": "159e5c34b2eee0a29fea732d1a14e378a51e4df1d0df7c35b736dc40638e3d46",
+      "sha256": "685ab2af12c80013582aee0f8f336f3b8ec0eb1e2df94e1630770c92a1fbe40b",
       "bytes": 759
     },
     "single-125/motion-normal-settled-125.png": {
-      "sha256": "d6e5573e8a7324ae1cd38f2c579bb3f815fb9184d27575501d7e2058c39b7aae",
-      "bytes": 143129,
+      "sha256": "c041fbb949c0fdc592228c8c826793c0175376b4263d8b4f711e17140f958557",
+      "bytes": 141913,
       "pixelSize": [
         1920,
         1080
@@ -1954,12 +2362,12 @@
       ]
     },
     "single-125/motion-reduced-125.json": {
-      "sha256": "0e7fc44afdce7721e42de75fb0d78776a33ea2582a7a84cb0628149fbe6e74b2",
+      "sha256": "cffeb90da886c077390cacfcb0febed02afe0271aa8a97c3e8f51f5775e61c19",
       "bytes": 693
     },
     "single-125/motion-reduced-settled-125.png": {
-      "sha256": "d6e5573e8a7324ae1cd38f2c579bb3f815fb9184d27575501d7e2058c39b7aae",
-      "bytes": 143129,
+      "sha256": "c041fbb949c0fdc592228c8c826793c0175376b4263d8b4f711e17140f958557",
+      "bytes": 141913,
       "pixelSize": [
         1920,
         1080
@@ -1982,20 +2390,20 @@
       ]
     },
     "single-125/motion-slow-125-intermediate.png": {
-      "sha256": "9a1db1fbac425b22fee276e29da8ed3dfd597322f3f81956085781c7165b1de1",
-      "bytes": 3450,
+      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
+      "bytes": 3466,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-125/motion-slow-125.json": {
-      "sha256": "fb28cae66c58739eb31762ccbd54953fd50c71e958e029797d2a1ab11a65af38",
+      "sha256": "b34b73ee62cdefaa06bb6756733bb1ce15ac84b12cc491581d224f58b650d96d",
       "bytes": 763
     },
     "single-125/motion-slow-settled-125.png": {
-      "sha256": "d6e5573e8a7324ae1cd38f2c579bb3f815fb9184d27575501d7e2058c39b7aae",
-      "bytes": 143129,
+      "sha256": "c041fbb949c0fdc592228c8c826793c0175376b4263d8b4f711e17140f958557",
+      "bytes": 141913,
       "pixelSize": [
         1920,
         1080
@@ -2006,296 +2414,436 @@
       "bytes": 18
     },
     "single-125/outputs.txt": {
-      "sha256": "60de5d0ec8da649a1ce000b53e14a37d2baf0d040d9ad48ccdaae2cb6327e36e",
+      "sha256": "63d5c144f05c8bb549a3174052387cb48a6a81b12c965890dfc65e67a01d4235",
       "bytes": 595
     },
-    "single-125/plasma-calendar-125.png": {
-      "sha256": "aa2c335a64e1adbd668ee041b3bab281c45d84410ca0432b5fa50a24bf3bed23",
-      "bytes": 169643,
+    "single-125/plasma-calendar-blur-disabled-125.png": {
+      "sha256": "61c272e168fa677c93514c3938679cda2e4ee15740d4abf0e06d15f4655aafc3",
+      "bytes": 168678,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-125/plasma-launcher-125.png": {
-      "sha256": "48852c64704fbea82a358bcfd7d6b99fac488862ca486ca67a1c9a85d2c6b54e",
-      "bytes": 252188,
+    "single-125/plasma-calendar-blur-enabled-125.png": {
+      "sha256": "403bd2c857bc8560385e769eef5eb9e87366d9d59bd63febe9136bc3f6f65c47",
+      "bytes": 302730,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-125/plasma-notification-125.png": {
-      "sha256": "c50435a0b64fd7763d0ef3ff78f4af462e6b09922abdaa42fefd645438868959",
-      "bytes": 175579,
+    "single-125/plasma-containments.ini": {
+      "sha256": "2f09e256eebd89da31a70c8db6a2283faf5ad19d6960cda78295c96323956e5d",
+      "bytes": 3076
+    },
+    "single-125/plasma-dialog-blur-disabled-125.png": {
+      "sha256": "3bd317e6277cb61211f38aac3ae1ade800c1eeac6a7983546a1f6ba442f6ece3",
+      "bytes": 152549,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-125/plasma-osd-125.png": {
-      "sha256": "f70be938d697189d1e35049cae0d796df636021bab58d5a8d0609f558d24aab6",
-      "bytes": 196075,
+    "single-125/plasma-dialog-blur-enabled-125.png": {
+      "sha256": "223282e97d2b2a1340234c391bdd1d8aecfa7bfcf5a79b2b51f42645c011e11b",
+      "bytes": 171449,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-launcher-blur-disabled-125.png": {
+      "sha256": "0788895fef6e5737c360a188128323c035df6b7aeda1286e0d964faad520ff98",
+      "bytes": 136567,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-launcher-blur-enabled-125.png": {
+      "sha256": "bfa704fc9b779ceed2357db80a27d2725937d3867b09944eefb604ddb0635392",
+      "bytes": 253587,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-notification-blur-disabled-125.png": {
+      "sha256": "0b19f0326e970dda93149f1f854bbf893a56f708b2739c8f24ae37a9bbf79b51",
+      "bytes": 150472,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-notification-blur-enabled-125.png": {
+      "sha256": "afc8d2804a856e9cb8c4e8efc7a44981aa35c11698134b9d2291d55d5ace045a",
+      "bytes": 173857,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-osd-blur-disabled-125.png": {
+      "sha256": "e8a0dea778179756ad875f63355a97f1bc876915e9081607c3d9475d8d9afa9c",
+      "bytes": 145529,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-osd-blur-enabled-125.png": {
+      "sha256": "add30aee47018539efe5fada99d460f9cbdc81621b55733b25920065bb23bb1b",
+      "bytes": 167852,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/plasma-panel-bottom-125.png": {
-      "sha256": "4dbaa487136346af0ad867870b3c944659cc2e3c69d524acd3fe1ce4797bad59",
-      "bytes": 158776,
+      "sha256": "495028df3786084b3fb1fa7ccc3fe32f938787fc7750ef662bc2df49a3d2405d",
+      "bytes": 156061,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/plasma-panel-left-125.png": {
-      "sha256": "332d0da29a5faf9f6db692d4bb591a3b763806d88a736e26491952a760174cb8",
-      "bytes": 160441,
+      "sha256": "76381854766db0ebc23a0b2a6690d2c0adf8f9da3b5f8ca09cc0254ecb1ad603",
+      "bytes": 159307,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/plasma-panel-right-125.png": {
-      "sha256": "b214aca7298f3d5f7a39d45ffc3b1bea8e8bcb3416394f769b6907864595b9a1",
-      "bytes": 157992,
+      "sha256": "0c3ae96e6d6b9c62d69a9ed557e8a54ede461df35b36b4e7c81b037a2dcefb14",
+      "bytes": 156794,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/plasma-panel-top-125.png": {
-      "sha256": "1c297d400d40d90d60bbcf24072143499ea054100dc7210852a750cd9ca073ec",
-      "bytes": 160774,
+      "sha256": "3e475eb1e0c99f17cd346fd3b2ca565d3d4a9387176fe4e9a689495985c84846",
+      "bytes": 158467,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-popup-blur-disabled-125.png": {
+      "sha256": "5f9e4eec11727101aa064993b742acff38b838fd63e68d387a69832096b01d70",
+      "bytes": 169013,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-popup-blur-enabled-125.png": {
+      "sha256": "8ddaa10a6d238c298534cbcd3c3c78fffaeed200fdce0bdead46044b4fd0c3ae",
+      "bytes": 195982,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-shell-baseline-blur-disabled-125.png": {
+      "sha256": "b73b73400775b687a4d114786ddf95ad813931d409b450606d87ed663645b06d",
+      "bytes": 138443,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-shell-baseline-blur-enabled-125.png": {
+      "sha256": "c9931b438adc36c89825e2da04715ff4bde2a62e0b18105769be7a27a69b26ab",
+      "bytes": 156436,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-task-manager-blur-disabled-125.png": {
+      "sha256": "c04a87e5cf653b275b0019afb1a483bda18e6033eb4da3d9b02e883fee8efaba",
+      "bytes": 138590,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-task-manager-blur-enabled-125.png": {
+      "sha256": "ec8ae35c5207e7a96320a91dd85b33563fc456affcf5c0210eb7fdfe5b1c09e4",
+      "bytes": 157611,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tooltip-before-blur-disabled-125.png": {
+      "sha256": "e2ef2e574b154fa1e56025c73fd77311c8333ac86f8cffae3efccc0ac7e09cc4",
+      "bytes": 128002,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tooltip-before-blur-enabled-125.png": {
+      "sha256": "2007597dabb00beb60be2da09af5543348da2d87c467d9d5b2b8c6d116d7a13f",
+      "bytes": 146886,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tooltip-blur-disabled-125.png": {
+      "sha256": "ba870a3f329ee6a3d8fee328364f288eedee8086967f39ed42d9caa82de3b318",
+      "bytes": 127235,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tooltip-blur-enabled-125.png": {
+      "sha256": "4e5f258f98f393e2d081d5c24297934fbcdbff30f98f012aa4a459de7802a6ac",
+      "bytes": 148267,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tray-blur-disabled-125.png": {
+      "sha256": "c934a3564ff47a9b1b072231a51ddd3998043f978714da5a80cfdc63c30ba3eb",
+      "bytes": 149988,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/plasma-tray-blur-enabled-125.png": {
+      "sha256": "632ed6bf574fa10f9cab51e90d57fa608848e62bae130ac1faf8dadb4711ea46",
+      "bytes": 253754,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/qt-dialog-enter-before-125.png": {
-      "sha256": "8466c2dd61d60a4429937cc58363d739859796699b52a3337738909c706ae6fa",
-      "bytes": 168778,
+      "sha256": "76aa974b1e9d1c200e190223d740d1d96ff13facd99fdc8ee3e0f0461f04bf73",
+      "bytes": 167120,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/qt-dialog-space-before-125.png": {
-      "sha256": "bb9a8768e60059bba30073062beeebb7c16bee1e0d8184867b598c3d46d60c08",
-      "bytes": 169947,
+      "sha256": "12366c9829c8d81b29bf1978b8860040c36654ab617f976fc86447272d492419",
+      "bytes": 168282,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/sddm-enter-validation-125.png": {
-      "sha256": "770b7a88971da2fffbf5493a49612ac36fe74cea62ecca69bf7028c56df42c74",
-      "bytes": 99687,
+      "sha256": "402d92406c8db30111c51a435e9fe413f40b391c21d5cab37c0a205b8540eb33",
+      "bytes": 100474,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/sddm-test-mode-125.png": {
-      "sha256": "d097dde1e0809b6e7e8f21dfa56a170a99a23486d3498d183c2ee72bc1745e38",
-      "bytes": 93553,
+      "sha256": "4f9a9c82f30d63e0c6c5507f10f6f9d65740d18d2120734972793364b8691639",
+      "bytes": 94384,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/sddm-username-focus-125.png": {
-      "sha256": "6a4dc6eaf651f5cd8bd3d40ba56b6fd946a053ca4d874ef4cf6f227c1d441c71",
-      "bytes": 93545,
+      "sha256": "bf7f8549a16ec0bf3f127456c18e0bae1982b13e84e1a7dc4e0f50534ce1cf3e",
+      "bytes": 94353,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/splash-windowed-125.png": {
-      "sha256": "dc575bff012e9321b60266cd348a35f0cb9932ec999f8a8b30b3e7e177ec6650",
-      "bytes": 21019,
+      "sha256": "9617b38daa35bac5c39b4ec0329188522cb4a3ea71e4795a74ec29fb5ffc60a7",
+      "bytes": 20971,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-keyboard-focus-125.png": {
-      "sha256": "532f5c8b7d783a9bcde75078ee41769579a09a61c2ec58419ee6d491dbfc9850",
-      "bytes": 291862,
+      "sha256": "230c4c40c28ea0d35038b07cb04262e3d6053e8ff98af5bb5e254577c6ddd626",
+      "bytes": 290391,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-maximized-125-restored-focus.png": {
-      "sha256": "b2a8b8752dd8537ac90f726436c70b0fdbd41870155dfcefa638d20633ce9af8",
-      "bytes": 292575,
+      "sha256": "8dfc0a161e32177124f8e58be098c4776538c9435c686e5b51e7578fbe567a38",
+      "bytes": 291129,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-maximized-125.png": {
-      "sha256": "3addc4194b89c90cbc7d359b11c95bbd796dfe6e73d29c3a0ba49a4d4a0e84e6",
-      "bytes": 262621,
+      "sha256": "ce8941051d3abf75d4fe8b1951e148035c158e5e968a999cac667ecfa15a658c",
+      "bytes": 262783,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-minimized-task-125.png": {
-      "sha256": "1f44c7c82da4f0671e11cce11111d5b35e4082a506caaf75ff950a0df7055504",
-      "bytes": 159910,
+      "sha256": "2b23868f564d53bc83cd5b4ead4ca58a23f077b9cea67b83e6edf103288f5b18",
+      "bytes": 157238,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-quick-tile-left-125.png": {
-      "sha256": "5fd3af608edec4ba0eecf20278f8f5a0e70f4f0553830e86fddcefdb863207ee",
-      "bytes": 291224,
+      "sha256": "ea18348cb20515fa4d1d062fc68a5e936643b696e8cc229f9336b22ec99d0415",
+      "bytes": 290690,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/systemsettings-quick-tile-right-125.png": {
-      "sha256": "20ffc0389780857a1cadcc977b96e63e525cee367a8d969d59f69888379180be",
-      "bytes": 342020,
+      "sha256": "9122ef53143dc56a2df81842b7bfdc8530f1db2f4acf2ffec5746b3880bca2c8",
+      "bytes": 339992,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-empty-125.png": {
-      "sha256": "f96be0486cb539149b3faf507e3861f0e7997e3c40acf828b12075e73567ed15",
-      "bytes": 138067,
+      "sha256": "307c8cbe738e5093f490a098c3a080851e9a317f2d62e97ad699e623e98bdcf1",
+      "bytes": 137510,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-error-125.png": {
-      "sha256": "038fde9d0d38daa09233a0b02b70b52d573879e23992f5dfc06667716a551288",
-      "bytes": 271542,
+      "sha256": "e9a002200f59e87ec2e430e0c64fcc44861ff85e0db58f7799c28ddd071043a7",
+      "bytes": 270534,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-125/tabbox-iconless-client-125.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-125/tabbox-long-title-125.png": {
-      "sha256": "01b7095a8c1dd43784ad1e447983ed9afb83b5c0b06ac54d750b13bc70145990",
-      "bytes": 276721,
+      "sha256": "d5546e98094eb4f5e83f5c36f7c592b047a8d7d51c33aed2381bdd78ba792f36",
+      "bytes": 275705,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-many-125.png": {
-      "sha256": "e29a3e5dfe8816fa62512e1b9fbaef3370a3a1c7ab371f79e491c4c1a0d966ff",
-      "bytes": 266601,
+      "sha256": "1adfba636252a6bd3ab9662bf292c5150a70fbdc8845b5cb66c0e42f5d564c82",
+      "bytes": 263982,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-minimized-125.png": {
-      "sha256": "e912efe0ae4dd0216a96fafc5a092d96f865068dccfe3cfedd92363ff68a002a",
-      "bytes": 189524,
+      "sha256": "02f2e401f0cfebc5375b080bdef94654695a794a558b504944b94dd70d9ebc94",
+      "bytes": 184929,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-missing-icon-125.png": {
-      "sha256": "095f9acda6c898bf4737d1c278787a85dbe04bd5101d9a073090b775216f4d9a",
-      "bytes": 276110,
+      "sha256": "f50dc8cbb4d08be1e5659f6ff71e3e42bfea3d8a36d6c98fbab9ecd869c09974",
+      "bytes": 275681,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-125/tabbox-single-125.png": {
-      "sha256": "6a3385ebb6766aa2df89ee014427ce65276a71b74f480e83bb0092a7558253c3",
-      "bytes": 133837,
+      "sha256": "ee0162c7b5653f25bba299fb65d81dc59b495b75ec5cf6e2369545b9deb0a43a",
+      "bytes": 133372,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-140/blur-disabled-140.png": {
-      "sha256": "2bc1a53c68302f035ab812866232a870d1a5794a2764f61f47dd2d7161fee900",
-      "bytes": 156497,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-140/blur-enabled-140.png": {
-      "sha256": "cd68f667492fdb05711e87a3aa7a1d6196f7962201a6c1c5b3f0eb5992c7f305",
-      "bytes": 209328,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-140/core-icon-gallery-140.png": {
-      "sha256": "901e94e0ab0aae33109cac9509012b66b10fcd34f850b58c9a4f2faecada61a0",
-      "bytes": 74820,
+      "sha256": "d13c7eda3a8728bb5ea2f8cb9dcfdc48fb9aad29535e35d42471a02b2660c8f9",
+      "bytes": 74804,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/desktop-baseline.png": {
-      "sha256": "553a85d0e984232b640d129a76a476818fd14b00229296b8484d44a25f72ab63",
-      "bytes": 195136,
+      "sha256": "a3560d83b0feb84d5b21cb985b54b303b50731fecbce67cde3a648ae0c02c851",
+      "bytes": 195560,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-140/doctor-runtime.json": {
+      "sha256": "b0aa9f6cceda56f9bbc9f43c45f22d7d53861296c4d3ffbb982a65ad2a73050c",
+      "bytes": 3009
+    },
     "single-140/dolphin-maximized-140-restored-focus.png": {
-      "sha256": "1dfef6b56e469f3b8041d8580efe5965e4268a53b8dbd14b57feeafcee9667e5",
-      "bytes": 242224,
+      "sha256": "ee929368e2c303c29dcfe3b61a9b73545c4059d5ce2cfb170e338458adf0f1e8",
+      "bytes": 241163,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/dolphin-maximized-140.png": {
-      "sha256": "a3d67599a52bb4028f3202494bc0b8b68ab8fe43e144cca372ec3e01fa66010a",
-      "bytes": 140557,
+      "sha256": "5465bff20497f5b77d48f02c7ce50e85b0eaff09d93d7e319dde0459c6c7aee1",
+      "bytes": 138688,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/firefox-maximized-140-restored-focus.png": {
-      "sha256": "f2b2a73593a98a819f1fc44082b17c3012ddcb0aed36d24a2548b2306f3c15b2",
-      "bytes": 51991,
+      "sha256": "8a1b7893ac32f890f2512e8d44977f4c58c5b81870f5ca74741e4bae0b20fb05",
+      "bytes": 52580,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/firefox-maximized-140.png": {
-      "sha256": "310f4b7c78e096150686b0d8ed97902f817eefe691763d5a56d2d0f97a33bc8f",
-      "bytes": 47470,
+      "sha256": "8af597d8ee7fcd33ac4a07d26f73a1d0718aac58ab008e0e2659cfe966121b43",
+      "bytes": 48008,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/konsole-alt-mnemonic-140.png": {
-      "sha256": "855b8a7512c1d227ea3737062c66d2a86b378329d2b8b5fd7cd32cfe446fbf17",
-      "bytes": 64258,
+      "sha256": "fbf44a5cf4b371e9ff879af5240bc55142f551e141ac675f6580897bfdf71f45",
+      "bytes": 63348,
       "pixelSize": [
         1920,
         1080
@@ -2310,16 +2858,16 @@
       ]
     },
     "single-140/konsole-maximized-140-restored-focus.png": {
-      "sha256": "28f6fd845d7367c9270f41d37bb2ca13144e865297e99b53b03e5ab1bcde1e85",
-      "bytes": 179664,
+      "sha256": "50f0977196a2b9314322e4640df8b4a4da7f34c39329dd6a6ba86044b657d4ba",
+      "bytes": 178151,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/konsole-maximized-140.png": {
-      "sha256": "f0c7beee59710bae7555d899ad0f0de6f44d865a071a0a77614ab8a91ae5715a",
-      "bytes": 61985,
+      "sha256": "2c776b921b3043a1cb726240f02b5707a2b2b80aacb35e4a8ae3a744e6deec33",
+      "bytes": 61036,
       "pixelSize": [
         1920,
         1080
@@ -2334,8 +2882,8 @@
       "bytes": 377
     },
     "single-140/layout-ltr-140.png": {
-      "sha256": "56cbac9771906f83ac67f1059d28d2bc55064b69bd612107044b8ded46404191",
-      "bytes": 190814,
+      "sha256": "8e80a91da009ac5f64c8a08f270143a0c2c9d52a14105b5316b49d7a976f7f7c",
+      "bytes": 193166,
       "pixelSize": [
         1920,
         1080
@@ -2350,32 +2898,32 @@
       "bytes": 378
     },
     "single-140/layout-rtl-140.png": {
-      "sha256": "38b5c0b51ec194bf750e3e575aa98294f40346896dfbfb0872c67542a6312635",
-      "bytes": 190647,
+      "sha256": "171862a8d4fc8ae3adbaf1edad53133c3434e8b5d26a01cf48778ccd7544875b",
+      "bytes": 192816,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/layout-translation-expansion-140.png": {
-      "sha256": "2b8ba7be6cefb47467033869403d07419acbc7de783f344898fdf49fcbb21705",
-      "bytes": 200130,
+      "sha256": "467b133696291890658d4e2885ce273bbaa0f0e9a5230a92b2525c98ac19c83b",
+      "bytes": 200370,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/logout-cancel-focus-140.png": {
-      "sha256": "104e51fe7cf3fcd27989f8eb1fb4f5af0df540229ff43f5685115943a0566a9f",
-      "bytes": 131540,
+      "sha256": "87cb6a32c9f95fc165f0357b5b0ec89697f5bc1dc4237dbb200b9f3547104ba5",
+      "bytes": 130675,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/logout-windowed-140.png": {
-      "sha256": "daad4b332cec1b952e007095865a796733f5d0ccacaade09a379f2994327a54c",
-      "bytes": 131304,
+      "sha256": "baafe30df7c8c913dac100d230a7a607de2150734242a24c739b259533d84713",
+      "bytes": 130366,
       "pixelSize": [
         1920,
         1080
@@ -2402,20 +2950,20 @@
       ]
     },
     "single-140/motion-normal-140-intermediate.png": {
-      "sha256": "2fc87adf9667aa58ef0da99f5f1f7a5757f9607ce5c1bd2e7744021feeddaecb",
-      "bytes": 3471,
+      "sha256": "341c01ebae7720d386845952e57e37fe004448774353fd51f0c56beb20a01cfa",
+      "bytes": 3464,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-140/motion-normal-140.json": {
-      "sha256": "1ece2b34c9e7af638d2632ed27287655cde8039319616d36fe7af3c9886a7d35",
+      "sha256": "5bfa5c6df04d3e1d79d4b685713e920dbdea571a9e8f786a6524d830cb384326",
       "bytes": 759
     },
     "single-140/motion-normal-settled-140.png": {
-      "sha256": "6a164a7b515c478869d518a9542e932128d118c06bfd34b3af8f2c6da38bb821",
-      "bytes": 143113,
+      "sha256": "6fa2c66cdf328e353addcd5886a817a46f81c26c543384ba42eff693d969abae",
+      "bytes": 143408,
       "pixelSize": [
         1920,
         1080
@@ -2438,12 +2986,12 @@
       ]
     },
     "single-140/motion-reduced-140.json": {
-      "sha256": "151e72ce65e5ebc569da680e510371fdea52d7b9dcbd98ab317cbcecce2df570",
+      "sha256": "d3523c5f5ecaf1437d2d02efb7ddb3980333a34d6bbffaad3d6f0758f961aae5",
       "bytes": 693
     },
     "single-140/motion-reduced-settled-140.png": {
-      "sha256": "6a164a7b515c478869d518a9542e932128d118c06bfd34b3af8f2c6da38bb821",
-      "bytes": 143113,
+      "sha256": "6fa2c66cdf328e353addcd5886a817a46f81c26c543384ba42eff693d969abae",
+      "bytes": 143408,
       "pixelSize": [
         1920,
         1080
@@ -2466,20 +3014,20 @@
       ]
     },
     "single-140/motion-slow-140-intermediate.png": {
-      "sha256": "d15428dd2689011722f04640544b6d0edb867d604a2c7b91981c6fd1d4095d4c",
-      "bytes": 3474,
+      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
+      "bytes": 3466,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-140/motion-slow-140.json": {
-      "sha256": "ca8f0992e8beaacd3fa9fefee41f72cfde924b126c482750f4dea9c51fedec45",
+      "sha256": "aba7ae9e52c653c0c694807b4791e9c62ac5db79aad6c7c081203b00faf1c856",
       "bytes": 763
     },
     "single-140/motion-slow-settled-140.png": {
-      "sha256": "6a164a7b515c478869d518a9542e932128d118c06bfd34b3af8f2c6da38bb821",
-      "bytes": 143113,
+      "sha256": "6fa2c66cdf328e353addcd5886a817a46f81c26c543384ba42eff693d969abae",
+      "bytes": 143408,
       "pixelSize": [
         1920,
         1080
@@ -2490,327 +3038,467 @@
       "bytes": 18
     },
     "single-140/outputs.txt": {
-      "sha256": "8ff3b0dfa6c444f657d009e93667eb83e08e2c6f4bf96a8d299243ce3d87183d",
+      "sha256": "215289c643f629d6bbfe211f54ab2a9c730808359785483aaf80261bb0630048",
       "bytes": 594
     },
-    "single-140/plasma-calendar-140.png": {
-      "sha256": "17d4bd82c3819d4078f44fd79a8310d9168484ee78d96997a1b2600ea339d390",
-      "bytes": 178776,
+    "single-140/plasma-calendar-blur-disabled-140.png": {
+      "sha256": "945c221885dc996a8bb02682966cfe2060a70b250cf3f2502e68fd2ed6c338b0",
+      "bytes": 180722,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-140/plasma-launcher-140.png": {
-      "sha256": "5505dd68e474f06cba9dfb52458c7feb3ff80bde44d288152a15f7574d213ee4",
-      "bytes": 503452,
+    "single-140/plasma-calendar-blur-enabled-140.png": {
+      "sha256": "9d1a7c5f6a9edfc2e568e842e488f248a1bcd39235497f083ec0e52d590cf5dc",
+      "bytes": 491367,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-140/plasma-notification-140.png": {
-      "sha256": "7d81e0457477aa04f2da82b6bc28bb234f2c04975c716b84fff183f3f0a8923f",
-      "bytes": 235058,
+    "single-140/plasma-containments.ini": {
+      "sha256": "404e4c212effec35c85e608cb44d8a8f5b73f44ac08e454df82361a4b000f453",
+      "bytes": 3076
+    },
+    "single-140/plasma-dialog-blur-disabled-140.png": {
+      "sha256": "b195a3c2f7972d3b72c512776a3e281bdd9a98b52beb077fa050602bd37100df",
+      "bytes": 159754,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-140/plasma-osd-140.png": {
-      "sha256": "3d675ff73a48ea2f2358f65d7e8d8a2c486f4b2f20540a6a74d2906f7eff00fe",
-      "bytes": 248314,
+    "single-140/plasma-dialog-blur-enabled-140.png": {
+      "sha256": "2b9caa2b94de03226484146e3e51d7b6006fcafe1026c90e0db2f4d67c1d7f97",
+      "bytes": 213174,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-launcher-blur-disabled-140.png": {
+      "sha256": "9fa5494edb0093920e38b70c56ca81bac94ca95720b4f05ed4042a7fdc42a5be",
+      "bytes": 160373,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-launcher-blur-enabled-140.png": {
+      "sha256": "5853c19a80ae387cdb8dab9bd80dcbb639f418005990f42e44eee513e47e2e33",
+      "bytes": 506386,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-notification-blur-disabled-140.png": {
+      "sha256": "c027d4924a8b1685d9e1ec14b20fd065e3f551be40898021707150e8bc5f655c",
+      "bytes": 156982,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-notification-blur-enabled-140.png": {
+      "sha256": "955f2d00dfac9b824392fae87ade7387af2c546ae5bff06366cc6885e5a40579",
+      "bytes": 236747,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-osd-blur-disabled-140.png": {
+      "sha256": "8cad6cfafba67d8711036934ad32aa15eef740694f80873b6f804f287ebbde7f",
+      "bytes": 152286,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-osd-blur-enabled-140.png": {
+      "sha256": "8126cce593a04c3fc78c77cb50347f05c7f83d3d19388d88a3a4fd2e2ddf1de1",
+      "bytes": 207583,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/plasma-panel-bottom-140.png": {
-      "sha256": "d5c1009296b97c2d4d0619249faedc6544d10e304bd1a0cf74010647a64f3221",
-      "bytes": 195046,
+      "sha256": "1b0b7e5b238b081dc695f50ba5e1260c734fbb210e5a74f156e13ce4be4f89f8",
+      "bytes": 195563,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/plasma-panel-left-140.png": {
-      "sha256": "aa1b6889f508bed91d3b0ba346f1f32b2e69223ab8f65ec157027ea4a59771ba",
-      "bytes": 179030,
+      "sha256": "38bdf46c95eadf28ef2c0eaedaf29e2e13dc9fce59dfeb1c1485aed55d8c7597",
+      "bytes": 180757,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/plasma-panel-right-140.png": {
-      "sha256": "0be7b2199cc5c18b19bd534e2f0e29e10c08af3ba70773df97c4e62ef9ef0be8",
-      "bytes": 177970,
+      "sha256": "48de5971cf330c15b4d1dc3fcf18053bb8920e66049572ee2fbdfe65264ab422",
+      "bytes": 180009,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/plasma-panel-top-140.png": {
-      "sha256": "c252bd736fdcddaa7bc6f0b179c8bf7cf3a67b6edd72a79442efd1dc4a2318db",
-      "bytes": 194701,
+      "sha256": "bb8bf1470c4e711751d0c230ba0e651264ff0bc4e15e573d6cf35c8c124d609c",
+      "bytes": 194477,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-popup-blur-disabled-140.png": {
+      "sha256": "be396af573726125f2f25202186b956ee772b53aa41812d107c0d1a99291c2ee",
+      "bytes": 177046,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-popup-blur-enabled-140.png": {
+      "sha256": "43a6f6456b2103000dab602feb1bfd7637720feea61714d3ed40c809e402cec7",
+      "bytes": 230369,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-shell-baseline-blur-disabled-140.png": {
+      "sha256": "cd165e13b976616086af14e87e7f15e61cb73a70a7511a8cc3c859cc8b54ed58",
+      "bytes": 142706,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-shell-baseline-blur-enabled-140.png": {
+      "sha256": "1b0b7e5b238b081dc695f50ba5e1260c734fbb210e5a74f156e13ce4be4f89f8",
+      "bytes": 195563,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-task-manager-blur-disabled-140.png": {
+      "sha256": "00f0f882b9592d781742b7821624cd2eff50cba8ba4dc7b5a2742017ee735146",
+      "bytes": 143005,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-task-manager-blur-enabled-140.png": {
+      "sha256": "dc71e1402fb66e5b67d0cabef2cf9882e3f5f5136f5f6af89bbeec3a7983836b",
+      "bytes": 196328,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tooltip-before-blur-disabled-140.png": {
+      "sha256": "f0ed61158a2d114a452de055694970d1e5d28a775e78729ca1a97b7dd5ddb6ab",
+      "bytes": 128110,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tooltip-before-blur-enabled-140.png": {
+      "sha256": "d172bb84f7b806e6f116f0748051c75cc39ddb0598cbdd511f8f15baaf0c499f",
+      "bytes": 181283,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tooltip-blur-disabled-140.png": {
+      "sha256": "8cbe8de8e196cba2f16310e78e16eeafa8a11ab59b5b0177ba95b5d276eaeac2",
+      "bytes": 125305,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tooltip-blur-enabled-140.png": {
+      "sha256": "3fc86c2a11024c00216d741b5b4046d979bf44cd4b97031576e0f284bd398ca3",
+      "bytes": 181749,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tray-blur-disabled-140.png": {
+      "sha256": "05e1f0077bc8f537bc7acbfe0c91da5f9073ce9030936a3d0db43beb55ff43a6",
+      "bytes": 177367,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-tray-blur-enabled-140.png": {
+      "sha256": "c53a8065ff3e12e11ada879cb6466885371fbe112ad8bd3852a691f1b5bf63fb",
+      "bytes": 436358,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/qt-dialog-enter-before-140.png": {
-      "sha256": "a3bcc0405beb2083d65a7e6548bcc673db1329e3f622bdda3eedf8b571221069",
-      "bytes": 208881,
+      "sha256": "f2b2c90800d92bda47564325b8c0aa645b20131ecf96b1be86e4a02bfe0f410a",
+      "bytes": 209628,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/qt-dialog-space-before-140.png": {
-      "sha256": "4df6b8a2a6883a516d936f7ae55e2ca547b07454470c85074b612e9c51b90ebd",
-      "bytes": 210338,
+      "sha256": "e0c71c75c8966fd62ef9c0de4d35fcc85d6a6035d3be97ff98e99c201135acf3",
+      "bytes": 210670,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/sddm-enter-validation-140.png": {
-      "sha256": "5ad5a3e9b5182be07334482086b35e73c0dc4e11526fb328c7afb8ffde3b9a7d",
-      "bytes": 105845,
+      "sha256": "1ce7b30d643d946c68750533ef4de8207ddc96705735de5009be29af35f6063f",
+      "bytes": 106639,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/sddm-test-mode-140.png": {
-      "sha256": "749442bf2b92d229afcff9a56bfd22209f07708124cf99a98687ad763904a411",
-      "bytes": 99452,
+      "sha256": "91e44cd42bbb1a14125510dc867d8e0d4d56c6d8c85a86da03160afb95d21253",
+      "bytes": 100446,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/sddm-username-focus-140.png": {
-      "sha256": "749442bf2b92d229afcff9a56bfd22209f07708124cf99a98687ad763904a411",
-      "bytes": 99452,
+      "sha256": "353dc9ce148484ccaa60622bce0cd4213c57ca4303bf50bf3bb72eac2801fd5d",
+      "bytes": 100418,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/splash-windowed-140.png": {
-      "sha256": "9385ec5dcfdbb9b41077ffd7117e50df1a3649c8eb02bc63c0c483e3f0189a26",
-      "bytes": 22250,
+      "sha256": "4459a57121f68176ede1ea8daaee0e65f2bec1ea48b6ee4aefbfa25b2508e10f",
+      "bytes": 22253,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-keyboard-focus-140.png": {
-      "sha256": "83452c6198470cb4fd4a2030e427e1a27b4b000e511979603bf49e2e0dde6cc9",
-      "bytes": 348095,
+      "sha256": "84b9eb45777ff706e5366a0d3526b3016fe51dbcb163023d86bcef3198191b4c",
+      "bytes": 347889,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-maximized-140-restored-focus.png": {
-      "sha256": "68af8d9e91c97edefbc665ac4caaee886e79bd0ded3c16fa69fed6e411b5d6f4",
-      "bytes": 348088,
+      "sha256": "6417b2f22e8e795ec9b432501894fa7936a410301e79ca39dcad47b2ffccaa5b",
+      "bytes": 347759,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-maximized-140.png": {
-      "sha256": "25f7a863cdcc4fb8193831c7b0cafd9c21991afd95bd8f91b9acc01d33c2bac0",
-      "bytes": 260190,
+      "sha256": "6eceb23000de8f3b79bf6a1a233d746a61dfcaf222bbc8bc26a586baa6d81ea4",
+      "bytes": 259979,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-minimized-task-140.png": {
-      "sha256": "42a2f121b8575dc0abe6206b0737b1ca406f65771feab6097cdcddf19f1dcf27",
-      "bytes": 196002,
+      "sha256": "1674711604819bef5d857d6d604393739c581a300877f0f35b2a9918cdfa36a8",
+      "bytes": 196327,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-quick-tile-left-140.png": {
-      "sha256": "173003604ad2a8afb4eb01793f35749a21d02ac55cf2e46e2053cd5f2d4cd4de",
-      "bytes": 283765,
+      "sha256": "54ed4f6c0d57cbe741ccf2371298e354d05ed5fb0ea7e61eafdeed57c9bddca4",
+      "bytes": 284634,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/systemsettings-quick-tile-right-140.png": {
-      "sha256": "118837c06f5bf1f70e8b78ca7a718567e20251e1ad15b45a3d664ea5ca9e9af2",
-      "bytes": 343226,
+      "sha256": "0bf8620a027dbe06a470761f36bff57827fd5299a7f413333b27683109df3bbe",
+      "bytes": 345253,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-empty-140.png": {
-      "sha256": "d8874634e927d060b7f148ea75748fc227603cd1ad654159ca128521b8b30c52",
-      "bytes": 140503,
+      "sha256": "6ce0ea706dee15cf7b5615adae63c9c157f55d6c5138eb1bf307e59e168dcf26",
+      "bytes": 142446,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-error-140.png": {
-      "sha256": "c3dbbf31884eee75f9e8ed14e1d04b59f1dda487e19f99ea89a72f538e5c05a4",
-      "bytes": 291267,
+      "sha256": "5bd8e9f2f0229c748ed236340dccc0eecc248b00a4f5729bf5b8f3a3621d2899",
+      "bytes": 290595,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-140/tabbox-iconless-client-140.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-140/tabbox-long-title-140.png": {
-      "sha256": "2ccb1a776619ff25f42b2c449038fe1684aec671cc3b03022240f642072c3cb8",
-      "bytes": 296940,
+      "sha256": "92c6553deac8327b6e845e1457fec9662883ccea0f4902177ce60d9272c9d2dc",
+      "bytes": 296117,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-many-140.png": {
-      "sha256": "8f0d7eb5ea3bf93038023f70758415bf278b724a4c9e404289b02406236848c4",
-      "bytes": 283140,
+      "sha256": "84cd42690b4af4a507f4a75822661f11dfbf1727c4aefcc528e0236870b333ea",
+      "bytes": 280343,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-minimized-140.png": {
-      "sha256": "aad3e7e706573e23e96d53c15e4d7bb13be2dd2ffa9435c4502bd89a66bf978d",
-      "bytes": 196079,
+      "sha256": "d1883e5b43c91bece8eaff85479724477715dc8f493fcccabcfecb1e0f9c4e41",
+      "bytes": 191890,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-missing-icon-140.png": {
-      "sha256": "723247699075ecd2510f9a232b7762cafee176ffa8fd2c431d56d7b4d34e47c1",
-      "bytes": 296461,
+      "sha256": "2237937c3a53e918df0da0ebca3b893dcea7c15726881631f6b1561d3641172f",
+      "bytes": 296367,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-140/tabbox-single-140.png": {
-      "sha256": "a731ea76628244c50806a82276e5aaa4adff03555e27a434906b1eda66e5c0ae",
-      "bytes": 130102,
+      "sha256": "5c7b4b96a020d3554c04fc1c3abebadeb4d0d5bb701f97242d74830bbdf061b0",
+      "bytes": 129636,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-150/blur-disabled-150.png": {
-      "sha256": "3467ac55f0661cd35b4ff483f138647fbc488bda28037e0334a242618994b6bc",
-      "bytes": 154492,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-150/blur-enabled-150.png": {
-      "sha256": "dbd1024ca132fca2401c7aa65faad808650920acf6383b8561c7b10c798d3c4e",
-      "bytes": 176255,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-150/core-icon-gallery-150.png": {
-      "sha256": "1bb861fdb59d69460c4397012e9047029801be1e6ce0214d3cfc9bde8ee71c9d",
-      "bytes": 98599,
+      "sha256": "281e3e31378354b7a78d58ad9d562a876b0108b06e0cfe106a7b1a514eee13e9",
+      "bytes": 76582,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/desktop-baseline.png": {
-      "sha256": "2785c09739d31d31d025d461198ad1d3947619cee2a4dfb2385dc7da08d87b6d",
-      "bytes": 165799,
+      "sha256": "5f481e69166511d1dcf82ac7596fdbd6c4b2a2e2343475b34c7b19dfcd094719",
+      "bytes": 194627,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-150/doctor-runtime.json": {
+      "sha256": "084eabe277a12e35306479b685fc9461f6914775c05756e748964e2bc1fb6a9d",
+      "bytes": 3009
+    },
     "single-150/dolphin-maximized-150-restored-focus.png": {
-      "sha256": "7739d2c045143366df7c694508fcd093e915884c78e175c48ff0a88b22a348ca",
-      "bytes": 205118,
+      "sha256": "d0d93d6386733a586f0121ef54169d1d0db2814938d99b2df22e468e6af256de",
+      "bytes": 234520,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/dolphin-maximized-150.png": {
-      "sha256": "8dec474807b0eebfa07832cdeff2d0ff3e8807a8afb71fe8133f89db77ab5a72",
-      "bytes": 170714,
+      "sha256": "c5a55a193d57f69394afc22544e408653f31a10d6762a7874b0d4b9d2b767d82",
+      "bytes": 145236,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/firefox-maximized-150-restored-focus.png": {
-      "sha256": "c5e58b1949c0489766daa291081eb6445781b289052e6f048ca3bf2f6768d75f",
-      "bytes": 89293,
+      "sha256": "e34174c3be41c09f47861e2abea8318bb679b1e87af4de2474655653b4967f36",
+      "bytes": 54814,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/firefox-maximized-150.png": {
-      "sha256": "d394c6292bcfb436397a9fd769caa83b63bbc61be4f70eb78285ebc43e0a68ca",
-      "bytes": 71124,
+      "sha256": "d7aeda789da37506b8e4d43398d84e6bea379819f6a6ddf5a13c14566974b644",
+      "bytes": 50620,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/konsole-alt-mnemonic-150.png": {
-      "sha256": "4bf79a9e489a43441bac857c8ec8183961c676a993017c69f601338c5634dbfc",
-      "bytes": 81492,
+      "sha256": "5d8de1e4b989c48b9afff73e9fbb41d1a13af369bab7055f6529519dd484610c",
+      "bytes": 59110,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/konsole-fullscreen-150.png": {
-      "sha256": "a110f610372ec2a7e7000ebf7a319c771cc6d6ea4f05db608dabcb5403c7f18b",
-      "bytes": 35468,
+      "sha256": "b385558c8a35c83f968ffc363c88555860bf067e8fadc5c6e9b4ab2026b54ae2",
+      "bytes": 35458,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/konsole-maximized-150-restored-focus.png": {
-      "sha256": "87c9c7683e59dcd12475a33c2d5a2d4c36ac982cd6f7282df9f21b3a5efb8a66",
-      "bytes": 132748,
+      "sha256": "cede32b0627304fecaa0576698c0e04784b8faec69d52a4811eab4934319c7a2",
+      "bytes": 165941,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/konsole-maximized-150.png": {
-      "sha256": "1d1aa2e531737259af490870ff2a9b14e4b50a8ce2f347bb6b92ec2584e7cd9a",
-      "bytes": 81462,
+      "sha256": "f6d1b2bf9e6e99c5f0f786dbeda3bf83bdf04cc90c275f244ee03edf9db1dc53",
+      "bytes": 58847,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/kwin-support.txt": {
-      "sha256": "25cc48ecdfb26a4d468b6bac5ba9d5f5a89df43f6ba2f0bb82fdd03590acf3b0",
+      "sha256": "f185031588fe8c917da49902f61fa2298b9896351f9a4b0a933fc39b7a10c65d",
       "bytes": 7146
     },
     "single-150/layout-ltr-150.json": {
@@ -2818,8 +3506,8 @@
       "bytes": 377
     },
     "single-150/layout-ltr-150.png": {
-      "sha256": "b7b631c5034cb741445c5c1411747b1749368d5a1b442076e26af14e79b4b627",
-      "bytes": 153774,
+      "sha256": "f11b7e41a474d31d766831b9748d8e239af73893ef93e5a43d27d2b363c0179a",
+      "bytes": 187731,
       "pixelSize": [
         1920,
         1080
@@ -2834,32 +3522,32 @@
       "bytes": 378
     },
     "single-150/layout-rtl-150.png": {
-      "sha256": "942201d22c736ee45d297e2149ffa5d9f5cfc6255fc66a39b5425148f455207b",
-      "bytes": 153227,
+      "sha256": "e990d08211a6901a5244cf84059dfef76ac5c5776239b5d62ab4c89fd4cc7d11",
+      "bytes": 187078,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/layout-translation-expansion-150.png": {
-      "sha256": "a2bc1e01035206cea1dabd8b49c22152feae6a8a667705ac163437120ca58642",
-      "bytes": 160671,
+      "sha256": "2dae5fbf3715fad100b7d962068c8b6095653b0f6654e17b414ac01f72b56b60",
+      "bytes": 194199,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/logout-cancel-focus-150.png": {
-      "sha256": "ed46b34dec92e9ee34b41367413bdf664b4a51fbe4cdc216743ff5c259f24c90",
-      "bytes": 132381,
+      "sha256": "550e099876216bd513b9015c02bf128d2101fc73367d0bac461b1a2699ca1c3d",
+      "bytes": 127271,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/logout-windowed-150.png": {
-      "sha256": "3359a5f2c881912cdfe5190b94013a4e50c9687d36a90b4e7b3a8439036dcf0e",
-      "bytes": 132116,
+      "sha256": "b324556670a42ecfe33745470f0eba29e3ed6572e11b897f3e926ad06a3b4a01",
+      "bytes": 126977,
       "pixelSize": [
         1920,
         1080
@@ -2886,20 +3574,20 @@
       ]
     },
     "single-150/motion-normal-150-intermediate.png": {
-      "sha256": "341c01ebae7720d386845952e57e37fe004448774353fd51f0c56beb20a01cfa",
-      "bytes": 3464,
+      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
+      "bytes": 3466,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-150/motion-normal-150.json": {
-      "sha256": "7cd67f67e70cd8f7909385c14459c50ff21a92f3010ab4bc497791c76bf75261",
+      "sha256": "c2d88b9707ba0267b6af44ccfc1fe33f6c45e9fc343dda8cb336dc56ac34868d",
       "bytes": 759
     },
     "single-150/motion-normal-settled-150.png": {
-      "sha256": "5e561eb689307628b3cba7f8a3009b5d01026b5323534434cacaad5546e3a208",
-      "bytes": 137330,
+      "sha256": "1142818443cf7da25a4a1dc80b4fd906e845dd0a15c7d0a44a714ad8f5b8a0dc",
+      "bytes": 136373,
       "pixelSize": [
         1920,
         1080
@@ -2922,12 +3610,12 @@
       ]
     },
     "single-150/motion-reduced-150.json": {
-      "sha256": "8200618a36e08da169e1a1cff94e1822a6541502f6608b9eb86c5f525d9acd98",
+      "sha256": "15430ce7d9fca266280e23fa903dfc924c8bfbd2a6479f86cd36bfb7ac6aebdd",
       "bytes": 693
     },
     "single-150/motion-reduced-settled-150.png": {
-      "sha256": "c99df8862096effb91191438b1c44a6ad372cad2fe94aa161e9c6f3253e0db4b",
-      "bytes": 137341,
+      "sha256": "1142818443cf7da25a4a1dc80b4fd906e845dd0a15c7d0a44a714ad8f5b8a0dc",
+      "bytes": 136373,
       "pixelSize": [
         1920,
         1080
@@ -2950,20 +3638,20 @@
       ]
     },
     "single-150/motion-slow-150-intermediate.png": {
-      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
-      "bytes": 3466,
+      "sha256": "d15428dd2689011722f04640544b6d0edb867d604a2c7b91981c6fd1d4095d4c",
+      "bytes": 3474,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-150/motion-slow-150.json": {
-      "sha256": "ab2e450931bc5d4412b9f4e18f367c87013fe8dcbf981ed5965cb50fb16af9aa",
+      "sha256": "113571465d2d5bbf22aebeee04ef299d78e70d5ee49bb20584f318051ab1a044",
       "bytes": 763
     },
     "single-150/motion-slow-settled-150.png": {
-      "sha256": "5e561eb689307628b3cba7f8a3009b5d01026b5323534434cacaad5546e3a208",
-      "bytes": 137330,
+      "sha256": "1142818443cf7da25a4a1dc80b4fd906e845dd0a15c7d0a44a714ad8f5b8a0dc",
+      "bytes": 136373,
       "pixelSize": [
         1920,
         1080
@@ -2974,320 +3662,460 @@
       "bytes": 18
     },
     "single-150/outputs.txt": {
-      "sha256": "56208fc731b180937a7fd8dad72dd364121a0e77823a40478a92e70e6011d0e7",
+      "sha256": "a7bf2efee5932da7d83f1f9746be3b3ff92858104e5a11b6fbd5126e26f839cb",
       "bytes": 594
     },
-    "single-150/plasma-calendar-150.png": {
-      "sha256": "cbbe1d6943e96c44670ae40b59b4e6140b3d4940c8039523790da6884e9e1370",
-      "bytes": 142778,
+    "single-150/plasma-calendar-blur-disabled-150.png": {
+      "sha256": "d96284d03dda4ea947af5bff9466ad69a15e1092b6b187cfda7396326449b0e9",
+      "bytes": 179800,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-150/plasma-launcher-150.png": {
-      "sha256": "316240f529423e53f68f7ab6c03419682cb02bedebeb7a62e51826144cd88ced",
-      "bytes": 311441,
+    "single-150/plasma-calendar-blur-enabled-150.png": {
+      "sha256": "b3147b1e592d792df852f873cc9b195915bb883e50705c25c94509fc272abf9b",
+      "bytes": 505816,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-150/plasma-notification-150.png": {
-      "sha256": "c847406fd8cfd09e8ddf310189b5fdcd46372c528a8a01ce01e46854110362c7",
-      "bytes": 189843,
+    "single-150/plasma-containments.ini": {
+      "sha256": "69a9b57176d46e19da808d15cb55e7b932da17e2beb90a03ec56e11dd32dba81",
+      "bytes": 3076
+    },
+    "single-150/plasma-dialog-blur-disabled-150.png": {
+      "sha256": "c6da0532acdde071e2f8bde33bd37c9d32b5a6aa1c6801a5c1c5066392b0519e",
+      "bytes": 156185,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-150/plasma-osd-150.png": {
-      "sha256": "3185688161aaf74d2022a5537e9be80bf116b7ba9390c060ed5f40e74860bf56",
-      "bytes": 206569,
+    "single-150/plasma-dialog-blur-enabled-150.png": {
+      "sha256": "e88e9052815c36cfb2346dc086301756d111a6d5c78d51d7d64b5c26450d0473",
+      "bytes": 212952,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-launcher-blur-disabled-150.png": {
+      "sha256": "1f9385d2205090ee588b77755ac8a05483836b43366314aa0c1e4f545ab492c7",
+      "bytes": 160051,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-launcher-blur-enabled-150.png": {
+      "sha256": "cdbbbf45a890fd88956ebdfec46ddeb0806ad776c604534644c11050cd39d37d",
+      "bytes": 537274,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-notification-blur-disabled-150.png": {
+      "sha256": "0bb6ddb974da759d23601ef71f5666c2d1fa9a3834b0cc785457e50e5a1dc402",
+      "bytes": 154093,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-notification-blur-enabled-150.png": {
+      "sha256": "5431fca1a2e675f667b8368530be01438d7253ecc922c9dbcd9b75681ae81ee3",
+      "bytes": 239207,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-osd-blur-disabled-150.png": {
+      "sha256": "a39efd939263320bce6409794f7cb3e961b5fcdc07a6df34226dacd6f6082918",
+      "bytes": 149380,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-osd-blur-enabled-150.png": {
+      "sha256": "9118bab7615f6a2a0956d8535d2da6d6d4b9ad19e411cb0e43320c01a5a9e527",
+      "bytes": 205793,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/plasma-panel-bottom-150.png": {
-      "sha256": "0a51f3b5a70a9c96a1ae5fc9459d3bb92e25e54501103e242dcd4f1595ffdc22",
-      "bytes": 165469,
+      "sha256": "226842075dfe7c8f8dcd57e83e9846aa32022281ee7c28daa63242ef1f92e00b",
+      "bytes": 194907,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/plasma-panel-left-150.png": {
-      "sha256": "539a8e8ed71ba204d7ea1d136551b23a5b47e9959674754e1aa9393bdad8581a",
-      "bytes": 165171,
+      "sha256": "eb7cf61c8aade56fdcabccb4b6503ef992ebc960595aa8dc0bb6e5b000525a58",
+      "bytes": 181809,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/plasma-panel-right-150.png": {
-      "sha256": "46777785a994fa1fcd1a0675790ec0552424b04092236865f1454e9499f8f397",
-      "bytes": 161307,
+      "sha256": "84e5622e6a3bc93da9861fef7cc9b68227c647bf9ac7c5b7fa0602dd8aee750e",
+      "bytes": 177626,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/plasma-panel-top-150.png": {
-      "sha256": "423bc934a2082300557a2079dffdee68186c484cdff23cc127b5858f214f7f8b",
-      "bytes": 167746,
+      "sha256": "51d7696785b836ffdea1f1af3d4f112de45f517ac2ca906a43740a6362e6a7c1",
+      "bytes": 196369,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-popup-blur-disabled-150.png": {
+      "sha256": "df3e0583ad7b0758a480d21c5660699a78c86286c4a676c00fc3aa22ede5488d",
+      "bytes": 176744,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-popup-blur-enabled-150.png": {
+      "sha256": "604d2f6b216da5c079f35f742b0d7514cb34dc306f1b50e7eda84e40269cb554",
+      "bytes": 232670,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-shell-baseline-blur-disabled-150.png": {
+      "sha256": "d7cb027ac06b6819dce63198b68b3fae2476035ade150f5f6f0a6c1db2e75906",
+      "bytes": 140107,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-shell-baseline-blur-enabled-150.png": {
+      "sha256": "11fe52c01a09fc9755ff56d446eb7f1273e28eb52b50ff609fd3c6dcf8df3d8d",
+      "bytes": 194838,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-task-manager-blur-disabled-150.png": {
+      "sha256": "fef41db7620a8a6a3d8c71ddf4ce61bdce4fe4a19417b17ce8740222e15a0a55",
+      "bytes": 140273,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-task-manager-blur-enabled-150.png": {
+      "sha256": "209bddccfca013acde77d3d3b8bf2b8f1c9db5f3999b3bb7c64b172c53f7a859",
+      "bytes": 195860,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tooltip-before-blur-disabled-150.png": {
+      "sha256": "66901c2d7ba0eb88072cc56ec1ca387cd1a499f3e3ff68418b2eb27659a90cd4",
+      "bytes": 119569,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tooltip-before-blur-enabled-150.png": {
+      "sha256": "87aaf103b8515f194590038d3fd08c754b621084c9cf977b945960bc47bc7ddf",
+      "bytes": 175609,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tooltip-blur-disabled-150.png": {
+      "sha256": "5169f1ca9a0bd72d2c87afa9a0f3972cefec489ff536368ed10a2aae7925ff17",
+      "bytes": 116074,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tooltip-blur-enabled-150.png": {
+      "sha256": "7628165f35ac4edabdca3a04b7bb9bddd83a34e8ce2afd26c176f75c91858fc5",
+      "bytes": 174052,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tray-blur-disabled-150.png": {
+      "sha256": "ba420d0318992afc8a051eebaae008ae12159d4b345bbe2f94cbd7a9f4d8ac2c",
+      "bytes": 169358,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/plasma-tray-blur-enabled-150.png": {
+      "sha256": "cfb19584aaa5835b52f9044b5b7ab9e23d5c29e47705f7d58d66a0a27718c32f",
+      "bytes": 443361,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/qt-dialog-enter-before-150.png": {
-      "sha256": "7f9b22e91b7cd28559b2966a8ee97234cd3d8130c88d4035a465bce6934850ef",
-      "bytes": 175816,
+      "sha256": "bb3b18e22031d8d98e77eb8af0f2a79b639fbc26609bb0b28af9a0b1cffccd0c",
+      "bytes": 209494,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/qt-dialog-space-before-150.png": {
-      "sha256": "2b229d57e116518050d678ec38c4d143b980567f789ed01ede2073fbbab1e574",
-      "bytes": 177258,
+      "sha256": "7c73cd79c4a6edd401b7642b36928df21d2c7d964f106fa40025511f87112ac3",
+      "bytes": 210951,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/sddm-enter-validation-150.png": {
-      "sha256": "5fb177f8e5df4d8b59c5b09154e88fdec43af4d5156b6fbd1403ae1296441238",
-      "bytes": 107453,
+      "sha256": "3c8723486e33de40287ec5afa442a61d31ebcb24348470650d5589f8e21c58a6",
+      "bytes": 107386,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/sddm-test-mode-150.png": {
-      "sha256": "e78f3903f08a6a3690f11cf0966cd79bdd02cf62e563df69809b27e2ebe34985",
-      "bytes": 100915,
+      "sha256": "53d4de059f15b7d6743092f0e5a367dd4d53c76f005727aa44401393d6516d2f",
+      "bytes": 101824,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/sddm-username-focus-150.png": {
-      "sha256": "36f6f229aa7f2fee3f49822423d065d83ff7133bf2b8e34df41c03a90da6396a",
-      "bytes": 100882,
+      "sha256": "e9a0ecc9c72501f6a22337c77f0acd91998105ca5410391b2b16fda08d8ad44e",
+      "bytes": 101801,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/splash-windowed-150.png": {
-      "sha256": "4773615d04cd72579d8ebaacf7206681cf06762a3a20d261b4de72c7c795f7de",
-      "bytes": 22315,
+      "sha256": "912243cf0d44aa85f6ed8717159f3d022c22dad6aa809d7d9fbce873c34f5cd7",
+      "bytes": 22267,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-keyboard-focus-150.png": {
-      "sha256": "55b3b881ad272b3b0e768ecf6dfd2a67b94e38270ce96fbe218598f8d72364bf",
-      "bytes": 316480,
+      "sha256": "7dfa49f49bf1fd3427ba0a023f4c40c02d24a6c88b7922bdb54cef0185415628",
+      "bytes": 292082,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-maximized-150-restored-focus.png": {
-      "sha256": "594f1f4c740ef364a5548742fb83e5c8b97b5091f990417f0a9395dfb2ff60d0",
-      "bytes": 316623,
+      "sha256": "548198a548e3957e7b5339a8f5262322500a35bfaa245fdf9119cd93fface803",
+      "bytes": 291658,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-maximized-150.png": {
-      "sha256": "f2229ea48dfa6e1ea80e75d08a49c27e1768cf81a759ff78918c1c37b0e315fa",
-      "bytes": 293040,
+      "sha256": "a1dcba29709f149cea07c580ce2e89e8b470fc45d03c563257c7900aeac577b4",
+      "bytes": 268703,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-minimized-task-150.png": {
-      "sha256": "9efadfaa91c0fe8198c649a7e632b38a1f0a586f6eb9f12880a8ddba99537978",
-      "bytes": 167061,
+      "sha256": "44ce1d7bb8a6de5bef1ca181499b35f8809c42ce7f579b485c877c430a55d012",
+      "bytes": 195936,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-quick-tile-left-150.png": {
-      "sha256": "a145eef3b7dcd5fcf450cc8d822dcf4d23eb0a4aa920aa1bcd508a822357bc1d",
-      "bytes": 311190,
+      "sha256": "4df7211637466fe35be8f237e0c5716122c6ecb5949408921b8086f419ed0bad",
+      "bytes": 288769,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/systemsettings-quick-tile-right-150.png": {
-      "sha256": "d433995f5dd98d2d776328650491a04f58c304379e32c4974d0cc83b16a57283",
-      "bytes": 369856,
+      "sha256": "628d5f708fe54b33f7a54c6ba3e69f77d362128cd6218aa3a3877dd35aa33bee",
+      "bytes": 345822,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-empty-150.png": {
-      "sha256": "c138de9f4adf7264195a1e6e4488a9eb8b5dc31ebb195ecd3d73c849830d7c9e",
-      "bytes": 138006,
+      "sha256": "285e33013450c172971ad2cb154d8073e42facef33c9884bb13268ef782f3e83",
+      "bytes": 137238,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-error-150.png": {
-      "sha256": "65218d34049a8881350d5d6dc24c24189dca76f15312496df377507a115f029a",
-      "bytes": 292857,
+      "sha256": "5cc549c028b682ca37fadf2fbeb3a49d940e0771045777a37536821991495a47",
+      "bytes": 289043,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-150/tabbox-iconless-client-150.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-150/tabbox-long-title-150.png": {
-      "sha256": "2323e8b9f6def10b0866dbdfb04c406f0b51456e5b771476648504fe0c426148",
-      "bytes": 300298,
+      "sha256": "f13daa1ae99540facb9e4833b3ebdaaff0827256dd6fc1b0a1fead57a9296e2b",
+      "bytes": 296013,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-many-150.png": {
-      "sha256": "86128061eb3d342bb536b5e2cbb9554991d7078fc6f76aca2eebd0ecb4d73a08",
-      "bytes": 287650,
+      "sha256": "11cf36e2cba045f96d1bfdf0d6511c427a4b4cd8763044bf685b699a9b183e8f",
+      "bytes": 282308,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-minimized-150.png": {
-      "sha256": "68324c25e0f9f169348f21ce5d5ff2deb47aa1ad7a63c130839eb38e7d65f27c",
-      "bytes": 188818,
+      "sha256": "9c88f45a75096d84da2b9808d8eef6adc0b1f983a4502b67bdd0a3e9cc64b04b",
+      "bytes": 182564,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-missing-icon-150.png": {
-      "sha256": "7a8a472b102bab1498f56dc42a2bc9fd6d0d0dbe3b8999fa5231be81a6ead089",
-      "bytes": 299764,
+      "sha256": "07625a5402ba0ec2022d84668ed790740fd984ff329656b03d2fd4eeaac47db9",
+      "bytes": 295612,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-150/tabbox-single-150.png": {
-      "sha256": "e991f1b24867e098c180900f74ab4e5d8233d5239d0ac8a63fed3b349b6128d8",
-      "bytes": 124794,
+      "sha256": "c406d623d33e1eab38e102c7c6d1deb9d2a0ae71512443d7b1017f2ccdab8d41",
+      "bytes": 122369,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-175/blur-disabled-175.png": {
-      "sha256": "29b0f094d0f45a1dd8fbc57745dcf344b548d4a1c93f9d7bc0c5f05a41a4dc4e",
-      "bytes": 159115,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-175/blur-enabled-175.png": {
-      "sha256": "23da8317c48444bca3b947d73e38cfe2828a1bf25142c4ee58b2369bffe37173",
-      "bytes": 182543,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-175/core-icon-gallery-175.png": {
-      "sha256": "4be556417d90874fac77aa88928aef3bf413f9716c13f6ddbd32899a4032882f",
-      "bytes": 119281,
+      "sha256": "db409091638ee7cc90cae9c133f00231dd3f1083b3de1fe78b33810c5a31bb38",
+      "bytes": 93969,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/desktop-baseline.png": {
-      "sha256": "5ef237e2471011386cab8e77885d5408b19e0930f9a57cce5e290b31ef216e27",
-      "bytes": 170211,
+      "sha256": "dd95e3910ca641c6a29afa93ecb2487f551b14f799ed1df65ba5d9836542aa23",
+      "bytes": 209636,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-175/doctor-runtime.json": {
+      "sha256": "347f513af134906d128943ccf79a940ecb742918af3c78e7a13605e5fb6207f7",
+      "bytes": 3010
+    },
     "single-175/dolphin-maximized-175-restored-focus.png": {
-      "sha256": "283a95454af1396784f9ad1ebd358c6e12feb54b44abce6b60279f6986ed99eb",
-      "bytes": 218984,
+      "sha256": "2c6dced00a58347c1264ea9357cb7271534e63174d1af07aa1a79cc985b1c241",
+      "bytes": 258021,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/dolphin-maximized-175.png": {
-      "sha256": "dcd6f0c22dc46b82aaffc09ef0f60d55ad26c7b47125e538a6f6325bfffa2fc1",
-      "bytes": 196013,
+      "sha256": "78692590d1277afee7f7b82e0f9bb407243cf1860f8a5ef69e5fac956e5b85ae",
+      "bytes": 168353,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/firefox-maximized-175-restored-focus.png": {
-      "sha256": "bdc3a023ac2995f6d10490e58f83583688c4660b6d1d0318d87e7391eed418c1",
-      "bytes": 113885,
+      "sha256": "d39e9d6df5b22a5bd2f0d242d27c520d9eafecfcb11cb28e6e53420294ac3acc",
+      "bytes": 61968,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/firefox-maximized-175.png": {
-      "sha256": "b6cc655babaa939f9b7dfccd105afc17d4de36966878b900ebc2c8a251064b57",
-      "bytes": 84232,
+      "sha256": "be8f5adc7f8a100765dde7d7106b65c7d259555694dc8b2dc6e1bfef57dc5bc7",
+      "bytes": 58464,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/konsole-alt-mnemonic-175.png": {
-      "sha256": "ec892fc0d0bcecbd0aa118e3c6e9e9727ab60d6e4bc8b16862b5a507898da2f9",
-      "bytes": 96818,
+      "sha256": "db2043dbd98b4c1054d98cf391fe5b0f429b0dbe0174d1a1bb0621abd8bc4b25",
+      "bytes": 71055,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/konsole-fullscreen-175.png": {
-      "sha256": "feaf38e8a433d9702ac74dc671d92552f4bea53bd0a6c320576f769e45736a30",
-      "bytes": 39626,
+      "sha256": "32db63a6a54fa5aafc589e3b96110a07060dae6900de8ba0ca15a48839e1baaa",
+      "bytes": 39616,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/konsole-maximized-175-restored-focus.png": {
-      "sha256": "84b8e2a45daf53349b03b84371db638b55b1528729ea6498a685f922b0d0a4e5",
-      "bytes": 123000,
+      "sha256": "8921577afce5c0b8d86381f43a52643efc6a1b757480d65dbf014bfc605f3f79",
+      "bytes": 95845,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/konsole-maximized-175.png": {
-      "sha256": "c3fb15622f550d8fdf69c04f92cd30d220e06aa6890d73a4476f99d1ee04f134",
-      "bytes": 95215,
+      "sha256": "87cad19160a2b1bdbde856552b9d534950461724b0e6be94ec01db4bf93c89a4",
+      "bytes": 69258,
       "pixelSize": [
         1920,
         1080
@@ -3302,8 +4130,8 @@
       "bytes": 377
     },
     "single-175/layout-ltr-175.png": {
-      "sha256": "79afb32b2b9dd1b217f0cd0586609f875443427b11ea003d2664f74dba844923",
-      "bytes": 147647,
+      "sha256": "74249eb9afae83d81e945b298d02cbb45b9ccec1bf78d5661d2cb26625bafa35",
+      "bytes": 190790,
       "pixelSize": [
         1920,
         1080
@@ -3318,32 +4146,32 @@
       "bytes": 378
     },
     "single-175/layout-rtl-175.png": {
-      "sha256": "32df3491ebf70820fdf6f0b6c4a1266d91e04ae1ae3a174f324dd27bc72e826c",
-      "bytes": 147090,
+      "sha256": "75651a20eaf97230a31c632a10e3b5de9d0731003326b717251321e1497e23a7",
+      "bytes": 190553,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/layout-translation-expansion-175.png": {
-      "sha256": "9420e7dab8bc32240c215e5e648ab86af92f2157e56c451ae9c1bf305a12d9ad",
-      "bytes": 157548,
+      "sha256": "33fc094567321fab031a7ae5a06131fb1239c93dc6fc657f5df356f85338d6f2",
+      "bytes": 200937,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/logout-cancel-focus-175.png": {
-      "sha256": "99d7f4f989f8c498b0ddf583afa737c91ffaa7a46ff2bdb9707365d3d3113789",
-      "bytes": 140225,
+      "sha256": "e979d9960347e4b9dc7009e47fd18fdf665047ec63377ee371db305c0a44faf5",
+      "bytes": 135779,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/logout-windowed-175.png": {
-      "sha256": "4e38fdb208cb1248d4262bcf5c0e5977cdf284746572a0ce1d4bd8c629a47dee",
-      "bytes": 140043,
+      "sha256": "8b80eaa672e45454e7b2eace9f06923d7a28bd3fc2e5a946e832144ceb4ac12e",
+      "bytes": 135575,
       "pixelSize": [
         1920,
         1080
@@ -3370,20 +4198,20 @@
       ]
     },
     "single-175/motion-normal-175-intermediate.png": {
-      "sha256": "928041c502cacff2a144df39416c0a806b166d2e956bf40634805a6c6cb4ec75",
-      "bytes": 3465,
+      "sha256": "08253b53067eca33e01b4cf2a210fbb92b072ac1f97f12ce21768c08e041852d",
+      "bytes": 3452,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-175/motion-normal-175.json": {
-      "sha256": "3e76398e1eebb234e94f86a772127ff8104f54ce5e9a637420a7445b765098cc",
+      "sha256": "7cc2f99dd8ba272e0d64a3f1ca72b3f49e6545b81f6d3640568a5833c86045f2",
       "bytes": 759
     },
     "single-175/motion-normal-settled-175.png": {
-      "sha256": "d07e3f87aadb199dd8a8ed2391bc0e82799c51e4bf9f814b76eab7771bf9f728",
-      "bytes": 133997,
+      "sha256": "c1ac931b4328f35faf280ae8d208481cec8c94b01b83d8d07ebf3af768eaab7d",
+      "bytes": 133998,
       "pixelSize": [
         1920,
         1080
@@ -3406,12 +4234,12 @@
       ]
     },
     "single-175/motion-reduced-175.json": {
-      "sha256": "cffeb90da886c077390cacfcb0febed02afe0271aa8a97c3e8f51f5775e61c19",
+      "sha256": "15430ce7d9fca266280e23fa903dfc924c8bfbd2a6479f86cd36bfb7ac6aebdd",
       "bytes": 693
     },
     "single-175/motion-reduced-settled-175.png": {
-      "sha256": "d07e3f87aadb199dd8a8ed2391bc0e82799c51e4bf9f814b76eab7771bf9f728",
-      "bytes": 133997,
+      "sha256": "c1ac931b4328f35faf280ae8d208481cec8c94b01b83d8d07ebf3af768eaab7d",
+      "bytes": 133998,
       "pixelSize": [
         1920,
         1080
@@ -3442,12 +4270,12 @@
       ]
     },
     "single-175/motion-slow-175.json": {
-      "sha256": "f8566e1c5e60290cc0db144f76f7b732cc995b0ffa8a15957e8c127d469f473a",
+      "sha256": "6bac2ddd01d33ddf99c76c232c6aa3a57ef6ca27e4cc219bd7880be316aea171",
       "bytes": 763
     },
     "single-175/motion-slow-settled-175.png": {
-      "sha256": "d07e3f87aadb199dd8a8ed2391bc0e82799c51e4bf9f814b76eab7771bf9f728",
-      "bytes": 133997,
+      "sha256": "c1ac931b4328f35faf280ae8d208481cec8c94b01b83d8d07ebf3af768eaab7d",
+      "bytes": 133998,
       "pixelSize": [
         1920,
         1080
@@ -3458,115 +4286,263 @@
       "bytes": 18
     },
     "single-175/outputs.txt": {
-      "sha256": "3a3351c0953f968e17c4b022be6f49d09b810207f2393ab93692516101cf7014",
+      "sha256": "1bfe3eed36f1d2bb2e651edb1bd9da8ca24267fd2ffbb251990a45a778f3160d",
       "bytes": 595
     },
-    "single-175/plasma-calendar-175.png": {
-      "sha256": "751524d8d5aab887b1dedbc7de89b9074d2a54a054b47a2bf328da836ce0caaa",
-      "bytes": 144405,
+    "single-175/plasma-calendar-blur-disabled-175.png": {
+      "sha256": "19fe1e491cdfb8f94a25b7a33c08cf2c41ba3e517ea4b374d78b8e32b11cfebf",
+      "bytes": 184638,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-175/plasma-launcher-175.png": {
-      "sha256": "4d4c65ab2025f65f847cfcbf2d5b3115eea3d3c966589554f018ae1b82f8128f",
-      "bytes": 375038,
+    "single-175/plasma-calendar-blur-enabled-175.png": {
+      "sha256": "c6852acd1d5ca83908f6e3976b0bd69348872d38ad5d3ac4f138d061ffdfdf9a",
+      "bytes": 565756,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-175/plasma-notification-175.png": {
-      "sha256": "f06a84199d360558604300cc88b8428626feb953ba98eb58b3e7cebf8c49cdfd",
-      "bytes": 205303,
+    "single-175/plasma-containments.ini": {
+      "sha256": "1ba18b4f12ca23ed2300e351ade093e0b0ff5cb5fb5cf9ca43c4d4e8afd176a7",
+      "bytes": 3076
+    },
+    "single-175/plasma-dialog-blur-disabled-175.png": {
+      "sha256": "ca68e4c5ab17a8b85a587c1cb11a44ad3a18bee9ecd15248b024fb4cb4e13e28",
+      "bytes": 162659,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-175/plasma-osd-175.png": {
-      "sha256": "73e643359bb8778e30c6e60a50bfcf4ccb46467020e876ed2fe71e37d9f2814f",
-      "bytes": 225081,
+    "single-175/plasma-dialog-blur-enabled-175.png": {
+      "sha256": "3ce08a230f02fd3d0b0f7108bfba5479503473f6dc651b930b9899f2fd2bb05a",
+      "bytes": 230513,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-launcher-blur-disabled-175.png": {
+      "sha256": "3234b9496d3b7cff322eb574e34f637b95102a6246338ae7755e2673ed1810ae",
+      "bytes": 168808,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-launcher-blur-enabled-175.png": {
+      "sha256": "f05d40c45cee4added8ea088478b137f5dc903636e5fb15e227f10f9a4f64d33",
+      "bytes": 652094,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-notification-blur-disabled-175.png": {
+      "sha256": "a5100176cc2d78633b555a76fa058c1ad684d3e8f120e5b0f41f4f189fe16438",
+      "bytes": 161398,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-notification-blur-enabled-175.png": {
+      "sha256": "3d4087edeadab3b9e4040f95cfdefdb804bb7e073084f35356138a3426c0c394",
+      "bytes": 270006,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-osd-blur-disabled-175.png": {
+      "sha256": "94da7961e91fa82dcb7e0b5109350b828f9627e507fd931092a92ee0e5070456",
+      "bytes": 154237,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-osd-blur-enabled-175.png": {
+      "sha256": "beda3e41df9e91e1e9774d2e99b2ddfc7b5da0ac4b9bc05427c0e9788141b7b0",
+      "bytes": 222160,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/plasma-panel-bottom-175.png": {
-      "sha256": "87dc68da867192913a7a362977fad5b76474d8b3ca2f9e818db3a19963c0b445",
-      "bytes": 170368,
+      "sha256": "5deb6195506b707c40ccffe3ea9f7979e400bec02d9142c28f8c28cddbc3b03d",
+      "bytes": 209705,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/plasma-panel-left-175.png": {
-      "sha256": "bef633c437a0a0bdee467442eb5a5ab3ce5a9d3c77a38cf0a475be2e9b55682a",
-      "bytes": 169608,
+      "sha256": "39f52e49f069836777fe80c882b816959d988ed273cd4504d646ca08e239b9c8",
+      "bytes": 191185,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/plasma-panel-right-175.png": {
-      "sha256": "c4688d5c9c2232dd333737a009874c434df7a2dd2041dfc4ad92b1dbd2d6ca61",
-      "bytes": 165976,
+      "sha256": "0f954c9ede182a4fd7c34c2071c3a6b154b33ff8d430c80dc706ae4346ff5cf8",
+      "bytes": 184010,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/plasma-panel-top-175.png": {
-      "sha256": "e785f57492cda4a41ee45ccc98172485b62841c1bbdb1c865b56612474b03be6",
-      "bytes": 173287,
+      "sha256": "2bab536b0a33162cd5b82b66bc949d62de328c8a69dd4ac16a5b926cc7877ad6",
+      "bytes": 208056,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-popup-blur-disabled-175.png": {
+      "sha256": "e517bbfb66c1d1621915815fbb0978fa2953f24a98b5b878507555d39b80491e",
+      "bytes": 186800,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-popup-blur-enabled-175.png": {
+      "sha256": "02c2e2f425f1991c8d440639e4edaa9823139079166d891548483135cba62d9e",
+      "bytes": 249169,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-shell-baseline-blur-disabled-175.png": {
+      "sha256": "1533f7961266cc8fb0b1051bb1370553f56bde8549aa96836bfc71e9b0747539",
+      "bytes": 142688,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-shell-baseline-blur-enabled-175.png": {
+      "sha256": "5deb6195506b707c40ccffe3ea9f7979e400bec02d9142c28f8c28cddbc3b03d",
+      "bytes": 209705,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-task-manager-blur-disabled-175.png": {
+      "sha256": "7afc6326b0147f0e909971f90fea8d2d4483a847b0e7c5f00b10436c637f6353",
+      "bytes": 142865,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-task-manager-blur-enabled-175.png": {
+      "sha256": "320e79f19d168ab94f9539363f738ca44b05621da76a2cadc89ad51216eae0db",
+      "bytes": 210307,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tooltip-before-blur-disabled-175.png": {
+      "sha256": "b2d695f6db2cdc24c106d46a67a2edcaab14e7524ee252fc0da220274824cee1",
+      "bytes": 110734,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tooltip-before-blur-enabled-175.png": {
+      "sha256": "7532bae5c34b9ab1af6745ccb2ab1f1caba6691fc6e3ebc019392f07ad72f704",
+      "bytes": 179187,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tooltip-blur-disabled-175.png": {
+      "sha256": "85bf0f247ecbbd574e4548f9b70f987f95dcf91f0440886c2454c7031ef01e00",
+      "bytes": 103956,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tooltip-blur-enabled-175.png": {
+      "sha256": "aec297c63ebcaff16f8ce1a8d07a48c647c265fef1c38b6213be24b6b0e0419a",
+      "bytes": 176587,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tray-blur-disabled-175.png": {
+      "sha256": "688df5352755f224fa11fb16f502e495f2f18b8776cdb08947ccb3ebbf7e6d51",
+      "bytes": 177301,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/plasma-tray-blur-enabled-175.png": {
+      "sha256": "bbdd1b362b9f6f08243b6d54dbb2aa5334844867a0f373d31501613fa84d747d",
+      "bytes": 487847,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/qt-dialog-enter-before-175.png": {
-      "sha256": "14f6bf33dbd1355cd12003491cadef69b9d25c8ffe3a44fd9e82f7abb54a70c3",
-      "bytes": 182130,
+      "sha256": "52168624210bcbbdd84e226db38cd0edbd8647f78210405332a4bffb2ab0f781",
+      "bytes": 225586,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/qt-dialog-space-before-175.png": {
-      "sha256": "3cf5e0a5dc04d93bdb426e38ce0ff1bfbe3e971abb0d5a30435354f0992f7006",
-      "bytes": 184283,
+      "sha256": "394c2794237b2751ae50c575b2017eb5aa48f25fce1708a22fd3d74528fbbe87",
+      "bytes": 227945,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/sddm-enter-validation-175.png": {
-      "sha256": "e182c9ed5c2133c0ce575289efddc817250971bcde325f24d7b78b554ed50ba9",
-      "bytes": 116810,
+      "sha256": "b0749c67764ac28411bb3c6907a05362703498dc076bceaaf785664e7fd26170",
+      "bytes": 119809,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/sddm-test-mode-175.png": {
-      "sha256": "c73e95bcc8643a006ae356c40f4b330562c343209d832157ae03c9a962e01a56",
-      "bytes": 108542,
+      "sha256": "a50dbca7ccb60499dfc857f01047e7eda5b13e4e7f78ba4f03aac0963d4f05cc",
+      "bytes": 111089,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/sddm-username-focus-175.png": {
-      "sha256": "2b80959d264af7aba368886a057b29b1e3bf90cb7c67f2630acfd3f36127b6d9",
-      "bytes": 108524,
+      "sha256": "d44b919f43faf08be92cecd7b04859c13b727d4170a1a512258dc5258cd6c7b5",
+      "bytes": 111070,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/splash-windowed-175.png": {
-      "sha256": "c2df41ec63b8f99cfef806e4cfcd657517431c931e1b0f2f38319fa67b0540dc",
+      "sha256": "93c49443222d4178cf59e20f2e82ae4c52e1a4152b41565879689de11127ce40",
       "bytes": 24172,
       "pixelSize": [
         1920,
@@ -3574,204 +4550,196 @@
       ]
     },
     "single-175/systemsettings-keyboard-focus-175.png": {
-      "sha256": "eb6ea70afe9690d05780dc7827d1058832ec633601101602c204746fc6d84e33",
-      "bytes": 339336,
+      "sha256": "7ee8747db8c4be49962155ace529633b4a1212c65250b7d9f6b05c359833b811",
+      "bytes": 311065,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/systemsettings-maximized-175-restored-focus.png": {
-      "sha256": "578ac3cf23985f8d4b64c6528f29dfa543419f0935ac33c1a789f7a47be4d4e2",
-      "bytes": 339107,
+      "sha256": "1e6a7edfdf7aca9c6d86af3f7cb62f33d235b2f18da92de4928dd62a67cdf783",
+      "bytes": 310974,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/systemsettings-maximized-175.png": {
-      "sha256": "c712b232323d76ffad4cab3d8fc5ac94a362f3a037886cd8cd22fd1349b012c9",
-      "bytes": 341815,
+      "sha256": "8696b989566784903614010aedb1c1dc7f16cb17571207dd9f76e2bab8d20510",
+      "bytes": 314761,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/systemsettings-minimized-task-175.png": {
-      "sha256": "aad60cdfd6ea8100f92d5e6f46ffb7c0b7c73799a7f5b84a17789e75af59222f",
-      "bytes": 172036,
+      "sha256": "09a4665992829b846d17b0a8e79c2ea5130459b003ee93066326b94c013c1c23",
+      "bytes": 210228,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/systemsettings-quick-tile-left-175.png": {
-      "sha256": "69d3760a7eed77bbc356815d21cd47f5cbd6e1807c28e38167e5bcd607ae4653",
-      "bytes": 321650,
+      "sha256": "0dfa48d673cc6dd546c512f1416fa1dc06760fcdd94829156b9d7ee7365bebf9",
+      "bytes": 295167,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/systemsettings-quick-tile-right-175.png": {
-      "sha256": "5655fd445679309e3b53f2aa98216aed4ecad05693fafa351fd7d74be88a6425",
-      "bytes": 379569,
+      "sha256": "cedd67be9a9443f33a791bb7cd99e0a6199fcb84a5d9201fe18548899118722c",
+      "bytes": 351807,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-empty-175.png": {
-      "sha256": "a69b3c8601909058e77c2e7a0ef84c49c91a027986a0bcc5c496364a17b698f3",
-      "bytes": 136277,
+      "sha256": "acb21f7e94cad1883a3e2911723633eb0ac693ebca0cd79346c1689b699a6970",
+      "bytes": 136624,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-error-175.png": {
-      "sha256": "42cdc1f399fbe442a93164c0334d55946974759e73be44981b2d05bc75aeb6f7",
-      "bytes": 312495,
+      "sha256": "556cf02fee14ac01c62ca2aca60017d6d1830ba442177e137460a0ee2d7b13bb",
+      "bytes": 309779,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-175/tabbox-iconless-client-175.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-175/tabbox-long-title-175.png": {
-      "sha256": "01edafde94d69e06c4ef929eb303946b7a6e094a2af9a7d76a7a7d7761cce7da",
-      "bytes": 320814,
+      "sha256": "2376dd4b55790d8210380c7e92544369bc807f12461bc92f3fa906045428d0dd",
+      "bytes": 318205,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-many-175.png": {
-      "sha256": "1bb73e971b1ae0dd8c6f9af54895cfbebfe89bd6ccb3fe14cc6b98197c2bd10d",
-      "bytes": 302473,
+      "sha256": "1b33fc7843adbcd959847861d5f90f0df0327c3f518f16ad14fe0d7c54057666",
+      "bytes": 297914,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-minimized-175.png": {
-      "sha256": "a71c037b99f30be3b6e33089f1d4465b5b99641ac0e9dbdb879a8c09d0064e79",
-      "bytes": 197091,
+      "sha256": "aa3f53dedc3a0eeb345060dc9f24c3f624632e4ef0e917c1f202afd55e42f770",
+      "bytes": 189477,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-missing-icon-175.png": {
-      "sha256": "82c582d3be09eb2d2139429ced995e6ae743b9a56173511f53bedc7f2a998c5e",
-      "bytes": 320131,
+      "sha256": "09affe764f0d25b04e63cfbe61b23ed28bb35763b15236772070d39a202d6bb5",
+      "bytes": 317192,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-175/tabbox-single-175.png": {
-      "sha256": "140a564da4e018531b1aa627b4d8744fbdb01df73844190de34fa148f0e96583",
-      "bytes": 116466,
+      "sha256": "830072477d78114482e4a36627a7c25b074b925824a8fd278712d0bffaf81642",
+      "bytes": 115705,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/active-theme.json": {
-      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
-      "bytes": 250
-    },
-    "single-200/blur-disabled-200.png": {
-      "sha256": "3e073c67410c07f187103872230e2d9ec744aec7fb4bc12eb6c12493e023f6f4",
-      "bytes": 160299,
-      "pixelSize": [
-        1920,
-        1080
-      ]
-    },
-    "single-200/blur-enabled-200.png": {
-      "sha256": "2cfe125be296c9d926e7e6521174d7ecc21c8ab7b6bb0be9df3614b152653553",
-      "bytes": 238081,
-      "pixelSize": [
-        1920,
-        1080
-      ]
+      "sha256": "8884932f87615bbc07098b952c7af38500511912ad8c78dcb392aeac6bdf92fd",
+      "bytes": 282
     },
     "single-200/core-icon-gallery-200.png": {
-      "sha256": "50e61ef576f7d81cca2552b6c0e2981dcd4c1c7b042a9519061b7a25f70a1b92",
-      "bytes": 104405,
+      "sha256": "1eaa6af55c78a59735faaa5bc5252560d7e01246afe2885b49db5afe11687cd5",
+      "bytes": 104443,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/desktop-baseline.png": {
-      "sha256": "39dbce6695de36fcd5750a5bb0382cef395abaabb088ccf1511be457c7cbe9bb",
-      "bytes": 222175,
+      "sha256": "ac8304851c83b0d8277900f17b2396716efe00fc616c9c45bec3d7da919d7932",
+      "bytes": 222194,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-200/doctor-runtime.json": {
+      "sha256": "6a875ffc87b208b5461e0842307ea0a72f046e5a0574064b9a045fceac83a1df",
+      "bytes": 3009
+    },
     "single-200/dolphin-maximized-200-restored-focus.png": {
-      "sha256": "0155ce89a8fb032bd474f05c20e4280168001acff3b11c5309b4198a39153ce3",
-      "bytes": 277049,
+      "sha256": "e095b705007020584dc7b5d2556adf535114fdf375eb45f4bea70f5a9ed2799b",
+      "bytes": 275616,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/dolphin-maximized-200.png": {
-      "sha256": "cb8dba7741f5347be5bae48743b20dcf0094114d9610dfc7bda2e7d73b232518",
-      "bytes": 166491,
+      "sha256": "d8985d535c63e47338fe11c448948e2efa380d9ae7ef1a4b6c90441027ea0e7e",
+      "bytes": 166057,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/firefox-maximized-200-restored-focus.png": {
-      "sha256": "12ea8eec2eded5b33e9a2954794dca84538a42d8befe2860a2ec647500323604",
-      "bytes": 65855,
+      "sha256": "a1ac2d2c97182b569f53648cf9cd6aaf1717c14b7a1f71bd66290e527679375b",
+      "bytes": 66228,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/firefox-maximized-200.png": {
-      "sha256": "6b7c2531d369fc9a7e43cd00b4ee9b94413bfb70d0f848e6d8a4ee059712ef8c",
-      "bytes": 62789,
+      "sha256": "59f0331f480b3e604739ff99e000adea015178e4c1efd6b535b99c50733f5812",
+      "bytes": 63170,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/konsole-alt-mnemonic-200.png": {
-      "sha256": "a4db6c45f70ba132806c209833d98505623507b5f9c326f7c51ddd9d9b8044a8",
-      "bytes": 77921,
+      "sha256": "9eb7de90159a3c2f646e21842aac5f33748959e034613cc7e70ad4a8ab96818a",
+      "bytes": 76236,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/konsole-fullscreen-200.png": {
-      "sha256": "05cd39e6db0a7110a524aa7a16e34bb370ff69b47a37fbef5dd02a9fe302aa65",
-      "bytes": 42482,
+      "sha256": "9bea4cb0507d21f02a50ad06b19f2fdf98a175abe45c0f2a68eeb63a121bce2b",
+      "bytes": 42470,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/konsole-maximized-200-restored-focus.png": {
-      "sha256": "704f3c97f2f5623c14831e290d134096bd270ddd6c1ba18afbf9f702098a4136",
-      "bytes": 92380,
+      "sha256": "f44910bc6ab9af028028f4e9c2cd7658e7fa8383df7a743041d8689694ceb4d8",
+      "bytes": 91170,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/konsole-maximized-200.png": {
-      "sha256": "0ad842bb4227e2339ca783fd218a8a5b45017ff74e0976fac89adf502b926c67",
-      "bytes": 77119,
+      "sha256": "7ea5b32cb2371fd325c589ce7cc2879144c7340a16d91f6631ec58ca2f2a772b",
+      "bytes": 75492,
       "pixelSize": [
         1920,
         1080
@@ -3786,8 +4754,8 @@
       "bytes": 377
     },
     "single-200/layout-ltr-200.png": {
-      "sha256": "500929fee3c111e4ae9ec3bcfea05925ba17bd68d320a81f5214ef6233d73f34",
-      "bytes": 188410,
+      "sha256": "21ce8244f444a2055b4f0e0472f46aa589816c3cdf657216609dca5544bfc1f5",
+      "bytes": 188481,
       "pixelSize": [
         1920,
         1080
@@ -3802,32 +4770,32 @@
       "bytes": 378
     },
     "single-200/layout-rtl-200.png": {
-      "sha256": "46d4048d09aa07bd890700a182abf1ff8cd99d449684923320cea6d90cde2e18",
-      "bytes": 188392,
+      "sha256": "68a42c2a7ca906456e882c40abcdae178d5a13ec892ac35532c6527e525e3594",
+      "bytes": 188447,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/layout-translation-expansion-200.png": {
-      "sha256": "eadd2b1d5aad7a59a4abbe0fa609be4a6c7749fd556c59095c88dbf74d9ef17d",
-      "bytes": 198207,
+      "sha256": "6b6c080b7af81e0aef8f58a1a5ae8c8a45a5153f6a3c7899033867267101aa5e",
+      "bytes": 198264,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/logout-cancel-focus-200.png": {
-      "sha256": "d1db99c87b904a2efa00b876e0bbf44d9e8b16e7f29c272863ab5987cc6ab7c1",
-      "bytes": 135751,
+      "sha256": "33172fb9ec42517ec8956e0d27b2bee750ecc6d6c3a7d87bef97f0a4d4cdb346",
+      "bytes": 135944,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/logout-windowed-200.png": {
-      "sha256": "3f5c044e046053aec1bd31b306a4d869988227fd729ea492bf73716ea2e695be",
-      "bytes": 135624,
+      "sha256": "f5a8355f87c706852f8c3f60ab66b968e227eed6758599f11b5199aa8bf8eb4e",
+      "bytes": 135803,
       "pixelSize": [
         1920,
         1080
@@ -3854,20 +4822,20 @@
       ]
     },
     "single-200/motion-normal-200-intermediate.png": {
-      "sha256": "928041c502cacff2a144df39416c0a806b166d2e956bf40634805a6c6cb4ec75",
-      "bytes": 3465,
+      "sha256": "e56df9cf71c7d2886b29a2c8315674a4a2e692ae77fd3ff1197543427e260e1e",
+      "bytes": 3466,
       "pixelSize": [
         360,
         72
       ]
     },
     "single-200/motion-normal-200.json": {
-      "sha256": "4fb2e25d7c74a837bf61d3c25da7edb64946bcefa522401f18d5864132a0cc21",
+      "sha256": "94d8a7cab8c0420505297c8439e437cf8de9291efa164f335ba95ec310edc7f2",
       "bytes": 759
     },
     "single-200/motion-normal-settled-200.png": {
-      "sha256": "6fc5e480a5ae1f54d7625c0f0874e178a01e76878f17d7bf499d434caa1ae6d8",
-      "bytes": 123601,
+      "sha256": "e0daa05b304cc7fb3e687c98ddc3640fd5c6377fc59cc625c6c70899424d6c93",
+      "bytes": 123753,
       "pixelSize": [
         1920,
         1080
@@ -3894,8 +4862,8 @@
       "bytes": 693
     },
     "single-200/motion-reduced-settled-200.png": {
-      "sha256": "6fc5e480a5ae1f54d7625c0f0874e178a01e76878f17d7bf499d434caa1ae6d8",
-      "bytes": 123601,
+      "sha256": "fad3127383f80ee8e343f578e102784aa9966d3bf137beb471b40218bb248ff8",
+      "bytes": 124058,
       "pixelSize": [
         1920,
         1080
@@ -3926,12 +4894,12 @@
       ]
     },
     "single-200/motion-slow-200.json": {
-      "sha256": "f4514752174586cf5c43cae4b3b8224841669e6673efdecaf4aaeda061cb2682",
+      "sha256": "e5e912ac4e0573c74a11a1de7320e3c8adcf763d22337a15448fd367cb33adca",
       "bytes": 763
     },
     "single-200/motion-slow-settled-200.png": {
-      "sha256": "6fc5e480a5ae1f54d7625c0f0874e178a01e76878f17d7bf499d434caa1ae6d8",
-      "bytes": 123601,
+      "sha256": "e0daa05b304cc7fb3e687c98ddc3640fd5c6377fc59cc625c6c70899424d6c93",
+      "bytes": 123753,
       "pixelSize": [
         1920,
         1080
@@ -3942,220 +4910,372 @@
       "bytes": 18
     },
     "single-200/outputs.txt": {
-      "sha256": "b3662246b734185c3b29fdc6aeda881dd611cc74e57e3be689faed232f6c300e",
+      "sha256": "7743197ad5ef4bfdebd1a463f8f34627cd85b37301e56a64472d4a6bf1437f07",
       "bytes": 591
     },
-    "single-200/plasma-calendar-200.png": {
-      "sha256": "8ef0b1df4709666acb579178c027f20b32b8ff4f35ff495c480242200d09434e",
-      "bytes": 185676,
+    "single-200/plasma-calendar-blur-disabled-200.png": {
+      "sha256": "05a028b72bcf421c430d947f05a27aa24ecd79482047504be9baed724f0f430c",
+      "bytes": 185988,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-200/plasma-launcher-200.png": {
-      "sha256": "3b10b8148140dcdf11355a3c6c746cbce64765cfbe3ceddfaceec690921dd90c",
-      "bytes": 721753,
+    "single-200/plasma-calendar-blur-enabled-200.png": {
+      "sha256": "6879ad4ac4dacf76489c83723b4c00f06308092d04ae7ac058379f651b3d6b33",
+      "bytes": 634316,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-200/plasma-notification-200.png": {
-      "sha256": "d80497669aa179240b1461d05eef44f7e817e033354708d9f0a30e5b39034173",
-      "bytes": 295271,
+    "single-200/plasma-containments.ini": {
+      "sha256": "e474c63d89abd99d60f0abae2f57872d78acc6ff0e25db496472baf47b011849",
+      "bytes": 3076
+    },
+    "single-200/plasma-dialog-blur-disabled-200.png": {
+      "sha256": "9850ccf45043e79ad7805d64d6602f6917574ec44c7ff3b7e0c3916a2e040b0d",
+      "bytes": 163587,
       "pixelSize": [
         1920,
         1080
       ]
     },
-    "single-200/plasma-osd-200.png": {
-      "sha256": "b67c0a9da96bfd5c493860517618381ec4a52d8dad6679594cc4bf0463d4bff4",
-      "bytes": 314081,
+    "single-200/plasma-dialog-blur-enabled-200.png": {
+      "sha256": "164d4b1a1781c4739c52b182e1d92a3fb9c2bfa630b78a8274200fef30b04014",
+      "bytes": 241577,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-launcher-blur-disabled-200.png": {
+      "sha256": "6aa3f8f3676d064df6ccaae3eea74adbf4f400efdb6d39cad78022c4900a15f1",
+      "bytes": 171836,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-launcher-blur-enabled-200.png": {
+      "sha256": "3ea9151fa042dca6dd2c42d5c98fcd7af8217b3f93f2584cbf02d1185220cfaf",
+      "bytes": 723215,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-notification-blur-disabled-200.png": {
+      "sha256": "7e33d970844c7f3b436de76425ba3e154d535d6c6c82a92ceb4a6168c7a26c0b",
+      "bytes": 164924,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-notification-blur-enabled-200.png": {
+      "sha256": "1c43b21f2f6067177261307b2ec1be88931adc2b393206c55a08f90c32c349f5",
+      "bytes": 295886,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-osd-blur-disabled-200.png": {
+      "sha256": "a5559f3230db0e7ced81bdba43706f7e409d0a49e44cb76be8b181336be232b1",
+      "bytes": 156711,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-osd-blur-enabled-200.png": {
+      "sha256": "e3443a0a68142b57844935eff2c9892b6b477c0f98daa683fe482b88501c51a3",
+      "bytes": 236800,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/plasma-panel-bottom-200.png": {
-      "sha256": "9926f6ae562634b1e122afd90161e988d4d5cd629f33f2394be5fd258336cd38",
-      "bytes": 222159,
+      "sha256": "1bfaca47b599d47393fdc3eab3f02a0496bff7a7b26ac7a40ab3ddde2c542884",
+      "bytes": 222335,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/plasma-panel-left-200.png": {
-      "sha256": "90d4633138fdfeb71fa09a8ad8062d70be6e25f5c6063b52fde720921d1fdb46",
-      "bytes": 195851,
+      "sha256": "677010975ced1f07e0695213ed2bf438a2614bb474f5240951f06173750cbd53",
+      "bytes": 195759,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/plasma-panel-right-200.png": {
-      "sha256": "0aa97fe2fe73ce8c96f95542df5d548ec628b409483473af0ead716a88283dfb",
-      "bytes": 190707,
+      "sha256": "c7ad76172d87317b6548b4992bd734c88d5d96166f29dbd606f78d29033ffe1d",
+      "bytes": 190690,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/plasma-panel-top-200.png": {
-      "sha256": "29be614a764d0a8652160d211e78b8a853f622fbb80f2609508494a9839734de",
-      "bytes": 217304,
+      "sha256": "f5110a1b5e950f33e17fcd9dcdb2d1a34bc3590d6145409e8e9e095134668fe8",
+      "bytes": 217601,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-popup-blur-disabled-200.png": {
+      "sha256": "4d98c24d787a2781bb01678455f42434c539bb640ffb50a9a234e689dd879279",
+      "bytes": 185220,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-popup-blur-enabled-200.png": {
+      "sha256": "202c10bc6c37e7c30da343490985814187641467ce0d7c898afd2a2b396da743",
+      "bytes": 263395,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-shell-baseline-blur-disabled-200.png": {
+      "sha256": "7d868150f901ec13e3dfe20fee9798f4820fe4ac7fe44005415a28108e31effd",
+      "bytes": 144757,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-shell-baseline-blur-enabled-200.png": {
+      "sha256": "1bfaca47b599d47393fdc3eab3f02a0496bff7a7b26ac7a40ab3ddde2c542884",
+      "bytes": 222335,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-task-manager-blur-disabled-200.png": {
+      "sha256": "b313c062b3af0fee6431c5f22a690d664e081e937b5a4ea242db0c20f2f71de7",
+      "bytes": 144853,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-task-manager-blur-enabled-200.png": {
+      "sha256": "b7f27048672b7ef6d0efa361d5fdc08e95857313964b9e336b3887e6517287fe",
+      "bytes": 222948,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tooltip-before-blur-disabled-200.png": {
+      "sha256": "7fea9c47d50ff825dcfd035bae5aaafa0d60d111e8adbceff1e195f07558690e",
+      "bytes": 94859,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tooltip-before-blur-enabled-200.png": {
+      "sha256": "7fea9c47d50ff825dcfd035bae5aaafa0d60d111e8adbceff1e195f07558690e",
+      "bytes": 94859,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tooltip-blur-disabled-200.png": {
+      "sha256": "f00a0e0f367b0a78b70f30a3c6779eecfefa9574713b1b1e274d952724328a67",
+      "bytes": 89491,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tooltip-blur-enabled-200.png": {
+      "sha256": "b14038c194f4b1caa3079499f1492d83ed03dda97106b0379db02f3c40c67b8c",
+      "bytes": 96998,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tray-blur-disabled-200.png": {
+      "sha256": "795a91fb87f7468db896f0b907478c2279fbf7c3911a8c5b8671a2008a7ce8fa",
+      "bytes": 176900,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/plasma-tray-blur-enabled-200.png": {
+      "sha256": "c87d11768c451e2615649679e92acf7023415b04da21e79a341d38923fe09be1",
+      "bytes": 527636,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/qt-dialog-enter-before-200.png": {
-      "sha256": "ad2ccd608bcafe2cbb9484c09a2481c636f6d40e96311849712821580cb7fee7",
-      "bytes": 238498,
+      "sha256": "51dccba1abe520949d39118748dd15f9301ef716156740fa7fdff3350f13c21d",
+      "bytes": 238621,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/qt-dialog-space-before-200.png": {
-      "sha256": "21c4e8765a72fdaedd46d710d96612cdbae08e6005ecd50018466f7d75db810d",
-      "bytes": 239217,
+      "sha256": "0c50988bd981a24e96f180903525a6f365ff8e546baceacf2e33aec1b4504bfc",
+      "bytes": 239330,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/sddm-enter-validation-200.png": {
-      "sha256": "567d9c45821abe0dbf667ab254f1b1fe9412d9964de993f281b266de45d300be",
-      "bytes": 123738,
+      "sha256": "eacb046c579e124484723ba3cdbd58f0fcdd7c77dc80130a3b5508f72e49b2c0",
+      "bytes": 125351,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/sddm-test-mode-200.png": {
-      "sha256": "28b6dcde01307d5cb061f72cda081ed80361b458fba518d5adc8b6b8030ccc7d",
-      "bytes": 112316,
+      "sha256": "461977cb3115a098a2826e20a619ee01a2a2007074cf36448790fbd53ce8e898",
+      "bytes": 115855,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/sddm-username-focus-200.png": {
-      "sha256": "7e77a922ab69d9c43b46c37fea38900101a1bf2b16137d7f346cecc873d462ff",
-      "bytes": 112296,
+      "sha256": "d6322b135a1be72cd81574b1168bbc8a04c7c3e001085005c897917e4b3cdb21",
+      "bytes": 115834,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/splash-windowed-200.png": {
-      "sha256": "862be498d346094528b0a3e647c41ff60994783b863d066a90c561b92f84644b",
-      "bytes": 26350,
+      "sha256": "13279872d563af9e97ea74caf12306206c08a69eb028697473a89a99b4f13f9d",
+      "bytes": 26283,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-keyboard-focus-200.png": {
-      "sha256": "2717ddd93d7596dca409a3c4e7f7c3336fa544f95a14b2e5695b19fabfdd2e6d",
-      "bytes": 307413,
+      "sha256": "5f2876b73cd192edc67e202d298ce9352e24340ff7c1ebca6ee31df0a9c815f7",
+      "bytes": 307419,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-maximized-200-restored-focus.png": {
-      "sha256": "2afb3e28380a2a2ba6f4fa5fb72e4c928ae7977208684e3c2ff17c46141a314a",
-      "bytes": 307628,
+      "sha256": "c1d04dfbc4076a713e03e05057e4778b20196959a0a84aa7d5af0bf578ca72f5",
+      "bytes": 307644,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-maximized-200.png": {
-      "sha256": "db259aa012614f734b9f2f9c2f2574a55ef5ce26b9239b092bff364e2f142285",
-      "bytes": 302772,
+      "sha256": "dfd01de5877c8998f19d93f591379987c9fd136b25de609f6dfa8478aa11a851",
+      "bytes": 302767,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-minimized-task-200.png": {
-      "sha256": "ad3769f802de19580948aa65eb7b235e06e36757e22605a2aa0c8721d07f4965",
-      "bytes": 222704,
+      "sha256": "b7f27048672b7ef6d0efa361d5fdc08e95857313964b9e336b3887e6517287fe",
+      "bytes": 222948,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-quick-tile-left-200.png": {
-      "sha256": "036fbddf6759e0c3cd7a97953282c2bd928c7b3347080c268f0461c2d8a8f29f",
-      "bytes": 265857,
+      "sha256": "0c56d275a439e3f1ee54efa9dbb180a1303111a1d6e5fc1e92ca75e4a2fa191e",
+      "bytes": 265989,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/systemsettings-quick-tile-right-200.png": {
-      "sha256": "2bc12f19b99f783b3e05f76b3c6e04cb8d4487ca5126800b335808aa95449123",
-      "bytes": 322333,
+      "sha256": "88f2928689c9f33808b9d55f1d0db3ca6ce830f8bfcd7382605de091b40bbeea",
+      "bytes": 322441,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-empty-200.png": {
-      "sha256": "59c65f3783dc12ce3b1185c2471224eb3d03a8d52081030ca0a3388f31cd6c4c",
-      "bytes": 136460,
+      "sha256": "7887431bc160406e0ebe3f1372df33261624ab4486c27134f238a87c670ec68a",
+      "bytes": 136642,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-error-200.png": {
-      "sha256": "9836772559b11f47c86cfbf48f4eb501dcb57a5778c25c5a34060662e47a9942",
-      "bytes": 288976,
+      "sha256": "86f20abc8ad87e294c3e3b21a05fb1e5fb8a014079bf80ab3602b56fd15835f8",
+      "bytes": 289108,
       "pixelSize": [
         1920,
         1080
       ]
     },
+    "single-200/tabbox-iconless-client-200.json": {
+      "sha256": "5c71bac42ced959bd2d4d33befbe48015ccb56d427094c267572b957cc8fb0df",
+      "bytes": 274
+    },
     "single-200/tabbox-long-title-200.png": {
-      "sha256": "7092ae7ab7c57a3f7a9c30193104ec4607361f7505efdf3273ed12e2ffed464a",
-      "bytes": 309664,
+      "sha256": "fac5564f4de80ffef1cabc34666ed6a0b0b8c83c5a8f1325f88a80ac3bb0fd2f",
+      "bytes": 309874,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-many-200.png": {
-      "sha256": "161ca2c0c42da7a9977f2593aabb57cd6db519f91f9530a95b96996340c35895",
-      "bytes": 251197,
+      "sha256": "307c90762c4f7c1446f564ff4620f65a480ee1d4e0fbde72772436f10ca7583c",
+      "bytes": 247431,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-minimized-200.png": {
-      "sha256": "418e819e3e398f4ef139c61d61c3ea4d93d183b24ba7ea8adf806b2184845286",
-      "bytes": 175818,
+      "sha256": "e6532e3739ccb72eb836ca8cf33cf2c21b8517f8810d1e9f6684c01683b696b9",
+      "bytes": 173032,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-missing-icon-200.png": {
-      "sha256": "827c02b2eabe51c99d163c82e6f95926bbf65dc891062c98e658aa4b5691c4e9",
-      "bytes": 294057,
+      "sha256": "9a1852d266cdf7e24b1bbfcdfb067b9d11ec3c59c91c50e08baa65bbae9d8823",
+      "bytes": 297209,
       "pixelSize": [
         1920,
         1080
       ]
     },
     "single-200/tabbox-single-200.png": {
-      "sha256": "dc5e44f63c4b31180bb105ac0e05d280bfbe42aa42f59dd26b5e959561249b11",
-      "bytes": 100923,
+      "sha256": "d964130166b153febed332faa778209867412799cff0faffe4b6e4f22043441b",
+      "bytes": 101123,
       "pixelSize": [
         1920,
         1080

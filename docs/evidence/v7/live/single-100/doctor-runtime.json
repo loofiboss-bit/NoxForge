@@ -1,0 +1,156 @@
+{
+  "active": {
+    "aurorae": "__aurorae__svg__io.github.loofiboss.noxforge.desktop",
+    "colorScheme": "NoxForgeDark",
+    "cursorTheme": "NoxForge-Cursors",
+    "iconInheritance": "breeze-dark,breeze,hicolor",
+    "icons": "NoxForge",
+    "kwinSwitcher": "io.github.loofiboss.noxforge.desktop",
+    "plasmaStyle": "io.github.loofiboss.noxforge.desktop",
+    "qtStyle": "NoxForge",
+    "soundTheme": "NoxForge",
+    "splash": "io.github.loofiboss.noxforge.desktop",
+    "wallpaper": "NoxForge"
+  },
+  "componentVersions": [
+    "7.0.0"
+  ],
+  "components": {
+    "aurorae": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    },
+    "color-scheme": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": []
+    },
+    "cursors": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": []
+    },
+    "global-theme": {
+      "copies": 2,
+      "found": true,
+      "provenance": [
+        "system",
+        "user"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    },
+    "icons": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": []
+    },
+    "kwin-switcher": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    },
+    "plasma-style": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    },
+    "qt-style": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": []
+    },
+    "sddm": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    },
+    "sounds": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": []
+    },
+    "wallpaper": {
+      "copies": 1,
+      "found": true,
+      "provenance": [
+        "system"
+      ],
+      "versions": [
+        "7.0.0"
+      ]
+    }
+  },
+  "criticalIcons": {
+    "inheritance": [
+      "breeze-dark",
+      "breeze",
+      "hicolor"
+    ],
+    "manifestPresent": true,
+    "requiredCount": 85,
+    "status": "ok",
+    "unresolved": []
+  },
+  "expectedVersion": "7.0.0",
+  "missing": [],
+  "mixedVersions": false,
+  "nextAction": "Installation is complete. Select NoxForge explicitly in System Settings if desired.",
+  "packageVersion": "7.0.0-1.fc44",
+  "session": {
+    "displayScales": {
+      "outputs": [
+        {
+          "connected": true,
+          "enabled": true,
+          "name": "Virtual-0",
+          "scale": 1.0
+        }
+      ],
+      "source": "KScreen/KWin runtime",
+      "status": "ok"
+    },
+    "kde": "true",
+    "kernel": "7.1.5-201.fc44.x86_64",
+    "type": "wayland",
+    "wayland": "present"
+  },
+  "status": "ok"
+}

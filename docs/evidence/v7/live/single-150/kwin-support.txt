@@ -272,7 +272,7 @@
 | delegate:
 | animationDuration: 300
 | ignoreMinimized: false
-| mode: ModeAllDesktops
+| mode: ModeWindowClass
 | partialActivationFactor: 0
 | gestureInProgress: false
 | searchText:
