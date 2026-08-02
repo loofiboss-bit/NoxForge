@@ -116,14 +116,9 @@ Rectangle {
             }
         }
         MouseArea { id: mouse; anchors.fill: parent; hoverEnabled: true; enabled: button.interactive; onClicked: button.clicked() }
-        Keys.onPressed: event => {
-            if (interactive && (event.key === Qt.Key_Return
-                    || event.key === Qt.Key_Enter
-                    || event.key === Qt.Key_Space)) {
-                event.accepted = true
-                clicked()
-            }
-        }
+        Shortcut { sequence: "Return"; enabled: button.activeFocus && button.interactive; onActivated: button.clicked() }
+        Shortcut { sequence: "Enter"; enabled: button.activeFocus && button.interactive; onActivated: button.clicked() }
+        Shortcut { sequence: "Space"; enabled: button.activeFocus && button.interactive; onActivated: button.clicked() }
     }
 
     component ForgeField: ColumnLayout {
