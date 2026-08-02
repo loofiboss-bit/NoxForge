@@ -56,11 +56,35 @@ while IFS= read -r installed_path; do
         printf 'Unsafe CMake manifest entry: %s\n' "${installed_path}" >&2
         exit 1
     }
-    target="${system_root}${installed_path}"
-    case "${target}" in
-        "${system_root}/usr/"*) ;;
-        *) printf 'Refusing unsafe uninstall target: %s\n' "${target}" >&2; exit 1 ;;
+    case "${installed_path}" in
+        *'/../'*|*'/./'*|*'//'*)
+            printf 'Unsafe CMake manifest entry: %s\n' "${installed_path}" >&2
+            exit 1
+            ;;
     esac
+    case "${installed_path}" in
+        /usr/lib/qt6/plugins/styles/libnoxforge6.so|\
+        /usr/lib64/qt6/plugins/styles/libnoxforge6.so|\
+        /usr/share/color-schemes/NoxForgeDark.colors|\
+        /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/icons/NoxForge/*|\
+        /usr/share/icons/NoxForge-Cursors/*|\
+        /usr/share/sounds/NoxForge/*|\
+        /usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/wallpapers/NoxForge/*|\
+        /usr/share/sddm/themes/NoxForge/*|\
+        /usr/bin/noxforge-doctor|\
+        /usr/share/noxforge/VERSION|\
+        /usr/share/man/man1/noxforge-doctor.1)
+            ;;
+        *)
+            printf 'Refusing non-NoxForge manifest entry: %s\n' "${installed_path}" >&2
+            exit 1
+            ;;
+    esac
+    target="${system_root}${installed_path}"
     rm -f -- "${target}"
 done < "${manifest}"
 

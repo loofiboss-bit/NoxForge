@@ -6,8 +6,9 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "design/v7-candidate-contract.json"
@@ -21,6 +22,20 @@ INSTALL_PATH = ROOT / "scripts/install-system.sh"
 UNINSTALL_PATH = ROOT / "scripts/uninstall-system.sh"
 EVIDENCE_PATH = ROOT / "docs/evidence/v7/candidate/phase8.json"
 CHECK = "--check" in sys.argv[1:]
+REQUIRED_COMPOSED_CHECKS = {
+    "applications-maximize-restore",
+    "aurorae-edges-and-states",
+    "core-and-session-icons",
+    "plasma-shell-surfaces",
+    "blur-enabled-disabled",
+    "session-surfaces",
+    "tabbox-state-matrix",
+    "motion-matrix",
+    "keyboard-focus-and-activation",
+    "translation-expansion",
+    "rtl-layout",
+    "runtime-readback",
+}
 
 
 def sha256(path: Path) -> str:
@@ -31,6 +46,67 @@ def require(text: str, fragments: tuple[str, ...], subject: str) -> None:
     missing = [fragment for fragment in fragments if fragment not in text]
     if missing:
         raise RuntimeError(f"{subject} contract drift: {', '.join(missing)}")
+
+
+def git_text(*arguments: str) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(ROOT), *arguments],
+        check=False,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"qualification Git lineage check failed: {result.stdout.strip()}")
+    return result.stdout.strip()
+
+
+def verify_source_commit(commit: str, version: str) -> None:
+    if git_text("cat-file", "-t", commit) != "commit":
+        raise RuntimeError("qualification sourceCommit does not identify a commit")
+    git_text("merge-base", "--is-ancestor", commit, "HEAD")
+    if git_text("show", f"{commit}:VERSION") != version:
+        raise RuntimeError("qualification sourceCommit is not a stable source commit")
+    spec = git_text("show", f"{commit}:packaging/noxforge.spec")
+    if not re.search(rf"^Version:\s+{re.escape(version)}$", spec, re.MULTILINE):
+        raise RuntimeError("qualification sourceCommit does not contain the stable RPM version")
+
+
+def verify_live_files(manifest: dict[str, object], evidence_root: Path) -> None:
+    declared = manifest.get("files")
+    if not isinstance(declared, dict) or not declared:
+        raise RuntimeError("live manifest does not bind its evidence files")
+    actual = {
+        path.relative_to(evidence_root).as_posix()
+        for path in evidence_root.rglob("*")
+        if path.is_file() and path.name != "manifest.json"
+    }
+    if set(declared) != actual:
+        missing = sorted(set(declared) - actual)
+        unbound = sorted(actual - set(declared))
+        raise RuntimeError(
+            "live evidence file set drifted"
+            + (f"; missing: {', '.join(missing)}" if missing else "")
+            + (f"; unbound: {', '.join(unbound)}" if unbound else "")
+        )
+    for relative, raw_entry in declared.items():
+        relative_path = PurePosixPath(relative)
+        if relative_path.is_absolute() or ".." in relative_path.parts or "." in relative_path.parts:
+            raise RuntimeError(f"unsafe live evidence path: {relative}")
+        if not isinstance(raw_entry, dict):
+            raise RuntimeError(f"invalid live evidence entry: {relative}")
+        path = evidence_root.joinpath(*relative_path.parts)
+        if sha256(path) != raw_entry.get("sha256") or path.stat().st_size != raw_entry.get("bytes"):
+            raise RuntimeError(f"live evidence hash or size drifted: {relative}")
+        if path.suffix == ".png" and png_size(path) != raw_entry.get("pixelSize"):
+            raise RuntimeError(f"live evidence pixel dimensions drifted: {relative}")
+
+
+def png_size(path: Path) -> list[int]:
+    header = path.read_bytes()[:24]
+    if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        raise RuntimeError(f"invalid PNG evidence: {path}")
+    return [int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big")]
 
 
 def build_evidence() -> dict[str, object]:
@@ -62,6 +138,7 @@ def build_evidence() -> dict[str, object]:
         or qualification.get("releaseBlockers") != []
     ):
         raise RuntimeError("stable v7 qualification identity or lineage is incomplete")
+    verify_source_commit(str(candidate["sourceCommit"]), version)
     release_contract = qualification.get("releaseContract", {})
     if release_contract.get("assetCount") != 6 or len(release_contract.get("assetKinds", [])) != 6:
         raise RuntimeError("stable v7 qualification must preserve the six-asset contract")
@@ -90,11 +167,14 @@ def build_evidence() -> dict[str, object]:
         or live_manifest.get("version") != version
         or set(live_cases) != expected_cases
         or any(case.get("status") != "passed" for case in live_cases.values())
+        or set(live_manifest.get("requiredChecksPerCase", [])) != REQUIRED_COMPOSED_CHECKS
+        or any(set(case.get("checks", [])) != REQUIRED_COMPOSED_CHECKS for case in live_cases.values())
         or not isinstance(package, dict)
         or package.get("nevra") != f"noxforge-{version}-1.fc44.x86_64"
         or package.get("rpmVerify") != "passed"
     ):
         raise RuntimeError("exact-RPM composed live manifest is incomplete")
+    verify_live_files(live_manifest, LIVE_PATH.parent)
 
     upgrade_candidate = upgrade.get("candidate", {})
     upgrade_result = upgrade.get("result", {})

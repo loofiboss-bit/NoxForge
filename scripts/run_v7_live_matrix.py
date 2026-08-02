@@ -27,6 +27,8 @@ META = 125
 SHIFT = 42
 ALT = 56
 TAB = 15
+ENTER = 28
+SPACE = 57
 UP = 103
 DOWN = 108
 LEFT = 105
@@ -35,6 +37,20 @@ ESC = 1
 F = 33
 F11 = 87
 ANSI_ESCAPE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+REQUIRED_COMPOSED_CHECKS = (
+    "applications-maximize-restore",
+    "aurorae-edges-and-states",
+    "core-and-session-icons",
+    "plasma-shell-surfaces",
+    "blur-enabled-disabled",
+    "session-surfaces",
+    "tabbox-state-matrix",
+    "motion-matrix",
+    "keyboard-focus-and-activation",
+    "translation-expansion",
+    "rtl-layout",
+    "runtime-readback",
+)
 
 
 def run(
@@ -78,7 +94,7 @@ def normalized_text_evidence(text: str, *, quote: bool = False) -> str:
     return "\n".join(lines) + "\n"
 
 
-def verify_maximized_capture(path: Path, desktop: Path) -> None:
+def verify_maximized_capture(path: Path, desktop: Path, output_count: int = 1) -> None:
     with Image.open(path) as source:
         image = source.convert("RGB")
     with Image.open(desktop) as source:
@@ -90,11 +106,12 @@ def verify_maximized_capture(path: Path, desktop: Path) -> None:
     # Aurorae's maximized outer shadow leaves a symmetric five-pixel capture
     # margin and Plasma reserves its panel. The changed application surface
     # must otherwise span the complete output in both axes.
+    minimum_width = width - 16 if output_count == 1 else width // output_count - 16
     if (
         bounds is None
         or bounds[0] > 8
         or bounds[1] > 8
-        or bounds[2] < width - 8
+        or bounds[2] - bounds[0] < minimum_width
         or bounds[3] < height - 100
     ):
         raise RuntimeError(f"capture is not maximized across the output: {path}")
@@ -572,7 +589,7 @@ def application_capture(session: LiveSession, command: list[str], label: str) ->
     capture = session.screenshot(label)
     if session.desktop_capture is None:
         raise RuntimeError("desktop baseline was not captured")
-    verify_maximized_capture(capture, session.desktop_capture)
+    verify_maximized_capture(capture, session.desktop_capture, session.args.outputs)
     session.restore()
     session.input("keys", "--hold-ms", 100, TAB)
     session.input("keys", "--hold-ms", 100, TAB)
@@ -580,7 +597,7 @@ def application_capture(session: LiveSession, command: list[str], label: str) ->
     session.stop_process(process)
 
 
-def icon_gallery_capture(session: LiveSession) -> None:
+def icon_gallery_capture(session: LiveSession, label: str) -> None:
     gallery = Path(os.environ["XDG_RUNTIME_DIR"]) / "noxforge-v7-icon-gallery.qml"
     gallery.write_text(
         """import QtQuick
@@ -627,8 +644,153 @@ ApplicationWindow {
     )
     process = session.launch([QML_LAUNCHER, str(gallery)])
     session.maximize()
-    session.screenshot("core-icon-gallery-140")
+    session.screenshot(f"core-icon-gallery-{label}")
     session.stop_process(process)
+
+
+def require_visual_change(before: Path, after: Path, subject: str) -> None:
+    with Image.open(before) as source:
+        first = source.convert("RGB")
+    with Image.open(after) as source:
+        second = source.convert("RGB")
+    if first.size != second.size or ImageChops.difference(first, second).getbbox() is None:
+        raise RuntimeError(f"keyboard activation produced no visible state change: {subject}")
+
+
+def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
+    try:
+        returncode = process.wait(timeout=5)
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(f"keyboard activation did not complete: {subject}") from error
+    if returncode != 0:
+        raise RuntimeError(f"keyboard activation failed for {subject}: exit {returncode}")
+
+
+def keyboard_dialog_activation(session: LiveSession, label: str) -> None:
+    for key_name, key_code in (("enter", ENTER), ("space", SPACE)):
+        dialog = session.launch(
+            ["kdialog", "--title", "NoxForge v7", "--msgbox", f"Activate with {key_name}"]
+        )
+        session.screenshot(f"qt-dialog-{key_name}-before-{label}")
+        session.input("keys", "--hold-ms", 80, key_code)
+        require_process_exit(dialog, f"Qt dialog {key_name}")
+        if dialog in session.processes:
+            session.processes.remove(dialog)
+
+
+def set_blur_state(session: LiveSession, enabled: bool) -> None:
+    method = "loadEffect" if enabled else "unloadEffect"
+    run(
+        [
+            "qdbus-qt6",
+            "org.kde.KWin",
+            "/Effects",
+            f"org.kde.kwin.Effects.{method}",
+            "blur",
+        ]
+    )
+    time.sleep(0.5)
+    state = run(
+        [
+            "qdbus-qt6",
+            "org.kde.KWin",
+            "/Effects",
+            "org.kde.kwin.Effects.isEffectLoaded",
+            "blur",
+        ]
+    ).stdout.strip().lower()
+    if state != str(enabled).lower():
+        raise RuntimeError(f"KWin blur effect did not reach requested state: {enabled}")
+
+
+def blur_state_capture(session: LiveSession, label: str) -> None:
+    dialog = session.launch(
+        ["kdialog", "--title", "NoxForge blur state", "--msgbox", "Translucent surface"]
+    )
+    set_blur_state(session, True)
+    session.screenshot(f"blur-enabled-{label}")
+    set_blur_state(session, False)
+    session.screenshot(f"blur-disabled-{label}")
+    session.stop_process(dialog)
+
+
+def tabbox_window(session: LiveSession, name: str, title: str) -> subprocess.Popen[str]:
+    source = Path(os.environ["XDG_RUNTIME_DIR"]) / f"noxforge-tabbox-{name}.qml"
+    source.write_text(
+        "import QtQuick\n"
+        "Window {\n"
+        "    visible: true\n"
+        "    width: 720\n"
+        "    height: 420\n"
+        f"    title: {json.dumps(title)}\n"
+        "    color: \"#0E1318\"\n"
+        "}\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return session.launch([QML_LAUNCHER, str(source)])
+
+
+def held_tabbox_capture(session: LiveSession, name: str) -> None:
+    input_process = subprocess.Popen(
+        [str(session.args.injector), "keys", "--hold-ms", "2200", str(ALT), str(TAB)],
+        cwd=ROOT,
+        text=True,
+        stdout=session.log_handle,
+        stderr=subprocess.STDOUT,
+    )
+    time.sleep(0.6)
+    session.screenshot(name)
+    if input_process.wait(timeout=10) != 0:
+        raise RuntimeError(f"held Alt+Tab input failed for {name}")
+
+
+def tabbox_state_matrix(session: LiveSession, label: str) -> None:
+    held_tabbox_capture(session, f"tabbox-empty-{label}")
+
+    single = tabbox_window(session, "single", "NoxForge single-window state")
+    held_tabbox_capture(session, f"tabbox-single-{label}")
+    session.stop_process(single)
+
+    normal = session.launch(["systemsettings"])
+    missing = tabbox_window(session, "missing-icon", "NoxForge missing-icon state")
+    held_tabbox_capture(session, f"tabbox-missing-icon-{label}")
+    session.stop_process(missing)
+    session.stop_process(normal)
+
+    normal = session.launch(["systemsettings"])
+    long_title = tabbox_window(
+        session,
+        "long-title",
+        "NoxForge extraordinarily long localized window title for live elision qualification",
+    )
+    held_tabbox_capture(session, f"tabbox-long-title-{label}")
+    session.stop_process(long_title)
+    session.stop_process(normal)
+
+    normal = session.launch(["systemsettings"])
+    error = session.launch(
+        ["kdialog", "--title", "NoxForge error state", "--error", "Live error semantics"]
+    )
+    held_tabbox_capture(session, f"tabbox-error-{label}")
+    session.stop_process(error)
+    session.stop_process(normal)
+
+    apps = [
+        session.launch(["systemsettings"]),
+        session.launch(["dolphin", str(ROOT)]),
+        session.launch(["konsole"]),
+        tabbox_window(session, "many-a", "NoxForge many-window state A"),
+        tabbox_window(session, "many-b", "NoxForge many-window state B"),
+    ]
+    held_tabbox_capture(session, f"tabbox-many-{label}")
+    session.kwin_script(
+        'const windows = workspace.windowList(); for (const w of windows) '
+        'if (w.caption.includes("many-window state A")) w.minimized = true;'
+    )
+    held_tabbox_capture(session, f"tabbox-minimized-{label}")
+    for app in apps:
+        session.stop_process(app)
 
 
 def single_case(session: LiveSession) -> None:
@@ -639,25 +801,20 @@ def single_case(session: LiveSession) -> None:
         ["systemsettings"],
         f"systemsettings-maximized-{label}",
     )
-    if scale not in (1.0, 1.4, 2.0):
-        return
     application_capture(session, ["dolphin", str(ROOT)], f"dolphin-maximized-{label}")
     application_capture(session, ["konsole"], f"konsole-maximized-{label}")
-
-    if scale != 1.4:
-        return
 
     process = session.launch(["systemsettings"])
     session.focus_window()
     session.input("keys", "--hold-ms", 120, META, LEFT)
     time.sleep(1)
-    session.screenshot("systemsettings-quick-tile-left-140")
+    session.screenshot(f"systemsettings-quick-tile-left-{label}")
     session.input("keys", "--hold-ms", 120, META, RIGHT)
     session.input("keys", "--hold-ms", 120, META, RIGHT)
     time.sleep(1)
-    session.screenshot("systemsettings-quick-tile-right-140")
+    session.screenshot(f"systemsettings-quick-tile-right-{label}")
     session.kwin_script("workspace.activeWindow.minimized = true;")
-    session.screenshot("systemsettings-minimized-task-140")
+    session.screenshot(f"systemsettings-minimized-task-{label}")
     session.kwin_script(
         'const windows = workspace.windowList(); for (const w of windows) '
         'if (w.caption.includes("System Settings")) w.minimized = false;'
@@ -668,31 +825,31 @@ def single_case(session: LiveSession) -> None:
     session.focus_window()
     session.input("keys", "--hold-ms", 120, F11)
     time.sleep(1)
-    session.screenshot("konsole-fullscreen-140")
+    session.screenshot(f"konsole-fullscreen-{label}")
     session.input("keys", "--hold-ms", 120, F11)
     session.stop_process(process)
 
     process = session.launch(["systemsettings"])
     for _ in range(5):
         session.input("keys", "--hold-ms", 80, TAB)
-    session.screenshot("systemsettings-keyboard-focus-140")
+    session.screenshot(f"systemsettings-keyboard-focus-{label}")
     session.stop_process(process)
 
     process = session.launch(["konsole"])
     session.input("keys", "--hold-ms", 200, ALT, F)
     time.sleep(1)
-    session.screenshot("konsole-alt-mnemonic-140")
+    session.screenshot(f"konsole-alt-mnemonic-{label}")
     session.input("keys", "--hold-ms", 80, ESC)
     session.stop_process(process)
 
     process = session.launch(["systemsettings"], env={"QT_LAYOUT_DIRECTION": "rtl"})
     session.maximize()
-    session.screenshot("systemsettings-rtl-140")
+    session.screenshot(f"systemsettings-rtl-{label}")
     session.stop_process(process)
 
     process = session.launch(["systemsettings"], env={"LANGUAGE": "x-test"})
     session.maximize()
-    session.screenshot("systemsettings-translation-expansion-140")
+    session.screenshot(f"systemsettings-translation-expansion-{label}")
     session.stop_process(process)
 
     firefox_profile = Path(os.environ["XDG_RUNTIME_DIR"]) / "firefox-profile"
@@ -707,37 +864,31 @@ def single_case(session: LiveSession) -> None:
             str(firefox_profile),
             "about:blank",
         ],
-        "firefox-maximized-140",
+        f"firefox-maximized-{label}",
     )
 
-    dialog = session.launch(
-        ["kdialog", "--title", "NoxForge v7", "--msgbox", "Operational Precision dialog"]
-    )
-    session.screenshot("qt-dialog-140")
-    session.input("keys", "--hold-ms", 80, TAB)
-    session.screenshot("qt-dialog-keyboard-focus-140")
-    session.stop_process(dialog)
+    keyboard_dialog_activation(session, label)
 
-    icon_gallery_capture(session)
+    icon_gallery_capture(session, label)
 
     for edge in ("bottom", "top", "left", "right"):
         session.plasma_script(
             f'const p = panels(); if (p.length !== 1) throw "expected one panel"; '
             f'p[0].location = "{edge}";'
         )
-        session.screenshot(f"plasma-panel-{edge}-140")
+        session.screenshot(f"plasma-panel-{edge}-{label}")
     session.plasma_script('panels()[0].location = "bottom";')
 
     session.input("keys", "--hold-ms", 100, META)
     time.sleep(1)
-    session.screenshot("plasma-launcher-140")
+    session.screenshot(f"plasma-launcher-{label}")
     session.input("keys", "--hold-ms", 80, ESC)
 
     notification = run(
         ["notify-send", "--print-id", "NoxForge v7", "Operational Precision live notification"]
     )
     time.sleep(1)
-    session.screenshot("plasma-notification-140")
+    session.screenshot(f"plasma-notification-{label}")
 
     run(
         [
@@ -750,7 +901,8 @@ def single_case(session: LiveSession) -> None:
         ]
     )
     time.sleep(1)
-    session.screenshot("plasma-osd-140")
+    session.screenshot(f"plasma-osd-{label}")
+    blur_state_capture(session, label)
 
     notification_id = notification.stdout.strip()
     if notification_id.isdigit():
@@ -766,11 +918,11 @@ def single_case(session: LiveSession) -> None:
         )
     session.input("keys", "--hold-ms", 80, ESC)
     time.sleep(0.5)
-    # The virtual output is 1920x1080 physical / 1371x771 logical at 140%;
-    # Plasma's clock is centred near logical x=1270 in the bottom panel.
-    session.input("absolute-click", 1270, 745)
+    logical_width = round(1920 / scale)
+    logical_height = round(1080 / scale)
+    session.input("absolute-click", max(1, logical_width - 100), max(1, logical_height - 26))
     time.sleep(1)
-    session.screenshot("plasma-calendar-140")
+    session.screenshot(f"plasma-calendar-{label}")
     session.input("keys", "--hold-ms", 80, ESC)
 
     logout = session.launch(
@@ -782,10 +934,14 @@ def single_case(session: LiveSession) -> None:
         ],
         wait_seconds=2,
     )
-    session.screenshot("logout-windowed-140")
-    session.input("keys", "--hold-ms", 80, TAB)
-    session.screenshot("logout-keyboard-focus-140")
-    session.stop_process(logout)
+    session.screenshot(f"logout-windowed-{label}")
+    for _ in range(5):
+        session.input("keys", "--hold-ms", 80, TAB)
+    session.screenshot(f"logout-cancel-focus-{label}")
+    session.input("keys", "--hold-ms", 80, SPACE)
+    require_process_exit(logout, "Logout cancel with Space")
+    if logout in session.processes:
+        session.processes.remove(logout)
 
     sddm = session.launch(
         [
@@ -800,9 +956,22 @@ def single_case(session: LiveSession) -> None:
         ],
         wait_seconds=2,
     )
-    session.screenshot("sddm-test-mode-140")
+    session.screenshot(f"sddm-test-mode-{label}")
     session.input("keys", "--hold-ms", 80, TAB)
-    session.screenshot("sddm-keyboard-focus-140")
+    session.screenshot(f"sddm-username-focus-{label}")
+    for _ in range(3):
+        session.input("keys", "--hold-ms", 80, TAB)
+    sddm_before = session.screenshot(f"sddm-login-focus-{label}")
+    session.input("keys", "--hold-ms", 80, ENTER)
+    time.sleep(0.5)
+    sddm_validation = session.screenshot(f"sddm-enter-validation-{label}")
+    require_visual_change(sddm_before, sddm_validation, "SDDM Enter validation")
+    session.input("keys", "--hold-ms", 80, SHIFT, TAB)
+    session.screenshot(f"sddm-session-focus-{label}")
+    session.input("keys", "--hold-ms", 80, SPACE)
+    time.sleep(0.5)
+    sddm_menu = session.screenshot(f"sddm-space-session-menu-{label}")
+    require_visual_change(sddm_validation, sddm_menu, "SDDM Space session menu")
     session.stop_process(sddm)
 
     splash = session.launch(
@@ -811,7 +980,7 @@ def single_case(session: LiveSession) -> None:
         require_running=False,
     )
     if splash.poll() is None:
-        session.screenshot("splash-windowed-140")
+        session.screenshot(f"splash-windowed-{label}")
     session.stop_process(splash)
 
     for factor, suffix in ((0, "reduced"), (1, "normal"), (4, "slow")):
@@ -831,27 +1000,10 @@ def single_case(session: LiveSession) -> None:
         process = session.launch(["systemsettings"])
         session.maximize()
         session.restore()
-        session.screenshot(f"motion-{suffix}-settled-140")
+        session.screenshot(f"motion-{suffix}-settled-{label}")
         session.stop_process(process)
 
-    apps = [
-        session.launch(["systemsettings"]),
-        session.launch(["dolphin", str(ROOT)]),
-        session.launch(["konsole"]),
-    ]
-    input_process = subprocess.Popen(
-        [str(session.args.injector), "keys", "--hold-ms", "2200", str(ALT), str(TAB)],
-        cwd=ROOT,
-        text=True,
-        stdout=session.log_handle,
-        stderr=subprocess.STDOUT,
-    )
-    time.sleep(0.6)
-    session.screenshot("tabbox-held-140")
-    if input_process.wait(timeout=10) != 0:
-        raise RuntimeError("held Alt+Tab input failed")
-    for app in apps:
-        session.stop_process(app)
+    tabbox_state_matrix(session, label)
 
 
 def mixed_case(session: LiveSession) -> None:
@@ -876,6 +1028,7 @@ def mixed_case(session: LiveSession) -> None:
     session.screenshot(f"mixed-{label}-applications")
     for app in apps:
         session.stop_process(app)
+    single_case(session)
 
 
 def inner(args: argparse.Namespace) -> int:
@@ -928,6 +1081,7 @@ def session_manifest(
         "requiredMixedScales": [
             f"{scale_label(left)}+{scale_label(right)}" for left, right in MIXED_SCALES
         ],
+        "requiredChecksPerCase": list(REQUIRED_COMPOSED_CHECKS),
         "cases": cases,
         "files": files,
         "limitations": [
@@ -943,6 +1097,8 @@ def outer(args: argparse.Namespace) -> int:
     if evidence_root == ROOT or ROOT not in evidence_root.parents:
         raise RuntimeError("evidence directory must be a dedicated path inside the repository")
     require_tools(args.injector)
+    if evidence_root.exists():
+        shutil.rmtree(evidence_root)
     evidence_root.mkdir(parents=True, exist_ok=True)
     package = verify_system_package() if args.system_package else None
     cases: list[dict[str, object]] = []
@@ -1017,7 +1173,7 @@ def outer(args: argparse.Namespace) -> int:
                     text=True,
                     stdout=runner_handle,
                     stderr=subprocess.STDOUT,
-                    timeout=240,
+                    timeout=480,
                 )
             status = "passed" if result.returncode == 0 else "failed"
             cases.append(
@@ -1025,6 +1181,7 @@ def outer(args: argparse.Namespace) -> int:
                     "id": case_name,
                     "status": status,
                     "scales": [scale_label(scale) for scale in scales],
+                    "checks": list(REQUIRED_COMPOSED_CHECKS) if status == "passed" else [],
                     "seconds": round(time.monotonic() - started, 3),
                 }
             )
@@ -1048,7 +1205,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="qualify the already-installed, rpm-verified system package",
     )
-    parser.add_argument("--injector", type=Path, required=True)
+    parser.add_argument(
+        "--injector",
+        type=Path,
+        default=Path(shutil.which("noxforge-live-input") or "noxforge-live-input"),
+        help="bounded EIS input helper (defaults to the helper built by the qualification image)",
+    )
     parser.add_argument(
         "--evidence-dir",
         type=Path,

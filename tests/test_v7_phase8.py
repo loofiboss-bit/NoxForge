@@ -9,6 +9,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts import build as source_build
+from scripts import check_v7_candidate
+
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads(
     (ROOT / "design/v7-candidate-contract.json").read_text(encoding="utf-8")
@@ -30,6 +33,51 @@ def tree_hash(root: Path) -> str:
 
 
 class V7PhaseEightTests(unittest.TestCase):
+    def test_live_manifest_hashes_are_enforced(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="noxforge-v7-live-hashes-") as name:
+            root = Path(name)
+            evidence = root / "evidence.txt"
+            evidence.write_text("bound evidence\n", encoding="utf-8")
+            manifest = {
+                "files": {
+                    evidence.name: {
+                        "sha256": hashlib.sha256(evidence.read_bytes()).hexdigest(),
+                        "bytes": evidence.stat().st_size,
+                    }
+                }
+            }
+            check_v7_candidate.verify_live_files(manifest, root)
+            evidence.write_text("mutated evidence\n", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "hash or size drifted"):
+                check_v7_candidate.verify_live_files(manifest, root)
+
+    def test_source_archive_contains_reproducible_live_environment(self) -> None:
+        self.assertIn(Path("containers"), source_build.SOURCE_PATHS)
+        container = (ROOT / "containers/fedora44-live.Containerfile").read_text(encoding="utf-8")
+        for fragment in (
+            "libei-devel",
+            "NOXFORGE_BUILD_LIVE_INPUT=ON",
+            "--target noxforge_live_input",
+            "/usr/local/bin/noxforge-live-input",
+        ):
+            self.assertIn(fragment, container)
+
+    def test_live_runner_executes_complete_checks_for_every_scenario(self) -> None:
+        source = (ROOT / "scripts/run_v7_live_matrix.py").read_text(encoding="utf-8")
+        single_case = source.split("def single_case", 1)[1].split("def mixed_case", 1)[0]
+        mixed_case = source.split("def mixed_case", 1)[1].split("def inner", 1)[0]
+        self.assertNotIn("scale not in", single_case)
+        self.assertNotIn("scale !=", single_case)
+        self.assertIn("single_case(session)", mixed_case)
+        for fragment in (
+            "keyboard_dialog_activation(session, label)",
+            "blur_state_capture(session, label)",
+            "tabbox_state_matrix(session, label)",
+            "sddm-enter-validation",
+            "logout-cancel-focus",
+        ):
+            self.assertIn(fragment, single_case)
+
     def test_candidate_is_stable_with_every_mandatory_live_case_passed(self) -> None:
         qualification = json.loads(
             (ROOT / "docs/evidence/v7/qualification.json").read_text(encoding="utf-8")
@@ -187,6 +235,34 @@ class V7PhaseEightTests(unittest.TestCase):
                 any(path.is_file() for path in (stage / "usr/share/icons/NoxForge").rglob("*"))
             )
             self.assertFalse(list(stage.glob("usr/lib*/qt6/plugins/styles/libnoxforge6.so")))
+
+    def test_system_uninstall_rejects_non_noxforge_manifest_entries(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="noxforge-v7-uninstall-scope-") as name:
+            temporary = Path(name)
+            build = temporary / "build"
+            stage = temporary / "stage"
+            manifest = build / "install_manifest.txt"
+            sentinel = stage / "usr/share/unrelated-project/data.txt"
+            manifest.parent.mkdir(parents=True)
+            sentinel.parent.mkdir(parents=True)
+            manifest.write_text("/usr/share/unrelated-project/data.txt\n", encoding="utf-8")
+            sentinel.write_text("preserve\n", encoding="utf-8")
+            environment = os.environ.copy()
+            environment.update(
+                NOXFORGE_BUILD_ROOT=str(build),
+                NOXFORGE_SYSTEM_ROOT=str(stage),
+            )
+            result = subprocess.run(
+                [str(ROOT / "scripts/uninstall-system.sh"), "--system"],
+                cwd=ROOT,
+                env=environment,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Refusing non-NoxForge manifest entry", result.stderr)
+            self.assertTrue(sentinel.is_file())
 
     def test_phase_evidence_records_stable_release_qualification(self) -> None:
         self.assertEqual(EVIDENCE["result"], "release-gate-passed")

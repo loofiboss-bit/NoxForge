@@ -15,6 +15,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
 option(NOXFORGE_ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" OFF)
+option(NOXFORGE_BUILD_LIVE_INPUT "Build the bounded libei live-qualification helper" OFF)
+
+if(NOXFORGE_BUILD_LIVE_INPUT)
+    find_package(Qt6 6.7 REQUIRED COMPONENTS DBus)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBEI REQUIRED IMPORTED_TARGET libei-1.0)
+    add_executable(noxforge_live_input tools/noxforge-live-input.cpp)
+    target_link_libraries(noxforge_live_input PRIVATE Qt6::Core Qt6::DBus PkgConfig::LIBEI)
+    set_target_properties(noxforge_live_input PROPERTIES OUTPUT_NAME "noxforge-live-input")
+endif()
 
 set(NOXFORGE_STYLE_SOURCES
     src/style/noxforgepalette.h

@@ -23,6 +23,7 @@ SOURCE_PATHS = (
     Path("packaging"),
     Path("docs"),
     Path("design"),
+    Path("containers"),
     Path("color-schemes"),
     Path("plasma"),
     Path("aurorae"),
