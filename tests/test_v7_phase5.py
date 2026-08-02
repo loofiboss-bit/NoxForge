@@ -80,6 +80,7 @@ class V7PhaseFiveTests(unittest.TestCase):
         self.assertIn('Shortcut { sequence: "Enter"', SDDM)
         self.assertIn('Shortcut { sequence: "Space"', SDDM)
         self.assertIn("enabled: button.activeFocus && button.interactive", SDDM)
+        self.assertIn('qsTr("No sessions available")', SDDM)
         for forbidden in (
             "plasma-apply-lookandfeel",
             "kwriteconfig",

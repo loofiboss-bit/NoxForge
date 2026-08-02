@@ -86,7 +86,7 @@ class V7PhaseEightTests(unittest.TestCase):
             "tabbox_state_matrix(session, label)",
             "sddm-enter-validation",
             "require_color_presence(sddm_validation, (255, 107, 122)",
-            "require_color_growth(",
+            "require_session_menu_state(sddm_validation, sddm_menu)",
             "for _ in range(4):",
             "time.sleep(0.5)",
             "logout-cancel-focus",

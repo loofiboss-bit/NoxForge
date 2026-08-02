@@ -693,6 +693,12 @@ def require_color_growth(
         )
 
 
+def require_session_menu_state(before: Path, after: Path) -> None:
+    if exact_color_pixels(after, (251, 191, 36)) >= 16:
+        return
+    require_color_growth(before, after, (163, 255, 71), "SDDM Space session menu")
+
+
 def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
     try:
         returncode = process.wait(timeout=5)
@@ -1023,12 +1029,7 @@ def single_case(session: LiveSession) -> None:
     session.input("keys", "--hold-ms", 80, SPACE)
     time.sleep(0.5)
     sddm_menu = session.screenshot(f"sddm-space-session-menu-{label}")
-    require_color_growth(
-        sddm_validation,
-        sddm_menu,
-        (163, 255, 71),
-        "SDDM Space session menu",
-    )
+    require_session_menu_state(sddm_validation, sddm_menu)
     session.stop_process(sddm)
 
     sddm = session.launch(

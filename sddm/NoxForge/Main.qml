@@ -241,7 +241,9 @@ Rectangle {
             }
             Item {
                 Layout.fillWidth: true
-                implicitHeight: root.sessionMenuOpen ? sessionChoiceColumn.implicitHeight : 0
+                implicitHeight: root.sessionMenuOpen
+                    ? Math.max(sessionChoiceColumn.implicitHeight, sessionEmptyState.implicitHeight)
+                    : 0
                 Layout.preferredHeight: implicitHeight
                 clip: true
                 opacity: root.sessionMenuOpen ? 1 : 0
@@ -272,6 +274,18 @@ Rectangle {
                             onClicked: { root.sessionIndex = index; root.sessionMenuOpen = false; sessionButton.forceActiveFocus() }
                         }
                     }
+                }
+                Text {
+                    id: sessionEmptyState
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    visible: root.sessionMenuOpen && sessionChoices.count === 0
+                    text: qsTr("No sessions available")
+                    color: tokens.neutral
+                    font.pixelSize: tokens.metadataSize
+                    horizontalAlignment: Text.AlignHCenter
+                    Accessible.role: Accessible.StaticText
+                    Accessible.name: text
                 }
             }
 
