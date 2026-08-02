@@ -35,6 +35,7 @@ jobs:
           libasan
           libubsan
           ninja-build
+          plasma-workspace
           python3
           qt6-qtbase-devel
           qt6-qtdeclarative-devel
