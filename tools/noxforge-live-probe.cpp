@@ -168,8 +168,28 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     QMouseEvent press(QEvent::MouseButtonPress, QPointF(4, 4), QPointF(4, 4), QPointF(4, 4),
                       Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     QApplication::sendEvent(button, &press);
-    if (factor == 0.0)
-        application.processEvents(QEventLoop::AllEvents, 8);
+    qint64 immediateSettleMs = -1;
+    if (factor == 0.0) {
+        QElapsedTimer settle;
+        settle.start();
+        QString settledHash;
+        int stableSamples = 0;
+        while (settle.elapsed() <= 40) {
+            application.processEvents(QEventLoop::AllEvents, 8);
+            const QString hash = imageHash(
+                button->grab().toImage().convertToFormat(QImage::Format_RGBA8888));
+            if (hash != initialHash && hash == settledHash) {
+                ++stableSamples;
+            } else {
+                settledHash = hash;
+                stableSamples = hash != initialHash ? 1 : 0;
+            }
+            if (stableSamples >= 2)
+                break;
+            QThread::msleep(2);
+        }
+        immediateSettleMs = settle.elapsed();
+    }
     QElapsedTimer timer;
     timer.start();
     QString previousHash = initialHash;
@@ -221,6 +241,7 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     report.insert(QStringLiteral("styleHintDurationMs"), expectedDuration);
     report.insert(QStringLiteral("measuredExpectedDurationMs"), measuredExpectedDuration);
     report.insert(QStringLiteral("observationWindowMs"), observationWindow);
+    report.insert(QStringLiteral("immediateSettleMs"), immediateSettleMs);
     report.insert(QStringLiteral("sampleCount"), samples);
     report.insert(QStringLiteral("distinctTransitionFrames"), distinctHashes.size());
     report.insert(QStringLiteral("firstChangeMs"), firstChangeMs);

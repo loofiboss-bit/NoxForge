@@ -154,7 +154,9 @@ class V7PhaseEightTests(unittest.TestCase):
     def test_reduced_motion_flushes_immediate_frame_before_sampling(self) -> None:
         source = (ROOT / "tools/noxforge-live-probe.cpp").read_text(encoding="utf-8")
         self.assertIn("if (factor == 0.0)", source)
-        self.assertIn("application.processEvents(QEventLoop::AllEvents, 8);", source)
+        self.assertIn("while (settle.elapsed() <= 40)", source)
+        self.assertIn("stableSamples >= 2", source)
+        self.assertIn('report.insert(QStringLiteral("immediateSettleMs")', source)
 
     def test_user_install_cycle_preserves_kde_configuration(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-v7-user-cycle-") as name:

@@ -987,7 +987,11 @@ def motion_qualification(session: LiveSession, label: str) -> None:
     reduced = reports["reduced"]
     normal = reports["normal"]
     slow = reports["slow"]
-    if int(reduced["distinctTransitionFrames"]) != 1 or int(reduced["lastChangeMs"]) > 40:
+    if (
+        int(reduced["distinctTransitionFrames"]) != 1
+        or int(reduced["lastChangeMs"]) > 40
+        or not 0 <= int(reduced.get("immediateSettleMs", -1)) <= 40
+    ):
         raise RuntimeError("reduced motion was not immediate and static")
     for suffix, report in (("normal", normal), ("slow", slow)):
         if (
