@@ -71,6 +71,7 @@ class PackagingTests(unittest.TestCase):
 
     def test_rpm_contract_has_no_scriptlets_or_desktop_mutations(self) -> None:
         spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
+        self.assertIn("%global use_source_date_epoch_as_buildtime 1", spec)
         sections = {
             line.strip().split(maxsplit=1)[0]
             for line in spec.splitlines()
@@ -94,6 +95,25 @@ class PackagingTests(unittest.TestCase):
     def test_source_archive_contains_packaging_contract(self) -> None:
         build_script = (ROOT / "scripts/build.py").read_text(encoding="utf-8")
         self.assertIn('Path("packaging")', build_script)
+
+    def test_binary_and_source_rpms_are_built_separately(self) -> None:
+        for relative in (
+            "scripts/release-check.py",
+            "scripts/prepare_v7_candidate.py",
+            ".github/workflows/release.yml",
+        ):
+            source = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("-bb", source, relative)
+            self.assertIn("-bs", source, relative)
+            self.assertNotIn("-ba", source, relative)
+
+    def test_native_binaries_do_not_embed_absolute_build_roots(self) -> None:
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("-ffile-prefix-map=${CMAKE_SOURCE_DIR}", cmake)
+        self.assertIn("-ffile-prefix-map=${CMAKE_BINARY_DIR}", cmake)
+        self.assertIn("-frandom-seed=NoxForge-${NOXFORGE_PUBLIC_VERSION}", cmake)
+        self.assertIn("string(SHA1 NOXFORGE_STYLE_BUILD_ID", cmake)
+        self.assertIn("-Wl,--build-id=0x${NOXFORGE_STYLE_BUILD_ID}", cmake)
 
 
 if __name__ == "__main__":

@@ -132,15 +132,16 @@ def check_rpm(temporary: Path, source_archive: Path) -> None:
         (topdir / directory).mkdir(parents=True)
     packaged_source = topdir / "SOURCES" / source_archive.name
     shutil.copy2(source_archive, packaged_source)
-    run(
-        [
-            "rpmbuild",
-            "-ba",
-            "--define",
-            f"_topdir {topdir}",
-            str(ROOT / "packaging/noxforge.spec"),
-        ]
-    )
+    for mode in ("-bb", "-bs"):
+        run(
+            [
+                "rpmbuild",
+                mode,
+                "--define",
+                f"_topdir {topdir}",
+                str(ROOT / "packaging/noxforge.spec"),
+            ]
+        )
     packages = sorted(topdir.glob("SRPMS/*.src.rpm")) + sorted(topdir.glob("RPMS/*/*.rpm"))
     if not packages:
         raise RuntimeError("rpmbuild produced no packages")

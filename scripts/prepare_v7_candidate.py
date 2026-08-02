@@ -78,15 +78,16 @@ def build_rpms(source_archive: Path, temporary: Path) -> tuple[Path, Path]:
     for directory in ("BUILD", "BUILDROOT", "RPMS", "SOURCES", "SPECS", "SRPMS"):
         (topdir / directory).mkdir(parents=True)
     shutil.copy2(source_archive, topdir / "SOURCES" / source_archive.name)
-    run(
-        [
-            "rpmbuild",
-            "-ba",
-            "--define",
-            f"_topdir {topdir}",
-            str(ROOT / "packaging/noxforge.spec"),
-        ]
-    )
+    for mode in ("-bb", "-bs"):
+        run(
+            [
+                "rpmbuild",
+                mode,
+                "--define",
+                f"_topdir {topdir}",
+                str(ROOT / "packaging/noxforge.spec"),
+            ]
+        )
     source_packages = sorted(topdir.glob("SRPMS/*.src.rpm"))
     binary_packages = [
         path

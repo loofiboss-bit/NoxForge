@@ -117,7 +117,8 @@ jobs:
           python3 scripts/build.py
           mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} release
           cp dist/noxforge-*.tar.xz rpmbuild/SOURCES/
-          rpmbuild -ba --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
+          rpmbuild -bb --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
+          rpmbuild -bs --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
           cp dist/noxforge-*.tar.xz rpmbuild/SRPMS/*.src.rpm rpmbuild/RPMS/*/noxforge-[0-9]*.rpm release/
           cp "$NOXFORGE_EVIDENCE_DIR/automated-gate.md" release/
           python3 - <<'PY'

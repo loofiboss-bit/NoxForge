@@ -12,6 +12,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # Keep ELF contents and build IDs independent of rpmbuild's absolute topdir.
+    add_compile_options(
+        "-ffile-prefix-map=${CMAKE_SOURCE_DIR}=NoxForge-${NOXFORGE_PUBLIC_VERSION}"
+        "-ffile-prefix-map=${CMAKE_BINARY_DIR}=NoxForge-${NOXFORGE_PUBLIC_VERSION}/build"
+        "-frandom-seed=NoxForge-${NOXFORGE_PUBLIC_VERSION}"
+    )
+endif()
+
 find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
 option(NOXFORGE_ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" OFF)
@@ -40,11 +49,24 @@ set(NOXFORGE_STYLE_SOURCES
     src/style/noxforgestyleplugin.json
 )
 
+set(NOXFORGE_STYLE_BUILD_ID_INPUT
+    "NoxForgeStyle-${NOXFORGE_PUBLIC_VERSION}|${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}|Qt-${Qt6_VERSION}|${CMAKE_CXX_FLAGS}|${CMAKE_CXX_FLAGS_RELEASE}|${CMAKE_SHARED_LINKER_FLAGS}"
+)
+foreach(source IN LISTS NOXFORGE_STYLE_SOURCES)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/${source}" source_sha256)
+    string(APPEND NOXFORGE_STYLE_BUILD_ID_INPUT "|${source}:${source_sha256}")
+endforeach()
+string(SHA1 NOXFORGE_STYLE_BUILD_ID "${NOXFORGE_STYLE_BUILD_ID_INPUT}")
+
 add_library(noxforge_style MODULE
     ${NOXFORGE_STYLE_SOURCES}
 )
 target_link_libraries(noxforge_style PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 target_compile_definitions(noxforge_style PRIVATE QT_NO_KEYWORDS)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # LTO build IDs otherwise inherit rpmbuild's temporary absolute paths.
+    target_link_options(noxforge_style PRIVATE "-Wl,--build-id=0x${NOXFORGE_STYLE_BUILD_ID}")
+endif()
 set_target_properties(noxforge_style PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins/styles"
     OUTPUT_NAME "noxforge6"
