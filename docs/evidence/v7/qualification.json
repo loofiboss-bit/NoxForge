@@ -3,7 +3,7 @@
   "releaseState": "release",
   "candidate": {
     "version": "7.0.0",
-    "sourceCommit": "ac160bff4096dbbef5942b5e8d44fc5d79060ed1",
+    "sourceCommit": "9d1e1e23e18c58d94b8f51083dff47e69b1c628f",
     "sourceRef": "v7.0.0",
     "worktreeDirty": false,
     "package": "noxforge-7.0.0-1.fc44.x86_64.rpm",
