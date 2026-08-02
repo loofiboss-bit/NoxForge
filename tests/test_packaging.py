@@ -72,6 +72,7 @@ class PackagingTests(unittest.TestCase):
     def test_rpm_contract_has_no_scriptlets_or_desktop_mutations(self) -> None:
         spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
         self.assertIn("%global use_source_date_epoch_as_buildtime 1", spec)
+        self.assertIn("%global _buildhost fedora", spec)
         self.assertIn("%undefine _unique_build_ids", spec)
         self.assertIn("%global _no_recompute_build_ids 1", spec)
         sections = {
