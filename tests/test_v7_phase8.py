@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import shutil
@@ -9,10 +10,20 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts import build as source_build
-from scripts import check_v7_candidate
-
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_script(name: str):
+    spec = importlib.util.spec_from_file_location(name, ROOT / f"scripts/{name}.py")
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load scripts/{name}.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+source_build = load_script("build")
+check_v7_candidate = load_script("check_v7_candidate")
 CONTRACT = json.loads(
     (ROOT / "design/v7-candidate-contract.json").read_text(encoding="utf-8")
 )

@@ -366,5 +366,10 @@ Rectangle {
         repeat: false
         onTriggered: root.entryReady = true
     }
-    Component.onCompleted: if (root.reducedMotion) entryReady = true
+    Component.onCompleted: {
+        if (root.reducedMotion) {
+            entryReady = true
+        }
+        Qt.callLater(root.focusFirstAction)
+    }
 }

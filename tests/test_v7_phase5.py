@@ -35,6 +35,7 @@ class V7PhaseFiveTests(unittest.TestCase):
             'qsTr("Caps Lock is on")',
             "Layout.minimumHeight: 40",
             "Layout.maximumHeight: 40",
+            "Qt.callLater(root.focusFirstAction)",
             "keyboard.layouts[keyboard.currentLayout]",
             'qsTr("Choose session")',
             "onLoginFailed",

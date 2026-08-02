@@ -49,6 +49,7 @@ def build_evidence() -> dict[str, object]:
             "KeyboardIndicator.KeyState",
             'qsTr("Caps Lock is on")',
             "Layout.minimumHeight: 40",
+            "Qt.callLater(root.focusFirstAction)",
             "sddm.login",
             "sddm.suspend",
             "sddm.reboot",

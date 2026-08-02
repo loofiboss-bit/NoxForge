@@ -957,7 +957,6 @@ def single_case(session: LiveSession) -> None:
         wait_seconds=2,
     )
     session.screenshot(f"sddm-test-mode-{label}")
-    session.input("keys", "--hold-ms", 80, TAB)
     session.screenshot(f"sddm-username-focus-{label}")
     for _ in range(3):
         session.input("keys", "--hold-ms", 80, TAB)
