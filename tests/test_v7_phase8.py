@@ -44,6 +44,13 @@ def tree_hash(root: Path) -> str:
 
 
 class V7PhaseEightTests(unittest.TestCase):
+    def test_motion_lifecycle_probe_is_isolated_from_parallel_qml_load(self) -> None:
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        lifecycle = cmake.split(
+            "set_tests_properties(motion-controller-lifecycle PROPERTIES", 1
+        )[1].split(")", 1)[0]
+        self.assertIn("RUN_SERIAL TRUE", lifecycle)
+
     def test_live_manifest_hashes_are_enforced(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-v7-live-hashes-") as name:
             root = Path(name)

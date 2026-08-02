@@ -172,6 +172,7 @@ add_test(
 add_test(NAME motion-controller-lifecycle COMMAND noxforge_motion_probe)
 set_tests_properties(motion-controller-lifecycle PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    RUN_SERIAL TRUE
 )
 add_test(NAME motion-qualification-500-cycles COMMAND noxforge_motion_qualification_probe)
 set_tests_properties(motion-qualification-500-cycles PROPERTIES
