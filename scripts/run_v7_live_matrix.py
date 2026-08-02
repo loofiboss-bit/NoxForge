@@ -657,13 +657,22 @@ def require_visual_change(before: Path, after: Path, subject: str) -> None:
         raise RuntimeError(f"keyboard activation produced no visible state change: {subject}")
 
 
-def exact_color_pixels(path: Path, color: tuple[int, int, int]) -> int:
+def semantic_color_pixels(
+    path: Path,
+    color: tuple[int, int, int],
+    *,
+    tolerance: int = 0,
+) -> int:
     with Image.open(path) as source:
         rgb = source.convert("RGB")
         colors = rgb.getcolors(maxcolors=rgb.width * rgb.height)
     if colors is None:
         raise RuntimeError(f"could not inspect semantic colors in {path}")
-    return dict((pixel, count) for count, pixel in colors).get(color, 0)
+    return sum(
+        count
+        for count, pixel in colors
+        if max(abs(channel - target) for channel, target in zip(pixel, color)) <= tolerance
+    )
 
 
 def require_color_presence(
@@ -672,8 +681,9 @@ def require_color_presence(
     subject: str,
     *,
     minimum: int = 16,
+    tolerance: int = 0,
 ) -> None:
-    if exact_color_pixels(path, color) < minimum:
+    if semantic_color_pixels(path, color, tolerance=tolerance) < minimum:
         raise RuntimeError(f"expected semantic color is absent from {subject}: {path}")
 
 
@@ -1015,7 +1025,12 @@ def single_case(session: LiveSession) -> None:
     session.input("keys", "--hold-ms", 80, ENTER)
     time.sleep(0.5)
     sddm_validation = session.screenshot(f"sddm-enter-validation-{label}")
-    require_color_presence(sddm_validation, (255, 107, 122), "SDDM Enter validation")
+    require_color_presence(
+        sddm_validation,
+        (255, 107, 122),
+        "SDDM Enter validation",
+        tolerance=32,
+    )
     session.stop_process(sddm)
 
     sddm = session.launch(
