@@ -151,11 +151,12 @@ class V7PhaseEightTests(unittest.TestCase):
         self.assertIn("verify_maximized_capture(capture", source)
         self.assertIn("if attempt == 2:", source)
 
-    def test_reduced_motion_flushes_immediate_frame_before_sampling(self) -> None:
+    def test_reduced_motion_measures_convergence_before_static_sampling(self) -> None:
         source = (ROOT / "tools/noxforge-live-probe.cpp").read_text(encoding="utf-8")
         self.assertIn("if (factor == 0.0)", source)
         self.assertIn("while (settle.elapsed() <= 40)", source)
-        self.assertIn("stableSamples >= 2", source)
+        self.assertIn("immediateSettleMs = settle.elapsed()", source)
+        self.assertIn("observationInitialHash = hash", source)
         self.assertIn('report.insert(QStringLiteral("immediateSettleMs")', source)
         self.assertIn("Qt::WA_TransparentForMouseEvents", source)
         self.assertIn("button->setFocusPolicy(Qt::NoFocus)", source)

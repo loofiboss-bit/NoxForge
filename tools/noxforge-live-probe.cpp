@@ -171,31 +171,26 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
                       Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     QApplication::sendEvent(button, &press);
     qint64 immediateSettleMs = -1;
+    QString observationInitialHash = initialHash;
     if (factor == 0.0) {
         QElapsedTimer settle;
         settle.start();
-        QString settledHash;
-        int stableSamples = 0;
+        QString previousSettleHash = initialHash;
         while (settle.elapsed() <= 40) {
             application.processEvents(QEventLoop::AllEvents, 8);
             const QString hash = imageHash(
                 button->grab().toImage().convertToFormat(QImage::Format_RGBA8888));
-            if (hash != initialHash && hash == settledHash) {
-                ++stableSamples;
-            } else {
-                settledHash = hash;
-                stableSamples = hash != initialHash ? 1 : 0;
-            }
-            if (stableSamples >= 2)
-                break;
+            if (hash != previousSettleHash)
+                immediateSettleMs = settle.elapsed();
+            previousSettleHash = hash;
+            observationInitialHash = hash;
             QThread::msleep(2);
         }
-        immediateSettleMs = settle.elapsed();
     }
     QElapsedTimer timer;
     timer.start();
-    QString previousHash = initialHash;
-    QString finalHash = initialHash;
+    QString previousHash = observationInitialHash;
+    QString finalHash = observationInitialHash;
     QStringList distinctHashes;
     qint64 firstChangeMs = -1;
     qint64 lastChangeMs = -1;
