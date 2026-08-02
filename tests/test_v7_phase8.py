@@ -125,6 +125,7 @@ class V7PhaseEightTests(unittest.TestCase):
             self.assertIn(f"plasma-{surface}-blur-", source)
         self.assertIn('"absolute-click",\n            logical_width // 2,', source)
         self.assertIn('logical_height // 2,\n            273,', source)
+        self.assertIn("if not has_visual_change(task_capture, tray):", source)
         splash = single_case.split('splash = session.launch(', 1)[1].split(
             "session.stop_process(splash)", 1
         )[0]

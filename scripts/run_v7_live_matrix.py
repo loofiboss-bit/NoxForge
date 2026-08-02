@@ -751,6 +751,14 @@ def require_visual_change(before: Path, after: Path, subject: str) -> None:
         raise RuntimeError(f"keyboard activation produced no visible state change: {subject}")
 
 
+def has_visual_change(before: Path, after: Path) -> bool:
+    with Image.open(before) as source:
+        first = source.convert("RGB")
+    with Image.open(after) as source:
+        second = source.convert("RGB")
+    return first.size != second.size or ImageChops.difference(first, second).getbbox() is not None
+
+
 def semantic_color_pixels(
     path: Path,
     color: tuple[int, int, int],
@@ -926,6 +934,14 @@ def blur_state_capture(session: LiveSession, label: str) -> None:
         )
         time.sleep(1)
         tray = session.screenshot(f"plasma-tray-blur-{state}-{label}")
+        if not has_visual_change(task_capture, tray):
+            session.input(
+                "absolute-click",
+                max(1, logical_width - 140),
+                max(1, logical_height - 20),
+            )
+            time.sleep(1)
+            tray = session.screenshot(f"plasma-tray-blur-{state}-{label}")
         require_visual_change(task_capture, tray, f"system tray with blur {state}")
         session.input("keys", "--hold-ms", 80, ESC)
 
