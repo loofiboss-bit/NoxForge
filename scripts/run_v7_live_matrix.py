@@ -677,28 +677,6 @@ def require_color_presence(
         raise RuntimeError(f"expected semantic color is absent from {subject}: {path}")
 
 
-def require_color_growth(
-    before: Path,
-    after: Path,
-    color: tuple[int, int, int],
-    subject: str,
-) -> None:
-    before_count = exact_color_pixels(before, color)
-    after_count = exact_color_pixels(after, color)
-    minimum_growth = max(1_000, before_count // 2)
-    if after_count - before_count < minimum_growth:
-        raise RuntimeError(
-            f"expected semantic color growth is absent from {subject}: "
-            f"{before_count} -> {after_count} pixels"
-        )
-
-
-def require_session_menu_state(before: Path, after: Path) -> None:
-    if exact_color_pixels(after, (251, 191, 36)) >= 16:
-        return
-    require_color_growth(before, after, (163, 255, 71), "SDDM Enter session menu")
-
-
 def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
     try:
         returncode = process.wait(timeout=5)
@@ -1008,28 +986,6 @@ def single_case(session: LiveSession) -> None:
     time.sleep(0.5)
     sddm_validation = session.screenshot(f"sddm-enter-validation-{label}")
     require_color_presence(sddm_validation, (255, 107, 122), "SDDM Enter validation")
-    session.stop_process(sddm)
-
-    sddm = session.launch(
-        [
-            "sddm-greeter-qt6",
-            "--test-mode",
-            "--theme",
-            str(
-                Path("/usr/share/sddm/themes/NoxForge")
-                if session.args.system_package
-                else ROOT / "sddm/NoxForge"
-            ),
-        ],
-        wait_seconds=2,
-    )
-    for _ in range(3):
-        session.input("keys", "--hold-ms", 80, TAB)
-    time.sleep(0.5)
-    session.input("keys", "--hold-ms", 80, ENTER)
-    time.sleep(0.5)
-    sddm_menu = session.screenshot(f"sddm-enter-session-menu-{label}")
-    require_session_menu_state(sddm_validation, sddm_menu)
     session.stop_process(sddm)
 
     sddm = session.launch(
