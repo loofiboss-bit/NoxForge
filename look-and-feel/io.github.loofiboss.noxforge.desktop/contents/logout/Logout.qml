@@ -180,7 +180,7 @@ Item {
                 ForgeButton {
                     id: lockButton
                     label: qsTr("Lock")
-                    iconName: "security-high"
+                    iconName: "system-lock-screen"
                     Layout.fillWidth: true
                     KeyNavigation.tab: logoutButton
                     KeyNavigation.backtab: cancelButton
@@ -189,7 +189,7 @@ Item {
                 ForgeButton {
                     id: logoutButton
                     label: qsTr("Log out")
-                    iconName: "application-exit"
+                    iconName: "system-log-out"
                     Layout.fillWidth: true
                     KeyNavigation.tab: sleepButton
                     KeyNavigation.backtab: lockButton
@@ -209,7 +209,7 @@ Item {
                 ForgeButton {
                     id: sleepButton
                     label: qsTr("Sleep")
-                    iconName: "preferences-system-power-management"
+                    iconName: "system-suspend"
                     Layout.fillWidth: true
                     KeyNavigation.tab: restartButton
                     KeyNavigation.backtab: logoutButton
@@ -218,7 +218,7 @@ Item {
                 ForgeButton {
                     id: restartButton
                     label: qsTr("Restart")
-                    iconName: "view-refresh"
+                    iconName: "system-reboot"
                     danger: true
                     Layout.fillWidth: true
                     KeyNavigation.tab: shutdownButton
@@ -228,7 +228,7 @@ Item {
                 ForgeButton {
                     id: shutdownButton
                     label: qsTr("Shut down")
-                    iconName: "preferences-system-power-management"
+                    iconName: "system-shutdown"
                     danger: true
                     Layout.fillWidth: true
                     KeyNavigation.tab: cancelButton

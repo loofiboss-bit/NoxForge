@@ -57,7 +57,7 @@ class PhaseThreeTests(unittest.TestCase):
     def test_icon_theme_has_system_coverage_and_neutral_app_fallback(self) -> None:
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(ICONS / "index.theme", encoding="utf-8")
-        self.assertEqual(parser["Icon Theme"]["Inherits"], "hicolor")
+        self.assertEqual(parser["Icon Theme"]["Inherits"], "breeze-dark,breeze,hicolor")
         icons = list((ICONS / "scalable").glob("*/*.svg"))
         self.assertGreaterEqual(len(icons), 120)
         self.assertEqual(

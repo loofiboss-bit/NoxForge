@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-02",
+  "release": {
+    "version": "6.0.0",
+    "tag": "v6.0.0",
+    "tagObject": "9c8221d260d5587b5b49501e552314b1e3837a5c",
+    "sourceCommit": "d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6",
+    "pullRequest": 10,
+    "ciRun": 30691626413,
+    "releaseWorkflowRun": 30692016393
+  },
+  "github": {
+    "url": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v6.0.0",
+    "draft": false,
+    "prerelease": false,
+    "publishedAt": "2026-08-01T08:46:14Z",
+    "assetCount": 6,
+    "checksumsVerified": true,
+    "assets": [
+      {
+        "name": "automated-gate.md",
+        "sha256": "054d9ea67c16cf039803597da25ec81168df5f2985a57f77d1fb712c382eeb4d"
+      },
+      {
+        "name": "noxforge-6.0.0-1.fc44.src.rpm",
+        "sha256": "86a18a9ed270caff44bf94927d30ffed311bc35d7634683b79af0c58c2cfdf3f"
+      },
+      {
+        "name": "noxforge-6.0.0-1.fc44.x86_64.rpm",
+        "sha256": "300ed95754de31ca38c6910b2467904fadc33f1fe15a798f28c3e3d66e3128e1"
+      },
+      {
+        "name": "noxforge-6.0.0.tar.xz",
+        "sha256": "11c83d17acaa57a949e51b3e14c2eb3a6f3115e54504ff267b974db8c37583b1"
+      },
+      {
+        "name": "qualification.json",
+        "sha256": "1c1500b35994505d0d7267f9d76f2ae4542e88394287264b8f00783c61f8de34"
+      },
+      {
+        "name": "SHA256SUMS",
+        "sha256": "4d36a1dc57e3e6c07cc71dea42c0114d54fa841d13592efb31b5ca73d3e2a78b"
+      }
+    ]
+  },
+  "copr": {
+    "project": "loofitheboss/noxforge",
+    "buildId": 10802161,
+    "state": "succeeded",
+    "startedOn": "2026-08-01T12:47:03Z",
+    "endedOn": "2026-08-01T12:51:55Z",
+    "chroot": "fedora-44-x86_64",
+    "sourcePackage": "noxforge-6.0.0-1.fc44.src.rpm",
+    "binaryPackage": "noxforge-6.0.0-1.fc44.x86_64.rpm",
+    "repoUrl": "https://download.copr.fedorainfracloud.org/results/loofitheboss/noxforge",
+    "latestSucceededBuildId": 10802161,
+    "latestSucceededVersion": "6.0.0-1",
+    "publicRepositoryReadback": "passed"
+  },
+  "installation": {
+    "environment": "disposable Fedora 44 container",
+    "package": "noxforge-6.0.0-1.fc44.x86_64",
+    "source": "checksum-verified public GitHub release RPM",
+    "rpmVerify": "passed",
+    "doctorStatus": "ok",
+    "doctorComponentCount": 11,
+    "mixedVersions": false,
+    "removal": "passed",
+    "settingsHashBefore": "7e0b0c8c999008aeaeb1882b5768bef68ee57c6727ad080427fec9a09cb13b78",
+    "settingsHashAfterInstall": "7e0b0c8c999008aeaeb1882b5768bef68ee57c6727ad080427fec9a09cb13b78",
+    "settingsHashAfterRemoval": "7e0b0c8c999008aeaeb1882b5768bef68ee57c6727ad080427fec9a09cb13b78",
+    "settingsPreserved": true,
+    "themeApplied": false
+  },
+  "limitations": {
+    "unavailableLiveCasesRemainBlocked": true,
+    "blockedCaseIds": [
+      "qt-interactive-motion",
+      "plasma-blur-on-off",
+      "sddm-authentication-and-power",
+      "logout-keyboard-and-pointer",
+      "held-alt-tab",
+      "aurorae-composed-motion",
+      "cursor-live-scale"
+    ]
+  }
+}

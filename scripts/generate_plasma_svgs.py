@@ -165,6 +165,7 @@ def background(
     mask: bool = True,
     edge_highlight: bool = False,
     overlay_shadow: bool = False,
+    margin_size: int = 8,
 ) -> str:
     parts = [
         frame(
@@ -176,10 +177,13 @@ def background(
             edge_highlight=edge_highlight,
             overlay_shadow=overlay_shadow,
         ),
-        margins("", 0, 32),
+        margins("", 0, 32, margin_size),
     ]
     if mask:
-        parts.extend([frame("mask", 40, 0, recipe("glyph"), notch=notch), margins("mask", 40, 32)])
+        parts.extend([
+            frame("mask", 40, 0, recipe("glyph"), notch=notch),
+            margins("mask", 40, 32, margin_size),
+        ])
     return svg("\n".join(parts))
 
 
@@ -284,7 +288,11 @@ def main() -> None:
     )
     write(
         "widgets/panel-background.svg",
-        background(family_paint("widgets/panel-background.svg"), edge_highlight=True),
+        background(
+            family_paint("widgets/panel-background.svg"),
+            edge_highlight=True,
+            margin_size=CONTRACT["shellMetrics"]["surfaceMargins"]["panel"],
+        ),
     )
     write(
         "widgets/background.svg",
@@ -387,7 +395,12 @@ def main() -> None:
     write("widgets/plasmoidheading.svg", heading())
     write(
         "widgets/toolbar.svg",
-        background(family_paint("widgets/toolbar.svg", opacity=0.12), notch=False, mask=False),
+        background(
+            family_paint("widgets/toolbar.svg", opacity=0.12),
+            notch=False,
+            mask=False,
+            margin_size=CONTRACT["shellMetrics"]["surfaceMargins"]["toolbar"],
+        ),
     )
     write(
         "widgets/listitem.svg",
@@ -525,6 +538,9 @@ def main() -> None:
         ),
     )
     for relative, variant in CONTRACT["backgroundVariantRecipes"].items():
+        margin_role = "panel" if "panel-background" in relative else (
+            "tooltip" if "tooltip" in relative else "dialog" if "dialogs/" in relative else "popup"
+        )
         write(
             relative,
             background(
@@ -533,6 +549,7 @@ def main() -> None:
                 mask=False,
                 edge_highlight=variant["edgeHighlight"],
                 overlay_shadow=variant["overlayShadow"],
+                margin_size=CONTRACT["shellMetrics"]["surfaceMargins"][margin_role],
             ),
         )
 

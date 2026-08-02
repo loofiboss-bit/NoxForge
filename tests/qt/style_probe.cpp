@@ -54,6 +54,16 @@ QImage renderControl(QStyle *style, QStyle::ControlElement element,
     return image;
 }
 
+QImage renderComplex(QStyle *style, QStyle::ComplexControl control,
+                     const QStyleOptionComplex &option)
+{
+    QImage image(option.rect.size(), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    style->drawComplexControl(control, &option, &painter);
+    return image;
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -74,9 +84,12 @@ int main(int argc, char **argv)
         || QString::fromLatin1(style->metaObject()->className()) != QStringLiteral("NoxForgeStyle"))
         return 2;
     app.setStyle(style);
+    QCommonStyle common;
 
     QStyleOptionSlider scroll;
-    scroll.rect = QRect(0, 0, 200, 10);
+    const int scrollExtent = style->pixelMetric(QStyle::PM_ScrollBarExtent);
+    if (scrollExtent < 16) return 28;
+    scroll.rect = QRect(0, 0, 200, scrollExtent);
     scroll.orientation = Qt::Horizontal;
     scroll.minimum = 0;
     scroll.maximum = 100;
@@ -101,6 +114,20 @@ int main(int argc, char **argv)
                                      scrollSubPage.center()) != QStyle::SC_ScrollBarSubPage) return 22;
     if (style->hitTestComplexControl(QStyle::CC_ScrollBar, &scroll,
                                      scrollAddPage.center()) != QStyle::SC_ScrollBarAddPage) return 23;
+    const QImage scrollImage = renderComplex(style, QStyle::CC_ScrollBar, scroll);
+    int visibleTrackRows = 0;
+    const QColor background(QStringLiteral("#0E1318"));
+    for (int y = 0; y < scrollImage.height(); ++y) {
+        bool rowDiffers = false;
+        for (int x = 0; x < scrollImage.width(); ++x) {
+            if (scrollImage.pixelColor(x, y) != background) {
+                rowDiffers = true;
+                break;
+            }
+        }
+        visibleTrackRows += rowDiffers ? 1 : 0;
+    }
+    if (visibleTrackRows < 4 || visibleTrackRows > 8) return 29;
 
     QStyleOptionSlider slider;
     slider.rect = QRect(0, 0, 220, 32);
@@ -189,9 +216,31 @@ int main(int argc, char **argv)
     if (!containsColor(renderControl(style, QStyle::CE_ProgressBarContents, busy),
                        QColor(QStringLiteral("#22D3EE")))) return 18;
 
-    QCommonStyle common;
     if (style->styleHint(QStyle::SH_Widget_Animate)
         != common.styleHint(QStyle::SH_Widget_Animate)) return 19;
+    if (style->styleHint(QStyle::SH_UnderlineShortcut)
+        != common.styleHint(QStyle::SH_UnderlineShortcut)) return 30;
+    if (style->styleHint(QStyle::SH_MenuBar_AltKeyNavigation)
+        != common.styleHint(QStyle::SH_MenuBar_AltKeyNavigation)) return 31;
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.setValue(QStringLiteral("KDE/SingleClick"), true);
+        settings.sync();
+    }
+    if (style->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick) != 1) return 32;
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.setValue(QStringLiteral("KDE/SingleClick"), false);
+        settings.sync();
+    }
+    if (style->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick) != 0) return 33;
+    {
+        QSettings settings(kdeglobals, QSettings::IniFormat);
+        settings.remove(QStringLiteral("KDE/SingleClick"));
+        settings.sync();
+    }
+    if (style->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick)
+        != common.styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick)) return 34;
     const int animationDuration = style->styleHint(QStyle::SH_Widget_Animation_Duration);
     if (animationDuration != 120) return 24;
     {

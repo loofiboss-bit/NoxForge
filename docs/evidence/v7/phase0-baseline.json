@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "release": "7.0.0-dev",
+  "phase": 0,
+  "capturedAt": "2026-08-02",
+  "source": {
+    "branch": "docs/v6-release-closure",
+    "head": "d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6",
+    "headTag": "v6.0.0",
+    "worktreeDirty": true,
+    "preservedPreexistingPaths": [
+      "README.md",
+      "docs/MANUAL_TESTING.md",
+      "docs/NOXFORGE_V6_PLAN.md",
+      "docs/evidence/v6/qualification.json",
+      "docs/evidence/v6/public-readback.json",
+      "tests/test_v6_phase8.py"
+    ]
+  },
+  "publicV6": {
+    "status": "completed",
+    "tag": "v6.0.0",
+    "sourceCommit": "d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6",
+    "githubAssetCount": 6,
+    "githubChecksumsVerified": true,
+    "coprBuildId": 10802161,
+    "coprState": "succeeded",
+    "coprEndedOn": "2026-08-01T12:51:55Z",
+    "fedora44Package": "noxforge-6.0.0-1.fc44.x86_64",
+    "publicRepositoryReadback": "passed"
+  },
+  "toolchain": {
+    "fedora": "44",
+    "kernel": "7.1.5-201.fc44.x86_64",
+    "plasmaWorkspace": "6.7.3-1.fc44",
+    "kwin": "6.7.3-1.fc44",
+    "qt": "6.11.1",
+    "kirigami": "6.28.0-1.fc44",
+    "python": "3.14.6",
+    "cmake": "4.3.0",
+    "ninja": "1.13.2",
+    "gcc": "16.1.1",
+    "ffmpeg": "8.1.2",
+    "imageMagick": "7.1.2-27"
+  },
+  "baselineChecks": [
+    {
+      "command": "python3 scripts/validate.py",
+      "status": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p 'test_*.py' -v",
+      "status": "passed",
+      "testsDiscovered": 147,
+      "testsFailed": 0,
+      "testsSkipped": 0,
+      "durationSeconds": 186.938
+    },
+    {
+      "command": "python3 scripts/sync_version.py --check",
+      "status": "passed",
+      "version": "6.0.0",
+      "fields": 14,
+      "consumers": 13,
+      "note": "Pre-v7 version baseline before development synchronization."
+    },
+    {
+      "command": "python3 scripts/generate_sound_theme.py --check",
+      "status": "passed",
+      "events": 32,
+      "environment": "Fedora 44 with FFmpeg 8.1.2"
+    }
+  ],
+  "issues": [
+    {
+      "id": "aurorae-maximized-width",
+      "priority": "P0",
+      "status": "failing",
+      "reason": "A real maximized System Settings report shows an unpainted black titlebar remainder; the special maximized center is only 28 by 28 source units."
+    },
+    {
+      "id": "core-icon-resolution",
+      "priority": "P0",
+      "status": "failing",
+      "reason": "draw-highlight, view-hidden, and tools-report-bug are absent while NoxForge inherits only hicolor."
+    },
+    {
+      "id": "session-icon-semantics",
+      "priority": "P1",
+      "status": "partial",
+      "reason": "Several session action names are absent and must not share an unrelated generic glyph."
+    },
+    {
+      "id": "qt-kde-interaction-policy",
+      "priority": "P1",
+      "status": "failing",
+      "reason": "The native style unconditionally disables single-click activation and mnemonic underlines."
+    },
+    {
+      "id": "scrollbar-hit-target",
+      "priority": "P1",
+      "status": "partial",
+      "reason": "The native style hardcodes a 10 logical pixel scrollbar extent."
+    },
+    {
+      "id": "mixed-dpi-live-matrix",
+      "priority": "P0",
+      "status": "missing",
+      "reason": "Existing v6 evidence does not qualify a maximized decoration across the required single and mixed-output scale matrix."
+    },
+    {
+      "id": "ogg-cross-toolchain-reproducibility",
+      "priority": "P1",
+      "status": "uncertain",
+      "reason": "The current pinned Fedora 44 environment matches committed bytes, but another toolchain reported Ogg container drift."
+    },
+    {
+      "id": "test-count-reporting",
+      "priority": "P1",
+      "status": "failing",
+      "reason": "Current discovery runs 147 tests while v6 release prose hardcodes 141."
+    }
+  ],
+  "evidencePolicy": {
+    "automatedIsLive": false,
+    "historicalV6Promoted": false,
+    "pendingP0BlocksReleaseReadiness": true,
+    "hostConfigurationChanged": false,
+    "assetsRegeneratedToHideDrift": false
+  }
+}

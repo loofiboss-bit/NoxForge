@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "releaseState": "development",
+  "candidate": {
+    "version": "7.0.0-dev",
+    "sourceCommit": null,
+    "sourceRef": "working-tree",
+    "worktreeDirty": true,
+    "package": null,
+    "artifacts": []
+  },
+  "evidencePolicy": {
+    "v6ResultsPromoted": false,
+    "offscreenIsLiveEvidence": false,
+    "unavailableCasesRemainPending": true,
+    "pendingP0BlocksReleaseReadiness": true
+  },
+  "releaseReady": false,
+  "automatedCases": [
+    {
+      "id": "phase0-source-baseline",
+      "status": "passed",
+      "evidence": "phase0-gate.md",
+      "reason": "The authoritative Phase 0 gate passed with 106 active tests, nine explicit historical v6 module skips, 21 CTest cases, four sanitizer probes, reproducible archive, Fedora development packages, and clean rpmlint."
+    },
+    {
+      "id": "aurorae-static-correction",
+      "status": "passed",
+      "evidence": "aurorae/phase1.json",
+      "reason": "The incomplete special maximized centers were removed; complete normal active and inactive frames now provide Aurorae's documented fallback across 48 static scale/state cases."
+    },
+    {
+      "id": "icon-resolution-audit",
+      "status": "passed",
+      "evidence": "icons/phase2.json",
+      "reason": "The Fedora overlay chain, eight original core icons, distinct session semantics, and 90 real Qt resolution/render cases pass."
+    },
+    {
+      "id": "native-style-interaction",
+      "status": "passed",
+      "evidence": "style/phase3.json",
+      "reason": "KDE single-click policy, base mnemonic and Alt behavior, and separated scrollbar hit and visual geometry pass the native Qt probe."
+    },
+    {
+      "id": "plasma-shell-static",
+      "status": "passed",
+      "evidence": "plasma-shell/manifest.json",
+      "reason": "The 4 px shell rhythm, surface-specific margins, nested-border policy, radius roles, complete edge elements, and identical v6/v7 atlas viewports pass automated qualification."
+    },
+    {
+      "id": "session-surfaces-offscreen",
+      "status": "passed",
+      "evidence": "session/phase5.json",
+      "reason": "Authentication calls remain intact while SDDM, Logout, and TabBox pass isolated QML loading, five-scale rendering, explicit fallback, RTL, keyboard, empty, many-window, busy, error, and minimized-state contracts."
+    },
+    {
+      "id": "priority-asset-optics",
+      "status": "passed",
+      "evidence": "assets/phase6.json",
+      "reason": "The 48 evidence-ranked priority icons remain nonempty and raster-distinct at 16, 22, and 24 pixels; the confirmed keyboard hardware/settings collision is corrected while cursor and brand identity remain frozen."
+    },
+    {
+      "id": "diagnostics-and-reproducibility",
+      "status": "passed",
+      "evidence": "diagnostics/phase7.json",
+      "reason": "Read-only doctor coverage, KScreen/KWin per-output scale reporting, provenance and icon diagnostics, pinned/cross-toolchain sound policy, environment preflight, and result-derived test counts pass automated qualification."
+    },
+    {
+      "id": "local-candidate-preparation",
+      "status": "passed",
+      "evidence": "candidate/phase8.json",
+      "reason": "The local static, unit, sanitizer, build, package, isolated install-tree, repeated-install, rollback, uninstall, configuration-preservation, reproducibility, and provenance gate passes without installing or applying v7 on the host. Development artifacts remain unsigned, local, and unqualified."
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "aurorae-maximized-scaling",
+      "priority": "P0",
+      "status": "pending",
+      "scales": [100, 125, 140, 150, 175, 200],
+      "mixedOutputs": ["100+140", "100+200"],
+      "reason": "The initiating report failed. The static fallback correction passes, but the full input-capable composed KWin matrix has not been rerun."
+    },
+    {
+      "id": "core-icon-visibility",
+      "priority": "P0",
+      "status": "pending",
+      "reason": "The reported names now resolve in the real Qt lookup probe, but visible System Settings and Plasma confirmation requires an activated disposable or real session."
+    },
+    {
+      "id": "application-cohesion",
+      "priority": "P1",
+      "status": "pending",
+      "applications": ["System Settings", "Dolphin", "Konsole", "Qt menus and dialogs"],
+      "reason": "Complete v7 activation and capture have not been qualified."
+    },
+    {
+      "id": "plasma-shell-matrix",
+      "priority": "P1",
+      "status": "pending",
+      "reason": "Panel edges, tray, popups, calendar, notifications, dialogs, and OSD require v7 live qualification."
+    },
+    {
+      "id": "session-surfaces",
+      "priority": "P1",
+      "status": "pending",
+      "reason": "SDDM test mode, Logout, and TabBox require v7 keyboard, RTL, translation, icon, and mixed-DPI qualification."
+    },
+    {
+      "id": "accessibility-input",
+      "priority": "P1",
+      "status": "pending",
+      "reason": "Keyboard-only focus, Alt mnemonics, pointer targets, and interaction states require an input-capable environment."
+    }
+  ],
+  "releaseBlockers": [
+    "The mandatory composed Wayland and input-capable live matrix remains pending, including both P0 cases.",
+    "Fresh v6-to-v7 upgrade qualification requires a clean disposable Fedora 44 KDE environment.",
+    "The dirty development working tree is not bound to a clean exact-source commit."
+  ]
+}

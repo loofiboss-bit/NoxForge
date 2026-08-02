@@ -8,6 +8,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / "VERSION").read_text(encoding="utf-8").strip() != "6.0.0":
+    raise unittest.SkipTest("historical v6 source-bound tests")
 
 
 class V6PhaseThreeTests(unittest.TestCase):

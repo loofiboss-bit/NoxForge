@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 source_root=$(cd -- "${script_dir}/.." && pwd)
-build_root="${source_root}/build/cmake"
+build_root=${NOXFORGE_BUILD_ROOT:-${source_root}/build/cmake}
 dry_run=false
 system_mode=false
 
@@ -28,6 +28,10 @@ fi
 system_root=${NOXFORGE_SYSTEM_ROOT:-}
 if [[ -n "${system_root}" && ( "${system_root}" != /* || "${system_root}" == "/" ) ]]; then
     printf 'NOXFORGE_SYSTEM_ROOT must be a safe absolute staging path.\n' >&2
+    exit 2
+fi
+if [[ "${build_root}" != /* || "${build_root}" == "/" ]]; then
+    printf 'NOXFORGE_BUILD_ROOT must be a safe absolute build path.\n' >&2
     exit 2
 fi
 if [[ "${dry_run}" != true && -z "${system_root}" && ${EUID} -ne 0 ]]; then

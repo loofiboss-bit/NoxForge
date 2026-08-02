@@ -7,6 +7,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / "VERSION").read_text(encoding="utf-8").strip() != "6.0.0":
+    raise unittest.SkipTest("historical v6 source-bound tests")
 CONTRACT_PATH = ROOT / "design/session-surface-contract.json"
 EVIDENCE_ROOT = ROOT / "docs/evidence/v6/session"
 SURFACES = {

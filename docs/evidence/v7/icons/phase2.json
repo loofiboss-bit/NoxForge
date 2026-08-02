@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 2,
+  "result": "passed",
+  "target": "Fedora KDE 44",
+  "theme": "NoxForge",
+  "inheritance": [
+    "breeze-dark",
+    "breeze",
+    "hicolor"
+  ],
+  "installedFallbackDirectories": {
+    "breeze-dark": true,
+    "breeze": true,
+    "hicolor": true
+  },
+  "requiredCore": [
+    {
+      "name": "draw-highlight",
+      "relativePath": "actions/draw-highlight.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "2ec8de46dbfc73fa6ca009ecdf8a59a148554c4c0fecde1430049c7869ac44a8",
+      "provenance": [
+        "System Settings reported runtime miss"
+      ]
+    },
+    {
+      "name": "view-hidden",
+      "relativePath": "actions/view-hidden.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "50ceb488816b69d16af3ee3711cffcf090b90b75cb097ed4fb7b9cb4ab791354",
+      "provenance": [
+        "System Settings reported runtime miss"
+      ]
+    },
+    {
+      "name": "tools-report-bug",
+      "relativePath": "actions/tools-report-bug.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "cb71cdf79563f3be5f1426b7c4b0c3d26d8b00f4e39e0e869fd9a9772f9b21e5",
+      "provenance": [
+        "System Settings reported runtime miss"
+      ]
+    },
+    {
+      "name": "system-suspend",
+      "relativePath": "actions/system-suspend.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "d55a1d07669cfdb9e3bddb041d084ae2c4b5ad9f6149b9aaac934e62619e1925",
+      "provenance": [
+        "Logout.qml Sleep action",
+        "KDE session action"
+      ]
+    },
+    {
+      "name": "system-reboot",
+      "relativePath": "actions/system-reboot.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "85dc30b0edabe18875b9c2385c6297e6c4d55aa88e489495c6d42b80c7f2b46c",
+      "provenance": [
+        "Logout.qml Restart action",
+        "KDE session action"
+      ]
+    },
+    {
+      "name": "system-shutdown",
+      "relativePath": "actions/system-shutdown.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "8a251a2cdae2ed88471880d779c04fbf0de41ee597ef7756bfc50a7649d4be22",
+      "provenance": [
+        "Logout.qml Shut down action",
+        "KDE session action"
+      ]
+    },
+    {
+      "name": "system-lock-screen",
+      "relativePath": "actions/system-lock-screen.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "cb68255cace8d8cd599f1e6ff9dea9019c56517d709946cf1c7e7104c9b85a2e",
+      "provenance": [
+        "Logout.qml Lock action",
+        "KDE session action"
+      ]
+    },
+    {
+      "name": "system-log-out",
+      "relativePath": "actions/system-log-out.svg",
+      "resolution": "NoxForge overlay",
+      "sha256": "e547cf8f28aca6880e2885580aef2f4ee5fa8d82252caabe0661d00d4f6cdb3a",
+      "provenance": [
+        "Logout.qml Log out action",
+        "KDE session action"
+      ]
+    }
+  ],
+  "fallbackProbes": [
+    {
+      "name": "document-print",
+      "resolution": "intentional fallback",
+      "resolvedTheme": "breeze-dark",
+      "resolvedRelativePath": "actions/16/document-print.svg",
+      "provenance": [
+        "standard Qt and KDE application action"
+      ]
+    }
+  ],
+  "semanticHashesDistinct": true,
+  "renderMatrix": {
+    "logicalSizes": [
+      16,
+      22,
+      24,
+      32,
+      48
+    ],
+    "modes": [
+      "normal",
+      "selected"
+    ],
+    "backgrounds": [
+      "dark",
+      "selected"
+    ]
+  },
+  "qtProbe": {
+    "ctestName": "icon-theme-resolution",
+    "implementation": "tests/qt/icon_resolution_probe.cpp",
+    "requiredRenderCases": 90,
+    "status": "required-by-phase-gate"
+  },
+  "liveApplicationEvidence": {
+    "status": "pending",
+    "reason": "Requires an explicitly activated disposable or real Plasma session."
+  },
+  "sourceHashes": {
+    "contract": "80b5abc95cb8ddafd1a282cea35008da9f670147bdd0591393c64b9764994ebb",
+    "indexTheme": "63942ae8947b138bcb096df04f06d5f6f3e99542f8bfc5736b03251f664d87a9",
+    "logoutQml": "927537e1a0564be65fc5360e6ed7643a978550e47ffcf4874c947f46d4799c9c"
+  }
+}

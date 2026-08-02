@@ -17,7 +17,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
-EVIDENCE = ROOT / "docs/evidence/v6/plasma-shell"
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+EVIDENCE_SERIES = "v6" if VERSION == "6.0.0" else "v7"
+EVIDENCE = ROOT / f"docs/evidence/{EVIDENCE_SERIES}/plasma-shell"
 MANIFEST = EVIDENCE / "atlas-manifest.json"
 SCALES = ((1.0, "100"), (1.25, "125"), (1.4, "140"), (2.0, "200"))
 COLUMNS = 8
@@ -187,13 +189,14 @@ def render_all(target: Path, magick: str, contract: dict[str, object]) -> tuple[
     )
     manifest = {
         "schemaVersion": 2,
+        "version": VERSION,
         "plasmaVersion": contract["plasmaVersion"],
         "themeId": contract["themeId"],
         "evidenceClass": capture_matrix["evidenceClass"],
         "qualifiesLivePlasma": capture_matrix["qualifiesLivePlasma"],
         "limitations": [
             "Static SVG source rasterization does not prove a running Plasma shell or compositor.",
-            "Live panel, blur, compact-layout, and multi-output checks remain blocked until Phase 7.",
+            "Live panel, blur, compact-layout, and multi-output checks remain pending.",
         ],
         "assetCount": len(assets),
         "columns": COLUMNS,

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 3,
+  "interactionPolicy": {
+    "singleClick": {
+      "source": "kdeglobals [KDE] SingleClick",
+      "fallback": "QCommonStyle::styleHint"
+    },
+    "underlineShortcut": "QCommonStyle::styleHint",
+    "menuBarAltNavigation": "QCommonStyle::styleHint"
+  },
+  "scrollbar": {
+    "functionalExtent": 16,
+    "visualTrackMaximum": 6,
+    "minimumThumbLength": 18,
+    "lineButtons": false
+  },
+  "selection": {
+    "surfaceRole": "surfaceSelected",
+    "markerRole": "accent",
+    "markerWidth": 3,
+    "rtlMirrored": true
+  },
+  "automatedProbe": {
+    "ctestName": "style-plugin-discovery",
+    "implementation": "tests/qt/style_probe.cpp"
+  }
+}

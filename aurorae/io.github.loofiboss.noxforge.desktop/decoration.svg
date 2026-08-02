@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
+<svg xmlns="http://www.w3.org/2000/svg" width="92" height="40" viewBox="0 0 92 40">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Raised { color: #1B252C; }
@@ -24,9 +24,4 @@
 <path id="decoration-inactive-bottomleft" d="M52 34H58V40A6 6 0 0 1 52 34Z" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
 <rect id="decoration-inactive-bottom" x="58" y="34" width="28" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
 <path id="decoration-inactive-bottomright" d="M86 34H92A6 6 0 0 1 86 40Z" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
-  <g id="decoration-maximized-center">
-    <rect x="104" y="0" width="28" height="28" class="ColorScheme-Raised" fill="currentColor"/>
-    <path d="M106 1h12" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="2"/>
-  </g>
-  <rect id="decoration-maximized-inactive-center" x="104" y="36" width="28" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
 </svg>

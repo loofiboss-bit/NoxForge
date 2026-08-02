@@ -5,18 +5,22 @@ This file is the canonical scope and release-gate index.
 ## Active release scope
 
 The active, phase-gated release authority is
-[`NOXFORGE_V6_PLAN.md`](NOXFORGE_V6_PLAN.md). NoxForge v6 evolves the released
-Industrial Precision system into Kinetic Precision through a render-backed
-visual hierarchy, purposeful native Qt and QML motion, refined shell material,
-and original brand and wallpaper work.
+[`NOXFORGE_V7_PLAN.md`](NOXFORGE_V7_PLAN.md). NoxForge v7 Operational Precision
+corrects P0 Aurorae scaling and icon-resolution defects before reconciling
+application, shell, session, accessibility, diagnostics, and release evidence.
+It preserves the released Kinetic Precision identity and non-destructive
+installation policy.
 
 Implementation proceeds one phase at a time. Every phase gate must pass before
-its narrow local commit. Unavailable graphical checks remain pending or
-blocked; later phases, installation, theme application, publication and remote
-changes are not implied by local phase completion.
+its checkpoint. Unavailable graphical checks remain pending or blocked; a
+pending P0 live gate prevents a v7 release-ready claim. Local phase completion
+does not imply a commit, installation, theme application, publication, or
+remote change.
 
 ## Historical release evidence
 
+- [`NOXFORGE_V6_PLAN.md`](NOXFORGE_V6_PLAN.md) records the completed v6 scope,
+  public release, COPR publication, and bounded live evidence.
 - [`NOXFORGE_V5_PLAN.md`](NOXFORGE_V5_PLAN.md) records the completed v5 scope,
   stable release, publication and independent readback.
 - [`NOXFORGE_V4_PLAN.md`](NOXFORGE_V4_PLAN.md) records the closed v4 scope and

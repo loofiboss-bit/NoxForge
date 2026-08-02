@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 5,
+  "importantControlHeight": 40,
+  "authenticationBoundary": {
+    "preservedCalls": [
+      "sddm.login",
+      "sddm.suspend",
+      "sddm.reboot",
+      "sddm.powerOff"
+    ],
+    "credentialStorageAdded": false,
+    "hostConfigurationMutation": false
+  },
+  "sddm": {
+    "busyIndicator": "QtQuick.Controls BusyIndicator",
+    "stableStatusHeight": 40,
+    "capsLockIndicator": true,
+    "keyboardLayoutVisible": true,
+    "sessionSelectorVisible": true
+  },
+  "logout": {
+    "distinctActionIcons": [
+      "system-lock-screen",
+      "system-log-out",
+      "system-suspend",
+      "system-reboot",
+      "system-shutdown"
+    ]
+  },
+  "tabbox": {
+    "modelRoles": ["caption", "icon", "minimized"],
+    "missingIconFallback": "application-x-executable",
+    "scenarios": [
+      "empty",
+      "many",
+      "long-rtl",
+      "keyboard",
+      "missing-icon",
+      "minimized"
+    ]
+  },
+  "offscreenScaleMatrix": [100, 125, 140, 150, 200],
+  "mixedDpi": {
+    "cases": ["100+140", "100+200"],
+    "status": "pending-live",
+    "reason": "A single offscreen QQuickView cannot qualify per-output compositor migration."
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false
+  }
+}

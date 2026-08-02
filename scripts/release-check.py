@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib.util
+import json
 import os
 import shutil
 import subprocess
@@ -24,6 +25,15 @@ GENERATOR_CHECKS = (
     ("render_wallpaper.py", "--check"),
     ("render_artwork_evidence.py", "--check"),
     ("check_plasma_rasters.py",),
+    ("check_v7_aurorae.py", "--check"),
+    ("check_v7_icons.py", "--check"),
+    ("check_v7_style.py", "--check"),
+    ("check_v7_sessions.py", "--check"),
+    ("check_v7_assets.py", "--check"),
+    ("check_v7_diagnostics.py", "--check"),
+    ("check_v7_candidate.py", "--check"),
+)
+V6_GENERATOR_CHECKS = (
     ("capture_v6_baseline.py", "--check"),
     ("render_v6_north_star.py", "--check"),
     ("render_v6_previews.py", "--check"),
@@ -42,6 +52,23 @@ QML_SURFACES = (
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml",
 )
+
+
+def preflight(*, skip_rpm: bool) -> None:
+    required = ["cmake", "ninja", "c++", "magick", "ffmpeg", "git", "xz", "rpm"]
+    if not skip_rpm:
+        required.extend(("rpmbuild", "rpmlint"))
+    missing = sorted(command for command in required if not shutil.which(command))
+    try:
+        find_qmllint()
+    except RuntimeError:
+        missing.append("qmllint")
+    if missing:
+        raise RuntimeError(
+            "environment preflight failed; repository checks were not started; "
+            "missing required tools: " + ", ".join(sorted(set(missing)))
+        )
+    print("Environment preflight passed: " + ", ".join(sorted(set(required + ["qmllint"]))))
 
 
 def run(command: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -158,10 +185,27 @@ def main() -> int:
     )
     arguments = parser.parse_args()
 
+    preflight(skip_rpm=arguments.skip_rpm)
+
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    generator_checks = GENERATOR_CHECKS
+    if version == "6.0.0":
+        generator_checks += V6_GENERATOR_CHECKS
+
     run([sys.executable, "scripts/validate.py"])
-    for command in GENERATOR_CHECKS:
+    for command in generator_checks:
         run([sys.executable, f"scripts/{command[0]}", *command[1:]])
-    run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
+    with tempfile.TemporaryDirectory(prefix="noxforge-python-gate-") as test_temp:
+        test_report = Path(test_temp) / "python-tests.json"
+        run([sys.executable, "scripts/run_python_tests.py", "--report", str(test_report)])
+        counts = json.loads(test_report.read_text(encoding="utf-8"))
+        if not counts.get("successful"):
+            raise RuntimeError("repository Python gate failed")
+        print(
+            "Derived Python gate counts: "
+            f"{counts['passed']} passed, {counts['skipped']} skipped, "
+            f"{counts['testsRun']} total"
+        )
     run([sys.executable, "scripts/check_v6_phase3_sanitizers.py"])
 
     with tempfile.TemporaryDirectory(prefix="noxforge-release-check-") as temp:
@@ -220,4 +264,15 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except subprocess.CalledProcessError as error:
+        print(
+            "repository gate failed after environment preflight: "
+            + " ".join(map(str, error.cmd)),
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from error
+    except RuntimeError as error:
+        print(str(error), file=sys.stderr)
+        raise SystemExit(1) from error

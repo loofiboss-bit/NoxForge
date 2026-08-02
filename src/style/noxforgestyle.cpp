@@ -227,7 +227,7 @@ int NoxForgeStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, c
     case PM_ButtonDefaultIndicator: return 0;
     case PM_LayoutHorizontalSpacing:
     case PM_LayoutVerticalSpacing: return 8;
-    case PM_ScrollBarExtent: return 10;
+    case PM_ScrollBarExtent: return 16;
     case PM_SliderThickness: return 18;
     case PM_SliderLength: return 18;
     case PM_IndicatorWidth:
@@ -246,9 +246,20 @@ int NoxForgeStyle::styleHint(StyleHint hint, const QStyleOption *option,
                              const QWidget *widget, QStyleHintReturn *returnData) const
 {
     switch (hint) {
-    case SH_UnderlineShortcut: return 0;
-    case SH_ItemView_ActivateItemOnSingleClick: return 0;
-    case SH_MenuBar_AltKeyNavigation: return 1;
+    case SH_UnderlineShortcut:
+    case SH_MenuBar_AltKeyNavigation:
+        return QCommonStyle::styleHint(hint, option, widget, returnData);
+    case SH_ItemView_ActivateItemOnSingleClick: {
+        const QString path = QStandardPaths::locate(
+            QStandardPaths::GenericConfigLocation, QStringLiteral("kdeglobals"));
+        if (!path.isEmpty()) {
+            QSettings settings(path, QSettings::IniFormat);
+            settings.beginGroup(QStringLiteral("KDE"));
+            if (settings.contains(QStringLiteral("SingleClick")))
+                return settings.value(QStringLiteral("SingleClick")).toBool();
+        }
+        return QCommonStyle::styleHint(hint, option, widget, returnData);
+    }
     case SH_FocusFrame_AboveWidget: return 1;
     case SH_Widget_Animation_Duration:
         return qRound(NP::productiveDuration * motionScale(widget));
@@ -852,6 +863,16 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
     }
     case CC_ScrollBar: {
         const QRect slider = subControlRect(CC_ScrollBar, option, SC_ScrollBarSlider, widget);
+        const auto *scroll = qstyleoption_cast<const QStyleOptionSlider *>(option);
+        if (!scroll) break;
+        QRect visualSlider = slider;
+        if (scroll->orientation == Qt::Horizontal) {
+            visualSlider.setHeight(qMin(6, slider.height()));
+            visualSlider.moveCenter(QPoint(slider.center().x(), option->rect.center().y()));
+        } else {
+            visualSlider.setWidth(qMin(6, slider.width()));
+            visualSlider.moveCenter(QPoint(option->rect.center().x(), slider.center().y()));
+        }
         painter->fillRect(option->rect, NP::background());
         const qreal hover = motionValue(
             widget, NoxForgeMotion::Channel::Hover,
@@ -864,7 +885,7 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         painter->setPen(Qt::NoPen);
         painter->setBrush(mixedColor(
             mixedColor(NP::border(), NP::accent(), hover), NP::accentPressed(), active));
-        painter->drawRoundedRect(slider, 4, 4);
+        painter->drawRoundedRect(visualSlider, 3, 3);
         painter->restore();
         return;
     }

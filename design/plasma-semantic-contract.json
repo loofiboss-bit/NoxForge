@@ -10,6 +10,22 @@
     "runtimeSvgFilters": false,
     "blurRequiredForReadability": false
   },
+  "shellMetrics": {
+    "gridUnit": 4,
+    "surfaceMargins": {
+      "panel": 4,
+      "toolbar": 4,
+      "popup": 8,
+      "dialog": 8,
+      "tooltip": 8
+    },
+    "nestedBorderPolicy": "one outer material edge; inner headings and rows use tonal separation",
+    "radiusRoles": {
+      "compact": 4,
+      "surface": 6,
+      "overlay": 8
+    }
+  },
   "semanticRecipes": {
     "canvas": {"cssClass": "ColorScheme-ViewBackground", "opacity": 1.0},
     "sunken": {"cssClass": "NoxForge-Sunken", "opacity": 1.0},

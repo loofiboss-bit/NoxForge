@@ -3,7 +3,9 @@
 pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Controls as QQC2
 import org.kde.kirigami.platform as Platform
+import org.kde.plasma.private.keyboardindicator as KeyboardIndicator
 
 Rectangle {
     id: root
@@ -25,6 +27,11 @@ Rectangle {
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
 
+    KeyboardIndicator.KeyState {
+        id: capsLockState
+        key: Qt.Key_CapsLock
+    }
+
     QtObject {
         id: motion
         readonly property real durationScale: Platform.Units.shortDuration <= 0
@@ -33,23 +40,6 @@ Rectangle {
         readonly property bool reducedMotion: durationScale <= 0
         function duration(baseDuration) {
             return reducedMotion ? 0 : Math.max(1, Math.round(baseDuration * durationScale))
-        }
-    }
-
-    Component {
-        id: busyGlyph
-        Text {
-            text: "↻"
-            color: tokens.detailCyan
-            font.pixelSize: tokens.controlLabelSize
-            rotation: root.testProgress >= 0 ? root.testProgress * 360 : 0
-            RotationAnimation on rotation {
-                running: !root.reducedMotion && root.testProgress < 0
-                loops: Animation.Infinite
-                from: 0
-                to: 360
-                duration: motion.duration(tokens.busyCycleDuration)
-            }
         }
     }
 
@@ -118,7 +108,12 @@ Rectangle {
             anchors.rightMargin: tokens.standardSpacing
             anchors.verticalCenter: parent.verticalCenter
             active: button.busy
-            sourceComponent: busyGlyph
+            sourceComponent: QQC2.BusyIndicator {
+                implicitWidth: 20
+                implicitHeight: 20
+                running: button.busy && !root.reducedMotion && root.testProgress < 0
+                Accessible.ignored: true
+            }
         }
         MouseArea { id: mouse; anchors.fill: parent; hoverEnabled: true; enabled: button.interactive; onClicked: button.clicked() }
         Keys.onReturnPressed: if (interactive) clicked()
@@ -284,7 +279,16 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 40
                 Layout.maximumHeight: 40
-                text: root.statusMessage
+                text: {
+                    const messages = []
+                    if (capsLockState.locked) {
+                        messages.push(qsTr("Caps Lock is on"))
+                    }
+                    if (root.statusMessage.length > 0) {
+                        messages.push(root.statusMessage)
+                    }
+                    return messages.join(" · ")
+                }
                 color: root.statusDanger ? tokens.negative : tokens.textSecondary
                 font.pixelSize: tokens.metadataSize
                 wrapMode: Text.Wrap

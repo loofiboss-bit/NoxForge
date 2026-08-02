@@ -1,0 +1,351 @@
+{
+  "decision": "Remove the incomplete special maximized centers and use Aurorae's documented normal-frame fallback.",
+  "liveMatrix": {
+    "reason": "This environment has not executed a trusted input-capable composed KWin mixed-DPI matrix.",
+    "requiredMixedOutputs": [
+      [
+        100,
+        140
+      ],
+      [
+        100,
+        200
+      ]
+    ],
+    "requiredScales": [
+      100,
+      125,
+      140,
+      150,
+      175,
+      200
+    ],
+    "status": "pending"
+  },
+  "mixedOutputStaticCases": [
+    {
+      "scales": [
+        100,
+        140
+      ],
+      "status": "passed-static"
+    },
+    {
+      "scales": [
+        100,
+        200
+      ],
+      "status": "passed-static"
+    }
+  ],
+  "phase": 1,
+  "release": "7.0.0-dev",
+  "releaseReady": false,
+  "schemaVersion": 1,
+  "sourceGeometry": {
+    "activeCenterOpacity": 1.0,
+    "inactiveCenterOpacity": 0.9,
+    "normalFrameElementCount": 18,
+    "specialMaximizedElementCount": 0,
+    "viewBox": "0 0 92 40"
+  },
+  "sourceHashes": {
+    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svg": "63574b7e6b138df10a86837ea50dc25d095d4df60770b8c98618c85178a207a9",
+    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svgz": "af7cd3d30528edc043450face9798e6a07a518c53195584a62654cae35f51aa3",
+    "aurorae/io.github.loofiboss.noxforge.desktop/io.github.loofiboss.noxforge.desktoprc": "9a4578cc6b807cfde00f50efb8f3f6517546fa4699fd8beec6567bd89f058d1c",
+    "design/edge-polish-contract.json": "6ccc6f09dc8f136fd63ba9f6a7663cd60aadea2c8ca6e60d541d104b9dda7dc0",
+    "scripts/generate_visual_assets.py": "faf73b55471a4cba92caaa46e15ddcf7048c12a48fbeed814ab0d5ed0304fed4"
+  },
+  "staticMatrix": [
+    {
+      "scalePercent": 100,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "active-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "inactive-normal",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "active-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "inactive-maximized",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "quick-tiled-left",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "quick-tiled-right",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "shaded",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 100,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 125,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 140,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 150,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 175,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    },
+    {
+      "scalePercent": 200,
+      "state": "fullscreen-transition",
+      "status": "passed-static",
+      "surface": "normal-frame-fallback"
+    }
+  ],
+  "strategy": "normal-frame-fallback",
+  "upstreamContract": "https://develop.kde.org/docs/plasma/aurorae/#maximized-windows"
+}

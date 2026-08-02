@@ -92,6 +92,10 @@ Item {
                 : motion.duration(tokens.selectionDuration)
             highlightMoveVelocity: -1
             onCurrentIndexChanged: root.currentIndex = currentIndex
+            Keys.onReturnPressed: if (currentIndex >= 0) model.activate(currentIndex)
+            Keys.onSpacePressed: if (currentIndex >= 0) model.activate(currentIndex)
+            Accessible.role: Accessible.List
+            Accessible.name: qsTr("Open windows")
             LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
             LayoutMirroring.childrenInherit: true
 
@@ -108,6 +112,9 @@ Item {
                 required property string caption
                 required property var icon
                 required property bool minimized
+                readonly property var resolvedIcon: icon === undefined || icon === null || icon === ""
+                    ? "application-x-executable"
+                    : icon
                 width: root.horizontalMode ? root.horizontalCardWidth : windowList.width
                 height: root.horizontalMode
                     ? root.horizontalCardHeight
@@ -161,7 +168,7 @@ Item {
                     anchors.margins: tokens.standardSpacing
                     spacing: tokens.compactSpacing
                     Kirigami.Icon {
-                        source: windowDelegate.icon
+                        source: windowDelegate.resolvedIcon
                         Layout.preferredWidth: root.horizontalMode
                             ? Kirigami.Units.iconSizes.large
                             : Kirigami.Units.iconSizes.medium
@@ -189,6 +196,9 @@ Item {
                     }
                     Item { Layout.fillHeight: true; visible: root.horizontalMode }
                 }
+                Accessible.role: Accessible.ListItem
+                Accessible.name: caption
+                Accessible.description: minimized ? qsTr("Minimized window") : qsTr("Window")
                 TapHandler {
                     onTapped: {
                         windowList.currentIndex = windowDelegate.index

@@ -1,13 +1,19 @@
 # Fedora KDE 44 manual visual gate
 
 Run after RPM installation in a disposable Plasma 6.7+ Wayland session.
-Capture evidence before any tag or publication. Results must be `passed`,
-`failed`, `blocked`, or `not-applicable` in
-`docs/evidence/v6/qualification.json`; automated evidence never substitutes for
-a live result.
+Capture evidence before any tag or publication. Active v7 results must be
+`passed`, `failed`, `blocked`, `pending`, or `not-applicable` in
+`docs/evidence/v7/qualification.json`; automated evidence never substitutes for
+a live result. Historical v6 results remain immutable in
+`docs/evidence/v6/qualification.json`.
 
-Current candidate: NoxForge 6.0.0 on Fedora KDE 44. Every automated result
-passes. The v6 isolated Wayland matrix passes Global Theme application, exact
+Current development target: NoxForge 7.0.0-dev on Fedora KDE 44. The Phase 0
+source baseline passes repository validation and 147 discovered Python tests.
+The reported maximized-titlebar and missing-icon cases are failing P0 baseline
+results. The complete v7 mixed-DPI live matrix is pending and v7 is not
+release-ready.
+
+Historical v6 qualification passes Global Theme application, exact
 panel preservation, all four panel edges, two-output placement, visible shell
 fallback review, and real Qt composition at 140 percent. Unavailable
 hardware/input/authentication cases remain explicitly `blocked`; no v5 result
@@ -177,7 +183,7 @@ mode, PAM authentication, and real SDDM power actions remain blocked. The
 generic splash test presentation was rejected rather than promoted to live
 v6 evidence.
 
-## Current v6 Phase 8 release candidate evidence (2026-08-01)
+## Current v6 Phase 8 public release evidence (2026-08-02)
 
 The repository version and all current generated consumers are stable `6.0.0`.
 README and release-note images link to exact generated previews, source atlases,
@@ -185,10 +191,50 @@ or authentic offscreen QML/native Qt output and identify their non-live status.
 The immutable Phase 0 baseline remains `6.0.0-dev` historical evidence.
 
 The complete local source/archive/SRPM/RPM gate and the isolated Wayland matrix
-pass. `docs/evidence/v6/qualification.json` is release-ready with exact
-candidate lineage and the six-asset contract. The annotated `v6.0.0` tag,
-GitHub Release, COPR build, installation, and independent public
-download/readback remain the Phase 8 publication gate.
+pass. Annotated tag `v6.0.0` resolves to
+`d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`; release workflow
+`30692016393` published exactly six checksum-verified GitHub assets. A
+disposable Fedora 44 installation passed `rpm -V`, `noxforge-doctor`, and
+non-applying removal while KDE and SDDM sentinel hashes remained identical.
+COPR build `10802161` reached terminal `succeeded`, and public Fedora 44 x86_64
+metadata resolves `noxforge-6.0.0-1.fc44`; Phase 8 public closure is complete.
+Machine-readable details are in
+`docs/evidence/v6/public-readback.json`.
+
+## V7 Phase 8 mandatory live matrix
+
+Run this matrix only in an authorized disposable Fedora 44 KDE Plasma 6
+Wayland environment with the exact v7 RPM installed but not automatically
+applied. Record every result in `docs/evidence/v7/qualification.json`; retain
+`pending` when the environment or required input/hardware is unavailable.
+
+For each single-output scale at 100%, 125%, 140%, 150%, 175%, and 200%, and
+for mixed-output pairs 100% + 140% and 100% + 200%:
+
+1. Maximize and restore System Settings, Dolphin, and Konsole. Inspect every
+   Aurorae edge and corner, title centering, caption clipping, hit targets, and
+   active/inactive state.
+2. Exercise the reported core icons plus session suspend, restart, shutdown,
+   lock, and log-out actions. Record the resolved icon name and visible
+   semantic result; a fallback glyph must not be reported as NoxForge artwork.
+3. Capture all four panel edges, tray, launcher, task manager, popup, calendar,
+   notification, dialog, tooltip, and OSD with blur both enabled and disabled.
+4. Run SDDM test mode, Splash, Logout, and a held TabBox cycle with empty,
+   single, many-window, minimized, missing-icon, long-title, and error states.
+5. Verify normal, reduced/disabled, and deliberately slow motion for hover,
+   press, selection, busy, splash, and session transitions. Confirm no stale
+   timer or half-completed state after interruption.
+6. Traverse every interactive surface using keyboard only. Verify focus order,
+   visible focus, Enter/Space activation, Alt mnemonics, disabled controls,
+   translation expansion, and live RTL layout.
+7. Read back package version, component provenance, active settings, icon
+   inheritance, unresolved critical icons, and actual KScreen/KWin per-output
+   scales with `noxforge-doctor --json`.
+
+Separately test fresh installation, v6 upgrade, repeated installation,
+rollback, uninstall, and KDE/SDDM configuration preservation. Real SDDM
+authentication and power actions require a recoverable VM. Automated and
+offscreen output never closes any row in this live matrix.
 
 ## Remaining interactive checks (require a physical or input-capable test environment)
 

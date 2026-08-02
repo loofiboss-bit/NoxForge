@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 REPOSITORY_URL = "https://github.com/loofiboss-bit/NoxForge"
+V6_RELEASE_VERSION = "6.0.0"
 SEMVER = re.compile(
     r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
@@ -190,7 +191,7 @@ def validate_tokens(version: str) -> dict[str, object]:
         or geometry.get("standardSpacing") != 8
         or geometry.get("overlayRadius") != 8
         or geometry.get("controlHeight") != 32
-        or geometry.get("largeControlHeight") != 36
+        or geometry.get("largeControlHeight") != 40
     ):
         raise ValidationError("design geometry does not match Kinetic Precision")
     if opacity != {
@@ -844,8 +845,8 @@ def validate_icons() -> None:
         raise ValidationError("runtime icon fixture is missing")
     index = load_colors(theme / "index.theme")
     inherited = index["Icon Theme"].get("inherits", "").split(",")
-    if inherited != ["hicolor"]:
-        raise ValidationError("icon theme may inherit only hicolor for application logos")
+    if inherited != ["breeze-dark", "breeze", "hicolor"]:
+        raise ValidationError("icon theme must use the verified Fedora KDE overlay fallback chain")
     valid_contexts = {
         "Actions", "Animations", "Applications", "Categories", "Devices", "Emblems",
         "Emotes", "International", "MimeTypes", "Places", "Status",
@@ -1686,12 +1687,21 @@ def validate_v6_phase7_evidence(version: str) -> None:
         raise ValidationError("v6 Phase 7 motion stress evidence failed")
 
 
-def validate_tooling() -> None:
+def validate_tooling(version: str) -> None:
     required = (
         ROOT / "scripts/build.py",
         ROOT / "scripts/release-check.py",
         ROOT / "scripts/sync_version.py",
         ROOT / "scripts/generate_design_system.py",
+        ROOT / "scripts/check_v7_aurorae.py",
+        ROOT / "scripts/check_v7_icons.py",
+        ROOT / "scripts/check_v7_style.py",
+        ROOT / "scripts/check_v7_sessions.py",
+        ROOT / "scripts/check_v7_assets.py",
+        ROOT / "scripts/check_v7_diagnostics.py",
+        ROOT / "scripts/check_v7_candidate.py",
+        ROOT / "scripts/prepare_v7_candidate.py",
+        ROOT / "scripts/run_python_tests.py",
         ROOT / "scripts/render_v6_north_star.py",
         ROOT / "scripts/render_v6_previews.py",
         ROOT / "scripts/render_v6_motion_evidence.py",
@@ -1710,6 +1720,8 @@ def validate_tooling() -> None:
         ROOT / "docs/INSTALL_FEDORA.md",
         ROOT / "docs/TROUBLESHOOTING.md",
         ROOT / "docs/MANUAL_TESTING.md",
+        ROOT / "docs/NOXFORGE_V7_PLAN.md",
+        ROOT / "docs/releases/v7.0.0.md",
         ROOT / "docs/evidence/v5/qualification.json",
         ROOT / "docs/evidence/v6/qualification.json",
         ROOT / "docs/evidence/v6/baseline/manifest.json",
@@ -1723,6 +1735,12 @@ def validate_tooling() -> None:
         ROOT / "docs/evidence/v6/accessibility-review.json",
         ROOT / "docs/evidence/v6/performance.json",
         ROOT / "docs/evidence/v6/automated-gate.md",
+        ROOT / "docs/evidence/v6/public-readback.json",
+        ROOT / "docs/evidence/v7/phase0-baseline.json",
+        ROOT / "docs/evidence/v7/qualification.json",
+        ROOT / "docs/evidence/v7/aurorae/phase1.json",
+        ROOT / "docs/evidence/v7/candidate/phase8.json",
+        ROOT / "design/v7-candidate-contract.json",
         ROOT / "packaging/noxforge.spec",
         ROOT / "tools/noxforge-doctor",
     )
@@ -1746,8 +1764,11 @@ def validate_tooling() -> None:
         if command in system_install or command in system_uninstall:
             raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-    if "docs/evidence/v6/qualification.json" not in checklist or "blocked" not in checklist.lower():
-        raise ValidationError("manual graphical checks must use the active structured v6 evidence manifest")
+    if (
+        "docs/evidence/v7/qualification.json" not in checklist
+        or "pending" not in checklist.lower()
+    ):
+        raise ValidationError("manual graphical checks must use the active structured v7 evidence manifest")
     evidence_root = ROOT / "docs/evidence/v5"
     evidence = load_json(evidence_root / "qualification.json")
     if not isinstance(evidence, dict) or evidence.get("schemaVersion") != 2:
@@ -1820,7 +1841,7 @@ def validate_tooling() -> None:
         raise ValidationError("blocked automated evidence must record its blocker")
 
     v6 = load_json(ROOT / "docs/evidence/v6/qualification.json")
-    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    v6_version = V6_RELEASE_VERSION
     if (
         not isinstance(v6, dict)
         or v6.get("schemaVersion") != 2
@@ -1830,17 +1851,17 @@ def validate_tooling() -> None:
     v6_candidate = v6.get("candidate")
     expected_artifacts = {
         "automated-gate.md",
-        f"noxforge-{version}.tar.xz",
-        f"noxforge-{version}-1.fc44.src.rpm",
-        f"noxforge-{version}-1.fc44.x86_64.rpm",
+        f"noxforge-{v6_version}.tar.xz",
+        f"noxforge-{v6_version}-1.fc44.src.rpm",
+        f"noxforge-{v6_version}-1.fc44.x86_64.rpm",
         "qualification.json",
         "SHA256SUMS",
     }
     if (
         not isinstance(v6_candidate, dict)
-        or v6_candidate.get("version") != version
-        or v6_candidate.get("sourceRef") != f"v{version}"
-        or v6_candidate.get("package") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or v6_candidate.get("version") != v6_version
+        or v6_candidate.get("sourceRef") != f"v{v6_version}"
+        or v6_candidate.get("package") != f"noxforge-{v6_version}-1.fc44.x86_64.rpm"
         or set(v6_candidate.get("artifacts", [])) != expected_artifacts
     ):
         raise ValidationError("v6 candidate metadata is incomplete")
@@ -1917,9 +1938,68 @@ def validate_tooling() -> None:
             ).is_file():
                 raise ValidationError("passed v6 live evidence must link a real file")
 
+    v7 = load_json(ROOT / "docs/evidence/v7/qualification.json")
+    if (
+        not isinstance(v7, dict)
+        or v7.get("schemaVersion") != 1
+        or v7.get("releaseState") != "development"
+        or v7.get("releaseReady") is not False
+    ):
+        raise ValidationError("v7 qualification identity is invalid")
+    v7_candidate = v7.get("candidate")
+    if (
+        not isinstance(v7_candidate, dict)
+        or v7_candidate.get("version") != version
+        or v7_candidate.get("sourceCommit") is not None
+        or v7_candidate.get("sourceRef") != "working-tree"
+        or v7_candidate.get("worktreeDirty") is not True
+        or v7_candidate.get("package") is not None
+        or v7_candidate.get("artifacts") != []
+    ):
+        raise ValidationError("v7 development candidate metadata is invalid")
+    v7_policy = v7.get("evidencePolicy")
+    if (
+        not isinstance(v7_policy, dict)
+        or v7_policy.get("v6ResultsPromoted") is not False
+        or v7_policy.get("offscreenIsLiveEvidence") is not False
+        or v7_policy.get("pendingP0BlocksReleaseReadiness") is not True
+    ):
+        raise ValidationError("v7 evidence policy is invalid")
+    v7_live = v7.get("liveCases")
+    if not isinstance(v7_live, list) or not v7_live:
+        raise ValidationError("v7 live matrix is missing")
+    allowed_v7 = {"pending", "blocked", "failed", "passed", "not-applicable"}
+    for case in v7_live:
+        if (
+            not isinstance(case, dict)
+            or case.get("status") not in allowed_v7
+            or not case.get("reason")
+        ):
+            raise ValidationError("v7 live matrix contains an invalid result")
+    required_live = {
+        "aurorae-maximized-scaling",
+        "core-icon-visibility",
+        "application-cohesion",
+        "plasma-shell-matrix",
+        "session-surfaces",
+        "accessibility-input",
+    }
+    live_by_id = {case.get("id"): case for case in v7_live}
+    if not required_live <= set(live_by_id) or any(
+        live_by_id[case_id].get("status") != "pending" for case_id in required_live
+    ):
+        raise ValidationError("v7 mandatory unavailable live cases must remain pending")
+    if not isinstance(v7.get("releaseBlockers"), list) or len(v7["releaseBlockers"]) < 3:
+        raise ValidationError("v7 development qualification must retain release blockers")
+    p0 = [case for case in v7_live if case.get("priority") == "P0"]
+    if not p0 or not any(
+        case.get("status") in {"failed", "pending", "blocked"} for case in p0
+    ):
+        raise ValidationError("v7 Phase 0 must preserve the unresolved P0 release gate")
 
-def validate_generated_sources() -> None:
-    for script in (
+
+def validate_generated_sources(version: str) -> None:
+    scripts = [
         "scripts/sync_version.py",
         "scripts/generate_design_system.py",
         "scripts/generate_plasma_svgs.py",
@@ -1928,17 +2008,30 @@ def validate_generated_sources() -> None:
         "scripts/generate_sound_theme.py",
         "scripts/render_wallpaper.py",
         "scripts/render_artwork_evidence.py",
-        "scripts/capture_v6_baseline.py",
-        "scripts/render_v6_north_star.py",
-        "scripts/render_v6_previews.py",
-        "scripts/render_v6_motion_evidence.py",
-        "scripts/measure_v6_phase3_performance.py",
-        "scripts/render_v6_session_evidence.py",
-        "scripts/measure_v6_phase5_performance.py",
-        "scripts/render_v6_edge_evidence.py",
-        "scripts/check_v6_accessibility.py",
-        "scripts/measure_v6_phase7_performance.py",
-    ):
+        "scripts/check_v7_aurorae.py",
+        "scripts/check_v7_icons.py",
+        "scripts/check_v7_style.py",
+        "scripts/check_v7_sessions.py",
+        "scripts/check_v7_assets.py",
+        "scripts/check_v7_diagnostics.py",
+        "scripts/check_v7_candidate.py",
+    ]
+    if version == V6_RELEASE_VERSION:
+        scripts.extend(
+            [
+                "scripts/capture_v6_baseline.py",
+                "scripts/render_v6_north_star.py",
+                "scripts/render_v6_previews.py",
+                "scripts/render_v6_motion_evidence.py",
+                "scripts/measure_v6_phase3_performance.py",
+                "scripts/render_v6_session_evidence.py",
+                "scripts/measure_v6_phase5_performance.py",
+                "scripts/render_v6_edge_evidence.py",
+                "scripts/check_v6_accessibility.py",
+                "scripts/measure_v6_phase7_performance.py",
+            ]
+        )
+    for script in scripts:
         result = subprocess.run(
             [sys.executable, str(ROOT / script), "--check"],
             cwd=ROOT,
@@ -2004,14 +2097,15 @@ def validate() -> None:
     validate_sddm(version)
     validate_wallpaper(version)
     validate_artwork_evidence(version)
-    validate_v6_brand_previews(version)
-    validate_v6_north_star(version)
-    validate_v6_motion_evidence(version)
-    validate_v6_session_evidence(version)
-    validate_v6_edge_evidence(version)
-    validate_v6_phase7_evidence(version)
-    validate_tooling()
-    validate_generated_sources()
+    if version == V6_RELEASE_VERSION:
+        validate_v6_brand_previews(version)
+        validate_v6_north_star(version)
+        validate_v6_motion_evidence(version)
+        validate_v6_session_evidence(version)
+        validate_v6_edge_evidence(version)
+        validate_v6_phase7_evidence(version)
+    validate_tooling(version)
+    validate_generated_sources(version)
     validate_json_and_xml()
     validate_no_package_symlinks()
 

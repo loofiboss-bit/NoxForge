@@ -79,7 +79,7 @@ CORE_ICON_SPECS = {
     "preferences/preferences-system.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M9 4v4"/>',
     "preferences/preferences-desktop-theme.svg": '<rect x="3" y="4" width="18" height="14"/><path d="M8 22h8M12 18v4M6 8h12M6 12h7"/><path class="accent" d="M6 8h5"/>',
     "preferences/preferences-desktop-display.svg": '<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/><path class="accent" d="M4 5h4"/>',
-    "preferences/preferences-desktop-keyboard.svg": '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M5 10h2M9 10h2M13 10h2M17 10h2M5 14h2M9 14h8M19 14h1"/><path class="accent" d="M9 14h8"/>',
+    "preferences/preferences-desktop-keyboard.svg": '<path d="M4 5h16M9 3v4"/><circle cx="9" cy="5" r="2"/><rect x="2" y="9" width="20" height="11" rx="2"/><path d="M5 13h2M9 13h2M13 13h2M17 13h2M6 17h12"/><path class="accent" d="M7 17h10"/>',
     "preferences/preferences-system-network.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M12 3v4"/>',
     "preferences/preferences-system-power-management.svg": '<path d="M12 3v8M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v5"/>',
     "status/dialog-information.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7" r="1"/><path class="accent" d="M12 11v3"/>',
@@ -151,6 +151,17 @@ PHASE6_PRIORITY_ICON_SPECS = {
     "preferences/preferences-desktop-mouse.svg": '<rect x="7" y="2" width="10" height="20" rx="5"/><path d="M12 2v7M7 9h10M19 7v10"/><circle cx="19" cy="12" r="1.5"/><path class="accent" d="M19 10.5v3"/>',
     "preferences/preferences-system-bluetooth.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 7l8 10V7L8 17l8-10"/><path class="accent" d="M8 7l8 10"/>',
     "preferences/preferences-system-sound.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 7v10M20 5v14"/><circle cx="16" cy="11" r="1.5"/><circle cx="20" cy="14" r="1.5"/><path class="accent" d="M16 9.5v3"/>',
+}
+
+V7_CORE_ICON_SPECS = {
+    "actions/draw-highlight.svg": '<path d="M5 18l9-9 5 5-9 9H5zM12 11l5 5M15 7l2-2 4 4-2 2"/><path class="accent" d="M5 18h5l-5 5z"/>',
+    "actions/view-hidden.svg": '<path d="M3 12c2.5-4 5.5-6 9-6s6.5 2 9 6c-2.5 4-5.5 6-9 6s-6.5-2-9-6zM9 12a3 3 0 0 0 5 2"/><path d="M4 4l16 16"/><path class="accent" d="M4 4l6 6"/>',
+    "actions/tools-report-bug.svg": '<path d="M8 8h8v10a4 4 0 0 1-8 0zM10 8V5h4v3M5 11h3M16 11h3M5 15h3M16 15h3M6 20l3-2M18 20l-3-2"/><path class="accent" d="M10 5h4M8 11h8"/>',
+    "actions/system-suspend.svg": '<path d="M7 5a8 8 0 1 0 12 10A7 7 0 0 1 7 5z"/><path class="accent" d="M7 5a8 8 0 0 0 4 15"/>',
+    "actions/system-reboot.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5"/><path class="accent" d="M16 7l3-3M18 16l-2 2"/>',
+    "actions/system-shutdown.svg": '<path d="M12 3v9M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v6"/>',
+    "actions/system-lock-screen.svg": '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/><path class="accent" d="M8 10h8"/>',
+    "actions/system-log-out.svg": '<path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M14 8l4 4M8 12h5"/>',
 }
 
 ICON_ALIASES = {
@@ -285,7 +296,6 @@ DUPLICATE_ALLOWLIST = (
     ("applets/audio-volume-high-symbolic.svg", "status/audio-volume-high.svg"),
     ("applets/battery-full-symbolic.svg", "applets/battery-full.svg", "status/battery-good.svg"),
     ("categories/applications-internet.svg", "preferences/preferences-system-network.svg"),
-    ("devices/input-keyboard.svg", "preferences/preferences-desktop-keyboard.svg"),
     ("devices/network-wired.svg", "status/network-wired-activated.svg", "status/network-wired.svg"),
     ("devices/network-wireless.svg", "status/network-wireless-connected-100.svg", "status/network-wireless.svg"),
     ("mimetypes/inode-directory.svg", "places/folder.svg"),
@@ -349,7 +359,7 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
 def decoration_svg() -> str:
     active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True)
     inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-Sunken", 0.9, active=False)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="92" height="40" viewBox="0 0 92 40">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Raised {{ color: {COLORS["surfaceRaised"]}; }}
@@ -359,11 +369,6 @@ def decoration_svg() -> str:
   </defs>
   {active}
   {inactive}
-  <g id="decoration-maximized-center">
-    <rect x="104" y="0" width="28" height="28" class="ColorScheme-Raised" fill="currentColor"/>
-    <path d="M106 1h{EDGE_POLISH["aurorae"]["activeRailLength"]}" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="{EDGE_POLISH["aurorae"]["activeRailThickness"]}"/>
-  </g>
-  <rect id="decoration-maximized-inactive-center" x="104" y="36" width="28" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="0.9"/>
 </svg>
 '''
 
@@ -461,6 +466,7 @@ def main() -> None:
         **STATE_ICON_SPECS,
         **V5_RUNTIME_ICON_SPECS,
         **PHASE6_PRIORITY_ICON_SPECS,
+        **V7_CORE_ICON_SPECS,
     }
     effective_aliases: dict[str, str] = {}
 

@@ -59,10 +59,11 @@ public:
         IconRole,
         MinimizedRole,
     };
-    explicit WindowModel(bool empty, bool longText, bool many, QObject *parent = nullptr)
+    explicit WindowModel(bool empty, bool longText, bool many, bool missingIcon, QObject *parent = nullptr)
         : QAbstractListModel(parent)
         , m_count(empty ? 0 : many ? 12 : 5)
         , m_longText(longText)
+        , m_missingIcon(missingIcon)
     {
     }
     int rowCount(const QModelIndex &parent = {}) const override { return parent.isValid() ? 0 : m_count; }
@@ -78,6 +79,9 @@ public:
             }
             return QStringLiteral("NoxForge window %1").arg(index.row() + 1);
         case IconRole:
+            if (m_missingIcon && index.row() == 2) {
+                return QString();
+            }
             return QStringLiteral("applications-system");
         case MinimizedRole:
             return index.row() == 3;
@@ -98,6 +102,7 @@ public:
 private:
     int m_count;
     bool m_longText;
+    bool m_missingIcon;
     int m_lastActivated = -1;
 };
 
@@ -304,10 +309,11 @@ int main(int argc, char **argv)
     const bool reduced = scenario == QStringLiteral("reduced")
         || scenario == QStringLiteral("empty-reduced");
     const bool many = scenario == QStringLiteral("many");
+    const bool missingIcon = scenario == QStringLiteral("missing-icon");
     const bool reducedProbe = scenario == QStringLiteral("reduced-probe");
     Config config(QUrl::fromLocalFile(QString::fromLocal8Bit(argv[3])));
     SessionModel sessions(longText);
-    WindowModel windows(empty, longText, many);
+    WindowModel windows(empty, longText, many, missingIcon);
     UserModel users(longText);
     Keyboard keyboard(longText);
     Sddm sddm;

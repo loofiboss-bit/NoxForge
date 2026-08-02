@@ -30,13 +30,13 @@
   <g id="bottomleft"><path d="M0 18H6V24A6 6 0 0 1 0 18Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="1"/></g>
   <g id="bottom"><rect x="6" y="18" width="12" height="6" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="1"/></g>
   <g id="bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ViewBackground" fill="currentColor" fill-opacity="1"/></g>
-  <rect id="hint-top-margin" x="0" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
-  <rect id="hint-right-margin" x="2" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-bottom-margin" x="9" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
-  <rect id="hint-left-margin" x="11" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-top-inset" x="18" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
-  <rect id="hint-right-inset" x="20" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-bottom-inset" x="27" y="32" width="1" height="6" fill="#000" fill-opacity="0"/>
-  <rect id="hint-left-inset" x="29" y="32" width="6" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-top-margin" x="0" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-margin" x="2" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-margin" x="9" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-margin" x="11" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-top-inset" x="18" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-inset" x="20" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-inset" x="27" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-inset" x="29" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
   <rect id="hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

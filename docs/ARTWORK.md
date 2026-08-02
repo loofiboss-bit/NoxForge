@@ -29,14 +29,15 @@ access.
 ## Icon, cursor and sound coverage
 
 `design/artwork-contract.json` fixes the Fedora KDE 44, Plasma 6.7 and System
-Settings 6.7 runtime fixture used by the generated icon manifest. The 185
+Settings 6.7 runtime fixture used by the generated icon manifest. The 193
 scalable icons cover actions, applets, categories, devices, emblems, MIME
-types, places, preferences and status names. The 196 physical 16/22 px optical
+types, places, preferences and status names. The 212 physical 16/22 px optical
 variants are limited to dense action, applet and status contexts. Canonical
 original glyph families are reused only for genuine semantic synonyms; broader
 related names receive a deterministic optical discriminator. No symlinks or
-artwork from another theme are used. Only `hicolor` is inherited so third-party
-applications retain their own product icons.
+artwork from another theme are used. The explicit Fedora overlay chain is
+`breeze-dark,breeze,hicolor`, so third-party applications retain their own
+product icons when NoxForge does not own a matching name.
 
 The NoxForge cursor generator writes original 24, 32 and 48 pixel Xcursor image
 chunks plus physical alias files. Its manifest records and validates every
@@ -44,8 +45,13 @@ canonical hotspot. Wait and progress contain twelve 80 ms frames at each size.
 Canonical cursor SVG sources match their corresponding distinct glyph geometry.
 The sound generator synthesizes editable WAV masters, normalizes ordinary
 events to -23 dBFS RMS and the alarm to -20 dBFS RMS under a -3 dBFS peak
-ceiling, and emits deterministic Ogg/Vorbis files. Duration and frequency
-signatures keep each of the ten semantic source sounds distinct.
+ceiling, and emits Ogg/Vorbis events. Cross-toolchain reproducibility is bound
+to byte-identical WAV masters, coverage metrics, and valid Ogg containers. Ogg
+byte equality is additionally required in the pinned Fedora release environment
+with FFmpeg 8.1.2. A different host encoder may validate the canonical
+PCM/source contract but must never be used to overwrite the committed sound
+tree blindly. Duration and frequency signatures keep each of the ten semantic
+source sounds distinct.
 
 The reviewed v6 Phase 2 evidence is committed as four deterministic contact
 sheets and `docs/evidence/artwork-contact-sheets.json`. The manifest binds

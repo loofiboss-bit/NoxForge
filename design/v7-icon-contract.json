@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "target": "Fedora KDE 44",
+  "theme": "NoxForge",
+  "overlayPolicy": {
+    "inherits": ["breeze-dark", "breeze", "hicolor"],
+    "systemThemeRoot": "/usr/share/icons",
+    "unresolvedCoreAllowed": false,
+    "fallbackIsIntentional": true
+  },
+  "renderMatrix": {
+    "logicalSizes": [16, 22, 24, 32, 48],
+    "modes": ["normal", "selected"],
+    "backgrounds": ["dark", "selected"]
+  },
+  "required": [
+    {
+      "name": "draw-highlight",
+      "context": "actions",
+      "semantic": "draw or mark a highlight",
+      "provenance": ["System Settings reported runtime miss"]
+    },
+    {
+      "name": "view-hidden",
+      "context": "actions",
+      "semantic": "hidden items are not shown",
+      "provenance": ["System Settings reported runtime miss"]
+    },
+    {
+      "name": "tools-report-bug",
+      "context": "actions",
+      "semantic": "report a software defect",
+      "provenance": ["System Settings reported runtime miss"]
+    },
+    {
+      "name": "system-suspend",
+      "context": "actions",
+      "semantic": "suspend the current system session",
+      "provenance": ["Logout.qml Sleep action", "KDE session action"]
+    },
+    {
+      "name": "system-reboot",
+      "context": "actions",
+      "semantic": "restart the system",
+      "provenance": ["Logout.qml Restart action", "KDE session action"]
+    },
+    {
+      "name": "system-shutdown",
+      "context": "actions",
+      "semantic": "power off the system",
+      "provenance": ["Logout.qml Shut down action", "KDE session action"]
+    },
+    {
+      "name": "system-lock-screen",
+      "context": "actions",
+      "semantic": "lock the current session",
+      "provenance": ["Logout.qml Lock action", "KDE session action"]
+    },
+    {
+      "name": "system-log-out",
+      "context": "actions",
+      "semantic": "end the current user session",
+      "provenance": ["Logout.qml Log out action", "KDE session action"]
+    }
+  ],
+  "fallbackProbes": [
+    {
+      "name": "document-print",
+      "context": "actions",
+      "provenance": ["standard Qt and KDE application action"],
+      "expectedResolution": "breeze-dark or breeze"
+    }
+  ],
+  "testedApplicationClasses": [
+    "System Settings",
+    "Dolphin",
+    "standard Qt actions",
+    "NoxForge Logout"
+  ]
+}

@@ -8,6 +8,7 @@ import json
 import hashlib
 import math
 import random
+import re
 import shutil
 import struct
 import subprocess
@@ -21,6 +22,7 @@ THEME = ROOT / "sounds/NoxForge"
 ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
 SOUND_CONTRACT = ARTWORK["sounds"]
 RATE = SOUND_CONTRACT["sampleRate"]
+PINNED_FFMPEG_VERSION = "8.1.2"
 
 SPECS = {
     "tick": (0.08, ((880.0, 0.16), (1320.0, 0.05))),
@@ -130,6 +132,20 @@ def encode(source: Path, target: Path) -> None:
     )
 
 
+def ffmpeg_version() -> str | None:
+    try:
+        first_line = subprocess.run(
+            ["ffmpeg", "-version"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.splitlines()[0]
+    except (IndexError, OSError, subprocess.CalledProcessError):
+        return None
+    match = re.match(r"ffmpeg version\s+([^\s]+)", first_line)
+    return match.group(1) if match else None
+
+
 def ogg_crc(data: bytes) -> int:
     checksum = 0
     for byte in data:
@@ -218,8 +234,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="fail when generated sound files drift")
     args = parser.parse_args()
-    if not shutil.which("ffmpeg"):
-        print("ffmpeg is required to generate the sound theme", file=sys.stderr)
+    encoder = ffmpeg_version() if shutil.which("ffmpeg") else None
+    if encoder is None:
+        print("environment preflight failed: ffmpeg is required for sound validation", file=sys.stderr)
         raise SystemExit(1)
     if not args.check:
         generate(THEME)
@@ -229,16 +246,32 @@ def main() -> None:
         generated = Path(temporary) / "NoxForge"
         generate(generated)
         expected = sorted(path.relative_to(generated) for path in generated.rglob("*") if path.is_file())
+        pinned = encoder == PINNED_FFMPEG_VERSION
         drift = [
             relative
             for relative in expected
+            if pinned or relative.parts[0] != "stereo"
             if not (THEME / relative).is_file()
             or (generated / relative).read_bytes() != (THEME / relative).read_bytes()
         ]
         if drift:
-            print("Sound generator drift: " + ", ".join(map(str, drift)), file=sys.stderr)
+            policy = "pinned encoder bytes" if pinned else "canonical PCM/source metrics"
+            print(f"Sound generator drift under {policy}: " + ", ".join(map(str, drift)), file=sys.stderr)
             raise SystemExit(1)
-    print(f"Verified {len(EVENTS)} normalized original NoxForge sound events")
+        invalid_ogg = [
+            relative
+            for relative in expected
+            if relative.parts[0] == "stereo"
+            and (
+                not (THEME / relative).is_file()
+                or (THEME / relative).read_bytes()[:4] != b"OggS"
+            )
+        ]
+        if invalid_ogg:
+            print("Invalid committed Ogg events: " + ", ".join(map(str, invalid_ogg)), file=sys.stderr)
+            raise SystemExit(1)
+    policy = "pinned FFmpeg byte equality" if encoder == PINNED_FFMPEG_VERSION else "canonical PCM/source metrics"
+    print(f"Verified {len(EVENTS)} normalized original NoxForge sound events using {policy} ({encoder})")
 
 
 if __name__ == "__main__":

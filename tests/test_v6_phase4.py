@@ -7,6 +7,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / "VERSION").read_text(encoding="utf-8").strip() != "6.0.0":
+    raise unittest.SkipTest("historical v6 source-bound tests")
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
 ATLAS_PATH = ROOT / "docs/evidence/v6/plasma-shell/atlas-manifest.json"

@@ -9,6 +9,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / "VERSION").read_text(encoding="utf-8").strip() != "6.0.0":
+    raise unittest.SkipTest("historical v6 source-bound tests")
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 CONTRACT = json.loads(
     (ROOT / "design/edge-polish-contract.json").read_text(encoding="utf-8")

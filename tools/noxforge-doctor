@@ -9,6 +9,7 @@ import json
 import os
 import platform
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -28,14 +29,17 @@ COMPONENTS = {
     "sddm": ("sddm/themes", "NoxForge", "metadata.desktop"),
 }
 ACTIVE_CONFIG = {
+    "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
     "colorScheme": ("kdeglobals", "General", "ColorScheme"),
     "icons": ("kdeglobals", "Icons", "Theme"),
+    "soundTheme": ("kdeglobals", "Sounds", "Theme"),
     "plasmaStyle": ("plasmarc", "Theme", "name"),
     "cursorTheme": ("kcminputrc", "Mouse", "cursorTheme"),
     "aurorae": ("kwinrc", "org.kde.kdecoration2", "theme"),
     "kwinSwitcher": ("kwinrc", "TabBox", "LayoutName"),
     "splash": ("ksplashrc", "KSplash", "Theme"),
 }
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*m")
 SEMVER = re.compile(
     r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
@@ -145,8 +149,23 @@ def qt_plugin_paths(root: Path) -> list[Path]:
 
 def read_active_components() -> dict[str, str]:
     config_root = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    reader = shutil.which("kreadconfig6")
     active: dict[str, str] = {}
     for label, (filename, section, key) in ACTIVE_CONFIG.items():
+        if reader:
+            try:
+                result = subprocess.run(
+                    [reader, "--file", filename, "--group", section, "--key", key],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=2,
+                )
+            except (OSError, subprocess.TimeoutExpired):
+                result = None
+            if result is not None and result.returncode == 0 and result.stdout.strip():
+                active[label] = result.stdout.strip()
+                continue
         parser = configparser.ConfigParser(interpolation=None)
         try:
             parser.read(config_root / filename, encoding="utf-8")
@@ -155,6 +174,131 @@ def read_active_components() -> dict[str, str]:
         if parser.has_option(section, key):
             active[label] = parser.get(section, key)
     return active
+
+
+def detect_wallpaper() -> str:
+    config_root = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    path = config_root / "plasma-org.kde.plasma.desktop-appletsrc"
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return "not-detected"
+    images = [line.split("=", 1)[1] for line in lines if line.startswith("Image=")]
+    if any("/wallpapers/NoxForge/" in image for image in images):
+        return "NoxForge"
+    return "other" if images else "not-detected"
+
+
+def data_root_provenance(root: Path, data_root: Path) -> str:
+    if root != Path("/"):
+        return "staged-system"
+    if data_root == Path("/usr/share"):
+        return "system"
+    if data_root == Path("/usr/local/share"):
+        return "local-system"
+    return "user"
+
+
+def icon_diagnostics(roots: list[Path]) -> dict[str, Any]:
+    theme_roots = [candidate / "icons/NoxForge" for candidate in roots]
+    installed = next((candidate for candidate in theme_roots if (candidate / "index.theme").is_file()), None)
+    if installed is None:
+        return {
+            "inheritance": [],
+            "manifestPresent": False,
+            "requiredCount": 0,
+            "unresolved": [],
+            "status": "theme-missing",
+        }
+    parser = configparser.ConfigParser(interpolation=None)
+    try:
+        parser.read(installed / "index.theme", encoding="utf-8")
+        inheritance = [
+            item.strip()
+            for item in parser.get("Icon Theme", "Inherits", fallback="").split(",")
+            if item.strip()
+        ]
+    except configparser.Error:
+        inheritance = []
+    coverage_path = installed / "coverage.json"
+    try:
+        fixture = json.loads(coverage_path.read_text(encoding="utf-8"))["runtimeFixture"]
+    except (KeyError, TypeError, json.JSONDecodeError, OSError):
+        return {
+            "inheritance": inheritance,
+            "manifestPresent": False,
+            "requiredCount": 0,
+            "unresolved": [],
+            "status": "manifest-unavailable",
+        }
+    unresolved = [
+        relative
+        for relative in fixture
+        if not any(
+            (installed / directory / relative).is_file()
+            for directory in ("scalable", "16x16", "22x22")
+        )
+    ]
+    return {
+        "inheritance": inheritance,
+        "manifestPresent": True,
+        "requiredCount": len(fixture),
+        "unresolved": sorted(unresolved),
+        "status": "ok" if not unresolved else "unresolved",
+    }
+
+
+def parse_kscreen_doctor(output: str) -> list[dict[str, Any]]:
+    outputs: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    for raw_line in output.splitlines():
+        line = ANSI_ESCAPE.sub("", raw_line).strip()
+        match = re.match(r"Output:\s+\d+\s+(\S+)", line)
+        if match:
+            current = {
+                "name": match.group(1),
+                "enabled": False,
+                "connected": False,
+                "scale": None,
+            }
+            outputs.append(current)
+            continue
+        if current is None:
+            continue
+        if line == "enabled":
+            current["enabled"] = True
+        elif line == "connected":
+            current["connected"] = True
+        elif line.startswith("Scale:"):
+            try:
+                current["scale"] = float(line.split(":", 1)[1].strip())
+            except ValueError:
+                current["scale"] = None
+    return [item for item in outputs if item["scale"] is not None]
+
+
+def output_scales(root: Path) -> dict[str, Any]:
+    if root != Path("/"):
+        return {"status": "not-applicable-staged-root", "source": None, "outputs": []}
+    command = shutil.which("kscreen-doctor")
+    if not command:
+        return {"status": "unavailable", "source": None, "outputs": []}
+    try:
+        result = subprocess.run(
+            [command, "-o"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return {"status": "unavailable", "source": None, "outputs": []}
+    outputs = parse_kscreen_doctor(result.stdout) if result.returncode == 0 else []
+    return {
+        "status": "ok" if outputs else "unavailable",
+        "source": "KScreen/KWin runtime" if outputs else None,
+        "outputs": outputs,
+    }
 
 
 def build_report(root: Path) -> dict[str, Any]:
@@ -179,6 +323,13 @@ def build_report(root: Path) -> dict[str, Any]:
             "found": bool(matches),
             "copies": len(matches),
             "versions": discovered_versions,
+            "provenance": sorted(
+                {
+                    data_root_provenance(root, candidate)
+                    for candidate in roots
+                    if component_path(candidate, definition).is_file()
+                }
+            ),
         }
 
     plugins = qt_plugin_paths(root)
@@ -186,18 +337,23 @@ def build_report(root: Path) -> dict[str, Any]:
         "found": bool(plugins),
         "copies": len(plugins),
         "versions": [],
+        "provenance": ["system" if root == Path("/") else "staged-system"] if plugins else [],
     }
+
+    icons = icon_diagnostics(roots)
 
     expected = expected_version(root)
     mixed = len(versions) > 1 or (
         expected is not None and any(version != expected for version in versions)
     )
     missing = sorted(name for name, state in components.items() if not state["found"])
-    complete = not missing and not mixed
+    complete = not missing and not mixed and icons["status"] != "unresolved"
     if missing:
         next_action = "Install or reinstall the NoxForge RPM, then run noxforge-doctor again."
     elif mixed:
         next_action = "Remove mixed source/user copies, reinstall one NoxForge RPM version, and rerun the doctor."
+    elif icons["status"] == "unresolved":
+        next_action = "Reinstall the NoxForge icon package; required core icons are unresolved."
     else:
         next_action = "Installation is complete. Select NoxForge explicitly in System Settings if desired."
 
@@ -209,17 +365,20 @@ def build_report(root: Path) -> dict[str, Any]:
         "mixedVersions": mixed,
         "missing": missing,
         "components": components,
+        "criticalIcons": icons,
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown"),
             "kde": os.environ.get("KDE_FULL_SESSION", "unknown"),
             "wayland": "present" if os.environ.get("WAYLAND_DISPLAY") else "absent",
-            "scale": os.environ.get("QT_SCALE_FACTOR", "system-default"),
+            "displayScales": output_scales(root),
             "kernel": platform.release(),
         },
     }
     if root == Path("/"):
         report["active"] = read_active_components()
+        report["active"]["iconInheritance"] = ",".join(icons["inheritance"]) or "none"
+        report["active"]["wallpaper"] = detect_wallpaper()
     else:
         report["active"] = {}
     return report
@@ -241,8 +400,11 @@ def print_human(report: dict[str, Any]) -> None:
     print(
         "Session: "
         f"{session['type']}, KDE={session['kde']}, Wayland={session['wayland']}, "
-        f"scale={session['scale']}, kernel={session['kernel']}"
+        f"scale-source={session['displayScales']['source'] or session['displayScales']['status']}, "
+        f"kernel={session['kernel']}"
     )
+    for output in session["displayScales"]["outputs"]:
+        print(f"  output {output['name']}: scale={output['scale']:g}")
     print(f"Next action: {report['nextAction']}")
 
 

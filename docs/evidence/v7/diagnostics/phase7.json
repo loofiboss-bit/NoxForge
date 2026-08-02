@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 7,
+  "result": "passed",
+  "doctor": {
+    "readOnly": true,
+    "activeSettings": [
+      "qtStyle",
+      "colorScheme",
+      "icons",
+      "iconInheritance",
+      "plasmaStyle",
+      "aurorae",
+      "kwinSwitcher",
+      "soundTheme",
+      "wallpaper"
+    ],
+    "componentProvenance": true,
+    "mixedVersions": true,
+    "criticalIconResolution": true,
+    "displayScaleSource": "KScreen/KWin runtime",
+    "forbiddenScaleSource": "QT_SCALE_FACTOR",
+    "privacy": [
+      "no usernames",
+      "no hostnames",
+      "no personal paths",
+      "no display contents"
+    ]
+  },
+  "soundReproducibility": {
+    "policy": "canonical-pcm-with-pinned-release-bytes",
+    "pinnedFfmpegVersion": "8.1.2",
+    "crossToolchain": [
+      "byte-identical deterministic WAV masters",
+      "byte-identical coverage metrics",
+      "valid Ogg Vorbis event containers"
+    ],
+    "pinnedReleaseEnvironment": [
+      "all cross-toolchain requirements",
+      "byte-identical Ogg event files"
+    ],
+    "blindHostRegenerationAllowed": false
+  },
+  "releaseGate": {
+    "preflightCategory": "environment",
+    "gateFailureCategory": "repository",
+    "testCountsDerivedFromRunner": true,
+    "hardcodedTestTotalsAllowed": false
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false
+  },
+  "sourceHashes": {
+    "contract": "a7d1c8590c009a616a71944b2909abf54e619588e053edbcb1a97b73b8715560",
+    "doctor": "ace1c68a2043db6ed7080bee419793baf59ad0112a0fbbb54d6a742c062ceaab",
+    "soundGenerator": "0fc8c8967c8bb3bc408d84c34fa1a40f017f507509fe1af3c1f5e915018ebc99",
+    "releaseCheck": "e65129b30608ecc7f5db19632cf7de9411fb851f1c9178a7cc67f1bb680caedc",
+    "testRunner": "d93550482620770366a40134b80e97101dbc5b9771cf60f2d72d708dc5a85c60",
+    "doctorManual": "f58d851136811d1f10e1177e59490b1b0dab35be3ced9134fd545c2d97e1af41",
+    "artworkDocumentation": "e39a2fe64d93630c9c78b03ca3047bff409162e5f8ab70d5d689dcc3a13e4ac1"
+  }
+}

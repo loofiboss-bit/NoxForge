@@ -46,7 +46,7 @@ VERSION_FILES = {
         r'(?m)^(\s*"Version":\s*)".*?"(,?)$',
         r'\g<1>"{version}"\g<2>',
     ),),
-    "docs/evidence/v6/qualification.json": ((
+    "docs/evidence/v7/qualification.json": ((
         r'(?m)^(\s*"version":\s*)".*?"(,?)$',
         r'\g<1>"{version}"\g<2>',
     ),),

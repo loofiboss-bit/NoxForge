@@ -2,16 +2,17 @@
 
 **Repository:** `loofiboss-bit/NoxForge`
 **Reviewed baseline:** `main` at `6a113e71980d106c38a2bbdece6df171c0ae9ed3`
-**Current stable release:** `v5.0.0` at `c979515e6bb99f0201e630be269bb7ecc097c35c`
+**Current stable release:** `v6.0.0` at `d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland
-**Status:** Active phase-gated implementation authority for v6
+**Status:** Completed historical authority; v6.0.0 is publicly released
 **Release theme:** **Kinetic Precision**
 
 This canonical plan was reconciled from the reviewed Kinetic Precision proposal
 on 2026-07-30. The reviewed baseline matched exactly before reconciliation:
 `main` at `6a113e71980d106c38a2bbdece6df171c0ae9ed3`, with no tracked worktree
 changes. The source proposal is retained as a short provenance pointer at
-`docs/NOXFORGE_V6_KINETIC_PRECISION_PLAN.md`; this file is the active authority.
+`docs/NOXFORGE_V6_KINETIC_PRECISION_PLAN.md`. This file is historical; the
+active authority is `docs/NOXFORGE_V7_PLAN.md`.
 
 ## Executive decision
 
@@ -887,8 +888,8 @@ Present v6 as a coherent product and publish through the proven v5 pipeline.
   and after removal.
 - README screenshots come from the released build.
 
-**Release-ready outcome (2026-08-01; public readback pending):** The source tree and
-all current version consumers are promoted to stable `6.0.0`. README, Global
+**Publication status (2026-08-02; complete):** The v6 release source and all
+stable version consumers are `6.0.0`. README, Global
 Theme previews, release notes, compatibility, installation, rollback,
 reduced-motion, troubleshooting, and manual-testing documentation now present
 Kinetic Precision using exact generated or authentic offscreen v6 outputs.
@@ -900,10 +901,23 @@ byte-identical source archives, and clean Fedora SRPM/RPM `rpmlint`. The
 release qualification manifest now records exact candidate lineage, a clean
 worktree, the six-asset contract, and the isolated Wayland result.
 
-Phase 8 public readback is pending. Its remaining gate is the annotated
-`v6.0.0` tag, exact-tag qualification, GitHub Release, COPR terminal success,
-public artifact/checksum readback, clean RPM installation, `rpm -V`,
-`noxforge-doctor`, removal, and before/after KDE/SDDM settings hashes.
+PR #10 merged the qualified candidate after all required checks passed in CI
+run `30691626413`. Annotated tag `v6.0.0` resolves to
+`d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`. Release workflow run
+`30692016393` rebuilt that exact tag, passed the full Fedora 44 gate, verified
+the commit/ref-bound payload, and published exactly six assets. A fresh public
+download passed every `SHA256SUMS` entry and confirmed the source archive,
+SRPM, `noxforge-6.0.0-1.fc44.x86_64.rpm`, qualification manifest, and automated
+report all name the exact release lineage. A disposable Fedora 44 installation
+of the released RPM passed
+`rpm -V` and `noxforge-doctor` with all eleven components present and no mixed
+versions. Removal with `dnf remove --no-autoremove` removed only NoxForge; KDE
+and SDDM sentinel hashes remained identical before installation, after
+installation, and after removal. COPR build `10802161` reached terminal
+`succeeded` at `2026-08-01T12:51:55Z`, and the public Fedora 44 x86_64
+repository resolves `noxforge-6.0.0-1.fc44`. Phase 8 public release closure is
+complete. The environment-blocked physical/input live cases remain documented
+release limitations and were not relabeled as passed.
 
 ## Cross-phase file map
 

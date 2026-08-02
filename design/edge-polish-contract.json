@@ -1,12 +1,14 @@
 {
   "schemaVersion": 1,
-  "version": "6.0.0",
+  "version": "7.0.0-dev",
   "phase": 6,
   "aurorae": {
     "titleHeight": 26,
     "buttonSize": 26,
     "activeMaterial": "surfaceRaised",
     "inactiveMaterial": "surfaceSunken",
+    "maximizedStrategy": "normal-frame-fallback",
+    "specialMaximizedElements": false,
     "activeRailLength": 12,
     "activeRailThickness": 2,
     "buttons": ["menu", "minimize", "maximize", "restore", "close"],
@@ -25,9 +27,9 @@
   },
   "icons": {
     "coverageFrozen": {
-      "scalable": 185,
-      "optical": 196,
-      "runtimeFixture": 77
+      "scalable": 193,
+      "optical": 212,
+      "runtimeFixture": 85
     },
     "reviewSizes": [16, 22, 24, 32, 48],
     "priority": {

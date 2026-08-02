@@ -62,6 +62,9 @@ target_link_libraries(noxforge_motion_qualification_probe PRIVATE Qt6::Core Qt6:
 add_executable(noxforge_accessibility_probe tests/qt/accessibility_probe.cpp)
 target_link_libraries(noxforge_accessibility_probe PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 
+add_executable(noxforge_icon_resolution_probe tests/qt/icon_resolution_probe.cpp)
+target_link_libraries(noxforge_icon_resolution_probe PRIVATE Qt6::Core Qt6::Gui)
+
 if(NOXFORGE_ENABLE_SANITIZERS)
     foreach(
         target
@@ -142,9 +145,20 @@ add_test(NAME accessibility-platform-preference COMMAND noxforge_accessibility_p
 set_tests_properties(accessibility-platform-preference PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_PLUGIN_PATH=${CMAKE_BINARY_DIR}/plugins;QT_STYLE_OVERRIDE=NoxForge"
 )
+add_test(
+    NAME icon-theme-resolution
+    COMMAND noxforge_icon_resolution_probe "${CMAKE_SOURCE_DIR}"
+)
+set_tests_properties(icon-theme-resolution PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+)
 set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 
 function(add_noxforge_session_test name surface qml scenario)
+    set(scale 1.0)
+    if(ARGC GREATER 4)
+        set(scale ${ARGV4})
+    endif()
     add_test(
         NAME ${name}
         COMMAND noxforge_session_renderer
@@ -157,7 +171,9 @@ function(add_noxforge_session_test name surface qml scenario)
             ${scenario}
             "${CMAKE_SOURCE_DIR}"
     )
-    set_tests_properties(${name} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+    set_tests_properties(${name} PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale}"
+    )
 endfunction()
 
 add_noxforge_session_test(session-sddm-surface sddm sddm/NoxForge/Main.qml long-rtl)
@@ -178,6 +194,63 @@ add_noxforge_session_test(
     tabbox
     kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
     long-rtl
+)
+
+foreach(scale IN ITEMS 1.0 1.25 1.4 1.5 2.0)
+    string(REPLACE "." "" scale_id "${scale}")
+    add_noxforge_session_test(
+        session-sddm-scale-${scale_id}
+        sddm
+        sddm/NoxForge/Main.qml
+        standard
+        ${scale}
+    )
+    add_noxforge_session_test(
+        session-splash-scale-${scale_id}
+        splash
+        look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml
+        standard
+        ${scale}
+    )
+    add_noxforge_session_test(
+        session-logout-scale-${scale_id}
+        logout
+        look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml
+        standard
+        ${scale}
+    )
+    add_noxforge_session_test(
+        session-tabbox-scale-${scale_id}
+        tabbox
+        kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+        standard
+        ${scale}
+    )
+endforeach()
+
+add_noxforge_session_test(
+    session-tabbox-empty
+    tabbox
+    kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+    empty
+)
+add_noxforge_session_test(
+    session-tabbox-many
+    tabbox
+    kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+    many
+)
+add_noxforge_session_test(
+    session-tabbox-keyboard
+    tabbox
+    kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+    keyboard
+)
+add_noxforge_session_test(
+    session-tabbox-missing-icon
+    tabbox
+    kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+    missing-icon
 )
 
 include(GNUInstallDirs)

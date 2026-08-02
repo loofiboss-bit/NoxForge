@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import configparser
+import hashlib
 import json
 import struct
 import unittest
@@ -49,13 +50,20 @@ class PhaseEightAssetsTests(unittest.TestCase):
         self.assertTrue(coverage["runtimeFixture"])
         self.assertEqual(coverage["opticalSizes"], [16, 22])
         self.assertEqual(len(coverage["aliases"]), 12)
-        self.assertEqual(len(coverage["duplicateAllowlist"]), 11)
+        duplicate_groups: dict[str, list[str]] = {}
+        for relative in icons:
+            digest = hashlib.sha256((root / "scalable" / relative).read_bytes()).hexdigest()
+            duplicate_groups.setdefault(digest, []).append(relative)
+        actual_duplicates = sorted(
+            sorted(group) for group in duplicate_groups.values() if len(group) > 1
+        )
+        self.assertEqual(sorted(coverage["duplicateAllowlist"]), actual_duplicates)
         optical = [path for size in (16, 22) for path in (root / f"{size}x{size}").glob("*/*.svg")]
         self.assertEqual(len(optical), coverage["opticalCount"])
         self.assertFalse(any(path.is_symlink() for path in optical))
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(root / "index.theme", encoding="utf-8")
-        self.assertEqual(parser["Icon Theme"]["Inherits"], "hicolor")
+        self.assertEqual(parser["Icon Theme"]["Inherits"], "breeze-dark,breeze,hicolor")
         valid_contexts = {
             "Actions",
             "Animations",

@@ -55,24 +55,35 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-This checkout contains the qualified NoxForge 6.0.0 release candidate. Its
-isolated Wayland matrix passed theme application, exact panel preservation,
-all four panel edges, two-output placement, visible shell fallback review, and
-real Qt composition at 140 percent without changing the maintainer KDE or SDDM
-configuration. Exact-tag GitHub and COPR publication plus independent package
-readback are pending. NoxForge 5.0.0 remains the current verified public
-release until that controlled readback completes. The exact-tag
-[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v5.0.0)
+NoxForge 6.0.0 is the current verified public release. Annotated tag
+`v6.0.0` resolves to `d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`; the exact-tag
+[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v6.0.0)
 provides the verified source archive, SRPM, Fedora 44 RPM, qualification
-manifest, automated report and checksums. The Fedora package is available from
-COPR project `loofitheboss/noxforge`; exact publication and independent
-readback evidence is recorded in
-[`docs/NOXFORGE_V5_PLAN.md`](docs/NOXFORGE_V5_PLAN.md). The historical v4
-GitHub release contains no attached build artifacts and made no v4 COPR or
-fresh live-qualification claim.
+manifest, automated report, and checksums. A fresh public download passed every
+checksum. An independent disposable Fedora 44 installation, `rpm -V`,
+`noxforge-doctor`, removal, and KDE/SDDM settings-hash check passed. COPR build
+`10802161` succeeded, and public Fedora 44 repository metadata resolves
+`noxforge-6.0.0-1.fc44` for x86_64. Current readback evidence is in
+[`docs/evidence/v6/public-readback.json`](docs/evidence/v6/public-readback.json).
 
-The v6 local release gate covers deterministic generation, 141 Python tests,
-21 CTest cases, ASan/UBSan, QML lint, isolated staging, byte-identical source
+Development of NoxForge 7.0.0 Operational Precision is phase-gated by the
+[active v7 plan](docs/NOXFORGE_V7_PLAN.md). The development tree is not a
+public v7 release, and pending P0 live scaling checks prevent a release-ready
+claim. All repository-supported local phases are implemented and locally
+qualified, including isolated reversible install trees and unqualified local
+artifact staging. Mandatory composed Wayland/input testing, a clean v6 upgrade,
+and exact clean-commit lineage remain pending; `VERSION` therefore stays
+`7.0.0-dev`.
+
+The isolated Wayland matrix passed theme application, exact panel
+preservation, all four panel edges, two-output placement, visible shell
+fallback review, and real Qt composition at 140 percent without changing the
+maintainer KDE or SDDM configuration.
+
+The v6 release gate recorded 141 Python tests at qualification time. Current
+repository discovery runs 147 tests; v7 reports derive counts from actual gate
+output rather than preserving that historical total. The v6 gate also covers
+deterministic generation, 21 CTest cases, ASan/UBSan, QML lint, isolated staging, byte-identical source
 archives, SRPM/RPM build, and `rpmlint`. Automated accessibility, reduced
 motion, 100/125/140/200 percent rendering, and complete-tree performance
 qualification pass. Live injected Wayland input, hardware blur,

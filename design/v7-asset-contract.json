@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 6,
+  "evidenceBasis": {
+    "panel": "KDE Plasma runtime names in the frozen repository fixture",
+    "systemSettings": "System Settings runtime names in the frozen repository fixture",
+    "dolphin": "Dolphin action and place names in the frozen repository fixture",
+    "session": "NoxForge Logout QML and session action contracts"
+  },
+  "rankedPriority": [
+    "applets/battery.svg",
+    "applets/bluetooth-active.svg",
+    "applets/clock.svg",
+    "applets/keyboard-layout.svg",
+    "applets/network.svg",
+    "applets/notifications.svg",
+    "applets/systemtray.svg",
+    "status/audio-volume-high.svg",
+    "status/audio-volume-muted.svg",
+    "status/battery-charging.svg",
+    "status/battery-good.svg",
+    "status/network-wired.svg",
+    "status/network-wireless.svg",
+    "status/network-wireless-disconnected.svg",
+    "preferences/preferences-desktop-accessibility.svg",
+    "preferences/preferences-desktop-color.svg",
+    "preferences/preferences-desktop-display-randr.svg",
+    "preferences/preferences-desktop-icons.svg",
+    "preferences/preferences-desktop-keyboard.svg",
+    "preferences/preferences-desktop-mouse.svg",
+    "preferences/preferences-desktop-theme.svg",
+    "preferences/preferences-system-bluetooth.svg",
+    "preferences/preferences-system-network.svg",
+    "preferences/preferences-system-power-management.svg",
+    "preferences/preferences-system-sound.svg",
+    "categories/applications-system.svg",
+    "devices/computer.svg",
+    "actions/configure.svg",
+    "actions/document-new.svg",
+    "actions/document-open.svg",
+    "actions/document-save.svg",
+    "actions/edit-copy.svg",
+    "actions/edit-cut.svg",
+    "actions/edit-paste.svg",
+    "actions/system-search.svg",
+    "actions/view-filter.svg",
+    "actions/view-grid.svg",
+    "actions/view-list-tree.svg",
+    "places/folder.svg",
+    "places/user-home.svg",
+    "actions/system-lock-screen.svg",
+    "actions/system-log-out.svg",
+    "actions/system-suspend.svg",
+    "actions/system-reboot.svg",
+    "actions/system-shutdown.svg",
+    "actions/dialog-cancel.svg",
+    "actions/dialog-ok.svg",
+    "status/software-update-available.svg"
+  ],
+  "reviewSizes": [16, 22, 24],
+  "opticalPolicy": {
+    "grid": 24,
+    "strokeWidth": 1.7,
+    "requireNonemptyRaster": true,
+    "requireUniquePriorityRasterAtEachSize": true,
+    "confirmedCorrection": "preferences keyboard is distinct from input keyboard hardware"
+  },
+  "cursorDecision": {
+    "status": "unchanged",
+    "reason": "No live scaling defect was demonstrated; sizes, hotspots, silhouettes, and timing remain frozen."
+  },
+  "brandDecision": {
+    "status": "unchanged",
+    "reason": "No crop, preview, scale, or presentation defect was demonstrated."
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false
+  }
+}

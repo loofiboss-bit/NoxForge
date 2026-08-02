@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 8,
+  "candidateState": "unqualified-local-development",
+  "releaseReady": false,
+  "localGate": {
+    "requiredPassedCategories": [
+      "static",
+      "unit",
+      "sanitizer",
+      "build",
+      "package",
+      "install-tree",
+      "repeated-install",
+      "rollback",
+      "uninstall",
+      "configuration-preservation",
+      "reproducibility",
+      "provenance"
+    ],
+    "freshV6Upgrade": "pending-disposable-fedora-session",
+    "exactSourceCommit": "pending-clean-committed-candidate"
+  },
+  "artifactPolicy": {
+    "output": "dist/v7-local-candidate",
+    "requiredKinds": [
+      "source-archive",
+      "binary-rpm",
+      "source-rpm",
+      "checksums",
+      "provenance"
+    ],
+    "networkAllowed": false,
+    "hostInstallAllowed": false,
+    "themeActivationAllowed": false,
+    "publicationAllowed": false,
+    "unsignedDevelopmentArtifacts": true
+  },
+  "mandatoryLiveCases": [
+    "aurorae-maximized-scaling",
+    "core-icon-visibility",
+    "application-cohesion",
+    "plasma-shell-matrix",
+    "session-surfaces",
+    "accessibility-input"
+  ],
+  "requiredScales": [100, 125, 140, 150, 175, 200],
+  "requiredMixedOutputs": ["100+140", "100+200"],
+  "evidenceBoundary": {
+    "offscreenIsLiveEvidence": false,
+    "unavailableLiveCasesRemainPending": true,
+    "pendingP0BlocksReleaseReadiness": true,
+    "developmentArtifactsAreReleaseAssets": false
+  }
+}

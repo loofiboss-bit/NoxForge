@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 3,
+  "result": "passed",
+  "interactionPolicy": {
+    "singleClick": {
+      "source": "kdeglobals [KDE] SingleClick",
+      "fallback": "QCommonStyle::styleHint"
+    },
+    "underlineShortcut": "QCommonStyle::styleHint",
+    "menuBarAltNavigation": "QCommonStyle::styleHint"
+  },
+  "scrollbar": {
+    "functionalExtent": 16,
+    "visualTrackMaximum": 6,
+    "minimumThumbLength": 18,
+    "lineButtons": false
+  },
+  "selection": {
+    "surfaceRole": "surfaceSelected",
+    "markerRole": "accent",
+    "markerWidth": 3,
+    "rtlMirrored": true
+  },
+  "automatedProbe": {
+    "ctestName": "style-plugin-discovery",
+    "implementation": "tests/qt/style_probe.cpp",
+    "status": "required-by-phase-gate",
+    "cases": [
+      "single-click true false and base fallback",
+      "base mnemonic visibility",
+      "base Alt navigation",
+      "16 pixel scrollbar pointer extent",
+      "six pixel maximum visual track",
+      "scrollbar page and thumb hit testing"
+    ]
+  },
+  "liveApplicationEvidence": {
+    "status": "pending",
+    "reason": "Requires complete Global Theme activation in an input-capable disposable or real Plasma session."
+  },
+  "sourceHashes": {
+    "contract": "9b147c9cf959e8ca37690cd6b3446fd854da518240136cf7c751b6718430f6ae",
+    "style": "eb9a88d1e865247c7727a1adada1be352e96e7711cbac64988bfcc80b11bc47e",
+    "probe": "06ce01cf7c3d6883c7210dd83bb49769b2f908228d9f3bf82879cfaabd1228f2"
+  }
+}

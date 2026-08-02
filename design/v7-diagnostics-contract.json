@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 7,
+  "doctor": {
+    "readOnly": true,
+    "activeSettings": [
+      "qtStyle",
+      "colorScheme",
+      "icons",
+      "iconInheritance",
+      "plasmaStyle",
+      "aurorae",
+      "kwinSwitcher",
+      "soundTheme",
+      "wallpaper"
+    ],
+    "componentProvenance": true,
+    "mixedVersions": true,
+    "criticalIconResolution": true,
+    "displayScaleSource": "KScreen/KWin runtime",
+    "forbiddenScaleSource": "QT_SCALE_FACTOR",
+    "privacy": [
+      "no usernames",
+      "no hostnames",
+      "no personal paths",
+      "no display contents"
+    ]
+  },
+  "soundReproducibility": {
+    "policy": "canonical-pcm-with-pinned-release-bytes",
+    "pinnedFfmpegVersion": "8.1.2",
+    "crossToolchain": [
+      "byte-identical deterministic WAV masters",
+      "byte-identical coverage metrics",
+      "valid Ogg Vorbis event containers"
+    ],
+    "pinnedReleaseEnvironment": [
+      "all cross-toolchain requirements",
+      "byte-identical Ogg event files"
+    ],
+    "blindHostRegenerationAllowed": false
+  },
+  "releaseGate": {
+    "preflightCategory": "environment",
+    "gateFailureCategory": "repository",
+    "testCountsDerivedFromRunner": true,
+    "hardcodedTestTotalsAllowed": false
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false
+  }
+}

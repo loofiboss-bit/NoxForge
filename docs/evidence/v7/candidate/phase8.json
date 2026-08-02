@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 8,
+  "result": "local-gate-passed-release-gate-open",
+  "candidateState": "unqualified-local-development",
+  "releaseReady": false,
+  "localGate": {
+    "status": "passed",
+    "categories": {
+      "static": "passed",
+      "unit": "passed",
+      "sanitizer": "passed",
+      "build": "passed",
+      "package": "passed",
+      "install-tree": "passed",
+      "repeated-install": "passed",
+      "rollback": "passed",
+      "uninstall": "passed",
+      "configuration-preservation": "passed",
+      "reproducibility": "passed",
+      "provenance": "passed"
+    },
+    "freshV6Upgrade": "pending",
+    "exactSourceCommit": "pending"
+  },
+  "artifactPolicy": {
+    "output": "dist/v7-local-candidate",
+    "requiredKinds": [
+      "source-archive",
+      "binary-rpm",
+      "source-rpm",
+      "checksums",
+      "provenance"
+    ],
+    "networkAllowed": false,
+    "hostInstallAllowed": false,
+    "themeActivationAllowed": false,
+    "publicationAllowed": false,
+    "unsignedDevelopmentArtifacts": true
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false,
+    "requiredScales": [
+      100,
+      125,
+      140,
+      150,
+      175,
+      200
+    ],
+    "requiredMixedOutputs": [
+      "100+140",
+      "100+200"
+    ],
+    "cases": {
+      "aurorae-maximized-scaling": {
+        "priority": "P0",
+        "status": "pending"
+      },
+      "core-icon-visibility": {
+        "priority": "P0",
+        "status": "pending"
+      },
+      "application-cohesion": {
+        "priority": "P1",
+        "status": "pending"
+      },
+      "plasma-shell-matrix": {
+        "priority": "P1",
+        "status": "pending"
+      },
+      "session-surfaces": {
+        "priority": "P1",
+        "status": "pending"
+      },
+      "accessibility-input": {
+        "priority": "P1",
+        "status": "pending"
+      }
+    }
+  },
+  "releaseBlockers": [
+    "mandatory composed Wayland and input-capable live matrix",
+    "fresh v6 to v7 upgrade in a clean Fedora 44 KDE environment",
+    "clean exact-source commit lineage"
+  ],
+  "evidenceBoundary": {
+    "offscreenIsLiveEvidence": false,
+    "unavailableLiveCasesRemainPending": true,
+    "pendingP0BlocksReleaseReadiness": true,
+    "developmentArtifactsAreReleaseAssets": false
+  },
+  "sourceHashes": {
+    "contract": "e8c92588273f605925ded098beba142114a528fae975c95729b1670de08c03d9",
+    "qualification": "5aa85c1ce39b9a86565e99aca56aff45c370e9bf68c70d378ed778e255a4dba4",
+    "releaseNotes": "eb0737b5d40539e40055e3c1d3d9183e45e2bcb91512b822a33e5522acbc8247",
+    "manualGate": "3ba54628293d08761b824f1258029af708593e2e1b54d36037a70570785a0754",
+    "candidateStaging": "a4903c5acef459b93db4bedfed9916aed8a0f24acf16d9f70c62e3062bbadb25",
+    "isolatedInstall": "53b8618b3c30f39ce9ea88332e3e34375b0c3ddbf3428c607483ef27cbdd1408",
+    "isolatedUninstall": "29aa6407e4964a345311c317992536168ec3b543d1adc52ba4d9f78fdb2754f8"
+  }
+}

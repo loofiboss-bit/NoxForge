@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0-dev",
+  "phase": 5,
+  "result": "passed",
+  "importantControlHeight": 40,
+  "authenticationBoundary": {
+    "preservedCalls": [
+      "sddm.login",
+      "sddm.suspend",
+      "sddm.reboot",
+      "sddm.powerOff"
+    ],
+    "credentialStorageAdded": false,
+    "hostConfigurationMutation": false
+  },
+  "sddm": {
+    "busyIndicator": "QtQuick.Controls BusyIndicator",
+    "stableStatusHeight": 40,
+    "capsLockIndicator": true,
+    "keyboardLayoutVisible": true,
+    "sessionSelectorVisible": true
+  },
+  "logout": {
+    "distinctActionIcons": [
+      "system-lock-screen",
+      "system-log-out",
+      "system-suspend",
+      "system-reboot",
+      "system-shutdown"
+    ]
+  },
+  "tabbox": {
+    "modelRoles": [
+      "caption",
+      "icon",
+      "minimized"
+    ],
+    "missingIconFallback": "application-x-executable",
+    "scenarios": [
+      "empty",
+      "many",
+      "long-rtl",
+      "keyboard",
+      "missing-icon",
+      "minimized"
+    ]
+  },
+  "offscreenScaleMatrix": {
+    "status": "required-by-phase-gate",
+    "scales": [
+      100,
+      125,
+      140,
+      150,
+      200
+    ],
+    "surfaces": [
+      "sddm",
+      "splash",
+      "logout",
+      "tabbox"
+    ]
+  },
+  "mixedDpi": {
+    "cases": [
+      "100+140",
+      "100+200"
+    ],
+    "status": "pending-live",
+    "reason": "A single offscreen QQuickView cannot qualify per-output compositor migration."
+  },
+  "liveQualification": {
+    "status": "pending",
+    "qualifiesLiveSession": false
+  },
+  "sourceHashes": {
+    "contract": "283bd36417488e8b9d8c33231e7cafff29fd3cc3662ccaa999796a3ed0b4be3f",
+    "tokens": "c7f8e2ec4e80d9c3a52d44f85949cf2c1f0615b9bc3f68144efe18f53f1f992a",
+    "sddm": "e08ac332f8251a6b56cd570d4f5b2e5880725bb26e60ea365a61d447b15b1348",
+    "logout": "927537e1a0564be65fc5360e6ed7643a978550e47ffcf4874c947f46d4799c9c",
+    "tabbox": "33d0e7197ba50a030a1da15f36457e0b21f550d96e745607883ad0c53cd1445f",
+    "cmake": "24abb480077de188a8b36ac21be118a808e026d0f6227668d7e3c5fac7ca553b",
+    "renderer": "c426ff02a050b80699c75e9cd69ff58a94cb1930366e8894163af8d8abbaf8aa"
+  }
+}

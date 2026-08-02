@@ -7,6 +7,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if (ROOT / "VERSION").read_text(encoding="utf-8").strip() != "6.0.0":
+    raise unittest.SkipTest("historical v6 source-bound tests")
 
 
 class V6PhaseEightTests(unittest.TestCase):
@@ -75,14 +77,36 @@ class V6PhaseEightTests(unittest.TestCase):
         self.assertGreaterEqual(workflow.count('test "${#assets[@]}" -eq 6'), 2)
         self.assertIn("candidate.get(\"sourceCommit\") != expected_commit", workflow)
 
-    def test_phase_plan_records_local_completion_and_public_blockers(self) -> None:
+    def test_phase_plan_records_public_release_and_copr_blocker(self) -> None:
         plan = (ROOT / "docs/NOXFORGE_V6_PLAN.md").read_text(encoding="utf-8")
         phase = plan.split("## Phase 8", 1)[1].split("## Cross-phase", 1)[0]
-        self.assertIn("**Release-ready outcome (2026-08-01; public readback pending):**", phase)
+        self.assertIn("**Publication status (2026-08-01; COPR pending):**", phase)
         self.assertIn("141 Python tests", phase)
-        self.assertIn("public readback is pending", phase)
-        for gate in ("tag", "GitHub Release", "COPR", "installation"):
+        for gate in ("v6.0.0", "30692016393", "10802161", "rpm -V"):
             self.assertIn(gate, phase)
+        self.assertIn("final Phase 8 blocker", phase)
+
+    def test_public_readback_records_every_release_surface(self) -> None:
+        evidence = json.loads(
+            (ROOT / "docs/evidence/v6/public-readback.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(evidence["schemaVersion"], 1)
+        self.assertEqual(evidence["release"]["tag"], "v6.0.0")
+        self.assertEqual(
+            evidence["release"]["sourceCommit"],
+            "d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6",
+        )
+        self.assertEqual(evidence["github"]["assetCount"], 6)
+        self.assertTrue(evidence["github"]["checksumsVerified"])
+        self.assertEqual(evidence["copr"]["state"], "pending")
+        self.assertEqual(evidence["copr"]["buildId"], 10802161)
+        self.assertEqual(evidence["copr"]["publicRepositoryReadback"], "blocked")
+        self.assertEqual(evidence["installation"]["rpmVerify"], "passed")
+        self.assertEqual(evidence["installation"]["doctorStatus"], "ok")
+        self.assertEqual(evidence["installation"]["removal"], "passed")
+        self.assertTrue(evidence["installation"]["settingsPreserved"])
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
-  "iconCount": 185,
-  "opticalCount": 196,
+  "iconCount": 193,
+  "opticalCount": 212,
   "opticalSizes": [
     16,
     22
@@ -14,6 +14,7 @@
     "actions/document-new.svg",
     "actions/document-open.svg",
     "actions/document-save.svg",
+    "actions/draw-highlight.svg",
     "actions/edit-copy.svg",
     "actions/edit-cut.svg",
     "actions/edit-paste.svg",
@@ -22,10 +23,17 @@
     "actions/media-playback-pause.svg",
     "actions/media-playback-start.svg",
     "actions/media-playback-stop.svg",
+    "actions/system-lock-screen.svg",
+    "actions/system-log-out.svg",
+    "actions/system-reboot.svg",
     "actions/system-run.svg",
     "actions/system-search.svg",
+    "actions/system-shutdown.svg",
+    "actions/system-suspend.svg",
+    "actions/tools-report-bug.svg",
     "actions/view-filter.svg",
     "actions/view-grid.svg",
+    "actions/view-hidden.svg",
     "actions/view-list-tree.svg",
     "applets/battery.svg",
     "applets/bluetooth-active.svg",
@@ -160,7 +168,7 @@
     48
   ],
   "categories": {
-    "actions": 40,
+    "actions": 48,
     "applets": 30,
     "categories": 10,
     "devices": 20,
@@ -178,6 +186,7 @@
     "actions/document-new.svg",
     "actions/document-open.svg",
     "actions/document-save.svg",
+    "actions/draw-highlight.svg",
     "actions/edit-clear.svg",
     "actions/edit-copy.svg",
     "actions/edit-cut.svg",
@@ -200,10 +209,17 @@
     "actions/media-playback-stop.svg",
     "actions/media-skip-backward.svg",
     "actions/media-skip-forward.svg",
+    "actions/system-lock-screen.svg",
+    "actions/system-log-out.svg",
+    "actions/system-reboot.svg",
     "actions/system-run.svg",
     "actions/system-search.svg",
+    "actions/system-shutdown.svg",
+    "actions/system-suspend.svg",
+    "actions/tools-report-bug.svg",
     "actions/view-filter.svg",
     "actions/view-grid.svg",
+    "actions/view-hidden.svg",
     "actions/view-list-details.svg",
     "actions/view-list-icons.svg",
     "actions/view-list-tree.svg",
@@ -401,10 +417,6 @@
     [
       "categories/applications-internet.svg",
       "preferences/preferences-system-network.svg"
-    ],
-    [
-      "devices/input-keyboard.svg",
-      "preferences/preferences-desktop-keyboard.svg"
     ],
     [
       "devices/network-wired.svg",
