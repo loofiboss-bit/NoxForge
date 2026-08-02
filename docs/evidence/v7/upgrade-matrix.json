@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0",
+  "status": "passed",
+  "environment": {
+    "distribution": "Fedora 44",
+    "containerImage": "localhost/noxforge-v7-live:fedora44",
+    "containerImageId": "01edc9979a553d0b02189543276ccfa8cdb00cd20af5ca4ba944ed5b928a8169",
+    "publicV6Repository": "copr:copr.fedorainfracloud.org:loofitheboss:noxforge",
+    "networkPurpose": "resolve the already-public v6 package and Fedora dependencies"
+  },
+  "candidate": {
+    "path": "noxforge-7.0.0-1.fc44.x86_64.rpm",
+    "nevra": "noxforge-7.0.0-1.fc44.x86_64",
+    "sha256": "38b22e7541796a36c3df643d92f3e675e10a2897dce6819e402c9b5b92801629"
+  },
+  "result": {
+    "candidateNevra": "noxforge-7.0.0-1.fc44.x86_64",
+    "configurationPreservation": "passed",
+    "doctor": {
+      "freshV7": {
+        "expectedVersion": "7.0.0",
+        "missing": [],
+        "mixedVersions": false,
+        "packageVersion": "7.0.0-1.fc44",
+        "status": "ok"
+      },
+      "publicV6": {
+        "expectedVersion": "6.0.0",
+        "missing": [],
+        "mixedVersions": false,
+        "packageVersion": "6.0.0-1.fc44",
+        "status": "ok"
+      },
+      "upgradeV7": {
+        "expectedVersion": "7.0.0",
+        "missing": [],
+        "mixedVersions": false,
+        "packageVersion": "7.0.0-1.fc44",
+        "status": "ok"
+      }
+    },
+    "hostMutated": false,
+    "publicV6Nevra": "noxforge-6.0.0-1.fc44.x86_64",
+    "rpmVerify": "passed-at-every-installed-state",
+    "steps": [
+      "public-v6-install",
+      "v6-to-v7-upgrade",
+      "v7-repeated-install",
+      "v7-to-v6-rollback",
+      "second-v6-to-v7-upgrade",
+      "v7-uninstall",
+      "fresh-v7-install",
+      "final-v7-uninstall"
+    ],
+    "themeApplied": false
+  },
+  "evidenceBoundary": {
+    "disposableContainer": true,
+    "hostPackageChanged": false,
+    "hostThemeChanged": false,
+    "configurationSentinels": [
+      "/root/.config/kdeglobals",
+      "/root/.config/kwinrc",
+      "/root/.config/plasma-org.kde.plasma.desktop-appletsrc",
+      "/etc/sddm.conf.d/99-user-sentinel.conf"
+    ]
+  }
+}

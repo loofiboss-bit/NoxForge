@@ -1,121 +1,154 @@
 {
-  "schemaVersion": 1,
-  "releaseState": "development",
+  "schemaVersion": 2,
+  "releaseState": "release",
   "candidate": {
-    "version": "7.0.0-dev",
-    "sourceCommit": null,
-    "sourceRef": "working-tree",
-    "worktreeDirty": true,
-    "package": null,
-    "artifacts": []
+    "version": "7.0.0",
+    "sourceCommit": "da4eafe2756b9de0e8f3ded7b5c8f0aefdcd5514",
+    "sourceRef": "v7.0.0",
+    "worktreeDirty": false,
+    "package": "noxforge-7.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [
+      "automated-gate.md",
+      "noxforge-7.0.0.tar.xz",
+      "noxforge-7.0.0-1.fc44.src.rpm",
+      "noxforge-7.0.0-1.fc44.x86_64.rpm",
+      "qualification.json",
+      "SHA256SUMS"
+    ]
   },
+  "releaseContract": {
+    "assetCount": 6,
+    "assetKinds": [
+      "source-archive",
+      "source-rpm",
+      "binary-rpm",
+      "qualification",
+      "automated-gate",
+      "checksums"
+    ]
+  },
+  "environment": {
+    "fedora": "44",
+    "plasma": "6.7.3",
+    "kwin": "6.7.3",
+    "qt": "6.11.1",
+    "session": "isolated KWin virtual Wayland with verified system RPM",
+    "singleScales": [100, 125, 140, 150, 175, 200],
+    "mixedScales": ["100+140", "100+200"],
+    "input": "KWin EIS RemoteDesktop with libei sender"
+  },
+  "releaseReady": true,
   "evidencePolicy": {
     "v6ResultsPromoted": false,
     "offscreenIsLiveEvidence": false,
-    "unavailableCasesRemainPending": true,
-    "pendingP0BlocksReleaseReadiness": true
+    "mandatoryCasesRequireComposedEvidence": true,
+    "physicalLimitationsRemainUnclaimed": true
   },
-  "releaseReady": false,
   "automatedCases": [
     {
-      "id": "phase0-source-baseline",
+      "id": "release-gate",
       "status": "passed",
-      "evidence": "phase0-gate.md",
-      "reason": "The authoritative Phase 0 gate passed with 106 active tests, nine explicit historical v6 module skips, 21 CTest cases, four sanitizer probes, reproducible archive, Fedora development packages, and clean rpmlint."
+      "evidence": "automated-gate.md",
+      "reason": "The stable static, unit, sanitizer, build, package, reproducibility, install-tree, rollback, uninstall, and provenance gate passes."
     },
     {
       "id": "aurorae-static-correction",
       "status": "passed",
       "evidence": "aurorae/phase1.json",
-      "reason": "The incomplete special maximized centers were removed; complete normal active and inactive frames now provide Aurorae's documented fallback across 48 static scale/state cases."
+      "reason": "Complete normal frames provide Aurorae fallback across the static scale and state matrix."
     },
     {
       "id": "icon-resolution-audit",
       "status": "passed",
       "evidence": "icons/phase2.json",
-      "reason": "The Fedora overlay chain, eight original core icons, distinct session semantics, and 90 real Qt resolution/render cases pass."
+      "reason": "Eight original core icons and the Fedora inheritance chain pass real Qt resolution and render checks."
     },
     {
       "id": "native-style-interaction",
       "status": "passed",
       "evidence": "style/phase3.json",
-      "reason": "KDE single-click policy, base mnemonic and Alt behavior, and separated scrollbar hit and visual geometry pass the native Qt probe."
+      "reason": "KDE click policy, mnemonic behavior, focus, and scrollbar hit geometry pass the native Qt probe."
     },
     {
-      "id": "plasma-shell-static",
-      "status": "passed",
-      "evidence": "plasma-shell/manifest.json",
-      "reason": "The 4 px shell rhythm, surface-specific margins, nested-border policy, radius roles, complete edge elements, and identical v6/v7 atlas viewports pass automated qualification."
-    },
-    {
-      "id": "session-surfaces-offscreen",
+      "id": "plasma-session-assets",
       "status": "passed",
       "evidence": "session/phase5.json",
-      "reason": "Authentication calls remain intact while SDDM, Logout, and TabBox pass isolated QML loading, five-scale rendering, explicit fallback, RTL, keyboard, empty, many-window, busy, error, and minimized-state contracts."
+      "reason": "Shell, session, asset, accessibility, diagnostic, and reproducibility contracts pass their phase gates."
     },
     {
-      "id": "priority-asset-optics",
+      "id": "fedora-package-lifecycle",
       "status": "passed",
-      "evidence": "assets/phase6.json",
-      "reason": "The 48 evidence-ranked priority icons remain nonempty and raster-distinct at 16, 22, and 24 pixels; the confirmed keyboard hardware/settings collision is corrected while cursor and brand identity remain frozen."
-    },
-    {
-      "id": "diagnostics-and-reproducibility",
-      "status": "passed",
-      "evidence": "diagnostics/phase7.json",
-      "reason": "Read-only doctor coverage, KScreen/KWin per-output scale reporting, provenance and icon diagnostics, pinned/cross-toolchain sound policy, environment preflight, and result-derived test counts pass automated qualification."
-    },
-    {
-      "id": "local-candidate-preparation",
-      "status": "passed",
-      "evidence": "candidate/phase8.json",
-      "reason": "The local static, unit, sanitizer, build, package, isolated install-tree, repeated-install, rollback, uninstall, configuration-preservation, reproducibility, and provenance gate passes without installing or applying v7 on the host. Development artifacts remain unsigned, local, and unqualified."
+      "evidence": "upgrade-matrix.json",
+      "reason": "Public v6 install, v6-to-v7 upgrade, repeated install, rollback, uninstall, fresh install, RPM verification, doctor, and configuration preservation pass in disposable Fedora 44."
     }
   ],
   "liveCases": [
     {
       "id": "aurorae-maximized-scaling",
       "priority": "P0",
-      "status": "pending",
+      "status": "passed",
       "scales": [100, 125, 140, 150, 175, 200],
       "mixedOutputs": ["100+140", "100+200"],
-      "reason": "The initiating report failed. The static fallback correction passes, but the full input-capable composed KWin matrix has not been rerun."
+      "evidence": "live/manifest.json",
+      "reason": "True KWin maximization spans every required single and mixed output without unpainted decoration regions; mixed-output transitions recompose correctly."
     },
     {
       "id": "core-icon-visibility",
       "priority": "P0",
-      "status": "pending",
-      "reason": "The reported names now resolve in the real Qt lookup probe, but visible System Settings and Plasma confirmation requires an activated disposable or real session."
+      "status": "passed",
+      "evidence": "live/single-140/core-icon-gallery-140.png",
+      "reason": "All reported core and session icons render visibly and distinctly through the active NoxForge icon theme; document-print demonstrates the intentional Breeze fallback."
     },
     {
       "id": "application-cohesion",
       "priority": "P1",
-      "status": "pending",
-      "applications": ["System Settings", "Dolphin", "Konsole", "Qt menus and dialogs"],
-      "reason": "Complete v7 activation and capture have not been qualified."
+      "status": "passed",
+      "evidence": "live/manifest.json",
+      "reason": "System Settings, Dolphin, Konsole, Firefox, Qt menus, dialogs, quick tiles, full screen, and minimized tasks compose coherently."
     },
     {
       "id": "plasma-shell-matrix",
       "priority": "P1",
-      "status": "pending",
-      "reason": "Panel edges, tray, popups, calendar, notifications, dialogs, and OSD require v7 live qualification."
+      "status": "passed",
+      "evidence": "live/manifest.json",
+      "reason": "All panel edges, launcher, task manager, tray, calendar, notification, dialog, tooltip, and OSD surfaces compose without seams."
     },
     {
       "id": "session-surfaces",
       "priority": "P1",
-      "status": "pending",
-      "reason": "SDDM test mode, Logout, and TabBox require v7 keyboard, RTL, translation, icon, and mixed-DPI qualification."
+      "status": "passed",
+      "evidence": "live/manifest.json",
+      "reason": "The verified RPM payload renders SDDM test mode, Logout, production Splash, and a held many-window TabBox with visible semantics."
     },
     {
       "id": "accessibility-input",
       "priority": "P1",
-      "status": "pending",
-      "reason": "Keyboard-only focus, Alt mnemonics, pointer targets, and interaction states require an input-capable environment."
+      "status": "passed",
+      "evidence": "live/manifest.json",
+      "reason": "Injected keyboard and pointer input verifies focus, Alt mnemonics, target activation, RTL, translation expansion, and normal, reduced, and slow motion settling."
     }
   ],
-  "releaseBlockers": [
-    "The mandatory composed Wayland and input-capable live matrix remains pending, including both P0 cases.",
-    "Fresh v6-to-v7 upgrade qualification requires a clean disposable Fedora 44 KDE environment.",
-    "The dirty development working tree is not bound to a clean exact-source commit."
-  ]
+  "limitations": [
+    {
+      "id": "hardware-blur",
+      "status": "blocked",
+      "reason": "The virtual output cannot qualify physical hardware blur quality."
+    },
+    {
+      "id": "physical-cursor-scale",
+      "status": "blocked",
+      "reason": "The KWin virtual backend exposes a synthetic default pointer, so physical NoxForge cursor appearance is not claimed."
+    },
+    {
+      "id": "audio-routing",
+      "status": "blocked",
+      "reason": "No physical speaker or headphone route is attached to the disposable environment."
+    },
+    {
+      "id": "sddm-pam-and-power",
+      "status": "blocked",
+      "reason": "SDDM test mode does not exercise PAM authentication or real power actions."
+    }
+  ],
+  "releaseBlockers": []
 }

@@ -29,7 +29,7 @@
   "liveEvidence": false,
   "originalEditable": true,
   "phase": 2,
-  "release": "7.0.0-dev",
+  "release": "7.0.0",
   "reviewAssertions": [
     "The semantic and monochrome N/F masters share one clean continuous geometry.",
     "The mark remains legible at 16, 24, 48, 128, and 512 px.",

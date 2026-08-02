@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 1,
-  "version": "7.0.0-dev",
+  "schemaVersion": 2,
+  "version": "7.0.0",
   "phase": 8,
-  "result": "local-gate-passed-release-gate-open",
-  "candidateState": "unqualified-local-development",
-  "releaseReady": false,
+  "result": "release-gate-passed",
+  "candidateState": "qualified-stable-release",
+  "releaseReady": true,
   "localGate": {
     "status": "passed",
     "categories": {
@@ -21,27 +21,19 @@
       "reproducibility": "passed",
       "provenance": "passed"
     },
-    "freshV6Upgrade": "pending",
-    "exactSourceCommit": "pending"
+    "freshV6Upgrade": "passed",
+    "exactSourceCommit": "da4eafe2756b9de0e8f3ded7b5c8f0aefdcd5514"
   },
   "artifactPolicy": {
-    "output": "dist/v7-local-candidate",
-    "requiredKinds": [
-      "source-archive",
-      "binary-rpm",
-      "source-rpm",
-      "checksums",
-      "provenance"
-    ],
-    "networkAllowed": false,
+    "output": "canonical release workflow",
+    "assetCount": 6,
     "hostInstallAllowed": false,
     "themeActivationAllowed": false,
-    "publicationAllowed": false,
-    "unsignedDevelopmentArtifacts": true
+    "publicationRequiresExactTag": true
   },
   "liveQualification": {
-    "status": "pending",
-    "qualifiesLiveSession": false,
+    "status": "passed",
+    "qualifiesLiveSession": true,
     "requiredScales": [
       100,
       125,
@@ -57,46 +49,65 @@
     "cases": {
       "aurorae-maximized-scaling": {
         "priority": "P0",
-        "status": "pending"
+        "status": "passed"
       },
       "core-icon-visibility": {
         "priority": "P0",
-        "status": "pending"
+        "status": "passed"
       },
       "application-cohesion": {
         "priority": "P1",
-        "status": "pending"
+        "status": "passed"
       },
       "plasma-shell-matrix": {
         "priority": "P1",
-        "status": "pending"
+        "status": "passed"
       },
       "session-surfaces": {
         "priority": "P1",
-        "status": "pending"
+        "status": "passed"
       },
       "accessibility-input": {
         "priority": "P1",
-        "status": "pending"
+        "status": "passed"
       }
     }
   },
-  "releaseBlockers": [
-    "mandatory composed Wayland and input-capable live matrix",
-    "fresh v6 to v7 upgrade in a clean Fedora 44 KDE environment",
-    "clean exact-source commit lineage"
+  "releaseBlockers": [],
+  "limitations": [
+    {
+      "id": "hardware-blur",
+      "status": "blocked",
+      "reason": "The virtual output cannot qualify physical hardware blur quality."
+    },
+    {
+      "id": "physical-cursor-scale",
+      "status": "blocked",
+      "reason": "The KWin virtual backend exposes a synthetic default pointer, so physical NoxForge cursor appearance is not claimed."
+    },
+    {
+      "id": "audio-routing",
+      "status": "blocked",
+      "reason": "No physical speaker or headphone route is attached to the disposable environment."
+    },
+    {
+      "id": "sddm-pam-and-power",
+      "status": "blocked",
+      "reason": "SDDM test mode does not exercise PAM authentication or real power actions."
+    }
   ],
   "evidenceBoundary": {
     "offscreenIsLiveEvidence": false,
-    "unavailableLiveCasesRemainPending": true,
-    "pendingP0BlocksReleaseReadiness": true,
-    "developmentArtifactsAreReleaseAssets": false
+    "physicalLimitationsRemainUnclaimed": true,
+    "packageInstallationAppliesTheme": false
   },
   "sourceHashes": {
     "contract": "e8c92588273f605925ded098beba142114a528fae975c95729b1670de08c03d9",
-    "qualification": "5aa85c1ce39b9a86565e99aca56aff45c370e9bf68c70d378ed778e255a4dba4",
-    "releaseNotes": "eb0737b5d40539e40055e3c1d3d9183e45e2bcb91512b822a33e5522acbc8247",
-    "manualGate": "3ba54628293d08761b824f1258029af708593e2e1b54d36037a70570785a0754",
+    "qualification": "c06f2d8b75b735fc072c4ccef0a540d2ff4ffbdd1ec473ee3e26f0f99e060ed1",
+    "liveManifest": "f14425cd6f7c095a48c451689e4de8e8aac5706abecad432501a3239bdf61939",
+    "upgradeMatrix": "bdc7a4177bde2a69507b25a0115b3a31a69aee9ba3520cd6959cf164c35de944",
+    "releaseNotes": "a0ce2c4cceda5dec722f219f421a9e2d987c2b21b8e1edc79d837496ec260a9c",
+    "manualGate": "d4d9867e0d5526539904124c8d8e972cd7e859e89dc382a022ae41e7c7ba8d5c",
     "candidateStaging": "a4903c5acef459b93db4bedfed9916aed8a0f24acf16d9f70c62e3062bbadb25",
     "isolatedInstall": "53b8618b3c30f39ce9ea88332e3e34375b0c3ddbf3428c607483ef27cbdd1408",
     "isolatedUninstall": "29aa6407e4964a345311c317992536168ec3b543d1adc52ba4d9f78fdb2754f8"

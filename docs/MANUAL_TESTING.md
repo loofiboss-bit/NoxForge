@@ -7,11 +7,10 @@ Capture evidence before any tag or publication. Active v7 results must be
 a live result. Historical v6 results remain immutable in
 `docs/evidence/v6/qualification.json`.
 
-Current development target: NoxForge 7.0.0-dev on Fedora KDE 44. The Phase 0
-source baseline passes repository validation and 147 discovered Python tests.
-The reported maximized-titlebar and missing-icon cases are failing P0 baseline
-results. The complete v7 mixed-DPI live matrix is pending and v7 is not
-release-ready.
+Current target: NoxForge 7.0.0 on Fedora KDE 44. The mandatory isolated
+input-capable matrix passes at 100/125/140/150/175/200 percent and mixed
+100+140/100+200 outputs. The reported maximized-titlebar and missing-icon P0
+cases are closed by composed evidence in `docs/evidence/v7/live/`.
 
 Historical v6 qualification passes Global Theme application, exact
 panel preservation, all four panel edges, two-output placement, visible shell
@@ -206,7 +205,7 @@ Machine-readable details are in
 Run this matrix only in an authorized disposable Fedora 44 KDE Plasma 6
 Wayland environment with the exact v7 RPM installed but not automatically
 applied. Record every result in `docs/evidence/v7/qualification.json`; retain
-`pending` when the environment or required input/hardware is unavailable.
+`blocked` when optional physical hardware or privileged behavior is unavailable.
 
 For each single-output scale at 100%, 125%, 140%, 150%, 175%, and 200%, and
 for mixed-output pairs 100% + 140% and 100% + 200%:
@@ -236,19 +235,16 @@ rollback, uninstall, and KDE/SDDM configuration preservation. Real SDDM
 authentication and power actions require a recoverable VM. Automated and
 offscreen output never closes any row in this live matrix.
 
-## Remaining interactive checks (require a physical or input-capable test environment)
+## Remaining physical and privileged limitations
 
-The following require physical hardware or a trusted input-capable disposable
-environment and remain blocked. The test operator must:
+The following are outside the mandatory virtual Wayland release matrix and
+remain unclaimed until a recoverable physical or VM environment is available:
 
 1. Compare popups with hardware blur enabled and disabled.
-2. Navigate with injected keyboard input through System Settings and session dialogs.
-3. Exercise Aurorae active/inactive/maximized/hover/pressed states.
-4. Hold Alt+Tab with multiple windows, long titles and the empty state.
-5. Verify cursor motion at 100, 140 and 200 percent.
-6. Verify speaker/headphone routing and volume.
-7. Verify the production splash integration in a disposable login.
-8. Verify SDDM authentication and power flows in a recoverable VM.
+2. Verify physical cursor appearance at 100, 140 and 200 percent.
+3. Verify speaker/headphone routing and volume.
+4. Verify PAM authentication and real SDDM power actions in a recoverable VM.
+5. Verify the complete production login transition across a real session start.
 
 Automated validation and offscreen rendering are structural evidence only and
 do not close these graphical checks.

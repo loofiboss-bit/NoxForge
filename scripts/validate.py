@@ -1941,28 +1941,31 @@ def validate_tooling(version: str) -> None:
     v7 = load_json(ROOT / "docs/evidence/v7/qualification.json")
     if (
         not isinstance(v7, dict)
-        or v7.get("schemaVersion") != 1
-        or v7.get("releaseState") != "development"
-        or v7.get("releaseReady") is not False
+        or v7.get("schemaVersion") != 2
+        or v7.get("releaseState") != "release"
+        or v7.get("releaseReady") is not True
     ):
         raise ValidationError("v7 qualification identity is invalid")
     v7_candidate = v7.get("candidate")
     if (
         not isinstance(v7_candidate, dict)
         or v7_candidate.get("version") != version
-        or v7_candidate.get("sourceCommit") is not None
-        or v7_candidate.get("sourceRef") != "working-tree"
-        or v7_candidate.get("worktreeDirty") is not True
-        or v7_candidate.get("package") is not None
-        or v7_candidate.get("artifacts") != []
+        or not isinstance(v7_candidate.get("sourceCommit"), str)
+        or not re.fullmatch(r"[0-9a-f]{40}", v7_candidate["sourceCommit"])
+        or v7_candidate.get("sourceRef") != f"v{version}"
+        or v7_candidate.get("worktreeDirty") is not False
+        or v7_candidate.get("package") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or not isinstance(v7_candidate.get("artifacts"), list)
+        or len(v7_candidate["artifacts"]) != 6
     ):
-        raise ValidationError("v7 development candidate metadata is invalid")
+        raise ValidationError("v7 stable candidate metadata is invalid")
     v7_policy = v7.get("evidencePolicy")
     if (
         not isinstance(v7_policy, dict)
         or v7_policy.get("v6ResultsPromoted") is not False
         or v7_policy.get("offscreenIsLiveEvidence") is not False
-        or v7_policy.get("pendingP0BlocksReleaseReadiness") is not True
+        or v7_policy.get("mandatoryCasesRequireComposedEvidence") is not True
+        or v7_policy.get("physicalLimitationsRemainUnclaimed") is not True
     ):
         raise ValidationError("v7 evidence policy is invalid")
     v7_live = v7.get("liveCases")
@@ -1986,16 +1989,14 @@ def validate_tooling(version: str) -> None:
     }
     live_by_id = {case.get("id"): case for case in v7_live}
     if not required_live <= set(live_by_id) or any(
-        live_by_id[case_id].get("status") != "pending" for case_id in required_live
+        live_by_id[case_id].get("status") != "passed" for case_id in required_live
     ):
-        raise ValidationError("v7 mandatory unavailable live cases must remain pending")
-    if not isinstance(v7.get("releaseBlockers"), list) or len(v7["releaseBlockers"]) < 3:
-        raise ValidationError("v7 development qualification must retain release blockers")
+        raise ValidationError("v7 mandatory composed live cases must pass")
+    if v7.get("releaseBlockers") != []:
+        raise ValidationError("qualified v7 release must not retain release blockers")
     p0 = [case for case in v7_live if case.get("priority") == "P0"]
-    if not p0 or not any(
-        case.get("status") in {"failed", "pending", "blocked"} for case in p0
-    ):
-        raise ValidationError("v7 Phase 0 must preserve the unresolved P0 release gate")
+    if not p0 or any(case.get("status") != "passed" for case in p0):
+        raise ValidationError("v7 P0 release cases must be closed by composed evidence")
 
 
 def validate_generated_sources(version: str) -> None:

@@ -1,0 +1,25 @@
+Output: 1 Virtual-0 7d0546ab-37e4-4071-9404-fff6d022a069
+	enabled
+	connected
+	priority 1
+	Unknown
+	replication source:0
+	Modes:  1:1920x1080@60.00*!
+	Custom modes: None
+	Geometry: 0,0 1372x772
+	Scale: 1.4
+	Rotation: 1
+	Overscan: 0
+	Vrr: incapable
+	RgbRange: unknown
+	HDR: incapable
+	Wide Color Gamut: incapable
+	ICC profile: incapable
+	Color profile source: incapable
+	Brightness control: unsupported
+	Color resolution: unknown
+	Allow EDR: unsupported
+	Sharpness control: unsupported
+	Automatic brightness: unsupported
+	Auto Rotate Policy: incapable
+	Adaptive backlight modulation: unsupported

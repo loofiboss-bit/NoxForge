@@ -1,0 +1,50 @@
+Output: 1 Virtual-1 021cc541-85ab-497b-a6b1-1ec7a3921776
+	enabled
+	connected
+	priority 2
+	Unknown
+	replication source:0
+	Modes:  1:1920x1080@60.00*!
+	Custom modes: None
+	Geometry: 1920,0 960x540
+	Scale: 2
+	Rotation: 1
+	Overscan: 0
+	Vrr: incapable
+	RgbRange: unknown
+	HDR: incapable
+	Wide Color Gamut: incapable
+	ICC profile: incapable
+	Color profile source: incapable
+	Brightness control: unsupported
+	Color resolution: unknown
+	Allow EDR: unsupported
+	Sharpness control: unsupported
+	Automatic brightness: unsupported
+	Auto Rotate Policy: incapable
+	Adaptive backlight modulation: unsupported
+Output: 2 Virtual-0 7869e2f0-e1d3-46ee-a671-2b7499027768
+	enabled
+	connected
+	priority 1
+	Unknown
+	replication source:0
+	Modes:  2:1920x1080@60.00*!
+	Custom modes: None
+	Geometry: 0,0 1920x1080
+	Scale: 1
+	Rotation: 1
+	Overscan: 0
+	Vrr: incapable
+	RgbRange: unknown
+	HDR: incapable
+	Wide Color Gamut: incapable
+	ICC profile: incapable
+	Color profile source: incapable
+	Brightness control: unsupported
+	Color resolution: unknown
+	Allow EDR: unsupported
+	Sharpness control: unsupported
+	Automatic brightness: unsupported
+	Auto Rotate Policy: incapable
+	Adaptive backlight modulation: unsupported

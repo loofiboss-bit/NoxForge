@@ -47,7 +47,7 @@ class V7PhaseFourTests(unittest.TestCase):
                 self.assertIn(f"{orientation}-{state}-{edge}", ids)
 
     def test_v7_before_after_evidence_uses_identical_viewports(self) -> None:
-        self.assertEqual(V7_MANIFEST["version"], "7.0.0-dev")
+        self.assertEqual(V7_MANIFEST["version"], "7.0.0")
         self.assertFalse(V7_MANIFEST["qualifiesLivePlasma"])
         self.assertEqual(V7_MANIFEST["staticScenarioCount"], 128)
         before = {(entry["scale"], entry["width"], entry["height"]) for entry in V6_MANIFEST["atlases"]}

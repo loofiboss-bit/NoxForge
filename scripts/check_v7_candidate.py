@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""Validate the v7 local-candidate and honest release-readiness boundary."""
+"""Validate the stable v7 qualification and exact local release evidence."""
 
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "design/v7-candidate-contract.json"
 QUALIFICATION_PATH = ROOT / "docs/evidence/v7/qualification.json"
+LIVE_PATH = ROOT / "docs/evidence/v7/live/manifest.json"
+UPGRADE_PATH = ROOT / "docs/evidence/v7/upgrade-matrix.json"
 NOTES_PATH = ROOT / "docs/releases/v7.0.0.md"
 MANUAL_PATH = ROOT / "docs/MANUAL_TESTING.md"
 PREPARE_PATH = ROOT / "scripts/prepare_v7_candidate.py"
@@ -33,6 +36,8 @@ def require(text: str, fragments: tuple[str, ...], subject: str) -> None:
 def build_evidence() -> dict[str, object]:
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
     qualification = json.loads(QUALIFICATION_PATH.read_text(encoding="utf-8"))
+    live_manifest = json.loads(LIVE_PATH.read_text(encoding="utf-8"))
+    upgrade = json.loads(UPGRADE_PATH.read_text(encoding="utf-8"))
     notes = NOTES_PATH.read_text(encoding="utf-8")
     manual = MANUAL_PATH.read_text(encoding="utf-8")
     prepare = PREPARE_PATH.read_text(encoding="utf-8")
@@ -40,44 +45,93 @@ def build_evidence() -> dict[str, object]:
     uninstall = UNINSTALL_PATH.read_text(encoding="utf-8")
 
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    if version != contract["version"] or not version.endswith("-dev"):
-        raise RuntimeError("Phase 8 must remain bound to the development version")
+    if version != "7.0.0":
+        raise RuntimeError("Phase 8 release qualification requires VERSION 7.0.0")
+
     candidate = qualification.get("candidate", {})
     if (
-        qualification.get("releaseState") != "development"
-        or qualification.get("releaseReady") is not False
-        or candidate.get("sourceCommit") is not None
-        or candidate.get("artifacts") != []
+        qualification.get("schemaVersion") != 2
+        or qualification.get("releaseState") != "release"
+        or qualification.get("releaseReady") is not True
+        or candidate.get("version") != version
+        or candidate.get("sourceRef") != f"v{version}"
+        or not re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceCommit", "")))
+        or candidate.get("worktreeDirty") is not False
+        or candidate.get("package") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or len(candidate.get("artifacts", [])) != 6
+        or qualification.get("releaseBlockers") != []
     ):
-        raise RuntimeError("qualification invented stable lineage or release artifacts")
+        raise RuntimeError("stable v7 qualification identity or lineage is incomplete")
+    release_contract = qualification.get("releaseContract", {})
+    if release_contract.get("assetCount") != 6 or len(release_contract.get("assetKinds", [])) != 6:
+        raise RuntimeError("stable v7 qualification must preserve the six-asset contract")
 
     live = {case["id"]: case for case in qualification.get("liveCases", [])}
     missing_live = sorted(set(contract["mandatoryLiveCases"]) - set(live))
     if missing_live:
         raise RuntimeError("mandatory live matrix is incomplete: " + ", ".join(missing_live))
-    if any(live[case_id]["status"] != "pending" for case_id in contract["mandatoryLiveCases"]):
-        raise RuntimeError("unavailable mandatory v7 live cases must remain pending")
-    if not any(live[case_id].get("priority") == "P0" for case_id in contract["mandatoryLiveCases"]):
-        raise RuntimeError("pending P0 release boundary is missing")
+    if any(live[case_id].get("status") != "passed" for case_id in contract["mandatoryLiveCases"]):
+        raise RuntimeError("every mandatory v7 live case must pass")
+
+    expected_cases = {
+        "single-100",
+        "single-125",
+        "single-140",
+        "single-150",
+        "single-175",
+        "single-200",
+        "mixed-100-140",
+        "mixed-100-200",
+    }
+    live_cases = {case.get("id"): case for case in live_manifest.get("cases", [])}
+    package = live_manifest.get("package", {})
+    if (
+        live_manifest.get("schemaVersion") != 1
+        or live_manifest.get("version") != version
+        or set(live_cases) != expected_cases
+        or any(case.get("status") != "passed" for case in live_cases.values())
+        or not isinstance(package, dict)
+        or package.get("nevra") != f"noxforge-{version}-1.fc44.x86_64"
+        or package.get("rpmVerify") != "passed"
+    ):
+        raise RuntimeError("exact-RPM composed live manifest is incomplete")
+
+    upgrade_candidate = upgrade.get("candidate", {})
+    upgrade_result = upgrade.get("result", {})
+    if (
+        upgrade.get("status") != "passed"
+        or upgrade.get("version") != version
+        or upgrade_candidate.get("path") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or upgrade_result.get("candidateNevra") != f"noxforge-{version}-1.fc44.x86_64"
+        or upgrade_result.get("configurationPreservation") != "passed"
+        or upgrade_result.get("themeApplied") is not False
+        or upgrade_result.get("hostMutated") is not False
+    ):
+        raise RuntimeError("disposable Fedora v6-to-v7 lifecycle evidence is incomplete")
 
     require(
         notes,
         (
-            "UNQUALIFIED DEVELOPMENT NOTES",
-            "not release-ready",
+            "Corrected behavior",
+            "Qualification status and limitations",
             "100/125/140/150/175/200",
             "100+140/100+200",
             "System Settings",
             "Dolphin",
             "Konsole",
-            "Keyboard-only",
-            "translation expansion",
+            "translation",
+            "expansion",
             "RTL",
             "Installation and upgrade",
             "Rollback",
+            "Hardware blur",
+            "PAM",
+            "authentication",
         ),
         "release notes",
     )
+    if "UNQUALIFIED" in notes or "not release-ready" in notes:
+        raise RuntimeError("stable release notes retain a development-only warning")
     require(
         manual,
         (
@@ -100,7 +154,7 @@ def build_evidence() -> dict[str, object]:
             "rpmbuild",
             "SHA256SUMS",
         ),
-        "candidate staging",
+        "historical candidate staging",
     )
     for forbidden in ("curl", "wget", "gh release", "git push", "plasma-apply-", "kwriteconfig", "qdbus"):
         if forbidden in prepare:
@@ -109,40 +163,49 @@ def build_evidence() -> dict[str, object]:
     require(uninstall, ("NOXFORGE_BUILD_ROOT", "install_manifest.txt"), "isolated rollback")
 
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "version": version,
         "phase": 8,
-        "result": "local-gate-passed-release-gate-open",
-        "candidateState": contract["candidateState"],
-        "releaseReady": False,
+        "result": "release-gate-passed",
+        "candidateState": "qualified-stable-release",
+        "releaseReady": True,
         "localGate": {
             "status": "passed",
             "categories": {
                 category: "passed" for category in contract["localGate"]["requiredPassedCategories"]
             },
-            "freshV6Upgrade": "pending",
-            "exactSourceCommit": "pending",
+            "freshV6Upgrade": "passed",
+            "exactSourceCommit": candidate["sourceCommit"],
         },
-        "artifactPolicy": contract["artifactPolicy"],
+        "artifactPolicy": {
+            "output": "canonical release workflow",
+            "assetCount": 6,
+            "hostInstallAllowed": False,
+            "themeActivationAllowed": False,
+            "publicationRequiresExactTag": True,
+        },
         "liveQualification": {
-            "status": "pending",
-            "qualifiesLiveSession": False,
+            "status": "passed",
+            "qualifiesLiveSession": True,
             "requiredScales": contract["requiredScales"],
             "requiredMixedOutputs": contract["requiredMixedOutputs"],
             "cases": {
-                case_id: {"priority": live[case_id]["priority"], "status": live[case_id]["status"]}
+                case_id: {"priority": live[case_id]["priority"], "status": "passed"}
                 for case_id in contract["mandatoryLiveCases"]
             },
         },
-        "releaseBlockers": [
-            "mandatory composed Wayland and input-capable live matrix",
-            "fresh v6 to v7 upgrade in a clean Fedora 44 KDE environment",
-            "clean exact-source commit lineage",
-        ],
-        "evidenceBoundary": contract["evidenceBoundary"],
+        "releaseBlockers": [],
+        "limitations": qualification["limitations"],
+        "evidenceBoundary": {
+            "offscreenIsLiveEvidence": False,
+            "physicalLimitationsRemainUnclaimed": True,
+            "packageInstallationAppliesTheme": False,
+        },
         "sourceHashes": {
             "contract": sha256(CONTRACT_PATH),
             "qualification": sha256(QUALIFICATION_PATH),
+            "liveManifest": sha256(LIVE_PATH),
+            "upgradeMatrix": sha256(UPGRADE_PATH),
             "releaseNotes": sha256(NOTES_PATH),
             "manualGate": sha256(MANUAL_PATH),
             "candidateStaging": sha256(PREPARE_PATH),
@@ -162,11 +225,11 @@ def main() -> int:
         if not EVIDENCE_PATH.is_file() or EVIDENCE_PATH.read_text(encoding="utf-8") != payload:
             print("NoxForge v7 candidate evidence drifted", file=sys.stderr)
             return 1
-        print("NoxForge v7 local-candidate boundary check passed")
+        print("NoxForge v7 stable release qualification check passed")
         return 0
     EVIDENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     EVIDENCE_PATH.write_text(payload, encoding="utf-8", newline="\n")
-    print("Wrote NoxForge v7 local-candidate evidence")
+    print("Wrote NoxForge v7 stable release evidence")
     return 0
 
 

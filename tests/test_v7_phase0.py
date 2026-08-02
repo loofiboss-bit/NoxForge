@@ -14,15 +14,15 @@ class V7PhaseZeroTests(unittest.TestCase):
         index = (ROOT / "docs/IMPLEMENTATION_PLAN.md").read_text(encoding="utf-8")
         plan = (ROOT / "docs/NOXFORGE_V7_PLAN.md").read_text(encoding="utf-8")
         self.assertIn("NOXFORGE_V7_PLAN.md", index)
-        self.assertIn("Active phase-gated implementation authority", plan)
+        self.assertIn("canonical implementation and release-gate authority", plan)
         self.assertIn("Operational Precision", plan)
-        self.assertIn("7.0.0-dev", plan)
-        self.assertIn("pending P0", plan)
+        self.assertIn("7.0.0", plan)
+        self.assertIn("Release-qualified locally", plan)
 
-    def test_development_version_is_synchronized_without_rewriting_v6(self) -> None:
+    def test_stable_version_is_synchronized_without_rewriting_v6(self) -> None:
         self.assertEqual(
             (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
-            "7.0.0-dev",
+            "7.0.0",
         )
         subprocess.run(
             ["python3", "scripts/sync_version.py", "--check"],
@@ -41,9 +41,9 @@ class V7PhaseZeroTests(unittest.TestCase):
         )
         self.assertEqual(v6["candidate"]["version"], "6.0.0")
         self.assertEqual(v6["candidate"]["sourceRef"], "v6.0.0")
-        self.assertEqual(v7["candidate"]["version"], "7.0.0-dev")
-        self.assertEqual(v7["releaseState"], "development")
-        self.assertFalse(v7["releaseReady"])
+        self.assertEqual(v7["candidate"]["version"], "7.0.0")
+        self.assertEqual(v7["releaseState"], "release")
+        self.assertTrue(v7["releaseReady"])
 
     def test_v6_public_closure_is_current_and_complete(self) -> None:
         evidence = json.loads(
@@ -88,7 +88,7 @@ class V7PhaseZeroTests(unittest.TestCase):
         )
         self.assertEqual(issues["test-count-reporting"]["status"], "failing")
 
-    def test_required_live_matrix_keeps_p0_failures_open(self) -> None:
+    def test_required_live_matrix_closes_p0_failures_with_composed_evidence(self) -> None:
         evidence = json.loads(
             (ROOT / "docs/evidence/v7/qualification.json").read_text(
                 encoding="utf-8"
@@ -96,11 +96,11 @@ class V7PhaseZeroTests(unittest.TestCase):
         )
         live = {entry["id"]: entry for entry in evidence["liveCases"]}
         scaling = live["aurorae-maximized-scaling"]
-        self.assertIn(scaling["status"], {"failed", "pending"})
+        self.assertEqual(scaling["status"], "passed")
         self.assertEqual(scaling["scales"], [100, 125, 140, 150, 175, 200])
         self.assertEqual(scaling["mixedOutputs"], ["100+140", "100+200"])
-        self.assertIn(live["core-icon-visibility"]["status"], {"failed", "pending"})
-        self.assertTrue(evidence["evidencePolicy"]["pendingP0BlocksReleaseReadiness"])
+        self.assertEqual(live["core-icon-visibility"]["status"], "passed")
+        self.assertTrue(evidence["evidencePolicy"]["mandatoryCasesRequireComposedEvidence"])
 
     def test_phase_zero_gate_preserves_the_live_boundary(self) -> None:
         gate = (ROOT / "docs/evidence/v7/phase0-gate.md").read_text(

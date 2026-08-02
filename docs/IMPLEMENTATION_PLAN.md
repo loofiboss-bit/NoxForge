@@ -11,11 +11,11 @@ application, shell, session, accessibility, diagnostics, and release evidence.
 It preserves the released Kinetic Precision identity and non-destructive
 installation policy.
 
-Implementation proceeds one phase at a time. Every phase gate must pass before
-its checkpoint. Unavailable graphical checks remain pending or blocked; a
-pending P0 live gate prevents a v7 release-ready claim. Local phase completion
-does not imply a commit, installation, theme application, publication, or
-remote change.
+All nine v7 phases are implemented. The mandatory P0/P1 input-capable composed
+matrix and disposable Fedora 44 package lifecycle are release gates; physical
+hardware, PAM, audio, and power limitations remain explicitly unclaimed.
+Publication and host activation still require explicit authorization and
+independent readback even after the local release gate passes.
 
 ## Historical release evidence
 

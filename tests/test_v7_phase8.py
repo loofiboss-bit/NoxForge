@@ -30,16 +30,16 @@ def tree_hash(root: Path) -> str:
 
 
 class V7PhaseEightTests(unittest.TestCase):
-    def test_candidate_remains_unqualified_with_every_mandatory_live_case_pending(self) -> None:
+    def test_candidate_is_stable_with_every_mandatory_live_case_passed(self) -> None:
         qualification = json.loads(
             (ROOT / "docs/evidence/v7/qualification.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(qualification["releaseState"], "development")
-        self.assertFalse(qualification["releaseReady"])
-        self.assertIsNone(qualification["candidate"]["sourceCommit"])
+        self.assertEqual(qualification["releaseState"], "release")
+        self.assertTrue(qualification["releaseReady"])
+        self.assertRegex(qualification["candidate"]["sourceCommit"], r"^[0-9a-f]{40}$")
         live = {case["id"]: case for case in qualification["liveCases"]}
         for case_id in CONTRACT["mandatoryLiveCases"]:
-            self.assertEqual(live[case_id]["status"], "pending")
+            self.assertEqual(live[case_id]["status"], "passed")
         self.assertTrue(
             any(live[case_id]["priority"] == "P0" for case_id in CONTRACT["mandatoryLiveCases"])
         )
@@ -47,8 +47,6 @@ class V7PhaseEightTests(unittest.TestCase):
     def test_release_notes_cover_fix_scope_limitations_upgrade_and_rollback(self) -> None:
         notes = (ROOT / "docs/releases/v7.0.0.md").read_text(encoding="utf-8")
         for fragment in (
-            "UNQUALIFIED DEVELOPMENT NOTES",
-            "not release-ready",
             "Corrected behavior",
             "Qualification status and limitations",
             "Installation and upgrade",
@@ -57,6 +55,8 @@ class V7PhaseEightTests(unittest.TestCase):
             "100+140/100+200",
         ):
             self.assertIn(fragment, notes)
+        self.assertNotIn("UNQUALIFIED", notes)
+        self.assertNotIn("not release-ready", notes)
 
     def test_local_staging_is_bounded_and_non_publishing(self) -> None:
         source = (ROOT / "scripts/prepare_v7_candidate.py").read_text(encoding="utf-8")
@@ -168,7 +168,7 @@ class V7PhaseEightTests(unittest.TestCase):
             )
             report = json.loads(doctor.stdout)
             self.assertEqual(report["status"], "ok")
-            self.assertEqual(report["expectedVersion"], "7.0.0-dev")
+            self.assertEqual(report["expectedVersion"], "7.0.0")
             self.assertTrue(
                 all(item["provenance"] == ["staged-system"] for item in report["components"].values())
             )
@@ -188,12 +188,12 @@ class V7PhaseEightTests(unittest.TestCase):
             )
             self.assertFalse(list(stage.glob("usr/lib*/qt6/plugins/styles/libnoxforge6.so")))
 
-    def test_phase_evidence_separates_local_passes_from_release_blockers(self) -> None:
-        self.assertEqual(EVIDENCE["result"], "local-gate-passed-release-gate-open")
+    def test_phase_evidence_records_stable_release_qualification(self) -> None:
+        self.assertEqual(EVIDENCE["result"], "release-gate-passed")
         self.assertTrue(all(value == "passed" for value in EVIDENCE["localGate"]["categories"].values()))
-        self.assertFalse(EVIDENCE["releaseReady"])
-        self.assertFalse(EVIDENCE["liveQualification"]["qualifiesLiveSession"])
-        self.assertGreaterEqual(len(EVIDENCE["releaseBlockers"]), 3)
+        self.assertTrue(EVIDENCE["releaseReady"])
+        self.assertTrue(EVIDENCE["liveQualification"]["qualifiesLiveSession"])
+        self.assertEqual(EVIDENCE["releaseBlockers"], [])
 
 
 if __name__ == "__main__":

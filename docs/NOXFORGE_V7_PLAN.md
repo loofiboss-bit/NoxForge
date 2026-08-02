@@ -3,9 +3,9 @@
 **Repository:** `loofiboss-bit/NoxForge`
 **Reviewed baseline:** `v6.0.0` / `d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`
 **Current public release:** `v6.0.0`
-**Development version:** `7.0.0-dev`
+**Release version:** `7.0.0`
 **Target:** Fedora KDE 44, Plasma/KWin 6.7+, Qt 6.11, Wayland
-**Status:** Active phase-gated implementation authority
+**Status:** Release-qualified locally; public readback pending
 **Release name:** **Operational Precision**
 
 This plan is the canonical implementation and release-gate authority for
@@ -573,6 +573,23 @@ upgrade, and exact clean-commit lineage remain `pending`. Therefore
 publication, host installation, or theme application is authorized. Evidence
 is in `docs/evidence/v7/candidate/phase8.json`, `phase8-gate.md`, and the local
 ignored `dist/v7-local-candidate/` staging directory.
+
+## Release qualification outcome (2026-08-02)
+
+The stable `7.0.0` candidate closes every mandatory P0/P1 case. An exact-RPM
+Fedora 44 KDE container passes all six single scales, both mixed-output pairs,
+real application and shell composition, production Splash, SDDM test mode,
+Logout, held TabBox, RTL, keyboard/pointer input, and motion variants. A second
+disposable Fedora 44 matrix passes public v6 installation, v6-to-v7 upgrade,
+repeated install, rollback, uninstall, fresh v7 install, `rpm -V`, doctor, and
+configuration preservation. Hardware blur, audible routing, physical cursor
+appearance, PAM authentication, and real power actions remain unclaimed but do
+not substitute for or reopen the completed mandatory virtual-session cases.
+
+Release evidence is in `docs/evidence/v7/qualification.json`,
+`docs/evidence/v7/automated-gate.md`, `docs/evidence/v7/live/`, and
+`docs/evidence/v7/upgrade-matrix.json`. Public GitHub/COPR and host-application
+claims remain pending until independent readback is committed.
 
 ## Standard verification
 

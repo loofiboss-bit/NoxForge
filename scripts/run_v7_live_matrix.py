@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -33,6 +34,7 @@ RIGHT = 106
 ESC = 1
 F = 33
 F11 = 87
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 
 
 def run(
@@ -64,6 +66,16 @@ def png_size(path: Path) -> list[int]:
     if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
         raise RuntimeError(f"invalid PNG evidence: {path}")
     return list(struct.unpack(">II", header[16:24]))
+
+
+def normalized_text_evidence(text: str, *, quote: bool = False) -> str:
+    """Keep command evidence readable and safe for deterministic Git diffs."""
+    lines = [ANSI_ESCAPE.sub("", line).rstrip() for line in text.splitlines()]
+    while lines and not lines[-1]:
+        lines.pop()
+    if quote:
+        lines = [f"| {line}" if line else "|" for line in lines]
+    return "\n".join(lines) + "\n"
 
 
 def verify_maximized_capture(path: Path, desktop: Path) -> None:
@@ -308,7 +320,7 @@ class LiveSession:
             timeout=30,
         )
         (self.evidence / "lookandfeel-apply.txt").write_text(
-            result.stdout, encoding="utf-8", newline="\n"
+            normalized_text_evidence(result.stdout), encoding="utf-8", newline="\n"
         )
         if result.returncode != 0:
             raise RuntimeError("isolated Global Theme application failed: " + result.stdout)
@@ -405,7 +417,9 @@ class LiveSession:
             )
             position += round(1920 / scale)
         result = run(["kscreen-doctor", *commands], timeout=30)
-        (self.evidence / "output-change.txt").write_text(result.stdout, encoding="utf-8")
+        (self.evidence / "output-change.txt").write_text(
+            normalized_text_evidence(result.stdout), encoding="utf-8", newline="\n"
+        )
         time.sleep(2)
         self.record_runtime()
         self.desktop_capture = self.screenshot("desktop-baseline")
@@ -413,8 +427,12 @@ class LiveSession:
     def record_runtime(self) -> None:
         outputs = run(["kscreen-doctor", "-o"], timeout=30).stdout
         support = run(["qdbus-qt6", "org.kde.KWin", "/KWin", "supportInformation"]).stdout
-        (self.evidence / "outputs.txt").write_text(outputs, encoding="utf-8")
-        (self.evidence / "kwin-support.txt").write_text(support, encoding="utf-8")
+        (self.evidence / "outputs.txt").write_text(
+            normalized_text_evidence(outputs), encoding="utf-8", newline="\n"
+        )
+        (self.evidence / "kwin-support.txt").write_text(
+            normalized_text_evidence(support, quote=True), encoding="utf-8", newline="\n"
+        )
         expected = [f"Scale: \x1b[0;0m{scale:g}" for scale in self.args.scales]
         if not all(fragment in outputs for fragment in expected):
             plain_expected = [f"Scale: {scale:g}" for scale in self.args.scales]

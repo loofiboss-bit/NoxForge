@@ -1,13 +1,13 @@
-# NoxForge 6 — Kinetic Precision
+# NoxForge 7 — Operational Precision
 
 NoxForge is an original, complete dark Global Theme for Fedora KDE 44,
-Plasma/KWin 6.7+, Qt 6.11, and Wayland. Kinetic Precision combines quiet
+Plasma/KWin 6.7+, Qt 6.11, and Wayland. Operational Precision combines quiet
 graphite depth, exact lime state markers, restrained cyan/violet detail, and
 short motion that settles cleanly.
 
 ![NoxForge Kinetic Precision Global Theme fullscreen preview](look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png)
 
-*Authentic generated Global Theme preview from the exact v6 wallpaper package;
+*Authentic generated Global Theme preview from the exact v7 wallpaper package;
 this is not live desktop or compositor evidence. Its canonical 16:9 source
 output is the [2560×1440 Kinetic Precision wallpaper](wallpapers/NoxForge/contents/images/2560x1440.png).*
 
@@ -55,40 +55,26 @@ recovery guidance are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Status
 
-NoxForge 6.0.0 is the current verified public release. Annotated tag
-`v6.0.0` resolves to `d6c4e3c5584b9fdd61c7bb3ae9b3b693f03e67f6`; the exact-tag
-[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v6.0.0)
-provides the verified source archive, SRPM, Fedora 44 RPM, qualification
-manifest, automated report, and checksums. A fresh public download passed every
-checksum. An independent disposable Fedora 44 installation, `rpm -V`,
-`noxforge-doctor`, removal, and KDE/SDDM settings-hash check passed. COPR build
-`10802161` succeeded, and public Fedora 44 repository metadata resolves
-`noxforge-6.0.0-1.fc44` for x86_64. Current readback evidence is in
-[`docs/evidence/v6/public-readback.json`](docs/evidence/v6/public-readback.json).
+NoxForge 7.0.0 is the qualified Operational Precision release represented by
+`VERSION`. Its exact-tag workflow produces the source archive, SRPM, Fedora 44
+RPM, qualification manifest, automated report, and checksums. Public GitHub
+and COPR readback is recorded after publication in
+`docs/evidence/v7/public-readback.json`; until that file exists, publication is
+not claimed by the checkout.
 
-Development of NoxForge 7.0.0 Operational Precision is phase-gated by the
-[active v7 plan](docs/NOXFORGE_V7_PLAN.md). The development tree is not a
-public v7 release, and pending P0 live scaling checks prevent a release-ready
-claim. All repository-supported local phases are implemented and locally
-qualified, including isolated reversible install trees and unqualified local
-artifact staging. Mandatory composed Wayland/input testing, a clean v6 upgrade,
-and exact clean-commit lineage remain pending; `VERSION` therefore stays
-`7.0.0-dev`.
+The input-capable isolated KWin/Wayland matrix passes six single-output scales,
+two mixed-output pairs, true maximization, output transitions, all panel edges,
+real applications, Qt dialogs, core icons, launcher, calendar, notifications,
+OSD, production Splash, SDDM test mode, Logout, and a held TabBox cycle. A
+disposable Fedora 44 package matrix passes public v6 installation, v6-to-v7
+upgrade, repeated install, rollback, uninstall, fresh v7 install, `rpm -V`,
+`noxforge-doctor`, and KDE/SDDM configuration preservation.
 
-The isolated Wayland matrix passed theme application, exact panel
-preservation, all four panel edges, two-output placement, visible shell
-fallback review, and real Qt composition at 140 percent without changing the
-maintainer KDE or SDDM configuration.
-
-The v6 release gate recorded 141 Python tests at qualification time. Current
-repository discovery runs 147 tests; v7 reports derive counts from actual gate
-output rather than preserving that historical total. The v6 gate also covers
-deterministic generation, 21 CTest cases, ASan/UBSan, QML lint, isolated staging, byte-identical source
-archives, SRPM/RPM build, and `rpmlint`. Automated accessibility, reduced
-motion, 100/125/140/200 percent rendering, and complete-tree performance
-qualification pass. Live injected Wayland input, hardware blur,
-animation-speed variants, high-contrast mode, cursor composition, production
-splash integration, and real SDDM authentication remain explicitly blocked.
+The v7 gate derives its counts from actual output: 142 active Python tests,
+nine historical v6 skips, 46 CTest cases, four sanitizer probes, QML lint,
+deterministic generation, byte-identical archives, SRPM/RPM build, and clean
+`rpmlint`. Hardware blur, audible routing, physical cursor scaling, PAM
+authentication, and real power actions remain explicitly unclaimed.
 
 Compatibility, COPR installation, explicit component selection, verification,
 upgrade, and safe rollback are documented in

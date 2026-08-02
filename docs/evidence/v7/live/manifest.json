@@ -1,0 +1,827 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0",
+  "environment": {
+    "session": "isolated KWin virtual Wayland",
+    "kwin": "kwin 6.7.3",
+    "qt": "6.11.1",
+    "hostSessionMutated": false,
+    "input": "KWin EIS RemoteDesktop with libei sender",
+    "themeSource": "verified system RPM with byte-identical isolated look-and-feel staging"
+  },
+  "package": {
+    "nevra": "noxforge-7.0.0-1.fc44.x86_64",
+    "rpmVerify": "passed",
+    "doctorStatus": "ok",
+    "expectedVersion": "7.0.0",
+    "packageVersion": "7.0.0-1.fc44",
+    "mixedVersions": false
+  },
+  "requiredSingleScales": [
+    "100",
+    "125",
+    "140",
+    "150",
+    "175",
+    "200"
+  ],
+  "requiredMixedScales": [
+    "100+140",
+    "100+200"
+  ],
+  "cases": [
+    {
+      "id": "single-100",
+      "status": "passed",
+      "scales": [
+        "100"
+      ],
+      "seconds": 36.185
+    },
+    {
+      "id": "single-125",
+      "status": "passed",
+      "scales": [
+        "125"
+      ],
+      "seconds": 16.51
+    },
+    {
+      "id": "single-140",
+      "status": "passed",
+      "scales": [
+        "140"
+      ],
+      "seconds": 134.643
+    },
+    {
+      "id": "single-150",
+      "status": "passed",
+      "scales": [
+        "150"
+      ],
+      "seconds": 15.4
+    },
+    {
+      "id": "single-175",
+      "status": "passed",
+      "scales": [
+        "175"
+      ],
+      "seconds": 14.599
+    },
+    {
+      "id": "single-200",
+      "status": "passed",
+      "scales": [
+        "200"
+      ],
+      "seconds": 29.634
+    },
+    {
+      "id": "mixed-100-140",
+      "status": "passed",
+      "scales": [
+        "100",
+        "140"
+      ],
+      "seconds": 30.888
+    },
+    {
+      "id": "mixed-100-200",
+      "status": "passed",
+      "scales": [
+        "100",
+        "200"
+      ],
+      "seconds": 30.843
+    }
+  ],
+  "files": {
+    "mixed-100-140/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "mixed-100-140/desktop-baseline.png": {
+      "sha256": "5b16646d1ba11325843c78e0454b001912a8622f9646c0c093a9ad911d99dd66",
+      "bytes": 499685,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/kwin-support.txt": {
+      "sha256": "4d24a30b9f9c0e9ab87e99d3aa1fe5e5734d52233c8048a71f64e8cd1a7ded17",
+      "bytes": 7315
+    },
+    "mixed-100-140/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "mixed-100-140/mixed-100-140-applications.png": {
+      "sha256": "9991df6358ec5178eb251c2ce7d935b6c1f0f2ae31c2bfac827e4c558059bf1c",
+      "bytes": 501977,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/mixed-100-140-systemsettings-left.png": {
+      "sha256": "1ae3880a39de9ff22125ebb7e1edb321791e2ddf15a1e3eabc5721a5e74240ed",
+      "bytes": 540492,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/mixed-100-140-systemsettings-right.png": {
+      "sha256": "147efe1ba625c02d06383252396f71517fe360010d18252741ae704afc49028d",
+      "bytes": 1114465,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/mixed-100-140-systemsettings-transition.png": {
+      "sha256": "1ee5a8e6f833b283c9cb0d4bcce79314c9ed2bab41d2af2225d430fea3a8aae7",
+      "bytes": 1088351,
+      "pixelSize": [
+        6582,
+        2160
+      ]
+    },
+    "mixed-100-140/output-change.txt": {
+      "sha256": "67a39db67be70e8386082dfc4285dc3ee206cc54aaa723c6f5b63742a2e93e18",
+      "bytes": 36
+    },
+    "mixed-100-140/outputs.txt": {
+      "sha256": "dd5813b51f79d5447ed2f614ec1aee0e90a8ed322cd96b8c8f14eac56c4cf076",
+      "bytes": 1190
+    },
+    "mixed-100-200/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "mixed-100-200/desktop-baseline.png": {
+      "sha256": "5f6fc82a89348dcf33117e507afe8bb2d693587bcf7500867e6902903037068d",
+      "bytes": 402445,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/kwin-support.txt": {
+      "sha256": "b9abc0ae7ba8d310a24a63a6a29cd2abe74c41a2e844ccfbb839b78dd2e57750",
+      "bytes": 7312
+    },
+    "mixed-100-200/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "mixed-100-200/mixed-100-200-applications.png": {
+      "sha256": "ce3151fa68f3325dca03d48764c9ef51a1d5ee36c447051a84e5567d81c9011d",
+      "bytes": 402671,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/mixed-100-200-systemsettings-left.png": {
+      "sha256": "3cb736879907180d7521a88d919bcc1beee221a7276ddc48cee090e3d49bedc8",
+      "bytes": 436457,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/mixed-100-200-systemsettings-right.png": {
+      "sha256": "918d9192c54bcf1d358eb660aeea222fe340a681f41ae84fd19fd244d127e3d6",
+      "bytes": 605042,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/mixed-100-200-systemsettings-transition.png": {
+      "sha256": "add3d969cd3acd64293efaab2fa2d27197b1cbcaebc1445f96e2b6fb6b2aeb38",
+      "bytes": 587424,
+      "pixelSize": [
+        5760,
+        2160
+      ]
+    },
+    "mixed-100-200/output-change.txt": {
+      "sha256": "67a39db67be70e8386082dfc4285dc3ee206cc54aaa723c6f5b63742a2e93e18",
+      "bytes": 36
+    },
+    "mixed-100-200/outputs.txt": {
+      "sha256": "2f0da6540317d9f2703a364ceb3c51b9d590ac7938ad3b1e764c1fcc08e28109",
+      "bytes": 1187
+    },
+    "single-100/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-100/desktop-baseline.png": {
+      "sha256": "6b1a71321586a5eec04e35509699887cc1e394ae828b7146e6b70adfab9d3125",
+      "bytes": 149856,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/dolphin-maximized-100-restored-focus.png": {
+      "sha256": "9a4c474c6388153047faffd56b3ed7767b68e79e770df522412a5f9c24a5deb9",
+      "bytes": 184032,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/dolphin-maximized-100.png": {
+      "sha256": "a5c42d631d0158f02fc1e66408f87d6e90de7ac539a0b33a711164e03cbc4c96",
+      "bytes": 94591,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/konsole-maximized-100-restored-focus.png": {
+      "sha256": "a92b53ab4e1128a0e9e581145ae4cb960a1a19a48be89971ed39c84bbac58112",
+      "bytes": 143352,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/konsole-maximized-100.png": {
+      "sha256": "4067d6490257225d9ce155439702a7b63f9f374b8d64ea71be08d3fb83d0760d",
+      "bytes": 53825,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/kwin-support.txt": {
+      "sha256": "42c2cfb22674d376706747fb8a9740cc1a2dd0c4767dddabddb3031b9b76d476",
+      "bytes": 7145
+    },
+    "single-100/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-100/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-100/outputs.txt": {
+      "sha256": "1f0f0dd1d071f0dba1b29dda6a4cc1a963c2284c57516f82bbb90fc7197daeee",
+      "bytes": 593
+    },
+    "single-100/systemsettings-maximized-100-restored-focus.png": {
+      "sha256": "c4c2c8b47d20c20cb9d428f8f0d6d7c1bbcd70a99d379b861bcb934abeb608eb",
+      "bytes": 239859,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-100/systemsettings-maximized-100.png": {
+      "sha256": "2c7f60efc9f25fb45d0c2b92a78eb05fda2fe6e2cc6b2520e98cb2d9f092d200",
+      "bytes": 187752,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-125/desktop-baseline.png": {
+      "sha256": "57311db274d4d9c84de0d178668596bb2674b753f4f8a9c567f3dbf5f9efa8f1",
+      "bytes": 190217,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/kwin-support.txt": {
+      "sha256": "b08facb7fed9913d8589d111c20b6ba589ce4b8f124608810c523857a6f6a837",
+      "bytes": 7147
+    },
+    "single-125/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-125/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-125/outputs.txt": {
+      "sha256": "2390bdba0d8ca0b8138c375d9f9bf2fb7cd6aafc854fe692b0b5a4471777755e",
+      "bytes": 595
+    },
+    "single-125/systemsettings-maximized-125-restored-focus.png": {
+      "sha256": "ce1f692f72a469be812607553bfc4bd0de7228792ca97dde335ab6a4f7b675e0",
+      "bytes": 324342,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-125/systemsettings-maximized-125.png": {
+      "sha256": "49a1c17601d254a9376c1973de314a20b83b5e8401c8acde3f67cc154975d791",
+      "bytes": 238182,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-140/core-icon-gallery-140.png": {
+      "sha256": "bdcedf6cd7afa9a9724664b5cd1d67ec042faa107ad9791ea4755e8986ec26b0",
+      "bytes": 95188,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/desktop-baseline.png": {
+      "sha256": "a303d1633b5312b4e07280cce4ddfbd79cce1b2127c6e17e7f1d58f197cb3ea4",
+      "bytes": 162688,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/dolphin-maximized-140-restored-focus.png": {
+      "sha256": "88948f3b7bdf7c5efa696c1b338e5eef1b2f6838e11a567a52b00b8cc1f0a849",
+      "bytes": 199214,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/dolphin-maximized-140.png": {
+      "sha256": "1039a65f7eeb0e8c055683fd40565a854d66995b862bf1bbbd616d29ab8bb234",
+      "bytes": 150316,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/firefox-maximized-140-restored-focus.png": {
+      "sha256": "98399eebc546ca3acfbb63fa50ee371e04f04e3eaa94abd708b431c55a72407c",
+      "bytes": 76676,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/firefox-maximized-140.png": {
+      "sha256": "63092b74999f2c19dd5f8d1b062478644972cffd719aaa06adfcf17517f84fa5",
+      "bytes": 67073,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/konsole-alt-mnemonic-140.png": {
+      "sha256": "1f2b2945bf27f8052df72aa6832006f5b2f10cdcef1bff04bfcef529a56d5067",
+      "bytes": 83728,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/konsole-fullscreen-140.png": {
+      "sha256": "9918b5f8cbb2cbfb29b51a8aacf92914efc0a79a7858b35d3a1ff4a1cce2d147",
+      "bytes": 38094,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/konsole-maximized-140-restored-focus.png": {
+      "sha256": "261b57944ccf40168b77dbe59be5256fd00f030f69765d190158159466774e14",
+      "bytes": 145721,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/konsole-maximized-140.png": {
+      "sha256": "5d1aa5ecb8cd0166aabe1bef9fcf21b1bdc3bd9dabd53f36fb6d86a620c6835b",
+      "bytes": 81438,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/kwin-support.txt": {
+      "sha256": "b02bf54850a4e483af59cb662a17fd59edac17c4a7d001ca5844e9398bf41694",
+      "bytes": 7146
+    },
+    "single-140/logout-keyboard-focus-140.png": {
+      "sha256": "f3b8cbecb0df865589f5a11e766343e4aec975f645a9babce2b2e875d5cccbad",
+      "bytes": 1136089,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/logout-windowed-140.png": {
+      "sha256": "006ac8e393cb7c58d0fd5f5fdd71d47b6bf82419c0e4d46656495ff3cb20d297",
+      "bytes": 1135607,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-140/motion-normal-settled-140.png": {
+      "sha256": "fae27e5e1355fbae9fc3665ef41be2ac59efc60dc63749f691684f989432b894",
+      "bytes": 314277,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/motion-reduced-settled-140.png": {
+      "sha256": "80a210b9beca1cf07dbbbe47f2d2739189abf0702e4493d532c4c3c817bbf58f",
+      "bytes": 314010,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/motion-slow-settled-140.png": {
+      "sha256": "266ae6f983769f5d0116daa39f62bf9f3149815b6ad4e4a5221cff3fda682b97",
+      "bytes": 314097,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-140/outputs.txt": {
+      "sha256": "10ed7aab03df4f931d1614d2fcbc6d30b92a1c14cbbd5764f0d7558f91885eca",
+      "bytes": 594
+    },
+    "single-140/plasma-calendar-140.png": {
+      "sha256": "5399b682ceb78b2da628f2aa69776d2e001a10c61609ede9658a8e73bf73fe56",
+      "bytes": 335993,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-launcher-140.png": {
+      "sha256": "1822638679380ae62137d41479b64f327335d65798252b0609308ebad0b54b65",
+      "bytes": 286915,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-notification-140.png": {
+      "sha256": "b58f64c38a9e8018b751b3fa4db7b119c57582fecd3816024183e11aa0fdfc4f",
+      "bytes": 182998,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-osd-140.png": {
+      "sha256": "bbe5c203bc7ec74828dde701c99bcce5d38dcd2f64949af3347103af7d5112b0",
+      "bytes": 198906,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-panel-bottom-140.png": {
+      "sha256": "082c394041b7d3e25443e1d2768b883f6b998c408c42fdd8822ce363ec28551e",
+      "bytes": 162763,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-panel-left-140.png": {
+      "sha256": "d79caaacf7eb87f3864a14fc6e3099b2d41f2869b190ca455e0105bade35b7a9",
+      "bytes": 165624,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-panel-right-140.png": {
+      "sha256": "8e84452a4359156ae3bc2c63882b121cc77dcff9ac1b052bd8278c918bf3a59c",
+      "bytes": 162481,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/plasma-panel-top-140.png": {
+      "sha256": "e8af220f544951c300efd8665d48512460f8fce9921b2ebc69f04d86aa9543f2",
+      "bytes": 166275,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/qt-dialog-140.png": {
+      "sha256": "cc27e39ba711d3b24dd52083fa2f5748fd5639247ccffe2cea91e173e01e1d39",
+      "bytes": 178305,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/qt-dialog-keyboard-focus-140.png": {
+      "sha256": "cc27e39ba711d3b24dd52083fa2f5748fd5639247ccffe2cea91e173e01e1d39",
+      "bytes": 178305,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/sddm-keyboard-focus-140.png": {
+      "sha256": "de3c466e11636150183c24b87412e10d01d686784f47690f0c4248dc8a2c9f5e",
+      "bytes": 100438,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/sddm-test-mode-140.png": {
+      "sha256": "f95e3bc44663fb706432c43a2914cfc3ea913c03ff6e7c53ea93cef88b7552ea",
+      "bytes": 100198,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/splash-windowed-140.png": {
+      "sha256": "16c549dca5cacc6ab67881621d742fe3a69c5c00b97665d8e2c105dd3447872c",
+      "bytes": 22194,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-keyboard-focus-140.png": {
+      "sha256": "a3be7c5e79982277f4ded0dae4aba165987a9c81826b22a165a79878306fe9bb",
+      "bytes": 314555,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-maximized-140-restored-focus.png": {
+      "sha256": "efa18f15c8b1c53c36e8e047f4b5136b249978995ff6f5f08db90d8c2faf63ee",
+      "bytes": 314659,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-maximized-140.png": {
+      "sha256": "896a98e273f62ed3869bae1d3d6e8f00446b3844e6516522cf3cec61c55bd826",
+      "bytes": 280846,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-minimized-task-140.png": {
+      "sha256": "6ab0f49e210ba8a136ba57799ee39ea7626a51d38915f39f66d5ae690d990693",
+      "bytes": 163869,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-quick-tile-left-140.png": {
+      "sha256": "4147ef92f701587d4700870839fececd9bdceda21d87ed4412396572fa5d19e0",
+      "bytes": 305002,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-quick-tile-right-140.png": {
+      "sha256": "77e6ead814c5ced07ecfaa8e83dd7d2013ece2abd64892f9f85ee870923fdd32",
+      "bytes": 364510,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-rtl-140.png": {
+      "sha256": "92fc3746904423c27fff9d74a979d76be628962ea79ddfe3bba8cba4cf00daf1",
+      "bytes": 280929,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/systemsettings-translation-expansion-140.png": {
+      "sha256": "b6c19ceaf80c33519b66c2e6aa3ebce4c4fb013b90368f5bfb007666ee0a8bbb",
+      "bytes": 280948,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-140/tabbox-held-140.png": {
+      "sha256": "27c5fcd1812dd2a063566f809de7524ded24320036bba2edb70f10c1b4ccf3fe",
+      "bytes": 322477,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-150/desktop-baseline.png": {
+      "sha256": "4a83dca8d5c1f0a9d3cfca912cde2e8249ca38d5c74448704dd00ce0b373ba78",
+      "bytes": 197487,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/kwin-support.txt": {
+      "sha256": "25cc48ecdfb26a4d468b6bac5ba9d5f5a89df43f6ba2f0bb82fdd03590acf3b0",
+      "bytes": 7146
+    },
+    "single-150/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-150/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-150/outputs.txt": {
+      "sha256": "c1f78ab9aa470cd581a492fc99534ce90dae4bf7f774341dd96312d7a8a39336",
+      "bytes": 594
+    },
+    "single-150/systemsettings-maximized-150-restored-focus.png": {
+      "sha256": "441c54140fb5ac4310c9b34e18481f22855fed2daee20efc7439f0d3781ae386",
+      "bytes": 293147,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-150/systemsettings-maximized-150.png": {
+      "sha256": "be26b848b1c1e24478bb421914a3a96fbfcbd37a1dc9a9c1cc185de11f4c8f7d",
+      "bytes": 268997,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-175/desktop-baseline.png": {
+      "sha256": "96466ddf75005de99723ac6ef42b2813bb2ed545017fd6e682ac406187bcd1fc",
+      "bytes": 211625,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/kwin-support.txt": {
+      "sha256": "d501c597292f41ce21d9a40d437318e0157a3df98f36521e2f5875cbb1d1282b",
+      "bytes": 7147
+    },
+    "single-175/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-175/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-175/outputs.txt": {
+      "sha256": "1d443e06cf087d658e3fa91b963fd5e9e7709b195222aacd80869b7656f9346a",
+      "bytes": 595
+    },
+    "single-175/systemsettings-maximized-175-restored-focus.png": {
+      "sha256": "67a5dd60f30814c7f552893a2af42e88b47801999730b28887c5fc7f8d595230",
+      "bytes": 311769,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-175/systemsettings-maximized-175.png": {
+      "sha256": "532e52f8e40fc512544c16ccdfe49a448545516ba02b8b052e32f02ef260f529",
+      "bytes": 314828,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/active-theme.json": {
+      "sha256": "da03c767c5035c61e238ab5a8a56ee717b5c70675fb4afb3be792535a2b21130",
+      "bytes": 250
+    },
+    "single-200/desktop-baseline.png": {
+      "sha256": "31a102c2bbc32a58ced215693f72802a1b57a9e1cb179fd6e17096648d8a1802",
+      "bytes": 222454,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/dolphin-maximized-200-restored-focus.png": {
+      "sha256": "700191c233e033b6a1006b0880d2fa7f7008935433677fafaadc7f4e44bee7e0",
+      "bytes": 265450,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/dolphin-maximized-200.png": {
+      "sha256": "45878447224d4057eabeda458437f3cde6b40246ec91c1fc273f81afc644cb44",
+      "bytes": 159218,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/konsole-maximized-200-restored-focus.png": {
+      "sha256": "98f40e8759cb3e7f71e33c5595d8c95f1e0e020f8c4ca847b858cef93f5af4d6",
+      "bytes": 91864,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/konsole-maximized-200.png": {
+      "sha256": "4b151df4654ea272dc3ba43c7f5a16380cdcfa299fc6c50028dff1156dd1d26b",
+      "bytes": 76386,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/kwin-support.txt": {
+      "sha256": "000512f827cd3e02499a638f6d8ea9b33bc14f7fbe89dd871040a3c81f908b0e",
+      "bytes": 7143
+    },
+    "single-200/lookandfeel-apply.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    "single-200/output-change.txt": {
+      "sha256": "f6ccd268381f66b13638be1773c74ec2adcad489cfe6b83f1afee3e4038fb89f",
+      "bytes": 18
+    },
+    "single-200/outputs.txt": {
+      "sha256": "4984c5d0cef5787424b046d61debe95105035064016c99e7781b33013a24a897",
+      "bytes": 591
+    },
+    "single-200/systemsettings-maximized-200-restored-focus.png": {
+      "sha256": "5666c2a44f4c98f8c5f332afc3805b31a22f7640aeca89f4016f8ca4640cb24d",
+      "bytes": 308056,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    },
+    "single-200/systemsettings-maximized-200.png": {
+      "sha256": "ac452f6031a35865faddfb2f270dc7175ddbc3882a40ab674cef4a7e213dabca",
+      "bytes": 303203,
+      "pixelSize": [
+        1920,
+        1080
+      ]
+    }
+  },
+  "limitations": [
+    "The KWin virtual backend reports its synthetic pointer as the default cursor; physical NoxForge cursor scaling is not claimed.",
+    "Hardware blur, audio output, PAM authentication, and real power actions are not exercised.",
+    "The headless system-package run stages the verified RPM defaults before compositor startup because plasma-apply-lookandfeel cannot initialize a pristine headless profile by itself."
+  ]
+}

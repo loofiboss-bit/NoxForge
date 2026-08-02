@@ -1,7 +1,7 @@
-%global upstream_version 7.0.0-dev
+%global upstream_version 7.0.0
 
 Name:           noxforge
-Version:        7.0.0~dev
+Version:        7.0.0
 Release:        1%{?dist}
 Summary:        Kinetic Precision global theme for KDE Plasma 6
 
@@ -59,6 +59,9 @@ and an SDDM theme. Package installation does not apply or activate the theme.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Sun Aug 02 2026 Loofi <noreply@example.invalid> - 7.0.0-1
+- Release NoxForge v7 Operational Precision with composed Wayland qualification
+
 * Sun Aug 02 2026 Loofi <noreply@example.invalid> - 7.0.0~dev-1
 - Start the phase-gated NoxForge v7 Operational Precision development cycle
 
