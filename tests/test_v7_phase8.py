@@ -145,6 +145,12 @@ class V7PhaseEightTests(unittest.TestCase):
         for forbidden in ("curl", "wget", "git push", "gh release", "plasma-apply-", "kwriteconfig"):
             self.assertNotIn(forbidden, source)
 
+    def test_live_application_capture_retries_verified_maximization(self) -> None:
+        source = (ROOT / "scripts/run_v7_live_matrix.py").read_text(encoding="utf-8")
+        self.assertIn("for attempt in range(3):", source)
+        self.assertIn("verify_maximized_capture(capture", source)
+        self.assertIn("if attempt == 2:", source)
+
     def test_user_install_cycle_preserves_kde_configuration(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-v7-user-cycle-") as name:
             home = Path(name)

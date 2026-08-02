@@ -596,11 +596,18 @@ class LiveSession:
 
 def application_capture(session: LiveSession, command: list[str], label: str) -> None:
     process = session.launch(command)
-    session.maximize()
-    capture = session.screenshot(label)
     if session.desktop_capture is None:
         raise RuntimeError("desktop baseline was not captured")
-    verify_maximized_capture(capture, session.desktop_capture, session.args.outputs)
+    for attempt in range(3):
+        session.maximize()
+        capture = session.screenshot(label)
+        try:
+            verify_maximized_capture(capture, session.desktop_capture, session.args.outputs)
+            break
+        except RuntimeError:
+            if attempt == 2:
+                raise
+            time.sleep(1)
     session.restore()
     session.input("keys", "--hold-ms", 100, TAB)
     session.input("keys", "--hold-ms", 100, TAB)
