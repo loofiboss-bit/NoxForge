@@ -44,6 +44,8 @@ jobs:
           xz
 
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Run the authoritative release gate
         shell: bash
