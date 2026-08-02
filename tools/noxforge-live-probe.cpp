@@ -66,10 +66,7 @@ QJsonObject commonReport(QApplication &application)
 
 QImage renderMotionFrame(QApplication &application, QPushButton *button, bool pressed)
 {
-    const qreal devicePixelRatio = button->devicePixelRatioF();
-    const QSize pixelSize = (QSizeF(button->size()) * devicePixelRatio).toSize();
-    QImage image(pixelSize, QImage::Format_RGBA8888);
-    image.setDevicePixelRatio(devicePixelRatio);
+    QImage image(button->size(), QImage::Format_RGBA8888);
     image.fill(Qt::transparent);
 
     QStyleOptionButton option;
