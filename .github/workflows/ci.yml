@@ -23,6 +23,7 @@ jobs:
       - name: Install declared dependencies
         run: >-
           dnf install -y
+          breeze-icon-theme
           cmake
           ffmpeg-free
           gcc-c++
