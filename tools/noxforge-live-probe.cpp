@@ -168,6 +168,8 @@ int motionProbe(QApplication &application, const QString &reportPath, const QStr
     QMouseEvent press(QEvent::MouseButtonPress, QPointF(4, 4), QPointF(4, 4), QPointF(4, 4),
                       Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     QApplication::sendEvent(button, &press);
+    if (factor == 0.0)
+        application.processEvents(QEventLoop::AllEvents, 8);
     QElapsedTimer timer;
     timer.start();
     QString previousHash = initialHash;
