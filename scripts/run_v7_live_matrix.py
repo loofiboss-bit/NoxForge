@@ -997,6 +997,7 @@ def single_case(session: LiveSession) -> None:
     # Traverse the explicit cyclic KeyNavigation chain to the primary action.
     for _ in range(4):
         session.input("keys", "--hold-ms", 80, TAB)
+    time.sleep(0.5)
     session.input("keys", "--hold-ms", 80, ENTER)
     time.sleep(0.5)
     sddm_validation = session.screenshot(f"sddm-enter-validation-{label}")
@@ -1018,6 +1019,7 @@ def single_case(session: LiveSession) -> None:
     )
     for _ in range(3):
         session.input("keys", "--hold-ms", 80, TAB)
+    time.sleep(0.5)
     session.input("keys", "--hold-ms", 80, SPACE)
     time.sleep(0.5)
     sddm_menu = session.screenshot(f"sddm-space-session-menu-{label}")

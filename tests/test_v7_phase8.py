@@ -88,6 +88,7 @@ class V7PhaseEightTests(unittest.TestCase):
             "require_color_presence(sddm_validation, (255, 107, 122)",
             "require_color_growth(",
             "for _ in range(4):",
+            "time.sleep(0.5)",
             "logout-cancel-focus",
         ):
             self.assertIn(fragment, single_case)
