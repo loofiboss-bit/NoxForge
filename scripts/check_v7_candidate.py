@@ -50,7 +50,7 @@ def require(text: str, fragments: tuple[str, ...], subject: str) -> None:
 
 def git_text(*arguments: str) -> str:
     result = subprocess.run(
-        ["git", "-C", str(ROOT), *arguments],
+        ["git", "-c", f"safe.directory={ROOT}", "-C", str(ROOT), *arguments],
         check=False,
         text=True,
         stdout=subprocess.PIPE,
