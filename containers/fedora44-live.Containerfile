@@ -29,8 +29,12 @@ RUN dnf -y install dbus-daemon qt6-qtdeclarative-devel xorg-x11-server-Xvfb \
 COPY . /opt/NoxForge
 RUN cmake -S /opt/NoxForge -B /tmp/noxforge-live-build -G Ninja \
         -DNOXFORGE_BUILD_LIVE_INPUT=ON \
-    && cmake --build /tmp/noxforge-live-build --target noxforge_live_input \
+    && cmake --build /tmp/noxforge-live-build \
+        --target noxforge_live_input noxforge_live_probe \
     && install -Dm0755 \
         /tmp/noxforge-live-build/noxforge-live-input \
         /usr/local/bin/noxforge-live-input \
+    && install -Dm0755 \
+        /tmp/noxforge-live-build/noxforge-live-probe \
+        /usr/local/bin/noxforge-live-probe \
     && rm -rf /tmp/noxforge-live-build

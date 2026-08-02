@@ -19,6 +19,7 @@ BuildRequires:  qt6-qtdeclarative-devel >= 6.7
 Requires:       kwin >= 6.7
 Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
+Requires:       breeze-icon-theme
 Requires:       sddm
 
 %description

@@ -70,6 +70,8 @@ class V7PhaseEightTests(unittest.TestCase):
             "NOXFORGE_BUILD_LIVE_INPUT=ON",
             "--target noxforge_live_input",
             "/usr/local/bin/noxforge-live-input",
+            "--target noxforge_live_input noxforge_live_probe",
+            "/usr/local/bin/noxforge-live-probe",
         ):
             self.assertIn(fragment, container)
 
@@ -94,6 +96,13 @@ class V7PhaseEightTests(unittest.TestCase):
             "logout-cancel-focus",
         ):
             self.assertIn(fragment, single_case)
+        for fragment in (
+            "layout_qualification(session, label)",
+            "motion_qualification(session, label)",
+            "distinctTransitionFrames",
+            "intermediateFrameCaptured",
+        ):
+            self.assertIn(fragment, source)
 
     def test_candidate_is_stable_with_every_mandatory_live_case_passed(self) -> None:
         qualification = json.loads(

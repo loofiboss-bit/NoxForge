@@ -154,6 +154,15 @@ def check_rpm(temporary: Path, source_archive: Path) -> None:
     ]
     if len(binary) != 1:
         raise RuntimeError("expected exactly one installable NoxForge RPM")
+    qualified = json.loads(
+        (ROOT / "docs/evidence/v7/upgrade-matrix.json").read_text(encoding="utf-8")
+    ).get("candidate", {})
+    built_sha256 = hashlib.sha256(binary[0].read_bytes()).hexdigest()
+    if built_sha256 != qualified.get("sha256"):
+        raise RuntimeError(
+            "release-built RPM does not match the exact live and upgrade-qualified RPM: "
+            f"{built_sha256}"
+        )
     listing = subprocess.run(
         ["rpm", "-qlp", str(binary[0])],
         cwd=ROOT,
@@ -168,7 +177,7 @@ def check_rpm(temporary: Path, source_archive: Path) -> None:
     ):
         if expected not in listing:
             raise RuntimeError(f"RPM is missing expected path: {expected}")
-    print(f"Fedora RPM contract passed: {binary[0].name}")
+    print(f"Fedora RPM contract passed: {binary[0].name} ({built_sha256})")
 
 
 def main() -> int:

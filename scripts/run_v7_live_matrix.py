@@ -21,6 +21,7 @@ from PIL import Image, ImageChops
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
 QML_LAUNCHER = shutil.which("qml") or "/usr/lib64/qt6/bin/qml"
+LIVE_PROBE = Path(shutil.which("noxforge-live-probe") or "noxforge-live-probe")
 SINGLE_SCALES = (1.0, 1.25, 1.4, 1.5, 1.75, 2.0)
 MIXED_SCALES = ((1.0, 1.4), (1.0, 2.0))
 META = 125
@@ -151,7 +152,7 @@ def isolated_environment(root: Path) -> dict[str, str]:
     return env
 
 
-def require_tools(injector: Path) -> None:
+def require_tools(injector: Path, probe: Path) -> None:
     required = (
         "dbus-run-session",
         "dolphin",
@@ -177,6 +178,8 @@ def require_tools(injector: Path) -> None:
         raise RuntimeError("missing live qualification tools: " + ", ".join(missing))
     if not injector.is_file() or not os.access(injector, os.X_OK):
         raise RuntimeError(f"input helper is not executable: {injector}")
+    if not probe.is_file() or not os.access(probe, os.X_OK):
+        raise RuntimeError(f"live style probe is not executable: {probe}")
 
 
 def install_theme(env: dict[str, str]) -> None:
@@ -239,8 +242,15 @@ def stage_prestart_defaults(env: dict[str, str], defaults: Path) -> None:
     env["NOXFORGE_LIVE_PRESTAGED"] = "verified look-and-feel defaults"
 
 
-def verify_system_package() -> dict[str, object]:
+def verify_system_package(candidate_rpm: Path) -> dict[str, object]:
+    if not candidate_rpm.is_file():
+        raise RuntimeError("--candidate-rpm must identify the installed qualification RPM")
     nevra = run(["rpm", "-q", "noxforge"]).stdout.strip()
+    candidate_nevra = run(
+        ["rpm", "-qp", "--qf", "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}", str(candidate_rpm)]
+    ).stdout.strip()
+    if candidate_nevra != nevra:
+        raise RuntimeError("installed NoxForge package does not match --candidate-rpm")
     verification = run(["rpm", "-V", "noxforge"], check=False)
     if verification.returncode != 0 or verification.stdout.strip():
         raise RuntimeError("installed NoxForge RPM failed verification: " + verification.stdout)
@@ -249,6 +259,7 @@ def verify_system_package() -> dict[str, object]:
         raise RuntimeError("installed NoxForge package failed doctor readback")
     return {
         "nevra": nevra,
+        "sha256": sha256(candidate_rpm),
         "rpmVerify": "passed",
         "doctorStatus": doctor["status"],
         "expectedVersion": doctor.get("expectedVersion"),
@@ -847,6 +858,142 @@ def tabbox_state_matrix(session: LiveSession, label: str) -> None:
         session.stop_process(app)
 
 
+def wait_for_json_report(path: Path, process: subprocess.Popen[str]) -> dict[str, object]:
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        if path.is_file():
+            return json.loads(path.read_text(encoding="utf-8"))
+        if process.poll() is not None:
+            raise RuntimeError(f"live style probe exited before writing {path.name}")
+        time.sleep(0.05)
+    raise RuntimeError(f"timed out waiting for live style probe report: {path.name}")
+
+
+def require_distinct_captures(first: Path, second: Path, subject: str) -> None:
+    with Image.open(first) as source:
+        first_image = source.convert("RGB")
+    with Image.open(second) as source:
+        second_image = source.convert("RGB")
+    if (
+        first_image.size != second_image.size
+        or ImageChops.difference(first_image, second_image).getbbox() is None
+    ):
+        raise RuntimeError(f"{subject} captures do not show an observable layout change")
+
+
+def layout_qualification(session: LiveSession, label: str) -> None:
+    reports: dict[str, dict[str, object]] = {}
+    captures: dict[str, Path] = {}
+    for mode, options in (
+        ("ltr", []),
+        ("rtl", ["--rtl"]),
+        ("pseudo", ["--pseudo"]),
+    ):
+        report_path = session.evidence / f"layout-{mode}-{label}.json"
+        process = session.launch(
+            [
+                str(session.args.probe),
+                "--mode",
+                "layout",
+                "--report",
+                str(report_path),
+                *options,
+            ],
+            wait_seconds=0.2,
+        )
+        reports[mode] = wait_for_json_report(report_path, process)
+        captures[mode] = session.screenshot(
+            f"layout-{'translation-expansion' if mode == 'pseudo' else mode}-{label}"
+        )
+        session.stop_process(process)
+
+    for mode, report in reports.items():
+        if report.get("result") != "passed" or report.get("styleClass") != "NoxForgeStyle":
+            raise RuntimeError(f"{mode} live layout probe did not use the installed NoxForge style")
+    ltr = reports["ltr"]
+    rtl = reports["rtl"]
+    pseudo = reports["pseudo"]
+    if (
+        ltr.get("layoutDirection") != "ltr"
+        or rtl.get("layoutDirection") != "rtl"
+        or int(ltr["markerX"]) >= int(ltr["windowWidth"]) // 2
+        or int(rtl["markerX"]) <= int(rtl["windowWidth"]) // 2
+    ):
+        raise RuntimeError("live RTL probe did not mirror the semantic leading edge")
+    displayed = str(pseudo.get("displayedText", ""))
+    if (
+        pseudo.get("pseudoLocalized") is not True
+        or not displayed.startswith("xx ")
+        or not displayed.endswith(" xx")
+        or int(pseudo["textWidth"]) <= int(pseudo["normalTextWidth"]) * 2
+    ):
+        raise RuntimeError(
+            "live pseudo-localization probe did not render observable expansion markers"
+        )
+    require_distinct_captures(captures["ltr"], captures["rtl"], "RTL")
+    require_distinct_captures(captures["ltr"], captures["pseudo"], "pseudo-localization")
+
+
+def motion_qualification(session: LiveSession, label: str) -> None:
+    reports: dict[str, dict[str, object]] = {}
+    for factor, suffix in ((0, "reduced"), (1, "normal"), (4, "slow")):
+        run(
+            [
+                "kwriteconfig6",
+                "--file",
+                "kdeglobals",
+                "--group",
+                "KDE",
+                "--key",
+                "AnimationDurationFactor",
+                str(factor),
+            ]
+        )
+        report_path = session.evidence / f"motion-{suffix}-{label}.json"
+        frames_prefix = session.evidence / f"motion-{suffix}-{label}"
+        process = session.launch(
+            [
+                str(session.args.probe),
+                "--mode",
+                "motion",
+                "--report",
+                str(report_path),
+                "--frames-prefix",
+                str(frames_prefix),
+            ],
+            wait_seconds=0.2,
+        )
+        report = wait_for_json_report(report_path, process)
+        reports[suffix] = report
+        session.screenshot(f"motion-{suffix}-settled-{label}")
+        session.stop_process(process)
+        if (
+            report.get("result") != "passed"
+            or report.get("styleClass") != "NoxForgeStyle"
+            or float(report.get("configuredFactor", -1)) != factor
+            or int(report.get("styleHintDurationMs", -1)) != 120 * factor
+            or int(report.get("measuredExpectedDurationMs", -1)) != 90 * factor
+            or report.get("initialSha256") == report.get("finalSha256")
+        ):
+            raise RuntimeError(f"{suffix} live motion probe failed exact-style readback")
+
+    reduced = reports["reduced"]
+    normal = reports["normal"]
+    slow = reports["slow"]
+    if int(reduced["distinctTransitionFrames"]) != 1 or int(reduced["lastChangeMs"]) > 40:
+        raise RuntimeError("reduced motion was not immediate and static")
+    for suffix, report in (("normal", normal), ("slow", slow)):
+        if (
+            int(report["distinctTransitionFrames"]) < 3
+            or report.get("intermediateFrameCaptured") is not True
+        ):
+            raise RuntimeError(f"{suffix} motion did not produce measured intermediate frames")
+    normal_last = int(normal["lastChangeMs"])
+    slow_last = int(slow["lastChangeMs"])
+    if normal_last < 50 or slow_last < normal_last * 2.5 or slow_last > 550:
+        raise RuntimeError("live motion timing did not scale with AnimationDurationFactor")
+
+
 def single_case(session: LiveSession) -> None:
     scale = session.args.scales[0]
     label = scale_label(scale)
@@ -896,15 +1043,7 @@ def single_case(session: LiveSession) -> None:
     session.input("keys", "--hold-ms", 80, ESC)
     session.stop_process(process)
 
-    process = session.launch(["systemsettings"], env={"QT_LAYOUT_DIRECTION": "rtl"})
-    session.maximize()
-    session.screenshot(f"systemsettings-rtl-{label}")
-    session.stop_process(process)
-
-    process = session.launch(["systemsettings"], env={"LANGUAGE": "x-test"})
-    session.maximize()
-    session.screenshot(f"systemsettings-translation-expansion-{label}")
-    session.stop_process(process)
+    layout_qualification(session, label)
 
     firefox_profile = Path(os.environ["XDG_RUNTIME_DIR"]) / "firefox-profile"
     firefox_profile.mkdir(parents=True, exist_ok=True)
@@ -1059,25 +1198,7 @@ def single_case(session: LiveSession) -> None:
         session.screenshot(f"splash-windowed-{label}")
     session.stop_process(splash)
 
-    for factor, suffix in ((0, "reduced"), (1, "normal"), (4, "slow")):
-        run(
-            [
-                "kwriteconfig6",
-                "--file",
-                "kdeglobals",
-                "--group",
-                "KDE",
-                "--key",
-                "AnimationDurationFactor",
-                str(factor),
-            ]
-        )
-        run(["qdbus-qt6", "org.kde.KWin", "/KWin", "reconfigure"])
-        process = session.launch(["systemsettings"])
-        session.maximize()
-        session.restore()
-        session.screenshot(f"motion-{suffix}-settled-{label}")
-        session.stop_process(process)
+    motion_qualification(session, label)
 
     tabbox_state_matrix(session, label)
 
@@ -1172,11 +1293,13 @@ def outer(args: argparse.Namespace) -> int:
     evidence_root = Path(args.evidence_dir).resolve()
     if evidence_root == ROOT or ROOT not in evidence_root.parents:
         raise RuntimeError("evidence directory must be a dedicated path inside the repository")
-    require_tools(args.injector)
+    require_tools(args.injector, args.probe)
     if evidence_root.exists():
         shutil.rmtree(evidence_root)
     evidence_root.mkdir(parents=True, exist_ok=True)
-    package = verify_system_package() if args.system_package else None
+    if args.system_package and args.candidate_rpm is None:
+        raise RuntimeError("--candidate-rpm is required with --system-package")
+    package = verify_system_package(args.candidate_rpm) if args.system_package else None
     cases: list[dict[str, object]] = []
     scenarios = [(scale,) for scale in SINGLE_SCALES] + list(MIXED_SCALES)
     if args.scenario:
@@ -1227,6 +1350,8 @@ def outer(args: argparse.Namespace) -> int:
                 "--inner",
                 "--injector",
                 str(args.injector),
+                "--probe",
+                str(args.probe),
                 "--evidence-dir",
                 str(case_evidence),
                 "--socket",
@@ -1288,6 +1413,17 @@ def parse_args() -> argparse.Namespace:
         help="bounded EIS input helper (defaults to the helper built by the qualification image)",
     )
     parser.add_argument(
+        "--probe",
+        type=Path,
+        default=LIVE_PROBE,
+        help="installed-style live probe (defaults to the helper built by the qualification image)",
+    )
+    parser.add_argument(
+        "--candidate-rpm",
+        type=Path,
+        help="exact installed RPM whose digest is bound into the live manifest",
+    )
+    parser.add_argument(
         "--evidence-dir",
         type=Path,
         default=ROOT / "docs/evidence/v7/live",
@@ -1305,6 +1441,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scales", type=float, nargs="+", default=[1.0], help=argparse.SUPPRESS)
     args = parser.parse_args()
     args.injector = args.injector.resolve()
+    args.probe = args.probe.resolve()
+    if args.candidate_rpm is not None:
+        args.candidate_rpm = args.candidate_rpm.resolve()
     if len(args.scales) != args.outputs:
         parser.error("--scales must provide one value per output")
     return args

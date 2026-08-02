@@ -24,6 +24,10 @@ if(NOXFORGE_BUILD_LIVE_INPUT)
     add_executable(noxforge_live_input tools/noxforge-live-input.cpp)
     target_link_libraries(noxforge_live_input PRIVATE Qt6::Core Qt6::DBus PkgConfig::LIBEI)
     set_target_properties(noxforge_live_input PROPERTIES OUTPUT_NAME "noxforge-live-input")
+
+    add_executable(noxforge_live_probe tools/noxforge-live-probe.cpp)
+    target_link_libraries(noxforge_live_probe PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+    set_target_properties(noxforge_live_probe PROPERTIES OUTPUT_NAME "noxforge-live-probe")
 endif()
 
 set(NOXFORGE_STYLE_SOURCES

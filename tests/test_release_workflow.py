@@ -52,6 +52,12 @@ class ReleaseWorkflowTests(unittest.TestCase):
             self.workflow,
         )
         self.assertIn('candidate.get("sourceRef") != expected_ref', self.workflow)
+        self.assertIn('qualified_rpm.get("sha256")', self.workflow)
+        self.assertIn('evidence["candidate"]["packageSha256"] = binary_sha256', self.workflow)
+        self.assertIn(
+            "release-built RPM does not match the exact live and upgrade-qualified RPM",
+            self.workflow,
+        )
 
     def test_public_release_refuses_development_versions(self) -> None:
         self.assertIn("Public releases require a stable VERSION", self.workflow)

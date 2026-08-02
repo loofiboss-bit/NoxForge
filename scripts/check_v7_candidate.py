@@ -171,6 +171,7 @@ def build_evidence() -> dict[str, object]:
         or any(set(case.get("checks", [])) != REQUIRED_COMPOSED_CHECKS for case in live_cases.values())
         or not isinstance(package, dict)
         or package.get("nevra") != f"noxforge-{version}-1.fc44.x86_64"
+        or not re.fullmatch(r"[0-9a-f]{64}", str(package.get("sha256", "")))
         or package.get("rpmVerify") != "passed"
     ):
         raise RuntimeError("exact-RPM composed live manifest is incomplete")
@@ -182,12 +183,17 @@ def build_evidence() -> dict[str, object]:
         upgrade.get("status") != "passed"
         or upgrade.get("version") != version
         or upgrade_candidate.get("path") != f"noxforge-{version}-1.fc44.x86_64.rpm"
+        or not re.fullmatch(r"[0-9a-f]{64}", str(upgrade_candidate.get("sha256", "")))
+        or upgrade_candidate.get("sha256") != package.get("sha256")
         or upgrade_result.get("candidateNevra") != f"noxforge-{version}-1.fc44.x86_64"
         or upgrade_result.get("configurationPreservation") != "passed"
         or upgrade_result.get("themeApplied") is not False
         or upgrade_result.get("hostMutated") is not False
     ):
-        raise RuntimeError("disposable Fedora v6-to-v7 lifecycle evidence is incomplete")
+        raise RuntimeError(
+            "disposable Fedora v6-to-v7 lifecycle evidence is incomplete or does not bind "
+            "the exact live-qualified RPM"
+        )
 
     require(
         notes,
