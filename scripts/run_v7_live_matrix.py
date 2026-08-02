@@ -677,6 +677,31 @@ def require_color_presence(
         raise RuntimeError(f"expected semantic color is absent from {subject}: {path}")
 
 
+def require_color_in_relative_region(
+    path: Path,
+    color: tuple[int, int, int],
+    region: tuple[float, float, float, float],
+    subject: str,
+    *,
+    minimum: int = 100,
+) -> None:
+    with Image.open(path) as source:
+        rgb = source.convert("RGB")
+        left, top, right, bottom = region
+        crop = rgb.crop(
+            (
+                round(rgb.width * left),
+                round(rgb.height * top),
+                round(rgb.width * right),
+                round(rgb.height * bottom),
+            )
+        )
+        colors = crop.getcolors(maxcolors=crop.width * crop.height)
+    count = 0 if colors is None else dict((pixel, total) for total, pixel in colors).get(color, 0)
+    if count < minimum:
+        raise RuntimeError(f"expected focused semantic region is absent from {subject}: {path}")
+
+
 def require_process_exit(process: subprocess.Popen[str], subject: str) -> None:
     try:
         returncode = process.wait(timeout=5)
@@ -955,9 +980,16 @@ def single_case(session: LiveSession) -> None:
         wait_seconds=2,
     )
     session.screenshot(f"logout-windowed-{label}")
-    for _ in range(5):
+    for _ in range(6):
         session.input("keys", "--hold-ms", 80, TAB)
-    session.screenshot(f"logout-cancel-focus-{label}")
+    time.sleep(0.5)
+    logout_cancel = session.screenshot(f"logout-cancel-focus-{label}")
+    require_color_in_relative_region(
+        logout_cancel,
+        (163, 255, 71),
+        (0.0, 0.64, 1.0, 0.78),
+        "Logout cancel focus",
+    )
     session.input("keys", "--hold-ms", 80, SPACE)
     require_process_exit(logout, "Logout cancel with Space")
     if logout in session.processes:
