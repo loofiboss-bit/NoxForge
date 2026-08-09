@@ -48,8 +48,22 @@ jobs:
               raise SystemExit(f'public releases require stable VERSION, got {version}')
           if version != manifest['release']['stableVersion'] or '${{ inputs.ref }}' != f'v{version}':
               raise SystemExit('tag, VERSION, and manifest stableVersion do not match')
-          exact = subprocess.check_output(['git', '-c', 'safe.directory=' + str(Path.cwd()), 'describe', '--tags', '--exact-match'], text=True).strip()
-          if exact != f'v{version}':
+          requested_ref = '${{ inputs.ref }}'
+          exact = subprocess.check_output(
+              [
+                  'git',
+                  '-c',
+                  'safe.directory=' + str(Path.cwd()),
+                  'rev-parse',
+                  f'refs/tags/{requested_ref}^{{commit}}',
+              ],
+              text=True,
+          ).strip()
+          head = subprocess.check_output(
+              ['git', '-c', 'safe.directory=' + str(Path.cwd()), 'rev-parse', 'HEAD'],
+              text=True,
+          ).strip()
+          if exact != head:
               raise SystemExit('checkout is not the exact requested tag')
           PY
           python3 scripts/validate_release_manifest.py
@@ -222,7 +236,16 @@ jobs:
               validate_bundle "$final_dir"
             else
               staging_ref="${{ inputs.ref }}-staging-${{ github.run_id }}"
-              gh release create "$staging_ref" release/* --draft --target "${{ inputs.ref }}" \
+              if git ls-remote --exit-code origin "refs/tags/$staging_ref" >/dev/null 2>&1; then
+                git fetch origin "refs/tags/$staging_ref:refs/tags/$staging_ref"
+              else
+                git -c user.name='github-actions[bot]' \
+                  -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                  tag -a "$staging_ref" "${{ inputs.ref }}^{}" \
+                  -m "Temporary staging tag for ${{ inputs.ref }}"
+                git push origin "$staging_ref"
+              fi
+              gh release create "$staging_ref" release/* --draft --verify-tag \
                 --title "NoxForge ${{ inputs.ref }} staging" \
                 --notes-file "$NOXFORGE_NOTES_FILE"
               gh release edit "$staging_ref" --draft=false
