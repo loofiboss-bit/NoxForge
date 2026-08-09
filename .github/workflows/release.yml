@@ -179,6 +179,8 @@ jobs:
           path: release
       - name: Verify checksums and manifest payload count
         shell: bash
+        env:
+          NOXFORGE_RELEASE_REF: ${{ inputs.ref }}
         run: |
           (cd release && sha256sum --check SHA256SUMS)
           python3 - <<'PY'
@@ -190,12 +192,14 @@ jobs:
           if not required <= files:
               raise SystemExit(f'missing manifest payloads: {sorted(required-files)}')
           PY
-          version="${{ inputs.ref }}"
+          version="$NOXFORGE_RELEASE_REF"
           version="${version#v}"
           echo "NOXFORGE_NOTES_FILE=docs/releases/v${version}.md" >> "$GITHUB_ENV"
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
+          NOXFORGE_RELEASE_REF: ${{ inputs.ref }}
+          NOXFORGE_STAGING_REF: ${{ inputs.staging_ref }}
         run: |
           validate_bundle() {
             local bundle_dir="$1"
@@ -214,7 +218,8 @@ jobs:
           }
 
           reject_extra_remote_assets() {
-            python3 - "${{ inputs.ref }}" <<'PY'
+            local ref="$1"
+            python3 - "$ref" <<'PY'
           import json
           import subprocess
           import sys
@@ -230,19 +235,23 @@ jobs:
           PY
           }
 
-          if gh release view "${{ inputs.ref }}" >/dev/null 2>&1; then
-            is_draft="$(gh release view "${{ inputs.ref }}" --json isDraft --jq '.isDraft')"
+          if gh release view "$NOXFORGE_RELEASE_REF" >/dev/null 2>&1; then
+            is_draft="$(gh release view "$NOXFORGE_RELEASE_REF" --json isDraft --jq '.isDraft')"
             if [[ "$is_draft" == "true" ]]; then
-              reject_extra_remote_assets
-              gh release upload "${{ inputs.ref }}" release/* --clobber
-              gh release edit "${{ inputs.ref }}" --draft=false --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"
+              reject_extra_remote_assets "$NOXFORGE_RELEASE_REF"
+              gh release upload "$NOXFORGE_RELEASE_REF" release/* --clobber
+              gh release edit "$NOXFORGE_RELEASE_REF" --draft=false --title "NoxForge $NOXFORGE_RELEASE_REF" --notes-file "$NOXFORGE_NOTES_FILE"
               final_dir="$(mktemp -d)"
-              gh release download "${{ inputs.ref }}" --dir "$final_dir"
+              gh release download "$NOXFORGE_RELEASE_REF" --dir "$final_dir"
               validate_bundle "$final_dir"
             else
-              staging_ref="${{ inputs.staging_ref }}"
+              staging_ref="$NOXFORGE_STAGING_REF"
               if [[ -z "$staging_ref" ]]; then
                 echo 'safe replacement requires a pre-created staging_ref input' >&2
+                exit 1
+              fi
+              if [[ "$staging_ref" == "$NOXFORGE_RELEASE_REF" ]]; then
+                echo 'staging_ref must differ from the release ref' >&2
                 exit 1
               fi
               if ! git ls-remote --exit-code origin "refs/tags/$staging_ref" >/dev/null 2>&1; then
@@ -250,27 +259,39 @@ jobs:
                 exit 1
               fi
               git fetch origin "refs/tags/$staging_ref:refs/tags/$staging_ref"
+              release_commit="$(git rev-parse "refs/tags/$NOXFORGE_RELEASE_REF^{commit}")"
+              staging_commit="$(git rev-parse "refs/tags/$staging_ref^{commit}")"
+              if [[ "$staging_commit" != "$release_commit" ]]; then
+                echo "staging tag does not resolve to the release commit: $staging_ref" >&2
+                exit 1
+              fi
+              if gh release view "$staging_ref" >/dev/null 2>&1; then
+                gh release delete "$staging_ref" --yes
+              fi
               gh release create "$staging_ref" release/* --draft --verify-tag \
-                --title "NoxForge ${{ inputs.ref }} staging" \
+                --title "NoxForge $NOXFORGE_RELEASE_REF staging" \
                 --notes-file "$NOXFORGE_NOTES_FILE"
               gh release edit "$staging_ref" --draft=false
               staging_dir="$(mktemp -d)"
               gh release download "$staging_ref" --dir "$staging_dir"
               validate_bundle "$staging_dir"
-              gh release delete "${{ inputs.ref }}" --yes
-              gh release create "${{ inputs.ref }}" release/* --verify-tag \
-                --title "NoxForge ${{ inputs.ref }}" \
+              gh release delete "$NOXFORGE_RELEASE_REF" --yes
+              gh release create "$NOXFORGE_RELEASE_REF" release/* --verify-tag \
+                --title "NoxForge $NOXFORGE_RELEASE_REF" \
                 --notes-file "$NOXFORGE_NOTES_FILE"
               final_dir="$(mktemp -d)"
-              gh release download "${{ inputs.ref }}" --dir "$final_dir"
+              gh release download "$NOXFORGE_RELEASE_REF" --dir "$final_dir"
               validate_bundle "$final_dir"
-              gh release delete "$staging_ref" --yes --cleanup-tag
+              gh release delete "$staging_ref" --yes
             fi
           else
-            gh release create "${{ inputs.ref }}" release/* --verify-tag \
-              --title "NoxForge ${{ inputs.ref }}" \
+            if [[ -n "$NOXFORGE_STAGING_REF" ]] && gh release view "$NOXFORGE_STAGING_REF" >/dev/null 2>&1; then
+              gh release delete "$NOXFORGE_STAGING_REF" --yes
+            fi
+            gh release create "$NOXFORGE_RELEASE_REF" release/* --verify-tag \
+              --title "NoxForge $NOXFORGE_RELEASE_REF" \
               --notes-file "$NOXFORGE_NOTES_FILE"
             final_dir="$(mktemp -d)"
-            gh release download "${{ inputs.ref }}" --dir "$final_dir"
+            gh release download "$NOXFORGE_RELEASE_REF" --dir "$final_dir"
             validate_bundle "$final_dir"
           fi
