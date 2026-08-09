@@ -111,16 +111,16 @@ jobs:
                       'sourceCommit': source_commit,
                       'worktreeDirty': False,
                   })
-                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\\n')
+                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\n')
               elif filename == 'automated-gate.md':
                   lines=[
                       line for line in source.read_text().splitlines()
                       if not line.startswith(('Version: ', 'Commit: ', 'Release state: '))
                   ]
                   (release / filename).write_text(
-                      '\\n'.join(lines).rstrip()
-                      + f"\\n\\nVersion: {Path('VERSION').read_text().strip()}\\n"
-                      + f"Commit: {source_commit}\\nRelease state: release\\n"
+                      '\n'.join(lines).rstrip()
+                      + f"\n\nVersion: {Path('VERSION').read_text().strip()}\n"
+                      + f"Commit: {source_commit}\nRelease state: release\n"
                   )
               else:
                   shutil.copy2(source, release / filename)
@@ -177,6 +177,72 @@ jobs:
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create "${{ inputs.ref }}" release/* --verify-tag
-          --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"
+        run: |
+          validate_bundle() {
+            local bundle_dir="$1"
+            (cd "$bundle_dir" && sha256sum --check SHA256SUMS)
+            python3 - "$bundle_dir" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          bundle=Path(sys.argv[1])
+          manifest=json.loads(Path('distribution/release-manifest.json').read_text())
+          expected={item['filename'] for item in manifest['artifacts']} | {'SHA256SUMS'}
+          actual={path.name for path in bundle.iterdir() if path.is_file()}
+          if actual != expected:
+              raise SystemExit(f'non-manifest release payload: extra={sorted(actual-expected)} missing={sorted(expected-actual)}')
+          PY
+          }
+
+          reject_extra_remote_assets() {
+            python3 - "${{ inputs.ref }}" <<'PY'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          ref=sys.argv[1]
+          manifest=json.loads(Path('distribution/release-manifest.json').read_text())
+          expected={item['filename'] for item in manifest['artifacts']} | {'SHA256SUMS'}
+          payload=json.loads(subprocess.check_output(['gh', 'release', 'view', ref, '--json', 'assets'], text=True))
+          actual={asset['name'] for asset in payload['assets']}
+          extra=actual-expected
+          if extra:
+              raise SystemExit(f'existing release has non-manifest assets: {sorted(extra)}')
+          PY
+          }
+
+          if gh release view "${{ inputs.ref }}" >/dev/null 2>&1; then
+            is_draft="$(gh release view "${{ inputs.ref }}" --json isDraft --jq '.isDraft')"
+            if [[ "$is_draft" == "true" ]]; then
+              reject_extra_remote_assets
+              gh release upload "${{ inputs.ref }}" release/* --clobber
+              gh release edit "${{ inputs.ref }}" --draft=false --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"
+              final_dir="$(mktemp -d)"
+              gh release download "${{ inputs.ref }}" --dir "$final_dir"
+              validate_bundle "$final_dir"
+            else
+              staging_ref="${{ inputs.ref }}-staging-${{ github.run_id }}"
+              gh release create "$staging_ref" release/* --draft --target "${{ inputs.ref }}" \
+                --title "NoxForge ${{ inputs.ref }} staging" \
+                --notes-file "$NOXFORGE_NOTES_FILE"
+              gh release edit "$staging_ref" --draft=false
+              staging_dir="$(mktemp -d)"
+              gh release download "$staging_ref" --dir "$staging_dir"
+              validate_bundle "$staging_dir"
+              gh release delete "${{ inputs.ref }}" --yes
+              gh release create "${{ inputs.ref }}" release/* --verify-tag \
+                --title "NoxForge ${{ inputs.ref }}" \
+                --notes-file "$NOXFORGE_NOTES_FILE"
+              final_dir="$(mktemp -d)"
+              gh release download "${{ inputs.ref }}" --dir "$final_dir"
+              validate_bundle "$final_dir"
+              gh release delete "$staging_ref" --yes --cleanup-tag
+            fi
+          else
+            gh release create "${{ inputs.ref }}" release/* --verify-tag \
+              --title "NoxForge ${{ inputs.ref }}" \
+              --notes-file "$NOXFORGE_NOTES_FILE"
+            final_dir="$(mktemp -d)"
+            gh release download "${{ inputs.ref }}" --dir "$final_dir"
+            validate_bundle "$final_dir"
+          fi
