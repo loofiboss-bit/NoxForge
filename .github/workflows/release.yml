@@ -12,6 +12,11 @@ on:
         required: true
         default: false
         type: boolean
+      staging_ref:
+        description: Pre-created tag used for a safe replacement of an existing public release
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -235,16 +240,16 @@ jobs:
               gh release download "${{ inputs.ref }}" --dir "$final_dir"
               validate_bundle "$final_dir"
             else
-              staging_ref="${{ inputs.ref }}-staging-${{ github.run_id }}"
-              if git ls-remote --exit-code origin "refs/tags/$staging_ref" >/dev/null 2>&1; then
-                git fetch origin "refs/tags/$staging_ref:refs/tags/$staging_ref"
-              else
-                git -c user.name='github-actions[bot]' \
-                  -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-                  tag -a "$staging_ref" "${{ inputs.ref }}^{}" \
-                  -m "Temporary staging tag for ${{ inputs.ref }}"
-                git push origin "$staging_ref"
+              staging_ref="${{ inputs.staging_ref }}"
+              if [[ -z "$staging_ref" ]]; then
+                echo 'safe replacement requires a pre-created staging_ref input' >&2
+                exit 1
               fi
+              if ! git ls-remote --exit-code origin "refs/tags/$staging_ref" >/dev/null 2>&1; then
+                echo "staging tag does not exist: $staging_ref" >&2
+                exit 1
+              fi
+              git fetch origin "refs/tags/$staging_ref:refs/tags/$staging_ref"
               gh release create "$staging_ref" release/* --draft --verify-tag \
                 --title "NoxForge ${{ inputs.ref }} staging" \
                 --notes-file "$NOXFORGE_NOTES_FILE"
