@@ -239,7 +239,10 @@ jobs:
               if git ls-remote --exit-code origin "refs/tags/$staging_ref" >/dev/null 2>&1; then
                 git fetch origin "refs/tags/$staging_ref:refs/tags/$staging_ref"
               else
-                git tag -a "$staging_ref" "${{ inputs.ref }}^{}" -m "Temporary staging tag for ${{ inputs.ref }}"
+                git -c user.name='github-actions[bot]' \
+                  -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                  tag -a "$staging_ref" "${{ inputs.ref }}^{}" \
+                  -m "Temporary staging tag for ${{ inputs.ref }}"
                 git push origin "$staging_ref"
               fi
               gh release create "$staging_ref" release/* --draft --verify-tag \
