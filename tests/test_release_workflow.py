@@ -40,7 +40,12 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn('gh release delete "${{ inputs.ref }}" --yes', self.workflow)
         self.assertIn('gh release delete "$staging_ref" --yes --cleanup-tag', self.workflow)
         self.assertIn('non-manifest release payload', self.workflow)
-        self.assertIn('git\', \'-c\', \'safe.directory=\' + str(Path.cwd()), \'describe\', \'--tags\', \'--exact-match\'', self.workflow)
+        self.assertIn("'rev-parse',", self.workflow)
+        self.assertIn("f'refs/tags/{requested_ref}^{{commit}}'", self.workflow)
+        self.assertIn('git ls-remote --exit-code origin "refs/tags/$staging_ref"', self.workflow)
+        self.assertIn('git tag -a "$staging_ref" "${{ inputs.ref }}^{}"', self.workflow)
+        self.assertIn('git push origin "$staging_ref"', self.workflow)
+        self.assertIn('gh release create "$staging_ref" release/* --draft --verify-tag', self.workflow)
         self.assertIn('docs/releases/v${version}.md', self.workflow)
 
     def test_public_release_refuses_development_versions(self) -> None:
