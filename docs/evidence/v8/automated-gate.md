@@ -1,8 +1,8 @@
 # NoxForge 8.0.0 automated gate
 
 This compact report records the stable local release gate. It covers the
-manifest-driven V8 artifact graph, deterministic Store packages, package safety,
-source-budget checks, Python tests, sanitizer probes, CTest, QML lint,
+manifest-driven V8 artifact graph, deterministic Store packages, package
+safety, source-budget checks, Python tests, sanitizer probes, CTest, QML lint,
 reproducible source archives, Fedora RPM/SRPM construction, rpmlint, isolated
 installation dry-runs, and `git diff --check`.
 

@@ -111,16 +111,16 @@ jobs:
                       'sourceCommit': source_commit,
                       'worktreeDirty': False,
                   })
-                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\\n')
+                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\n')
               elif filename == 'automated-gate.md':
                   lines=[
                       line for line in source.read_text().splitlines()
                       if not line.startswith(('Version: ', 'Commit: ', 'Release state: '))
                   ]
                   (release / filename).write_text(
-                      '\\n'.join(lines).rstrip()
-                      + f"\\n\\nVersion: {Path('VERSION').read_text().strip()}\\n"
-                      + f"Commit: {source_commit}\\nRelease state: release\\n"
+                      '\n'.join(lines).rstrip()
+                      + f"\n\nVersion: {Path('VERSION').read_text().strip()}\n"
+                      + f"Commit: {source_commit}\nRelease state: release\n"
                   )
               else:
                   shutil.copy2(source, release / filename)
@@ -177,6 +177,12 @@ jobs:
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create "${{ inputs.ref }}" release/* --verify-tag
-          --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"
+        run: |
+          if gh release view "${{ inputs.ref }}" >/dev/null 2>&1; then
+            gh release upload "${{ inputs.ref }}" release/* --clobber
+            gh release edit "${{ inputs.ref }}" --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"
+          else
+            gh release create "${{ inputs.ref }}" release/* --verify-tag \
+              --title "NoxForge ${{ inputs.ref }}" \
+              --notes-file "$NOXFORGE_NOTES_FILE"
+          fi

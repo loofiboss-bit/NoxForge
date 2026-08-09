@@ -33,6 +33,9 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("source_commit=subprocess.check_output", self.workflow)
         self.assertIn("qualification['releaseState']='release'", self.workflow)
         self.assertIn("'sourceCommit': source_commit", self.workflow)
+        self.assertIn("json.dumps(qualification, indent=2) + '\\n'", self.workflow)
+        self.assertIn("'\\n'.join(lines)", self.workflow)
+        self.assertIn('gh release upload "${{ inputs.ref }}" release/* --clobber', self.workflow)
         self.assertIn('git\', \'-c\', \'safe.directory=\' + str(Path.cwd()), \'describe\', \'--tags\', \'--exact-match\'', self.workflow)
         self.assertIn('docs/releases/v${version}.md', self.workflow)
 
