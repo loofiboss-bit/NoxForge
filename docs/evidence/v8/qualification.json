@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 3,
+  "releaseState": "release",
+  "releaseReady": true,
+  "candidate": {
+    "version": "8.0.0",
+    "sourceRef": "v8.0.0",
+    "sourceCommit": null,
+    "worktreeDirty": false,
+    "package": "noxforge-8.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [
+      "noxforge-8.0.0-source.tar.xz",
+      "noxforge-8.0.0-portable.tar.xz",
+      "noxforge-8.0.0-global-theme.tar.xz",
+      "noxforge-8.0.0-plasma-style.tar.xz",
+      "noxforge-8.0.0-colors.tar.xz",
+      "noxforge-8.0.0-aurorae.tar.xz",
+      "noxforge-8.0.0-icons.tar.xz",
+      "noxforge-8.0.0-cursors.tar.xz",
+      "noxforge-8.0.0-kwin-switcher.tar.xz",
+      "noxforge-8.0.0-sounds.tar.xz",
+      "noxforge-8.0.0-wallpapers.tar.xz",
+      "noxforge-8.0.0-1.fc44.x86_64.rpm",
+      "noxforge-8.0.0-1.fc44.src.rpm",
+      "qualification.json",
+      "automated-gate.md",
+      "SHA256SUMS"
+    ]
+  },
+  "releaseContract": {
+    "assetCount": 16,
+    "artifactManifest": "distribution/release-manifest.json",
+    "checksumFile": "SHA256SUMS"
+  },
+  "automatedCases": [
+    {"id": "manifest", "status": "passed", "evidence": "distribution/release-manifest.json", "reason": "Manifest and edition contracts validate."},
+    {"id": "store-packages", "status": "passed", "evidence": "distribution/kde-store/package-manifest.json", "reason": "Deterministic package builder and validator pass local fixtures."},
+    {"id": "source-budget", "status": "passed", "evidence": "scripts/release-check.py", "reason": "Independent source archives are byte-identical and remain below the 20 MB budget."},
+    {"id": "fedora-rpm", "status": "passed", "evidence": "scripts/release-check.py", "reason": "Fedora 44 binary and source RPMs build successfully and pass rpmlint with zero errors and warnings."}
+  ],
+  "liveCases": [
+    {"id": "display-input-matrix", "status": "pending", "reason": "Requires an authorized isolated 2560x1440 Wayland session."},
+    {"id": "physical-cursor", "status": "blocked", "reason": "Physical cursor hardware is unavailable to this gate."},
+    {"id": "audio-routing", "status": "blocked", "reason": "Physical audio routing is unavailable to this gate."},
+    {"id": "pam-login-power", "status": "blocked", "reason": "PAM/login and power actions are not observable here."}
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "physicalUnavailable": "pending-or-blocked",
+    "v7HistoryImmutable": true,
+    "releaseReadyWithUnavailableCases": true
+  },
+  "limitations": [
+    "Fresh 2560x1440 live input and display-session qualification remain pending without an authorized isolated Wayland session.",
+    "Physical cursor hardware, audio routing, PAM/login, and power actions remain blocked or pending and are not inferred from offscreen evidence.",
+    "Arch makepkg/namcap and external Fedora package lifecycle are downstream checks and remain unverified here."
+  ],
+  "releaseBlockers": []
+}

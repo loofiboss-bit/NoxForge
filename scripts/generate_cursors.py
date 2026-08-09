@@ -234,7 +234,7 @@ def main() -> None:
             target = ALIASES[target]
         outputs[cursor_dir / alias] = data[target]
     outputs[THEME / "index.theme"] = (
-        "[Icon Theme]\nName=NoxForge\nComment=Original Kinetic Precision cursors\n",
+        "[Icon Theme]\nName=NoxForge\nComment=Original Forge Identity cursors\n",
     )[0].encode()
     outputs[THEME / "coverage.json"] = (
         json.dumps(

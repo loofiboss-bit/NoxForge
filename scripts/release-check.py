@@ -16,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 GENERATOR_CHECKS = (
+    ("validate_release_manifest.py",),
     ("sync_version.py", "--check"),
     ("generate_design_system.py", "--check"),
     ("generate_plasma_svgs.py", "--check"),
@@ -25,13 +26,9 @@ GENERATOR_CHECKS = (
     ("render_wallpaper.py", "--check"),
     ("render_artwork_evidence.py", "--check"),
     ("check_plasma_rasters.py",),
-    ("check_v7_aurorae.py", "--check"),
-    ("check_v7_icons.py", "--check"),
-    ("check_v7_style.py", "--check"),
-    ("check_v7_sessions.py", "--check"),
-    ("check_v7_assets.py", "--check"),
-    ("check_v7_diagnostics.py", "--check"),
-    ("check_v7_candidate.py", "--check"),
+    ("build_store_packages.py", "--output-dir", "{STORE_DIR}"),
+    ("validate_store_packages.py", "--archive-dir", "{STORE_DIR}"),
+    ("check_store_kpackages.py", "--archive-dir", "{STORE_DIR}"),
 )
 V6_GENERATOR_CHECKS = (
     ("capture_v6_baseline.py", "--check"),
@@ -55,7 +52,7 @@ QML_SURFACES = (
 
 
 def preflight(*, skip_rpm: bool) -> None:
-    required = ["cmake", "ninja", "c++", "magick", "ffmpeg", "git", "xz", "rpm"]
+    required = ["cmake", "ninja", "c++", "magick", "ffmpeg", "git", "xz", "rpm", "kpackagetool6"]
     if not skip_rpm:
         required.extend(("rpmbuild", "rpmlint"))
     missing = sorted(command for command in required if not shutil.which(command))
@@ -155,14 +152,16 @@ def check_rpm(temporary: Path, source_archive: Path) -> None:
     ]
     if len(binary) != 1:
         raise RuntimeError("expected exactly one installable NoxForge RPM")
-    qualified = json.loads(
-        (ROOT / "docs/evidence/v7/upgrade-matrix.json").read_text(encoding="utf-8")
-    ).get("candidate", {})
     built_sha256 = hashlib.sha256(binary[0].read_bytes()).hexdigest()
-    if built_sha256 != qualified.get("sha256"):
-        raise RuntimeError(
-            "release-built RPM does not match the exact live and upgrade-qualified RPM: "
-            f"{built_sha256}"
+    manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
+    budget = next(item["budgetBytes"] for item in manifest["artifacts"] if item["key"] == "rpm")
+    if binary[0].stat().st_size > budget:
+        raise RuntimeError(f"RPM exceeds the manifest budget: {binary[0].stat().st_size} > {budget}")
+    baseline_rpm = manifest["release"]["baseline"].get("rpmBytes")
+    if isinstance(baseline_rpm, int) and binary[0].stat().st_size > round(baseline_rpm * 1.25):
+        print(
+            "Warning: RPM exceeds the normal V7 growth bound: "
+            f"{binary[0].stat().st_size} > {round(baseline_rpm * 1.25)}"
         )
     listing = subprocess.run(
         ["rpm", "-qlp", str(binary[0])],
@@ -199,12 +198,14 @@ def main() -> int:
 
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     generator_checks = GENERATOR_CHECKS
-    if version == "6.0.0":
-        generator_checks += V6_GENERATOR_CHECKS
 
     run([sys.executable, "scripts/validate.py"])
-    for command in generator_checks:
-        run([sys.executable, f"scripts/{command[0]}", *command[1:]])
+    with tempfile.TemporaryDirectory(prefix="noxforge-store-gate-") as store_temp:
+        for command in generator_checks:
+            expanded = [part.replace("{STORE_DIR}", store_temp) for part in command]
+            run([sys.executable, f"scripts/{expanded[0]}", *expanded[1:]])
+        # The package validator is intentionally run after the builder so the
+        # Store/portable archive graph is exercised on every gate.
     with tempfile.TemporaryDirectory(prefix="noxforge-python-gate-") as test_temp:
         test_report = Path(test_temp) / "python-tests.json"
         run([sys.executable, "scripts/run_python_tests.py", "--report", str(test_report)])

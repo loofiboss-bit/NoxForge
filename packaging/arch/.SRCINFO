@@ -1,0 +1,21 @@
+pkgbase = noxforge
+	pkgdesc = Forge Identity Plasma components for Fedora and Arch KDE
+	pkgver = 8.0.0
+	pkgrel = 1
+	url = https://github.com/loofiboss-bit/NoxForge
+	arch = x86_64
+	license = MIT
+	makedepends = cmake
+	makedepends = ninja
+	makedepends = python
+	makedepends = qt6-declarative
+	makedepends = kirigami
+	depends = breeze-icons
+	depends = kwin
+	depends = plasma-workspace
+	depends = qt6-base
+	optdepends = sddm: optional NoxForge login-screen component
+	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v8.0.0/noxforge-8.0.0-source.tar.xz
+	sha256sums = 88dad38a130df020daf16f7b63e62c29e9776857c914c8449cd267f0a193060e
+
+pkgname = noxforge

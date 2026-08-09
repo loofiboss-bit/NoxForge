@@ -1,0 +1,10 @@
+{
+  "KPlugin": {
+    "Authors": [{"Email": "loofi@loofi.com", "Name": "Loofi"}],
+    "Description": "Original restrained angular graphite NoxForge Quiet wallpaper",
+    "Id": "NoxForge-Quiet",
+    "License": "MIT",
+    "Name": "NoxForge Quiet",
+    "Version": "8.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 [Icon Theme]
 Name=NoxForge
-Comment=Original Industrial Precision system icons
+Comment=Original Forge Identity system icons
 Inherits=breeze-dark,breeze,hicolor
 Directories=16x16/actions,16x16/applets,16x16/status,22x22/actions,22x22/applets,22x22/status,scalable/actions,scalable/applets,scalable/categories,scalable/devices,scalable/emblems,scalable/mimetypes,scalable/places,scalable/preferences,scalable/status
 

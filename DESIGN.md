@@ -1,7 +1,8 @@
 # NoxForge Design System
 
-NoxForge uses an atmospheric, technical visual language called **Kinetic
-Precision**. This file is the visual authority for every NoxForge component.
+NoxForge uses an atmospheric, technical visual language called **Forge
+Identity**, rooted in the Kinetic Precision discipline. This file is the
+visual authority for every NoxForge component.
 
 <!-- Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 -->
 
@@ -165,9 +166,10 @@ The style derives its duration scale from
 `SH_Widget_Animation_Duration`, returns zero when the effective Qt/KDE duration
 is disabled, and respects `QStyleHints::useHoverEffects()`. It never uses Qt
 private animation classes. Deterministic 0/50/100 percent offscreen renders,
-event lifecycle probes, sanitizer results, and v5-relative medians live under
-`docs/evidence/v6/qt-motion/`. These files are structural evidence and do not
-claim live pointer, keyboard, compositor, or desktop qualification.
+event lifecycle probes, and sanitizer results are retained as compact V8
+qualification evidence and temporary CI artifacts. These files are structural
+evidence and do not claim live pointer, keyboard, compositor, or desktop
+qualification.
 
 ### Session QML choreography
 
@@ -188,10 +190,9 @@ to keep first-frame cost within the v5-relative limit.
   horizontal or vertical card rail. It does not invent window previews.
 
 Production QML keeps deterministic test progress disabled at `-1`. The
-offscreen renderer injects start, mid, or end progress only for the 46-capture
-matrix under `docs/evidence/v6/session/`. That matrix and the SDDM first-frame
-comparison are structural evidence, not live SDDM, KWin, keyboard, pointer, or
-power-flow qualification.
+offscreen renderer injects start, mid, or end progress only for the 46-case CI
+matrix. That matrix and the SDDM first-frame comparison are structural
+evidence, not live SDDM, KWin, keyboard, pointer, or power-flow qualification.
 
 ## Contrast contract
 
@@ -239,7 +240,7 @@ comes from semantic state recipes, not decorative palettes or effects.
 ### Plasma material implementation
 
 `design/plasma-semantic-contract.json` schema 4 binds every one of the 43
-widget families to the canonical v6 palette. Plasma source generation no longer
+widget families to the canonical Forge Identity palette. Plasma source generation no longer
 uses the temporary phase 1 `assetGenerationPalette` freeze.
 
 - Canvas, sunken, surface, raised, and overlay recipes express depth tonally.
@@ -267,8 +268,8 @@ and close use the same rounded 1.7 px geometry across all eight Aurorae button
 states. Close turns red only for hover and press. No decoration uses a glow or
 SVG filter.
 
-The scalable icon inventory remains 185 files, the Fedora KDE runtime fixture
-remains 77 names, and the 16/22 px physical optical inventory remains 196
+The scalable icon inventory contains 193 files, the Fedora KDE runtime fixture
+contains 77 names, and the 16/22 px physical optical inventory contains 212
 files. A ranked set of 56 panel, System Settings, Dolphin, and session icons
 receives the Phase 6 optical review. Fifteen formerly generic fallback-derived
 glyphs now have simpler role-specific masters; semantic distinction takes
@@ -281,6 +282,5 @@ sequences, and 80 ms frame duration. Their source outline is normalized to
 small hotspot or semantic detail. The qualified sound tree is byte-frozen
 because no Phase 6 interaction exposed a mismatch.
 
-The Aurorae, icon, and cursor sheets under
-`docs/evidence/v6/edge-polish/` are deterministic source evidence only. They
-do not qualify a composed KWin decoration or live cursor scaling.
+The Aurorae, icon, and cursor sheets are deterministic source evidence only.
+They do not qualify a composed KWin decoration or live cursor scaling.

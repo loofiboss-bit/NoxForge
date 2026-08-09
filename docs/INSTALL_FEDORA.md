@@ -1,82 +1,41 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge v6 uses the RPM package as the primary installation authority. Enable
-the Fedora 44 COPR and install the package:
+NoxForge 8 is a scriptlet-free Fedora 44 package for the complete-system
+journey. It provides the native Qt style, system doctor, and all system theme
+components; SDDM remains a separate, explicitly selectable system component.
 
 ```bash
-sudo dnf copr enable loofitheboss/noxforge
 sudo dnf install noxforge
-```
-
-To build the exact package locally from a clean source archive instead:
-
-```bash
-python3 scripts/build.py
-rpmbuild -ba \
-  --define "_sourcedir $PWD/dist" \
-  packaging/noxforge.spec
-```
-
-The NoxForge RPM owns only its theme, plugin, diagnostic, and documentation
-files and has no installation scriptlets. On the supported Fedora KDE target,
-DNF reuses the installed Plasma, KWin, Qt, and SDDM packages. NoxForge does not
-select a theme, change a panel, activate SDDM, clear caches, or restart Plasma.
-
-## Select the theme
-
-Open **System Settings → Colors & Themes → Global Theme**, select NoxForge and
-review the components before applying. Keep panel-layout replacement disabled
-unless you explicitly want the optional compact NoxForge layout.
-
-Select the NoxForge application style, window decoration, icons, cursors,
-colors, task switcher, splash screen and sounds individually if your Global
-Theme selection does not include a component. SDDM is intentionally separate;
-test it in a recoverable VM before selecting it as the login-screen theme.
-
-## Verify
-
-```bash
 rpm -V noxforge
-noxforge-doctor
+noxforge-doctor --json
 ```
 
-The doctor is read-only and exits non-zero when components are absent or mixed.
+Package installation does not apply NoxForge, change a panel, edit KDE
+configuration, restart Plasma, or activate SDDM. Select components explicitly
+in System Settings and keep panel-layout replacement disabled unless you have
+deliberately chosen it.
 
-NoxForge motion follows KDE's configured animation duration. A zero duration
-settles every native Qt and supported QML state immediately while preserving
-focus, selection, busy, success, and error indicators.
+## Build from the distributed source archive
 
-## Upgrade
+```bash
+tar -xJf noxforge-8.0.0-source.tar.xz
+cd NoxForge-8.0.0
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+DESTDIR="$PWD/stage" cmake --install build
+```
 
-Upgrade from COPR with:
+The same source archive is the RPM Source0 input. Its archive root and checksum
+are recorded in `SHA256SUMS`.
+
+## Upgrade, rollback, and removal
 
 ```bash
 sudo dnf upgrade --refresh noxforge
-rpm -V noxforge
-noxforge-doctor
-```
-
-## Roll back and remove
-
-Before downgrading or removing NoxForge, select a known-good non-NoxForge
-Global Theme and any components you selected separately. Restore a known-good
-SDDM theme first if you explicitly activated NoxForge SDDM.
-
-For a later NoxForge update, downgrade to an older build retained in the
-enabled repository:
-
-```bash
 sudo dnf downgrade --refresh noxforge
-```
-
-NoxForge v2 did not have an RPM channel. For all package-managed releases,
-explicitly select another theme before removal. Disable dependency cleanup so
-a minimal or manually assembled KDE installation cannot lose desktop packages
-that DNF first encountered as NoxForge dependencies:
-
-```bash
 sudo dnf remove --no-autoremove noxforge
 ```
 
-See [Troubleshooting](TROUBLESHOOTING.md) for mixed source/RPM installations
-and safe diagnostic collection.
+Before rollback or removal, select a known-good Global Theme and restore a
+known-good SDDM theme if you explicitly activated one. `rpm -V` and the doctor
+are read-only checks; no scriptlet mutates user settings.

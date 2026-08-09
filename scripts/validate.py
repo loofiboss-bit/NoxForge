@@ -1999,6 +1999,58 @@ def validate_tooling(version: str) -> None:
         raise ValidationError("v7 P0 release cases must be closed by composed evidence")
 
 
+def validate_tooling(version: str) -> None:
+    """Validate active V8 tooling without reinterpreting historical evidence."""
+    required = (
+        ROOT / "scripts/build.py",
+        ROOT / "scripts/build_store_packages.py",
+        ROOT / "scripts/check_store_kpackages.py",
+        ROOT / "scripts/validate_store_packages.py",
+        ROOT / "scripts/validate_release_manifest.py",
+        ROOT / "scripts/release-check.py",
+        ROOT / "scripts/sync_version.py",
+        ROOT / "scripts/run_python_tests.py",
+        ROOT / "scripts/install.sh",
+        ROOT / "scripts/uninstall.sh",
+        ROOT / "scripts/install-system.sh",
+        ROOT / "scripts/uninstall-system.sh",
+        ROOT / "docs/QUICKSTART.md",
+        ROOT / "docs/INSTALL_FEDORA.md",
+        ROOT / "docs/INSTALL_PORTABLE.md",
+        ROOT / "docs/INSTALL_ARCH.md",
+        ROOT / "docs/DOCTOR_MANUAL.md",
+        ROOT / "docs/TROUBLESHOOTING.md",
+        ROOT / "docs/MANUAL_TESTING.md",
+        ROOT / "docs/NOXFORGE_V8_PLAN.md",
+        ROOT / "distribution/release-manifest.json",
+        ROOT / "distribution/kde-store/package-manifest.json",
+        ROOT / "media/manifest.json",
+        ROOT / "packaging/noxforge.spec",
+        ROOT / "packaging/arch/PKGBUILD",
+        ROOT / "packaging/arch/.SRCINFO",
+        ROOT / "tools/noxforge-doctor",
+    )
+    missing = [path.relative_to(ROOT) for path in required if not path.is_file()]
+    if missing:
+        raise ValidationError(f"missing active V8 tooling or documentation: {missing}")
+    issue_templates = sorted((ROOT / ".github/ISSUE_TEMPLATE").glob("*.yml"))
+    if len(issue_templates) != 4:
+        raise ValidationError("V8 requires exactly four focused issue templates")
+    install_text = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")
+    uninstall_text = (ROOT / "scripts/uninstall.sh").read_text(encoding="utf-8")
+    for option in ("--user", "--dry-run"):
+        if option not in install_text or option not in uninstall_text:
+            raise ValidationError(f"install and uninstall must support {option}")
+    for forbidden in ("sudo", "kwriteconfig", "qdbus", "systemctl", "plasmashell --replace", "plasma-apply-"):
+        if forbidden in install_text or forbidden in uninstall_text:
+            raise ValidationError(f"portable tooling must not execute live-setting command {forbidden!r}")
+    manifest = load_json(ROOT / "distribution/release-manifest.json")
+    if manifest.get("release", {}).get("version") != version:
+        raise ValidationError("release manifest version drift")
+    if manifest.get("evidence", {}).get("policy", {}).get("offscreenIsLiveEvidence") is not False:
+        raise ValidationError("V8 evidence policy must keep offscreen separate from live")
+
+
 def validate_generated_sources(version: str) -> None:
     scripts = [
         "scripts/sync_version.py",
@@ -2052,6 +2104,31 @@ def validate_generated_sources(version: str) -> None:
     )
     if raster.returncode != 0:
         raise ValidationError(f"Plasma raster matrix failed: {(raster.stderr or raster.stdout).strip()}")
+
+
+def validate_generated_sources(version: str) -> None:
+    scripts = [
+        ("scripts/sync_version.py", "--check"),
+        ("scripts/generate_design_system.py", "--check"),
+        ("scripts/generate_plasma_svgs.py", "--check"),
+        ("scripts/generate_visual_assets.py", "--check"),
+        ("scripts/generate_cursors.py", "--check"),
+        ("scripts/generate_sound_theme.py", "--check"),
+        ("scripts/render_wallpaper.py", "--check"),
+        ("scripts/check_plasma_rasters.py",),
+        ("scripts/validate_release_manifest.py",),
+    ]
+    for command in scripts:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / command[0]), *command[1:]],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            detail = (result.stderr or result.stdout).strip()
+            raise ValidationError(f"generated source drift in {command[0]}: {detail}")
 
 
 def validate_json_and_xml() -> None:

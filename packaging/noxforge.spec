@@ -1,17 +1,17 @@
-%global upstream_version 7.0.0
+%global upstream_version 8.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        7.0.0
+Version:        8.0.0
 Release:        1%{?dist}
-Summary:        Kinetic Precision global theme for KDE Plasma 6
+Summary:        Forge Identity KDE Plasma components
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
-Source0:        %{url}/releases/download/v%{upstream_version}/noxforge-%{upstream_version}.tar.xz
+Source0:        %{url}/releases/download/v%{upstream_version}/noxforge-%{upstream_version}-source.tar.xz
 
 BuildRequires:  cmake >= 3.24
 BuildRequires:  gcc-c++
@@ -24,13 +24,16 @@ Requires:       kwin >= 6.7
 Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
-Requires:       sddm
+Recommends:     sddm
 
 %description
-NoxForge is an original complete Global Theme for Fedora KDE. It includes a
-Plasma Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration,
-KWin switcher, icons, cursors, sounds, wallpaper, a native Qt 6 style plugin,
-and an SDDM theme. Package installation does not apply or activate the theme.
+NoxForge Forge Identity is an MIT-licensed collection of separately installable
+KDE Plasma components for Fedora KDE. The package contains a Plasma
+Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
+switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6
+style plugin, and an SDDM theme. Store and portable editions use Breeze app
+controls; this system package provides the optional native style integration.
+Package installation does not apply or activate the theme.
 
 %prep
 %autosetup -n NoxForge-%{upstream_version}
@@ -52,6 +55,7 @@ and an SDDM theme. Package installation does not apply or activate the theme.
 %{_mandir}/man1/noxforge-doctor.1*
 %{_qt6_plugindir}/styles/libnoxforge6.so
 %{_datadir}/noxforge/VERSION
+%{_datadir}/noxforge/release-manifest.json
 %{_datadir}/color-schemes/NoxForgeDark.colors
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
@@ -61,9 +65,14 @@ and an SDDM theme. Package installation does not apply or activate the theme.
 %{_datadir}/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/kwin/tabbox/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/wallpapers/NoxForge/
+%{_datadir}/wallpapers/NoxForge-Quiet/
+%{_datadir}/wallpapers/NoxForge-Ultrawide/
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Sun Aug 09 2026 Loofi <noreply@example.invalid> - 8.0.0-1
+- Release NoxForge v8 Forge Identity with manifest-driven Store and portable components
+
 * Sun Aug 02 2026 Loofi <noreply@example.invalid> - 7.0.0-1
 - Release NoxForge v7 Operational Precision with composed Wayland qualification
 

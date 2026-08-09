@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "release": "8.0.0",
+  "session": {
+    "targetViewport": "2560x1440",
+    "scale": 1.0,
+    "testUser": "neutral disposable user",
+    "wallpaper": "NoxForge Forge",
+    "panel": "single bottom panel",
+    "status": "representative-retained; fresh 2560x1440 V8 live capture pending",
+    "privacy": "No personal data is intentionally present"
+  },
+  "provenancePolicy": {
+    "live": "Captured from an isolated Plasma session",
+    "offscreen": "Rendered without a live compositor",
+    "generated": "Produced by a deterministic asset generator",
+    "composited": "Derived from authentic source material and explicitly labelled"
+  },
+  "captures": [
+    {"id": "desktop", "path": "media/v8/desktop-baseline.png", "surface": "desktop", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
+    {"id": "dolphin-icons", "path": "media/v8/dolphin-maximized-100.png", "surface": "Dolphin and icons", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
+    {"id": "launcher", "path": "media/v8/plasma-launcher-blur-enabled-100.png", "surface": "launcher/panel/tray", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
+    {"id": "system-settings", "path": "media/v8/systemsettings-maximized-100.png", "surface": "System Settings and Qt", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
+    {"id": "aurorae-tabbox", "path": "media/v8/tabbox-many-100.png", "surface": "Aurorae and TabBox", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
+    {"id": "sddm-session", "path": "media/v8/sddm-test-mode-100.png", "surface": "SDDM/logout", "provenance": "offscreen-v7-retained", "sourceDimensions": "1920x1080"}
+  ],
+  "derivatives": {
+    "storeIcon": {"path": "media/store-icon.png", "dimensions": "400x400", "provenance": "generated"},
+    "storeHero": {"path": "media/store-hero.png", "dimensions": "1280x640", "provenance": "composited"},
+    "githubSocialPreview": {"path": "media/github-social-preview.png", "dimensions": "1280x640", "provenance": "composited"},
+    "globalThemePreview": {"path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/preview.png", "dimensions": "480x380", "provenance": "generated"},
+    "globalThemeFullscreenPreview": {"path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png", "dimensions": "960x540", "provenance": "generated"}
+  }
+}

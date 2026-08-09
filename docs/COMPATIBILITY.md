@@ -1,10 +1,10 @@
-# Plasma 6 compatibility record
+# NoxForge 8 compatibility
 
-Verified structurally on 2026-07-30 against Fedora KDE 44: Plasma/KWin 6.7.3,
-KDE Frameworks 6.28 and Qt 6.11.1. Plasma 5, Qt 5 and legacy metadata are not
-supported.
+The qualified compatibility target is Fedora 44 KDE and the verified Arch
+Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
+Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 
-## Package contracts
+## System package roots
 
 | Component | Installed path |
 | --- | --- |
@@ -16,48 +16,15 @@ supported.
 | Icons | `/usr/share/icons/NoxForge/` |
 | Cursors | `/usr/share/icons/NoxForge-Cursors/` |
 | Sounds | `/usr/share/sounds/NoxForge/` |
-| Wallpaper | `/usr/share/wallpapers/NoxForge/` |
+| Wallpapers | `/usr/share/wallpapers/NoxForge{,-Quiet,-Ultrawide}/` |
 | Qt style plugin | `/usr/lib64/qt6/plugins/styles/libnoxforge6.so` |
-| SDDM | `/usr/share/sddm/themes/NoxForge/` |
+| SDDM (optional) | `/usr/share/sddm/themes/NoxForge/` |
 | Doctor | `/usr/bin/noxforge-doctor` |
 
-The Look-and-Feel package declares `Plasma/LookAndFeel`; the task switcher
-declares `KWin/WindowSwitcher`. Packages contain no symlinks. The icon theme
-inherits only `hicolor`, and the Plasma Style declares no explicit fallback.
+Store and portable packages use Breeze application controls and install
+components separately. The complete-system edition adds the native Qt style;
+the doctor reports a portable installation as `ok` without Qt or SDDM.
 
-The Qt style is a native `QCommonStyle`/`QStylePlugin` implementation with the
-public key `NoxForge`. It does not link against Breeze or Kvantum.
-
-V6 automated qualification passes all documented contrast pairs, non-color
-state indicators, system-font behavior, keyboard structure, RTL,
-100/125/140/200 percent rendering, zero-duration reduced motion, ASan/UBSan,
-and complete-tree performance within ten percent of the reviewed v5 baseline.
-The native 500-cycle stress probe has no failed state, retained widget, active
-idle timer, or out-of-budget heap growth.
-
-V6 isolated Wayland qualification passes Plasma theme application, panel
-preservation at every edge, two-output placement, shell artwork, required panel
-icons, and real Qt composition at scale 1.0 and 1.4. Hardware blur, injected
-keyboard/pointer motion, Aurorae and Alt+Tab interaction, animation-speed
-variants, live high contrast and RTL, cursor scaling, production splash
-integration, and real SDDM authentication/power remain `blocked` in
-`docs/evidence/v6/qualification.json`. Completed v5 and v3 live
-evidence remains historical and is not promoted to v6.
-
-The Fedora RPM and CMake staging contract own system paths and contain no
-installation scriptlets. Installation, upgrade and removal do not apply or
-activate NoxForge and do not edit KDE or SDDM configuration. The legacy
-user-local source installer remains a developer/migration fallback rather than
-a competing production path.
-
-The Aurorae generation contract is exercised with Python 3.12 and Fedora 44's
-Python 3.14. Its `.svgz` files use a canonical gzip stream with a fixed
-timestamp, empty filename, maximum compression and platform-neutral OS header,
-so committed assets are byte-identical across these Python environments.
-
-## Sources
-
-- <https://develop.kde.org/docs/plasma/theme/theme-porting-to-plasma6/>
-- <https://develop.kde.org/docs/plasma/>
-- <https://doc.qt.io/QT-6/qstyleplugin.html>
-- <https://doc.qt.io/qt-6/style-reference.html>
+KPackage metadata is at the Global Theme and Plasma Style archive roots, and
+all packages reject symlinks. Installation, upgrade, and removal do not apply
+NoxForge or edit KDE/SDDM configuration.

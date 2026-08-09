@@ -1,0 +1,10 @@
+{
+  "KPlugin": {
+    "Authors": [{"Email": "loofi@loofi.com", "Name": "Loofi"}],
+    "Description": "Original panoramic angular graphite NoxForge Ultrawide wallpaper",
+    "Id": "NoxForge-Ultrawide",
+    "License": "MIT",
+    "Name": "NoxForge Ultrawide",
+    "Version": "8.0.0"
+  }
+}

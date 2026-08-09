@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "July 2026" "NoxForge 7.0.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "August 2026" "NoxForge 8.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -13,6 +13,12 @@ safely readable active theme names, icon inheritance and critical resolution,
 and actual per-output KScreen/KWin scales when available.
 It does not write files, apply a theme, clear caches, restart services, or
 request privileges.
+.PP
+The JSON report contains an BeditionR object with a stable BkindR
+(BcomponentR, BportableR, Bcomplete-systemR, BmixedR, or
+BabsentR), status, capabilities, shadowed copies, wallpaper variants, and
+BmissingMandatoryR components. Qt style and SDDM are optional for portable
+and component editions.
 .SH OPTIONS
 .TP
 .B \-\-json

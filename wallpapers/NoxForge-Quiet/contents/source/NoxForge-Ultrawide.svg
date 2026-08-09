@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3440" height="1440" viewBox="0 0 3440 1440">
+  <title>NoxForge Quiet Precision ultrawide forged planes</title>
+  <defs>
+    <linearGradient id="canvas-wide" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151D23"/>
+      <stop offset="0.38" stop-color="#0E1318"/>
+      <stop offset="1" stop-color="#090C0F"/>
+    </linearGradient>
+    <linearGradient id="plate-wide" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#222D35"/>
+      <stop offset="1" stop-color="#151D23"/>
+    </linearGradient>
+  </defs>
+  <rect width="3440" height="1440" fill="url(#canvas-wide)"/>
+
+  <!-- Independent panoramic geometry keeps the centre free instead of stretching 16:9. -->
+  <path d="M0 0H480L790 486L638 602L0 238Z" fill="#1B252C"/>
+  <path d="M0 244L622 596L1010 520L1204 652L778 758L0 452Z" fill="url(#plate-wide)"/>
+  <path d="M0 464L742 750L1118 1138L916 1206L612 910L0 708Z" fill="#151D23"/>
+  <path d="M0 720L594 912L1070 1440H716L456 1134L0 1018Z" fill="#1B252C"/>
+  <path d="M0 1020L436 1138L680 1440H0Z" fill="#10171C"/>
+
+  <path d="M470 0H486L800 488L782 504Z" fill="#A3FF47" opacity="0.30"/>
+  <path d="M782 504L804 492L982 520L960 528Z" fill="#A3FF47" opacity="0.20"/>
+
+  <!-- A low-contrast far-edge counterweight balances the panorama without
+       occupying the quiet 1200–2860 workspace. -->
+  <path d="M3440 350L3260 466L3322 532L3440 460Z" fill="#151D23"/>
+  <path d="M3440 492L3312 566L3160 536L3040 626L3102 672L3334 634L3440 578Z"
+        fill="#1B252C" opacity="0.30"/>
+  <path d="M3440 646L3328 698L3200 674L3120 734L3172 770L3348 754L3440 712Z"
+        fill="#10171C" opacity="0.30"/>
+
+  <path d="M244 734L364 770" fill="none" stroke="#22D3EE" stroke-width="3" opacity="0.32"/>
+  <path d="M728 980L798 1044" fill="none" stroke="#A78BFA" stroke-width="3" opacity="0.20"/>
+  <path d="M3210 606L3268 590" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.20"/>
+
+  <g fill="none" stroke="#3C4B53" stroke-width="2" opacity="0.34">
+    <path d="M0 242L622 594L1010 518"/>
+    <path d="M0 462L742 748L1120 1138"/>
+    <path d="M0 718L594 910L1072 1440"/>
+    <path d="M3440 348L3258 466L3322 534"/>
+  </g>
+</svg>

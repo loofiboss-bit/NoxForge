@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
+  <title>NoxForge Quiet Precision 16:9 forged planes</title>
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151D23"/>
+      <stop offset="0.42" stop-color="#0E1318"/>
+      <stop offset="1" stop-color="#090C0F"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#222D35"/>
+      <stop offset="1" stop-color="#151D23"/>
+    </linearGradient>
+  </defs>
+  <rect width="2560" height="1440" fill="url(#canvas)"/>
+
+  <!-- Original left-anchored forged planes preserve a quiet central/right workspace. -->
+  <path d="M0 0H438L720 506L588 612L0 222Z" fill="#1B252C"/>
+  <path d="M0 226L572 606L846 526L1018 668L716 760L0 432Z" fill="url(#plate)"/>
+  <path d="M0 438L676 750L966 1128L790 1196L548 902L0 696Z" fill="#151D23"/>
+  <path d="M0 710L530 908L946 1440H630L408 1128L0 1012Z" fill="#1B252C"/>
+  <path d="M0 1014L396 1132L604 1440H0Z" fill="#10171C"/>
+
+  <!-- One narrow energy seam; lime never becomes an ambient slab. -->
+  <path d="M432 0H448L734 508L716 522Z" fill="#A3FF47" opacity="0.30"/>
+  <path d="M716 522L736 512L854 536L836 542Z" fill="#A3FF47" opacity="0.20"/>
+
+  <!-- Subordinate detail is deliberately visible only on close inspection. -->
+  <path d="M218 728L330 766" fill="none" stroke="#22D3EE" stroke-width="3" opacity="0.34"/>
+  <path d="M668 966L734 1030" fill="none" stroke="#A78BFA" stroke-width="3" opacity="0.22"/>
+  <path d="M926 612L966 600" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.26"/>
+
+  <g fill="none" stroke="#3C4B53" stroke-width="2" opacity="0.36">
+    <path d="M0 224L572 604L846 524"/>
+    <path d="M0 436L676 748L968 1128"/>
+    <path d="M0 708L530 906L948 1440"/>
+  </g>
+</svg>

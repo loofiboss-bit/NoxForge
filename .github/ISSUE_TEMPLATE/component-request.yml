@@ -1,0 +1,25 @@
+name: Component request
+description: Request a focused KDE component or wallpaper variant
+title: "[component] "
+labels: ["component-request"]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component or wallpaper ID
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: User journey and use case
+      description: Explain whether this is Store, portable, or complete-system scope.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries
+      options:
+        - label: I understand components install separately and do not imply automatic activation.
+          required: true

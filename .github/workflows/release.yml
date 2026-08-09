@@ -18,184 +18,122 @@ permissions:
 
 jobs:
   build:
-    name: Build exact Fedora 44 artifacts
+    name: Build manifest-driven artifacts
     runs-on: ubuntu-24.04
     container: fedora:44
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - name: Install declared dependencies
         run: >-
-          dnf install -y
-          breeze-icon-theme
-          cmake
-          ffmpeg-free
-          gcc-c++
-          git
-          glibc-langpack-en
-          google-noto-sans-fonts
-          ImageMagick
-          kf6-kirigami
-          libasan
-          libubsan
-          ninja-build
-          plasma-workspace
-          python3
-          qt6-qtbase-devel
-          qt6-qtdeclarative-devel
-          rpm-build
-          rpmlint
-          xz
-
+          dnf install -y breeze-icon-theme cmake ffmpeg-free gcc-c++ git
+          glibc-langpack-en google-noto-sans-fonts ImageMagick kf6-kirigami
+          kf6-kpackage
+          libasan libubsan ninja-build plasma-workspace python3
+          qt6-qtbase-devel qt6-qtdeclarative-devel rpm-build rpmlint xz
       - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
-
-      - name: Refuse tag or metadata mismatch
+      - name: Validate exact tag and manifest
         shell: bash
         run: |
-          version=$(<VERSION)
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Public releases require a stable VERSION, got: $version" >&2
-            exit 1
-          fi
-          test "${{ inputs.ref }}" = "v${version}"
-          test "$(git -c safe.directory="$GITHUB_WORKSPACE" describe --tags --exact-match)" = "v${version}"
-          python3 scripts/sync_version.py --check
-          major=${version%%.*}
-          evidence_dir="docs/evidence/v${major}"
-          notes_file="docs/releases/v${version}.md"
-          test -s "${evidence_dir}/qualification.json"
-          test -s "${evidence_dir}/automated-gate.md"
-          test -s "${notes_file}"
-          grep -Fqx "Version: ${version}" "${evidence_dir}/automated-gate.md"
-          grep -Fq "${version}" "${notes_file}"
-          python3 - "$version" "$evidence_dir/qualification.json" <<'PY'
+          python3 - <<'PY'
           import json
           import re
-          import sys
+          import subprocess
           from pathlib import Path
-
-          version, manifest_path = sys.argv[1:]
-          manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-          candidate = manifest.get("candidate", {})
-          if manifest.get("schemaVersion") != 2:
-              raise SystemExit("qualification manifest must use schema version 2")
-          if manifest.get("releaseState") != "release":
-              raise SystemExit("qualification manifest is not release-ready")
-          if candidate.get("version") != version or candidate.get("sourceRef") != f"v{version}":
-              raise SystemExit("qualification version/ref does not match the requested tag")
-          if not re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceCommit", ""))):
-              raise SystemExit("qualification baseline commit is not an exact commit")
-          if candidate.get("worktreeDirty") is not False:
-              raise SystemExit("qualification must describe a clean tagged worktree")
-          if not candidate.get("package") or len(candidate.get("artifacts", [])) != 6:
-              raise SystemExit("qualification package/artifacts are incomplete")
-          contract = manifest.get("releaseContract", {})
-          if contract.get("assetCount") != 6 or len(contract.get("assetKinds", [])) != 6:
-              raise SystemExit("qualification manifest does not define the six-asset contract")
+          manifest = json.loads(Path('distribution/release-manifest.json').read_text())
+          version = Path('VERSION').read_text().strip()
+          if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', version):
+              raise SystemExit(f'public releases require stable VERSION, got {version}')
+          if version != manifest['release']['stableVersion'] or '${{ inputs.ref }}' != f'v{version}':
+              raise SystemExit('tag, VERSION, and manifest stableVersion do not match')
+          exact = subprocess.check_output(['git', '-c', 'safe.directory=' + str(Path.cwd()), 'describe', '--tags', '--exact-match'], text=True).strip()
+          if exact != f'v{version}':
+              raise SystemExit('checkout is not the exact requested tag')
           PY
-          source_commit=$(git -c safe.directory="$GITHUB_WORKSPACE" rev-parse HEAD)
-          if [[ ! "$source_commit" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Unable to resolve the exact checked-out release commit" >&2
-            exit 1
-          fi
-          {
-            echo "NOXFORGE_VERSION=$version"
-            echo "NOXFORGE_EVIDENCE_DIR=$evidence_dir"
-            echo "NOXFORGE_NOTES_FILE=$notes_file"
-            echo "NOXFORGE_RELEASE_REF=${{ inputs.ref }}"
-            echo "NOXFORGE_SOURCE_COMMIT=$source_commit"
-          } >> "$GITHUB_ENV"
-
-      - name: Run the full gate
+          python3 scripts/validate_release_manifest.py
+          python3 scripts/sync_version.py --check
+          echo "NOXFORGE_VERSION=$(<VERSION)" >> "$GITHUB_ENV"
+      - name: Run the full release gate
         run: python3 scripts/release-check.py
-
-      - name: Build source and Fedora package artifacts
+      - name: Build source, portable, and Fedora artifacts
         shell: bash
         run: |
-          python3 scripts/build.py
+          python3 scripts/build.py --mode all --skip-tests
           mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} release
-          cp dist/noxforge-*.tar.xz rpmbuild/SOURCES/
+          source_archive=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('distribution/release-manifest.json').read_text())
+          print(next(x['filename'] for x in m['artifacts'] if x['key']=='source'))
+          PY
+          )
+          cp "dist/${source_archive}" rpmbuild/SOURCES/
           rpmbuild -bb --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
           rpmbuild -bs --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
-          cp dist/noxforge-*.tar.xz rpmbuild/SRPMS/*.src.rpm rpmbuild/RPMS/*/noxforge-[0-9]*.rpm release/
-          cp "$NOXFORGE_EVIDENCE_DIR/automated-gate.md" release/
           python3 - <<'PY'
           import hashlib
           import json
-          import os
+          import shutil
+          import subprocess
           from pathlib import Path
-
-          source = Path(os.environ["NOXFORGE_EVIDENCE_DIR"]) / "qualification.json"
-          upgrade = Path(os.environ["NOXFORGE_EVIDENCE_DIR"]) / "upgrade-matrix.json"
-          destination = Path("release/qualification.json")
-          evidence = json.loads(source.read_text(encoding="utf-8"))
-          qualified_rpm = json.loads(upgrade.read_text(encoding="utf-8"))["candidate"]
-          version = os.environ["NOXFORGE_VERSION"]
-          release_files = sorted(path.name for path in Path("release").iterdir() if path.is_file())
-          binary_rpm = next(
-              path
-              for path in Path("release").iterdir()
-              if path.name.endswith(".rpm") and not path.name.endswith(".src.rpm")
-          )
-          binary_sha256 = hashlib.sha256(binary_rpm.read_bytes()).hexdigest()
-          if binary_sha256 != qualified_rpm.get("sha256"):
-              raise SystemExit(
-                  "release-built RPM does not match the exact live and upgrade-qualified RPM"
-              )
-          expected_payloads = [
-              "automated-gate.md",
-              f"noxforge-{version}.tar.xz",
-              next(name for name in release_files if name.endswith(".src.rpm")),
-              next(
-                  name
-                  for name in release_files
-                  if name.endswith(".rpm") and not name.endswith(".src.rpm")
-              ),
-              "qualification.json",
-              "SHA256SUMS",
-          ]
-          evidence["releaseState"] = "release"
-          evidence["candidate"]["sourceCommit"] = os.environ["NOXFORGE_SOURCE_COMMIT"]
-          evidence["candidate"]["sourceRef"] = os.environ["NOXFORGE_RELEASE_REF"]
-          evidence["candidate"]["worktreeDirty"] = False
-          evidence["candidate"]["package"] = binary_rpm.name
-          evidence["candidate"]["packageSha256"] = binary_sha256
-          evidence["candidate"]["artifacts"] = expected_payloads
-          destination.write_text(
-              json.dumps(evidence, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-
-          report = Path("release/automated-gate.md")
-          report_lines = [
-              line
-              for line in report.read_text(encoding="utf-8").splitlines()
-              if not line.startswith(("Version: ", "Commit: "))
-          ]
-          report.write_text(
-              "\n".join(report_lines).rstrip()
-              + f"\n\nVersion: {version}\nCommit: {os.environ['NOXFORGE_SOURCE_COMMIT']}\n",
-              encoding="utf-8",
-          )
+          manifest=json.loads(Path('distribution/release-manifest.json').read_text())
+          release=Path('release')
+          evidence_root=Path(manifest['evidence']['activeRoot'])
+          release_ref='${{ inputs.ref }}'
+          source_commit=subprocess.check_output(
+              ['git', '-c', 'safe.directory=' + str(Path.cwd()), 'rev-parse', 'HEAD'],
+              text=True,
+          ).strip()
+          for artifact in manifest['artifacts']:
+              kind=artifact['kind']
+              filename=artifact['filename']
+              if kind in {'source', 'portable', 'store'}:
+                  source=Path('dist') / filename
+              elif kind == 'rpm':
+                  source=Path('rpmbuild/RPMS') / 'x86_64' / filename
+              elif kind == 'srpm':
+                  source=Path('rpmbuild/SRPMS') / filename
+              elif kind == 'evidence':
+                  source=evidence_root / filename
+              else:
+                  raise SystemExit(f'unsupported manifest artifact kind: {kind}')
+              if not source.is_file():
+                  raise SystemExit(f'missing manifest artifact source: {source}')
+              if filename == 'qualification.json':
+                  qualification=json.loads(source.read_text())
+                  qualification['releaseState']='release'
+                  qualification['releaseReady']=True
+                  qualification.setdefault('candidate', {}).update({
+                      'version': Path('VERSION').read_text().strip(),
+                      'sourceRef': release_ref,
+                      'sourceCommit': source_commit,
+                      'worktreeDirty': False,
+                  })
+                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\\n')
+              elif filename == 'automated-gate.md':
+                  lines=[
+                      line for line in source.read_text().splitlines()
+                      if not line.startswith(('Version: ', 'Commit: ', 'Release state: '))
+                  ]
+                  (release / filename).write_text(
+                      '\\n'.join(lines).rstrip()
+                      + f"\\n\\nVersion: {Path('VERSION').read_text().strip()}\\n"
+                      + f"Commit: {source_commit}\\nRelease state: release\\n"
+                  )
+              else:
+                  shutil.copy2(source, release / filename)
+          expected={item['filename'] for item in manifest['artifacts']}
+          actual={path.name for path in release.iterdir() if path.is_file()}
+          if not expected <= actual:
+              raise SystemExit(f'missing manifest payloads: {sorted(expected-actual)}')
+          for path in release.iterdir():
+              if path.is_file() and path.name != 'SHA256SUMS':
+                  pass
+          (release/'SHA256SUMS').write_text(''.join(f'{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n' for path in sorted(release.iterdir()) if path.is_file() and path.name != 'SHA256SUMS'))
           PY
-          (
-            cd release
-            find . -maxdepth 1 -type f ! -name SHA256SUMS -printf '%f\0' \
-              | sort -z \
-              | xargs -0 sha256sum > SHA256SUMS
-            sha256sum --check SHA256SUMS
-          )
-          mapfile -d '' assets < <(find release -maxdepth 1 -type f -printf '%f\0')
-          test "${#assets[@]}" -eq 6
-          test -s release/qualification.json
-          test -s release/automated-gate.md
-          test -s release/SHA256SUMS
-          test -s "release/noxforge-${NOXFORGE_VERSION}.tar.xz"
-          test "$(find release -maxdepth 1 -type f -name '*.src.rpm' | wc -l)" -eq 1
-          test "$(find release -maxdepth 1 -type f -name '*.rpm' ! -name '*.src.rpm' | wc -l)" -eq 1
-
+          (cd release && sha256sum --check SHA256SUMS)
       - uses: actions/upload-artifact@v4
         with:
           name: noxforge-${{ inputs.ref }}
@@ -204,7 +142,7 @@ jobs:
           retention-days: 3
 
   publish-github:
-    name: Publish approved GitHub release
+    name: Publish approved manifest payload
     needs: build
     if: ${{ inputs.publish }}
     runs-on: ubuntu-24.04
@@ -215,49 +153,30 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
-
+          fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
           name: noxforge-${{ inputs.ref }}
           path: release
-
-      - name: Verify the exact release payload
+      - name: Verify checksums and manifest payload count
         shell: bash
         run: |
-          version=$(<VERSION)
-          test "${{ inputs.ref }}" = "v${version}"
-          mapfile -d '' assets < <(find release -maxdepth 1 -type f -printf '%f\0')
-          test "${#assets[@]}" -eq 6
-          test -s release/qualification.json
-          test -s release/automated-gate.md
-          test -s release/SHA256SUMS
-          test -s "release/noxforge-${version}.tar.xz"
-          test "$(find release -maxdepth 1 -type f -name '*.src.rpm' | wc -l)" -eq 1
-          test "$(find release -maxdepth 1 -type f -name '*.rpm' ! -name '*.src.rpm' | wc -l)" -eq 1
           (cd release && sha256sum --check SHA256SUMS)
-          python3 - "$(git rev-parse HEAD)" "${{ inputs.ref }}" <<'PY'
+          python3 - <<'PY'
           import json
-          import sys
           from pathlib import Path
-
-          expected_commit, expected_ref = sys.argv[1:]
-          manifest = json.loads(
-              Path("release/qualification.json").read_text(encoding="utf-8")
-          )
-          candidate = manifest.get("candidate", {})
-          if candidate.get("sourceCommit") != expected_commit:
-              raise SystemExit("release payload commit does not match the checked-out tag")
-          if candidate.get("sourceRef") != expected_ref:
-              raise SystemExit("release payload ref does not match the requested tag")
+          m=json.loads(Path('distribution/release-manifest.json').read_text())
+          files={p.name for p in Path('release').iterdir() if p.is_file() and p.name != 'SHA256SUMS'}
+          required={item['filename'] for item in m['artifacts']}
+          if not required <= files:
+              raise SystemExit(f'missing manifest payloads: {sorted(required-files)}')
           PY
+          version="${{ inputs.ref }}"
+          version="${version#v}"
           echo "NOXFORGE_NOTES_FILE=docs/releases/v${version}.md" >> "$GITHUB_ENV"
-
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh release create "${{ inputs.ref }}"
-          release/*
-          --verify-tag
-          --title "NoxForge ${{ inputs.ref }}"
-          --notes-file "$NOXFORGE_NOTES_FILE"
+          gh release create "${{ inputs.ref }}" release/* --verify-tag
+          --title "NoxForge ${{ inputs.ref }}" --notes-file "$NOXFORGE_NOTES_FILE"

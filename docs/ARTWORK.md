@@ -15,7 +15,7 @@ images. SDDM
 uses a deterministically dimmed 16:9 derivative, while its preview is captured
 from the real QML surface with mock runtime models.
 
-The Kinetic Precision N/F mark is authored as editable semantic and monochrome
+The Forge Identity N/F mark is authored as editable semantic and monochrome
 SVG masters with one continuous N-to-F geometry. A separate horizontal lockup
 uses vector paths rather than a bundled or forced font. Generated physical
 copies are committed for Splash, Logout, SDDM, and TabBox, and optical review
@@ -53,7 +53,7 @@ PCM/source contract but must never be used to overwrite the committed sound
 tree blindly. Duration and frequency signatures keep each of the ten semantic
 source sounds distinct.
 
-The reviewed v6 Phase 2 evidence is committed as four deterministic contact
+The reviewed V8 artwork evidence is committed as compact deterministic contact
 sheets and `docs/evidence/artwork-contact-sheets.json`. The manifest binds
 contract, source, coverage and sheet hashes; these are structural/offscreen
 artwork reviews and do not claim live Plasma or cursor interaction.

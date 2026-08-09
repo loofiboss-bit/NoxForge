@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "status": "pending",
+  "journeys": {
+    "fedora": "pending",
+    "arch": "pending",
+    "store": "passed-local-isolated-fixtures",
+    "portable": "passed-local-isolated-fixtures"
+  },
+  "candidate": null,
+  "reason": "External package lifecycle qualification requires the exact stable candidate archive."
+}
