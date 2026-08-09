@@ -1,24 +1,33 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index.
+This file is the canonical scope and release-gate index. The active authority is
+[`NOXFORGE_V8_PLAN.md`](NOXFORGE_V8_PLAN.md); the machine-readable companion is
+[`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Active release scope
 
-The active, phase-gated release authority is
-[`NOXFORGE_V7_PLAN.md`](NOXFORGE_V7_PLAN.md). NoxForge v7 Operational Precision
-corrects P0 Aurorae scaling and icon-resolution defects before reconciling
-application, shell, session, accessibility, diagnostics, and release evidence.
-It preserves the released Kinetic Precision identity and non-destructive
-installation policy.
+NoxForge 8.0.0 Forge Identity is implemented phase-by-phase from the verified
+v7.0.0 baseline. The current development line is `8.0.0-dev`; it is not a
+release, publication, host installation, or theme-activation authorization.
 
-All nine v7 phases are implemented. The mandatory P0/P1 input-capable composed
-matrix and disposable Fedora 44 package lifecycle are release gates; physical
-hardware, PAM, audio, and power limitations remain explicitly unclaimed.
-Publication and host activation still require explicit authorization and
-independent readback even after the local release gate passes.
+The phase gates cover deterministic component packaging, a manifest-driven
+portable edition, a complete system package, trimmed source/evidence, visual
+presentation and restrained polish, Fedora and Arch packaging, and final
+qualification. Unavailable physical cursor, sound-routing, PAM/login, power,
+and live-session checks remain `pending` or `blocked` and are never inferred
+from offscreen or CI evidence.
+
+Installation is user-local and reversible by default. No phase may apply a
+theme, change a panel, write active KDE settings, install SDDM, mutate a host,
+publish to an external service, or rewrite the v7 history without a separate
+explicit authorization.
 
 ## Historical release evidence
 
+- [`NOXFORGE_V7_PLAN.md`](NOXFORGE_V7_PLAN.md) records the completed v7 scope,
+  qualification boundary, and immutable `v7.0.0` lineage.
+- [`releases/v7.0.0.md`](releases/v7.0.0.md) records the historical v7 release
+  without changing its source or evidence.
 - [`NOXFORGE_V6_PLAN.md`](NOXFORGE_V6_PLAN.md) records the completed v6 scope,
   public release, COPR publication, and bounded live evidence.
 - [`NOXFORGE_V5_PLAN.md`](NOXFORGE_V5_PLAN.md) records the completed v5 scope,

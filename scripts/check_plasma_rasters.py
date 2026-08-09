@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-EVIDENCE_SERIES = "v6" if VERSION == "6.0.0" else "v7"
+EVIDENCE_SERIES = "v6" if VERSION == "6.0.0" else ("v7" if VERSION.startswith("7.") else "v8")
 EVIDENCE = ROOT / f"docs/evidence/{EVIDENCE_SERIES}/plasma-shell"
 MANIFEST = EVIDENCE / "atlas-manifest.json"
 SCALES = ((1.0, "100"), (1.25, "125"), (1.4, "140"), (2.0, "200"))

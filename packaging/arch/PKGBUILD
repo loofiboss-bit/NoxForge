@@ -1,0 +1,27 @@
+pkgname=noxforge
+pkgver=8.0.0
+pkgrel=1
+pkgdesc='Forge Identity Plasma components for Fedora and Arch KDE'
+arch=('x86_64')
+url='https://github.com/loofiboss-bit/NoxForge'
+license=('MIT')
+depends=('breeze-icons' 'kwin' 'plasma-workspace' 'qt6-base')
+makedepends=('cmake' 'ninja' 'python' 'qt6-declarative' 'kirigami')
+optdepends=('sddm: optional NoxForge login-screen component')
+source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v8.0.0/noxforge-8.0.0-source.tar.xz')
+sha256sums=('dc5bf0455b31f66e4d87096ee6b3912d0e5e4969781d0fd8b4b969570aa19f55')
+
+build() {
+  cmake -S "NoxForge-${pkgver}" -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+check() {
+  ctest --test-dir build --output-on-failure
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+}

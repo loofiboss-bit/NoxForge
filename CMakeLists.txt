@@ -334,6 +334,14 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge"
 )
 install(
+    DIRECTORY wallpapers/NoxForge-Quiet/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge-Quiet"
+)
+install(
+    DIRECTORY wallpapers/NoxForge-Ultrawide/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge-Ultrawide"
+)
+install(
     DIRECTORY sddm/NoxForge/
     DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/NoxForge"
 )
@@ -343,6 +351,10 @@ install(
 )
 install(
     FILES VERSION
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
+)
+install(
+    FILES distribution/release-manifest.json
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
 )
 install(

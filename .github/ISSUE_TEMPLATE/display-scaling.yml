@@ -1,0 +1,23 @@
+name: Display scaling issue
+description: Report a supported DPI or mixed-output problem
+title: "[scaling] "
+labels: ["display-scaling"]
+body:
+  - type: input
+    id: outputs
+    attributes:
+      label: Output scales
+      placeholder: 100% + 140%, panel edge, Wayland
+    validations:
+      required: true
+  - type: textarea
+    id: symptoms
+    attributes:
+      label: Observed and expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Attach a privacy-safe capture and doctor JSON when possible.

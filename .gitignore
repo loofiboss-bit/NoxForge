@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 *.tmp
 *~
+# Full live display matrices are temporary CI evidence. Keep only compact
+# manifests and curated representatives in the V8 tree.
+docs/evidence/v8/live/full-matrices/
+media/full-matrices/
+*.qualification-matrix.png

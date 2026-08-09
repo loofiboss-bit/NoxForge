@@ -1,0 +1,26 @@
+name: Installation or package issue
+description: Report a Store, portable, Fedora, or Arch package problem
+title: "[package] "
+labels: ["packaging"]
+body:
+  - type: dropdown
+    id: edition
+    attributes:
+      label: Edition
+      options:
+        - Store/component
+        - Portable
+        - Fedora complete-system
+        - Arch complete-system
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Commands and output
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Doctor JSON

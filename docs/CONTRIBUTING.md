@@ -1,7 +1,7 @@
 # Contributing to NoxForge
 
-NoxForge targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. Keep changes
-focused, preserve the Kinetic Precision design authority in `DESIGN.md`, and
+NoxForge 8 targets Fedora KDE 44, Arch Plasma/KWin 6.7+, Qt 6.11 and Wayland.
+Keep changes focused, preserve the Forge Identity design authority in `DESIGN.md`, and
 do not copy artwork from another theme.
 
 ## Required development tools
@@ -12,7 +12,7 @@ On Fedora 44:
 sudo dnf install cmake ffmpeg-free gcc-c++ git ImageMagick ninja-build \
   google-noto-sans-fonts libasan libubsan python3 qt6-qtbase-devel \
   qt6-qtdeclarative-devel \
-  rpm-build rpmlint xz
+  rpm-build rpmlint xz kf6-kpackage
 ```
 
 ## Release-integrity gate

@@ -17,11 +17,30 @@ SOURCES = {
     "16:9": ROOT / "wallpapers/NoxForge/contents/source/NoxForge.svg",
     "ultrawide": ROOT / "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg",
 }
+VARIANT_SOURCES = {
+    "NoxForge": {
+        "16:9": ROOT / "wallpapers/NoxForge/contents/source/NoxForge.svg",
+        "ultrawide": ROOT / "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg",
+    },
+    "NoxForge-Quiet": {
+        "16:9": ROOT / "wallpapers/NoxForge-Quiet/contents/source/NoxForge.svg",
+        "ultrawide": ROOT / "wallpapers/NoxForge-Quiet/contents/source/NoxForge-Ultrawide.svg",
+    },
+    "NoxForge-Ultrawide": {
+        "16:9": ROOT / "wallpapers/NoxForge-Ultrawide/contents/source/NoxForge.svg",
+        "ultrawide": ROOT / "wallpapers/NoxForge-Ultrawide/contents/source/NoxForge-Ultrawide.svg",
+    },
+}
 OUTPUTS = (
     ("16:9", 1920, 1080),
     ("16:9", 2560, 1440),
     ("16:9", 3840, 2160),
     ("ultrawide", 3440, 1440),
+)
+WALLPAPER_VARIANTS = (
+    ("NoxForge", False),
+    ("NoxForge-Quiet", True),
+    ("NoxForge-Ultrawide", False),
 )
 
 
@@ -33,6 +52,7 @@ def render(
     height: int,
     *,
     dim: bool = False,
+    indexed: bool = False,
 ) -> None:
     command = [
         magick,
@@ -42,10 +62,14 @@ def render(
     ]
     if dim:
         command += ["-fill", TOKENS["colors"]["background"], "-colorize", "58"]
+    if indexed:
+        command += ["-dither", "None", "-colors", "256"]
     command += [
         "-strip",
         "-define", "png:exclude-chunks=date,time",
-        f"PNG24:{destination}",
+        "-define", "png:compression-level=9",
+        "-define", "png:compression-filter=5",
+        f"{'PNG8' if indexed else 'PNG24'}:{destination}",
     ]
     subprocess.run(command, check=True)
 
@@ -63,9 +87,18 @@ def main() -> int:
         temp = Path(temporary)
         rendered: list[tuple[Path, Path]] = []
         for composition, width, height in OUTPUTS:
-            generated = temp / f"{width}x{height}.png"
-            render(magick, SOURCES[composition], generated, width, height)
-            rendered.append((generated, ROOT / f"wallpapers/NoxForge/contents/images/{width}x{height}.png"))
+            for variant, dim in WALLPAPER_VARIANTS:
+                generated = temp / f"{variant}-{width}x{height}.png"
+                render(
+                    magick,
+                    VARIANT_SOURCES[variant][composition],
+                    generated,
+                    width,
+                    height,
+                    dim=dim,
+                    indexed=True,
+                )
+                rendered.append((generated, ROOT / f"wallpapers/{variant}/contents/images/{width}x{height}.png"))
         sddm_background = temp / "sddm-background.png"
         render(magick, SOURCES["16:9"], sddm_background, 2560, 1440, dim=True)
         rendered.append((sddm_background, ROOT / "sddm/NoxForge/background.png"))

@@ -203,7 +203,7 @@ Rectangle {
             width: parent.width - 64
             spacing: tokens.standardSpacing + tokens.compactSpacing
             Text { text: qsTr("Sign in"); color: tokens.textPrimary; font.pixelSize: tokens.surfaceTitleSize; font.weight: tokens.headingWeight }
-            Text { text: qsTr("Kinetic Precision session"); color: tokens.textSecondary; font.pixelSize: tokens.metadataSize; Layout.bottomMargin: tokens.compactSpacing }
+            Text { text: qsTr("Forge Identity session"); color: tokens.textSecondary; font.pixelSize: tokens.metadataSize; Layout.bottomMargin: tokens.compactSpacing }
 
             ForgeField {
                 id: usernameField

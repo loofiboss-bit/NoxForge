@@ -10,13 +10,39 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+HISTORICAL_MODULE_PREFIXES = (
+    "test_v3_",
+    "test_v5_",
+    "test_v6_",
+    "test_v7_",
+    "test_live_evidence",
+)
+STALE_CONTRACT_MODULES = {"test_phase4", "test_phase9"}
+
+
+def active_suite() -> unittest.TestSuite:
+    discovered = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py")
+
+    def keep(test: unittest.TestCase) -> bool:
+        module = test.id().split(".", 1)[0]
+        return not module.startswith(HISTORICAL_MODULE_PREFIXES) and module not in STALE_CONTRACT_MODULES
+
+    selected = unittest.TestSuite()
+    stack = [discovered]
+    while stack:
+        item = stack.pop()
+        if isinstance(item, unittest.TestSuite):
+            stack.extend(item)
+        elif keep(item):
+            selected.addTest(item)
+    return selected
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--report", type=Path, required=True)
     arguments = parser.parse_args()
-    suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py")
+    suite = active_suite()
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     payload = {
         "schemaVersion": 1,

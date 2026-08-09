@@ -29,7 +29,7 @@
   "liveEvidence": false,
   "originalEditable": true,
   "phase": 2,
-  "release": "7.0.0",
+  "release": "8.0.0-dev",
   "reviewAssertions": [
     "The semantic and monochrome N/F masters share one clean continuous geometry.",
     "The mark remains legible at 16, 24, 48, 128, and 512 px.",
@@ -42,7 +42,7 @@
   "schemaVersion": 2,
   "sheets": {
     "docs/evidence/artwork-brand-optical-sizes.png": "06e4cf080b5ca5b80256254f61d753eb43da1c9721f4107b82f9b32de85f3475",
-    "docs/evidence/artwork-brand-wallpaper.png": "cb0254718e6a89bee001a98f5dd9fa0f70e9f3ce5918e6bfef60d3f8f2cebd81",
+    "docs/evidence/artwork-brand-wallpaper.png": "7734251c0c26e34fa3772ba218b3526eff21639b584858b1fb98d766969fdd12",
     "docs/evidence/artwork-cursors.png": "84b9dec1e6ab92708c14e3f743c92edc46f983a94cd543b51d1a92a8d75c7922",
     "docs/evidence/artwork-icons.png": "2ffc23c2875761106e691e6c0ca508f610122d48902ca833434c8c8c7e97193f"
   },

@@ -1,0 +1,27 @@
+name: Doctor diagnostics
+description: Report an edition, shadowing, or missing-component diagnostic
+title: "[doctor] "
+labels: ["diagnostics"]
+body:
+  - type: textarea
+    id: doctor-json
+    attributes:
+      label: Doctor JSON
+      description: Paste the complete output from the read-only doctor command.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: edition
+    attributes:
+      label: Edition and installation history
+      description: State Store/component, portable, Fedora, or Arch and any migration or reinstall steps.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed usernames, hostnames, personal paths, and other private data.
+          required: true

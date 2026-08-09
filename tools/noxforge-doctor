@@ -28,6 +28,17 @@ COMPONENTS = {
     "kwin-switcher": ("kwin/tabbox", THEME_ID, "metadata.json"),
     "sddm": ("sddm/themes", "NoxForge", "metadata.desktop"),
 }
+PORTABLE_REQUIRED = (
+    "global-theme",
+    "plasma-style",
+    "color-scheme",
+    "aurorae",
+    "icons",
+    "cursors",
+    "sounds",
+    "wallpaper",
+    "kwin-switcher",
+)
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
     "colorScheme": ("kdeglobals", "General", "ColorScheme"),
@@ -62,6 +73,8 @@ def parse_args() -> argparse.Namespace:
 
 def data_roots(root: Path) -> list[Path]:
     if root != Path("/"):
+        if (root / "noxforge").is_dir() or (root / "plasma").is_dir():
+            return [root]
         return [root / "usr/local/share", root / "usr/share"]
     roots: list[Path] = []
     configured = os.environ.get("XDG_DATA_HOME")
@@ -105,7 +118,7 @@ def metadata_version(path: Path) -> str | None:
 
 
 def expected_version(root: Path) -> str | None:
-    candidates = [root / "usr/share/noxforge/VERSION"]
+    candidates = [root / "noxforge/VERSION", root / "usr/share/noxforge/VERSION"]
     repository_version = Path(__file__).resolve().parents[1] / "VERSION"
     candidates.append(repository_version)
     for path in candidates:
@@ -259,10 +272,13 @@ def detect_wallpaper() -> str:
     images = [containment.get("Image", "") for containment in active]
     if any(not image for image in images):
         return "ambiguous"
-    noxforge = ["/wallpapers/NoxForge/" in image for image in images]
-    if all(noxforge):
-        return "NoxForge"
-    if not any(noxforge):
+    wallpaper_ids = []
+    for image in images:
+        match = re.search(r"/wallpapers/(NoxForge(?:-Quiet|-Ultrawide)?)/", image)
+        wallpaper_ids.append(match.group(1) if match else None)
+    if all(wallpaper_ids):
+        return wallpaper_ids[0] if len(set(wallpaper_ids)) == 1 else "ambiguous"
+    if not any(wallpaper_ids):
         return "other"
     return "ambiguous"
 
@@ -379,6 +395,82 @@ def output_scales(root: Path) -> dict[str, Any]:
     }
 
 
+def edition_manifest(roots: list[Path]) -> dict[str, Any] | None:
+    for data_root in roots:
+        for candidate in (data_root / "noxforge/manifest.json", data_root / "noxforge/edition.json"):
+            try:
+                value = json.loads(candidate.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(value, dict):
+                return value
+    return None
+
+
+def edition_report(
+    roots: list[Path],
+    components: dict[str, dict[str, Any]],
+    plugins: list[Path],
+    mixed: bool,
+    active: dict[str, str],
+) -> dict[str, Any]:
+    found = {name for name, state in components.items() if state["found"]}
+    portable_missing = sorted(set(PORTABLE_REQUIRED) - found)
+    has_portable_marker = edition_manifest(roots) is not None
+    user_copies = {
+        name
+        for name, state in components.items()
+        if state["found"] and "user" in state["provenance"]
+    }
+    system_copies = {
+        name
+        for name, state in components.items()
+        if state["found"] and any(value in state["provenance"] for value in ("system", "local-system", "staged-system"))
+    }
+    shadowed = sorted(user_copies & system_copies)
+    native = bool(plugins)
+    if mixed or (active.get("qtStyle") == "NoxForge" and not native):
+        kind = "mixed"
+        status = "mixed"
+        missing = portable_missing + (["native-qt-style"] if active.get("qtStyle") == "NoxForge" and not native else [])
+    elif not found and not native:
+        kind = "absent"
+        status = "absent"
+        missing = portable_missing
+    elif native and not portable_missing:
+        kind = "complete-system"
+        status = "ok"
+        missing = []
+    elif has_portable_marker and not portable_missing:
+        kind = "portable"
+        status = "ok"
+        missing = []
+    else:
+        kind = "component"
+        status = "incomplete" if portable_missing else "ok"
+        missing = portable_missing
+    capabilities = ["user-local-components"] if found else []
+    if kind in {"portable", "complete-system"}:
+        capabilities.extend(["installer", "uninstaller", "doctor"])
+    if native:
+        capabilities.append("native-qt-style")
+    if components.get("sddm", {}).get("found"):
+        capabilities.append("sddm")
+    return {
+        "kind": kind,
+        "status": status,
+        "capabilities": sorted(set(capabilities)),
+        "missingMandatory": sorted(set(missing)),
+        "shadowed": shadowed,
+        "portableMarker": has_portable_marker,
+        "storeDependencies": sorted(set(portable_missing)) if kind == "component" else [],
+        "wallpaperVariants": {
+            name: any((root / f"wallpapers/{name}/metadata.json").is_file() for root in roots)
+            for name in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide")
+        },
+    }
+
+
 def build_report(root: Path) -> dict[str, Any]:
     roots = data_roots(root)
     components: dict[str, dict[str, Any]] = {}
@@ -424,9 +516,35 @@ def build_report(root: Path) -> dict[str, Any]:
     mixed = len(versions) > 1 or (
         expected is not None and any(version != expected for version in versions)
     )
-    missing = sorted(name for name, state in components.items() if not state["found"])
+    raw_missing = sorted(name for name, state in components.items() if not state["found"])
+    missing = raw_missing[:]
+    active: dict[str, str] = {}
+    if root == Path("/"):
+        active = read_active_components()
+        active["iconInheritance"] = ",".join(icons["inheritance"]) or "none"
+        active["wallpaper"] = detect_wallpaper()
+    edition = edition_report(roots, components, plugins, mixed, active)
+    # Qt style and SDDM are optional outside an absent installation.  Keep the
+    # full absent inventory actionable, but do not report these optional
+    # components as failures for component or portable users.
+    if edition["kind"] != "absent":
+        missing = [name for name in raw_missing if name not in {"qt-style", "sddm"}]
     complete = not missing and not mixed and icons["status"] != "unresolved"
-    if missing:
+    if edition["shadowed"]:
+        edition["kind"] = "mixed"
+        edition["status"] = "mixed"
+    if edition["kind"] == "mixed":
+        complete = False
+    if icons["status"] == "unresolved" and edition["kind"] in {"portable", "complete-system"}:
+        edition["status"] = "incomplete"
+        edition["missingMandatory"] = sorted(set(edition["missingMandatory"]) | {"critical-icons"})
+    # A portable edition is intentionally valid without the native Qt style or
+    # SDDM; retain the legacy top-level status for callers that only consume it.
+    if edition["kind"] in {"portable", "complete-system"} and edition["status"] == "ok" and icons["status"] != "unresolved":
+        complete = True
+    if edition["kind"] == "mixed":
+        next_action = "Resolve the mixed user/system shadowing or missing native plugin, then rerun the doctor."
+    elif missing:
         next_action = "Install or reinstall the NoxForge RPM, then run noxforge-doctor again."
     elif mixed:
         next_action = "Remove mixed source/user copies, reinstall one NoxForge RPM version, and rerun the doctor."
@@ -444,6 +562,7 @@ def build_report(root: Path) -> dict[str, Any]:
         "missing": missing,
         "components": components,
         "criticalIcons": icons,
+        "edition": edition,
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown"),
@@ -453,17 +572,17 @@ def build_report(root: Path) -> dict[str, Any]:
             "kernel": platform.release(),
         },
     }
-    if root == Path("/"):
-        report["active"] = read_active_components()
-        report["active"]["iconInheritance"] = ",".join(icons["inheritance"]) or "none"
-        report["active"]["wallpaper"] = detect_wallpaper()
-    else:
-        report["active"] = {}
+    report["active"] = active
     return report
 
 
 def print_human(report: dict[str, Any]) -> None:
     print(f"NoxForge doctor: {report['status']}")
+    edition = report.get("edition", {})
+    print(f"Edition: {edition.get('kind', 'unknown')} ({edition.get('status', 'unknown')})")
+    missing = edition.get("missingMandatory", [])
+    if missing:
+        print(f"Edition missing: {', '.join(missing)}")
     print(f"Package: {report['packageVersion'] or 'not registered'}")
     print(f"Expected version: {report['expectedVersion'] or 'unknown'}")
     for name, state in report["components"].items():

@@ -1,44 +1,57 @@
 # Quick start and rollback
 
-NoxForge 6.0 targets Fedora KDE 44, Plasma 6.7+, Qt 6.11 and Wayland. The RPM
-is the primary installation authority.
+NoxForge 8 Forge Identity targets Fedora 44 KDE and the verified Arch Plasma /
+KWin 6.7+ and Qt 6.11 environment on Wayland. Choose the edition that matches
+your boundary.
 
-## Install
+## Fedora complete-system edition
 
 ```bash
-sudo dnf copr enable loofitheboss/noxforge
 sudo dnf install noxforge
 rpm -V noxforge
-noxforge-doctor
+noxforge-doctor --json
 ```
 
-Package installation changes no settings. Select **NoxForge** explicitly in
-System Settings → Colors & Themes → Global Theme. Keep panel-layout replacement
-disabled unless the optional compact layout is deliberately wanted. Select and
-test NoxForge SDDM separately in a recoverable VM.
+The RPM installs the native Qt style and system doctor but never applies a
+theme, changes a panel, edits KDE configuration, or activates SDDM. Select
+Global Theme, application style, decorations, icons, cursors, sounds and one
+of the three wallpapers explicitly in System Settings.
 
-NoxForge follows KDE's animation-duration preference. An instant/zero duration
-keeps focus, selection, busy, success, and error semantics visible while
-removing spatial and opacity transitions.
+## Portable user-local edition
+
+```bash
+tar -xJf noxforge-8.0.0-portable.tar.xz
+cd noxforge
+./scripts/install.sh --user --dry-run
+./scripts/install.sh --user
+"${XDG_DATA_HOME:-$HOME/.local/share}/noxforge/bin/noxforge-doctor" --json
+```
+
+Portable installs all user-local components, uses Breeze application controls,
+and writes no active KDE settings. Store components can likewise be installed
+individually; the Global Theme package is not a complete transaction.
 
 ## Build locally
 
 ```bash
-python3 scripts/release-check.py
-python3 scripts/build.py
-rpmbuild -ba --define "_sourcedir $PWD/dist" packaging/noxforge.spec
+python3 scripts/release-check.py --skip-rpm
+python3 scripts/build.py --mode all --skip-tests
 ```
 
 ## Roll back
 
-Select another Global Theme and login screen first, then remove the package:
+Select another theme and login screen first. For portable, use the matching
+bundle's uninstaller:
+
+```bash
+./scripts/uninstall.sh --user --dry-run
+./scripts/uninstall.sh --user
+```
+
+For Fedora, remove only the package-owned files:
 
 ```bash
 sudo dnf remove --no-autoremove noxforge
 ```
 
-Removal deletes only RPM-owned paths and does not rewrite active KDE or SDDM
-configuration. Dependency cleanup is deliberately disabled so DNF cannot prune
-KDE packages on a minimal or manually assembled installation. See
-`docs/INSTALL_FEDORA.md` for upgrade and downgrade commands, and
-`docs/TROUBLESHOOTING.md` for old user-local source copies.
+Neither path changes active settings or prunes unrelated KDE dependencies.

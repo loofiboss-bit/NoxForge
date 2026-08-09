@@ -74,9 +74,12 @@ while IFS= read -r installed_path; do
         /usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/wallpapers/NoxForge/*|\
+        /usr/share/wallpapers/NoxForge-Quiet/*|\
+        /usr/share/wallpapers/NoxForge-Ultrawide/*|\
         /usr/share/sddm/themes/NoxForge/*|\
         /usr/bin/noxforge-doctor|\
         /usr/share/noxforge/VERSION|\
+        /usr/share/noxforge/release-manifest.json|\
         /usr/share/man/man1/noxforge-doctor.1)
             ;;
         *)
