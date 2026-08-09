@@ -1,6 +1,6 @@
 # Changelog
 
-## 8.0.0-dev
+## 8.0.0
 
 - Forge Identity editions and manifest-driven artifact graph.
 - Correct KDE package roots and deterministic Store validation.

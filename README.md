@@ -2,8 +2,8 @@
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. The V8 development line targets Fedora 44 and the verified Arch
-Plasma/KWin 6.7+ and Qt 6.11 environment on Wayland.
+Forge Notch. The V8.0.0 Forge Identity release targets Fedora 44 and the
+verified Arch Plasma/KWin 6.7+ and Qt 6.11 environment on Wayland.
 
 ![NoxForge desktop hero](media/store-hero.png)
 

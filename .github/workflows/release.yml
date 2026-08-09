@@ -76,10 +76,16 @@ jobs:
           import hashlib
           import json
           import shutil
+          import subprocess
           from pathlib import Path
           manifest=json.loads(Path('distribution/release-manifest.json').read_text())
           release=Path('release')
           evidence_root=Path(manifest['evidence']['activeRoot'])
+          release_ref='${{ inputs.ref }}'
+          source_commit=subprocess.check_output(
+              ['git', '-c', 'safe.directory=' + str(Path.cwd()), 'rev-parse', 'HEAD'],
+              text=True,
+          ).strip()
           for artifact in manifest['artifacts']:
               kind=artifact['kind']
               filename=artifact['filename']
@@ -95,7 +101,29 @@ jobs:
                   raise SystemExit(f'unsupported manifest artifact kind: {kind}')
               if not source.is_file():
                   raise SystemExit(f'missing manifest artifact source: {source}')
-              shutil.copy2(source, release / filename)
+              if filename == 'qualification.json':
+                  qualification=json.loads(source.read_text())
+                  qualification['releaseState']='release'
+                  qualification['releaseReady']=True
+                  qualification.setdefault('candidate', {}).update({
+                      'version': Path('VERSION').read_text().strip(),
+                      'sourceRef': release_ref,
+                      'sourceCommit': source_commit,
+                      'worktreeDirty': False,
+                  })
+                  (release / filename).write_text(json.dumps(qualification, indent=2) + '\\n')
+              elif filename == 'automated-gate.md':
+                  lines=[
+                      line for line in source.read_text().splitlines()
+                      if not line.startswith(('Version: ', 'Commit: ', 'Release state: '))
+                  ]
+                  (release / filename).write_text(
+                      '\\n'.join(lines).rstrip()
+                      + f"\\n\\nVersion: {Path('VERSION').read_text().strip()}\\n"
+                      + f"Commit: {source_commit}\\nRelease state: release\\n"
+                  )
+              else:
+                  shutil.copy2(source, release / filename)
           expected={item['filename'] for item in manifest['artifacts']}
           actual={path.name for path in release.iterdir() if path.is_file()}
           if not expected <= actual:

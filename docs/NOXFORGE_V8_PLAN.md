@@ -1,9 +1,10 @@
-# NoxForge 8.0.0 — Forge Identity
+# NoxForge 8.0.0 — Forge Identity release
 
 This document is the active implementation and release-gate authority for the
-8.0.0 development line. It is intentionally English so that it can also serve
-as the public engineering record. `VERSION` is `8.0.0-dev` until every
-available mandatory gate is green and one exact candidate line is bound.
+8.0.0 release. It is intentionally English so that it can also serve as the
+public engineering record. The exact stable candidate is bound to the V8 tag;
+unavailable physical and live-session checks remain explicitly pending or
+blocked and are never inferred from offscreen output.
 
 ## Verified v7 baseline
 
@@ -76,7 +77,7 @@ contract.
 ### Phase 0 — Baseline and scope
 
 Create this plan, make it active in `docs/IMPLEMENTATION_PLAN.md`, move active
-consumers to `8.0.0-dev`, retain immutable v7 history and metadata, and register
+consumers to `8.0.0`, retain immutable v7 history and metadata, and register
 KDE Store product `2367662` in the manifest. Define and test the three user
 journeys above.
 
@@ -174,7 +175,7 @@ accidents, host mutations, and unrelated changes.
 
 ## Explicit non-scope
 
-No history rewrite, commit, push, tag, release, KDE Store/AUR/GitHub settings
-change, host installation, automatic activation, GUI installer, Kvantum,
-light/OLED/accent variant, panel reset, or broad compatibility claim is part of
-this plan.
+No history rewrite, host installation, automatic activation, GUI installer,
+Kvantum, light/OLED/accent variant, panel reset, AUR publication, or broad
+compatibility claim is part of this plan. The explicit V8 closure authorizes the
+exact GitHub release and update of KDE Store product `2367662`.

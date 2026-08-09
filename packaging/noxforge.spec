@@ -5,7 +5,7 @@
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        8.0.0~dev
+Version:        8.0.0
 Release:        1%{?dist}
 Summary:        Forge Identity KDE Plasma components
 
@@ -70,8 +70,8 @@ Package installation does not apply or activate the theme.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
-* Sat Aug 08 2026 Loofi <noreply@example.invalid> - 8.0.0~dev-1
-- Start the phase-gated NoxForge v8 Forge Identity development cycle
+* Sun Aug 09 2026 Loofi <noreply@example.invalid> - 8.0.0-1
+- Release NoxForge v8 Forge Identity with manifest-driven Store and portable components
 
 * Sun Aug 02 2026 Loofi <noreply@example.invalid> - 7.0.0-1
 - Release NoxForge v7 Operational Precision with composed Wayland qualification

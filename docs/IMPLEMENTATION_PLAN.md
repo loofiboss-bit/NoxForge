@@ -6,9 +6,10 @@ This file is the canonical scope and release-gate index. The active authority is
 
 ## Active release scope
 
-NoxForge 8.0.0 Forge Identity is implemented phase-by-phase from the verified
-v7.0.0 baseline. The current development line is `8.0.0-dev`; it is not a
-release, publication, host installation, or theme-activation authorization.
+NoxForge 8.0.0 Forge Identity is the stable release implemented phase-by-phase
+from the verified v7.0.0 baseline. GitHub release publication and the update of
+the historical KDE Store product `2367662` are the explicit V8 closure surfaces;
+no host installation or theme activation is implied.
 
 The phase gates cover deterministic component packaging, a manifest-driven
 portable edition, a complete system package, trimmed source/evidence, visual
@@ -17,10 +18,11 @@ qualification. Unavailable physical cursor, sound-routing, PAM/login, power,
 and live-session checks remain `pending` or `blocked` and are never inferred
 from offscreen or CI evidence.
 
-Installation is user-local and reversible by default. No phase may apply a
-theme, change a panel, write active KDE settings, install SDDM, mutate a host,
-publish to an external service, or rewrite the v7 history without a separate
-explicit authorization.
+Installation is user-local and reversible by default. This release does not
+authorize automatic theme application, panel changes, active KDE settings,
+SDDM activation, host installation, AUR publication, or v7 history rewriting.
+The GitHub and KDE Store publication surfaces above are the separately
+authorized release operations.
 
 ## Historical release evidence
 

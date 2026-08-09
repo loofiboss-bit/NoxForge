@@ -30,6 +30,9 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("manifest['release']['stableVersion']", self.workflow)
         self.assertIn("manifest['evidence']['activeRoot']", self.workflow)
         self.assertIn("for artifact in manifest['artifacts']", self.workflow)
+        self.assertIn("source_commit=subprocess.check_output", self.workflow)
+        self.assertIn("qualification['releaseState']='release'", self.workflow)
+        self.assertIn("'sourceCommit': source_commit", self.workflow)
         self.assertIn('git\', \'-c\', \'safe.directory=\' + str(Path.cwd()), \'describe\', \'--tags\', \'--exact-match\'', self.workflow)
         self.assertIn('docs/releases/v${version}.md', self.workflow)
 

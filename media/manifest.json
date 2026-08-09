@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "8.0.0-dev",
+  "release": "8.0.0",
   "session": {
     "targetViewport": "2560x1440",
     "scale": 1.0,
