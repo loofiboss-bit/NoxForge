@@ -35,7 +35,11 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("'sourceCommit': source_commit", self.workflow)
         self.assertIn("json.dumps(qualification, indent=2) + '\\n'", self.workflow)
         self.assertIn("'\\n'.join(lines)", self.workflow)
-        self.assertIn('gh release upload "${{ inputs.ref }}" release/* --clobber', self.workflow)
+        self.assertIn("gh release edit \"${{ inputs.ref }}\" --draft=false", self.workflow)
+        self.assertIn('staging_ref="${{ inputs.ref }}-staging-${{ github.run_id }}"', self.workflow)
+        self.assertIn('gh release delete "${{ inputs.ref }}" --yes', self.workflow)
+        self.assertIn('gh release delete "$staging_ref" --yes --cleanup-tag', self.workflow)
+        self.assertIn('non-manifest release payload', self.workflow)
         self.assertIn('git\', \'-c\', \'safe.directory=\' + str(Path.cwd()), \'describe\', \'--tags\', \'--exact-match\'', self.workflow)
         self.assertIn('docs/releases/v${version}.md', self.workflow)
 
