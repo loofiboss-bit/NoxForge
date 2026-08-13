@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
   <title>NoxForge move cursor source</title>
-  <g fill="#0E1318" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="#0D1419" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 2v20M2 12h20M12 2L8 6M12 2l4 4M12 22l-4-4M12 22l4-4M2 12l4-4M2 12l4 4M22 12l-4-4M22 12l-4 4"/><circle class="accent" cx="12" cy="12" r="2"/>
   </g>
   <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>

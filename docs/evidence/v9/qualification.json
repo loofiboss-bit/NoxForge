@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 4,
+  "releaseState": "candidate",
+  "releaseReady": false,
+  "candidate": {
+    "version": "9.0.0",
+    "sourceRef": null,
+    "sourceCommit": null,
+    "worktreeDirty": true,
+    "package": "noxforge-9.0.0-1.fc44.x86_64.rpm",
+    "artifacts": []
+  },
+  "automatedCases": [],
+  "liveCases": [
+    {"id": "fedora44-plasmalogin", "status": "pending", "reason": "Requires an isolated Fedora 44 login cycle."},
+    {"id": "fedora44-sddm-upgrade", "status": "pending", "reason": "Requires an isolated upgraded Fedora 44 system."},
+    {"id": "physical-login-input", "status": "blocked", "reason": "Physical PAM, input, cursor, audio, power, and multi-monitor evidence is unavailable to the deterministic gate."}
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "physicalUnavailable": "pending-or-blocked",
+    "v8HistoryImmutable": true
+  },
+  "releaseBlockers": ["Exact source commit and published artifacts are bound by the tag-driven release workflow."]
+}

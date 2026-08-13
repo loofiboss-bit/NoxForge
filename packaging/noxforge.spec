@@ -1,13 +1,13 @@
-%global upstream_version 8.0.0
+%global upstream_version 9.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        8.0.0
+Version:        9.0.0
 Release:        1%{?dist}
-Summary:        Forge Identity KDE Plasma components
+Summary:        System Coherence KDE Plasma components
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
@@ -24,16 +24,16 @@ Requires:       kwin >= 6.7
 Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
-Recommends:     sddm
-
 %description
-NoxForge Forge Identity is an MIT-licensed collection of separately installable
-KDE Plasma components for Fedora KDE. The package contains a Plasma
+NoxForge System Coherence is an MIT-licensed collection of separately
+installable KDE Plasma components for Fedora KDE. The package contains a Plasma
 Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
 switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6
-style plugin, and an SDDM theme. Store and portable editions use Breeze app
-controls; this system package provides the optional native style integration.
-Package installation does not apply or activate the theme.
+style plugin, and an SDDM compatibility theme. Fedora 44 Plasma Login Manager
+uses its standard wallpaper integration and does not support third-party greeter
+QML. Store and portable editions use Breeze app controls; this system package
+provides the optional native style integration. Package installation does not
+apply a theme, configure a login surface, or switch display managers.
 
 %prep
 %autosetup -n NoxForge-%{upstream_version}
@@ -70,6 +70,12 @@ Package installation does not apply or activate the theme.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Thu Aug 13 2026 Loofi <noreply@example.invalid> - 9.0.0-1
+- Release NoxForge v9 System Coherence with Fedora 44 PLM diagnostics
+
+* Thu Aug 13 2026 Loofi <noreply@example.invalid> - 9.0.0~dev-1
+- Start NoxForge v9 System Coherence development
+
 * Sun Aug 09 2026 Loofi <noreply@example.invalid> - 8.0.0-1
 - Release NoxForge v8 Forge Identity with manifest-driven Store and portable components
 

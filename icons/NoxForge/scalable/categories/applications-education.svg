@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
   <style>
-    .accent { stroke: #A3FF47; }
-    .accent-fill { fill: #A3FF47; stroke: none; }
+    .accent { stroke: #22D3EE; }
+    .accent-fill { fill: #22D3EE; stroke: none; }
   </style>
   <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
     <path d="M3 9l9-5 9 5-9 5zM6 11v5c4 3 8 3 12 0v-5"/><path class="accent" d="M12 4l5 3"/>

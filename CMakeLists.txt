@@ -153,10 +153,14 @@ endfunction()
 add_noxforge_gallery_test(widget-gallery-ltr-100 1.0 FALSE controls)
 add_noxforge_gallery_test(widget-gallery-ltr-125 1.25 FALSE controls)
 add_noxforge_gallery_test(widget-gallery-ltr-140 1.4 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-ltr-150 1.5 FALSE controls)
+add_noxforge_gallery_test(widget-gallery-ltr-175 1.75 FALSE controls)
 add_noxforge_gallery_test(widget-gallery-ltr-200 2.0 FALSE controls)
 add_noxforge_gallery_test(widget-gallery-rtl-100 1.0 TRUE controls)
 add_noxforge_gallery_test(widget-gallery-rtl-125 1.25 TRUE controls)
 add_noxforge_gallery_test(widget-gallery-rtl-140 1.4 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-150 1.5 TRUE controls)
+add_noxforge_gallery_test(widget-gallery-rtl-175 1.75 TRUE controls)
 add_noxforge_gallery_test(widget-gallery-rtl-200 2.0 TRUE controls)
 add_noxforge_gallery_test(widget-gallery-data-page 1.0 FALSE data)
 add_noxforge_gallery_test(widget-gallery-menu-page 1.0 FALSE menu)
@@ -233,7 +237,7 @@ add_noxforge_session_test(
     long-rtl
 )
 
-foreach(scale IN ITEMS 1.0 1.25 1.4 1.5 2.0)
+foreach(scale IN ITEMS 1.0 1.25 1.4 1.5 1.75 2.0)
     string(REPLACE "." "" scale_id "${scale}")
     add_noxforge_session_test(
         session-sddm-scale-${scale_id}

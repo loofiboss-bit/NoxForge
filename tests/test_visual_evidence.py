@@ -18,7 +18,14 @@ def png_dimensions(path: Path) -> tuple[int, int]:
 
 class VisualEvidenceTests(unittest.TestCase):
     def test_ltr_rtl_scale_matrix_has_expected_dimensions_and_unique_data(self) -> None:
-        expected = {"100": (960, 760), "125": (1200, 950), "140": (1344, 1064), "200": (1920, 1520)}
+        expected = {
+            "100": (960, 760),
+            "125": (1200, 950),
+            "140": (1344, 1064),
+            "150": (1440, 1140),
+            "175": (1680, 1330),
+            "200": (1920, 1520),
+        }
         captures: list[Path] = []
         for direction in ("ltr", "rtl"):
             for percent, dimensions in expected.items():

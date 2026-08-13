@@ -1,4 +1,4 @@
-# NoxForge 8 compatibility
+# NoxForge 9 compatibility
 
 The qualified compatibility target is Fedora 44 KDE and the verified Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -18,13 +18,24 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Sounds | `/usr/share/sounds/NoxForge/` |
 | Wallpapers | `/usr/share/wallpapers/NoxForge{,-Quiet,-Ultrawide}/` |
 | Qt style plugin | `/usr/lib64/qt6/plugins/styles/libnoxforge6.so` |
-| SDDM (optional) | `/usr/share/sddm/themes/NoxForge/` |
+| PLM wallpaper asset | `/usr/share/wallpapers/NoxForge-Quiet/` |
+| SDDM compatibility theme | `/usr/share/sddm/themes/NoxForge/` |
 | Doctor | `/usr/bin/noxforge-doctor` |
 
 Store and portable packages use Breeze application controls and install
 components separately. The complete-system edition adds the native Qt style;
-the doctor reports a portable installation as `ok` without Qt or SDDM.
+the doctor reports a portable installation as `ok` without Qt or login-manager
+integration.
+
+## Login managers
+
+Fedora 44 defaults to Plasma Login Manager. NoxForge supports PLM only through
+its standard wallpaper surface; arbitrary PLM QML themes are not supported.
+NoxForge Quiet is the recommended asset, but it is never selected automatically.
+The packaged SDDM theme supports upgraded Fedora systems that still use SDDM.
+Arch is qualified with SDDM. An installed SDDM theme does not imply that SDDM
+is active.
 
 KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
-NoxForge or edit KDE/SDDM configuration.
+NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.

@@ -116,7 +116,7 @@ int main(int argc, char **argv)
                                      scrollAddPage.center()) != QStyle::SC_ScrollBarAddPage) return 23;
     const QImage scrollImage = renderComplex(style, QStyle::CC_ScrollBar, scroll);
     int visibleTrackRows = 0;
-    const QColor background(QStringLiteral("#0E1318"));
+    const QColor background(QStringLiteral("#0D1419"));
     for (int y = 0; y < scrollImage.height(); ++y) {
         bool rowDiffers = false;
         for (int x = 0; x < scrollImage.width(); ++x) {

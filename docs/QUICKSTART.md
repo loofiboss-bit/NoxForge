@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 8 Forge Identity targets Fedora 44 KDE and the verified Arch Plasma /
+NoxForge 9 System Coherence targets Fedora 44 KDE and the verified Arch Plasma /
 KWin 6.7+ and Qt 6.11 environment on Wayland. Choose the edition that matches
 your boundary.
 
@@ -13,14 +13,17 @@ noxforge-doctor --json
 ```
 
 The RPM installs the native Qt style and system doctor but never applies a
-theme, changes a panel, edits KDE configuration, or activates SDDM. Select
+theme, changes a panel, edits KDE configuration, or switches a display manager.
+Fedora 44 uses Plasma Login Manager by default: select **NoxForge Quiet** as its
+wallpaper through System Settings if desired. NoxForge does not supply a custom
+PLM greeter. Select
 Global Theme, application style, decorations, icons, cursors, sounds and one
 of the three wallpapers explicitly in System Settings.
 
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-8.0.0-portable.tar.xz
+tar -xJf noxforge-9.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user
@@ -40,7 +43,7 @@ python3 scripts/build.py --mode all --skip-tests
 
 ## Roll back
 
-Select another theme and login screen first. For portable, use the matching
+Select another theme and login surface first. For portable, use the matching
 bundle's uninstaller:
 
 ```bash

@@ -160,7 +160,7 @@ def check_rpm(temporary: Path, source_archive: Path) -> None:
     baseline_rpm = manifest["release"]["baseline"].get("rpmBytes")
     if isinstance(baseline_rpm, int) and binary[0].stat().st_size > round(baseline_rpm * 1.25):
         print(
-            "Warning: RPM exceeds the normal V7 growth bound: "
+            "Warning: RPM exceeds the normal baseline growth bound: "
             f"{binary[0].stat().st_size} > {round(baseline_rpm * 1.25)}"
         )
     listing = subprocess.run(
@@ -232,10 +232,21 @@ def main() -> int:
                 "-G",
                 "Ninja",
                 "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_INSTALL_PREFIX=/usr",
             ]
         )
         run(["cmake", "--build", str(build_dir)])
         run(["ctest", "--test-dir", str(build_dir), "--output-on-failure"])
+        run(
+            [
+                sys.executable,
+                "scripts/check_v9_migration.py",
+                "--build-root",
+                str(build_dir),
+                "--report",
+                str(temporary / "migration-preservation.json"),
+            ]
+        )
 
         qmllint = find_qmllint()
         for surface in QML_SURFACES:

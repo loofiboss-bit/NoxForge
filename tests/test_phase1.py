@@ -49,11 +49,11 @@ class PhaseOneTests(unittest.TestCase):
     def test_repository_validation(self) -> None:
         VALIDATE.validate()
 
-    def test_schema_v5_preserves_identity_and_grid(self) -> None:
-        self.assertEqual(self.tokens["schemaVersion"], 5)
-        self.assertEqual(self.tokens["colors"]["background"], "#0E1318")
+    def test_schema_v6_preserves_identity_and_grid(self) -> None:
+        self.assertEqual(self.tokens["schemaVersion"], 6)
+        self.assertEqual(self.tokens["colors"]["background"], "#0D1419")
         self.assertEqual(self.tokens["colors"]["accent"], "#A3FF47")
-        self.assertEqual(self.tokens["colors"]["surfaceSelected"], "#1E2B31")
+        self.assertEqual(self.tokens["colors"]["surfaceSelected"], "#223429")
         geometry = self.tokens["geometry"]
         self.assertEqual(geometry["forgeNotch"], 4)
         self.assertEqual(geometry["compactSpacing"], 4)
@@ -183,8 +183,8 @@ class PhaseOneTests(unittest.TestCase):
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(standalone, encoding="utf-8")
         self.assertEqual(parser["General"]["ColorScheme"], "NoxForgeDark")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "30,43,49")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "30,43,49")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "34,52,41")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "34,52,41")
         self.assertEqual(parser["Colors:Selection"]["DecorationFocus"], "163,255,71")
 
 
