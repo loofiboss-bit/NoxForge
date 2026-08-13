@@ -9,11 +9,13 @@ For a local candidate, preload the exact source archive into a temporary
 
 ```bash
 export SRCDEST="$(mktemp -d)"
-cp noxforge-8.0.0-source.tar.xz "$SRCDEST/"
+cp noxforge-9.0.0-source.tar.xz "$SRCDEST/"
 makepkg --verifysource --cleanbuild
 makepkg --cleanbuild
 ```
 
 Install the resulting package with an isolated pacman root for qualification,
 then run `noxforge-doctor --json`. Pacman owns rollback and removal; no
-scriptlet applies the theme or changes KDE configuration.
+scriptlet applies the theme or changes KDE configuration. SDDM is the qualified
+login-manager journey on Arch and remains an optional dependency; package
+installation does not install, enable, or configure it.

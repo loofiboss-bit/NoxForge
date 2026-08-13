@@ -129,23 +129,23 @@ def validate_tokens(version: str) -> dict[str, object]:
     if tokens.get("themeId") != THEME_ID or tokens.get("version") != version:
         raise ValidationError("token identity or version does not match repository metadata")
     required_colors = {
-        "background": "#0E1318",
-        "surfaceSunken": "#10171C",
-        "surface": "#151D23",
-        "surfaceRaised": "#1B252C",
-        "surfaceOverlay": "#222D35",
-        "surfaceHover": "#232F36",
-        "surfaceSelected": "#1E2B31",
-        "border": "#2B3942",
-        "borderStrong": "#43535C",
-        "edgeHighlight": "#3C4B53",
-        "outlineMuted": "#314049",
+        "background": "#0D1419",
+        "surfaceSunken": "#10191F",
+        "surface": "#141E25",
+        "surfaceRaised": "#1B2831",
+        "surfaceOverlay": "#22323B",
+        "surfaceHover": "#283942",
+        "surfaceSelected": "#223429",
+        "border": "#2F414B",
+        "borderStrong": "#455A64",
+        "edgeHighlight": "#4B606A",
+        "outlineMuted": "#354852",
         "textPrimary": "#E8F0F2",
         "textSecondary": "#A6B4B9",
         "textDisabled": "#748289",
         "accent": "#A3FF47",
         "accentPressed": "#82D936",
-        "accentInk": "#0E1318",
+        "accentInk": "#0D1419",
         "accentSoft": "#243528",
         "accentMuted": "#71994F",
         "detailCyan": "#22D3EE",
@@ -155,7 +155,7 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") != 5 or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") != 6 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
     geometry = tokens.get("geometry")
     semantic_roles = tokens.get("semanticRoles")

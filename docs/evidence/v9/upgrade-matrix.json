@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "status": "pending",
+  "baseline": "8.0.0",
+  "preservedConfiguration": [
+    "plasma-org.kde.plasma.desktop-appletsrc",
+    "kdeglobals",
+    "kwinrc",
+    "plasmalogin.conf",
+    "plasmalogin.conf.d",
+    "sddm.conf",
+    "sddm.conf.d"
+  ],
+  "journeys": {
+    "fedora-plasmalogin": "pending",
+    "fedora-sddm-upgrade": "pending",
+    "arch-sddm": "pending",
+    "store": "pending",
+    "portable": "pending"
+  },
+  "candidate": null
+}

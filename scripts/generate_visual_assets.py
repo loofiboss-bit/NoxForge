@@ -314,13 +314,15 @@ def semantic_variant(body: str, relative: str) -> str:
     return body + f'<path class="accent" d="M{x} {y}h{length}M{x2} {y2}v{length2}"/>'
 
 
-def icon_svg(body: str) -> str:
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+def icon_svg(body: str, optical_size: int | None = None) -> str:
+    size = optical_size or 24
+    stroke_width = 1.9 if optical_size == 16 else 1.75 if optical_size == 22 else TOKENS["iconography"]["strokeWidth"]
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24">
   <style>
-    .accent {{ stroke: {COLORS["accent"]}; }}
-    .accent-fill {{ fill: {COLORS["accent"]}; stroke: none; }}
+    .accent {{ stroke: {COLORS["detailCyan"]}; }}
+    .accent-fill {{ fill: {COLORS["detailCyan"]}; stroke: none; }}
   </style>
-  <g fill="none" stroke="{COLORS["textPrimary"]}" stroke-width="{TOKENS["iconography"]["strokeWidth"]}" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="none" stroke="{COLORS["textPrimary"]}" stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round">
     {body}
   </g>
 </svg>
@@ -497,7 +499,7 @@ def main() -> None:
     }
     for size in fixture["opticalSizes"]:
         for relative, body in sorted(optical.items()):
-            write(ICONS / f"{size}x{size}" / relative, icon_svg(body))
+            write(ICONS / f"{size}x{size}" / relative, icon_svg(body, size))
     categories: dict[str, int] = {}
     for relative in specs:
         category = relative.split("/", 1)[0]
@@ -510,6 +512,7 @@ def main() -> None:
                 "iconCount": len(specs),
                 "opticalCount": len(optical) * 2,
                 "opticalSizes": fixture["opticalSizes"],
+                "opticalStrokeWidths": {"16": 1.9, "22": 1.75},
                 "runtimeFixture": sorted(required),
                 "runtimeFixtureSource": fixture["source"],
                 "phase6Priority": EDGE_POLISH["icons"]["priority"],

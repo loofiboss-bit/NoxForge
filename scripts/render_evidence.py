@@ -12,7 +12,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "build/cmake"
 EVIDENCE = ROOT / "docs/evidence"
-SCALES = (("100", "1.0"), ("125", "1.25"), ("140", "1.4"), ("200", "2.0"))
+SCALES = (
+    ("100", "1.0"),
+    ("125", "1.25"),
+    ("140", "1.4"),
+    ("150", "1.5"),
+    ("175", "1.75"),
+    ("200", "2.0"),
+)
 GALLERY_PAGES = ("data", "menu", "states", "stress")
 ICON_NAMES = (
     "actions/go-previous.svg",
@@ -78,7 +85,7 @@ def main() -> int:
                 source_root = ROOT / f"icons/NoxForge/{size}x{size}" if size in (16, 22) else ROOT / "icons/NoxForge/scalable"
                 tile = temp / f"icon-{row}-{size}.png"
                 run([
-                    magick, "-background", "#0E1318", str(source_root / relative), "-resize", f"{size}x{size}",
+                    magick, "-background", "#0D1419", str(source_root / relative), "-resize", f"{size}x{size}",
                     "-gravity", "center", "-extent", "72x72", str(tile),
                 ])
                 tiles.append(tile)
@@ -97,7 +104,7 @@ def main() -> int:
             shutil.copyfile(path, EVIDENCE / path.name)
         shutil.copyfile(sddm_output, ROOT / "sddm/NoxForge/preview.png")
         run([magick, str(gallery_outputs[0]), "-resize", "480x380", str(ROOT / f"look-and-feel/{THEME_ID}/contents/previews/preview.png")])
-    print("Rendered 12 Qt gallery captures, authentic SDDM preview, icon contact sheet, and Aurorae structural evidence")
+    print("Rendered 16 Qt gallery captures, authentic SDDM preview, icon contact sheet, and Aurorae structural evidence")
     return 0
 
 

@@ -18,10 +18,24 @@ ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
 CONTRACT_PATH = ROOT / "design/plasma-semantic-contract.json"
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-EVIDENCE_SERIES = "v6" if VERSION == "6.0.0" else ("v7" if VERSION.startswith("7.") else "v8")
+if VERSION.startswith("6."):
+    EVIDENCE_SERIES = "v6"
+elif VERSION.startswith("7."):
+    EVIDENCE_SERIES = "v7"
+elif VERSION.startswith("8."):
+    EVIDENCE_SERIES = "v8"
+else:
+    EVIDENCE_SERIES = "v9"
 EVIDENCE = ROOT / f"docs/evidence/{EVIDENCE_SERIES}/plasma-shell"
 MANIFEST = EVIDENCE / "atlas-manifest.json"
-SCALES = ((1.0, "100"), (1.25, "125"), (1.4, "140"), (2.0, "200"))
+SCALES = (
+    (1.0, "100"),
+    (1.25, "125"),
+    (1.4, "140"),
+    (1.5, "150"),
+    (1.75, "175"),
+    (2.0, "200"),
+)
 COLUMNS = 8
 GUTTER = 4
 
@@ -98,7 +112,7 @@ def compose_atlas(
     rows = math.ceil(len(tiles) / COLUMNS)
     width = COLUMNS * cell[0] + (COLUMNS + 1) * GUTTER
     height = rows * cell[1] + (rows + 1) * GUTTER
-    command = [magick, "-size", f"{width}x{height}", "xc:#0E1318"]
+    command = [magick, "-size", f"{width}x{height}", "xc:#0D1419"]
     for index, tile in enumerate(tiles):
         x = GUTTER + (index % COLUMNS) * (cell[0] + GUTTER)
         y = GUTTER + (index // COLUMNS) * (cell[1] + GUTTER)

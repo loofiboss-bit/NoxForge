@@ -55,6 +55,130 @@ SEMVER = re.compile(
     r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
+PLM_WALLPAPER_ID = "NoxForge-Quiet"
+
+
+def read_config(paths: list[Path]) -> configparser.ConfigParser:
+    """Read existing INI files in increasing precedence order."""
+    parser = configparser.ConfigParser(interpolation=None, strict=False)
+    parser.optionxform = str
+    for path in paths:
+        try:
+            with path.open(encoding="utf-8") as handle:
+                parser.read_file(handle)
+        except (configparser.Error, OSError):
+            continue
+    return parser
+
+
+def plm_config_paths(root: Path) -> list[Path]:
+    paths = [root / "usr/lib/plasmalogin/defaults.conf", root / "etc/plasmalogin.conf"]
+    paths.extend(sorted((root / "etc/plasmalogin.conf.d").glob("*.conf")))
+    return paths
+
+
+def sddm_config_paths(root: Path) -> list[Path]:
+    paths = sorted((root / "usr/lib/sddm/sddm.conf.d").glob("*.conf"))
+    paths.append(root / "etc/sddm.conf")
+    paths.extend(sorted((root / "etc/sddm.conf.d").glob("*.conf")))
+    return paths
+
+
+def configured_plm_wallpaper(root: Path) -> str | None:
+    parser = read_config(plm_config_paths(root))
+    section = "Greeter][Wallpaper][org.kde.image][General"
+    value = parser.get(section, "Image", fallback="").strip()
+    return value or None
+
+
+def configured_sddm_theme(root: Path) -> str | None:
+    parser = read_config(sddm_config_paths(root))
+    value = parser.get("Theme", "Current", fallback="").strip()
+    return value or None
+
+
+def display_manager_state(root: Path) -> tuple[str, str]:
+    if root != Path("/"):
+        return "not-detected", "not-applicable"
+    active: list[str] = []
+    unknown = False
+    for manager, service in (("plasmalogin", "plasmalogin.service"), ("sddm", "sddm.service")):
+        try:
+            result = subprocess.run(
+                ["systemctl", "is-active", service],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=2,
+            )
+        except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+            unknown = True
+            continue
+        if result.returncode == 0 and result.stdout.strip() == "active":
+            active.append(manager)
+    if len(active) == 1:
+        return active[0], "active"
+    if len(active) > 1:
+        return "other", "active"
+    display_manager = Path("/etc/systemd/system/display-manager.service")
+    try:
+        target = display_manager.resolve(strict=True).name
+    except OSError:
+        target = ""
+    if target == "plasmalogin.service":
+        return "plasmalogin", "unknown" if unknown else "inactive"
+    if target == "sddm.service":
+        return "sddm", "unknown" if unknown else "inactive"
+    if target:
+        return "other", "unknown" if unknown else "inactive"
+    return "not-detected", "unknown" if unknown else "inactive"
+
+
+def login_surface_report(root: Path, components: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    manager, service_state = display_manager_state(root)
+    system_root = root if root != Path("/") else Path("/")
+    quiet_paths = [
+        data_root / f"wallpapers/{PLM_WALLPAPER_ID}/metadata.json"
+        for data_root in data_roots(root)
+    ]
+    quiet_available = any(path.is_file() for path in quiet_paths)
+    sddm_available = components.get("sddm", {}).get("found", False)
+
+    integration = "none"
+    asset: str | None = None
+    available = False
+    selected = False
+    if manager == "plasmalogin":
+        integration = "wallpaper"
+        asset = PLM_WALLPAPER_ID
+        available = quiet_available
+        configured = configured_plm_wallpaper(system_root)
+        selected = bool(configured and re.search(r"/wallpapers/NoxForge-Quiet(?:/|$)", configured))
+    elif manager == "sddm":
+        integration = "custom-theme"
+        asset = "NoxForge"
+        available = bool(sddm_available)
+        selected = configured_sddm_theme(system_root) == "NoxForge"
+
+    if service_state == "not-applicable":
+        status = "not-applicable"
+    elif manager in {"other", "not-detected"}:
+        status = "not-integrated"
+    elif not available:
+        status = "unavailable"
+    elif selected:
+        status = "selected"
+    else:
+        status = "available"
+    return {
+        "manager": manager,
+        "serviceState": service_state,
+        "integration": integration,
+        "asset": asset,
+        "available": available,
+        "selected": selected,
+        "status": status,
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -455,7 +579,7 @@ def edition_report(
     if native:
         capabilities.append("native-qt-style")
     if components.get("sddm", {}).get("found"):
-        capabilities.append("sddm")
+        capabilities.append("sddm-theme")
     return {
         "kind": kind,
         "status": status,
@@ -554,6 +678,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installation is complete. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
+        "schemaVersion": 2,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
         "expectedVersion": expected,
@@ -563,6 +688,7 @@ def build_report(root: Path) -> dict[str, Any]:
         "components": components,
         "criticalIcons": icons,
         "edition": edition,
+        "loginSurface": login_surface_report(root, components),
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown"),
@@ -580,6 +706,12 @@ def print_human(report: dict[str, Any]) -> None:
     print(f"NoxForge doctor: {report['status']}")
     edition = report.get("edition", {})
     print(f"Edition: {edition.get('kind', 'unknown')} ({edition.get('status', 'unknown')})")
+    login = report.get("loginSurface", {})
+    print(
+        "Login surface: "
+        f"{login.get('manager', 'not-detected')} "
+        f"({login.get('serviceState', 'unknown')}, {login.get('status', 'not-integrated')})"
+    )
     missing = edition.get("missingMandatory", [])
     if missing:
         print(f"Edition missing: {', '.join(missing)}")

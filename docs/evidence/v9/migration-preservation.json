@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "version": "9.0.0",
+  "status": "passed",
+  "sourceState": "v8-era user choices",
+  "cycles": {
+    "install": 2,
+    "uninstall": 2
+  },
+  "configuration": [
+    "Plasma",
+    "panel",
+    "wallpaper",
+    "PLM",
+    "SDDM"
+  ],
+  "hashes": {
+    "user": [
+      "f61201f4ad9a491fe672a300515330c1af61a040775128478a60f2fc5246d99f",
+      "f61201f4ad9a491fe672a300515330c1af61a040775128478a60f2fc5246d99f",
+      "f61201f4ad9a491fe672a300515330c1af61a040775128478a60f2fc5246d99f"
+    ],
+    "system": [
+      "4c5617a82c45f702c5e8fd0e9f8905324f8705b4cfb25a68558b001d4c4193ba",
+      "4c5617a82c45f702c5e8fd0e9f8905324f8705b4cfb25a68558b001d4c4193ba",
+      "4c5617a82c45f702c5e8fd0e9f8905324f8705b4cfb25a68558b001d4c4193ba"
+    ]
+  },
+  "hostMutated": false
+}

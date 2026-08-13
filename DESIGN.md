@@ -1,8 +1,8 @@
 # NoxForge Design System
 
-NoxForge uses an atmospheric, technical visual language called **Forge
-Identity**, rooted in the Kinetic Precision discipline. This file is the
-visual authority for every NoxForge component.
+NoxForge uses an atmospheric, technical visual language called **System
+Coherence**, built on the Forge Identity and Kinetic Precision disciplines.
+This file is the visual authority for every NoxForge component.
 
 <!-- Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 -->
 
@@ -19,8 +19,9 @@ and motion explicitly purposeful.
   markers. It is not a navigation or ambient surface material.
 - The Forge Notch is a four-pixel clipped detail used only on active, selected,
   focused, or branded surfaces.
-- Cyan communicates information and progress. Violet is a rare secondary brand
-  detail. Red is reserved for destructive and error states.
+- Electric lime communicates active state, keyboard focus, and progress. Cyan
+  is informational, violet is a rare secondary detail, and red is reserved for
+  destructive and error states.
 - Controls remain compact, keyboard-visible, native to KDE behavior, and still
   when idle.
 
@@ -28,15 +29,15 @@ and motion explicitly purposeful.
 
 | Layer | Token | Value | Use |
 | --- | --- | --- | --- |
-| Canvas | `background` | `#0E1318` | Deep workspace background |
-| Sunken | `surfaceSunken` | `#10171C` | Inputs, data wells, recessed regions |
-| Surface | `surface` | `#151D23` | Windows, panels, stable containers |
-| Raised | `surfaceRaised` | `#1B252C` | Controls and quiet raised regions |
-| Overlay | `surfaceOverlay` | `#222D35` | Menus, popups, switchers, session cards |
+| Canvas | `background` | `#0D1419` | Deep workspace background |
+| Sunken | `surfaceSunken` | `#10191F` | Inputs, data wells, recessed regions |
+| Surface | `surface` | `#141E25` | Windows, panels, stable containers |
+| Raised | `surfaceRaised` | `#1B2831` | Controls and quiet raised regions |
+| Overlay | `surfaceOverlay` | `#22323B` | Menus, popups, switchers, session cards |
 
-Supporting surface tokens are `surfaceHover` `#232F36`,
-`surfaceSelected` `#1E2B31`, `edgeHighlight` `#3C4B53`, and
-`outlineMuted` `#314049`. Tonal separation does most of the work. Adjacent
+Supporting surface tokens are `surfaceHover` `#283942`,
+`surfaceSelected` `#223429`, `edgeHighlight` `#4B606A`, and
+`outlineMuted` `#354852`. Tonal separation does most of the work. Adjacent
 parent and child surfaces do not both draw complete borders. An overlay may use
 one outer keyline, one subtle top or leading highlight, and a neutral shadow.
 Colored shadows and ambient lime glow are forbidden.
@@ -52,7 +53,7 @@ Colored shadows and ambient lime glow are forbidden.
 | `accentPressed` | `#82D936` | Pressed primary action |
 | `accentSoft` | `#243528` | Restrained small accent backing |
 | `accentMuted` | `#71994F` | Secondary accent detail |
-| `detailCyan` | `#22D3EE` | Information, busy, and progress |
+| `detailCyan` | `#22D3EE` | Information and busy state |
 | `detailViolet` | `#A78BFA` | Rare identity counterpoint |
 | `negative` | `#FF6B7A` | Destructive and error states |
 | `neutral` | `#FBBF24` | Warning states |

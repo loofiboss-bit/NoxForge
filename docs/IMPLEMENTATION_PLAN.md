@@ -1,31 +1,29 @@
 # NoxForge Implementation Plan
 
 This file is the canonical scope and release-gate index. The active authority is
-[`NOXFORGE_V8_PLAN.md`](NOXFORGE_V8_PLAN.md); the machine-readable companion is
+[`NOXFORGE_V9_PLAN.md`](NOXFORGE_V9_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Active release scope
 
-NoxForge 8.0.0 Forge Identity is the stable release implemented phase-by-phase
-from the verified v7.0.0 baseline. GitHub release publication and the update of
-the historical KDE Store product `2367662` are the explicit V8 closure surfaces;
-no host installation or theme activation is implied.
+NoxForge 9.0.0 System Coherence is the stable release candidate based on the
+verified v8.0.0 baseline. It adds an honest Fedora 44 Plasma Login Manager model,
+read-only login-surface diagnostics, and a more legible graphite hierarchy.
 
-The phase gates cover deterministic component packaging, a manifest-driven
-portable edition, a complete system package, trimmed source/evidence, visual
-presentation and restrained polish, Fedora and Arch packaging, and final
-qualification. Unavailable physical cursor, sound-routing, PAM/login, power,
-and live-session checks remain `pending` or `blocked` and are never inferred
-from offscreen or CI evidence.
+The phase gates cover schema migration, PLM/SDDM diagnostics, deterministic
+component packaging, design-token regeneration, Fedora and Arch packaging, V8
+upgrade preservation, and final qualification. Unavailable physical checks
+remain `pending` or `blocked` and are never inferred from offscreen or CI.
 
 Installation is user-local and reversible by default. This release does not
 authorize automatic theme application, panel changes, active KDE settings,
-SDDM activation, host installation, AUR publication, or v7 history rewriting.
-The GitHub and KDE Store publication surfaces above are the separately
-authorized release operations.
+display-manager activation, host installation, or history rewrite. GitHub,
+COPR, and KDE Store publication is authorized for the exact v9.0.0 candidate.
 
 ## Historical release evidence
 
+- [`NOXFORGE_V8_PLAN.md`](NOXFORGE_V8_PLAN.md) records the completed V8 scope,
+  public release, edition model, and immutable `v8.0.0` lineage.
 - [`NOXFORGE_V7_PLAN.md`](NOXFORGE_V7_PLAN.md) records the completed v7 scope,
   qualification boundary, and immutable `v7.0.0` lineage.
 - [`releases/v7.0.0.md`](releases/v7.0.0.md) records the historical v7 release

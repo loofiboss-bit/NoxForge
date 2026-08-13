@@ -1,11 +1,15 @@
 {
   "schemaVersion": 3,
   "iconCount": 193,
-  "opticalCount": 212,
+  "opticalCount": 272,
   "opticalSizes": [
     16,
     22
   ],
+  "opticalStrokeWidths": {
+    "16": 1.9,
+    "22": 1.75
+  },
   "runtimeFixture": [
     "actions/application-exit.svg",
     "actions/configure.svg",

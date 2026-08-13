@@ -51,8 +51,12 @@ class V8ContractTests(unittest.TestCase):
             output = Path(name)
             builder.build_package("global-theme", output, manifest)
             builder.build_all(output, manifest)
-            archive = output / "noxforge-8.0.0-global-theme.tar.xz"
-            portable = output / "noxforge-8.0.0-portable.tar.xz"
+            archive = output / next(
+                item["filename"] for item in manifest["artifacts"] if item["key"] == "global-theme"
+            )
+            portable = output / next(
+                item["filename"] for item in manifest["artifacts"] if item["key"] == "portable"
+            )
             with tarfile.open(archive, "r:*") as handle:
                 store_defaults = handle.extractfile("global-theme/contents/defaults").read().decode()
             with tarfile.open(portable, "r:*") as handle:

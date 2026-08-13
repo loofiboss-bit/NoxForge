@@ -1,7 +1,7 @@
 # Manual qualification
 
 Capture evidence before any candidate tag or publication. The active record is
-the V8 manifest under `docs/evidence/v8/` and the compact visual index at
+the V9 manifest under `docs/evidence/v9/` and the compact visual index at
 `media/manifest.json`. Offscreen, generated, and composited material is never
 reported as live evidence.
 
@@ -17,7 +17,9 @@ reduced, and slow motion.
 Store/component and portable checks must confirm user-local installation,
 sentinel/configuration preservation, repeated install, precise uninstall, and
 no active-settings write. Complete-system checks additionally cover native Qt
-style, Fedora/Arch package lifecycle, rollback, and optional SDDM selection.
+style, Fedora/Arch package lifecycle, rollback, PLM wallpaper selection, and
+optional SDDM compatibility selection. A fresh Fedora 44 PLM session and an
+upgraded Fedora SDDM session are separate qualification targets.
 
 Physical cursor behavior, audio routing, PAM/login, power actions, and other
 unavailable hardware evidence stay `pending` or `blocked`; they are never

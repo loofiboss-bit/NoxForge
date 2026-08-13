@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "August 2026" "NoxForge 8.0.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "August 2026" "NoxForge 9.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -9,16 +9,19 @@ noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH DESCRIPTION
 .B noxforge-doctor
 reports the installed package version, component provenance and versions,
-safely readable active theme names, icon inheritance and critical resolution,
-and actual per-output KScreen/KWin scales when available.
-It does not write files, apply a theme, clear caches, restart services, or
-request privileges.
+safely readable active theme names, icon inheritance, actual per-output scales,
+and the effective login surface when it can be detected.
+It does not write files, apply a theme, clear caches, restart services, switch
+display managers, or request privileges.
 .PP
-The JSON report contains an BeditionR object with a stable BkindR
-(BcomponentR, BportableR, Bcomplete-systemR, BmixedR, or
-BabsentR), status, capabilities, shadowed copies, wallpaper variants, and
-BmissingMandatoryR components. Qt style and SDDM are optional for portable
-and component editions.
+JSON schema 2 contains stable
+.B edition
+and
+.B loginSurface
+objects. The latter reports the manager, service state, integration type,
+asset availability, selection, and status. An installed SDDM theme is not
+reported as active when Plasma Login Manager is active. Unselected optional
+login assets do not make the installation incomplete.
 .SH OPTIONS
 .TP
 .B \-\-json

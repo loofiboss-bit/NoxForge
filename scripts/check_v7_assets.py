@@ -95,7 +95,7 @@ def render_sheet(magick: str, icons: list[Path], destination: Path, temporary: P
             "-geometry",
             "+4+4",
             "-background",
-            "#151D23",
+            "#141E25",
             str(draft),
         ],
         cwd=ROOT,

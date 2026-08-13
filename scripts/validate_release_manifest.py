@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the public V8 release manifest and its package/edition contracts."""
+"""Validate the public V9 release manifest and its package/edition contracts."""
 
 from __future__ import annotations
 
@@ -15,8 +15,8 @@ MANIFEST_PATH = ROOT / "distribution/release-manifest.json"
 
 def validate() -> dict:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    if manifest.get("schemaVersion") != 1:
-        raise ValueError("release manifest schemaVersion must be 1")
+    if manifest.get("schemaVersion") != 2:
+        raise ValueError("release manifest schemaVersion must be 2")
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     if manifest["release"]["version"] != version:
         raise ValueError("manifest release version does not match VERSION")
@@ -24,7 +24,16 @@ def validate() -> dict:
         raise ValueError("active version is not SemVer")
     baseline = manifest["release"].get("baseline", {})
     if any(not isinstance(baseline.get(key), int) or baseline[key] <= 0 for key in ("rpmBytes", "srpmBytes")):
-        raise ValueError("V7 baseline must include positive RPM and SRPM sizes")
+        raise ValueError("V8 baseline must include positive RPM and SRPM sizes")
+    managers = manifest["compatibility"].get("loginManagers", {})
+    fedora = managers.get("fedora44", {})
+    arch = managers.get("arch", {})
+    if fedora.get("default") != "plasmalogin" or set(fedora.get("supported", [])) != {"plasmalogin", "sddm"}:
+        raise ValueError("Fedora 44 must model Plasma Login Manager as default with SDDM compatibility")
+    if fedora.get("integrations") != {"plasmalogin": "wallpaper", "sddm": "custom-theme"}:
+        raise ValueError("Fedora login-manager integrations are invalid")
+    if arch.get("qualified") != "sddm" or arch.get("supported") != ["sddm"]:
+        raise ValueError("Arch login-manager qualification must remain SDDM")
     artifacts = manifest.get("artifacts", [])
     keys = [item.get("key") for item in artifacts]
     filenames = [item.get("filename") for item in artifacts]

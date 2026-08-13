@@ -1,20 +1,20 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "8.0.0",
-    "stableVersion": "8.0.0",
-    "activePlan": "docs/NOXFORGE_V8_PLAN.md",
+    "version": "9.0.0",
+    "stableVersion": "9.0.0",
+    "activePlan": "docs/NOXFORGE_V9_PLAN.md",
     "baseline": {
-      "version": "7.0.0",
-      "commit": "ce51c0117059fe926129d64c89e0f783dd2d430c",
-      "tag": "v7.0.0",
-      "trackedBytes": 157316401,
-      "evidenceBytes": 151635355,
-      "githubSourceBytes": 98993432,
-      "srpmBytes": 99037329,
-      "rpmBytes": 1166680,
-      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v7.0.0",
+      "version": "8.0.0",
+      "commit": "47c4f6b59d100414cd1e96276107777f6fcafc76",
+      "tag": "v8.0.0",
+      "trackedBytes": 7228456,
+      "evidenceBytes": 3295227,
+      "githubSourceBytes": 3504472,
+      "srpmBytes": 3522969,
+      "rpmBytes": 1083388,
+      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v8.0.0",
       "kdeStoreProduct": "2367662"
     }
   },
@@ -25,6 +25,18 @@
       "qt": ">=6.11"
     },
     "displayServer": ["Wayland"],
+    "loginManagers": {
+      "fedora44": {
+        "default": "plasmalogin",
+        "supported": ["plasmalogin", "sddm"],
+        "integrations": {"plasmalogin": "wallpaper", "sddm": "custom-theme"}
+      },
+      "arch": {
+        "qualified": "sddm",
+        "supported": ["sddm"],
+        "integrations": {"sddm": "custom-theme"}
+      }
+    },
     "unsupportedClaims": ["X11", "Plasma 6.0", "Debian", "Ubuntu", "openSUSE", "Nix", "Flatpak", "AppImage"]
   },
   "packages": {
@@ -52,48 +64,48 @@
       "widgetStyle": "Breeze",
       "components": ["global-theme", "plasma-style", "colors", "aurorae", "icons", "cursors", "kwin-switcher", "sounds", "wallpapers"],
       "capabilities": ["user-local-components"],
-      "forbidden": ["native-qt-style", "sddm", "root"]
+      "forbidden": ["native-qt-style", "login-manager-integration", "root"]
     },
     "portable": {
       "kind": "portable",
       "widgetStyle": "Breeze",
       "components": ["global-theme", "plasma-style", "colors", "aurorae", "icons", "cursors", "kwin-switcher", "sounds", "wallpapers", "portable-doctor"],
       "capabilities": ["user-local-components", "installer", "uninstaller", "doctor"],
-      "forbidden": ["native-qt-style", "sddm", "root", "active-settings"]
+      "forbidden": ["native-qt-style", "login-manager-integration", "root", "active-settings"]
     },
     "complete-system": {
       "kind": "complete-system",
       "widgetStyle": "NoxForge",
       "components": ["portable", "native-qt-style", "system-doctor"],
-      "optional": ["sddm"],
+      "optional": ["plasmalogin-wallpaper", "sddm-theme"],
       "capabilities": ["user-local-components", "native-qt-style", "system-doctor"],
       "forbidden": ["automatic-activation"]
     }
   },
   "artifacts": [
-    {"key": "source", "filename": "noxforge-8.0.0-source.tar.xz", "kind": "source", "budgetBytes": 20971520},
-    {"key": "portable", "filename": "noxforge-8.0.0-portable.tar.xz", "kind": "portable", "budgetBytes": 10485760},
-    {"key": "global-theme", "filename": "noxforge-8.0.0-global-theme.tar.xz", "kind": "store", "package": "globalTheme", "budgetBytes": 10485760},
-    {"key": "plasma-style", "filename": "noxforge-8.0.0-plasma-style.tar.xz", "kind": "store", "package": "plasmaStyle", "budgetBytes": 10485760},
-    {"key": "colors", "filename": "noxforge-8.0.0-colors.tar.xz", "kind": "store", "package": "colors", "budgetBytes": 10485760},
-    {"key": "aurorae", "filename": "noxforge-8.0.0-aurorae.tar.xz", "kind": "store", "package": "aurorae", "budgetBytes": 10485760},
-    {"key": "icons", "filename": "noxforge-8.0.0-icons.tar.xz", "kind": "store", "package": "icons", "budgetBytes": 10485760},
-    {"key": "cursors", "filename": "noxforge-8.0.0-cursors.tar.xz", "kind": "store", "package": "cursors", "budgetBytes": 10485760},
-    {"key": "kwin-switcher", "filename": "noxforge-8.0.0-kwin-switcher.tar.xz", "kind": "store", "package": "kwinSwitcher", "budgetBytes": 10485760},
-    {"key": "sounds", "filename": "noxforge-8.0.0-sounds.tar.xz", "kind": "store", "package": "sounds", "budgetBytes": 10485760},
-    {"key": "wallpapers", "filename": "noxforge-8.0.0-wallpapers.tar.xz", "kind": "store", "package": "wallpapers", "budgetBytes": 8388608},
-    {"key": "rpm", "filename": "noxforge-8.0.0-1.fc44.x86_64.rpm", "kind": "rpm", "budgetBytes": 2097152},
-    {"key": "srpm", "filename": "noxforge-8.0.0-1.fc44.src.rpm", "kind": "srpm", "budgetBytes": 20971520},
+    {"key": "source", "filename": "noxforge-9.0.0-source.tar.xz", "kind": "source", "budgetBytes": 20971520},
+    {"key": "portable", "filename": "noxforge-9.0.0-portable.tar.xz", "kind": "portable", "budgetBytes": 10485760},
+    {"key": "global-theme", "filename": "noxforge-9.0.0-global-theme.tar.xz", "kind": "store", "package": "globalTheme", "budgetBytes": 10485760},
+    {"key": "plasma-style", "filename": "noxforge-9.0.0-plasma-style.tar.xz", "kind": "store", "package": "plasmaStyle", "budgetBytes": 10485760},
+    {"key": "colors", "filename": "noxforge-9.0.0-colors.tar.xz", "kind": "store", "package": "colors", "budgetBytes": 10485760},
+    {"key": "aurorae", "filename": "noxforge-9.0.0-aurorae.tar.xz", "kind": "store", "package": "aurorae", "budgetBytes": 10485760},
+    {"key": "icons", "filename": "noxforge-9.0.0-icons.tar.xz", "kind": "store", "package": "icons", "budgetBytes": 10485760},
+    {"key": "cursors", "filename": "noxforge-9.0.0-cursors.tar.xz", "kind": "store", "package": "cursors", "budgetBytes": 10485760},
+    {"key": "kwin-switcher", "filename": "noxforge-9.0.0-kwin-switcher.tar.xz", "kind": "store", "package": "kwinSwitcher", "budgetBytes": 10485760},
+    {"key": "sounds", "filename": "noxforge-9.0.0-sounds.tar.xz", "kind": "store", "package": "sounds", "budgetBytes": 10485760},
+    {"key": "wallpapers", "filename": "noxforge-9.0.0-wallpapers.tar.xz", "kind": "store", "package": "wallpapers", "budgetBytes": 8388608},
+    {"key": "rpm", "filename": "noxforge-9.0.0-1.fc44.x86_64.rpm", "kind": "rpm", "budgetBytes": 2097152},
+    {"key": "srpm", "filename": "noxforge-9.0.0-1.fc44.src.rpm", "kind": "srpm", "budgetBytes": 20971520},
     {"key": "qualification", "filename": "qualification.json", "kind": "evidence", "budgetBytes": 1048576},
     {"key": "automated-gate", "filename": "automated-gate.md", "kind": "evidence", "budgetBytes": 1048576}
   ],
   "source": {
-    "archiveRoot": "NoxForge-8.0.0",
-    "include": ["LICENSE", "LICENSES.md", "README.md", "VERSION", "CMakeLists.txt", "DESIGN.md", "distribution", "media", "packaging", "color-schemes", "plasma", "aurorae", "icons", "cursors", "sounds", "look-and-feel", "kwin", "sddm", "src", "tools", "wallpapers", "scripts", "tests", "docs/evidence/v8", "docs/man", "docs/QUICKSTART.md", "docs/INSTALL_FEDORA.md", "docs/INSTALL_PORTABLE.md", "docs/INSTALL_ARCH.md", "docs/COMPATIBILITY.md", "docs/TROUBLESHOOTING.md", "docs/CONTRIBUTING.md", "docs/DOCTOR_MANUAL.md"],
+    "archiveRoot": "NoxForge-9.0.0",
+    "include": ["LICENSE", "LICENSES.md", "README.md", "VERSION", "CMakeLists.txt", "DESIGN.md", "distribution", "media", "packaging", "color-schemes", "plasma", "aurorae", "icons", "cursors", "sounds", "look-and-feel", "kwin", "sddm", "src", "tools", "wallpapers", "scripts", "tests", "docs/evidence/v9", "docs/man", "docs/QUICKSTART.md", "docs/INSTALL_FEDORA.md", "docs/INSTALL_PORTABLE.md", "docs/INSTALL_ARCH.md", "docs/COMPATIBILITY.md", "docs/TROUBLESHOOTING.md", "docs/CONTRIBUTING.md", "docs/DOCTOR_MANUAL.md"],
     "exclude": ["AGENTS.md", "containers", "packaging/arch", "docs/evidence/v0", "docs/evidence/v1", "docs/evidence/v2", "docs/evidence/v3", "docs/evidence/v4", "docs/evidence/v5", "docs/evidence/v6", "docs/evidence/v7", "docs/NOXFORGE_V[0-7]_PLAN.md", "docs/releases", "media/full-matrices"]
   },
   "evidence": {
-    "activeRoot": "docs/evidence/v8",
+    "activeRoot": "docs/evidence/v9",
     "policy": {"offscreenIsLiveEvidence": false, "physicalUnavailable": "pending"},
     "futureFullMatrices": ".gitignore"
   }

@@ -37,7 +37,7 @@ SVG_HEADER = f"""<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480
       .NoxForge-Selected {{ color: {COLORS['surfaceSelected']}; }}
       .NoxForge-AccentSoft {{ color: {COLORS['accentSoft']}; }}
       .NoxForge-Attention {{ color: {COLORS['neutral']}; }}
-      .NoxForge-Progress {{ color: {COLORS['detailCyan']}; }}
+      .NoxForge-Progress {{ color: {COLORS['accent']}; }}
       .NoxForge-Border {{ color: {COLORS['border']}; }}
       .NoxForge-EdgeHighlight {{ color: {COLORS['edgeHighlight']}; }}
       .NoxForge-OverlayShadow {{ color: {COLORS['shadowOverlay']}; }}

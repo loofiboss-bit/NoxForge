@@ -151,7 +151,7 @@
       "status/user-available.svg",
       "status/user-away.svg"
     ],
-    "opticalContexts": ["actions", "applets", "status"],
+    "opticalContexts": ["actions", "applets", "places", "preferences", "status"],
     "opticalSizes": [16, 22]
   },
   "cursors": {

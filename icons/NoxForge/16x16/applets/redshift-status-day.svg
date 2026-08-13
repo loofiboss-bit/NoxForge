@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
   <style>
-    .accent { stroke: #A3FF47; }
-    .accent-fill { fill: #A3FF47; stroke: none; }
+    .accent { stroke: #22D3EE; }
+    .accent-fill { fill: #22D3EE; stroke: none; }
   </style>
-  <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="none" stroke="#E8F0F2" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/><path class="accent" d="M12 2v3"/>
   </g>
 </svg>

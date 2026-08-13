@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "8.0.0",
+  "version": "9.0.0",
   "phase": 6,
   "aurorae": {
     "titleHeight": 26,
@@ -28,7 +28,7 @@
   "icons": {
     "coverageFrozen": {
       "scalable": 193,
-      "optical": 212,
+      "optical": 272,
       "runtimeFixture": 85
     },
     "reviewSizes": [16, 22, 24, 32, 48],
