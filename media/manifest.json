@@ -22,7 +22,6 @@
     {"id": "launcher", "path": "media/v8/plasma-launcher-blur-enabled-100.png", "surface": "launcher/panel/tray", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
     {"id": "system-settings", "path": "media/v8/systemsettings-maximized-100.png", "surface": "System Settings and Qt", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
     {"id": "aurorae-tabbox", "path": "media/v8/tabbox-many-100.png", "surface": "Aurorae and TabBox", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "plasmalogin-session", "path": "media/v9/plasmalogin-test-mode-100.png", "surface": "Plasma Login Manager", "provenance": "live-test-mode-neutral-profile", "sourceDimensions": "1920x1080", "privacy": "System account lookup was disconnected; only the generic Other user path is visible"},
     {"id": "sddm-compatibility", "path": "media/v8/sddm-test-mode-100.png", "surface": "SDDM compatibility theme", "provenance": "offscreen-v7-retained", "sourceDimensions": "1920x1080"}
   ],
   "derivatives": {

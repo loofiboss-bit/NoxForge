@@ -30,7 +30,6 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 ![Launcher and panel](media/v8/plasma-launcher-blur-enabled-100.png)
 ![System Settings](media/v8/systemsettings-maximized-100.png)
 ![Aurorae and task switcher](media/v8/tabbox-many-100.png)
-![Plasma Login Manager neutral test mode](media/v9/plasmalogin-test-mode-100.png)
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
 Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
