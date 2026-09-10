@@ -77,7 +77,7 @@ jobs:
       - name: Run the full release gate
         run: |
           mkdir -p build/v9-source
-          git archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
+          git -c safe.directory="$PWD" archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
           python3 scripts/release-check.py --baseline-source build/v9-source
       - name: Build source, portable, and Fedora artifacts
         shell: bash
