@@ -1,13 +1,18 @@
 # Quick start and rollback
 
-NoxForge 9 System Coherence targets Fedora 44 KDE and the verified Arch Plasma /
+NoxForge 10 Everyday Precision targets Fedora 44 KDE and the target Arch Plasma /
 KWin 6.7+ and Qt 6.11 environment on Wayland. Choose the edition that matches
 your boundary.
 
 ## Fedora complete-system edition
 
+Use the Fedora 44 COPR repository `loofitheboss/noxforge`. Verify the installed
+version with `rpm -q noxforge`; repository metadata may need refreshing after
+an upgrade is published.
+
 ```bash
-sudo dnf install noxforge
+sudo dnf copr enable loofitheboss/noxforge
+sudo dnf install --refresh noxforge
 rpm -V noxforge
 noxforge-doctor --json
 ```
@@ -23,7 +28,7 @@ of the three wallpapers explicitly in System Settings.
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-9.0.0-portable.tar.xz
+tar -xJf noxforge-10.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

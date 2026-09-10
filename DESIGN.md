@@ -1,7 +1,7 @@
 # NoxForge Design System
 
-NoxForge uses an atmospheric, technical visual language called **System
-Coherence**, built on the Forge Identity and Kinetic Precision disciplines.
+NoxForge uses an atmospheric, technical visual language called **Everyday
+Precision**, built on the Forge Identity and Kinetic Precision disciplines.
 This file is the visual authority for every NoxForge component.
 
 <!-- Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 -->
@@ -64,7 +64,7 @@ olive fill. A focused control uses one immediate two-pixel lime treatment and
 does not also receive a lime fill. Icon accent coverage is eight percent or
 less unless the glyph communicates semantic success.
 
-## Schema v5
+## Schema v6
 
 `design/tokens.json` is canonical. Generated C++ and QML consumers carry the
 complete canonical payload plus typed properties, so parity is mechanically
@@ -285,3 +285,17 @@ because no Phase 6 interaction exposed a mismatch.
 
 The Aurorae, icon, and cursor sheets are deterministic source evidence only.
 They do not qualify a composed KWin decoration or live cursor scaling.
+
+## V10 interaction corrections
+
+Use the existing overlay/edge-highlight tokens for Qt menus and tooltips, just
+as the Plasma and session overlay surfaces do. Focus strokes occupy two full
+logical pixels inside their bounds; selection markers do not replace keyboard
+focus. TabBox highlights paint above delegates and vertical cards expand to fit
+their text/icon contents.
+
+Disabled text uses the opaque disabled foreground on a dark surface. Do not
+apply group opacity to text-bearing disabled controls: that would invalidate
+the 3:1 disabled-text contrast contract. The disabled state recipe therefore
+uses enabled opacity; decorative opacity tokens remain available. Composited
+state checks supplement actual Qt/QML pixel probes.

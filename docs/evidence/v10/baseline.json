@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "dc0b8b2a88988b651e091619de074735833d90e5",
+  "python": {
+    "schemaVersion": 1,
+    "testsRun": 90,
+    "passed": 81,
+    "skipped": 9,
+    "failures": 0,
+    "errors": 0,
+    "successful": true
+  },
+  "ctest": {
+    "passed": 54,
+    "failed": 0
+  },
+  "releaseGate": "Preflight, validation, generators and Store packaging passed; stopped during duplicate Python run after independent Python/CTest baselines completed. Full V10 gate required.",
+  "platform": {
+    "fedora": "44",
+    "qt": "6.11.2-2.fc44",
+    "plasma": "6.7.4-2.fc44",
+    "kwin": "6.7.4-2.fc44",
+    "arch": "pending; no Arch runtime installed"
+  }
+}

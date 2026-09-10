@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "version": "10.0.0",
+  "status": "passed",
+  "actualUpgradeRollback": "passed",
+  "hostMutated": false,
+  "cycles": [
+    {
+      "mode": "user",
+      "status": "passed",
+      "phases": [
+        {
+          "phase": "baseline-v9-install",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-upgrade",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-reinstall",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-uninstall",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-removed",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v9-rollback-install",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v9-rollback-uninstall-current-tool",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "system",
+      "status": "passed",
+      "phases": [
+        {
+          "phase": "baseline-v9-install",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-upgrade",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-reinstall",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-uninstall",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v10-repeat-uninstall",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v9-rollback-install",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        },
+        {
+          "phase": "v9-rollback-uninstall-current-tool",
+          "status": "passed",
+          "configurationHashes": [
+            "389267ad270fa437b5d6844fbe4a5714b61f54dd9f7d98acbc07deb09f941767",
+            "0ea23858a285b62e82547622ed066117c3c28d6507e0917004ef3e4b78fdd718"
+          ]
+        }
+      ]
+    }
+  ],
+  "baselineVersion": "9.0.0"
+}

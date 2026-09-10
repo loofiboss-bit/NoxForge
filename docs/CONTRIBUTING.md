@@ -1,6 +1,6 @@
 # Contributing to NoxForge
 
-NoxForge 8 targets Fedora KDE 44, Arch Plasma/KWin 6.7+, Qt 6.11 and Wayland.
+NoxForge 10 targets Fedora KDE 44, Arch Plasma/KWin 6.7+, Qt 6.11 and Wayland.
 Keep changes focused, preserve the Forge Identity design authority in `DESIGN.md`, and
 do not copy artwork from another theme.
 
@@ -20,7 +20,10 @@ sudo dnf install cmake ffmpeg-free gcc-c++ git ImageMagick ninja-build \
 Run the same gate used by CI:
 
 ```bash
-python3 scripts/release-check.py
+mkdir -p build/v9-source
+git archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
+python3 scripts/release-check.py --baseline-source build/v9-source
+python3 scripts/validate_media.py
 ```
 
 The gate checks generated-file drift, repository metadata, Python tests, the
@@ -31,3 +34,7 @@ and `rpmlint`.
 The release gate never applies NoxForge, changes KDE settings, restarts Plasma,
 or publishes artifacts. Live desktop checks belong in an isolated Fedora KDE
 test session and must follow `docs/MANUAL_TESTING.md`.
+
+V10 Arch runtime qualification remains pending. Record exact Qt, Plasma, KWin,
+OS and session versions with each test result; historical v9 evidence does not
+qualify the v10 candidate.

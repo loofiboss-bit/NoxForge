@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import configparser
+import hashlib
 import json
 import os
 import platform
@@ -114,6 +115,8 @@ def display_manager_state(root: Path) -> tuple[str, str]:
         except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
             unknown = True
             continue
+        if result.returncode not in (0, 3, 4):
+            unknown = True
         if result.returncode == 0 and result.stdout.strip() == "active":
             active.append(manager)
     if len(active) == 1:
@@ -141,7 +144,7 @@ def login_surface_report(root: Path, components: dict[str, dict[str, Any]]) -> d
         data_root / f"wallpapers/{PLM_WALLPAPER_ID}/metadata.json"
         for data_root in data_roots(root)
     ]
-    quiet_available = any(path.is_file() for path in quiet_paths)
+    quiet_available = any(scoped_file(path, root) for path in quiet_paths)
     sddm_available = components.get("sddm", {}).get("found", False)
 
     integration = "none"
@@ -197,7 +200,7 @@ def parse_args() -> argparse.Namespace:
 
 def data_roots(root: Path) -> list[Path]:
     if root != Path("/"):
-        if (root / "noxforge").is_dir() or (root / "plasma").is_dir():
+        if any((root / name).is_dir() for name in ("noxforge", "plasma", "color-schemes", "icons", "wallpapers", "sounds", "aurorae", "kwin")):
             return [root]
         return [root / "usr/local/share", root / "usr/share"]
     roots: list[Path] = []
@@ -206,8 +209,8 @@ def data_roots(root: Path) -> list[Path]:
         roots.append(Path(configured))
     else:
         roots.append(Path.home() / ".local/share")
-    roots.extend((Path("/usr/local/share"), Path("/usr/share")))
-    return roots
+    roots.extend(Path(value) for value in os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":") if value and Path(value).is_absolute())
+    return list(dict.fromkeys(roots))
 
 
 def component_path(data_root: Path, definition: tuple[str, str, str]) -> Path:
@@ -241,11 +244,19 @@ def metadata_version(path: Path) -> str | None:
     return None
 
 
+def scoped_file(path: Path, root: Path = Path("/")) -> bool:
+    """Reject missing files, broken links and links outside an isolated root."""
+    try:
+        return path.is_file() and (root == Path("/") or path.resolve().is_relative_to(root.resolve()))
+    except (OSError, RuntimeError):
+        return False
+
+
 def expected_version(root: Path) -> str | None:
-    candidates = [root / "noxforge/VERSION", root / "usr/share/noxforge/VERSION"]
-    repository_version = Path(__file__).resolve().parents[1] / "VERSION"
-    candidates.append(repository_version)
+    candidates = [data_root / "noxforge/VERSION" for data_root in data_roots(root)]
     for path in candidates:
+        if not scoped_file(path, root):
+            continue
         try:
             value = path.read_text(encoding="utf-8").strip()
         except OSError:
@@ -270,7 +281,7 @@ def package_version(root: Path) -> str | None:
             text=True,
             timeout=5,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except (OSError, subprocess.TimeoutExpired):
         return None
     return result.stdout.strip() if result.returncode == 0 else None
 
@@ -279,7 +290,7 @@ def qt_plugin_paths(root: Path) -> list[Path]:
     candidates: list[Path] = []
     for libdir in ("lib64", "lib"):
         candidate = root / f"usr/{libdir}/qt6/plugins/styles/libnoxforge6.so"
-        if candidate.is_file():
+        if scoped_file(candidate, root):
             candidates.append(candidate)
     return candidates
 
@@ -417,9 +428,9 @@ def data_root_provenance(root: Path, data_root: Path) -> str:
     return "user"
 
 
-def icon_diagnostics(roots: list[Path]) -> dict[str, Any]:
+def icon_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
     theme_roots = [candidate / "icons/NoxForge" for candidate in roots]
-    installed = next((candidate for candidate in theme_roots if (candidate / "index.theme").is_file()), None)
+    installed = next((candidate for candidate in theme_roots if scoped_file(candidate / "index.theme", root)), None)
     if installed is None:
         return {
             "inheritance": [],
@@ -440,6 +451,8 @@ def icon_diagnostics(roots: list[Path]) -> dict[str, Any]:
         inheritance = []
     coverage_path = installed / "coverage.json"
     try:
+        if not scoped_file(coverage_path, root):
+            raise OSError("coverage outside diagnostic root or missing")
         fixture = json.loads(coverage_path.read_text(encoding="utf-8"))["runtimeFixture"]
     except (KeyError, TypeError, json.JSONDecodeError, OSError):
         return {
@@ -453,7 +466,7 @@ def icon_diagnostics(roots: list[Path]) -> dict[str, Any]:
         relative
         for relative in fixture
         if not any(
-            (installed / directory / relative).is_file()
+            scoped_file(installed / directory / relative, root)
             for directory in ("scalable", "16x16", "22x22")
         )
     ]
@@ -519,9 +532,11 @@ def output_scales(root: Path) -> dict[str, Any]:
     }
 
 
-def edition_manifest(roots: list[Path]) -> dict[str, Any] | None:
+def edition_manifest(roots: list[Path], root: Path = Path("/")) -> dict[str, Any] | None:
     for data_root in roots:
         for candidate in (data_root / "noxforge/manifest.json", data_root / "noxforge/edition.json"):
+            if not scoped_file(candidate, root):
+                continue
             try:
                 value = json.loads(candidate.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
@@ -537,10 +552,13 @@ def edition_report(
     plugins: list[Path],
     mixed: bool,
     active: dict[str, str],
+    root: Path = Path("/"),
 ) -> dict[str, Any]:
     found = {name for name, state in components.items() if state["found"]}
     portable_missing = sorted(set(PORTABLE_REQUIRED) - found)
-    has_portable_marker = edition_manifest(roots) is not None
+    has_portable_marker = edition_manifest(roots, root) is not None or any(
+        scoped_file(candidate / "noxforge/.owned-files", root) for candidate in roots
+    )
     user_copies = {
         name
         for name, state in components.items()
@@ -553,28 +571,30 @@ def edition_report(
     }
     shadowed = sorted(user_copies & system_copies)
     native = bool(plugins)
-    if mixed or (active.get("qtStyle") == "NoxForge" and not native):
-        kind = "mixed"
-        status = "mixed"
-        missing = portable_missing + (["native-qt-style"] if active.get("qtStyle") == "NoxForge" and not native else [])
-    elif not found and not native:
-        kind = "absent"
-        status = "absent"
-        missing = portable_missing
-    elif native and not portable_missing:
+    system_marker = any(scoped_file(candidate / "noxforge/release-manifest.json", root) for candidate in roots)
+    required = set(PORTABLE_REQUIRED) if native or system_marker or has_portable_marker or "global-theme" in found else set()
+    missing = sorted(required - found)
+    if native or system_marker:
         kind = "complete-system"
-        status = "ok"
-        missing = []
-    elif has_portable_marker and not portable_missing:
+        if not native:
+            missing.append("qt-style")
+    elif has_portable_marker:
         kind = "portable"
-        status = "ok"
-        missing = []
-    else:
+    elif found:
         kind = "component"
-        status = "incomplete" if portable_missing else "ok"
-        missing = portable_missing
+    else:
+        kind = "absent"
+        missing = sorted(COMPONENTS) + ["qt-style"]
+    status = "incomplete" if missing else "ok"
+    if kind == "absent":
+        status = "absent"
+    base_kind = kind
+    if mixed or (active.get("qtStyle") == "NoxForge" and not native):
+        kind = status = "mixed"
+        if active.get("qtStyle") == "NoxForge" and not native:
+            missing.append("native-qt-style")
     capabilities = ["user-local-components"] if found else []
-    if kind in {"portable", "complete-system"}:
+    if base_kind in {"portable", "complete-system"}:
         capabilities.extend(["installer", "uninstaller", "doctor"])
     if native:
         capabilities.append("native-qt-style")
@@ -587,12 +607,38 @@ def edition_report(
         "missingMandatory": sorted(set(missing)),
         "shadowed": shadowed,
         "portableMarker": has_portable_marker,
-        "storeDependencies": sorted(set(portable_missing)) if kind == "component" else [],
+        "storeDependencies": sorted(set(missing)) if kind == "component" else [],
         "wallpaperVariants": {
-            name: any((root / f"wallpapers/{name}/metadata.json").is_file() for root in roots)
+            name: any(scoped_file(candidate / f"wallpapers/{name}/metadata.json", root) for candidate in roots)
             for name in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide")
         },
     }
+
+
+def content_digest(marker: Path, *, single_file: bool = False) -> str | None:
+    """Compare complete component payloads, without following directory symlinks."""
+    base = marker.parent
+    digest = hashlib.sha256()
+    try:
+        paths = [marker] if single_file else sorted(base.rglob("*"))
+        for path in paths:
+            if path.is_symlink():
+                digest.update(path.relative_to(base).as_posix().encode())
+                digest.update(b"link:" + os.readlink(path).encode())
+            elif path.is_file():
+                digest.update(path.relative_to(base).as_posix().encode() + b"\0")
+                digest.update(hashlib.sha256(path.read_bytes()).digest())
+    except OSError:
+        return None
+    return digest.hexdigest()
+
+
+def display_path(path: Path, root: Path) -> str:
+    if root == Path("/"):
+        user_root = data_roots(root)[0]
+        if path.is_relative_to(user_root):
+            return "$XDG_DATA_HOME/" + path.relative_to(user_root).as_posix()
+    return str(path)
 
 
 def build_report(root: Path) -> dict[str, Any]:
@@ -603,7 +649,7 @@ def build_report(root: Path) -> dict[str, Any]:
         matches = [
             component_path(candidate, definition)
             for candidate in roots
-            if component_path(candidate, definition).is_file()
+            if scoped_file(component_path(candidate, definition), root)
         ]
         discovered_versions = sorted(
             {
@@ -613,7 +659,17 @@ def build_report(root: Path) -> dict[str, Any]:
             }
         )
         versions.update(discovered_versions)
+        digests = [content_digest(match, single_file=name == "color-scheme") for match in matches]
+        duplicate = "none"
+        if len(matches) > 1:
+            duplicate = "unknown" if None in digests else ("identical" if len(set(digests)) == 1 else "conflict")
         components[name] = {
+            "paths": [display_path(match, root) for match in matches],
+            "effectivePath": display_path(matches[0], root) if matches else None,
+            "shadowedPaths": [display_path(match, root) for match in matches[1:]],
+            "duplicateStatus": duplicate,
+            "metadataStatus": "known" if matches and all(metadata_version(match) for match in matches) else "unknown",
+            "copyVersions": [metadata_version(match) for match in matches],
             "found": bool(matches),
             "copies": len(matches),
             "versions": discovered_versions,
@@ -621,64 +677,79 @@ def build_report(root: Path) -> dict[str, Any]:
                 {
                     data_root_provenance(root, candidate)
                     for candidate in roots
-                    if component_path(candidate, definition).is_file()
+                    if component_path(candidate, definition) in matches
                 }
             ),
         }
 
     plugins = qt_plugin_paths(root)
     components["qt-style"] = {
+        "paths": [display_path(path, root) for path in plugins],
+        "effectivePath": None,
+        "shadowedPaths": [],
+        "duplicateStatus": "not-applicable",
+        "metadataStatus": "unknown",
+        "copyVersions": [None for path in plugins],
         "found": bool(plugins),
         "copies": len(plugins),
         "versions": [],
         "provenance": ["system" if root == Path("/") else "staged-system"] if plugins else [],
     }
 
-    icons = icon_diagnostics(roots)
+    icons = icon_diagnostics(roots, root)
 
     expected = expected_version(root)
     mixed = len(versions) > 1 or (
         expected is not None and any(version != expected for version in versions)
     )
-    raw_missing = sorted(name for name, state in components.items() if not state["found"])
-    missing = raw_missing[:]
     active: dict[str, str] = {}
     if root == Path("/"):
         active = read_active_components()
         active["iconInheritance"] = ",".join(icons["inheritance"]) or "none"
         active["wallpaper"] = detect_wallpaper()
-    edition = edition_report(roots, components, plugins, mixed, active)
-    # Qt style and SDDM are optional outside an absent installation.  Keep the
-    # full absent inventory actionable, but do not report these optional
-    # components as failures for component or portable users.
-    if edition["kind"] != "absent":
-        missing = [name for name in raw_missing if name not in {"qt-style", "sddm"}]
-    complete = not missing and not mixed and icons["status"] != "unresolved"
-    if edition["shadowed"]:
-        edition["kind"] = "mixed"
-        edition["status"] = "mixed"
-    if edition["kind"] == "mixed":
-        complete = False
-    if icons["status"] == "unresolved" and edition["kind"] in {"portable", "complete-system"}:
-        edition["status"] = "incomplete"
+    edition = edition_report(roots, components, plugins, mixed, active, root)
+    issues: list[dict[str, str]] = []
+    for name, state in components.items():
+        duplicate = state["duplicateStatus"]
+        if duplicate != "none" and duplicate != "not-applicable":
+            issues.append({"code": "duplicate-" + duplicate, "component": name,
+                           "severity": "error" if duplicate == "conflict" else "warning",
+                           "message": f"{name}: {duplicate} copies; first discovered path has precedence. Review shadowed paths manually."})
+        if state["found"] and state["metadataStatus"] == "unknown":
+            issues.append({"code": "metadata-unknown", "component": name, "severity": "info",
+                           "message": f"{name}: component version metadata is unavailable."})
+    if mixed:
+        issues.append({"code": "mixed-versions", "component": "installation", "severity": "error",
+                       "message": "Installed component versions disagree with each other or the installed VERSION marker."})
+    if icons["status"] == "unresolved":
         edition["missingMandatory"] = sorted(set(edition["missingMandatory"]) | {"critical-icons"})
-    # A portable edition is intentionally valid without the native Qt style or
-    # SDDM; retain the legacy top-level status for callers that only consume it.
-    if edition["kind"] in {"portable", "complete-system"} and edition["status"] == "ok" and icons["status"] != "unresolved":
-        complete = True
+    missing = edition["missingMandatory"]
+    for name in missing:
+        issues.append({"code": "missing-required", "component": name, "severity": "error",
+                       "message": f"Required component is missing: {name}."})
+    complete = not any(issue["severity"] == "error" for issue in issues)
+    if any(state["duplicateStatus"] == "conflict" for state in components.values()):
+        edition["kind"] = edition["status"] = "mixed"
+    elif not complete and edition["status"] == "ok":
+        edition["status"] = "incomplete"
     if edition["kind"] == "mixed":
-        next_action = "Resolve the mixed user/system shadowing or missing native plugin, then rerun the doctor."
-    elif missing:
-        next_action = "Install or reinstall the NoxForge RPM, then run noxforge-doctor again."
-    elif mixed:
-        next_action = "Remove mixed source/user copies, reinstall one NoxForge RPM version, and rerun the doctor."
-    elif icons["status"] == "unresolved":
+        next_action = "Review mixed versions and effective/shadowed paths; manually reinstall matching components. If the active native style is missing, install it or explicitly select an available style."
+    elif "critical-icons" in missing:
         next_action = "Reinstall the NoxForge icon package; required core icons are unresolved."
+    elif missing and edition["kind"] == "portable":
+        next_action = "Reinstall the portable bundle with its installer, then rerun noxforge-doctor."
+    elif missing and edition["kind"] == "complete-system":
+        next_action = "Reinstall the complete-system package using your distribution package manager, then rerun noxforge-doctor."
+    elif missing and edition["kind"] == "component":
+        next_action = "Install or reinstall the listed required Store components, then rerun noxforge-doctor."
+    elif missing:
+        next_action = "Install your chosen Store components, portable bundle, or complete-system package, then rerun noxforge-doctor."
     else:
-        next_action = "Installation is complete. Select NoxForge explicitly in System Settings if desired."
+        next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
+        "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
         "expectedVersion": expected,
@@ -691,11 +762,11 @@ def build_report(root: Path) -> dict[str, Any]:
         "loginSurface": login_surface_report(root, components),
         "nextAction": next_action,
         "session": {
-            "type": os.environ.get("XDG_SESSION_TYPE", "unknown"),
-            "kde": os.environ.get("KDE_FULL_SESSION", "unknown"),
-            "wayland": "present" if os.environ.get("WAYLAND_DISPLAY") else "absent",
+            "type": os.environ.get("XDG_SESSION_TYPE", "unknown") if root == Path("/") else "not-applicable",
+            "kde": os.environ.get("KDE_FULL_SESSION", "unknown") if root == Path("/") else "not-applicable",
+            "wayland": ("present" if os.environ.get("WAYLAND_DISPLAY") else "absent") if root == Path("/") else "not-applicable",
             "displayScales": output_scales(root),
-            "kernel": platform.release(),
+            "kernel": platform.release() if root == Path("/") else "not-applicable",
         },
     }
     report["active"] = active
@@ -721,6 +792,11 @@ def print_human(report: dict[str, Any]) -> None:
         label = "found" if state["found"] else "missing"
         suffix = f" ({', '.join(state['versions'])})" if state["versions"] else ""
         print(f"  {name}: {label}{suffix}")
+        for index, path in enumerate(state["paths"]):
+            role = "effective" if index == 0 and name != "qt-style" else "discovered" if name == "qt-style" else "shadowed"
+            print(f"    {role}: {path}")
+    for issue in report["issues"]:
+        print(f"  [{issue['severity']}: {issue['code']}] {issue['message']}")
     if report["active"]:
         print("Active settings (read-only):")
         for name, value in sorted(report["active"].items()):

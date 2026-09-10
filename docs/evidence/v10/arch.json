@@ -1,0 +1,32 @@
+{
+  "environment": {
+    "container_runtime": "podman",
+    "container_name": "noxforge-v10-arch-verify",
+    "image": "docker.io/library/archlinux:base",
+    "image_id": "sha256:84e88cacd0e42ea6f23b45c9760c2942b05421cdd76ef33d3011c284bf29cf23",
+    "image_digest": "docker.io/library/archlinux@sha256:522dd24e4a16f41afe71c7561febe519f7575404c291565e9f0be823d1794ca4",
+    "source_mount": "/src:ro",
+    "build_directory": "/tmpbuild"
+  },
+  "runtime_packages": {
+    "cmake": "4.4.3-2",
+    "ninja": "1.13.2-3",
+    "gcc": "16.2.1+r23+gd564253eb6c8-1",
+    "python": "3.14.7-1",
+    "qt6-base": "6.11.2-3",
+    "qt6-declarative": "6.11.2-1",
+    "kirigami": "6.30.0-1",
+    "breeze-icons": "6.30.0-1",
+    "plasma-workspace": "6.7.5-1",
+    "kwin": "6.7.5-1"
+  },
+  "commands": [
+    {"command": "pacman -Syu --noconfirm", "exit_status": 0, "log": "build/arch-run/01-pacman-sync.log"},
+    {"command": "pacman -S --noconfirm --needed base-devel cmake ninja gcc python qt6-base qt6-declarative kirigami breeze-icons plasma-workspace kwin", "exit_status": 0, "log": "build/arch-run/02-pacman-install.log"},
+    {"command": "cmake -S /src -B /tmpbuild -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr", "exit_status": 0, "log": "build/arch-run/04-configure.log", "notes": ["WrapVulkanHeaders was not found; it is optional and did not affect configuration."]},
+    {"command": "cmake --build /tmpbuild -j2", "exit_status": 0, "log": "build/arch-run/05-build.log"},
+    {"command": "ctest --test-dir /tmpbuild --output-on-failure --timeout 72", "exit_status": 0, "log": "build/arch-run/06-ctest.log", "result": "72/72 passed", "duration_seconds": 35.09}
+  ],
+  "result": "pass",
+  "source_tree": "read-only inside container; no repository-tracked files were mutated by this verification"
+}

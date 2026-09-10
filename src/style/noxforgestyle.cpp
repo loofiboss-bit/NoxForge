@@ -80,9 +80,10 @@ void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(QPen(stroke, width));
+    painter->setPen(width > 0 ? QPen(stroke, width) : QPen(Qt::NoPen));
     painter->setBrush(fill);
-    painter->drawPath(surfacePath(QRectF(rect).adjusted(0.5, 0.5, -0.5, -0.5), notched));
+    const qreal inset = width / 2.0;
+    painter->drawPath(surfacePath(QRectF(rect).adjusted(inset, inset, -inset, -inset), notched));
     painter->restore();
 }
 
@@ -90,7 +91,8 @@ void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirect
                           bool focused = false)
 {
     paintSurface(painter, rect, NP::surfaceSelected(),
-                 focused ? NP::accent() : NP::borderStrong(), NP::borderWidth, true);
+                 focused ? NP::accent() : NP::borderStrong(),
+                 focused ? NP::focusWidth : NP::borderWidth, true);
     painter->save();
     painter->setPen(Qt::NoPen);
     painter->setBrush(NP::accent());
@@ -461,7 +463,7 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         const bool pressTarget = option->state.testFlag(State_Sunken);
         const qreal hover = motionValue(widget, NoxForgeMotion::Channel::Hover, hoverTarget);
         const qreal press = motionValue(widget, NoxForgeMotion::Channel::Press, pressTarget);
-        QColor fill = primary
+        QColor fill = primary && enabled(option)
             ? mixedColor(NP::accent(), NP::accentPressed(), press)
             : stateSurface(option, hover, press);
         QColor stroke = option->state.testFlag(State_HasFocus)
@@ -486,7 +488,7 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         return;
     case PE_PanelMenu:
     case PE_PanelTipLabel:
-        paintSurface(painter, option->rect, NP::surface(), NP::border());
+        paintSurface(painter, option->rect, NP::surfaceOverlay(), NP::edgeHighlight());
         return;
     case PE_Frame:
         if (qobject_cast<const QAbstractItemView *>(widget)) {
@@ -503,6 +505,10 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                                  option->direction, option->state.testFlag(State_HasFocus));
+        } else if (option->state.testFlag(State_HasFocus)) {
+            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
+                         option->state.testFlag(State_MouseOver) ? NP::surfaceHover() : NP::background(),
+                         NP::accent(), NP::focusWidth, true);
         } else if (option->state.testFlag(State_MouseOver)) {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), NP::surfaceHover(), NP::border());
         }

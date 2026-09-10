@@ -108,7 +108,7 @@ class PackagingTests(unittest.TestCase):
             source = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("-bb", source, relative)
             self.assertIn("-bs", source, relative)
-            self.assertNotIn("-ba", source, relative)
+            self.assertNotRegex(source, r"(?<![\w-])-ba(?![\w-])", relative)
 
     def test_native_binaries_do_not_embed_absolute_build_roots(self) -> None:
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")

@@ -51,7 +51,7 @@ if [[ "${dry_run}" == true ]]; then
     exit 0
 fi
 
-while IFS= read -r installed_path; do
+while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
     [[ -n "${installed_path}" && "${installed_path}" == /* ]] || {
         printf 'Unsafe CMake manifest entry: %s\n' "${installed_path}" >&2
         exit 1

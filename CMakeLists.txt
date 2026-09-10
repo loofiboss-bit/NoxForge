@@ -200,6 +200,12 @@ function(add_noxforge_session_test name surface qml scenario)
     if(ARGC GREATER 4)
         set(scale ${ARGV4})
     endif()
+    set(view_width 1280)
+    set(view_height 720)
+    if(ARGC GREATER 6)
+        set(view_width ${ARGV5})
+        set(view_height ${ARGV6})
+    endif()
     add_test(
         NAME ${name}
         COMMAND noxforge_session_renderer
@@ -207,8 +213,8 @@ function(add_noxforge_session_test name surface qml scenario)
             "${CMAKE_SOURCE_DIR}/${qml}"
             "${CMAKE_SOURCE_DIR}/sddm/NoxForge/background.png"
             "${CMAKE_BINARY_DIR}/${name}.png"
-            1280
-            720
+            ${view_width}
+            ${view_height}
             ${scenario}
             "${CMAKE_SOURCE_DIR}"
     )
@@ -239,6 +245,20 @@ add_noxforge_session_test(
 
 foreach(scale IN ITEMS 1.0 1.25 1.4 1.5 1.75 2.0)
     string(REPLACE "." "" scale_id "${scale}")
+    add_noxforge_session_test(
+        session-disabled-controls-${scale_id}
+        sddm sddm/NoxForge/Main.qml disabled-controls ${scale}
+    )
+    add_noxforge_session_test(
+        session-focus-horizontal-${scale_id}
+        tabbox kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+        focus-layout ${scale}
+    )
+    add_noxforge_session_test(
+        session-focus-vertical-${scale_id}
+        tabbox kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml
+        focus-layout ${scale} 800 1200
+    )
     add_noxforge_session_test(
         session-sddm-scale-${scale_id}
         sddm

@@ -1,5 +1,15 @@
 # Changelog
 
+## 10.0.0 — Everyday Precision
+
+- Fix system removal when CMake writes a final manifest entry without a newline.
+- Doctor schema 3 with isolated version discovery and edition-specific guidance.
+- Component precedence, duplicate/conflict findings, and actionable read-only reports.
+- Refined focus visibility, surface distinction, and composited text contrast.
+- Media validation for paths, PNG dimensions, and documented provenance.
+- V10 isolated lifecycle and visual evidence; unavailable physical and live Arch
+  session qualification remain pending rather than inheriting v9 results.
+
 ## 9.0.0
 
 - Fedora 44 PLM wallpaper integration without unsupported custom-greeter claims.

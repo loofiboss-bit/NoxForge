@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 4,
+  "releaseState": "release-candidate",
+  "releaseReady": false,
+  "candidate": {
+    "version": "10.0.0",
+    "sourceRef": "v10.0.0",
+    "sourceCommit": null,
+    "baselineCommit": "dc0b8b2a88988b651e091619de074735833d90e5",
+    "worktreeDirty": true,
+    "package": "noxforge-10.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [
+      "noxforge-10.0.0-source.tar.xz",
+      "noxforge-10.0.0-portable.tar.xz"
+    ],
+    "runtimeSourceHashes": "runtime-source-hashes.json"
+  },
+  "automatedCases": [
+    {
+      "id": "python",
+      "status": "passed",
+      "passed": 111,
+      "skipped": 9,
+      "failures": 0,
+      "errors": 0,
+      "log": "build/release-gate-final.log"
+    },
+    {
+      "id": "fedora-ctest",
+      "status": "passed",
+      "passed": 72,
+      "runtime": "Qt 6.11.2-2.fc44, Plasma/KWin 6.7.4-2.fc44",
+      "log": "build/release-gate.log"
+    },
+    {
+      "id": "arch-build-ctest",
+      "status": "passed",
+      "passed": 72,
+      "evidence": "arch.json"
+    },
+    {
+      "id": "asan-ubsan",
+      "status": "passed",
+      "passed": 4,
+      "log": "build/release-gate.log"
+    },
+    {
+      "id": "actual-v9-v10-v9-lifecycle",
+      "status": "passed",
+      "evidence": "migration.json",
+      "scope": "portable user and staged CMake system roots; 7 phases each; all configuration bytes preserved"
+    },
+    {
+      "id": "composited-contrast",
+      "status": "passed",
+      "cases": 40,
+      "evidence": "composited-contrast.json"
+    },
+    {
+      "id": "media-validation",
+      "status": "passed",
+      "evidence": "../../../media/manifest.json"
+    },
+    {
+      "id": "final-release-gate",
+      "status": "passed",
+      "log": "build/public-release-gate.log",
+      "scope": "Full uninterrupted local gate before final release-text and Store checksum updates; canonical CI reruns against the exact release commit."
+    },
+    {
+      "id": "rpm-package-validation",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0,
+      "log": "build/rpm-gate-final.log"
+    },
+    {
+      "id": "rpm-transactions",
+      "status": "passed",
+      "evidence": "rpm-lifecycle.json"
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "isolated-fedora-session",
+      "status": "passed",
+      "reason": "Five neutral-profile 2560x1440 captures; isolated Fedora Wayland container. No-blur launcher additionally exercised.",
+      "evidence": "live-capture.json"
+    },
+    {
+      "id": "arch-live-session",
+      "status": "pending",
+      "reason": "Arch build/offscreen tests passed separately; no live Arch login session exercised."
+    },
+    {
+      "id": "physical-login-pam",
+      "status": "pending",
+      "reason": "Not yet qualified for this candidate."
+    },
+    {
+      "id": "physical-input-cursor",
+      "status": "pending",
+      "reason": "Not yet qualified for this candidate."
+    },
+    {
+      "id": "physical-audio-power",
+      "status": "pending",
+      "reason": "Not yet qualified for this candidate."
+    },
+    {
+      "id": "physical-mixed-displays",
+      "status": "pending",
+      "reason": "Not yet qualified for this candidate."
+    },
+    {
+      "id": "arch-pacman-lifecycle",
+      "status": "pending",
+      "reason": "Fedora RPM transactions passed separately. Actual pacman package upgrade/rollback has not been exercised."
+    },
+    {
+      "id": "all-live-scales-rtl-motion",
+      "status": "pending",
+      "reason": "Six scales, RTL, long labels, keyboard focus and reduced motion have automated coverage. Full live app matrix at every scale remains untested."
+    }
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "historicalEvidenceImmutable": true
+  },
+  "releaseBlockers": [],
+  "review": {
+    "status": "findings-fixed-main-verified",
+    "fixed": [
+      "out-of-root component provenance",
+      "mixed edition management capabilities",
+      "out-of-root native plugin and auxiliary markers",
+      "canonical gate did not require actual v9 baseline"
+    ],
+    "limitation": "Independent reviewer reported findings but its final follow-up was interrupted by service usage limits. Main agent verified fixes and regression tests."
+  },
+  "publicationAuthorized": true,
+  "physicalQualificationComplete": false,
+  "qualificationLimitations": [
+    "Physical and full live matrix checks remain pending.",
+    "Arch pacman lifecycle remains pending."
+  ]
+}

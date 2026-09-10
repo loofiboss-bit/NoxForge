@@ -18,7 +18,7 @@ def run(command: list[str], *, env: dict[str, str] | None = None) -> None:
 
 
 def main() -> int:
-    run([sys.executable, "scripts/release-check.py"])
+    run([sys.executable, "scripts/release-check.py", *sys.argv[1:]])
     run([sys.executable, "scripts/check_phase6_accessibility.py", "--check"])
     run([sys.executable, "scripts/measure_phase6_performance.py", "--check"])
     run([sys.executable, "-m", "unittest", "tests.test_v5_phase6", "-v"])

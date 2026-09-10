@@ -83,17 +83,20 @@ Rectangle {
             : (mouse.containsMouse || activeFocus ? tokens.surfaceHover : tokens.surfaceRaised)
         border.color: activeFocus ? tokens.accent : mouse.containsMouse ? tokens.borderStrong : tokens.border
         border.width: activeFocus ? tokens.focusWidth : tokens.borderWidth
-        opacity: interactive || busy ? 1 : tokens.disabledOpacity
+        opacity: 1
         Accessible.role: Accessible.Button
         Accessible.name: label
         Accessible.description: danger ? qsTr("System power action") : ""
 
         Text {
+            objectName: "buttonLabel"
             anchors.centerIn: parent
             width: parent.width - tokens.standardSpacing * 2
             text: button.busy ? qsTr("Authenticating…") : button.label
             color: button.busy
                 ? tokens.detailCyan
+                : !button.interactive
+                ? tokens.textDisabled
                 : button.primary
                 ? tokens.accentInk
                 : button.danger && (mouse.containsMouse || button.activeFocus)
@@ -315,6 +318,7 @@ Rectangle {
             }
             ForgeButton {
                 id: loginButton
+                objectName: "loginButton"
                 label: qsTr("Sign in")
                 primary: true
                 busy: root.authenticating

@@ -75,7 +75,10 @@ jobs:
           python3 scripts/sync_version.py --check
           echo "NOXFORGE_VERSION=$(<VERSION)" >> "$GITHUB_ENV"
       - name: Run the full release gate
-        run: python3 scripts/release-check.py
+        run: |
+          mkdir -p build/v9-source
+          git archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
+          python3 scripts/release-check.py --baseline-source build/v9-source
       - name: Build source, portable, and Fedora artifacts
         shell: bash
         run: |
@@ -124,11 +127,22 @@ jobs:
                   qualification=json.loads(source.read_text())
                   qualification['releaseState']='release'
                   qualification['releaseReady']=True
+                  qualification['canonicalWorkflow']={
+                      'status': 'passed',
+                      'runUrl': '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+                      'sourceCommit': source_commit,
+                  }
+                  for case in qualification.get('automatedCases', []):
+                      if case.get('id') == 'final-release-gate':
+                          case.clear()
+                          case.update(id='final-release-gate', status='passed',
+                                      evidence=qualification['canonicalWorkflow']['runUrl'])
                   qualification.setdefault('candidate', {}).update({
                       'version': Path('VERSION').read_text().strip(),
                       'sourceRef': release_ref,
                       'sourceCommit': source_commit,
                       'worktreeDirty': False,
+                      'artifacts': [item['filename'] for item in manifest['artifacts']],
                   })
                   (release / filename).write_text(json.dumps(qualification, indent=2) + '\n')
               elif filename == 'automated-gate.md':

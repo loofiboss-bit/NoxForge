@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "release": "9.0.0",
+  "release": "10.0.0",
   "session": {
     "targetViewport": "2560x1440",
     "scale": 1.0,
-    "testUser": "neutral disposable user",
+    "testUser": "Demo User (disposable uid 2000)",
     "wallpaper": "NoxForge Forge",
     "panel": "single bottom panel",
-    "status": "representative-retained; fresh 2560x1440 V9 live capture pending",
-    "privacy": "No personal data is intentionally present"
+    "status": "captured-v10-isolated-wayland",
+    "privacy": "All five current captures visually reviewed; neutral profile and synthetic folders only. No host home or desktop session was mounted."
   },
   "provenancePolicy": {
     "live": "Captured from an isolated Plasma session",
@@ -17,19 +17,81 @@
     "composited": "Derived from authentic source material and explicitly labelled"
   },
   "captures": [
-    {"id": "desktop", "path": "media/v8/desktop-baseline.png", "surface": "desktop", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "dolphin-icons", "path": "media/v8/dolphin-maximized-100.png", "surface": "Dolphin and icons", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "launcher", "path": "media/v8/plasma-launcher-blur-enabled-100.png", "surface": "launcher/panel/tray", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "system-settings", "path": "media/v8/systemsettings-maximized-100.png", "surface": "System Settings and Qt", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "aurorae-tabbox", "path": "media/v8/tabbox-many-100.png", "surface": "Aurorae and TabBox", "provenance": "live-v7-retained", "sourceDimensions": "1920x1080"},
-    {"id": "plasmalogin-session", "path": "media/v9/plasmalogin-test-mode-100.png", "surface": "Plasma Login Manager", "provenance": "live-test-mode-neutral-profile", "sourceDimensions": "1920x1080", "privacy": "System account lookup was disconnected; only the generic Other user path is visible"},
-    {"id": "sddm-compatibility", "path": "media/v8/sddm-test-mode-100.png", "surface": "SDDM compatibility theme", "provenance": "offscreen-v7-retained", "sourceDimensions": "1920x1080"}
+    {
+      "id": "desktop",
+      "path": "media/v10/desktop.png",
+      "surface": "desktop",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    },
+    {
+      "id": "dolphin-icons",
+      "path": "media/v10/dolphin.png",
+      "surface": "Dolphin and icons",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    },
+    {
+      "id": "launcher",
+      "path": "media/v10/launcher.png",
+      "surface": "launcher/panel/tray",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    },
+    {
+      "id": "system-settings",
+      "path": "media/v10/system-settings.png",
+      "surface": "System Settings and Qt",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    },
+    {
+      "id": "aurorae-tabbox",
+      "path": "media/v10/aurorae-tabbox.png",
+      "surface": "Aurorae and TabBox",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    },
+    {
+      "id": "sddm-compatibility",
+      "path": "media/v8/sddm-test-mode-100.png",
+      "surface": "SDDM compatibility theme",
+      "provenance": "offscreen-v7-retained",
+      "sourceDimensions": "1920x1080"
+    },
+    {
+      "id": "launcher-no-blur",
+      "path": "media/v10/launcher-no-blur.png",
+      "surface": "launcher with KWin blur disabled",
+      "provenance": "live-isolated-container",
+      "sourceDimensions": "2560x1440"
+    }
   ],
   "derivatives": {
-    "storeIcon": {"path": "media/store-icon.png", "dimensions": "400x400", "provenance": "generated"},
-    "storeHero": {"path": "media/store-hero.png", "dimensions": "1280x640", "provenance": "composited"},
-    "githubSocialPreview": {"path": "media/github-social-preview.png", "dimensions": "1280x640", "provenance": "composited"},
-    "globalThemePreview": {"path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/preview.png", "dimensions": "480x380", "provenance": "generated"},
-    "globalThemeFullscreenPreview": {"path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png", "dimensions": "960x540", "provenance": "generated"}
+    "storeIcon": {
+      "path": "media/store-icon.png",
+      "dimensions": "400x400",
+      "provenance": "generated"
+    },
+    "storeHero": {
+      "path": "media/store-hero.png",
+      "dimensions": "1280x640",
+      "provenance": "composited"
+    },
+    "githubSocialPreview": {
+      "path": "media/github-social-preview.png",
+      "dimensions": "1280x640",
+      "provenance": "composited"
+    },
+    "globalThemePreview": {
+      "path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/preview.png",
+      "dimensions": "480x380",
+      "provenance": "generated"
+    },
+    "globalThemeFullscreenPreview": {
+      "path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png",
+      "dimensions": "960x540",
+      "provenance": "generated"
+    }
   }
 }

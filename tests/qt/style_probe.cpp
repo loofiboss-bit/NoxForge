@@ -15,6 +15,7 @@
 #include <QStyleOptionToolButton>
 #include <QTextStream>
 #include <QTemporaryDir>
+#include <QtMath>
 
 namespace {
 
@@ -181,6 +182,53 @@ int main(int argc, char **argv)
     if (toolMenu.width() != 24 || toolMenu.right() != tool.rect.right()) return 13;
     if (style->hitTestComplexControl(QStyle::CC_ToolButton, &tool,
                                      toolMenu.center()) != QStyle::SC_ToolButtonMenu) return 14;
+
+    // Measure the top focus stroke in device pixels, including antialiasing.
+    // Presence alone would miss the old clipped 1.5px and selected 1px strokes.
+    for (const qreal scale : {1.0, 1.25, 1.4, 1.5, 1.75, 2.0}) {
+        for (const bool selected : {false, true}) {
+            QStyleOption item;
+            item.rect = QRect(0, 0, 160, 40);
+            item.state = QStyle::State_Enabled | QStyle::State_HasFocus;
+            if (selected) item.state |= QStyle::State_Selected;
+            for (const auto direction : {Qt::LeftToRight, Qt::RightToLeft}) {
+                item.direction = direction;
+                const QImage rendered = renderPrimitive(style, QStyle::PE_PanelItemViewItem, item, scale);
+                if (!containsColor(rendered, QColor("#A3FF47"))) return 35;
+                const QColor fill(selected ? "#223429" : "#0D1419");
+                qreal coverage = 0;
+                for (int y = 0; y < qCeil(5 * scale); ++y) {
+                    const QColor pixel = rendered.pixelColor(rendered.width() / 2, y);
+                    coverage += pixel.alphaF() * qBound(0.0,
+                        (pixel.greenF() - fill.greenF()) / (1.0 - fill.greenF()), 1.0);
+                }
+                if (qAbs(coverage / scale - 2.0) > 0.16) return 36;
+            }
+        }
+        QStyleOption input;
+        input.rect = QRect(0, 0, 160, 40);
+        input.state = QStyle::State_Enabled | QStyle::State_HasFocus;
+        const QImage rendered = renderPrimitive(style, QStyle::PE_PanelLineEdit, input, scale);
+        qreal coverage = 0;
+        for (int y = 0; y < qCeil(4 * scale); ++y) {
+            const QColor pixel = rendered.pixelColor(rendered.width() / 2, y);
+            coverage += pixel.alphaF() * qBound(0.0,
+                (pixel.greenF() - QColor("#0D1419").greenF())
+                    / (1.0 - QColor("#0D1419").greenF()), 1.0);
+        }
+        if (qAbs(coverage / scale - 2.0) > 0.16) return 37;
+    }
+    QStyleOption overlay;
+    overlay.rect = QRect(0, 0, 120, 60);
+    for (const auto element : {QStyle::PE_PanelMenu, QStyle::PE_PanelTipLabel}) {
+        const QImage rendered = renderPrimitive(style, element, overlay);
+        if (rendered.pixelColor(60, 30) != QColor("#22323B")) return 38;
+    }
+    QStyleOptionButton disabledPrimary;
+    disabledPrimary.rect = QRect(0, 0, 160, 40);
+    disabledPrimary.features = QStyleOptionButton::DefaultButton;
+    const QImage disabledSurface = renderPrimitive(style, QStyle::PE_PanelButtonCommand, disabledPrimary);
+    if (disabledSurface.pixelColor(80, 20) != QColor("#141E25")) return 39;
 
     QStyleOption mixed;
     mixed.rect = QRect(0, 0, 24, 24);
