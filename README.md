@@ -1,14 +1,15 @@
-# NoxForge System Coherence
+# NoxForge Everyday Precision
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. The 9.0.0 development line targets Fedora 44 and the verified
-Arch Plasma/KWin 6.7+ and Qt 6.11 environment on Wayland.
+Forge Notch. Version 10.0.0 targets Fedora 44 and
+Arch Plasma/KWin 6.7+ and Qt 6.11 on Wayland.
+Fedora and Arch builds pass 72 offscreen tests each. Physical qualification
+remains pending; see [the evidence record](docs/evidence/v10/qualification.json).
 
-![NoxForge desktop hero](media/store-hero.png)
+![NoxForge isolated desktop](media/v10/desktop.png)
 
-The hero is retained presentation material; its provenance and the pending
-fresh 2560x1440 System Coherence capture are recorded
+Capture provenance and dimensions are recorded
 in [media/manifest.json](media/manifest.json).
 
 ## Choose an installation
@@ -26,20 +27,18 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 
 ## Gallery
 
-![Dolphin and icon treatment](media/v8/dolphin-maximized-100.png)
-![Launcher and panel](media/v8/plasma-launcher-blur-enabled-100.png)
-![System Settings](media/v8/systemsettings-maximized-100.png)
-![Aurorae and task switcher](media/v8/tabbox-many-100.png)
-![Plasma Login Manager neutral test mode](media/v9/plasmalogin-test-mode-100.png)
+![Dolphin and icon treatment](media/v10/dolphin.png)
+![Launcher and panel](media/v10/launcher.png)
+![System Settings](media/v10/system-settings.png)
+![Aurorae and task switcher](media/v10/aurorae-tabbox.png)
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
 Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
 recommended login wallpaper; NoxForge does not ship or claim a custom PLM QML
 greeter and never writes the active PLM configuration. The SDDM theme remains
-available for upgraded Fedora installations and the qualified Arch journey.
+available for upgraded Fedora installations and the planned Arch journey.
 
-These images are explicitly labelled live-retained or offscreen in the media
-manifest. They are not a substitute for pending physical input,
+These images carry explicit capture provenance in the media manifest. They are not a substitute for pending physical input,
 cursor, audio, PAM/login, power, and live-session gates.
 
 ## Components
@@ -65,11 +64,13 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The active scope is [NOXFORGE_V9_PLAN.md](docs/NOXFORGE_V9_PLAN.md), indexed by
+The active scope is [NOXFORGE_V10_PLAN.md](docs/NOXFORGE_V10_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the phase gate with:
 
 ```bash
-python3 scripts/release-check.py --skip-rpm
+mkdir -p build/v9-source
+git archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
+python3 scripts/release-check.py --baseline-source build/v9-source --skip-rpm
 python3 scripts/build.py --mode all --skip-tests
 ```
 

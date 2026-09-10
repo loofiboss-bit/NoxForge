@@ -37,7 +37,7 @@ class V9ContractTests(unittest.TestCase):
             (ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["schemaVersion"], 2)
-        self.assertEqual(manifest["release"]["version"], "9.0.0")
+        self.assertEqual(manifest["release"]["version"], (ROOT / "VERSION").read_text().strip())
         managers = manifest["compatibility"]["loginManagers"]
         self.assertEqual(managers["fedora44"]["default"], "plasmalogin")
         self.assertEqual(managers["fedora44"]["integrations"]["plasmalogin"], "wallpaper")
@@ -179,7 +179,7 @@ class V9ContractTests(unittest.TestCase):
             "sddm.conf.d",
         ):
             self.assertIn(marker, source)
-        self.assertIn("check_v9_migration.py", release_gate)
+        self.assertIn("check_v10_migration.py", release_gate)
         self.assertIn('\"-DCMAKE_INSTALL_PREFIX=/usr\"', release_gate)
 
 

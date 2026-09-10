@@ -1,6 +1,6 @@
-# NoxForge 9 compatibility
+# NoxForge 10 compatibility
 
-The qualified compatibility target is Fedora 44 KDE and the verified Arch
+The intended compatibility target is Fedora 44 KDE and the target Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
 Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 
@@ -33,9 +33,15 @@ Fedora 44 defaults to Plasma Login Manager. NoxForge supports PLM only through
 its standard wallpaper surface; arbitrary PLM QML themes are not supported.
 NoxForge Quiet is the recommended asset, but it is never selected automatically.
 The packaged SDDM theme supports upgraded Fedora systems that still use SDDM.
-Arch is qualified with SDDM. An installed SDDM theme does not imply that SDDM
+The Arch qualification journey uses optional SDDM. An installed SDDM theme does not imply that SDDM
 is active.
 
 KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
+
+V10 builds and passes all 72 offscreen CTest cases in a digest-pinned Arch
+container with Qt 6.11.2-3, Plasma/KWin 6.7.5-1. See
+[evidence](evidence/v10/arch.json). Live Arch login and hardware qualification
+remain pending; offscreen results do not establish those behaviors. Fedora
+Wayland captures use Qt 6.11.1 and Plasma/KWin 6.7.3 in an isolated container.

@@ -1149,7 +1149,7 @@ def validate_wallpaper(version: str) -> None:
 
 
 def validate_artwork_evidence(version: str) -> None:
-    manifest_path = ROOT / "docs/evidence/artwork-contact-sheets.json"
+    manifest_path = ROOT / json.loads((ROOT / "distribution/release-manifest.json").read_text())["evidence"]["activeRoot"] / "artwork/artwork-contact-sheets.json"
     manifest = load_json(manifest_path)
     if (
         not isinstance(manifest, dict)
@@ -2021,7 +2021,7 @@ def validate_tooling(version: str) -> None:
         ROOT / "docs/DOCTOR_MANUAL.md",
         ROOT / "docs/TROUBLESHOOTING.md",
         ROOT / "docs/MANUAL_TESTING.md",
-        ROOT / "docs/NOXFORGE_V8_PLAN.md",
+        ROOT / json.loads((ROOT / "distribution/release-manifest.json").read_text())["release"]["activePlan"],
         ROOT / "distribution/release-manifest.json",
         ROOT / "distribution/kde-store/package-manifest.json",
         ROOT / "media/manifest.json",

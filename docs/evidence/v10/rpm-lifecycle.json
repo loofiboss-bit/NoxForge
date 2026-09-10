@@ -1,0 +1,67 @@
+{
+  "version": "10.0.0",
+  "status": "passed",
+  "scope": "real RPM transactions in isolated Fedora container",
+  "hostMutated": false,
+  "phases": [
+    {
+      "phase": "v9-install",
+      "status": "passed",
+      "configurationHashes": {
+        "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasma-org.kde.plasma.desktop-appletsrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasmawallpaperrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/plasmalogin.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/sddm.conf.d/noxforge-user.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb"
+      }
+    },
+    {
+      "phase": "v10-upgrade",
+      "status": "passed",
+      "configurationHashes": {
+        "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasma-org.kde.plasma.desktop-appletsrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasmawallpaperrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/plasmalogin.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/sddm.conf.d/noxforge-user.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb"
+      }
+    },
+    {
+      "phase": "v10-reinstall",
+      "status": "passed",
+      "configurationHashes": {
+        "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasma-org.kde.plasma.desktop-appletsrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasmawallpaperrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/plasmalogin.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/sddm.conf.d/noxforge-user.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb"
+      }
+    },
+    {
+      "phase": "v9-rollback",
+      "status": "passed",
+      "configurationHashes": {
+        "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasma-org.kde.plasma.desktop-appletsrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasmawallpaperrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/plasmalogin.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/sddm.conf.d/noxforge-user.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb"
+      }
+    },
+    {
+      "phase": "uninstall",
+      "status": "passed",
+      "configurationHashes": {
+        "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasma-org.kde.plasma.desktop-appletsrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/home/demo/.config/plasmawallpaperrc": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/plasmalogin.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
+        "/etc/sddm.conf.d/noxforge-user.conf": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb"
+      }
+    }
+  ],
+  "packageHashes": {
+    "noxforge-9.0.0-1.fc44.x86_64.rpm": "e746e4751a0db53950dc98503bd4e67a8af6f39bbddf11d16e61359de883c7ff",
+    "noxforge-10.0.0-1.fc44.x86_64.rpm": "4ac5ae114a63e9eae85aa64797dde4b0ca0d63ee7e840709bbfbd54733878319"
+  }
+}

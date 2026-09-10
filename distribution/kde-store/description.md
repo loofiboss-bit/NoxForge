@@ -1,20 +1,11 @@
-# NoxForge Forge Identity
+# NoxForge Everyday Precision
 
-NoxForge is an original MIT-licensed Plasma visual system for Fedora 44 and
-the verified Arch Plasma/KWin 6.7+ and Qt 6.11 environment. The Global Theme,
-Plasma Style, colors, Aurorae, icons, cursors, task switcher, sounds, and
-wallpapers are separate packages because KDE installs these package types in
-separate resource roots.
+NoxForge 10.0.0 is an original MIT-licensed Plasma visual system with graphite surfaces, electric lime and the Forge Notch. V10 improves keyboard focus, disabled-text contrast, fractional-scale details and read-only installation diagnostics.
 
-The Global Theme package is a coordinator and is **not** a complete one-click
-transaction. Install the components you want through the matching KDE package
-manager. Store and portable packages use Breeze application controls and never
-install a native Qt plugin, SDDM, or root-owned files. A complete system
-edition is available separately through Fedora or Arch packaging.
+The Global Theme is a coordinator, not a complete one-click installer. Install the matching Plasma Style, colors, Aurorae, icons, cursors, task switcher, sounds and wallpapers from the individual archives in the GitHub release using their matching KDE package managers. Store and portable editions use Breeze application controls. The complete Fedora COPR package additionally supplies the native Qt style.
 
-Upload names are the exact `noxforge-8.0.0-*.tar.xz` names from the release
-manifest. The companion `SHA256SUMS` file binds each Store upload to its
-checksum; do not rename or combine component archives.
+Installation never applies the theme, changes panels or wallpaper, or switches the display manager. Plasma Login Manager integration remains standard wallpaper integration, with NoxForge Quiet recommended. SDDM is an optional compatibility component of the system edition.
 
-Compatibility is intentionally narrow and verified. No X11, Plasma 6.0,
-Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim is made.
+Use the exact `noxforge-10.0.0-*.tar.xz` files and verify them against the release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v10.0.0
+
+Fedora 44 and a digest-pinned Arch environment pass 72 offscreen tests each. Physical login/PAM, audio, pointer/input, mixed physical displays, the full live scale/RTL/motion matrix and Arch pacman lifecycle remain pending. No X11, Plasma 6.0 or other distribution support is claimed.

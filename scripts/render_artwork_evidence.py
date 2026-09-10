@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "design/artwork-contract.json"
-EVIDENCE = ROOT / "docs/evidence"
+EVIDENCE = ROOT / json.loads((ROOT / "distribution/release-manifest.json").read_text())["evidence"]["activeRoot"] / "artwork"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 
 
@@ -211,7 +211,7 @@ def render(magick: str, output: Path, temporary: Path) -> None:
             for path in source_paths
         },
         "sheets": {
-            f"docs/evidence/{path.name}": sha256(path)
+            (EVIDENCE / path.name).relative_to(ROOT).as_posix(): sha256(path)
             for path in sheets
         },
     }

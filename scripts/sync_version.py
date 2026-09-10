@@ -36,13 +36,13 @@ VERSION_FILES = {
     "aurorae/io.github.loofiboss.noxforge.desktop/metadata.desktop": ((r"(?m)^X-KDE-PluginInfo-Version=.*$", "X-KDE-PluginInfo-Version={version}"),),
     "sddm/NoxForge/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v9/qualification.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v9/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
+    "docs/evidence/v10/qualification.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "docs/evidence/v10/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
     "packaging/noxforge.spec": (
         (r"(?m)^%global upstream_version\s+.*$", "%global upstream_version {release_version}"),
         (r"(?m)^Version:\s+.*$", "Version:        {rpm_version}"),
     ),
-    "docs/man/noxforge-doctor.1": ((r'(?m)^\.TH NOXFORGE-DOCTOR 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-DOCTOR 1 "August 2026" "NoxForge {version}" "User Commands"'),),
+    "docs/man/noxforge-doctor.1": ((r'(?m)^\.TH NOXFORGE-DOCTOR 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge {version}" "User Commands"'),),
 }
 
 

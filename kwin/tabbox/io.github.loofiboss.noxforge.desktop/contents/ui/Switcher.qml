@@ -73,6 +73,7 @@ Item {
 
         ListView {
             id: windowList
+            objectName: "windowList"
             anchors.fill: parent
             anchors.margins: Kirigami.Units.gridUnit
             model: root.windowModel
@@ -100,6 +101,8 @@ Item {
             LayoutMirroring.childrenInherit: true
 
             highlight: Rectangle {
+                objectName: "selectionHighlight"
+                z: 2
                 color: "transparent"
                 border.color: tokens.accent
                 border.width: tokens.focusWidth
@@ -108,6 +111,7 @@ Item {
 
             delegate: Rectangle {
                 id: windowDelegate
+                objectName: "windowDelegate"
                 required property int index
                 required property string caption
                 required property var icon
@@ -118,7 +122,7 @@ Item {
                 width: root.horizontalMode ? root.horizontalCardWidth : windowList.width
                 height: root.horizontalMode
                     ? root.horizontalCardHeight
-                    : Kirigami.Units.gridUnit * 4
+                    : Math.max(Kirigami.Units.gridUnit * 4, delegateContent.implicitHeight + tokens.standardSpacing * 2)
                 color: tokens.surfaceRaised
                 border.color: tokens.outlineMuted
                 border.width: tokens.borderWidth
@@ -164,6 +168,8 @@ Item {
                 }
 
                 ColumnLayout {
+                    id: delegateContent
+                    objectName: "delegateContent"
                     anchors.fill: parent
                     anchors.margins: tokens.standardSpacing
                     spacing: tokens.compactSpacing

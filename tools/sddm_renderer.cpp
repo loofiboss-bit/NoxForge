@@ -32,7 +32,7 @@ class UserModel final : public QObject
     Q_PROPERTY(QString lastUser READ lastUser CONSTANT)
 public:
     using QObject::QObject;
-    QString lastUser() const { return QStringLiteral("loofi"); }
+    QString lastUser() const { return QStringLiteral("demo"); }
 };
 
 class Keyboard final : public QObject

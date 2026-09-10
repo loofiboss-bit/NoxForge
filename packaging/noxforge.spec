@@ -1,13 +1,13 @@
-%global upstream_version 9.0.0
+%global upstream_version 10.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        9.0.0
+Version:        10.0.0
 Release:        1%{?dist}
-Summary:        System Coherence KDE Plasma components
+Summary:        Everyday Precision KDE Plasma components
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
@@ -25,7 +25,7 @@ Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
 %description
-NoxForge System Coherence is an MIT-licensed collection of separately
+NoxForge Everyday Precision is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
 Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
 switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6
@@ -70,6 +70,9 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Wed Sep 09 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 10.0.0-1
+- Prepare Everyday Precision diagnostics, focus, contrast and removal fixes
+
 * Thu Aug 13 2026 Loofi <noreply@example.invalid> - 9.0.0-1
 - Release NoxForge v9 System Coherence with Fedora 44 PLM diagnostics
 

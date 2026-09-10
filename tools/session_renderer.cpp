@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include <QAbstractListModel>
+#include <cmath>
+#include <QFont>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
@@ -118,7 +120,7 @@ public:
     }
     QString lastUser() const
     {
-        return m_longText ? QStringLiteral("alexandra-mustermann-mit-langem-benutzernamen") : QStringLiteral("loofi");
+        return m_longText ? QStringLiteral("alexandra-mustermann-mit-langem-benutzernamen") : QStringLiteral("demo");
     }
 
 private:
@@ -232,6 +234,75 @@ static QJsonObject reducedMotionProbe(QObject *root, const QString &surface)
     };
 }
 
+static int matchingPixels(const QImage &image, QQuickItem *item, const QColor &color)
+{
+    const QRectF scene(item->mapToScene(QPointF()), item->size());
+    const qreal ratio = item->window() ? qreal(image.width()) / item->window()->width() : image.devicePixelRatio();
+    const QRect bounds(qRound(scene.x() * ratio), qRound(scene.y() * ratio),
+                       qRound(scene.width() * ratio), qRound(scene.height() * ratio));
+    int matches = 0;
+    const QRect clipped = bounds.intersected(image.rect());
+    for (int y = clipped.top(); y <= clipped.bottom(); ++y)
+        for (int x = clipped.left(); x <= clipped.right(); ++x) {
+            const QColor pixel = image.pixelColor(x, y);
+            if (qAbs(pixel.red() - color.red()) <= 3
+                && qAbs(pixel.green() - color.green()) <= 3
+                && qAbs(pixel.blue() - color.blue()) <= 3)
+                ++matches;
+        }
+    return matches;
+}
+
+static bool layoutProbe(QObject *root, const QImage &image)
+{
+    auto *highlight = root->findChild<QQuickItem *>(QStringLiteral("selectionHighlight"));
+    if (!highlight || highlight->z() <= 0 || !highlight->isVisible()
+        || matchingPixels(image, highlight, QColor("#A3FF47")) < 10)
+        return false;
+    int checked = 0;
+    QList<QQuickItem *> pending{qobject_cast<QQuickItem *>(root)};
+    while (!pending.isEmpty()) {
+        auto *delegate = pending.takeLast();
+        if (!delegate) continue;
+        pending.append(delegate->childItems());
+        if (delegate->objectName() != QStringLiteral("windowDelegate")) continue;
+        auto *content = delegate->findChild<QQuickItem *>(QStringLiteral("delegateContent"));
+        if (!content || content->implicitHeight() > content->height() + 0.5)
+            return false;
+        for (auto *child : content->childItems()) {
+            if (child->isVisible() && (child->y() < -0.5
+                || child->y() + child->height() > content->height() + 0.5))
+                return false;
+        }
+        ++checked;
+    }
+    return checked > 0;
+}
+
+static bool disabledProbe(QObject *root, const QImage &image)
+{
+    auto *button = root->findChild<QQuickItem *>(QStringLiteral("loginButton"));
+    auto *label = button ? button->findChild<QQuickItem *>(QStringLiteral("buttonLabel")) : nullptr;
+    if (!button || !label || button->property("interactive").toBool())
+        return false;
+    for (auto *parent = label; parent; parent = parent->parentItem())
+        if (parent->opacity() < 0.999)
+            return false;
+    const QColor foreground = label->property("color").value<QColor>();
+    const QColor background = button->property("color").value<QColor>();
+    const auto luminance = [](const QColor &color) {
+        const auto linear = [](double value) {
+            return value <= 0.04045 ? value / 12.92 : std::pow((value + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * linear(color.redF()) + 0.7152 * linear(color.greenF())
+            + 0.0722 * linear(color.blueF());
+    };
+    const double contrast = (std::max(luminance(foreground), luminance(background)) + 0.05)
+        / (std::min(luminance(foreground), luminance(background)) + 0.05);
+    return contrast >= 3.0 && matchingPixels(image, label, foreground) > 3
+        && matchingPixels(image, button, background) > 20;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 9) {
@@ -286,6 +357,11 @@ int main(int argc, char **argv)
         QLocale::setDefault(QLocale(QStringLiteral("ar_EG")));
     }
     QGuiApplication app(argc, argv);
+    if (scenario == QStringLiteral("focus-layout")) {
+        QFont largeFont = app.font();
+        largeFont.setPointSizeF(18);
+        app.setFont(largeFont);
+    }
     QStringList iconPaths = QIcon::themeSearchPaths();
     iconPaths.prepend(repositoryRoot + QStringLiteral("/icons"));
     QIcon::setThemeSearchPaths(iconPaths);
@@ -368,6 +444,16 @@ int main(int argc, char **argv)
         setPropertyIfPresent(root, "authenticating", true);
     }
 
+    if (scenario == QStringLiteral("disabled-controls")) {
+        auto *button = root->findChild<QObject *>(QStringLiteral("loginButton"));
+        if (!button) return 6;
+        button->setProperty("interactive", false);
+    }
+    if (scenario == QStringLiteral("focus-layout")) {
+        setPropertyIfPresent(root, "currentIndex", 3);
+        setPropertyIfPresent(root, "reducedMotion", true);
+        QMetaObject::invokeMethod(root, "focusFirstAction");
+    }
     view.resize(width, height);
     view.show();
     if (reducedProbe) {
@@ -405,7 +491,13 @@ int main(int argc, char **argv)
     }
     QTimer::singleShot(500, &app, [&]() {
         const QImage image = view.grabWindow();
-        app.exit(!image.isNull() && image.save(output) ? 0 : 4);
+        if (image.isNull() || !image.save(output)) {
+            app.exit(4);
+            return;
+        }
+        const bool passed = scenario == QStringLiteral("disabled-controls") ? disabledProbe(root, image)
+            : scenario == QStringLiteral("focus-layout") ? layoutProbe(root, image) : true;
+        app.exit(passed ? 0 : 6);
     });
     return app.exec();
 }

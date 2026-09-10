@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "August 2026" "NoxForge 9.0.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge 10.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -14,7 +14,7 @@ and the effective login surface when it can be detected.
 It does not write files, apply a theme, clear caches, restart services, switch
 display managers, or request privileges.
 .PP
-JSON schema 2 contains stable
+JSON schema 3 retains stable
 .B edition
 and
 .B loginSurface
@@ -36,7 +36,8 @@ Show command help.
 Returns 0 for a complete, version-consistent installation, 1 for an absent,
 partial, or mixed-version installation, and 2 for invalid command arguments.
 .SH PRIVACY
-The report omits usernames, hostnames, personal paths, and display contents.
+The report omits usernames, hostnames, and display contents. User component
+paths use the $XDG_DATA_HOME prefix; staged paths are shown as supplied.
 It never treats QT_SCALE_FACTOR as per-output evidence.
 .SH FILES
 .TP
@@ -45,3 +46,16 @@ Expected installed NoxForge version.
 .SH SEE ALSO
 .BR rpm (8),
 .BR dnf (8)
+
+.SH DIAGNOSTICS
+Components include ordered discovered paths, effective and shadowed data paths,
+per-copy versions, metadata availability, and duplicate classification.
+Identical component payloads warn without failing; conflicting payloads fail
+even when versions match. Native plugin paths are candidates, not proof of the
+runtime loader choice. Structured issues and text output share one assessment.
+Standalone components require only their declared dependencies. The global theme
+requires all portable components. Portable and system editions require their
+component set, with edition-specific repair advice.
+.PP
+An alternate root never falls back to source VERSION or host session settings.
+Missing version metadata is explicitly unknown. No duplicate is removed.

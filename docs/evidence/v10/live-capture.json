@@ -1,0 +1,41 @@
+{
+  "version": "10.0.0",
+  "provenance": "live-isolated-container",
+  "runtime": [
+    "qt6-qtbase-6.11.1-1.fc44.x86_64",
+    "plasma-workspace-6.7.3-1.fc44.x86_64",
+    "kwin-6.7.3-1.fc44.x86_64"
+  ],
+  "viewport": [
+    2560,
+    1440
+  ],
+  "scale": 1.0,
+  "physicalQualification": false,
+  "captures": {
+    "desktop-baseline.png": "fd19963915a6f861be6aea64f640667038bc30b86d0270dbcc6acf46d37feefd",
+    "desktop.png": "fd19963915a6f861be6aea64f640667038bc30b86d0270dbcc6acf46d37feefd",
+    "dolphin.png": "e7ef1d2e7208ef2e3cce82755a3ca418f6f76cf6180343150a6a84e5bf3973bc",
+    "dolphin-restored-focus.png": "f4baeb6b8f7c17ef749100be3354d583755209ab275f2e857622f32ef3d06f21",
+    "system-settings.png": "23b8738f07b069c43836e7d488e9edf2080ef97373ab4881e9245a61a405543b",
+    "system-settings-restored-focus.png": "bc49a08b37954734a4d684495fd3e339f6db7ea84943b247671a1cc9a40f065f",
+    "launcher.png": "2e682acd9aa5fe698fcca8651918ecffb7568c8d0c1146bf5b367e4979cadc5f",
+    "aurorae-tabbox.png": "2778fc74c6895d552631213d931eb7ab262a686033c85c42c2aab3f97a7e6bce",
+    "launcher-no-blur.png": "2e682acd9aa5fe698fcca8651918ecffb7568c8d0c1146bf5b367e4979cadc5f"
+  },
+  "containerImageId": "sha256:fc8ac88f56edb31c6ff027df4bd6b629979e1a6841f3996795e2cde6222e2fd1",
+  "profile": "Demo User, disposable uid 2000, private HOME/XDG/DBus/Wayland, network disabled",
+  "privacyReview": "passed: current media/v10 captures visually reviewed; only synthetic content",
+  "capturePaths": {
+    "desktop-baseline.png": "build/live-demo/desktop-baseline.png",
+    "desktop.png": "media/v10/desktop.png",
+    "dolphin.png": "media/v10/dolphin.png",
+    "dolphin-restored-focus.png": "build/live-demo/dolphin-restored-focus.png",
+    "system-settings.png": "media/v10/system-settings.png",
+    "system-settings-restored-focus.png": "build/live-demo/system-settings-restored-focus.png",
+    "launcher.png": "media/v10/launcher.png",
+    "aurorae-tabbox.png": "media/v10/aurorae-tabbox.png",
+    "launcher-no-blur.png": "media/v10/launcher-no-blur.png"
+  },
+  "blurDisabledQualification": "pending: compositor plugin state was not verified"
+}

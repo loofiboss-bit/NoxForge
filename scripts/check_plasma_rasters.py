@@ -26,7 +26,7 @@ elif VERSION.startswith("8."):
     EVIDENCE_SERIES = "v8"
 else:
     EVIDENCE_SERIES = "v9"
-EVIDENCE = ROOT / f"docs/evidence/{EVIDENCE_SERIES}/plasma-shell"
+EVIDENCE = ROOT / json.loads((ROOT / "distribution/release-manifest.json").read_text())["evidence"]["activeRoot"] / "plasma-shell"
 MANIFEST = EVIDENCE / "atlas-manifest.json"
 SCALES = (
     (1.0, "100"),

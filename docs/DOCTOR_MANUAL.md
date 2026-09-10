@@ -5,8 +5,8 @@
 is `/usr/bin/noxforge-doctor`.
 
 Use `--json` for automation and `--root /absolute/staged/root` for an isolated
-package tree. JSON schema 2 adds a stable top-level `loginSurface` object and
-retains the `edition` object. `loginSurface` contains:
+package tree or a portable data root. JSON schema 3 retains the top-level
+`loginSurface` and `edition` objects. `loginSurface` contains:
 
 - `manager`: `plasmalogin`, `sddm`, `other`, or `not-detected`;
 - `serviceState`: `active`, `inactive`, `unknown`, or `not-applicable`;
@@ -29,3 +29,39 @@ is reported only as a compatibility capability. PLM settings are read with
 The doctor never applies a theme, writes KDE or login-manager configuration,
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
+
+## Schema 3 diagnostics
+
+Each component exposes ordered `paths`, `effectivePath`, `shadowedPaths`,
+`copyVersions`, `metadataStatus`, and `duplicateStatus`. Data components use
+user data followed by ordered absolute `$XDG_DATA_DIRS` entries (default
+`/usr/local/share:/usr/share`) precedence. User paths are
+shown relative to `$XDG_DATA_HOME` to avoid exposing account names. Native Qt
+plugin paths are discovered candidates; `effectivePath` is null because the
+loader's choice is not inferred from filesystem presence.
+
+`duplicateStatus` is `none`, `identical`, `conflict`, or `unknown` for data
+components and `not-applicable` for native plugin candidates. Identical payload
+copies are warnings; differing payloads fail even when version strings match.
+An unreadable comparison remains unknown. Review the listed shadowed copies
+manually; doctor never removes them. `metadataStatus: unknown` is informational,
+including component formats without version metadata.
+
+`issues` contains `code`, `component`, `severity`, and `message`. Codes are
+`duplicate-identical`, `duplicate-conflict`, `duplicate-unknown`,
+`metadata-unknown`, `mixed-versions`, and `missing-required`. Text output renders
+the same issues and paths. Error issues yield exit status 1; warnings and
+informational issues alone do not fail an otherwise valid installation.
+
+A standalone component is valid without the rest of the suite. The global theme
+requires the portable component set, matching its Store dependency declaration.
+A portable manifest or installer ownership marker requires that set. A native
+plugin or installed `noxforge/release-manifest.json` identifies a system edition
+and requires that set plus the native plugin. Optional login assets do not fail those editions.
+The next action names Store components, the portable installer, or the system
+package manager according to the detected edition.
+
+`--root` never reads the source repository's VERSION or host session settings.
+Only VERSION markers inside the inspected root are used; missing or invalid
+markers produce `expectedVersion: null`. Staged session fields are
+`not-applicable`; runtime scales and active configuration are not queried.

@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Reject stale or incomplete runtime source bindings before release promotion."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+RUNTIME_ROOTS = ('src', 'tools', 'design', 'plasma', 'aurorae', 'kwin', 'sddm',
+                 'look-and-feel', 'color-schemes', 'icons', 'cursors', 'sounds', 'wallpapers')
+
+
+def runtime_paths(root: Path) -> set[str]:
+    paths = {'VERSION', 'CMakeLists.txt'}
+    for directory in RUNTIME_ROOTS:
+        paths.update(path.relative_to(root).as_posix() for path in (root / directory).rglob('*')
+                     if path.is_file() and '__pycache__' not in path.parts)
+    return paths
+
+
+def validate(root: Path) -> list[str]:
+    root = root.resolve()
+    evidence = root / 'docs/evidence/v10'
+    record = json.loads((evidence / 'qualification.json').read_text())
+    hashes_path = (evidence / record['candidate']['runtimeSourceHashes']).resolve()
+    if not hashes_path.is_relative_to(evidence):
+        return ['Runtime hash manifest escapes evidence directory']
+    hashes = json.loads(hashes_path.read_text())
+    errors = []
+    expected = runtime_paths(root)
+    if set(hashes) != expected:
+        errors.append('Runtime hash coverage differs: ' + ', '.join(sorted(set(hashes) ^ expected)))
+    for name, digest in hashes.items():
+        path = (root / name).resolve()
+        if not path.is_relative_to(root) or not path.is_file():
+            errors.append(f'Missing or escaped runtime source: {name}')
+        elif hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            errors.append(f'Stale runtime evidence: {name}; recapture or requalify before publication')
+    return errors
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    args = parser.parse_args()
+    try:
+        errors = validate(args.root)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        errors = [f'Invalid runtime evidence: {error}']
+    if errors:
+        print('\n'.join(errors))
+        return 1
+    print('Runtime evidence hashes and coverage match the release source')
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
