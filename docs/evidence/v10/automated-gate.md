@@ -5,7 +5,7 @@ Host installation and active desktop changes are excluded.
 
 | Check | Result |
 | --- | --- |
-| Python | 111 passed, 9 skipped, 0 failures/errors |
+| Python | 117 passed, 9 skipped, 0 failures/errors |
 | Fedora Qt 6.11.2 / Plasma and KWin 6.7.4 | 72/72 CTest passed |
 | Pinned Arch Qt 6.11.2 / Plasma and KWin 6.7.5 | Build and 72/72 CTest passed |
 | ASan and UBSan | 4/4 probes passed |

@@ -48,7 +48,7 @@ def capture(args):
             keys.wait(timeout=10)
         session.stop_process(settings)
         session.stop_process(dolphin)
-        # Additional real compositor evidence for the no-blur contract.
+        # Request blur-off; retain pending status until compositor state is verified.
         live.run(['kwriteconfig6', '--file', 'kwinrc', '--group', 'Plugins', '--key', 'blurEnabled', 'false'])
         live.run(['qdbus-qt6', 'org.kde.KWin', '/KWin', 'reconfigure'])
         session.input('keys', '--hold-ms', 100, live.META)
@@ -57,7 +57,7 @@ def capture(args):
         live.require_visual_change(args.evidence_dir / 'desktop.png', launcher, 'no-blur launcher expansion')
         runtime = live.run(['rpm', '-q', 'qt6-qtbase', 'plasma-workspace', 'kwin']).stdout.splitlines()
         report = {'version': (ROOT/'VERSION').read_text().strip(), 'provenance': 'live-isolated-container', 'runtime': runtime,
-                  'viewport': [args.width, args.height], 'scale': 1.0, 'physicalQualification': False,
+                  'viewport': [args.width, args.height], 'scale': 1.0, 'physicalQualification': False, 'blurDisabledQualification': 'pending: compositor state not verified',
                   'captures': {p.name: live.sha256(p) for p in args.evidence_dir.glob('*.png')}}
         (args.evidence_dir/'capture.json').write_text(json.dumps(report, indent=2)+'\n')
     finally:

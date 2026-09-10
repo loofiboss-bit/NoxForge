@@ -7,9 +7,61 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import struct
+import zlib
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 PROVENANCE_KINDS = {"live", "offscreen", "generated", "composited"}
+
+
+def png_dimensions(data: bytes) -> tuple[int, int]:
+    """Validate complete non-interlaced PNG streams, including CRCs and scanlines."""
+    if not data.startswith(PNG_SIGNATURE):
+        raise ValueError("invalid PNG signature")
+    offset, chunks, compressed = 8, [], bytearray()
+    while offset < len(data):
+        if offset + 12 > len(data):
+            raise ValueError("truncated PNG chunk")
+        size = struct.unpack(">I", data[offset:offset + 4])[0]
+        end = offset + 12 + size
+        if end > len(data):
+            raise ValueError("truncated PNG payload")
+        kind, payload = data[offset + 4:offset + 8], data[offset + 8:end - 4]
+        if zlib.crc32(kind + payload) != struct.unpack(">I", data[end - 4:end])[0]:
+            raise ValueError("invalid PNG chunk CRC")
+        chunks.append(kind)
+        if len(chunks) == 1:
+            if kind != b"IHDR" or len(payload) != 13:
+                raise ValueError("invalid PNG IHDR")
+            width, height, depth, color, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)
+        elif kind == b"IHDR":
+            raise ValueError("duplicate PNG IHDR")
+        if kind == b"IDAT":
+            compressed.extend(payload)
+        if kind == b"IEND":
+            if payload or end != len(data):
+                raise ValueError("invalid PNG end")
+            offset = end
+            break
+        offset = end
+    if not chunks or chunks[-1] != b"IEND" or not compressed:
+        raise ValueError("PNG requires image data and IEND")
+    depths = {0: {1, 2, 4, 8, 16}, 2: {8, 16}, 3: {1, 2, 4, 8}, 4: {8, 16}, 6: {8, 16}}
+    if (not width or not height or depth not in depths.get(color, set())
+            or compression or filtering or interlace):
+        raise ValueError("unsupported PNG image format")
+    if color == 3 and b"PLTE" not in chunks:
+        raise ValueError("indexed PNG requires a palette")
+    channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}[color]
+    stride = (width * depth * channels + 7) // 8 + 1
+    expected = height * stride
+    if expected > 256 * 1024 * 1024:
+        raise ValueError("PNG exceeds decoded media budget")
+    decoder = zlib.decompressobj()
+    raw = decoder.decompress(bytes(compressed), expected + 1)
+    if (len(raw) != expected or not decoder.eof or decoder.unused_data
+            or decoder.unconsumed_tail or any(raw[i] > 4 for i in range(0, expected, stride))):
+        raise ValueError("invalid PNG image scanlines")
+    return width, height
 
 
 def validate_manifest(root: Path, manifest_path: Path | None = None) -> list[str]:
@@ -68,16 +120,17 @@ def validate_manifest(root: Path, manifest_path: Path | None = None) -> list[str
             errors.append(f"{label}: invalid {dimension_key}")
             continue
         try:
-            with path.open("rb") as stream:
-                header = stream.read(33)
+            image_data = path.read_bytes()
         except OSError as exc:
             errors.append(f"{label}: cannot read {value}: {exc}")
             continue
-        if (path.suffix.lower() != ".png" or len(header) != 33
-                or header[:8] != PNG_SIGNATURE or header[8:16] != b"\x00\x00\x00\rIHDR"):
-            errors.append(f"{label}: invalid PNG IHDR in {value}")
+        try:
+            if path.suffix.lower() != ".png":
+                raise ValueError("expected PNG extension")
+            width, height = png_dimensions(image_data)
+        except (ValueError, zlib.error, struct.error) as exc:
+            errors.append(f"{label}: invalid PNG in {value}: {exc}")
             continue
-        width, height = struct.unpack(">II", header[16:24])
         actual = f"{width}x{height}"
         if actual != expected:
             errors.append(f"{label}: dimensions {actual} differ from declared {expected}: {value}")

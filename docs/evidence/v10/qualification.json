@@ -19,7 +19,7 @@
     {
       "id": "python",
       "status": "passed",
-      "passed": 111,
+      "passed": 117,
       "skipped": 9,
       "failures": 0,
       "errors": 0,
@@ -78,13 +78,19 @@
       "id": "rpm-transactions",
       "status": "passed",
       "evidence": "rpm-lifecycle.json"
+    },
+    {
+      "id": "rendered-disabled-text-contrast",
+      "status": "passed",
+      "evidence": "tools/session_renderer.cpp: disabledProbe, CTest session-disabled-controls at all six scales",
+      "scope": "Checks ancestor opacity, measured rendered foreground/background pixels, and contrast >= 3.0; separate from the 40 arithmetic compositing cases."
     }
   ],
   "liveCases": [
     {
       "id": "isolated-fedora-session",
       "status": "passed",
-      "reason": "Five neutral-profile 2560x1440 captures; isolated Fedora Wayland container. No-blur launcher additionally exercised.",
+      "reason": "Five neutral-profile 2560x1440 captures; isolated Fedora Wayland container.",
       "evidence": "live-capture.json"
     },
     {
@@ -121,6 +127,11 @@
       "id": "all-live-scales-rtl-motion",
       "status": "pending",
       "reason": "Six scales, RTL, long labels, keyboard focus and reduced motion have automated coverage. Full live app matrix at every scale remains untested."
+    },
+    {
+      "id": "live-blur-disabled",
+      "status": "pending",
+      "reason": "Configuration was written but compositor plugin state was not read back; identical launcher images do not prove disabled blur."
     }
   ],
   "evidencePolicy": {

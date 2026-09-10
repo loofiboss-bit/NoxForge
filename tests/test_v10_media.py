@@ -31,6 +31,20 @@ class MediaValidationTests(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(self.validate(), [])
 
+    def test_truncated_stream(self):
+        self.image.write_bytes(self.image.read_bytes()[:33])
+        self.assertIn("requires image data", " ".join(self.validate()))
+
+    def test_bad_crc(self):
+        data = bytearray(self.image.read_bytes())
+        data[29] ^= 1
+        self.image.write_bytes(data)
+        self.assertIn("CRC", " ".join(self.validate()))
+
+    def test_trailing_data(self):
+        self.image.write_bytes(self.image.read_bytes() + b"junk")
+        self.assertIn("invalid PNG end", " ".join(self.validate()))
+
     def test_missing_file(self):
         self.image.unlink()
         self.assertIn("cannot read", " ".join(self.validate()))

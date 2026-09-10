@@ -62,7 +62,7 @@
     {
       "id": "launcher-no-blur",
       "path": "media/v10/launcher-no-blur.png",
-      "surface": "launcher with KWin blur disabled",
+      "surface": "launcher after requesting blur disabled; compositor state unverified",
       "provenance": "live-isolated-container",
       "sourceDimensions": "2560x1440"
     }

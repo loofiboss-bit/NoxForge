@@ -19,8 +19,8 @@ def main() -> int:
     parser.add_argument('--candidate-rpm', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True)
     args = parser.parse_args()
-    if not Path('/run/.containerenv').is_file():
-        parser.error('requires a disposable Podman container; refusing host installation')
+    if not any(Path(marker).is_file() for marker in ('/run/.containerenv', '/.dockerenv')):
+        parser.error('requires a disposable container; refusing host installation')
     for package, version in ((args.baseline_rpm, '9.0.0'), (args.candidate_rpm, '10.0.0')):
         if run('rpm', '-qp', '--qf', '%{NAME} %{VERSION}', str(package)) != f'noxforge {version}':
             parser.error(f'wrong package: {package}')

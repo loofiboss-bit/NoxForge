@@ -36,5 +36,6 @@
     "launcher.png": "media/v10/launcher.png",
     "aurorae-tabbox.png": "media/v10/aurorae-tabbox.png",
     "launcher-no-blur.png": "media/v10/launcher-no-blur.png"
-  }
+  },
+  "blurDisabledQualification": "pending: compositor plugin state was not verified"
 }

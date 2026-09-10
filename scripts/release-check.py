@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GENERATOR_CHECKS = (
     ("check_rendered_contrast.py",),
     ("validate_media.py",),
+    ("validate_runtime_evidence.py",),
     ("validate_release_manifest.py",),
     ("sync_version.py", "--check"),
     ("generate_design_system.py", "--check"),

@@ -32,7 +32,7 @@ jobs:
         run: >-
           dnf install -y breeze-icon-theme cmake ffmpeg-free gcc-c++ git
           glibc-langpack-en google-noto-sans-fonts ImageMagick kf6-kirigami
-          kf6-kpackage
+          kf6-kpackage kwin
           libasan libubsan ninja-build plasma-workspace python3
           qt6-qtbase-devel qt6-qtdeclarative-devel rpm-build rpmlint xz
       - uses: actions/checkout@v7
@@ -96,6 +96,20 @@ jobs:
           rpmbuild -bs --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
           python3 - <<'PY'
           import hashlib
+          from pathlib import Path
+          from urllib.request import urlopen
+          baseline=Path('build/noxforge-9.0.0-1.fc44.x86_64.rpm')
+          url='https://github.com/loofiboss-bit/NoxForge/releases/download/v9.0.0/' + baseline.name
+          baseline.write_bytes(urlopen(url, timeout=120).read())
+          if hashlib.sha256(baseline.read_bytes()).hexdigest() != 'e746e4751a0db53950dc98503bd4e67a8af6f39bbddf11d16e61359de883c7ff':
+              raise SystemExit('published v9 RPM checksum mismatch')
+          PY
+          python3 scripts/check_v10_rpm_lifecycle.py \
+            --baseline-rpm build/noxforge-9.0.0-1.fc44.x86_64.rpm \
+            --candidate-rpm rpmbuild/RPMS/x86_64/noxforge-10.0.0-1.fc44.x86_64.rpm \
+            --report build/release-rpm-transactions.json
+          python3 - <<'PY'
+          import hashlib
           import json
           import shutil
           import subprocess
@@ -127,12 +141,18 @@ jobs:
                   qualification=json.loads(source.read_text())
                   qualification['releaseState']='release'
                   qualification['releaseReady']=True
+                  qualification['rpmTransactions']=json.loads(Path('build/release-rpm-transactions.json').read_text())
+                  if qualification['rpmTransactions']['status'] != 'passed':
+                      raise SystemExit('RPM transaction qualification failed')
                   qualification['canonicalWorkflow']={
                       'status': 'passed',
                       'runUrl': '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
                       'sourceCommit': source_commit,
                   }
                   for case in qualification.get('automatedCases', []):
+                      if case.get('id') == 'rpm-transactions':
+                          case.clear()
+                          case.update(id='rpm-transactions', status='passed', evidence='qualification.json#rpmTransactions')
                       if case.get('id') == 'final-release-gate':
                           case.clear()
                           case.update(id='final-release-gate', status='passed',
