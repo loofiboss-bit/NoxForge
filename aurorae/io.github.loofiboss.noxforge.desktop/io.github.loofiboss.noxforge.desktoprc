@@ -7,7 +7,18 @@ InactiveTextColor=166,180,185,255
 UseTextShadow=false
 LeftButtons=M
 RightButtons=IAX
-Shadow=false
+Shadow=true
+ActiveShadowSize=24
+InactiveShadowSize=16
+ActiveShadowOpacity=0.5
+InactiveShadowOpacity=0.3
+ActiveShadowColor=0,0,0
+InactiveShadowColor=0,0,0
+ActiveShadowOffsetX=0
+ActiveShadowOffsetY=4
+InactiveShadowOffsetX=0
+InactiveShadowOffsetY=2
+
 
 [Layout]
 BorderLeft=4

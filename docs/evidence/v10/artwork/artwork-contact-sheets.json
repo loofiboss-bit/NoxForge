@@ -42,7 +42,7 @@
   "schemaVersion": 2,
   "sheets": {
     "docs/evidence/v10/artwork/artwork-brand-optical-sizes.png": "d415be46bec16869c7e83561bf0283f6044574f5055d2d3d8975f8b67c556911",
-    "docs/evidence/v10/artwork/artwork-brand-wallpaper.png": "09b5a0c7d7a8567a2a436f20b27b6cbfb4162a70337ebd8e030d230239f6a55e",
+    "docs/evidence/v10/artwork/artwork-brand-wallpaper.png": "2584414172d65680669688d17e140fbfab748741558f8a89ae90cdfa141aeea3",
     "docs/evidence/v10/artwork/artwork-cursors.png": "ad170a4e85457a32633d6b80ecf012a8452489ba168d40fe96ce0bbdd9e67be7",
     "docs/evidence/v10/artwork/artwork-icons.png": "4d247224685b459f4ff21a88baa45c374aa4c3e76322ed99d28d7e4e365bb8d9"
   },
@@ -55,6 +55,6 @@
     "icons/NoxForge/coverage.json": "340e33b2c03f68be3b232e8e56f50c5e74bbce2378bf2ef38e0abc8f8e357278",
     "sounds/NoxForge/coverage.json": "bb58af0d6751cd3cb6df89399c1007c612df153854906fca56d2755b2845c1db",
     "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg": "3892676816c0fa3aa8d5cb3c1319618e83adf0d4044330c97fe86fd7eb922ada",
-    "wallpapers/NoxForge/contents/source/NoxForge.svg": "bbf7dc06874549a5375ff26310657a6f5b12b7cbb6c6e93c216520f9a725470f"
+    "wallpapers/NoxForge/contents/source/NoxForge.svg": "efb7572a7b8098d57539176e04e4d56d81ebc0fc077614af4c21f49698262106"
   }
 }

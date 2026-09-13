@@ -177,7 +177,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.margins: Platform.Units.gridUnit * 2
         spacing: tokens.compactSpacing
-        Text { id: clockText; anchors.right: parent.right; text: Qt.formatTime(root.currentDateTime, "HH:mm"); color: tokens.textPrimary; font.pixelSize: tokens.displayClockSize; font.weight: tokens.headingWeight }
+        Text { id: clockText; anchors.right: parent.right; text: Qt.formatTime(root.currentDateTime, "HH:mm"); color: tokens.textPrimary; font.pixelSize: tokens.displayClockSize; font.weight: Font.Light }
         Text { id: dateText; anchors.right: parent.right; text: Qt.formatDate(root.currentDateTime, "dddd d MMMM yyyy"); color: tokens.textSecondary; font.pixelSize: tokens.metadataSize }
         Timer {
             interval: 1000; running: true; repeat: true; triggeredOnStart: true
@@ -194,19 +194,39 @@ Rectangle {
             : (root.width - width) / 2
         y: (root.height - height) / 2 + (root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress))
         opacity: root.entryProgress
-        radius: tokens.overlayRadius
+        radius: tokens.overlayRadius + 4
         color: tokens.surfaceOverlay
         border.color: tokens.edgeHighlight
         border.width: tokens.borderWidth
-        Rectangle { anchors.left: parent.left; anchors.top: parent.top; width: 64; height: tokens.activeMarkerWidth; color: tokens.accent }
+        Rectangle { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: parent.top; width: 48; height: 3; radius: 1.5; color: tokens.accent }
 
         ColumnLayout {
             id: form
             anchors.centerIn: parent
             width: parent.width - 64
             spacing: tokens.standardSpacing + tokens.compactSpacing
-            Text { text: qsTr("Sign in"); color: tokens.textPrimary; font.pixelSize: tokens.surfaceTitleSize; font.weight: tokens.headingWeight }
-            Text { text: qsTr("Forge Identity session"); color: tokens.textSecondary; font.pixelSize: tokens.metadataSize; Layout.bottomMargin: tokens.compactSpacing }
+
+            Rectangle {
+                Layout.alignment: Qt.AlignHCenter
+                implicitWidth: 60
+                implicitHeight: 60
+                radius: 30
+                color: tokens.surfaceRaised
+                border.color: tokens.accent
+                border.width: 1.5
+                Layout.bottomMargin: 2
+
+                Text {
+                    anchors.centerIn: parent
+                    text: usernameField.editor.text.length > 0 ? usernameField.editor.text.charAt(0).toUpperCase() : "NF"
+                    color: tokens.accent
+                    font.pixelSize: 20
+                    font.weight: Font.DemiBold
+                }
+            }
+
+            Text { text: qsTr("Sign in"); color: tokens.textPrimary; font.pixelSize: tokens.surfaceTitleSize; font.weight: Font.DemiBold; Layout.alignment: Qt.AlignHCenter }
+            Text { text: qsTr("Forge Identity session"); color: tokens.textSecondary; font.pixelSize: tokens.metadataSize; Layout.bottomMargin: tokens.compactSpacing; Layout.alignment: Qt.AlignHCenter }
 
             ForgeField {
                 id: usernameField
