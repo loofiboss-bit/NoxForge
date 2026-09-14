@@ -1,6 +1,6 @@
 pkgbase = noxforge
-	pkgdesc = Deep Focus Plasma components for Fedora and Arch KDE
-	pkgver = 11.0.0
+	pkgdesc = Ecosystem & App Parity Plasma components for Fedora and Arch KDE
+	pkgver = 12.0.0
 	pkgrel = 1
 	url = https://github.com/loofiboss-bit/NoxForge
 	arch = x86_64
@@ -15,7 +15,7 @@ pkgbase = noxforge
 	depends = plasma-workspace
 	depends = qt6-base
 	optdepends = sddm: qualified NoxForge custom login-screen compatibility
-	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v11.0.0/noxforge-11.0.0-source.tar.xz
+	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v12.0.0/noxforge-12.0.0-source.tar.xz
 	sha256sums = 0112d57ebb11699e7610f808e0d51b539de980e46f55034d0b057d59e5ae6984
 
 pkgname = noxforge

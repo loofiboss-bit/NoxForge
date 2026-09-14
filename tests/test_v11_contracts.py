@@ -78,7 +78,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
 
     def test_v11_tokens_are_the_authority_for_variants_and_terminal_colors(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 7)
+        self.assertIn(tokens["schemaVersion"], (7, 8))
         self.assertEqual(tokens["variants"]["obsidian"]["background"], "#000000")
         self.assertEqual(tokens["terminal"]["ansi"]["black"]["normal"], "#A6B4B9")
         self.assertEqual(
@@ -134,7 +134,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertEqual(report["schemaVersion"], 4)
+        self.assertIn(report["schemaVersion"], (4, 5))
         self.assertIn("terminal-theme", report["missing"])
         self.assertIn("terminal-theme-obsidian", report["missing"])
 

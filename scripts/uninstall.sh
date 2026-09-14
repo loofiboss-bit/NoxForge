@@ -35,6 +35,10 @@ else
         "${data_home}/color-schemes/NoxForgeObsidian.colors"
         "${data_home}/konsole/NoxForge.colorscheme"
         "${data_home}/konsole/NoxForgeObsidian.colorscheme"
+        "${data_home}/themes/NoxForge"
+        "${data_home}/themes/NoxForgeObsidian"
+        "${data_home}/org.kde.syntax-highlighting/themes/NoxForge.theme"
+        "${data_home}/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme"
         "${data_home}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
         "${data_home}/aurorae/themes/io.github.loofiboss.noxforge.desktop"
         "${data_home}/icons/NoxForge"
@@ -45,6 +49,8 @@ else
         "${data_home}/wallpapers/NoxForge"
         "${data_home}/wallpapers/NoxForge-Quiet"
         "${data_home}/wallpapers/NoxForge-Ultrawide"
+        "${data_home}/noxforge/terminals"
+        "${data_home}/noxforge/editors"
     )
 fi
 
