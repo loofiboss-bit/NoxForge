@@ -56,7 +56,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn('staging tag does not resolve to the release commit:', self.workflow)
         self.assertIn('if gh release view "$staging_ref" >/dev/null 2>&1; then', self.workflow)
         self.assertIn('gh release create "$staging_ref" release/* --draft --verify-tag', self.workflow)
-        self.assertIn('docs/releases/v${version}.md', self.workflow)
+        self.assertIn('NOXFORGE_NOTES_FILE=distribution/kde-store/changelog.md', self.workflow)
 
     def test_public_release_refuses_development_versions(self) -> None:
         self.assertIn("public releases require stable VERSION", self.workflow)
