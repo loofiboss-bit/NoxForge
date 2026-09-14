@@ -15,15 +15,16 @@ and the effective login surface when it can be detected.
 It does not write files, apply a theme, clear caches, restart services, switch
 display managers, or request privileges.
 .PP
-JSON schema 4 retains stable
+JSON schema 5 retains stable
 .B edition
 and
 .B loginSurface
 objects. The latter reports the manager, service state, integration type,
 asset availability, selection, and status. An installed SDDM theme is not
 reported as active when Plasma Login Manager is active. Unselected optional
-login assets do not make the installation incomplete. Schema 4 also discovers
-the standard and Obsidian Konsole schemes and reports fractional display
+login assets do not make the installation incomplete. Schema 5 also discovers
+GTK 3/4 themes, KSyntaxHighlighting themes, terminal/editor assets, and the
+Flatpak theme-override readiness state, while reporting fractional display
 scales when available.
 .SH OPTIONS
 .TP

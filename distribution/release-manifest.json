@@ -7,9 +7,9 @@
     "activePlan": "docs/NOXFORGE_V12_PLAN.md",
     "baseline": {
       "version": "11.0.0",
-      "commit": "bb3a6865fa3f80c6575191d90f2fa5d20739c9df",
+      "commit": "bb3a686851766113daf5ef69542f94d876c72e7b",
       "tag": "v11.0.0",
-      "tagCommit": "bb3a6865fa3f80c6575191d90f2fa5d20739c9df",
+      "tagCommit": "bb3a686851766113daf5ef69542f94d876c72e7b",
       "rpmBytes": 1358900,
       "srpmBytes": 5820000,
       "githubSourceBytes": 5800000,

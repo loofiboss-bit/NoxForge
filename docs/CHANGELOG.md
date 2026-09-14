@@ -1,5 +1,19 @@
 # Changelog
 
+## 12.0.0 — Ecosystem & App Parity
+
+- GTK 3/4 themes, KSyntaxHighlighting themes, and VS Code/Cursor themes in
+  standard and Obsidian palettes.
+- Ghostty, Alacritty, Kitty, and Foot terminal configurations.
+- Doctor schema 5 with ecosystem discovery and read-only Flatpak theme access
+  guidance.
+- Synchronized CMake, RPM, Arch, portable, and Store package contracts.
+
+## 11.0.0 — Deep Focus & System Completeness
+
+- Complete native Qt 6 style primitives, official Konsole themes, and the
+  Obsidian true-black companion palette.
+
 ## 10.0.0 — Everyday Precision
 
 - Fix system removal when CMake writes a final manifest entry without a newline.
