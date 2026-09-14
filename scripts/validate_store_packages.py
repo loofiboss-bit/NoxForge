@@ -55,7 +55,7 @@ def _prefixes(package: str) -> tuple[str, ...]:
             return ("metadata.json", "contents/")
         return ("metadata.json", "colors", "plasmarc", "dialogs/", "weather/", "widgets/", "opaque/", "solid/", "translucent/")
     if package == "colors":
-        return ("NoxForgeDark.colors",)
+        return ("NoxForgeDark.colors", "NoxForgeObsidian.colors")
     if package == "aurorae":
         return ("io.github.loofiboss.noxforge.desktop/",)
     if package == "icons":
@@ -181,6 +181,14 @@ def validate_archive(archive: Path, package: str, manifest: dict) -> dict:
         _validate_metadata(archive, package, members, manifest)
     elif package in {"global-theme", "plasma-style", "kwin-switcher"}:
         _validate_metadata(archive, package, members, manifest)
+    if package == "portable":
+        required = {
+            "components/colors/NoxForgeObsidian.colors",
+            "components/konsole/NoxForge.colorscheme",
+            "components/konsole/NoxForgeObsidian.colorscheme",
+        }
+        if not required <= set(relative_names):
+            raise ValueError(f"portable archive is missing v11 assets: {sorted(required - set(relative_names))}")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     return {"package": package, "path": archive.name, "bytes": archive.stat().st_size, "sha256": digest, "budgetBytes": artifact["budgetBytes"]}
 

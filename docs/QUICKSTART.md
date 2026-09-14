@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 10 Everyday Precision targets Fedora 44 KDE and the target Arch Plasma /
+NoxForge 11 Deep Focus targets Fedora 44 KDE and the target Arch Plasma /
 KWin 6.7+ and Qt 6.11 environment on Wayland. Choose the edition that matches
 your boundary.
 
@@ -28,7 +28,7 @@ of the three wallpapers explicitly in System Settings.
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-10.0.0-portable.tar.xz
+tar -xJf noxforge-11.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

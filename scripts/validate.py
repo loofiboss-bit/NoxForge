@@ -122,6 +122,16 @@ def contrast_ratio(first: str, second: str) -> float:
     return (light + 0.05) / (dark + 0.05)
 
 
+def rgb_hex(value: str, *, label: str) -> str:
+    try:
+        channels = [int(channel.strip()) for channel in value.split(",")]
+    except ValueError as error:
+        raise ValidationError(f"{label} is not an RGB value: {value!r}") from error
+    if len(channels) != 3 or any(channel < 0 or channel > 255 for channel in channels):
+        raise ValidationError(f"{label} is not an RGB value: {value!r}")
+    return "#" + "".join(f"{channel:02X}" for channel in channels)
+
+
 def validate_tokens(version: str) -> dict[str, object]:
     tokens = load_json(ROOT / "design/tokens.json")
     if not isinstance(tokens, dict):
@@ -155,8 +165,43 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") != 6 or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") != 7 or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    variants = tokens.get("variants")
+    if not isinstance(variants, dict) or variants.get("obsidian") != {
+        "background": "#000000",
+        "surfaceSunken": "#05080A",
+        "surface": "#0A0F13",
+        "surfaceRaised": "#121B21",
+        "surfaceSelected": "#192D1E",
+        "textPrimary": "#E8F0F2",
+        "textSecondary": "#A6B4B9",
+        "accent": "#A3FF47",
+        "detailCyan": "#22D3EE",
+        "detailViolet": "#A78BFA",
+        "negative": "#FF6B7A",
+        "neutral": "#FBBF24",
+    }:
+        raise ValidationError("Obsidian palette tokens are incomplete or changed")
+    terminal = tokens.get("terminal")
+    if not isinstance(terminal, dict):
+        raise ValidationError("terminal token contract is missing")
+    backgrounds = terminal.get("backgrounds")
+    foreground = terminal.get("foreground")
+    ansi = terminal.get("ansi")
+    if not isinstance(backgrounds, dict) or not isinstance(foreground, dict) or not isinstance(ansi, dict):
+        raise ValidationError("terminal token contract is incomplete")
+    for variant in ("standard", "obsidian"):
+        values = backgrounds.get(variant)
+        if not isinstance(values, dict) or set(values) != {"background", "faint", "intense"}:
+            raise ValidationError(f"terminal {variant} backgrounds are incomplete")
+    if set(foreground) != {"normal", "faint", "intense"} or set(ansi) != {
+        "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"
+    }:
+        raise ValidationError("terminal ANSI token contract is incomplete")
+    for name, values in [("foreground", foreground), *ansi.items()]:
+        if not isinstance(values, dict) or set(values) != {"normal", "faint", "intense"}:
+            raise ValidationError(f"terminal {name} contrast tokens are incomplete")
     geometry = tokens.get("geometry")
     semantic_roles = tokens.get("semanticRoles")
     opacity = tokens.get("opacity")
@@ -523,14 +568,23 @@ def validate_konsole() -> None:
     for name in ("NoxForge", "NoxForgeObsidian"):
         path = ROOT / f"konsole/{name}.colorscheme"
         if not path.is_file():
-            continue
+            raise ValidationError(f"{path.name} is missing")
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(path, encoding="utf-8")
         if "General" not in parser or "Background" not in parser or "Foreground" not in parser:
             raise ValidationError(f"{path.name} missing required Konsole sections")
-        for section in ("Color0", "Color1", "Color2", "Color3", "Color4", "Color5", "Color6", "Color7"):
-            if section not in parser:
-                raise ValidationError(f"{path.name} missing {section}")
+        background = rgb_hex(parser["Background"]["Color"], label=f"{path.name} background")
+        foreground = rgb_hex(parser["Foreground"]["Color"], label=f"{path.name} foreground")
+        if contrast_ratio(foreground, background) < 7.0:
+            raise ValidationError(f"{path.name} foreground contrast is below 7:1")
+        for index in range(8):
+            for suffix in ("", "Faint", "Intense"):
+                section = f"Color{index}{suffix}"
+                if section not in parser:
+                    raise ValidationError(f"{path.name} missing {section}")
+                color = rgb_hex(parser[section]["Color"], label=f"{path.name} {section}")
+                if contrast_ratio(color, background) < 4.5:
+                    raise ValidationError(f"{path.name} {section} contrast is below 4.5:1")
 
 
 def validate_metadata(version: str) -> None:
@@ -2191,8 +2245,7 @@ def validate() -> None:
     tokens = validate_tokens(version)
     validate_motion_contract(tokens, version)
     validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors", "NoxForgeDark")
-    if (ROOT / "color-schemes/NoxForgeObsidian.colors").is_file():
-        validate_color_scheme(ROOT / "color-schemes/NoxForgeObsidian.colors", "NoxForgeObsidian")
+    validate_color_scheme(ROOT / "color-schemes/NoxForgeObsidian.colors", "NoxForgeObsidian")
     validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors", "NoxForgeDark")
     validate_konsole()
     if (ROOT / "color-schemes/NoxForgeDark.colors").read_bytes() != (

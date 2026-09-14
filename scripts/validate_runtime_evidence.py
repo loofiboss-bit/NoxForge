@@ -20,7 +20,7 @@ def runtime_paths(root: Path) -> set[str]:
 
 
 def evidence_root(root: Path) -> Path:
-    fallback = root / 'docs/evidence/v10'
+    fallback = root / 'docs/evidence/v11'
     manifest_path = root / 'distribution/release-manifest.json'
     if not manifest_path.is_file():
         return fallback

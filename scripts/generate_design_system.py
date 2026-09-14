@@ -311,9 +311,9 @@ def brand_lockup(tokens: dict[str, object]) -> str:
 '''
 
 
-def color_scheme(tokens: dict[str, object]) -> str:
-    colors = tokens["colors"]
-    assert isinstance(colors, dict)
+def color_scheme_for_palette(
+    colors: dict[str, object], scheme_id: str, display_name: str
+) -> str:
     roles = {
         "BackgroundAlternate": colors["surface"],
         "BackgroundNormal": colors["surfaceRaised"],
@@ -368,8 +368,8 @@ IntensityEffect=0
 {section("Colors:View", str(colors["background"]))}
 {section("Colors:Window", str(colors["surface"]), str(colors["surfaceRaised"]))}
 [General]
-ColorScheme=NoxForgeDark
-Name=NoxForge Dark
+ColorScheme={scheme_id}
+Name={display_name}
 shadeSortColumn=true
 
 [KDE]
@@ -385,12 +385,93 @@ inactiveForeground={rgb(str(colors["textSecondary"]))}
 '''
 
 
+def color_scheme(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    assert isinstance(colors, dict)
+    return color_scheme_for_palette(colors, "NoxForgeDark", "NoxForge Dark")
+
+
+def obsidian_color_scheme(tokens: dict[str, object]) -> str:
+    base = tokens["colors"]
+    variants = tokens["variants"]
+    assert isinstance(base, dict) and isinstance(variants, dict)
+    obsidian = variants["obsidian"]
+    assert isinstance(obsidian, dict)
+    palette = dict(base)
+    palette.update(obsidian)
+    return color_scheme_for_palette(palette, "NoxForgeObsidian", "NoxForge Obsidian")
+
+
+def konsole_scheme(tokens: dict[str, object], variant: str) -> str:
+    terminal = tokens["terminal"]
+    assert isinstance(terminal, dict)
+    backgrounds = terminal["backgrounds"]
+    foreground = terminal["foreground"]
+    ansi = terminal["ansi"]
+    assert isinstance(backgrounds, dict)
+    assert isinstance(foreground, dict)
+    assert isinstance(ansi, dict)
+    background = backgrounds[variant]
+    assert isinstance(background, dict)
+    names = ("black", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
+    lines = [
+        "[General]",
+        f"Description={'NoxForge' if variant == 'standard' else 'NoxForge Obsidian'}",
+        "Opacity=1",
+        "Blur=false",
+        "ColorRandomization=false",
+        "",
+        "[Background]",
+        f"Color={rgb(str(background['background']))}",
+        "",
+        "[BackgroundFaint]",
+        f"Color={rgb(str(background['faint']))}",
+        "",
+        "[BackgroundIntense]",
+        f"Color={rgb(str(background['intense']))}",
+        "",
+    ]
+    for index, name in enumerate(names):
+        value = ansi[name]
+        assert isinstance(value, dict)
+        lines.extend(
+            [
+                f"[Color{index}]",
+                f"Color={rgb(str(value['normal']))}",
+                "",
+                f"[Color{index}Faint]",
+                f"Color={rgb(str(value['faint']))}",
+                "",
+                f"[Color{index}Intense]",
+                f"Color={rgb(str(value['intense']))}",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "[Foreground]",
+            f"Color={rgb(str(foreground['normal']))}",
+            "",
+            "[ForegroundFaint]",
+            f"Color={rgb(str(foreground['faint']))}",
+            "",
+            "[ForegroundIntense]",
+            f"Color={rgb(str(foreground['intense']))}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def outputs(tokens: dict[str, object]) -> dict[Path, str]:
     colors_text = color_scheme(tokens)
     generated = {
         ROOT / "src/style/noxforgepalette.h": cpp_header(tokens),
         ROOT / "color-schemes/NoxForgeDark.colors": colors_text,
         ROOT / f"plasma/desktoptheme/{THEME_ID}/colors": colors_text,
+        ROOT / "color-schemes/NoxForgeObsidian.colors": obsidian_color_scheme(tokens),
+        ROOT / "konsole/NoxForge.colorscheme": konsole_scheme(tokens, "standard"),
+        ROOT / "konsole/NoxForgeObsidian.colorscheme": konsole_scheme(tokens, "obsidian"),
     }
     qml = qml_tokens(tokens)
     generated.update({path: qml for path in QML_TARGETS})

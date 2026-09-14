@@ -5,7 +5,7 @@
 is `/usr/bin/noxforge-doctor`.
 
 Use `--json` for automation and `--root /absolute/staged/root` for an isolated
-package tree or a portable data root. JSON schema 3 retains the top-level
+package tree or a portable data root. JSON schema 4 retains the top-level
 `loginSurface` and `edition` objects. `loginSurface` contains:
 
 - `manager`: `plasmalogin`, `sddm`, `other`, or `not-detected`;
@@ -30,7 +30,13 @@ The doctor never applies a theme, writes KDE or login-manager configuration,
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 3 diagnostics
+## Schema 4 diagnostics
+
+Schema 4 also discovers the standard and Obsidian Konsole schemes and reports
+fractional scaling factors when the inspected root provides them. The
+`--remediation-plan` option emits non-destructive shell guidance and preserves
+the report's status-derived exit code; it never claims that a suggested action
+was executed.
 
 Each component exposes ordered `paths`, `effectivePath`, `shadowedPaths`,
 `copyVersions`, `metadataStatus`, and `duplicateStatus`. Data components use

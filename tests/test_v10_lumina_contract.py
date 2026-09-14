@@ -36,13 +36,13 @@ class LuminaContractTests(unittest.TestCase):
             any(key.startswith(("activeshadow", "inactiveshadow")) for key in general)
         )
 
-    def test_lumina_preview_and_active_plan_are_current(self) -> None:
+    def test_active_plan_and_preview_are_current(self) -> None:
         manifest = json.loads(
             (ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V10_1_PLAN.md")
-        self.assertEqual(manifest["release"]["stableVersion"], "10.1.0")
-        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "10.1.0")
+        self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V11_PLAN.md")
+        self.assertEqual(manifest["release"]["stableVersion"], "11.0.0")
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), "11.0.0")
         preview = ROOT / "sddm/NoxForge/preview.png"
         evidence = ROOT / "docs/evidence/sddm_login_100pct.png"
         self.assertEqual(png_dimensions(preview), (960, 540))

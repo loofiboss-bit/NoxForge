@@ -12,7 +12,7 @@ class RuntimeEvidenceTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        evidence = self.root / 'docs/evidence/v10'
+        evidence = self.root / 'docs/evidence/v11'
         evidence.mkdir(parents=True)
         (evidence / 'qualification.json').write_text(json.dumps({'candidate': {'runtimeSourceHashes': 'hashes.json'}}))
         hashes = {}
