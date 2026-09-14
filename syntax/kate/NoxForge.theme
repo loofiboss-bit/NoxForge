@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "name": "NoxForge",
+    "revision": 1
+  },
+  "editor-colors": {
+    "BackgroundColor": "#0D1419",
+    "CodeFolding": "#2F414B",
+    "CurrentLine": "#141E25",
+    "CurrentLineNumber": "#A3FF47",
+    "IconBorder": "#10191F",
+    "IndentationLine": "#2F414B",
+    "LineNumbers": "#748289",
+    "MarkBookmark": "#22D3EE",
+    "MarkBreakpointActive": "#FF6B7A",
+    "MarkBreakpointDisabled": "#748289",
+    "MarkBreakpointReached": "#FBBF24",
+    "MarkError": "#FF6B7A",
+    "MarkExecution": "#22D3EE",
+    "MarkWarning": "#FBBF24",
+    "ModifiedLines": "#FBBF24",
+    "ReplaceHighlight": "#243528",
+    "SavedLines": "#A3FF47",
+    "SearchHighlight": "#223429",
+    "Separator": "#2F414B",
+    "SpellingMistakeLine": "#FF6B7A",
+    "TabMarker": "#354852",
+    "TemplateBackground": "#1B2831",
+    "TemplateFocusedEditablePlaceholder": "#243528",
+    "TemplateReadOnlyPlaceholder": "#10191F",
+    "TextSelection": "#223429",
+    "WordWrapMarker": "#2F414B"
+  },
+  "text-styles": {
+    "Alert": {
+      "bold": true,
+      "selected-text-color": "#FF6B7A",
+      "text-color": "#FF6B7A"
+    },
+    "Annotation": {
+      "selected-text-color": "#A78BFA",
+      "text-color": "#A78BFA"
+    },
+    "Attribute": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "BaseN": {
+      "selected-text-color": "#FBBF24",
+      "text-color": "#FBBF24"
+    },
+    "BuiltIn": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Char": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Comment": {
+      "italic": true,
+      "selected-text-color": "#748289",
+      "text-color": "#748289"
+    },
+    "CommentVar": {
+      "selected-text-color": "#A6B4B9",
+      "text-color": "#A6B4B9"
+    },
+    "Constant": {
+      "bold": true,
+      "selected-text-color": "#FBBF24",
+      "text-color": "#FBBF24"
+    },
+    "ControlFlow": {
+      "bold": true,
+      "selected-text-color": "#A3FF47",
+      "text-color": "#A3FF47"
+    },
+    "DataType": {
+      "selected-text-color": "#A78BFA",
+      "text-color": "#A78BFA"
+    },
+    "DecVal": {
+      "selected-text-color": "#FBBF24",
+      "text-color": "#FBBF24"
+    },
+    "Documentation": {
+      "selected-text-color": "#A6B4B9",
+      "text-color": "#A6B4B9"
+    },
+    "Error": {
+      "selected-text-color": "#FF6B7A",
+      "text-color": "#FF6B7A",
+      "underline": true
+    },
+    "Extension": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Float": {
+      "selected-text-color": "#FBBF24",
+      "text-color": "#FBBF24"
+    },
+    "Function": {
+      "selected-text-color": "#E8F0F2",
+      "text-color": "#E8F0F2"
+    },
+    "Import": {
+      "selected-text-color": "#A3FF47",
+      "text-color": "#A3FF47"
+    },
+    "Information": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Keyword": {
+      "bold": true,
+      "selected-text-color": "#A3FF47",
+      "text-color": "#A3FF47"
+    },
+    "Normal": {
+      "selected-text-color": "#E8F0F2",
+      "text-color": "#E8F0F2"
+    },
+    "Operator": {
+      "selected-text-color": "#A6B4B9",
+      "text-color": "#A6B4B9"
+    },
+    "Others": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Preprocessor": {
+      "selected-text-color": "#A78BFA",
+      "text-color": "#A78BFA"
+    },
+    "RegionMarker": {
+      "selected-text-color": "#354852",
+      "text-color": "#354852"
+    },
+    "SpecialChar": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "SpecialString": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "String": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Variable": {
+      "selected-text-color": "#E8F0F2",
+      "text-color": "#E8F0F2"
+    },
+    "VerbatimString": {
+      "selected-text-color": "#22D3EE",
+      "text-color": "#22D3EE"
+    },
+    "Warning": {
+      "selected-text-color": "#FBBF24",
+      "text-color": "#FBBF24"
+    }
+  }
+}
