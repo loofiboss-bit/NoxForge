@@ -2,7 +2,7 @@
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. Version 10.0.0 targets Fedora 44 and
+Forge Notch. Version 10.1.0 targets Fedora 44 and
 Arch Plasma/KWin 6.7+ and Qt 6.11 on Wayland.
 Fedora and Arch builds pass 72 offscreen tests each. Physical qualification
 remains pending; see [the evidence record](docs/evidence/v10/qualification.json).
@@ -64,13 +64,14 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The active scope is [NOXFORGE_V10_PLAN.md](docs/NOXFORGE_V10_PLAN.md), indexed by
+The active scope is [NOXFORGE_V10_1_PLAN.md](docs/NOXFORGE_V10_1_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the phase gate with:
 
 ```bash
-mkdir -p build/v9-source
-git archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
-python3 scripts/release-check.py --baseline-source build/v9-source --skip-rpm
+mkdir -p build/baseline-source
+baseline_commit=$(python3 -c 'import json; from pathlib import Path; print(json.loads(Path("distribution/release-manifest.json").read_text())["release"]["baseline"]["commit"])')
+git archive "$baseline_commit" | tar -x -C build/baseline-source
+python3 scripts/release-check.py --baseline-source build/baseline-source --skip-rpm
 python3 scripts/build.py --mode all --skip-tests
 ```
 

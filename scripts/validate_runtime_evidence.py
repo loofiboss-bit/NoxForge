@@ -19,9 +19,25 @@ def runtime_paths(root: Path) -> set[str]:
     return paths
 
 
+def evidence_root(root: Path) -> Path:
+    fallback = root / 'docs/evidence/v10'
+    manifest_path = root / 'distribution/release-manifest.json'
+    if not manifest_path.is_file():
+        return fallback
+    try:
+        manifest = json.loads(manifest_path.read_text())
+        configured = manifest.get('evidence', {}).get('activeRoot')
+    except (OSError, ValueError, TypeError, AttributeError):
+        return fallback
+    if not isinstance(configured, str) or not configured:
+        return fallback
+    candidate = (root / configured).resolve()
+    return candidate if candidate.is_relative_to(root.resolve()) else fallback
+
+
 def validate(root: Path) -> list[str]:
     root = root.resolve()
-    evidence = root / 'docs/evidence/v10'
+    evidence = evidence_root(root)
     record = json.loads((evidence / 'qualification.json').read_text())
     hashes_path = (evidence / record['candidate']['runtimeSourceHashes']).resolve()
     if not hashes_path.is_relative_to(evidence):
@@ -42,7 +58,7 @@ def validate(root: Path) -> list[str]:
 
 def update(root: Path) -> Path:
     root = root.resolve()
-    evidence = root / 'docs/evidence/v10'
+    evidence = evidence_root(root)
     record = json.loads((evidence / 'qualification.json').read_text())
     hashes_path = (evidence / record['candidate']['runtimeSourceHashes']).resolve()
     if not hashes_path.is_relative_to(evidence):
@@ -75,4 +91,3 @@ def main() -> int:
 
 if __name__ == '__main__':
     raise SystemExit(main())
-

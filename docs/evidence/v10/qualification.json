@@ -3,15 +3,15 @@
   "releaseState": "release-candidate",
   "releaseReady": false,
   "candidate": {
-    "version": "10.0.0",
-    "sourceRef": "v10.0.0",
+    "version": "10.1.0",
+    "sourceRef": "v10.1.0",
     "sourceCommit": null,
-    "baselineCommit": "dc0b8b2a88988b651e091619de074735833d90e5",
+    "baselineCommit": "efe433aec756a55531e8ba83f1ffeac0b2f495a7",
     "worktreeDirty": true,
-    "package": "noxforge-10.0.0-1.fc44.x86_64.rpm",
+    "package": "noxforge-10.1.0-1.fc44.x86_64.rpm",
     "artifacts": [
-      "noxforge-10.0.0-source.tar.xz",
-      "noxforge-10.0.0-portable.tar.xz"
+      "noxforge-10.1.0-source.tar.xz",
+      "noxforge-10.1.0-portable.tar.xz"
     ],
     "runtimeSourceHashes": "runtime-source-hashes.json"
   },
@@ -19,7 +19,7 @@
     {
       "id": "python",
       "status": "passed",
-      "passed": 117,
+      "passed": 119,
       "skipped": 9,
       "failures": 0,
       "errors": 0,
@@ -45,10 +45,10 @@
       "log": "build/release-gate.log"
     },
     {
-      "id": "actual-v9-v10-v9-lifecycle",
+      "id": "actual-10.0.0-10.1.0-10.0.0-lifecycle",
       "status": "passed",
       "evidence": "migration.json",
-      "scope": "portable user and staged CMake system roots; 7 phases each; all configuration bytes preserved"
+      "scope": "portable user and staged CMake system roots; baseline-to-candidate upgrade/rollback; all configuration bytes preserved"
     },
     {
       "id": "composited-contrast",
@@ -65,7 +65,7 @@
       "id": "final-release-gate",
       "status": "passed",
       "log": "build/public-release-gate.log",
-      "scope": "Full uninterrupted local gate before final release-text and Store checksum updates; canonical CI reruns against the exact release commit."
+      "scope": "Full uninterrupted local gate for the current 10.1.0 tree; canonical CI reruns against the exact release commit."
     },
     {
       "id": "rpm-package-validation",
@@ -89,9 +89,8 @@
   "liveCases": [
     {
       "id": "isolated-fedora-session",
-      "status": "passed",
-      "reason": "Five neutral-profile 2560x1440 captures; isolated Fedora Wayland container.",
-      "evidence": "live-capture.json"
+      "status": "pending",
+      "reason": "The 10.0.0 capture is historical and has not been requalified for the 10.1.0 Lumina candidate."
     },
     {
       "id": "arch-live-session",
@@ -146,7 +145,7 @@
       "out-of-root component provenance",
       "mixed edition management capabilities",
       "out-of-root native plugin and auxiliary markers",
-      "canonical gate did not require actual v9 baseline"
+      "canonical gate did not require the actual public baseline"
     ],
     "limitation": "Independent reviewer reported findings but its final follow-up was interrupted by service usage limits. Main agent verified fixes and regression tests."
   },

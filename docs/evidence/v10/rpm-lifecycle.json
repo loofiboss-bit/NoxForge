@@ -1,11 +1,12 @@
 {
-  "version": "10.0.0",
+  "version": "10.1.0",
+  "baselineVersion": "10.0.0",
   "status": "passed",
   "scope": "real RPM transactions in isolated Fedora container",
   "hostMutated": false,
   "phases": [
     {
-      "phase": "v9-install",
+      "phase": "10.0.0-install",
       "status": "passed",
       "configurationHashes": {
         "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
@@ -16,7 +17,7 @@
       }
     },
     {
-      "phase": "v10-upgrade",
+      "phase": "10.1.0-upgrade",
       "status": "passed",
       "configurationHashes": {
         "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
@@ -27,7 +28,7 @@
       }
     },
     {
-      "phase": "v10-reinstall",
+      "phase": "10.1.0-reinstall",
       "status": "passed",
       "configurationHashes": {
         "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
@@ -38,7 +39,7 @@
       }
     },
     {
-      "phase": "v9-rollback",
+      "phase": "10.0.0-rollback",
       "status": "passed",
       "configurationHashes": {
         "/home/demo/.config/kdeglobals": "8dce997b9358911ea9068ec0ba255959812c8eb59233d39e80dda8e66b2c34bb",
@@ -61,7 +62,7 @@
     }
   ],
   "packageHashes": {
-    "noxforge-9.0.0-1.fc44.x86_64.rpm": "e746e4751a0db53950dc98503bd4e67a8af6f39bbddf11d16e61359de883c7ff",
-    "noxforge-10.0.0-1.fc44.x86_64.rpm": "4ac5ae114a63e9eae85aa64797dde4b0ca0d63ee7e840709bbfbd54733878319"
+    "noxforge-10.0.0-1.fc44.x86_64.rpm": "caa0ff7b8c654bac17d1f264f5fa101b1f3ea1844b482c2b1c54a6a78ee4bcbb",
+    "noxforge-10.1.0-1.fc44.x86_64.rpm": "176b4fee2e7cba8d2251474697550941a751c1dc6a65e02f150d4ec517b3e5bc"
   }
 }
