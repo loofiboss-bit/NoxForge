@@ -30,7 +30,7 @@ Rectangle {
 
     Column {
         anchors.centerIn: parent
-        spacing: tokens.standardSpacing
+        spacing: tokens.standardSpacing * 2
         transform: Translate {
             y: root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress)
         }
@@ -60,6 +60,8 @@ Rectangle {
             height: 3
             radius: 1.5
             color: tokens.surfaceRaised
+            border.color: tokens.border
+            border.width: 1
 
             Rectangle {
                 width: parent.width * root.stageProgress

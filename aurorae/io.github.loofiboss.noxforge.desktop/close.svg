@@ -8,34 +8,42 @@
   </defs>
   <g id="active-center" transform="translate(0 0)" class="ColorScheme-Text" color="#E8F0F2">
       <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0"/>
-      <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      
+      <g fill="none" stroke="#E8F0F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
   <g id="inactive-center" transform="translate(32 0)" class="ColorScheme-Text" color="#E8F0F2">
       <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0"/>
-      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      
+      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
   <g id="hover-center" transform="translate(64 0)" class="ColorScheme-Hover" color="#E8F0F2">
-      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="1"/>
-      <g fill="none" stroke="#FF6B7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0.85"/>
+      <rect x="0.5" y="0.5" width="23" height="23" rx="4" fill="none" stroke="#FF6B7A" stroke-width="1" stroke-opacity="0.6"/>
+      <g fill="none" stroke="#FF6B7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
-  <g id="hover-inactive-center" transform="translate(96 0)" class="ColorScheme-Text" color="#E8F0F2">
-      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0.1"/>
-      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+  <g id="hover-inactive-center" transform="translate(96 0)" class="ColorScheme-Hover" color="#E8F0F2">
+      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0.45"/>
+      
+      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
   <g id="pressed-center" transform="translate(128 0)" class="ColorScheme-Pressed" color="#E8F0F2">
       <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="1"/>
-      <g fill="none" stroke="#FF6B7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      <rect x="0.5" y="0.5" width="23" height="23" rx="4" fill="none" stroke="#FF6B7A" stroke-width="1" stroke-opacity="0.6"/>
+      <g fill="none" stroke="#FF6B7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
-  <g id="pressed-inactive-center" transform="translate(160 0)" class="ColorScheme-Text" color="#E8F0F2">
-      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0.16"/>
-      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+  <g id="pressed-inactive-center" transform="translate(160 0)" class="ColorScheme-Pressed" color="#E8F0F2">
+      <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0.65"/>
+      
+      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
   <g id="deactivated-center" transform="translate(192 0)" class="ColorScheme-Text" color="#E8F0F2">
       <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0"/>
-      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      
+      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
   <g id="deactivated-inactive-center" transform="translate(224 0)" class="ColorScheme-Text" color="#E8F0F2">
       <rect width="24" height="24" rx="4" fill="currentColor" fill-opacity="0"/>
-      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l8 8M16 8l-8 8"/></g>
+      
+      <g fill="none" stroke="#A6B4B9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></g>
     </g>
 </svg>

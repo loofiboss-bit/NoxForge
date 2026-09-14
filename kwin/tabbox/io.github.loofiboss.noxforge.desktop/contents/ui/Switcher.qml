@@ -153,12 +153,14 @@ Item {
                 }
 
                 Rectangle {
-                    anchors.left: root.horizontalMode ? parent.left : parent.left
-                    anchors.right: root.horizontalMode ? parent.right : undefined
+                    anchors.horizontalCenter: root.horizontalMode ? parent.horizontalCenter : undefined
+                    anchors.left: root.horizontalMode ? undefined : parent.left
                     anchors.bottom: root.horizontalMode ? parent.bottom : undefined
+                    anchors.bottomMargin: root.horizontalMode ? tokens.compactSpacing : 0
                     anchors.verticalCenter: root.horizontalMode ? undefined : parent.verticalCenter
                     width: root.horizontalMode ? parent.width - tokens.standardSpacing * 2 : tokens.activeMarkerWidth
                     height: root.horizontalMode ? tokens.activeMarkerWidth : parent.height - tokens.standardSpacing * 2
+                    radius: tokens.activeMarkerWidth / 2
                     color: tokens.accent
                     opacity: windowDelegate.index === windowList.currentIndex ? 1 : 0
                     Behavior on opacity {
