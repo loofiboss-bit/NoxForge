@@ -8,14 +8,14 @@
     },
     "sddm": {
       "path": "sddm/NoxForge/preview.png",
-      "sha256": "460ebdfa7cb5566a7d89a628ebc394ca7e90eea4399697b9e36602871de2035c"
+      "sha256": "d7afb58659414574b8eb1db59471fe795292488b8082ace2893a2cc6fb31806c"
     }
   },
   "phase": 2,
   "release": "10.1.0",
   "schemaVersion": 1,
   "sources": {
-    "sddm/NoxForge/Main.qml": "1fe34d2971b836797a719a36140a272ecbbeb3202c33965d10ea76ebad5a3868",
+    "sddm/NoxForge/Main.qml": "7f3588268029a02734196684054bf2ba72a9023d43ec707397253461885c90ed",
     "sddm/NoxForge/NoxForgeLockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
     "sddm/NoxForge/background.png": "f81a8879f03a2fdcb4d10fcc37f51131ba14ba25c93d5985a31a39feee120591",
     "tools/sddm_renderer.cpp": "7d939bbda1a0de5441f2ed46686387bb4ac4f6a7a9176a01ad742d3221a7fc17",
