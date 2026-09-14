@@ -37,23 +37,32 @@ jobs:
           qt6-qtbase-devel qt6-qtdeclarative-devel rpm-build rpmlint xz
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.ref }}
           fetch-depth: 0
       - name: Validate exact tag and manifest
         shell: bash
+        env:
+          REQUESTED_REF: ${{ inputs.ref }}
         run: |
+          [[ "$REQUESTED_REF" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "Invalid release tag format: $REQUESTED_REF" >&2
+            exit 1
+          }
+          git -c safe.directory="$PWD" fetch --force --tags origin
+          exact="$(git -c safe.directory="$PWD" rev-parse "refs/tags/${REQUESTED_REF}^{commit}")"
+          git -c safe.directory="$PWD" checkout --detach "$exact"
           python3 - <<'PY'
           import json
           import re
           import subprocess
+          import os
           from pathlib import Path
           manifest = json.loads(Path('distribution/release-manifest.json').read_text())
           version = Path('VERSION').read_text().strip()
           if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', version):
               raise SystemExit(f'public releases require stable VERSION, got {version}')
-          if version != manifest['release']['stableVersion'] or '${{ inputs.ref }}' != f'v{version}':
+          requested_ref = os.environ['REQUESTED_REF']
+          if version != manifest['release']['stableVersion'] or requested_ref != f'v{version}':
               raise SystemExit('tag, VERSION, and manifest stableVersion do not match')
-          requested_ref = '${{ inputs.ref }}'
           exact = subprocess.check_output(
               [
                   'git',
