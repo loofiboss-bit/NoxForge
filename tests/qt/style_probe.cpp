@@ -304,6 +304,33 @@ int main(int argc, char **argv)
     }
     if (style->styleHint(QStyle::SH_Widget_Animation_Duration) != 240) return 27;
 
+    QStyleOption branchOpt;
+    branchOpt.rect = QRect(0, 0, 20, 20);
+    branchOpt.state = QStyle::State_Children | QStyle::State_Open | QStyle::State_Enabled;
+    const QImage branchImg = renderPrimitive(style, QStyle::PE_IndicatorBranch, branchOpt);
+    if (branchImg.isNull()) return 40;
+
+    QStyleOption tabFrameOpt;
+    tabFrameOpt.rect = QRect(0, 0, 100, 100);
+    const QImage tabFrameImg = renderPrimitive(style, QStyle::PE_FrameTabWidget, tabFrameOpt);
+    if (tabFrameImg.isNull()) return 41;
+
+    QStyleOption dockFrameOpt;
+    dockFrameOpt.rect = QRect(0, 0, 100, 100);
+    const QImage dockFrameImg = renderPrimitive(style, QStyle::PE_FrameDockWidget, dockFrameOpt);
+    if (dockFrameImg.isNull()) return 42;
+
+    QStyleOption statusOpt;
+    statusOpt.rect = QRect(0, 0, 200, 24);
+    const QImage statusImg = renderPrimitive(style, QStyle::PE_PanelStatusBar, statusOpt);
+    if (statusImg.isNull()) return 43;
+
+    QStyleOption splitterOpt;
+    splitterOpt.rect = QRect(0, 0, 8, 100);
+    splitterOpt.state = QStyle::State_Horizontal;
+    const QImage splitterImg = renderControl(style, QStyle::CE_Splitter, splitterOpt);
+    if (splitterImg.isNull()) return 44;
+
     const QString className = QString::fromLatin1(app.style()->metaObject()->className());
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"
                         << "Loaded style class: " << className << '\n'

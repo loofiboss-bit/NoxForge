@@ -57,6 +57,9 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
 %{_datadir}/color-schemes/NoxForgeDark.colors
+%{_datadir}/color-schemes/NoxForgeObsidian.colors
+%{_datadir}/konsole/NoxForge.colorscheme
+%{_datadir}/konsole/NoxForgeObsidian.colorscheme
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/icons/NoxForge/

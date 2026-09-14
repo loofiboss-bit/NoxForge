@@ -571,10 +571,49 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         if (option->state.testFlag(State_MouseOver))
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                          option->state.testFlag(State_Sunken) ? NP::surfaceSelected()
-                                                             : NP::surfaceHover(),
+                                                              : NP::surfaceHover(),
                          option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border());
         paintCloseIndicator(painter, option->rect,
                             enabled(option) ? NP::textPrimary() : NP::textDisabled());
+        return;
+    case PE_IndicatorBranch: {
+        const int midX = option->rect.center().x();
+        const int midY = option->rect.center().y();
+        painter->save();
+        painter->setPen(QPen(NP::outlineMuted(), 1, Qt::SolidLine));
+        if (option->state.testFlag(State_Item)) {
+            const int startX = (option->direction == Qt::RightToLeft) ? option->rect.left() : midX;
+            const int endX = (option->direction == Qt::RightToLeft) ? midX : option->rect.right();
+            painter->drawLine(startX, midY, endX, midY);
+        }
+        if (option->state.testFlag(State_Sibling)) {
+            painter->drawLine(midX, option->rect.top(), midX, option->rect.bottom());
+        } else if (option->state.testFlag(State_Item)) {
+            painter->drawLine(midX, option->rect.top(), midX, midY);
+        }
+        if (option->state.testFlag(State_Children)) {
+            const bool open = option->state.testFlag(State_Open);
+            const Qt::ArrowType arrow = open ? Qt::DownArrow
+                : (option->direction == Qt::RightToLeft ? Qt::LeftArrow : Qt::RightArrow);
+            const QColor color = option->state.testFlag(State_MouseOver)
+                ? NP::accent()
+                : (enabled(option) ? NP::textSecondary() : NP::textDisabled());
+            paintArrow(painter, option->rect, arrow, color);
+        }
+        painter->restore();
+        return;
+    }
+    case PE_FrameTabWidget:
+    case PE_FrameDockWidget:
+        paintSurface(painter, option->rect, NP::surface(), NP::border());
+        return;
+    case PE_PanelStatusBar:
+        painter->fillRect(option->rect, NP::surface());
+        painter->fillRect(QRect(option->rect.left(), option->rect.top(), option->rect.width(), 1), NP::border());
+        return;
+    case PE_FrameStatusBarItem:
+        painter->fillRect(QRect(option->direction == Qt::RightToLeft ? option->rect.left() : option->rect.right(),
+                                option->rect.top() + 2, 1, option->rect.height() - 4), NP::outlineMuted());
         return;
     case PE_IndicatorProgressChunk:
         paintSurface(painter, option->rect, NP::cyan(), NP::cyan());
@@ -765,6 +804,19 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         painter->fillRect(option->rect, NP::surface());
         painter->fillRect(QRect(option->rect.left(), option->rect.bottom(), option->rect.width(), 1), NP::border());
         return;
+    case CE_Splitter: {
+        const bool horizontal = option->state.testFlag(State_Horizontal);
+        const QPoint center = option->rect.center();
+        painter->save();
+        painter->setPen(QPen(NP::borderStrong(), 1));
+        if (horizontal) {
+            painter->drawLine(center.x(), center.y() - 6, center.x(), center.y() + 6);
+        } else {
+            painter->drawLine(center.x() - 6, center.y(), center.x() + 6, center.y());
+        }
+        painter->restore();
+        return;
+    }
     default:
         break;
     }

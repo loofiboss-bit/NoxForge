@@ -32,6 +32,9 @@ if [[ -f "${owned_manifest}" ]]; then
 else
     targets=(
         "${data_home}/color-schemes/NoxForgeDark.colors"
+        "${data_home}/color-schemes/NoxForgeObsidian.colors"
+        "${data_home}/konsole/NoxForge.colorscheme"
+        "${data_home}/konsole/NoxForgeObsidian.colorscheme"
         "${data_home}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
         "${data_home}/aurorae/themes/io.github.loofiboss.noxforge.desktop"
         "${data_home}/icons/NoxForge"

@@ -322,8 +322,16 @@ install(TARGETS noxforge_style
 set(NOXFORGE_THEME_ID "io.github.loofiboss.noxforge.desktop")
 
 install(
-    FILES color-schemes/NoxForgeDark.colors
+    FILES
+        color-schemes/NoxForgeDark.colors
+        color-schemes/NoxForgeObsidian.colors
     DESTINATION "${CMAKE_INSTALL_DATADIR}/color-schemes"
+)
+install(
+    FILES
+        konsole/NoxForge.colorscheme
+        konsole/NoxForgeObsidian.colorscheme
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/konsole"
 )
 install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
