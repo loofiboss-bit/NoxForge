@@ -250,7 +250,7 @@ jobs:
           PY
           version="$NOXFORGE_RELEASE_REF"
           version="${version#v}"
-          echo "NOXFORGE_NOTES_FILE=docs/releases/v${version}.md" >> "$GITHUB_ENV"
+          echo "NOXFORGE_NOTES_FILE=distribution/kde-store/changelog.md" >> "$GITHUB_ENV"
       - name: Publish exact approved artifacts
         env:
           GH_TOKEN: ${{ github.token }}
