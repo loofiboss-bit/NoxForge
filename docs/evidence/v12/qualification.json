@@ -16,7 +16,7 @@
     {
       "id": "python",
       "status": "passed",
-      "passed": 141,
+      "passed": 145,
       "skipped": 9,
       "failures": 0,
       "errors": 0,
@@ -120,9 +120,13 @@
       "source archive includes Konsole assets",
       "system uninstaller allowlist includes v12 assets",
       "doctor schema 5 and status-derived remediation exit code",
+      "doctor discovers all eight Big Four terminal variants",
+      "doctor hashes standalone syntax themes and follows XDG Flatpak data roots",
       "Konsole ANSI black contrast",
       "Arch source metadata tracks v12",
-      "terminal and Obsidian tokens are generator authority"
+      "terminal and Obsidian tokens are generator authority",
+      "V11 baseline metadata matches the public release assets",
+      "VS Code package version is sourced from design tokens"
     ]
   },
   "publicationAuthorized": true,

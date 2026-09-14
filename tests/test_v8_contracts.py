@@ -152,6 +152,7 @@ class V8ContractTests(unittest.TestCase):
             (root / "noxforge").mkdir(parents=True)
             shutil.copy2(ROOT / "VERSION", root / "noxforge/VERSION")
             shutil.copy2(ROOT / "distribution/release-manifest.json", root / "noxforge/manifest.json")
+            shutil.copytree(ROOT / "terminals", root / "noxforge/terminals")
             report = doctor.build_report(root)
             self.assertEqual(report["edition"]["kind"], "portable")
             self.assertEqual(report["edition"]["status"], "ok")

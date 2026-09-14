@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
 import subprocess
 import sys
 import tempfile
@@ -183,6 +184,14 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
             self.assertIn("editor.background", theme_data["colors"])
             self.assertIn("editor.foreground", theme_data["colors"])
 
+    def test_vscode_generator_uses_token_version(self) -> None:
+        generator = runpy.run_path(
+            str(ROOT / "scripts/generate_design_system.py"),
+            run_name="noxforge_generate_design_system_test",
+        )
+        package = json.loads(generator["vscode_package_json"]({"version": "99.1.2"}))
+        self.assertEqual(package["version"], "99.1.2")
+
     def test_terminal_themes(self) -> None:
         # Ghostty
         for variant in ("noxforge", "noxforge-obsidian"):
@@ -237,6 +246,43 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
         self.assertIn("gtk-theme-obsidian", report["missing"])
         self.assertIn("syntax-theme", report["missing"])
         self.assertIn("syntax-theme-obsidian", report["missing"])
+
+    def test_doctor_requires_all_v12_terminal_variants(self) -> None:
+        doctor = runpy.run_path(
+            str(ROOT / "tools/noxforge-doctor"),
+            run_name="noxforge_doctor_v12_test",
+        )
+        with tempfile.TemporaryDirectory(prefix="noxforge-v12-terminals-") as temp:
+            root = Path(temp)
+            (root / "noxforge").mkdir()
+            (root / "noxforge/manifest.json").write_text("{}\n", encoding="utf-8")
+            for name in doctor["PORTABLE_REQUIRED"]:
+                marker = doctor["component_path"](root, doctor["COMPONENTS"][name])
+                marker.parent.mkdir(parents=True, exist_ok=True)
+                marker.write_text("present\n", encoding="utf-8")
+
+            complete = doctor["build_report"](root)
+            self.assertEqual(complete["status"], "ok")
+            for name in (
+                "terminal-ghostty",
+                "terminal-alacritty",
+                "terminal-kitty",
+                "terminal-foot",
+            ):
+                marker = doctor["component_path"](root, doctor["COMPONENTS"][name])
+                marker.unlink()
+
+            partial = doctor["build_report"](root)
+        self.assertEqual(partial["status"], "incomplete")
+        self.assertEqual(
+            partial["missing"],
+            [
+                "terminal-alacritty",
+                "terminal-foot",
+                "terminal-ghostty",
+                "terminal-kitty",
+            ],
+        )
 
     def test_doctor_remediation_plan_includes_flatpak_guidance(self) -> None:
         doctor = ROOT / "tools/noxforge-doctor"

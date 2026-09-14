@@ -67,6 +67,28 @@ class DoctorV10Tests(unittest.TestCase):
             self.assertEqual(report['components']['plasma-style']['duplicateStatus'], 'conflict')
             self.assertTrue(any(issue['code'] == 'duplicate-conflict' for issue in report['issues']))
 
+    def test_shared_syntax_directories_hash_standalone_theme_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for data_root, extra in (
+                (root / 'usr/share', 'system-only\n'),
+                (root / 'usr/local/share', 'local-only\n'),
+            ):
+                marker = data_root / 'org.kde.syntax-highlighting/themes/NoxForge.theme'
+                write(marker, 'same-theme\n')
+                write(marker.parent / 'Unrelated.theme', extra)
+            report = doctor['build_report'](root)
+        self.assertEqual(report['components']['syntax-theme']['duplicateStatus'], 'identical')
+
+    def test_custom_xdg_data_home_is_used_for_flatpak_overrides(self):
+        with tempfile.TemporaryDirectory() as temp:
+            data_home = Path(temp)
+            override = data_home / 'flatpak/overrides/global'
+            write(override, '[Context]\nfilesystems=xdg-data/themes:ro\n')
+            with patch.dict('os.environ', {'XDG_DATA_HOME': str(data_home)}):
+                ecosystem = doctor['inspect_ecosystem'](Path('/'))
+        self.assertEqual(ecosystem['flatpakThemesOverride'], 'configured')
+
     def test_staged_report_never_queries_host_or_uses_repository_version(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

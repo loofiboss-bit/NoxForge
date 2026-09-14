@@ -915,12 +915,14 @@ def vscode_theme(tokens: dict[str, object], variant: str = "standard") -> str:
     return json.dumps(theme_data, indent=2) + "\n"
 
 
-def vscode_package_json() -> str:
+def vscode_package_json(tokens: dict[str, object]) -> str:
+    version = tokens["version"]
+    assert isinstance(version, str)
     manifest = {
         "name": "noxforge-theme",
         "displayName": "NoxForge Theme",
         "description": "NoxForge Graphite, Electric Lime and Obsidian True-Black theme for VS Code and Cursor.",
-        "version": "12.0.0",
+        "version": version,
         "publisher": "loofiboss",
         "engines": {
             "vscode": "^1.74.0",
@@ -1124,7 +1126,7 @@ def outputs(tokens: dict[str, object]) -> dict[Path, str]:
         ROOT / "themes/NoxForgeObsidian/index.theme": gtk_index_theme("obsidian"),
         ROOT / "syntax/kate/NoxForge.theme": kate_syntax_theme(tokens, "standard"),
         ROOT / "syntax/kate/NoxForgeObsidian.theme": kate_syntax_theme(tokens, "obsidian"),
-        ROOT / "editors/vscode/package.json": vscode_package_json(),
+        ROOT / "editors/vscode/package.json": vscode_package_json(tokens),
         ROOT / "editors/vscode/themes/noxforge-dark-color-theme.json": vscode_theme(tokens, "standard"),
         ROOT / "editors/vscode/themes/noxforge-obsidian-color-theme.json": vscode_theme(tokens, "obsidian"),
         ROOT / "terminals/ghostty/noxforge": ghostty_theme(tokens, "standard"),

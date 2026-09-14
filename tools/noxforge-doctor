@@ -24,6 +24,14 @@ COMPONENTS = {
     "color-scheme-obsidian": ("color-schemes", "", "NoxForgeObsidian.colors"),
     "terminal-theme": ("konsole", "", "NoxForge.colorscheme"),
     "terminal-theme-obsidian": ("konsole", "", "NoxForgeObsidian.colorscheme"),
+    "terminal-ghostty": ("noxforge/terminals/ghostty", "", "noxforge"),
+    "terminal-ghostty-obsidian": ("noxforge/terminals/ghostty", "", "noxforge-obsidian"),
+    "terminal-alacritty": ("noxforge/terminals/alacritty", "", "noxforge.toml"),
+    "terminal-alacritty-obsidian": ("noxforge/terminals/alacritty", "", "noxforge-obsidian.toml"),
+    "terminal-kitty": ("noxforge/terminals/kitty", "", "noxforge.conf"),
+    "terminal-kitty-obsidian": ("noxforge/terminals/kitty", "", "noxforge-obsidian.conf"),
+    "terminal-foot": ("noxforge/terminals/foot", "", "noxforge.ini"),
+    "terminal-foot-obsidian": ("noxforge/terminals/foot", "", "noxforge-obsidian.ini"),
     "gtk-theme": ("themes", "NoxForge", "index.theme"),
     "gtk-theme-obsidian": ("themes", "NoxForgeObsidian", "index.theme"),
     "syntax-theme": ("org.kde.syntax-highlighting/themes", "", "NoxForge.theme"),
@@ -51,6 +59,14 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
     "color-scheme-obsidian",
     "terminal-theme",
     "terminal-theme-obsidian",
+    "terminal-ghostty",
+    "terminal-ghostty-obsidian",
+    "terminal-alacritty",
+    "terminal-alacritty-obsidian",
+    "terminal-kitty",
+    "terminal-kitty-obsidian",
+    "terminal-foot",
+    "terminal-foot-obsidian",
     "gtk-theme",
     "gtk-theme-obsidian",
     "syntax-theme",
@@ -677,7 +693,7 @@ def display_path(path: Path, root: Path) -> str:
 
 def inspect_ecosystem(root: Path) -> dict[str, Any]:
     if root == Path("/"):
-        override_file = Path.home() / ".local/share/flatpak/overrides/global"
+        override_file = data_roots(root)[0] / "flatpak/overrides/global"
     else:
         override_file = root / ".local/share/flatpak/overrides/global"
     if override_file.is_file():
@@ -715,7 +731,18 @@ def build_report(root: Path) -> dict[str, Any]:
             }
         )
         versions.update(discovered_versions)
-        digests = [content_digest(match, single_file=name == "color-scheme") for match in matches]
+        digests = [
+            content_digest(
+                match,
+                single_file=name in {
+                    "color-scheme",
+                    "color-scheme-obsidian",
+                    "syntax-theme",
+                    "syntax-theme-obsidian",
+                },
+            )
+            for match in matches
+        ]
         duplicate = "none"
         if len(matches) > 1:
             duplicate = "unknown" if None in digests else ("identical" if len(set(digests)) == 1 else "conflict")

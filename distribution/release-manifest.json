@@ -10,12 +10,12 @@
       "commit": "bb3a686851766113daf5ef69542f94d876c72e7b",
       "tag": "v11.0.0",
       "tagCommit": "bb3a686851766113daf5ef69542f94d876c72e7b",
-      "rpmBytes": 1358900,
-      "srpmBytes": 5820000,
-      "githubSourceBytes": 5800000,
+      "rpmBytes": 1354681,
+      "srpmBytes": 5819618,
+      "githubSourceBytes": 5798356,
       "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v11.0.0",
       "rpmFilename": "noxforge-11.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "0759bfc20d77e287e9e283ee3394354624620eed409cd34df7f9b6ba668faf6b",
+      "rpmSha256": "f57e7c76429bd07b92bb521b8f51e51394644ff396ad480f6628d5312c4a6a59",
       "kdeStoreProduct": "2367662"
     }
   },
