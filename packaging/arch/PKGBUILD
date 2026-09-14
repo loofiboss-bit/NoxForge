@@ -1,15 +1,15 @@
 pkgname=noxforge
-pkgver=10.1.0
+pkgver=11.0.0
 pkgrel=1
-pkgdesc='Everyday Precision Plasma components for Fedora and Arch KDE'
+pkgdesc='Deep Focus Plasma components for Fedora and Arch KDE'
 arch=('x86_64')
 url='https://github.com/loofiboss-bit/NoxForge'
 license=('MIT')
 depends=('breeze-icons' 'kwin' 'plasma-workspace' 'qt6-base')
 makedepends=('cmake' 'ninja' 'python' 'qt6-declarative' 'kirigami')
 optdepends=('sddm: qualified NoxForge custom login-screen compatibility')
-source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v10.1.0/noxforge-10.1.0-source.tar.xz')
-sha256sums=('05fda383318e6780416dd88efeac7ceb1ab72629564a32e0fda348bc33748559')
+source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v11.0.0/noxforge-11.0.0-source.tar.xz')
+sha256sums=('0112d57ebb11699e7610f808e0d51b539de980e46f55034d0b057d59e5ae6984')
 
 build() {
   cmake -S "NoxForge-${pkgver}" -B build -G Ninja \

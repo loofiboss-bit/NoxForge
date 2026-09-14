@@ -50,6 +50,9 @@ class PackagingTests(unittest.TestCase):
 
             expected = (
                 "usr/share/color-schemes/NoxForgeDark.colors",
+                "usr/share/color-schemes/NoxForgeObsidian.colors",
+                "usr/share/konsole/NoxForge.colorscheme",
+                "usr/share/konsole/NoxForgeObsidian.colorscheme",
                 f"usr/share/plasma/desktoptheme/{THEME_ID}/metadata.json",
                 f"usr/share/aurorae/themes/{THEME_ID}/metadata.desktop",
                 "usr/share/icons/NoxForge/index.theme",

@@ -1,4 +1,4 @@
-# NoxForge 10 compatibility
+# NoxForge 11 compatibility
 
 The intended compatibility target is Fedora 44 KDE and the target Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -11,6 +11,8 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Global Theme | `/usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/` |
 | Plasma Style | `/usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/` |
 | Color scheme | `/usr/share/color-schemes/NoxForgeDark.colors` |
+| Obsidian color scheme | `/usr/share/color-schemes/NoxForgeObsidian.colors` |
+| Konsole themes | `/usr/share/konsole/NoxForge{,Obsidian}.colorscheme` |
 | Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
 | KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
 | Icons | `/usr/share/icons/NoxForge/` |
@@ -40,8 +42,8 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-V10 builds and passes all 72 offscreen CTest cases in a digest-pinned Arch
-container with Qt 6.11.2-3, Plasma/KWin 6.7.5-1. See
-[evidence](evidence/v10/arch.json). Live Arch login and hardware qualification
-remain pending; offscreen results do not establish those behaviors. Fedora
-Wayland captures use Qt 6.11.1 and Plasma/KWin 6.7.3 in an isolated container.
+The v11 local gate passes all 72 offscreen CTest cases on Fedora 44 with
+Qt 6.11.2 and Plasma/KWin 6.7.4, plus the generated Store/portable and RPM
+contracts. Arch build/live login and hardware qualification remain pending;
+offscreen results do not establish those behaviors. See the active
+[qualification record](evidence/v11/qualification.json).

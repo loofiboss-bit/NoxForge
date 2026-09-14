@@ -14,7 +14,8 @@ Version 11 expands the scope to achieve full system completeness:
 1. **Qt 6 C++ Style Completeness:** Complete primitive coverage for complex
    desktop applications (Dolphin, Kate, KDevelop, Qt Creator), adding
    `PE_IndicatorBranch` (tree view chevrons), `PE_FrameTabWidget` (clean tab
-   panes), `PE_IndicatorSplitter` (tactile divider bars), `PE_FrameDockWidget`
+   panes), `CE_Splitter` (tactile divider bars; Qt 6 exposes this as a control
+   element), `PE_FrameDockWidget`
    (dock frames), and `PE_PanelStatusBar` / `PE_FrameStatusBarItem` (status bars).
 2. **Developer & Terminal Integration:** Official Konsole color schemes
    (`konsole/NoxForge.colorscheme` and `konsole/NoxForgeObsidian.colorscheme`)
@@ -35,7 +36,7 @@ Version 11 expands the scope to achieve full system completeness:
    `IMPLEMENTATION_PLAN.md`, and define terminal ANSI tokens and Obsidian
    palette definitions in `design/tokens.json`.
 2. **Native Qt 6 Style Completeness:** Implement `PE_IndicatorBranch`,
-   `PE_FrameTabWidget`, `PE_IndicatorSplitter`, `PE_FrameDockWidget`, and
+   `PE_FrameTabWidget`, `CE_Splitter`, `PE_FrameDockWidget`, and
    `PE_FrameStatusBar` in `src/style/noxforgestyle.cpp`.
 3. **Terminal and Color Scheme Assets:** Deliver `konsole/NoxForge.colorscheme`,
    `konsole/NoxForgeObsidian.colorscheme`, and `color-schemes/NoxForgeObsidian.colors`.

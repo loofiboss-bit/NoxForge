@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 10
+# Troubleshooting NoxForge 11
 
 ## Collect a read-only report
 
@@ -16,7 +16,7 @@ requests privileges.
 
 ## Edition is mixed or incomplete
 
-Read schema 3 `issues`, `edition.missingMandatory`, and each component's
+Read schema 4 `issues`, `edition.missingMandatory`, and each component's
 `effectivePath` and `shadowedPaths`. Text output uses the same findings.
 
 | Finding | Interpretation and next action |
@@ -30,9 +30,10 @@ Read schema 3 `issues`, `edition.missingMandatory`, and each component's
 
 A standalone component does not require the full suite. A Global Theme has
 its declared component dependencies; portable and system editions require their
-respective component sets. Native Qt and login assets are not portable
-requirements. An active `widgetStyle=NoxForge` without the native plugin
-requires selecting Breeze or installing the complete system package.
+respective component sets, including Obsidian and Konsole assets for v11.
+Native Qt and login assets are not portable requirements. An active
+`widgetStyle=NoxForge` without the native plugin requires selecting Breeze or
+installing the complete system package.
 
 Do not infer the active Qt plugin from candidate file paths: its
 `effectivePath` remains null. Doctor reports discovery, not runtime loader

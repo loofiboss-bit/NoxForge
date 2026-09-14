@@ -7,6 +7,8 @@ import configparser
 import json
 import subprocess
 import sys
+import tarfile
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -74,6 +76,16 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
         self.assertGreaterEqual(contrast(accent, canvas_bg), 7.0)
         self.assertGreaterEqual(contrast(text_secondary, canvas_bg), 4.5)
 
+    def test_v11_tokens_are_the_authority_for_variants_and_terminal_colors(self) -> None:
+        tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
+        self.assertEqual(tokens["schemaVersion"], 7)
+        self.assertEqual(tokens["variants"]["obsidian"]["background"], "#000000")
+        self.assertEqual(tokens["terminal"]["ansi"]["black"]["normal"], "#A6B4B9")
+        self.assertEqual(
+            set(tokens["terminal"]["ansi"]),
+            {"black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"},
+        )
+
     def test_konsole_color_schemes(self) -> None:
         for name in ("NoxForge", "NoxForgeObsidian"):
             path = ROOT / f"konsole/{name}.colorscheme"
@@ -89,22 +101,42 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
             fg = parse_rgb(parser["Foreground"]["Color"])
             self.assertGreaterEqual(contrast(fg, bg), 7.0)
 
-            # Check 8 ANSI color definitions
+            # Check all ANSI normal, faint, and intense definitions.
             for i in range(8):
-                self.assertIn(f"Color{i}", parser)
-                self.assertIn(f"Color{i}Intense", parser)
+                for suffix in ("", "Faint", "Intense"):
+                    section = f"Color{i}{suffix}"
+                    self.assertIn(section, parser)
+                    color = parse_rgb(parser[section]["Color"])
+                    self.assertGreaterEqual(contrast(color, bg), 4.5, section)
 
     def test_doctor_remediation_plan(self) -> None:
         doctor = ROOT / "tools/noxforge-doctor"
-        result = subprocess.run(
-            [sys.executable, str(doctor), "--remediation-plan"],
-            capture_output=True,
-            text=True,
-            check=True,
-            cwd=ROOT,
-        )
+        with tempfile.TemporaryDirectory(prefix="noxforge-v11-remediation-") as temp:
+            result = subprocess.run(
+                [sys.executable, str(doctor), "--root", temp, "--remediation-plan"],
+                capture_output=True,
+                text=True,
+                check=False,
+                cwd=ROOT,
+            )
+        self.assertEqual(result.returncode, 1)
         self.assertIn("#!/usr/bin/env bash", result.stdout)
         self.assertIn("remediation plan", result.stdout.lower())
+
+    def test_doctor_reports_schema_four_and_terminal_completeness(self) -> None:
+        doctor = ROOT / "tools/noxforge-doctor"
+        with tempfile.TemporaryDirectory(prefix="noxforge-v11-doctor-") as temp:
+            result = subprocess.run(
+                [sys.executable, str(doctor), "--root", temp, "--json"],
+                capture_output=True,
+                text=True,
+                check=False,
+                cwd=ROOT,
+            )
+        report = json.loads(result.stdout)
+        self.assertEqual(report["schemaVersion"], 4)
+        self.assertIn("terminal-theme", report["missing"])
+        self.assertIn("terminal-theme-obsidian", report["missing"])
 
     def test_build_system_installs_v11_assets(self) -> None:
         cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
@@ -116,6 +148,27 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
         self.assertIn("color-schemes/NoxForgeObsidian.colors", spec)
         self.assertIn("konsole/NoxForge.colorscheme", spec)
         self.assertIn("konsole/NoxForgeObsidian.colorscheme", spec)
+
+    def test_portable_archive_contains_all_v11_assets(self) -> None:
+        from scripts import build_store_packages as builder
+        from scripts import validate_store_packages as validator
+
+        manifest = builder.load_manifest()
+        with tempfile.TemporaryDirectory(prefix="noxforge-v11-portable-") as temp:
+            output = Path(temp)
+            builder.build_all(output, manifest)
+            archive = output / next(
+                item["filename"] for item in manifest["artifacts"] if item["key"] == "portable"
+            )
+            validator.validate_archive(archive, "portable", manifest)
+            with tarfile.open(archive, "r:*") as handle:
+                names = {member.name for member in handle.getmembers()}
+        for required in (
+            "noxforge/components/colors/NoxForgeObsidian.colors",
+            "noxforge/components/konsole/NoxForge.colorscheme",
+            "noxforge/components/konsole/NoxForgeObsidian.colorscheme",
+        ):
+            self.assertIn(required, names)
 
 
 if __name__ == "__main__":

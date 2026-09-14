@@ -140,6 +140,10 @@ class V8ContractTests(unittest.TestCase):
                     shutil.copytree(source, target, dirs_exist_ok=True)
             (root / "color-schemes").mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / "color-schemes/NoxForgeDark.colors", root / "color-schemes/NoxForgeDark.colors")
+            shutil.copy2(ROOT / "color-schemes/NoxForgeObsidian.colors", root / "color-schemes/NoxForgeObsidian.colors")
+            (root / "konsole").mkdir(parents=True, exist_ok=True)
+            for name in ("NoxForge.colorscheme", "NoxForgeObsidian.colorscheme"):
+                shutil.copy2(ROOT / "konsole" / name, root / "konsole" / name)
             (root / "noxforge").mkdir(parents=True)
             shutil.copy2(ROOT / "VERSION", root / "noxforge/VERSION")
             shutil.copy2(ROOT / "distribution/release-manifest.json", root / "noxforge/manifest.json")

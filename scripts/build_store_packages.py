@@ -124,7 +124,8 @@ def assemble_package(package: str, staging: Path, manifest: dict, *, edition: st
     elif package == "kwin-switcher":
         _copy_tree(ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop", staging)
     elif package == "colors":
-        _copy_tree(ROOT / "color-schemes/NoxForgeDark.colors", staging / "NoxForgeDark.colors")
+        for name in ("NoxForgeDark.colors", "NoxForgeObsidian.colors"):
+            _copy_tree(ROOT / "color-schemes" / name, staging / name)
     elif package == "aurorae":
         _copy_tree(ROOT / "aurorae/io.github.loofiboss.noxforge.desktop", staging / "io.github.loofiboss.noxforge.desktop")
     elif package == "icons":
@@ -227,6 +228,10 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
                 target.mkdir(parents=True)
                 source = package_staging
                 shutil.copytree(source, target, dirs_exist_ok=True)
+        terminal_target = component_root / "konsole"
+        terminal_target.mkdir(parents=True)
+        for name in ("NoxForge.colorscheme", "NoxForgeObsidian.colorscheme"):
+            _copy_tree(ROOT / "konsole" / name, terminal_target / name)
         _assert_safe_tree(root)
         checksum = create_archive(root, portable, root_name="noxforge")
     portable.with_suffix(portable.suffix + ".sha256").write_text(f"{checksum}  {portable.name}\n", encoding="utf-8", newline="\n")

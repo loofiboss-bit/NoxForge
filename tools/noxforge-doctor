@@ -21,6 +21,9 @@ COMPONENTS = {
     "global-theme": ("plasma/look-and-feel", THEME_ID, "metadata.json"),
     "plasma-style": ("plasma/desktoptheme", THEME_ID, "metadata.json"),
     "color-scheme": ("color-schemes", "", "NoxForgeDark.colors"),
+    "color-scheme-obsidian": ("color-schemes", "", "NoxForgeObsidian.colors"),
+    "terminal-theme": ("konsole", "", "NoxForge.colorscheme"),
+    "terminal-theme-obsidian": ("konsole", "", "NoxForgeObsidian.colorscheme"),
     "aurorae": ("aurorae/themes", THEME_ID, "metadata.desktop"),
     "icons": ("icons", "NoxForge", "index.theme"),
     "cursors": ("icons", "NoxForge-Cursors", "index.theme"),
@@ -29,7 +32,7 @@ COMPONENTS = {
     "kwin-switcher": ("kwin/tabbox", THEME_ID, "metadata.json"),
     "sddm": ("sddm/themes", "NoxForge", "metadata.desktop"),
 }
-PORTABLE_REQUIRED = (
+STORE_REQUIRED = (
     "global-theme",
     "plasma-style",
     "color-scheme",
@@ -39,6 +42,11 @@ PORTABLE_REQUIRED = (
     "sounds",
     "wallpaper",
     "kwin-switcher",
+)
+PORTABLE_REQUIRED = STORE_REQUIRED + (
+    "color-scheme-obsidian",
+    "terminal-theme",
+    "terminal-theme-obsidian",
 )
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
@@ -577,7 +585,12 @@ def edition_report(
     shadowed = sorted(user_copies & system_copies)
     native = bool(plugins)
     system_marker = any(scoped_file(candidate / "noxforge/release-manifest.json", root) for candidate in roots)
-    required = set(PORTABLE_REQUIRED) if native or system_marker or has_portable_marker or "global-theme" in found else set()
+    if native or system_marker or has_portable_marker:
+        required = set(PORTABLE_REQUIRED)
+    elif "global-theme" in found:
+        required = set(STORE_REQUIRED)
+    else:
+        required = set()
     missing = sorted(required - found)
     if native or system_marker:
         kind = "complete-system"
@@ -761,7 +774,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -875,7 +888,7 @@ def main() -> int:
     report = build_report(root)
     if arguments.remediation_plan:
         print(remediation_plan(report), end="")
-        return 0
+        return 0 if report["status"] == "ok" else 1
     if arguments.json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:

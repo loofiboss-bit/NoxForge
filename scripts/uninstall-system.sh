@@ -66,6 +66,9 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/lib/qt6/plugins/styles/libnoxforge6.so|\
         /usr/lib64/qt6/plugins/styles/libnoxforge6.so|\
         /usr/share/color-schemes/NoxForgeDark.colors|\
+        /usr/share/color-schemes/NoxForgeObsidian.colors|\
+        /usr/share/konsole/NoxForge.colorscheme|\
+        /usr/share/konsole/NoxForgeObsidian.colorscheme|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/icons/NoxForge/*|\

@@ -1,13 +1,13 @@
-%global upstream_version 10.1.0
+%global upstream_version 11.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        10.1.0
+Version:        11.0.0
 Release:        1%{?dist}
-Summary:        KDE Plasma components
+Summary:        Deep Focus KDE Plasma components
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
@@ -25,7 +25,7 @@ Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
 %description
-NoxForge Lumina is an MIT-licensed collection of separately
+NoxForge Deep Focus is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
 Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
 switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6
@@ -73,8 +73,8 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
-* Mon Sep 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 10.1.0-1
-- Release Lumina wallpaper, SDDM, splash and Aurorae refinements
+* Mon Sep 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 11.0.0-1
+- Release Deep Focus native Qt style completeness, terminal themes and Obsidian palette
 
 * Wed Sep 09 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 10.0.0-1
 - Prepare Everyday Precision diagnostics, focus, contrast and removal fixes

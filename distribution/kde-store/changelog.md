@@ -1,3 +1,11 @@
+# NoxForge 11.0.0 — Deep Focus & System Completeness
+
+- completed native Qt 6 style primitives for branches, tabs, splitters, docks and status bars;
+- added standard and Obsidian Konsole color schemes with contrast-qualified ANSI colors;
+- added the true-black NoxForge Obsidian color scheme;
+- upgraded the read-only doctor to schema 4 and added status-derived remediation plans;
+- kept package installation non-applying and preserved the separate Store/portable/system boundaries.
+
 # NoxForge 10.1.0 — Lumina
 
 - refined Forge, Quiet, and Ultrawide wallpapers with regenerated evidence;

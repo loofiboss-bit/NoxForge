@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge 10.1.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge 11.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -6,6 +6,7 @@ noxforge-doctor \- inspect a NoxForge installation without changing it
 .RB [ \-\-json ]
 .RB [ \-\-root
 .IR path ]
+.RB [ \-\-remediation-plan ]
 .SH DESCRIPTION
 .B noxforge-doctor
 reports the installed package version, component provenance and versions,
@@ -14,14 +15,16 @@ and the effective login surface when it can be detected.
 It does not write files, apply a theme, clear caches, restart services, switch
 display managers, or request privileges.
 .PP
-JSON schema 3 retains stable
+JSON schema 4 retains stable
 .B edition
 and
 .B loginSurface
 objects. The latter reports the manager, service state, integration type,
 asset availability, selection, and status. An installed SDDM theme is not
 reported as active when Plasma Login Manager is active. Unselected optional
-login assets do not make the installation incomplete.
+login assets do not make the installation incomplete. Schema 4 also discovers
+the standard and Obsidian Konsole schemes and reports fractional display
+scales when available.
 .SH OPTIONS
 .TP
 .B \-\-json
@@ -29,6 +32,11 @@ Emit machine-readable JSON.
 .TP
 .BI \-\-root " path"
 Inspect an absolute staged or system root instead of the running system.
+.TP
+.B \-\-remediation-plan
+Emit a non-destructive shell plan for the detected state. The plan is advice
+only; the command preserves the report's status-derived exit code and does not
+execute the suggested actions.
 .TP
 .BR \-h ", " \-\-help
 Show command help.
