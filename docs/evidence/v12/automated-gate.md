@@ -7,7 +7,7 @@ baseline.
 
 | Check | Result |
 | --- | --- |
-| Python | 141 passed, 9 skipped, 0 failures/errors |
+| Python | 145 passed, 9 skipped, 0 failures/errors |
 | Fedora Qt 6.11.2 / Plasma and KWin 6.7.4 | 72/72 CTest passed |
 | ASan and UBSan | 4/4 probes passed |
 | v11.0.0→v12.0.0 staged user/system migration and rollback | Passed; configuration hashes preserved |

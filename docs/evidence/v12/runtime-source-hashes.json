@@ -763,7 +763,7 @@
   "src/style/noxforgestyleplugin.json": "0dd81f894bf9d2bc02e0bc01429a7044f3730553b1b44671f5db180576297704",
   "tools/motion_state_renderer.cpp": "2120055d06bbd2b989911610caba455459d3c856a5b39389020e703033ef0106",
   "tools/north_star_renderer.cpp": "951b6290429ae8a83985f9246f27b54f873fcdcce26c45c89bbfe0edd685df3f",
-  "tools/noxforge-doctor": "b45c07d173ad979e7f918e9a1fc72f29d5726ddd3219a9c124453b9c328b7540",
+  "tools/noxforge-doctor": "a1f841bec555d36ecf54f620eba55d0ec6e1d0c5154999328400326467a2d8d7",
   "tools/noxforge-live-input.cpp": "e043115717b583054fbf45cfd211a587b49a3288f159e10282241b1f65adaa97",
   "tools/noxforge-live-probe.cpp": "ad4f7992fbfc0d7bbe6f8cab620ce855bcc8f7e91f0bcadc44a29575281c4be8",
   "tools/sddm_renderer.cpp": "7d939bbda1a0de5441f2ed46686387bb4ac4f6a7a9176a01ad742d3221a7fc17",
