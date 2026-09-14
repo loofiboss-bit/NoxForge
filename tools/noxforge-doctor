@@ -24,6 +24,18 @@ COMPONENTS = {
     "color-scheme-obsidian": ("color-schemes", "", "NoxForgeObsidian.colors"),
     "terminal-theme": ("konsole", "", "NoxForge.colorscheme"),
     "terminal-theme-obsidian": ("konsole", "", "NoxForgeObsidian.colorscheme"),
+    "terminal-ghostty": ("noxforge/terminals/ghostty", "", "noxforge"),
+    "terminal-ghostty-obsidian": ("noxforge/terminals/ghostty", "", "noxforge-obsidian"),
+    "terminal-alacritty": ("noxforge/terminals/alacritty", "", "noxforge.toml"),
+    "terminal-alacritty-obsidian": ("noxforge/terminals/alacritty", "", "noxforge-obsidian.toml"),
+    "terminal-kitty": ("noxforge/terminals/kitty", "", "noxforge.conf"),
+    "terminal-kitty-obsidian": ("noxforge/terminals/kitty", "", "noxforge-obsidian.conf"),
+    "terminal-foot": ("noxforge/terminals/foot", "", "noxforge.ini"),
+    "terminal-foot-obsidian": ("noxforge/terminals/foot", "", "noxforge-obsidian.ini"),
+    "gtk-theme": ("themes", "NoxForge", "index.theme"),
+    "gtk-theme-obsidian": ("themes", "NoxForgeObsidian", "index.theme"),
+    "syntax-theme": ("org.kde.syntax-highlighting/themes", "", "NoxForge.theme"),
+    "syntax-theme-obsidian": ("org.kde.syntax-highlighting/themes", "", "NoxForgeObsidian.theme"),
     "aurorae": ("aurorae/themes", THEME_ID, "metadata.desktop"),
     "icons": ("icons", "NoxForge", "index.theme"),
     "cursors": ("icons", "NoxForge-Cursors", "index.theme"),
@@ -47,6 +59,18 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
     "color-scheme-obsidian",
     "terminal-theme",
     "terminal-theme-obsidian",
+    "terminal-ghostty",
+    "terminal-ghostty-obsidian",
+    "terminal-alacritty",
+    "terminal-alacritty-obsidian",
+    "terminal-kitty",
+    "terminal-kitty-obsidian",
+    "terminal-foot",
+    "terminal-foot-obsidian",
+    "gtk-theme",
+    "gtk-theme-obsidian",
+    "syntax-theme",
+    "syntax-theme-obsidian",
 )
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
@@ -667,6 +691,28 @@ def display_path(path: Path, root: Path) -> str:
     return str(path)
 
 
+def inspect_ecosystem(root: Path) -> dict[str, Any]:
+    if root == Path("/"):
+        override_file = data_roots(root)[0] / "flatpak/overrides/global"
+    else:
+        override_file = root / ".local/share/flatpak/overrides/global"
+    if override_file.is_file():
+        try:
+            text = override_file.read_text(encoding="utf-8", errors="ignore")
+            flatpak_override = (
+                "configured"
+                if "xdg-data/themes:ro" in text or "xdg-data/themes" in text
+                else "not-configured"
+            )
+        except OSError:
+            flatpak_override = "unreadable"
+    else:
+        flatpak_override = "absent"
+    return {
+        "flatpakThemesOverride": flatpak_override,
+    }
+
+
 def build_report(root: Path) -> dict[str, Any]:
     roots = data_roots(root)
     components: dict[str, dict[str, Any]] = {}
@@ -685,7 +731,18 @@ def build_report(root: Path) -> dict[str, Any]:
             }
         )
         versions.update(discovered_versions)
-        digests = [content_digest(match, single_file=name == "color-scheme") for match in matches]
+        digests = [
+            content_digest(
+                match,
+                single_file=name in {
+                    "color-scheme",
+                    "color-scheme-obsidian",
+                    "syntax-theme",
+                    "syntax-theme-obsidian",
+                },
+            )
+            for match in matches
+        ]
         duplicate = "none"
         if len(matches) > 1:
             duplicate = "unknown" if None in digests else ("identical" if len(set(digests)) == 1 else "conflict")
@@ -774,7 +831,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -786,6 +843,7 @@ def build_report(root: Path) -> dict[str, Any]:
         "criticalIcons": icons,
         "edition": edition,
         "loginSurface": login_surface_report(root, components),
+        "ecosystem": inspect_ecosystem(root),
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown") if root == Path("/") else "not-applicable",
@@ -836,6 +894,9 @@ def print_human(report: dict[str, Any]) -> None:
     )
     for output in session["displayScales"]["outputs"]:
         print(f"  output {output['name']}: scale={output['scale']:g}")
+    eco = report.get("ecosystem", {})
+    if eco:
+        print(f"Ecosystem: Flatpak themes override={eco.get('flatpakThemesOverride', 'unknown')}")
     print(f"Next action: {report['nextAction']}")
 
 
@@ -850,8 +911,18 @@ def remediation_plan(report: dict[str, Any]) -> str:
     kind = edition.get("kind", "unknown")
     missing = edition.get("missingMandatory", [])
     shadowed = edition.get("shadowed", [])
-    if not missing and not shadowed and report.get("status") == "ok":
+    eco = report.get("ecosystem", {})
+    flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent"}
+
+    if not missing and not shadowed and report.get("status") == "ok" and not flatpak_needed:
         lines.append("# Installation is clean and complete. No remediation required.")
+        return "\n".join(lines) + "\n"
+    if flatpak_needed:
+        lines.append("# Flatpak theme access remediation:")
+        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro || true")
+        lines.append("")
+    if not missing and not shadowed and report.get("status") == "ok":
+        lines.append("# Core desktop components are clean.")
         return "\n".join(lines) + "\n"
     if shadowed:
         lines.append("# Shadowed component copies detected in user data:")

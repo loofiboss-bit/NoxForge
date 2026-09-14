@@ -63,6 +63,23 @@ class PackagingTests(unittest.TestCase):
                 "usr/share/wallpapers/NoxForge/metadata.json",
                 "usr/share/sddm/themes/NoxForge/metadata.desktop",
                 "usr/share/man/man1/noxforge-doctor.1",
+                "usr/share/themes/NoxForge/gtk-3.0/gtk.css",
+                "usr/share/themes/NoxForge/gtk-4.0/gtk.css",
+                "usr/share/themes/NoxForge/index.theme",
+                "usr/share/themes/NoxForgeObsidian/gtk-3.0/gtk.css",
+                "usr/share/themes/NoxForgeObsidian/gtk-4.0/gtk.css",
+                "usr/share/themes/NoxForgeObsidian/index.theme",
+                "usr/share/org.kde.syntax-highlighting/themes/NoxForge.theme",
+                "usr/share/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme",
+                "usr/share/noxforge/terminals/ghostty/noxforge",
+                "usr/share/noxforge/terminals/ghostty/noxforge-obsidian",
+                "usr/share/noxforge/terminals/alacritty/noxforge.toml",
+                "usr/share/noxforge/terminals/alacritty/noxforge-obsidian.toml",
+                "usr/share/noxforge/terminals/kitty/noxforge.conf",
+                "usr/share/noxforge/terminals/kitty/noxforge-obsidian.conf",
+                "usr/share/noxforge/terminals/foot/noxforge.ini",
+                "usr/share/noxforge/terminals/foot/noxforge-obsidian.ini",
+                "usr/share/noxforge/editors/vscode/package.json",
             )
             for relative in expected:
                 self.assertTrue((stage / relative).is_file(), relative)
@@ -95,6 +112,11 @@ class PackagingTests(unittest.TestCase):
             self.assertNotIn(command, spec)
         self.assertIn("%{_qt6_plugindir}/styles/libnoxforge6.so", spec)
         self.assertIn("%{_datadir}/sddm/themes/NoxForge/", spec)
+        self.assertIn("%{_datadir}/themes/NoxForge/", spec)
+        self.assertIn("%{_datadir}/themes/NoxForgeObsidian/", spec)
+        self.assertIn("%{_datadir}/org.kde.syntax-highlighting/themes/NoxForge.theme", spec)
+        self.assertIn("%{_datadir}/noxforge/terminals/", spec)
+        self.assertIn("%{_datadir}/noxforge/editors/", spec)
         self.assertIn("BuildRequires:  kf6-kirigami", spec)
         self.assertIn("Requires:       breeze-icon-theme", spec)
 

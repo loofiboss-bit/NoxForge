@@ -1,7 +1,7 @@
 # Install the portable edition
 
-Download the exact 11.0.0 archive and `SHA256SUMS` from the
-[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v11.0.0).
+Download the exact 12.0.0 archive and `SHA256SUMS` from the
+[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v12.0.0).
 Verify its checksum before installation.
 
 The portable edition is user-local and reversible. It installs below
@@ -10,7 +10,7 @@ normal user data roots. It uses Breeze application controls, has no native Qt
 plugin or SDDM, and never writes active KDE settings.
 
 ```bash
-tar -xJf noxforge-11.0.0-portable.tar.xz
+tar -xJf noxforge-12.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

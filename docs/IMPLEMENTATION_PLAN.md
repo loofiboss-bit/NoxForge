@@ -1,19 +1,24 @@
 # NoxForge Implementation Plan
 
 This file is the canonical scope and release-gate index. The active authority is
-[`NOXFORGE_V11_PLAN.md`](NOXFORGE_V11_PLAN.md); the machine-readable companion is
+[`NOXFORGE_V12_PLAN.md`](NOXFORGE_V12_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Active release scope
 
-NoxForge 11.0.0 Deep Focus & System Completeness expands the public 10.1.0
-baseline with full native Qt 6 C++ style widget coverage, official Konsole
-and terminal themes, the NoxForge Obsidian true-black companion palette,
-and doctor schema 4 diagnostics. Implement phases sequentially according
-to that plan. Host installation and active desktop mutation remain outside
-the scope. Unavailable physical checks remain `pending` or `blocked`.
+NoxForge 12.0.0 Ecosystem & App Parity expands the public 11.0.0 baseline with
+GTK 3 & GTK 4 themes, KDE KSyntaxHighlighting and VS Code/Cursor editor themes,
+The Big Four Wayland terminal configs (Ghostty, Alacritty, Kitty, Foot),
+Tokens Schema 8 syntax authority, and Doctor Schema 5 diagnostics. Implement
+phases sequentially according to that plan. Host installation and active desktop
+mutation remain outside the scope. Unavailable physical checks remain `pending`
+or `blocked`.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V11_PLAN.md`](NOXFORGE_V11_PLAN.md) records the completed 11.0.0
+  Deep Focus & System Completeness scope, native Qt 6 C++ style completeness,
+  Konsole themes, and immutable `v11.0.0` lineage.
 
 - [`NOXFORGE_V10_1_PLAN.md`](NOXFORGE_V10_1_PLAN.md) records the completed 10.1.0
   Lumina Edition scope, wallpaper family, SDDM preview, and immutable `v10.1.0` lineage.

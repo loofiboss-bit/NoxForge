@@ -1,0 +1,27 @@
+{
+  "name": "noxforge-theme",
+  "displayName": "NoxForge Theme",
+  "description": "NoxForge Graphite, Electric Lime and Obsidian True-Black theme for VS Code and Cursor.",
+  "version": "12.0.0",
+  "publisher": "loofiboss",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "NoxForge Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/noxforge-dark-color-theme.json"
+      },
+      {
+        "label": "NoxForge Obsidian",
+        "uiTheme": "vs-dark",
+        "path": "./themes/noxforge-obsidian-color-theme.json"
+      }
+    ]
+  }
+}
