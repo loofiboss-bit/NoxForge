@@ -37,7 +37,7 @@ jobs:
           qt6-qtbase-devel qt6-qtdeclarative-devel rpm-build rpmlint xz
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ github.ref }}
           fetch-depth: 0
       - name: Validate exact tag and manifest
         shell: bash
