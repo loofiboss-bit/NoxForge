@@ -197,12 +197,14 @@ def main() -> int:
     )
     parser.add_argument(
         "--baseline-source", type=Path, required=True,
-        help="verified v9 source checkout for actual upgrade and rollback qualification",
+        help="verified baseline source checkout for actual upgrade and rollback qualification",
     )
     arguments = parser.parse_args()
     arguments.baseline_source = arguments.baseline_source.resolve()
-    if not (arguments.baseline_source / "VERSION").is_file() or (arguments.baseline_source / "VERSION").read_text().strip() != "9.0.0":
-        parser.error("--baseline-source must contain verified NoxForge 9.0.0 sources")
+    manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
+    baseline_version = manifest["release"]["baseline"]["version"]
+    if not (arguments.baseline_source / "VERSION").is_file() or (arguments.baseline_source / "VERSION").read_text().strip() != baseline_version:
+        parser.error(f"--baseline-source must contain verified NoxForge {baseline_version} sources")
 
     preflight(skip_rpm=arguments.skip_rpm)
 

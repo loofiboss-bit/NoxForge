@@ -19,9 +19,25 @@ def runtime_paths(root: Path) -> set[str]:
     return paths
 
 
+def evidence_root(root: Path) -> Path:
+    fallback = root / 'docs/evidence/v10'
+    manifest_path = root / 'distribution/release-manifest.json'
+    if not manifest_path.is_file():
+        return fallback
+    try:
+        manifest = json.loads(manifest_path.read_text())
+        configured = manifest.get('evidence', {}).get('activeRoot')
+    except (OSError, ValueError, TypeError, AttributeError):
+        return fallback
+    if not isinstance(configured, str) or not configured:
+        return fallback
+    candidate = (root / configured).resolve()
+    return candidate if candidate.is_relative_to(root.resolve()) else fallback
+
+
 def validate(root: Path) -> list[str]:
     root = root.resolve()
-    evidence = root / 'docs/evidence/v10'
+    evidence = evidence_root(root)
     record = json.loads((evidence / 'qualification.json').read_text())
     hashes_path = (evidence / record['candidate']['runtimeSourceHashes']).resolve()
     if not hashes_path.is_relative_to(evidence):
@@ -40,10 +56,28 @@ def validate(root: Path) -> list[str]:
     return errors
 
 
+def update(root: Path) -> Path:
+    root = root.resolve()
+    evidence = evidence_root(root)
+    record = json.loads((evidence / 'qualification.json').read_text())
+    hashes_path = (evidence / record['candidate']['runtimeSourceHashes']).resolve()
+    if not hashes_path.is_relative_to(evidence):
+        raise ValueError('Runtime hash manifest escapes evidence directory')
+    paths = sorted(runtime_paths(root))
+    hashes = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
+    hashes_path.write_text(json.dumps(hashes, indent=2) + '\n')
+    return hashes_path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--update', action='store_true', help='Update the runtime evidence hash manifest')
     args = parser.parse_args()
+    if args.update:
+        manifest = update(args.root)
+        print(f'Updated runtime evidence hashes in {manifest}')
+        return 0
     try:
         errors = validate(args.root)
     except (OSError, ValueError, KeyError, TypeError) as error:

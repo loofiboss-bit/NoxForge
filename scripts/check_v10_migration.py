@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise isolated V10 lifecycle; actual V9 upgrade requires explicit baseline."""
+"""Exercise isolated lifecycle; an actual upgrade requires an explicit baseline."""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +12,12 @@ from pathlib import Path
 from check_v9_migration import tree_digest, write
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def release_versions() -> tuple[str, str]:
+    manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text())
+    release = manifest["release"]
+    return release["baseline"]["version"], release["stableVersion"]
 
 
 def run(command: list[str], environment: dict[str, str], source: Path) -> None:
@@ -41,8 +47,15 @@ def metadata_version(data: Path, expected: str) -> None:
             raise AssertionError(f"{relative}: expected {expected}, got {actual}")
 
 
-def lifecycle(mode: str, current: Path, baseline: Path | None, baseline_build: Path | None) -> dict:
-    with tempfile.TemporaryDirectory(prefix=f"noxforge-v10-{mode}-") as temporary:
+def lifecycle(
+    mode: str,
+    current: Path,
+    baseline: Path | None,
+    baseline_build: Path | None,
+    baseline_version: str,
+    current_version: str,
+) -> dict:
+    with tempfile.TemporaryDirectory(prefix=f"noxforge-{current_version}-{mode}-") as temporary:
         root = Path(temporary)
         home, stage = root / "home", root / "stage"
         config, data = home / ".config", home / ".local/share"
@@ -91,15 +104,17 @@ def lifecycle(mode: str, current: Path, baseline: Path | None, baseline_build: P
             check(phase)
 
         if baseline:
-            install(baseline, baseline_build, "baseline-v9-install")
-        install(ROOT, current, "v10-upgrade" if baseline else "v10-install")
-        install(ROOT, current, "v10-reinstall")
-        remove(ROOT, current, "v10-uninstall")
-        remove(ROOT, current, "v10-repeat-uninstall") if mode == "system" else check("v10-removed")
+            install(baseline, baseline_build, f"baseline-{baseline_version}-install")
+        install(ROOT, current, f"{current_version}-upgrade" if baseline else f"{current_version}-install")
+        install(ROOT, current, f"{current_version}-reinstall")
+        remove(ROOT, current, f"{current_version}-uninstall")
+        remove(ROOT, current, f"{current_version}-repeat-uninstall") if mode == "system" else check(f"{current_version}-removed")
         if baseline:
-            install(baseline, baseline_build, "v9-rollback-install")
-            remove(ROOT, baseline_build, "v9-rollback-uninstall-current-tool")
-        return {"mode": mode, "status": "passed", "phases": phases}
+            install(baseline, baseline_build, f"{baseline_version}-rollback-install")
+            remove(ROOT, baseline_build, f"{baseline_version}-rollback-uninstall-current-tool")
+        return {"mode": mode, "status": "passed", "phases": phases,
+                "baselineVersion": baseline_version if baseline else None,
+                "currentVersion": current_version}
 
 
 def main() -> int:
@@ -111,7 +126,8 @@ def main() -> int:
     args = parser.parse_args()
     current = args.build_root.resolve()
     baseline = args.baseline_source.resolve() if args.baseline_source else None
-    report = {"schemaVersion": 1, "version": (ROOT / "VERSION").read_text().strip(),
+    baseline_version, current_version = release_versions()
+    report = {"schemaVersion": 1, "version": current_version,
               "status": "failed", "actualUpgradeRollback": "pending", "hostMutated": False, "cycles": []}
     try:
         validate_build(current, ROOT)
@@ -120,8 +136,8 @@ def main() -> int:
         with tempfile.TemporaryDirectory(prefix="noxforge-v9-build-") as temporary:
             baseline_build = args.baseline_build.resolve() if args.baseline_build else Path(temporary) / "build"
             if baseline:
-                if (baseline / "VERSION").read_text().strip() != "9.0.0":
-                    raise ValueError("Actual baseline must be V9.0.0")
+                if (baseline / "VERSION").read_text().strip() != baseline_version:
+                    raise ValueError(f"Actual baseline must be {baseline_version}")
                 if not args.baseline_build:
                     environment = os.environ.copy()
                     environment.update(HOME=temporary, XDG_CONFIG_HOME=temporary + "/config", XDG_DATA_HOME=temporary + "/data")
@@ -129,13 +145,18 @@ def main() -> int:
                     run(["cmake", "--build", str(baseline_build), "-j2"], environment, baseline)
                 validate_build(baseline_build, baseline)
             for mode in ("user", "system"):
-                report["cycles"].append(lifecycle(mode, current, baseline, baseline_build if baseline else None))
+                report["cycles"].append(
+                    lifecycle(mode, current, baseline, baseline_build if baseline else None,
+                              baseline_version, current_version)
+                )
         report["status"] = "passed"
         if baseline:
             report["actualUpgradeRollback"] = "passed"
-            report["baselineVersion"] = "9.0.0"
+            report["baselineVersion"] = baseline_version
         else:
-            report["pendingReason"] = "Actual V9 source/build not supplied; current-version lifecycle only."
+            report["pendingReason"] = (
+                f"Actual {baseline_version} source/build not supplied; current-version lifecycle only."
+            )
     except (OSError, ValueError, AssertionError, RuntimeError, subprocess.TimeoutExpired) as error:
         report["error"] = str(error)
     if args.report:

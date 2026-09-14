@@ -21,71 +21,71 @@ CHECK = "--check" in sys.argv[1:]
 DRIFT: list[Path] = []
 
 ICON_SPECS = {
-    "actions/document-new.svg": '<path d="M6 3h8l4 4v14H6zM14 3v5h4"/><path class="accent" d="M9 14h6M12 11v6"/>',
-    "actions/document-open.svg": '<path d="M3 7h7l2 2h9l-2 10H5z"/><path class="accent" d="M11 13h5M14 10l3 3-3 3"/>',
-    "actions/document-save.svg": '<path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 15h8v6"/><path class="accent" d="M17 3v5"/>',
-    "actions/edit-copy.svg": '<path d="M8 8h11v12H8zM5 16H3V4h11v2"/><path class="accent" d="M15 8l4 4"/>',
-    "actions/edit-paste.svg": '<path d="M7 5H4v16h14v-3M9 3h6v4H9zM8 9h12v9H8z"/><path class="accent" d="M16 9l4 4"/>',
-    "actions/edit-delete.svg": '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/><path class="accent" d="M4 7h4"/>',
-    "actions/system-search.svg": '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21"/><path class="accent" d="M6 8l2-2h3"/>',
-    "actions/configure.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M9 4v4"/>',
-    "places/folder.svg": '<path d="M3 6h7l2 2h9v11H3z"/><path class="accent" d="M3 9h18"/>',
-    "places/folder-open.svg": '<path d="M3 7h7l2 2h9l-2 10H5L3 12z"/><path class="accent" d="M5 12h16"/>',
-    "places/user-home.svg": '<path d="M3 11l9-8 9 8M6 9v12h12V9M10 21v-6h4v6"/><path class="accent" d="M12 3l4 4"/>',
-    "places/user-desktop.svg": '<rect x="3" y="4" width="18" height="13" rx="1"/><path d="M9 21h6M12 17v4"/><path class="accent" d="M4 5h5"/>',
+    "actions/document-new.svg": '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"/><path class="accent" d="M9 14h6M12 11v6"/>',
+    "actions/document-open.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 10h18l-2 9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L3 10z"/><path class="accent" d="M11 13h5M13.5 10.5l2.5 2.5-2.5 2.5"/>',
+    "actions/document-save.svg": '<path d="M4 4a1 1 0 0 1 1-1h11l4 4v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM8 3v5h8V3M8 14h8v6H8z"/><path class="accent" d="M15 3v5"/>',
+    "actions/edit-copy.svg": '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M5 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/><path class="accent" d="M14 8l6 6"/>',
+    "actions/edit-paste.svg": '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M6 14H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h2M12 4h2a1 1 0 0 1 1 1v2M9 3h3a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1z"/><path class="accent" d="M15 9l5 5"/>',
+    "actions/edit-delete.svg": '<path d="M4 6h16M10 6V4h4v2M6 6l1 14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-14M10 10v7M14 10v7"/><path class="accent" d="M4 6h4"/>',
+    "actions/system-search.svg": '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/><path class="accent" d="M7.5 8.5a4 4 0 0 1 4-2"/>',
+    "actions/configure.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M8 4v4"/>',
+    "places/folder.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path class="accent" d="M3 9.5h18"/>',
+    "places/folder-open.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 10h18l-2 9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L3 10z"/><path class="accent" d="M5 10h14"/>',
+    "places/user-home.svg": '<path d="M3 10.5L12 3l9 7.5v8.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"/><path class="accent" d="M12 3l7 6"/>',
+    "places/user-desktop.svg": '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path class="accent" d="M4 5h5"/>',
     "places/network-workgroup.svg": '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5L6 15.5M12 11.5l6 4"/><path class="accent" d="M9 12h6"/>',
-    "devices/computer.svg": '<rect x="3" y="3" width="13" height="11" rx="1"/><path d="M7 18h5M9.5 14v4M18 7h3v14h-7v-5"/><path class="accent" d="M19 9v4"/>',
-    "devices/drive-harddisk.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M12 10h6M12 14h6"/><path class="accent" d="M16 17h2"/>',
+    "devices/computer.svg": '<rect x="2" y="3" width="15" height="12" rx="2"/><path d="M6 19h7M9.5 15v4M18 7h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-3z"/><path class="accent" d="M19 9.5v3"/>',
+    "devices/drive-harddisk.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h5"/><path class="accent" d="M16 16.5h2"/>',
     "devices/audio-card.svg": '<path d="M4 5h13v14H4zM17 9h3v6h-3M7 8h6M7 12h6M7 16h3"/><path class="accent" d="M12 16h2"/>',
-    "devices/input-keyboard.svg": '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M5 10h2M9 10h2M13 10h2M17 10h2M5 14h2M9 14h8M19 14h1"/><path class="accent" d="M9 14h8"/>',
+    "devices/input-keyboard.svg": '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M5 10h2M9 10h2M13 10h2M17 10h2M5 14h2M9 14h6M17 14h2"/><path class="accent" d="M9 14h6"/>',
     "devices/input-mouse.svg": '<rect x="7" y="2" width="10" height="20" rx="5"/><path d="M12 2v7M7 9h10"/><path class="accent" d="M12 4v3"/>',
-    "devices/phone.svg": '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M9 5h6M10 19h4"/><path class="accent" d="M16 2v5"/>',
-    "status/network-wireless.svg": '<path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0"/><circle class="accent-fill" cx="12" cy="19" r="1.5"/>',
+    "devices/phone.svg": '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11.5 18.5h1"/><path class="accent" d="M10 5h4"/>',
+    "status/network-wireless.svg": '<path d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/><circle class="accent-fill" cx="12" cy="19" r="1.5"/>',
     "status/network-wired.svg": '<path d="M4 4h16v10h-6v3h3v3H7v-3h3v-3H4z"/><path class="accent" d="M8 8h8"/>',
-    "status/audio-volume-high.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9a5 5 0 0 1 0 6M18 6a9 9 0 0 1 0 12"/><path class="accent" d="M12 6v4"/>',
-    "status/battery-good.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2"/><path class="accent" d="M7 12h8"/>',
-    "status/dialog-warning.svg": '<path d="M12 3L22 20H2zM12 8v6"/><circle class="accent-fill" cx="12" cy="17" r="1"/>',
+    "status/audio-volume-high.svg": '<path d="M3 9.5h4l5-4v13l-5-4H3zM16 9a5 5 0 0 1 0 6M19 6a9 9 0 0 1 0 12"/><path class="accent" d="M12 6v4"/>',
+    "status/battery-good.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2"/><path class="accent" d="M7 12h8"/>',
+    "status/dialog-warning.svg": '<path d="M12 3L22 20a1 1 0 0 1-.87 1.5H2.87A1 1 0 0 1 2 20L12 3zM12 8.5v5.5"/><circle class="accent-fill" cx="12" cy="17" r="1"/>',
 }
 
 CORE_ICON_SPECS = {
-    "actions/edit-cut.svg": '<path d="M5 5l14 14M19 5L5 19"/><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path class="accent" d="M10 10l2 2"/>',
+    "actions/edit-cut.svg": '<path d="M6 6l12 12M18 6L6 18"/><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path class="accent" d="M10 10l2 2"/>',
     "actions/edit-undo.svg": '<path d="M9 7L4 12l5 5M5 12h8a6 6 0 0 1 6 6"/><path class="accent" d="M4 12h5"/>',
     "actions/edit-redo.svg": '<path d="M15 7l5 5-5 5M19 12h-8a6 6 0 0 0-6 6"/><path class="accent" d="M15 12h5"/>',
     "actions/edit-select-all.svg": '<rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="4 3"/><path class="accent" d="M9 12l2 2 4-4"/>',
     "actions/go-next.svg": '<path d="M8 5l7 7-7 7"/><path class="accent" d="M15 12h5"/>',
     "actions/list-add.svg": '<path d="M5 7h10M5 12h10M5 17h7M19 14v6M16 17h6"/><path class="accent" d="M16 17h6"/>',
-    "actions/media-playback-start.svg": '<path d="M7 4l13 8-13 8z"/><path class="accent" d="M7 4v6"/>',
+    "actions/media-playback-start.svg": '<path d="M8 5l11 7-11 7z"/><path class="accent" d="M8 5v6"/>',
     "actions/view-refresh.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5"/><path class="accent" d="M16 7l3-3"/>',
-    "categories/applications-system.svg": '<rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/><path class="accent" d="M13 3h8v3"/>',
+    "categories/applications-system.svg": '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><path class="accent" d="M13 3h8v3"/>',
     "categories/applications-development.svg": '<path d="M9 5l-6 7 6 7M15 5l6 7-6 7M13 3l-2 18"/><path class="accent" d="M15 5l3 3"/>',
     "categories/applications-graphics.svg": '<path d="M4 20l4-12 8-4 4 4-4 8zM8 8l8 8"/><circle cx="16" cy="8" r="1.5"/><path class="accent" d="M4 20l5-1"/>',
     "categories/applications-internet.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M12 3v4"/>',
-    "categories/applications-multimedia.svg": '<rect x="3" y="5" width="18" height="14"/><path d="M9 9l7 3-7 3z"/><path class="accent" d="M3 5h8"/>',
-    "devices/camera-photo.svg": '<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="4"/><path class="accent" d="M17 8h4"/>',
+    "categories/applications-multimedia.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 9l7 3-7 3z"/><path class="accent" d="M3 5h8"/>',
+    "devices/camera-photo.svg": '<path d="M3 8a1 1 0 0 1 1-1h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="12" cy="13" r="4"/><path class="accent" d="M17 7h4"/>',
     "devices/printer.svg": '<path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/><path class="accent" d="M16 12h2"/>',
     "devices/audio-headphones.svg": '<path d="M4 13a8 8 0 0 1 16 0v7h-4v-6h4M4 14h4v6H4z"/><path class="accent" d="M4 13a8 8 0 0 1 3-6"/>',
     "devices/media-removable.svg": '<path d="M7 3h10v8l3 3v7H4v-7l3-3zM7 11h10"/><path class="accent" d="M10 6h4"/>',
     "emblems/emblem-favorite.svg": '<path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/><path class="accent" d="M12 3v6"/>',
-    "emblems/emblem-important.svg": '<path d="M12 3v12"/><circle cx="12" cy="20" r="1"/><path class="accent" d="M12 3v5"/>',
+    "emblems/emblem-important.svg": '<path d="M12 3v12"/><circle class="accent-fill" cx="12" cy="20" r="1.5"/><path class="accent" d="M12 3v5"/>',
     "emblems/emblem-shared.svg": '<circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 11l6-4M9 13l6 4"/><path class="accent" d="M15 7l3-1"/>',
     "mimetypes/text-x-generic.svg": '<path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/><path class="accent" d="M9 12h4"/>',
     "mimetypes/application-pdf.svg": '<path d="M6 3h9l4 4v14H6zM15 3v5h4M9 16c3-6 5-6 7 0M10 13h5"/><path class="accent" d="M9 16h3"/>',
     "mimetypes/package-x-generic.svg": '<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/><path class="accent" d="M12 3l5 2"/>',
-    "mimetypes/image-x-generic.svg": '<rect x="3" y="4" width="18" height="16"/><circle cx="8" cy="9" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/><path class="accent" d="M15 12l5 6"/>',
+    "mimetypes/image-x-generic.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/><path class="accent" d="M15 12l5 6"/>',
     "mimetypes/audio-x-generic.svg": '<path d="M9 18V6l10-2v12M9 10l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/><path class="accent" d="M9 6l5-1"/>',
-    "mimetypes/video-x-generic.svg": '<rect x="3" y="5" width="18" height="14"/><path d="M10 9l6 3-6 3zM3 9h3M18 9h3"/><path class="accent" d="M10 9v3"/>',
-    "places/folder-documents.svg": '<path d="M3 6h7l2 2h9v11H3zM8 11h8M8 15h6"/><path class="accent" d="M8 11h5"/>',
-    "places/user-trash.svg": '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/><path class="accent" d="M5 7h4"/>',
-    "preferences/preferences-system.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M9 4v4"/>',
-    "preferences/preferences-desktop-theme.svg": '<rect x="3" y="4" width="18" height="14"/><path d="M8 22h8M12 18v4M6 8h12M6 12h7"/><path class="accent" d="M6 8h5"/>',
-    "preferences/preferences-desktop-display.svg": '<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/><path class="accent" d="M4 5h4"/>',
+    "mimetypes/video-x-generic.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l6 3-6 3zM3 9h3M18 9h3"/><path class="accent" d="M10 9v3"/>',
+    "places/folder-documents.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 12h8M8 15h5"/><path class="accent" d="M8 12h5"/>',
+    "places/user-trash.svg": '<path d="M4 6h16M10 6V4h4v2M6 6l1 14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-14M10 10v7M14 10v7"/><path class="accent" d="M5 6h4"/>',
+    "preferences/preferences-system.svg": '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="11" cy="18" r="2"/><path class="accent" d="M8 4v4"/>',
+    "preferences/preferences-desktop-theme.svg": '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 22h8M12 18v4M6 8h12M6 12h7"/><path class="accent" d="M6 8h5"/>',
+    "preferences/preferences-desktop-display.svg": '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path class="accent" d="M4 5h4"/>',
     "preferences/preferences-desktop-keyboard.svg": '<path d="M4 5h16M9 3v4"/><circle cx="9" cy="5" r="2"/><rect x="2" y="9" width="20" height="11" rx="2"/><path d="M5 13h2M9 13h2M13 13h2M17 13h2M6 17h12"/><path class="accent" d="M7 17h10"/>',
     "preferences/preferences-system-network.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M12 3v4"/>',
     "preferences/preferences-system-power-management.svg": '<path d="M12 3v8M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v5"/>',
-    "status/dialog-information.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7" r="1"/><path class="accent" d="M12 11v3"/>',
-    "status/dialog-error.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/><path class="accent" d="M8 8l4 4"/>',
-    "status/network-offline.svg": '<path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0"/><path class="accent" d="M4 4l16 16"/>',
-    "status/security-high.svg": '<path d="M12 3l8 3v6c0 5-3 8-8 10-5-2-8-5-8-10V6zM8 12l3 3 5-6"/><path class="accent" d="M8 12l3 3"/>',
+    "status/dialog-information.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="1"/><path class="accent" d="M12 11v3"/>',
+    "status/dialog-error.svg": '<circle cx="12" cy="12" r="9"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/><path class="accent" d="M8.5 8.5l3.5 3.5"/>',
+    "status/network-offline.svg": '<path d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/><path class="accent" d="M4 4l16 16"/>',
+    "status/security-high.svg": '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6zM8.5 12l2.5 2.5 5-5"/><path class="accent" d="M8.5 12l2.5 2.5"/>',
     "status/software-update-available.svg": '<path d="M12 3v12M7 10l5 5 5-5M5 20h14"/><path class="accent" d="M12 3v6"/>',
 }
 
@@ -94,22 +94,22 @@ STATE_ICON_SPECS = {
     "actions/go-up.svg": '<path d="M5 16l7-7 7 7"/><path class="accent" d="M12 9V4"/>',
     "actions/go-down.svg": '<path d="M5 8l7 7 7-7"/><path class="accent" d="M12 15v5"/>',
     "actions/media-playback-pause.svg": '<path d="M7 5v14M17 5v14"/><path class="accent" d="M7 5v6"/>',
-    "actions/media-playback-stop.svg": '<rect x="6" y="6" width="12" height="12"/><path class="accent" d="M6 6h6"/>',
+    "actions/media-playback-stop.svg": '<rect x="6" y="6" width="12" height="12" rx="1.5"/><path class="accent" d="M6 6h6"/>',
     "actions/media-skip-backward.svg": '<path d="M18 5l-9 7 9 7zM6 5v14"/><path class="accent" d="M6 5v7"/>',
-    "actions/zoom-in.svg": '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21M7 10h6M10 7v6"/><path class="accent" d="M10 7v3"/>',
-    "actions/zoom-out.svg": '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21M7 10h6"/><path class="accent" d="M7 10h3"/>',
+    "actions/zoom-in.svg": '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5M7.5 10.5h6M10.5 7.5v6"/><path class="accent" d="M10.5 7.5v3"/>',
+    "actions/zoom-out.svg": '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5M7.5 10.5h6"/><path class="accent" d="M7.5 10.5h3"/>',
     "applets/bluetooth-active.svg": '<path d="M8 6l8 12V6L8 18l8-12"/><path class="accent" d="M8 6l8 12"/>',
     "applets/bluetooth-disabled.svg": '<path d="M9 7l7 11V6l-4 6M5 5l14 14"/><path class="accent" d="M5 5l6 6"/>',
     "applets/redshift-status-day.svg": '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/><path class="accent" d="M12 2v3"/>',
     "applets/redshift-status-off.svg": '<circle cx="12" cy="12" r="7"/><path d="M5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
     "applets/redshift-status-on.svg": '<path d="M17 15a7 7 0 1 1-8-10 6 6 0 0 0 8 10z"/><path class="accent" d="M17 15a7 7 0 0 1-4 3"/>',
-    "status/audio-volume-low.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 10a3 3 0 0 1 0 4"/><path class="accent" d="M12 6v4"/>',
-    "status/audio-volume-medium.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9a5 5 0 0 1 0 6"/><path class="accent" d="M12 6v4"/>',
-    "status/audio-volume-muted.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 9l5 6M21 9l-5 6"/><path class="accent" d="M16 9l3 3"/>',
-    "status/battery-low.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M7 12h3"/><path class="accent" d="M7 12h3"/>',
-    "status/battery-caution.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M11 9v4"/><circle class="accent-fill" cx="11" cy="15.5" r="1"/>',
-    "status/battery-charging.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M13 8l-4 5h3l-1 4 4-6h-3z"/><path class="accent" d="M13 8l-2 3"/>',
-    "status/network-wireless-disconnected.svg": '<path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0M4 4l16 16"/><path class="accent" d="M4 4l5 5"/>',
+    "status/audio-volume-low.svg": '<path d="M3 9.5h4l5-4v13l-5-4H3zM16 10a3 3 0 0 1 0 4"/><path class="accent" d="M12 6v4"/>',
+    "status/audio-volume-medium.svg": '<path d="M3 9.5h4l5-4v13l-5-4H3zM16 9a5 5 0 0 1 0 6"/><path class="accent" d="M12 6v4"/>',
+    "status/audio-volume-muted.svg": '<path d="M3 9.5h4l5-4v13l-5-4H3zM16 9l5 6M21 9l-5 6"/><path class="accent" d="M16 9l3 3"/>',
+    "status/battery-low.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M7 12h3"/><path class="accent" d="M7 12h3"/>',
+    "status/battery-caution.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M11 9v4"/><circle class="accent-fill" cx="11" cy="15.5" r="1"/>',
+    "status/battery-charging.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M13 8l-4 5h3l-1 4 4-6h-3z"/><path class="accent" d="M13 8l-2 3"/>',
+    "status/network-wireless-disconnected.svg": '<path d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0M4 4l16 16"/><path class="accent" d="M4 4l5 5"/>',
     "status/network-wired-disconnected.svg": '<path d="M4 4h16v10h-6v3h3v3H7v-3h3v-3H4zM5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
 }
 
@@ -136,21 +136,21 @@ V5_RUNTIME_ICON_SPECS = {
 }
 
 PHASE6_PRIORITY_ICON_SPECS = {
-    "actions/dialog-cancel.svg": '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 8l8 8M16 8l-8 8"/><path class="accent" d="M8 8l4 4"/>',
-    "actions/dialog-ok.svg": '<circle cx="12" cy="12" r="9"/><path d="M7 12l3 3 7-7"/><path class="accent" d="M7 12l3 3"/>',
-    "applets/battery.svg": '<rect x="3" y="6" width="17" height="12" rx="2"/><path d="M20 10h2v4h-2M7 10v4M11 10v4M15 10v4"/><path class="accent" d="M15 10v4"/>',
-    "applets/clock.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/><path class="accent" d="M12 7v6"/>',
+    "actions/dialog-cancel.svg": '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/><path class="accent" d="M8.5 8.5l3.5 3.5"/>',
+    "actions/dialog-ok.svg": '<circle cx="12" cy="12" r="9"/><path d="M7.5 12l3 3 6.5-6.5"/><path class="accent" d="M7.5 12l3 3"/>',
+    "applets/battery.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M7 10v4M11 10v4M15 10v4"/><path class="accent" d="M15 10v4"/>',
+    "applets/clock.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/><path class="accent" d="M12 7v5"/>',
     "applets/network.svg": '<circle cx="5" cy="17" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="19" cy="17" r="2"/><path d="M6 15l5-6M13 9l5 6M7 17h10"/><path class="accent" d="M7 17h5"/>',
     "applets/notifications.svg": '<path d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/><path class="accent" d="M8 13h8"/>',
-    "applets/systemtray.svg": '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/><path class="accent" d="M14 4h6v3"/>',
-    "places/folder-download.svg": '<path d="M3 6h7l2 2h9v11H3zM12 10v6M9 13l3 3 3-3"/><path class="accent" d="M9 13l3 3"/>',
-    "places/folder-pictures.svg": '<path d="M3 6h7l2 2h9v11H3z"/><circle cx="9" cy="12" r="1.5"/><path d="M6 17l4-3 3 2 3-4 3 5"/><path class="accent" d="M16 12l3 5"/>',
-    "places/folder-videos.svg": '<path d="M3 6h7l2 2h9v11H3z"/><path d="M9 11l6 3-6 3z"/><path class="accent" d="M9 11v3"/>',
+    "applets/systemtray.svg": '<rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/><path class="accent" d="M14 4h6v3"/>',
+    "places/folder-download.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6M9 13.5l3 3 3-3"/><path class="accent" d="M9 13.5l3 3"/>',
+    "places/folder-pictures.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="9" cy="12" r="1.5"/><path d="M6 17l4-3 3 2 3-4 3 5"/><path class="accent" d="M16 12l3 5"/>',
+    "places/folder-videos.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 11l6 3-6 3z"/><path class="accent" d="M9 11v3"/>',
     "preferences/preferences-desktop-color.svg": '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="8" r="1"/><circle cx="15" cy="8" r="1"/><circle cx="8" cy="14" r="1"/><path d="M12 21c-2-3 1-5 4-4"/><path class="accent" d="M16 17l3 1"/>',
-    "preferences/preferences-desktop-icons.svg": '<rect x="3" y="4" width="18" height="16"/><rect x="6" y="7" width="4" height="4"/><rect x="14" y="7" width="4" height="4"/><rect x="6" y="14" width="4" height="3"/><rect x="14" y="14" width="4" height="3"/><path class="accent" d="M14 7h4v2"/>',
+    "preferences/preferences-desktop-icons.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><rect x="6" y="7" width="4" height="4" rx="1"/><rect x="14" y="7" width="4" height="4" rx="1"/><rect x="6" y="14" width="4" height="3" rx="1"/><rect x="14" y="14" width="4" height="3" rx="1"/><path class="accent" d="M14 7h4v2"/>',
     "preferences/preferences-desktop-mouse.svg": '<rect x="7" y="2" width="10" height="20" rx="5"/><path d="M12 2v7M7 9h10M19 7v10"/><circle cx="19" cy="12" r="1.5"/><path class="accent" d="M19 10.5v3"/>',
     "preferences/preferences-system-bluetooth.svg": '<circle cx="12" cy="12" r="9"/><path d="M8 7l8 10V7L8 17l8-10"/><path class="accent" d="M8 7l8 10"/>',
-    "preferences/preferences-system-sound.svg": '<path d="M3 9h4l5-4v14l-5-4H3zM16 7v10M20 5v14"/><circle cx="16" cy="11" r="1.5"/><circle cx="20" cy="14" r="1.5"/><path class="accent" d="M16 9.5v3"/>',
+    "preferences/preferences-system-sound.svg": '<path d="M3 9.5h4l5-4v13l-5-4H3zM16 7v10M20 5v14"/><circle cx="16" cy="11" r="1.5"/><circle cx="20" cy="14" r="1.5"/><path class="accent" d="M16 9.5v3"/>',
 }
 
 V7_CORE_ICON_SPECS = {
@@ -161,7 +161,7 @@ V7_CORE_ICON_SPECS = {
     "actions/system-reboot.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5"/><path class="accent" d="M16 7l3-3M18 16l-2 2"/>',
     "actions/system-shutdown.svg": '<path d="M12 3v9M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v6"/>',
     "actions/system-lock-screen.svg": '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/><path class="accent" d="M8 10h8"/>',
-    "actions/system-log-out.svg": '<path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M14 8l4 4M8 12h5"/>',
+    "actions/system-log-out.svg": '<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M14 8l4 4M8 12h5"/>',
 }
 
 ICON_ALIASES = {
@@ -334,7 +334,15 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
         return f"{prefix}-{position}"
 
     attr = f'class="{css_class}" fill="currentColor" fill-opacity="{opacity:g}"'
-    top = f'<g id="{name("top")}"><rect x="{x + 6}" y="{y}" width="28" height="6" {attr}/>'
+    border_class = "NoxForge-EdgeHighlight" if active else "NoxForge-OutlineMuted"
+    b_fill = f'class="{border_class}" fill="currentColor"'
+    b_attr = f'class="{border_class}" stroke="currentColor" fill="none" stroke-width="1"'
+
+    top = (
+        f'<g id="{name("top")}">'
+        f'<rect x="{x + 6}" y="{y}" width="28" height="6" {attr}/>'
+        f'<rect x="{x + 6}" y="{y}" width="28" height="1" {b_fill}/>'
+    )
     if active:
         rail = EDGE_POLISH["aurorae"]
         top += (
@@ -343,19 +351,54 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
             f'stroke-width="{rail["activeRailThickness"]}"/>'
         )
     top += "</g>"
-    return "\n".join(
-        [
-            f'<path id="{name("topleft")}" d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attr}/>',
-            top,
-            f'<path id="{name("topright")}" d="M{x + 34} {y}A6 6 0 0 1 {x + 40} {y + 6}H{x + 34}Z" {attr}/>',
-            f'<rect id="{name("left")}" x="{x}" y="{y + 6}" width="6" height="28" {attr}/>',
-            f'<rect id="{name("center")}" x="{x + 6}" y="{y + 6}" width="28" height="28" {attr}/>',
-            f'<rect id="{name("right")}" x="{x + 34}" y="{y + 6}" width="6" height="28" {attr}/>',
-            f'<path id="{name("bottomleft")}" d="M{x} {y + 34}H{x + 6}V{y + 40}A6 6 0 0 1 {x} {y + 34}Z" {attr}/>',
-            f'<rect id="{name("bottom")}" x="{x + 6}" y="{y + 34}" width="28" height="6" {attr}/>',
-            f'<path id="{name("bottomright")}" d="M{x + 34} {y + 34}H{x + 40}A6 6 0 0 1 {x + 34} {y + 40}Z" {attr}/>',
-        ]
+
+    topleft = (
+        f'<g id="{name("topleft")}">'
+        f'<path d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attr}/>'
+        f'<rect x="{x + 4}" y="{y}" width="2" height="1" {b_fill}/>'
+        f'<line x1="{x + 4}" y1="{y}" x2="{x}" y2="{y + 4}" {b_attr}/>'
+        f'<rect x="{x}" y="{y + 4}" width="1" height="2" {b_fill}/>'
+        f'</g>'
     )
+    topright = (
+        f'<g id="{name("topright")}">'
+        f'<path d="M{x + 34} {y}A6 6 0 0 1 {x + 40} {y + 6}H{x + 34}Z" {attr}/>'
+        f'<path d="M{x + 34} {y + 0.5}A5.5 5.5 0 0 1 {x + 39.5} {y + 6}" {b_attr}/>'
+        f'</g>'
+    )
+    left = (
+        f'<g id="{name("left")}">'
+        f'<rect x="{x}" y="{y + 6}" width="6" height="28" {attr}/>'
+        f'<rect x="{x}" y="{y + 6}" width="1" height="28" {b_fill}/>'
+        f'</g>'
+    )
+    center = f'<rect id="{name("center")}" x="{x + 6}" y="{y + 6}" width="28" height="28" {attr}/>'
+    right = (
+        f'<g id="{name("right")}">'
+        f'<rect x="{x + 34}" y="{y + 6}" width="6" height="28" {attr}/>'
+        f'<rect x="{x + 39}" y="{y + 6}" width="1" height="28" {b_fill}/>'
+        f'</g>'
+    )
+    bottomleft = (
+        f'<g id="{name("bottomleft")}">'
+        f'<path d="M{x} {y + 34}H{x + 6}V{y + 40}A6 6 0 0 1 {x} {y + 34}Z" {attr}/>'
+        f'<path d="M{x + 6} {y + 39.5}A5.5 5.5 0 0 1 {x + 0.5} {y + 34}" {b_attr}/>'
+        f'</g>'
+    )
+    bottom = (
+        f'<g id="{name("bottom")}">'
+        f'<rect x="{x + 6}" y="{y + 34}" width="28" height="6" {attr}/>'
+        f'<rect x="{x + 6}" y="{y + 39}" width="28" height="1" {b_fill}/>'
+        f'</g>'
+    )
+    bottomright = (
+        f'<g id="{name("bottomright")}">'
+        f'<path d="M{x + 34} {y + 34}H{x + 40}A6 6 0 0 1 {x + 34} {y + 40}Z" {attr}/>'
+        f'<path d="M{x + 39.5} {y + 34}A5.5 5.5 0 0 1 {x + 34} {y + 39.5}" {b_attr}/>'
+        f'</g>'
+    )
+
+    return "\n".join([topleft, top, topright, left, center, right, bottomleft, bottom, bottomright])
 
 
 def decoration_svg() -> str:
@@ -367,6 +410,8 @@ def decoration_svg() -> str:
       .ColorScheme-Raised {{ color: {COLORS["surfaceRaised"]}; }}
       .ColorScheme-Sunken {{ color: {COLORS["surfaceSunken"]}; }}
       .ColorScheme-Highlight {{ color: {COLORS["accent"]}; }}
+      .NoxForge-EdgeHighlight {{ color: {COLORS["edgeHighlight"]}; }}
+      .NoxForge-OutlineMuted {{ color: {COLORS["border"]}; }}
     ]]></style>
   </defs>
   {active}
@@ -378,20 +423,20 @@ def decoration_svg() -> str:
 BUTTON_STATES = (
     ("active", "ColorScheme-Text", 0.0),
     ("inactive", "ColorScheme-Text", 0.0),
-    ("hover", "ColorScheme-Hover", 1.0),
-    ("hover-inactive", "ColorScheme-Text", 0.1),
+    ("hover", "ColorScheme-Hover", 0.85),
+    ("hover-inactive", "ColorScheme-Hover", 0.45),
     ("pressed", "ColorScheme-Pressed", 1.0),
-    ("pressed-inactive", "ColorScheme-Text", 0.16),
+    ("pressed-inactive", "ColorScheme-Pressed", 0.65),
     ("deactivated", "ColorScheme-Text", 0.0),
     ("deactivated-inactive", "ColorScheme-Text", 0.0),
 )
 
 GLYPHS = {
-    "menu": '<path d="M8 8h8M8 12h8M8 16h8"/>',
-    "close": '<path d="M8 8l8 8M16 8l-8 8"/>',
-    "minimize": '<path d="M7 15h10"/>',
-    "maximize": '<path d="M7 7h10v10H7zM7 10l3-3"/>',
-    "restore": '<path d="M8 10h8v7H8zM10 10V7h7v7h-1"/>',
+    "menu": '<path d="M7 8h10M7 12h10M7 16h10"/>',
+    "close": '<path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/>',
+    "minimize": '<path d="M7.5 13h9"/>',
+    "maximize": '<rect x="7.5" y="7.5" width="9" height="9" rx="1.5"/>',
+    "restore": '<path d="M9.5 9.5h5.5v5.5H9.5zM11.5 7.5h5v5"/>',
 }
 
 
@@ -406,9 +451,15 @@ def button_svg(kind: str) -> str:
             if "inactive" in state or state.startswith("deactivated")
             else COLORS["textPrimary"]
         )
+        border_stroke = (
+            f'<rect x="0.5" y="0.5" width="23" height="23" rx="{TOKENS["geometry"]["compactRadius"]}" fill="none" stroke="{COLORS["negative"] if kind == "close" else COLORS["edgeHighlight"]}" stroke-width="1" stroke-opacity="0.6"/>'
+            if state in {"hover", "pressed"}
+            else ""
+        )
         groups.append(
             f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="{COLORS['textPrimary']}">
       <rect width="24" height="24" rx="{TOKENS['geometry']['compactRadius']}" fill="currentColor" fill-opacity="{opacity:g}"/>
+      {border_stroke}
       <g fill="none" stroke="{foreground}" stroke-width="{TOKENS['iconography']['strokeWidth']}" stroke-linecap="round" stroke-linejoin="round">{GLYPHS[kind]}</g>
     </g>'''
         )

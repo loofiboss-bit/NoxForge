@@ -4,6 +4,6 @@
     .accent-fill { fill: #22D3EE; stroke: none; }
   </style>
   <g fill="none" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 15h8v6"/><path class="accent" d="M17 3v5"/>
+    <path d="M4 4a1 1 0 0 1 1-1h11l4 4v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM8 3v5h8V3M8 14h8v6H8z"/><path class="accent" d="M15 3v5"/>
   </g>
 </svg>

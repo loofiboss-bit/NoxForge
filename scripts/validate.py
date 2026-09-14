@@ -805,8 +805,27 @@ def validate_aurorae(version: str) -> None:
         raise ValidationError("Aurorae version does not match VERSION")
     rc = theme / f"{THEME_ID}rc"
     settings = load_colors(rc)
-    if settings["General"].get("rightbuttons") != "IAX":
+    general = settings["General"]
+    if general.get("rightbuttons") != "IAX":
         raise ValidationError("Aurorae must configure minimize, maximize/restore, and close buttons")
+    if general.get("shadow", "").lower() != "true":
+        raise ValidationError("Aurorae must enable the documented shadow contract")
+    unsupported_shadow_keys = sorted(
+        key for key in general
+        if key.startswith("activeshadow") or key.startswith("inactiveshadow")
+    )
+    if unsupported_shadow_keys:
+        raise ValidationError(
+            "Aurorae uses unsupported shadow keys: " + ", ".join(unsupported_shadow_keys)
+        )
+    layout = settings["Layout"]
+    for key in ("paddingtop", "paddingbottom", "paddingleft", "paddingright"):
+        try:
+            padding = int(layout[key])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValidationError(f"Aurorae is missing a valid {key} shadow padding") from error
+        if not 1 <= padding <= 64:
+            raise ValidationError(f"Aurorae {key} must be between 1 and 64 pixels")
     decoration_ids = svg_ids(theme / "decoration.svg")
     for prefix in ("decoration", "decoration-inactive"):
         if not {f"{prefix}-{position}" for position in POSITIONS}.issubset(decoration_ids):

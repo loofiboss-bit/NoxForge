@@ -1,7 +1,7 @@
 # Install the complete edition on Arch
 
-Download the exact 10.0.0 archive and `SHA256SUMS` from the
-[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v10.0.0).
+Download the exact 10.1.0 archive and `SHA256SUMS` from the
+[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v10.1.0).
 Verify its checksum before installation.
 
 The intended target is Arch Linux with Plasma/KWin 6.7+ and Qt 6.11. The
@@ -13,7 +13,7 @@ For a local candidate, preload the exact source archive into a temporary
 
 ```bash
 export SRCDEST="$(mktemp -d)"
-cp noxforge-10.0.0-source.tar.xz "$SRCDEST/"
+cp noxforge-10.1.0-source.tar.xz "$SRCDEST/"
 makepkg --verifysource --cleanbuild
 makepkg --cleanbuild
 ```

@@ -76,9 +76,15 @@ jobs:
           echo "NOXFORGE_VERSION=$(<VERSION)" >> "$GITHUB_ENV"
       - name: Run the full release gate
         run: |
-          mkdir -p build/v9-source
-          git -c safe.directory="$PWD" archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
-          python3 scripts/release-check.py --baseline-source build/v9-source
+          mkdir -p build/baseline-source
+          baseline_commit=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('distribution/release-manifest.json').read_text())['release']['baseline']['commit'])
+          PY
+          )
+          git -c safe.directory="$PWD" archive "$baseline_commit" | tar -x -C build/baseline-source
+          python3 scripts/release-check.py --baseline-source build/baseline-source
       - name: Build source, portable, and Fedora artifacts
         shell: bash
         run: |
@@ -94,19 +100,35 @@ jobs:
           cp "dist/${source_archive}" rpmbuild/SOURCES/
           rpmbuild -bb --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
           rpmbuild -bs --define "_topdir $PWD/rpmbuild" packaging/noxforge.spec
-          python3 - <<'PY'
+          baseline_rpm="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('distribution/release-manifest.json').read_text())['release']['baseline']['rpmFilename'])
+          PY
+          )"
+          candidate_rpm="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          print(next(item['filename'] for item in json.loads(Path('distribution/release-manifest.json').read_text())['artifacts'] if item['key'] == 'rpm'))
+          PY
+          )"
+          python3 - "$baseline_rpm" <<'PY'
           import hashlib
+          import json
+          import sys
           from pathlib import Path
           from urllib.request import urlopen
-          baseline=Path('build/noxforge-9.0.0-1.fc44.x86_64.rpm')
-          url='https://github.com/loofiboss-bit/NoxForge/releases/download/v9.0.0/' + baseline.name
+          manifest=json.loads(Path('distribution/release-manifest.json').read_text())
+          baseline_meta=manifest['release']['baseline']
+          baseline=Path('build') / sys.argv[1]
+          url=baseline_meta['githubSource'].replace('/releases/tag/', '/releases/download/') + '/' + baseline.name
           baseline.write_bytes(urlopen(url, timeout=120).read())
-          if hashlib.sha256(baseline.read_bytes()).hexdigest() != 'e746e4751a0db53950dc98503bd4e67a8af6f39bbddf11d16e61359de883c7ff':
-              raise SystemExit('published v9 RPM checksum mismatch')
+          if hashlib.sha256(baseline.read_bytes()).hexdigest() != baseline_meta['rpmSha256']:
+              raise SystemExit('published baseline RPM checksum mismatch')
           PY
           python3 scripts/check_v10_rpm_lifecycle.py \
-            --baseline-rpm build/noxforge-9.0.0-1.fc44.x86_64.rpm \
-            --candidate-rpm rpmbuild/RPMS/x86_64/noxforge-10.0.0-1.fc44.x86_64.rpm \
+            --baseline-rpm "build/$baseline_rpm" \
+            --candidate-rpm "rpmbuild/RPMS/x86_64/$candidate_rpm" \
             --report build/release-rpm-transactions.json
           python3 - <<'PY'
           import hashlib

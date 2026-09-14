@@ -1,37 +1,107 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
-  <title>NoxForge Quiet Precision 16:9 forged planes</title>
+  <title>NoxForge Quiet Lumina Precision 16:9 wallpaper</title>
   <defs>
-    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#151D23"/>
-      <stop offset="0.42" stop-color="#0E1318"/>
-      <stop offset="1" stop-color="#090C0F"/>
+    <!-- Deep atmospheric space gradients -->
+    <linearGradient id="bg-canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#141E26"/>
+      <stop offset="35%" stop-color="#0E151B"/>
+      <stop offset="70%" stop-color="#090E12"/>
+      <stop offset="100%" stop-color="#050709"/>
     </linearGradient>
-    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#222D35"/>
-      <stop offset="1" stop-color="#151D23"/>
+
+    <!-- Obsidian layered plate gradients -->
+    <linearGradient id="plate-grad-1" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#1F2E3A"/>
+      <stop offset="60%" stop-color="#131C23"/>
+      <stop offset="100%" stop-color="#0C1217"/>
     </linearGradient>
+
+    <linearGradient id="plate-grad-2" x1="0" y1="0.2" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#1A2731"/>
+      <stop offset="50%" stop-color="#121B21"/>
+      <stop offset="100%" stop-color="#0A0F13"/>
+    </linearGradient>
+
+    <linearGradient id="plate-grad-3" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#16212A"/>
+      <stop offset="100%" stop-color="#0B1014"/>
+    </linearGradient>
+
+    <!-- Quiet Lumina accent gradient -->
+    <linearGradient id="lumina-glow" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#4EFA8B" stop-opacity="0.35"/>
+      <stop offset="45%" stop-color="#22D3EE" stop-opacity="0.25"/>
+      <stop offset="85%" stop-color="#38BDF8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Precision rim light gradients -->
+    <linearGradient id="rim-highlight-1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#647E8D" stop-opacity="0.4"/>
+      <stop offset="40%" stop-color="#4B606A" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1F2E3A" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="rim-highlight-2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4EFA8B" stop-opacity="0.3"/>
+      <stop offset="30%" stop-color="#22D3EE" stop-opacity="0.2"/>
+      <stop offset="70%" stop-color="#4B606A" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1B2831" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Radial atmospheric bloom -->
+    <radialGradient id="bloom-left" cx="20%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#1A3328" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#0E212A" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect width="2560" height="1440" fill="url(#canvas)"/>
 
-  <!-- Original left-anchored forged planes preserve a quiet central/right workspace. -->
-  <path d="M0 0H438L720 506L588 612L0 222Z" fill="#1B252C"/>
-  <path d="M0 226L572 606L846 526L1018 668L716 760L0 432Z" fill="url(#plate)"/>
-  <path d="M0 438L676 750L966 1128L790 1196L548 902L0 696Z" fill="#151D23"/>
-  <path d="M0 710L530 908L946 1440H630L408 1128L0 1012Z" fill="#1B252C"/>
-  <path d="M0 1014L396 1132L604 1440H0Z" fill="#10171C"/>
+  <!-- 1. Deep space canvas -->
+  <rect width="2560" height="1440" fill="url(#bg-canvas)"/>
 
-  <!-- One narrow energy seam; lime never becomes an ambient slab. -->
-  <path d="M432 0H448L734 508L716 522Z" fill="#A3FF47" opacity="0.30"/>
-  <path d="M716 522L736 512L854 536L836 542Z" fill="#A3FF47" opacity="0.20"/>
+  <!-- 2. Ambient atmosphere bloom -->
+  <rect width="2560" height="1440" fill="url(#bloom-left)"/>
 
-  <!-- Subordinate detail is deliberately visible only on close inspection. -->
-  <path d="M218 728L330 766" fill="none" stroke="#22D3EE" stroke-width="3" opacity="0.34"/>
-  <path d="M668 966L734 1030" fill="none" stroke="#A78BFA" stroke-width="3" opacity="0.22"/>
-  <path d="M926 612L966 600" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.26"/>
+  <!-- 3. Fine technical precision grid & isobars (subtle micro-lines) -->
+  <g fill="none" stroke="#263845" stroke-width="1" opacity="0.12">
+    <circle cx="500" cy="550" r="400"/>
+    <circle cx="500" cy="550" r="650"/>
+    <circle cx="500" cy="550" r="950"/>
+    <circle cx="500" cy="550" r="1300"/>
+  </g>
 
-  <g fill="none" stroke="#3C4B53" stroke-width="2" opacity="0.36">
-    <path d="M0 224L572 604L846 524"/>
-    <path d="M0 436L676 748L968 1128"/>
-    <path d="M0 708L530 906L948 1440"/>
+  <!-- 4. Deep foundation planes (left-anchored to keep central workspace quiet) -->
+  <path d="M0 0H620L980 560L790 740L0 280Z" fill="url(#plate-grad-3)" opacity="0.95"/>
+  <path d="M0 240L720 710L1080 610L1310 790L920 920L0 540Z" fill="url(#plate-grad-1)"/>
+  <path d="M0 510L820 880L1210 1340L980 1440H0Z" fill="url(#plate-grad-2)"/>
+
+  <!-- 5. Sculpted architectural mid-planes with refined bevels -->
+  <path d="M0 720L640 960L1120 1440H740L480 1140L0 1020Z" fill="#131C24"/>
+  <path d="M0 1010L440 1140L680 1440H0Z" fill="#0C1217"/>
+
+  <!-- 6. Modern precision contour ribbons (sweeping flowing energy) -->
+  <path d="M0 320 Q 520 620 780 530 T 1180 680" fill="none" stroke="url(#rim-highlight-1)" stroke-width="1.5" opacity="0.5"/>
+  <path d="M0 480 Q 640 820 940 760 T 1420 890" fill="none" stroke="url(#rim-highlight-1)" stroke-width="1.5" opacity="0.35"/>
+  <path d="M0 680 Q 580 940 860 1120 T 1280 1440" fill="none" stroke="url(#rim-highlight-1)" stroke-width="1.5" opacity="0.25"/>
+
+  <!-- 7. Lumina Mint & Cyan Core Energy Seam (Subdued for quiet login/greeter) -->
+  <path d="M540 0 H558 L910 550 L888 568 Z" fill="url(#lumina-glow)"/>
+  <path d="M888 568 L912 556 L1082 590 L1060 600 Z" fill="url(#lumina-glow)" opacity="0.6"/>
+  <path d="M1060 600 L1080 592 L1280 760 L1260 774 Z" fill="url(#lumina-glow)" opacity="0.4"/>
+
+  <!-- 8. Precision edge highlights on facet junctions -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M0 240L720 710L1080 610" stroke="url(#rim-highlight-2)" stroke-width="1.5" opacity="0.5"/>
+    <path d="M720 710L920 920" stroke="url(#rim-highlight-1)" stroke-width="1.2" opacity="0.4"/>
+    <path d="M0 510L820 880L1210 1340" stroke="url(#rim-highlight-1)" stroke-width="1.5" opacity="0.35"/>
+    <path d="M0 720L640 960L1120 1440" stroke="url(#rim-highlight-1)" stroke-width="1.2" opacity="0.25"/>
+  </g>
+
+  <!-- 9. Minimal technical coordinates & telemetry detail (quiet aesthetic touch) -->
+  <g fill="none" stroke="#22D3EE" stroke-width="1.5" opacity="0.3" stroke-linecap="round">
+    <path d="M280 810 L410 852"/>
+    <path d="M790 1060 L870 1130"/>
+    <path d="M1120 680 L1170 665"/>
   </g>
 </svg>

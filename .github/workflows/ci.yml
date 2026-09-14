@@ -50,9 +50,15 @@ jobs:
       - name: Run the authoritative release gate
         shell: bash
         run: |
-          mkdir -p build/v9-source
-          git -c safe.directory="$PWD" archive dc0b8b2a88988b651e091619de074735833d90e5 | tar -x -C build/v9-source
-          python3 scripts/release-check.py --baseline-source build/v9-source
+          mkdir -p build/baseline-source
+          baseline_commit=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('distribution/release-manifest.json').read_text())['release']['baseline']['commit'])
+          PY
+          )
+          git -c safe.directory="$PWD" archive "$baseline_commit" | tar -x -C build/baseline-source
+          python3 scripts/release-check.py --baseline-source build/baseline-source
 
   gzip-determinism:
     name: Canonical gzip on Python ${{ matrix.python }}

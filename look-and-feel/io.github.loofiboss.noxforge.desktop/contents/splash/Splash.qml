@@ -30,7 +30,7 @@ Rectangle {
 
     Column {
         anchors.centerIn: parent
-        spacing: tokens.standardSpacing
+        spacing: tokens.standardSpacing * 2
         transform: Translate {
             y: root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress)
         }
@@ -57,12 +57,16 @@ Rectangle {
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             width: Kirigami.Units.gridUnit * 12
-            height: tokens.borderWidth
+            height: 3
+            radius: 1.5
             color: tokens.surfaceRaised
+            border.color: tokens.border
+            border.width: 1
 
             Rectangle {
                 width: parent.width * root.stageProgress
                 height: parent.height
+                radius: 1.5
                 color: tokens.accent
                 Behavior on width {
                     enabled: !root.reducedMotion && root.testProgress < 0
