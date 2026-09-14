@@ -38,6 +38,11 @@ class PhaseSevenNativeStyleTests(unittest.TestCase):
             "CC_GroupBox",
             "CC_Slider",
             "CC_ScrollBar",
+            "PE_IndicatorBranch",
+            "PE_FrameTabWidget",
+            "PE_FrameDockWidget",
+            "PE_PanelStatusBar",
+            "CE_Splitter",
         ):
             self.assertIn(control, source)
 

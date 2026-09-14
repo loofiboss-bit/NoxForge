@@ -195,6 +195,11 @@ def parse_args() -> argparse.Namespace:
         help="inspect an absolute staged or system root (default: /)",
     )
     parser.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    parser.add_argument(
+        "--remediation-plan",
+        action="store_true",
+        help="emit actionable, non-destructive remediation shell commands",
+    )
     return parser.parse_args()
 
 
@@ -612,6 +617,14 @@ def edition_report(
             name: any(scoped_file(candidate / f"wallpapers/{name}/metadata.json", root) for candidate in roots)
             for name in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide")
         },
+        "colorSchemeVariants": {
+            name: any(scoped_file(candidate / f"color-schemes/{name}.colors", root) for candidate in roots)
+            for name in ("NoxForgeDark", "NoxForgeObsidian")
+        },
+        "terminalThemes": {
+            name: any(scoped_file(candidate / f"konsole/{name}.colorscheme", root) for candidate in roots)
+            for name in ("NoxForge", "NoxForgeObsidian")
+        },
     }
 
 
@@ -813,6 +826,46 @@ def print_human(report: dict[str, Any]) -> None:
     print(f"Next action: {report['nextAction']}")
 
 
+def remediation_plan(report: dict[str, Any]) -> str:
+    lines = [
+        "#!/usr/bin/env bash",
+        "# NoxForge non-destructive remediation plan",
+        "set -euo pipefail",
+        "",
+    ]
+    edition = report.get("edition", {})
+    kind = edition.get("kind", "unknown")
+    missing = edition.get("missingMandatory", [])
+    shadowed = edition.get("shadowed", [])
+    if not missing and not shadowed and report.get("status") == "ok":
+        lines.append("# Installation is clean and complete. No remediation required.")
+        return "\n".join(lines) + "\n"
+    if shadowed:
+        lines.append("# Shadowed component copies detected in user data:")
+        for name in shadowed:
+            lines.append(f"# Note: user copy of '{name}' takes precedence over system package.")
+        lines.append("")
+    if kind == "complete-system":
+        lines.append("# Recommended system package remediation:")
+        lines.append("if command -v dnf &>/dev/null; then")
+        lines.append("    sudo dnf reinstall noxforge")
+        lines.append("elif command -v pacman &>/dev/null; then")
+        lines.append("    echo 'Arch Linux: rebuild and reinstall noxforge from packaging/arch/PKGBUILD'")
+        lines.append("fi")
+    elif kind == "portable":
+        lines.append("# Recommended portable package remediation:")
+        lines.append("./scripts/install.sh --user")
+    elif kind == "component":
+        lines.append("# Recommended Store component remediation:")
+        for comp in missing:
+            lines.append(f"# Reinstall KDE Store component: {comp}")
+    else:
+        lines.append("# Recommended installation:")
+        lines.append("# Complete system: sudo dnf install noxforge")
+        lines.append("# Portable: ./scripts/install.sh --user")
+    return "\n".join(lines) + "\n"
+
+
 def main() -> int:
     arguments = parse_args()
     root = arguments.root
@@ -820,6 +873,9 @@ def main() -> int:
         print("--root must be an absolute path", file=sys.stderr)
         return 2
     report = build_report(root)
+    if arguments.remediation_plan:
+        print(remediation_plan(report), end="")
+        return 0
     if arguments.json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:

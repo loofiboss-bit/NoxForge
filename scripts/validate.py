@@ -498,7 +498,7 @@ def validate_motion_contract(tokens: dict[str, object], version: str) -> None:
         raise ValidationError("reduced-motion behavior is incomplete")
 
 
-def validate_color_scheme(path: Path) -> None:
+def validate_color_scheme(path: Path, expected_name: str = "NoxForgeDark") -> None:
     parser = load_colors(path)
     missing = COLOR_SECTIONS.difference(parser.sections())
     if missing:
@@ -515,8 +515,22 @@ def validate_color_scheme(path: Path) -> None:
                 raise ValidationError(f"invalid RGB value {value!r} in [{section}] {key}") from error
             if len(channels) != 3 or any(channel < 0 or channel > 255 for channel in channels):
                 raise ValidationError(f"invalid RGB value {value!r} in [{section}] {key}")
-    if parser["General"].get("colorscheme") != "NoxForgeDark":
+    if parser["General"].get("colorscheme") != expected_name:
         raise ValidationError(f"{path.name} has the wrong ColorScheme identifier")
+
+
+def validate_konsole() -> None:
+    for name in ("NoxForge", "NoxForgeObsidian"):
+        path = ROOT / f"konsole/{name}.colorscheme"
+        if not path.is_file():
+            continue
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read(path, encoding="utf-8")
+        if "General" not in parser or "Background" not in parser or "Foreground" not in parser:
+            raise ValidationError(f"{path.name} missing required Konsole sections")
+        for section in ("Color0", "Color1", "Color2", "Color3", "Color4", "Color5", "Color6", "Color7"):
+            if section not in parser:
+                raise ValidationError(f"{path.name} missing {section}")
 
 
 def validate_metadata(version: str) -> None:
@@ -2176,8 +2190,11 @@ def validate() -> None:
     version = validate_version()
     tokens = validate_tokens(version)
     validate_motion_contract(tokens, version)
-    validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors")
-    validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors")
+    validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors", "NoxForgeDark")
+    if (ROOT / "color-schemes/NoxForgeObsidian.colors").is_file():
+        validate_color_scheme(ROOT / "color-schemes/NoxForgeObsidian.colors", "NoxForgeObsidian")
+    validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors", "NoxForgeDark")
+    validate_konsole()
     if (ROOT / "color-schemes/NoxForgeDark.colors").read_bytes() != (
         ROOT / f"plasma/desktoptheme/{THEME_ID}/colors"
     ).read_bytes():
