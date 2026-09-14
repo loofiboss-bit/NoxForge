@@ -92,6 +92,51 @@
       "path": "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png",
       "dimensions": "960x540",
       "provenance": "generated"
+    },
+    "storeThumbnail": {
+      "path": "media/store/s1_store_thumbnail_480x380.png",
+      "dimensions": "480x380",
+      "provenance": "generated"
+    },
+    "storeHeroBanner1280": {
+      "path": "media/store/store_hero_banner_1280x640.png",
+      "dimensions": "1280x640",
+      "provenance": "composited"
+    },
+    "storeHeroBanner1920": {
+      "path": "media/store/store_hero_banner_1920x1080.png",
+      "dimensions": "1920x1080",
+      "provenance": "composited"
+    },
+    "storeShowcase01": {
+      "path": "media/store/01_hero_desktop_showcase_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
+    },
+    "storeShowcase02": {
+      "path": "media/store/02_dual_palettes_obsidian_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
+    },
+    "storeShowcase03": {
+      "path": "media/store/03_window_craft_aurorae_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
+    },
+    "storeShowcase04": {
+      "path": "media/store/04_system_completeness_qt6_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
+    },
+    "storeShowcase05": {
+      "path": "media/store/05_launcher_and_plasma_shell_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
+    },
+    "storeShowcase06": {
+      "path": "media/store/06_original_iconography_2560x1440.png",
+      "dimensions": "2560x1440",
+      "provenance": "generated"
     }
   }
 }

@@ -7,7 +7,7 @@ Qt 6.11 on Wayland, with complete native Qt 6 style coverage, official
 Konsole themes, and an Obsidian true-black companion palette.
 Physical qualification remains pending; see [the evidence record](docs/evidence/v11/qualification.json).
 
-![NoxForge isolated desktop](media/v10/desktop.png)
+![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
 Capture provenance and dimensions are recorded
 in [media/manifest.json](media/manifest.json).
@@ -27,10 +27,12 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 
 ## Gallery
 
-![Dolphin and icon treatment](media/v10/dolphin.png)
-![Launcher and panel](media/v10/launcher.png)
-![System Settings](media/v10/system-settings.png)
-![Aurorae and task switcher](media/v10/aurorae-tabbox.png)
+![NoxForge Hero Desktop Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
+![Dual Palettes: Graphite and Obsidian OLED](media/store/02_dual_palettes_obsidian_2560x1440.png)
+![Aurorae Window Craft and Forge Notch](media/store/03_window_craft_aurorae_2560x1440.png)
+![Native Qt 6 Control Completeness](media/store/04_system_completeness_qt6_2560x1440.png)
+![Application Launcher and Floating Plasma Shell](media/store/05_launcher_and_plasma_shell_2560x1440.png)
+![Original Vector Iconography and File Hierarchy](media/store/06_original_iconography_2560x1440.png)
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
 Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
