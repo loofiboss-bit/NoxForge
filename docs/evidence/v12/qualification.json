@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 4,
+  "releaseState": "release-candidate",
+  "releaseReady": false,
+  "candidate": {
+    "version": "12.0.0",
+    "sourceRef": "feature/v12-ecosystem-parity",
+    "sourceCommit": null,
+    "baselineCommit": "e7cb573e400aa7ce506401c5faa982628bca46aa",
+    "worktreeDirty": true,
+    "package": "noxforge-12.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [],
+    "runtimeSourceHashes": "runtime-source-hashes.json"
+  },
+  "automatedCases": [
+    {
+      "id": "python",
+      "status": "passed",
+      "passed": 140,
+      "skipped": 9,
+      "failures": 0,
+      "errors": 0,
+      "log": "build/release-gate-final.log"
+    },
+    {
+      "id": "fedora-ctest",
+      "status": "passed",
+      "passed": 72,
+      "runtime": "Qt 6.11.2-2.fc44, Plasma/KWin 6.7.4-2.fc44",
+      "log": "build/release-gate.log"
+    },
+    {
+      "id": "arch-build-ctest",
+      "status": "pending",
+      "reason": "No Arch container was available in the local gate; offscreen Fedora coverage does not qualify an Arch build."
+    },
+    {
+      "id": "asan-ubsan",
+      "status": "passed",
+      "passed": 4,
+      "log": "build/release-gate.log"
+    },
+    {
+      "id": "rpm-package-validation",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0,
+      "log": "build/rpm-gate-final.log"
+    },
+    {
+      "id": "rpm-transactions",
+      "status": "pending",
+      "reason": "Canonical release workflow must qualify Fedora RPM transactions."
+    },
+    {
+      "id": "final-release-gate",
+      "status": "passed",
+      "evidence": "local scripts/release-check.py",
+      "scope": "Full uninterrupted local v12 gate against the exact public 11.0.0 baseline."
+    },
+    {
+      "id": "source-archive-reproducibility",
+      "status": "passed",
+      "evidence": "scripts/release-check.py"
+    },
+    {
+      "id": "store-portable-packages",
+      "status": "passed",
+      "evidence": "scripts/validate_store_packages.py and scripts/check_store_kpackages.py"
+    },
+    {
+      "id": "qml-and-dry-run-boundary",
+      "status": "passed",
+      "evidence": "qmllint plus install.sh/uninstall.sh dry-runs"
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "physical-login-pam",
+      "status": "pending",
+      "reason": "No physical login/PAM session was performed for this candidate."
+    },
+    {
+      "id": "physical-input-cursor",
+      "status": "pending",
+      "reason": "No physical input or cursor session was performed for this candidate."
+    },
+    {
+      "id": "physical-audio-power",
+      "status": "pending",
+      "reason": "No physical audio or power-session check was performed for this candidate."
+    },
+    {
+      "id": "physical-mixed-displays",
+      "status": "pending",
+      "reason": "No physical mixed-display check was performed for this candidate."
+    },
+    {
+      "id": "arch-pacman-lifecycle",
+      "status": "pending",
+      "reason": "No live Arch pacman upgrade or rollback was performed for this candidate."
+    },
+    {
+      "id": "live-scale-rtl-motion",
+      "status": "pending",
+      "reason": "Automated coverage does not replace the full live scale, RTL, focus, and motion matrix."
+    }
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "historicalEvidenceImmutable": true,
+    "unavailableCasesRemainPending": true
+  },
+  "releaseBlockers": [],
+  "review": {
+    "status": "review-findings-fixed-local-qualified",
+    "fixed": [
+      "portable archive includes Obsidian and Konsole assets",
+      "source archive includes Konsole assets",
+      "system uninstaller allowlist includes v12 assets",
+      "doctor schema 5 and status-derived remediation exit code",
+      "Konsole ANSI black contrast",
+      "Arch source metadata tracks v12",
+      "terminal and Obsidian tokens are generator authority"
+    ]
+  },
+  "publicationAuthorized": true,
+  "physicalQualificationComplete": false,
+  "qualificationLimitations": [
+    "Physical and full live matrix checks remain pending.",
+    "Arch pacman lifecycle remains pending."
+  ]
+}

@@ -1,11 +1,11 @@
-%global upstream_version 11.0.0
+%global upstream_version 12.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        11.0.0
+Version:        12.0.0
 Release:        1%{?dist}
 Summary:        Deep Focus KDE Plasma components
 
@@ -60,6 +60,12 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/color-schemes/NoxForgeObsidian.colors
 %{_datadir}/konsole/NoxForge.colorscheme
 %{_datadir}/konsole/NoxForgeObsidian.colorscheme
+%{_datadir}/themes/NoxForge/
+%{_datadir}/themes/NoxForgeObsidian/
+%{_datadir}/org.kde.syntax-highlighting/themes/NoxForge.theme
+%{_datadir}/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme
+%{_datadir}/noxforge/terminals/
+%{_datadir}/noxforge/editors/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/icons/NoxForge/
@@ -73,6 +79,9 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForge/
 
 %changelog
+* Mon Sep 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 12.0.0-1
+- Release Ecosystem and App Parity with GTK 3/4 themes, Kate syntax and terminals
+
 * Mon Sep 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 11.0.0-1
 - Release Deep Focus native Qt style completeness, terminal themes and Obsidian palette
 

@@ -144,6 +144,11 @@ class V8ContractTests(unittest.TestCase):
             (root / "konsole").mkdir(parents=True, exist_ok=True)
             for name in ("NoxForge.colorscheme", "NoxForgeObsidian.colorscheme"):
                 shutil.copy2(ROOT / "konsole" / name, root / "konsole" / name)
+            for theme in ("NoxForge", "NoxForgeObsidian"):
+                shutil.copytree(ROOT / "themes" / theme, root / "themes" / theme, dirs_exist_ok=True)
+            (root / "org.kde.syntax-highlighting/themes").mkdir(parents=True, exist_ok=True)
+            for syntax in ("NoxForge.theme", "NoxForgeObsidian.theme"):
+                shutil.copy2(ROOT / "syntax/kate" / syntax, root / "org.kde.syntax-highlighting/themes" / syntax)
             (root / "noxforge").mkdir(parents=True)
             shutil.copy2(ROOT / "VERSION", root / "noxforge/VERSION")
             shutil.copy2(ROOT / "distribution/release-manifest.json", root / "noxforge/manifest.json")

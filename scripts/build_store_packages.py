@@ -232,6 +232,16 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         terminal_target.mkdir(parents=True)
         for name in ("NoxForge.colorscheme", "NoxForgeObsidian.colorscheme"):
             _copy_tree(ROOT / "konsole" / name, terminal_target / name)
+        themes_target = component_root / "themes"
+        themes_target.mkdir(parents=True)
+        for name in ("NoxForge", "NoxForgeObsidian"):
+            _copy_tree(ROOT / "themes" / name, themes_target / name)
+        syntax_target = component_root / "syntax"
+        syntax_target.mkdir(parents=True)
+        for name in ("NoxForge.theme", "NoxForgeObsidian.theme"):
+            _copy_tree(ROOT / "syntax/kate" / name, syntax_target / name)
+        _copy_tree(ROOT / "terminals", component_root / "terminals")
+        _copy_tree(ROOT / "editors/vscode", component_root / "editors/vscode")
         _assert_safe_tree(root)
         checksum = create_archive(root, portable, root_name="noxforge")
     portable.with_suffix(portable.suffix + ".sha256").write_text(f"{checksum}  {portable.name}\n", encoding="utf-8", newline="\n")

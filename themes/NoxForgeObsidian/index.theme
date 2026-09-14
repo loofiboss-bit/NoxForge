@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=NoxForgeObsidian
+Comment=NoxForge Obsidian OLED True-Black theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=NoxForgeObsidian
+MetacityTheme=NoxForgeObsidian
+IconTheme=NoxForge
+CursorTheme=NoxForge-Cursors
+ButtonLayout=close,minimize,maximize:
