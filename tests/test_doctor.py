@@ -35,6 +35,21 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
     write(share / "color-schemes/NoxForgeObsidian.colors")
     write(share / "konsole/NoxForge.colorscheme")
     write(share / "konsole/NoxForgeObsidian.colorscheme")
+    write(share / "themes/NoxForge/index.theme")
+    write(share / "themes/NoxForgeObsidian/index.theme")
+    write(share / "org.kde.syntax-highlighting/themes/NoxForge.theme")
+    write(share / "org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme")
+    for relative in (
+        "noxforge/terminals/ghostty/noxforge",
+        "noxforge/terminals/ghostty/noxforge-obsidian",
+        "noxforge/terminals/alacritty/noxforge.toml",
+        "noxforge/terminals/alacritty/noxforge-obsidian.toml",
+        "noxforge/terminals/kitty/noxforge.conf",
+        "noxforge/terminals/kitty/noxforge-obsidian.conf",
+        "noxforge/terminals/foot/noxforge.ini",
+        "noxforge/terminals/foot/noxforge-obsidian.ini",
+    ):
+        write(share / relative)
     write(share / f"aurorae/themes/{THEME_ID}/metadata.desktop", desktop)
     write(share / "icons/NoxForge/index.theme")
     write(share / "icons/NoxForge-Cursors/index.theme")

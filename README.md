@@ -1,11 +1,13 @@
-# NoxForge Deep Focus & System Completeness
+# NoxForge Ecosystem & App Parity
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. Version 11.0.0 targets Fedora 44 and Arch Plasma/KWin 6.7+ and
-Qt 6.11 on Wayland, with complete native Qt 6 style coverage, official
-Konsole themes, and an Obsidian true-black companion palette.
-Physical qualification remains pending; see [the evidence record](docs/evidence/v11/qualification.json).
+Forge Notch. Version 12.0.0 targets Fedora 44 and Arch Plasma/KWin 6.7+ and
+Qt 6.11 on Wayland, extending the system with GTK 3/4 themes, KDE syntax
+themes, VS Code/Cursor themes, and matching Ghostty, Alacritty, Kitty, and
+Foot terminal configurations. Doctor schema 5 reports the complete ecosystem
+in read-only mode. Physical qualification remains pending; see [the evidence
+record](docs/evidence/v12/qualification.json).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -48,6 +50,9 @@ cursor, audio, PAM/login, power, and live-session gates.
 - Global Theme and Plasma Style with KDE-correct package roots;
 - NoxForge Dark and Obsidian colors, matching Konsole themes, Aurorae decoration,
   KWin switcher, icons, cursors, and sounds;
+- GTK 3 and GTK 4 themes, Kate/KWrite syntax themes, and VS Code/Cursor editor
+  themes in standard and Obsidian palettes;
+- Ghostty, Alacritty, Kitty, and Foot configurations for both terminal palettes;
 - three selectable wallpapers: **NoxForge Forge** (`NoxForge`), **NoxForge Quiet**
   (`NoxForge-Quiet`), and **NoxForge Ultrawide** (`NoxForge-Ultrawide`);
 - a native Qt 6 style, PLM wallpaper asset, and optional SDDM compatibility
@@ -67,7 +72,7 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The active scope is [NOXFORGE_V11_PLAN.md](docs/NOXFORGE_V11_PLAN.md), indexed by
+The active scope is [NOXFORGE_V12_PLAN.md](docs/NOXFORGE_V12_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the phase gate with:
 
 ```bash

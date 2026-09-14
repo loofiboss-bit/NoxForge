@@ -334,6 +334,28 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/konsole"
 )
 install(
+    DIRECTORY themes/NoxForge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/themes/NoxForge"
+)
+install(
+    DIRECTORY themes/NoxForgeObsidian/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/themes/NoxForgeObsidian"
+)
+install(
+    FILES
+        syntax/kate/NoxForge.theme
+        syntax/kate/NoxForgeObsidian.theme
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/org.kde.syntax-highlighting/themes"
+)
+install(
+    DIRECTORY terminals/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/terminals"
+)
+install(
+    DIRECTORY editors/vscode/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/vscode"
+)
+install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
 )

@@ -1,4 +1,4 @@
-# NoxForge 11 compatibility
+# NoxForge 12 compatibility
 
 The intended compatibility target is Fedora 44 KDE and the target Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -13,6 +13,10 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Color scheme | `/usr/share/color-schemes/NoxForgeDark.colors` |
 | Obsidian color scheme | `/usr/share/color-schemes/NoxForgeObsidian.colors` |
 | Konsole themes | `/usr/share/konsole/NoxForge{,Obsidian}.colorscheme` |
+| GTK themes | `/usr/share/themes/NoxForge{,Obsidian}/` |
+| KSyntaxHighlighting themes | `/usr/share/org.kde.syntax-highlighting/themes/NoxForge{,Obsidian}.theme` |
+| Terminal configurations | `/usr/share/noxforge/terminals/` |
+| VS Code/Cursor themes | `/usr/share/noxforge/editors/vscode/` |
 | Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
 | KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
 | Icons | `/usr/share/icons/NoxForge/` |
@@ -42,8 +46,8 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v11 local gate passes all 72 offscreen CTest cases on Fedora 44 with
+The v12 local gate passes all 72 offscreen CTest cases on Fedora 44 with
 Qt 6.11.2 and Plasma/KWin 6.7.4, plus the generated Store/portable and RPM
-contracts. Arch build/live login and hardware qualification remain pending;
-offscreen results do not establish those behaviors. See the active
-[qualification record](evidence/v11/qualification.json).
+contracts and 141 Python tests (9 historical skips). Arch build/live login and
+hardware qualification remain pending; offscreen results do not establish
+those behaviors. See the active [qualification record](evidence/v12/qualification.json).

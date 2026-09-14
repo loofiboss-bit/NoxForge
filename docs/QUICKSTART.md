@@ -1,8 +1,9 @@
 # Quick start and rollback
 
-NoxForge 11 Deep Focus targets Fedora 44 KDE and the target Arch Plasma /
-KWin 6.7+ and Qt 6.11 environment on Wayland. Choose the edition that matches
-your boundary.
+NoxForge 12 Ecosystem & App Parity targets Fedora 44 KDE and the target Arch
+Plasma/KWin 6.7+ and Qt 6.11 environment on Wayland. It includes matching GTK,
+syntax-highlighting, editor, and Wayland-terminal assets. Choose the edition
+that matches your boundary.
 
 ## Fedora complete-system edition
 
@@ -28,16 +29,17 @@ of the three wallpapers explicitly in System Settings.
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-11.0.0-portable.tar.xz
+tar -xJf noxforge-12.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user
 "${XDG_DATA_HOME:-$HOME/.local/share}/noxforge/bin/noxforge-doctor" --json
 ```
 
-Portable installs all user-local components, uses Breeze application controls,
-and writes no active KDE settings. Store components can likewise be installed
-individually; the Global Theme package is not a complete transaction.
+Portable installs all user-local components, including the GTK, syntax,
+editor, and terminal assets, uses Breeze application controls, and writes no
+active KDE settings. Store components can likewise be installed individually;
+the Global Theme package is not a complete transaction.
 
 ## Build locally
 

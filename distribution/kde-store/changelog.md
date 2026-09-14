@@ -1,10 +1,11 @@
-# NoxForge 11.0.0 — Deep Focus & System Completeness
+# NoxForge 12.0.0 — Ecosystem & App Parity
 
-- completed native Qt 6 style primitives for branches, tabs, splitters, docks and status bars;
-- added standard and Obsidian Konsole color schemes with contrast-qualified ANSI colors;
-- added the true-black NoxForge Obsidian color scheme;
-- upgraded the read-only doctor to schema 4 and added status-derived remediation plans;
+- added deterministic GTK 3/4 themes in Graphite and Obsidian palettes;
+- added KSyntaxHighlighting, VS Code/Cursor, and Big Four Wayland terminal themes;
+- upgraded the read-only doctor to schema 5 with ecosystem and Flatpak override diagnostics;
 - kept package installation non-applying and preserved the separate Store/portable/system boundaries.
+
+# NoxForge 11.0.0 — Deep Focus & System Completeness
 
 # NoxForge 10.1.0 — Lumina
 
