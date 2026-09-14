@@ -69,6 +69,12 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/color-schemes/NoxForgeObsidian.colors|\
         /usr/share/konsole/NoxForge.colorscheme|\
         /usr/share/konsole/NoxForgeObsidian.colorscheme|\
+        /usr/share/themes/NoxForge/*|\
+        /usr/share/themes/NoxForgeObsidian/*|\
+        /usr/share/org.kde.syntax-highlighting/themes/NoxForge.theme|\
+        /usr/share/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme|\
+        /usr/share/noxforge/terminals/*|\
+        /usr/share/noxforge/editors/vscode/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/icons/NoxForge/*|\

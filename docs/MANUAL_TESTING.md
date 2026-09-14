@@ -1,7 +1,7 @@
 # Manual qualification
 
 Capture evidence before any candidate tag or publication. The active record is
-the V11 evidence under `docs/evidence/v11/` and the compact visual index at
+the V12 evidence under `docs/evidence/v12/` and the compact visual index at
 `media/manifest.json`. Offscreen, generated, and composited material is never
 reported as live evidence.
 
@@ -25,7 +25,7 @@ Physical cursor behavior, audio routing, PAM/login, power actions, and other
 unavailable hardware evidence stay `pending` or `blocked`; they are never
 promoted from CI or offscreen output.
 
-## V11 evidence boundaries
+## V12 evidence boundaries
 
 Capture desktop, Dolphin, System Settings, launcher, and Aurorae/TabBox in a
 neutral isolated session at 2560x1440. Run `python3 scripts/validate_media.py`
@@ -34,7 +34,7 @@ each image for personal data before adding it to the manifest. A container
 Wayland capture proves that isolated surface only; it cannot qualify hardware
 input, host login, audio, mixed physical displays, or an Arch runtime.
 
-For v10.1-to-v11, repeated installation, removal, and rollback, hash Plasma,
+For v11-to-v12, repeated installation, removal, and rollback, hash Plasma,
 panel, wallpaper, PLM and SDDM configuration before and after each operation.
 Compare bytes, including unrelated sentinels, in disposable roots. Exercise
 blur disabled, long translations, RTL, and keyboard focus on selected items.

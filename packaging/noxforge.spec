@@ -7,7 +7,7 @@
 Name:           noxforge
 Version:        12.0.0
 Release:        1%{?dist}
-Summary:        Deep Focus KDE Plasma components
+Summary:        Ecosystem and app parity KDE Plasma components
 
 License:        MIT
 URL:            https://github.com/loofiboss-bit/NoxForge
@@ -25,7 +25,7 @@ Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
 %description
-NoxForge Deep Focus is an MIT-licensed collection of separately
+NoxForge Ecosystem & App Parity is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
 Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
 switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6

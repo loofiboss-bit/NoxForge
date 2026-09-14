@@ -5,7 +5,7 @@
 is `/usr/bin/noxforge-doctor`.
 
 Use `--json` for automation and `--root /absolute/staged/root` for an isolated
-package tree or a portable data root. JSON schema 4 retains the top-level
+package tree or a portable data root. JSON schema 5 retains the top-level
 `loginSurface` and `edition` objects. `loginSurface` contains:
 
 - `manager`: `plasmalogin`, `sddm`, `other`, or `not-detected`;
@@ -30,9 +30,12 @@ The doctor never applies a theme, writes KDE or login-manager configuration,
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 4 diagnostics
+## Schema 5 diagnostics
 
-Schema 4 also discovers the standard and Obsidian Konsole schemes and reports
+Schema 5 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
+Kate/KWrite syntax themes, and the packaged terminal/editor assets. The
+`ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
+have a read-only `xdg-data/themes` override. The doctor also reports
 fractional scaling factors when the inspected root provides them. The
 `--remediation-plan` option emits non-destructive shell guidance and preserves
 the report's status-derived exit code; it never claims that a suggested action

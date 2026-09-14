@@ -6,7 +6,7 @@
     "version": "12.0.0",
     "sourceRef": "feature/v12-ecosystem-parity",
     "sourceCommit": null,
-    "baselineCommit": "e7cb573e400aa7ce506401c5faa982628bca46aa",
+    "baselineCommit": "bb3a686851766113daf5ef69542f94d876c72e7b",
     "worktreeDirty": true,
     "package": "noxforge-12.0.0-1.fc44.x86_64.rpm",
     "artifacts": [],
@@ -16,7 +16,7 @@
     {
       "id": "python",
       "status": "passed",
-      "passed": 140,
+      "passed": 141,
       "skipped": 9,
       "failures": 0,
       "errors": 0,

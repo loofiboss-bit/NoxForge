@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -44,6 +45,44 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
 
         impl_plan = (ROOT / "docs/IMPLEMENTATION_PLAN.md").read_text(encoding="utf-8")
         self.assertIn("NOXFORGE_V12_PLAN.md", impl_plan)
+
+    def test_system_uninstall_accepts_v12_manifest_entries(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="noxforge-v12-uninstall-") as temp:
+            root = Path(temp)
+            build = root / "build"
+            stage = root / "stage"
+            entries = (
+                "/usr/share/themes/NoxForge/gtk-3.0/gtk.css",
+                "/usr/share/themes/NoxForgeObsidian/gtk-4.0/gtk.css",
+                "/usr/share/org.kde.syntax-highlighting/themes/NoxForge.theme",
+                "/usr/share/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme",
+                "/usr/share/noxforge/terminals/ghostty/noxforge",
+                "/usr/share/noxforge/editors/vscode/package.json",
+            )
+            manifest = build / "install_manifest.txt"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text("\n".join(entries) + "\n", encoding="utf-8")
+            for entry in entries:
+                target = stage / entry.lstrip("/")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("owned\n", encoding="utf-8")
+
+            environment = dict(
+                os.environ,
+                NOXFORGE_BUILD_ROOT=str(build),
+                NOXFORGE_SYSTEM_ROOT=str(stage),
+            )
+            result = subprocess.run(
+                [str(ROOT / "scripts/uninstall-system.sh"), "--system"],
+                cwd=ROOT,
+                env=environment,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            for entry in entries:
+                self.assertFalse((stage / entry.lstrip("/")).exists(), entry)
 
     def test_schema_8_tokens_and_syntax_contract(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
