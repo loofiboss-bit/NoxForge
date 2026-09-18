@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.0.1 — Aurorae Decoration Border Fix
+
+- Fix Aurorae window decorations appearing as thick black borders on Fedora/KWin
+  by disabling synthetic shadow and explicitly setting zero padding to match
+  the solid 6px border design.
+- Re-qualified Store packages, portable edition, RPM packaging, and runtime evidence.
+
 ## 12.0.0 — Ecosystem & App Parity
 
 - GTK 3/4 themes, KSyntaxHighlighting themes, and VS Code/Cursor themes in

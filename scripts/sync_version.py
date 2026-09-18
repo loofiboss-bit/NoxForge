@@ -36,7 +36,17 @@ VERSION_FILES = {
     "aurorae/io.github.loofiboss.noxforge.desktop/metadata.desktop": ((r"(?m)^X-KDE-PluginInfo-Version=.*$", "X-KDE-PluginInfo-Version={version}"),),
     "sddm/NoxForge/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v12/qualification.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "editors/vscode/package.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "docs/evidence/v12/artwork/artwork-contact-sheets.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "docs/evidence/v12/qualification.json": (
+        (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
+        (r'(?m)^(\s*"package":\s*)"noxforge-.*?-1\.fc44\.x86_64\.rpm"(,?)$', r'\g<1>"noxforge-{rpm_version}-1.fc44.x86_64.rpm"\g<2>'),
+    ),
+    "distribution/kde-store/description.md": (
+        (r"(?m)^NoxForge .*? Ecosystem & App Parity is an original", "NoxForge {version} Ecosystem & App Parity is an original"),
+        (r"(?m)^Use the exact `noxforge-.*?-\*\.tar\.xz` files and verify them against the", "Use the exact `noxforge-{version}-*.tar.xz` files and verify them against the"),
+        (r"(?m)^release `SHA256SUMS`: https://github\.com/loofiboss-bit/NoxForge/releases/tag/v.*?$", "release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v{version}"),
+    ),
     "docs/evidence/v12/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
     "packaging/noxforge.spec": (
         (r"(?m)^%global upstream_version\s+.*$", "%global upstream_version {release_version}"),

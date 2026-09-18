@@ -88,7 +88,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
     def test_schema_8_tokens_and_syntax_contract(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
         self.assertEqual(tokens["schemaVersion"], 8)
-        self.assertEqual(tokens["version"], "12.0.0")
+        self.assertEqual(tokens["version"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
         self.assertIn("syntax", tokens)
         self.assertEqual(set(tokens["syntax"]), {"standard", "obsidian"})
 
@@ -170,7 +170,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
         pkg = json.loads(pkg_path.read_text(encoding="utf-8"))
 
         self.assertEqual(pkg["name"], "noxforge-theme")
-        self.assertEqual(pkg["version"], "12.0.0")
+        self.assertEqual(pkg["version"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
         themes = pkg.get("contributes", {}).get("themes", [])
         self.assertEqual(len(themes), 2)
 
@@ -314,7 +314,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
         self.assertIn("%{_datadir}/noxforge/editors/", spec)
 
         pkgbuild = (ROOT / "packaging/arch/PKGBUILD").read_text(encoding="utf-8")
-        self.assertIn("pkgver=12.0.0", pkgbuild)
+        self.assertIn(f"pkgver={(ROOT / 'VERSION').read_text().strip()}", pkgbuild)
 
     def test_install_and_uninstall_scripts_handle_v12_assets(self) -> None:
         install_sh = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")

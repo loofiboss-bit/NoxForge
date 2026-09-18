@@ -1,3 +1,9 @@
+# NoxForge 12.0.1 — Aurorae Decoration Border Fix
+
+- fixed Aurorae window decoration borders appearing as thick black rectangles on Fedora and KWin Wayland;
+- disabled synthetic window shadow and zeroed padding contract to match the opaque 6px border design;
+- updated qualification and release evidence across Store, portable, and complete packages.
+
 # NoxForge 12.0.0 — Ecosystem & App Parity
 
 - added deterministic GTK 3/4 themes in Graphite and Obsidian palettes;
