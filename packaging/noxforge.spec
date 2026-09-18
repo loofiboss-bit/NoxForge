@@ -1,11 +1,11 @@
-%global upstream_version 12.0.0
+%global upstream_version 12.0.1
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
 
 Name:           noxforge
-Version:        12.0.0
+Version:        12.0.1
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 

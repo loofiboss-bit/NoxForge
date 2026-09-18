@@ -28,10 +28,10 @@ class LuminaContractTests(unittest.TestCase):
         )
         general = parser["General"]
         layout = parser["Layout"]
-        self.assertEqual(general["shadow"].lower(), "true")
+        self.assertEqual(general["shadow"].lower(), "false")
         self.assertEqual(general.get("rightbuttons"), "IAX")
         for key in ("paddingtop", "paddingbottom", "paddingleft", "paddingright"):
-            self.assertGreater(int(layout[key]), 0)
+            self.assertTrue(key not in layout or int(layout[key]) == 0)
         self.assertFalse(
             any(key.startswith(("activeshadow", "inactiveshadow")) for key in general)
         )
@@ -41,8 +41,8 @@ class LuminaContractTests(unittest.TestCase):
             (ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8")
         )
         self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V11_PLAN.md", "docs/NOXFORGE_V12_PLAN.md"))
-        self.assertIn(manifest["release"]["stableVersion"], ("11.0.0", "12.0.0"))
-        self.assertIn((ROOT / "VERSION").read_text(encoding="utf-8").strip(), ("11.0.0", "12.0.0"))
+        self.assertIn(manifest["release"]["stableVersion"], ("11.0.0", "12.0.0", "12.0.1"))
+        self.assertIn((ROOT / "VERSION").read_text(encoding="utf-8").strip(), ("11.0.0", "12.0.0", "12.0.1"))
         preview = ROOT / "sddm/NoxForge/preview.png"
         evidence = ROOT / "docs/evidence/sddm_login_100pct.png"
         self.assertEqual(png_dimensions(preview), (960, 540))

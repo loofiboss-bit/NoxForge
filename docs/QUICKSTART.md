@@ -29,7 +29,7 @@ of the three wallpapers explicitly in System Settings.
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-12.0.0-portable.tar.xz
+tar -xJf noxforge-12.0.1-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

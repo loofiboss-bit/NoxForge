@@ -1,6 +1,6 @@
-# NoxForge 12.0.0 Ecosystem Parity local qualification
+# NoxForge 12.0.1 Ecosystem Parity local qualification
 
-Version: 12.0.0
+Version: 12.0.1
 
 The complete local v12 release check passed against the exact public 11.0.0
 baseline.
