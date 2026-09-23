@@ -173,6 +173,13 @@ add_test(
         "${CMAKE_SOURCE_DIR}/sddm/NoxForge/background.png"
         "${CMAKE_BINARY_DIR}/sddm-qml-surface.png"
 )
+add_test(
+    NAME sddm-obsidian-qml-surface
+    COMMAND noxforge_sddm_renderer
+        "${CMAKE_SOURCE_DIR}/sddm/NoxForgeObsidian/Main.qml"
+        "${CMAKE_SOURCE_DIR}/sddm/NoxForgeObsidian/background.png"
+        "${CMAKE_BINARY_DIR}/sddm-obsidian-qml-surface.png"
+)
 add_test(NAME motion-controller-lifecycle COMMAND noxforge_motion_probe)
 set_tests_properties(motion-controller-lifecycle PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
@@ -193,7 +200,7 @@ add_test(
 set_tests_properties(icon-theme-resolution PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
 )
-set_tests_properties(sddm-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+set_tests_properties(sddm-qml-surface sddm-obsidian-qml-surface PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 
 function(add_noxforge_session_test name surface qml scenario)
     set(scale 1.0)
@@ -320,6 +327,7 @@ install(TARGETS noxforge_style
 )
 
 set(NOXFORGE_THEME_ID "io.github.loofiboss.noxforge.desktop")
+set(NOXFORGE_OBSIDIAN_THEME_ID "io.github.loofiboss.noxforge.obsidian.desktop")
 
 install(
     FILES
@@ -356,12 +364,28 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/vscode"
 )
 install(
+    DIRECTORY editors/neovim/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/neovim"
+)
+install(
+    DIRECTORY editors/helix/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/helix"
+)
+install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
 )
 install(
+    DIRECTORY "plasma/desktoptheme/${NOXFORGE_OBSIDIAN_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_OBSIDIAN_THEME_ID}"
+)
+install(
     DIRECTORY "aurorae/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/aurorae/themes/${NOXFORGE_THEME_ID}"
+)
+install(
+    DIRECTORY "aurorae/${NOXFORGE_OBSIDIAN_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/aurorae/themes/${NOXFORGE_OBSIDIAN_THEME_ID}"
 )
 install(
     DIRECTORY icons/NoxForge/
@@ -380,6 +404,10 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/look-and-feel/${NOXFORGE_THEME_ID}"
 )
 install(
+    DIRECTORY "look-and-feel/${NOXFORGE_OBSIDIAN_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/look-and-feel/${NOXFORGE_OBSIDIAN_THEME_ID}"
+)
+install(
     DIRECTORY "kwin/tabbox/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/kwin/tabbox/${NOXFORGE_THEME_ID}"
 )
@@ -396,8 +424,20 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge-Ultrawide"
 )
 install(
+    DIRECTORY wallpapers/NoxForge-Obsidian/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge-Obsidian"
+)
+install(
+    DIRECTORY wallpapers/NoxForge-Obsidian-Ultrawide/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge-Obsidian-Ultrawide"
+)
+install(
     DIRECTORY sddm/NoxForge/
     DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/NoxForge"
+)
+install(
+    DIRECTORY sddm/NoxForgeObsidian/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/NoxForgeObsidian"
 )
 install(
     PROGRAMS tools/noxforge-doctor

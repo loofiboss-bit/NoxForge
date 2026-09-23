@@ -1,11 +1,12 @@
-%global upstream_version 12.0.1
+%global upstream_version 13.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
 %global _no_recompute_build_ids 1
+%global debug_package %{nil}
 
 Name:           noxforge
-Version:        12.0.1
+Version:        13.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -67,18 +68,27 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/noxforge/terminals/
 %{_datadir}/noxforge/editors/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
+%{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
+%{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/icons/NoxForge/
 %{_datadir}/icons/NoxForge-Cursors/
 %{_datadir}/sounds/NoxForge/
 %{_datadir}/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/
+%{_datadir}/plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/kwin/tabbox/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/wallpapers/NoxForge/
 %{_datadir}/wallpapers/NoxForge-Quiet/
 %{_datadir}/wallpapers/NoxForge-Ultrawide/
+%{_datadir}/wallpapers/NoxForge-Obsidian/
+%{_datadir}/wallpapers/NoxForge-Obsidian-Ultrawide/
 %{_datadir}/sddm/themes/NoxForge/
+%{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Wed Sep 23 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.0-1
+- Release True Obsidian OLED Parity & Dual-Stack Architecture
+
 * Mon Sep 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 12.0.0-1
 - Release Ecosystem and App Parity with GTK 3/4 themes, Kate syntax and terminals
 

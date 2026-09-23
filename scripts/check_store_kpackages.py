@@ -31,7 +31,9 @@ ROOT = Path(__file__).resolve().parents[1]
 STORE_MANIFEST = ROOT / "distribution/kde-store/package-manifest.json"
 KPACKAGE_TYPES = {
     "global-theme": "Plasma/LookAndFeel",
+    "global-theme-obsidian": "Plasma/LookAndFeel",
     "plasma-style": "Plasma/Theme",
+    "plasma-style-obsidian": "Plasma/Theme",
     "kwin-switcher": "KWin/WindowSwitcher",
 }
 
@@ -130,9 +132,11 @@ def _knewstuff_install(package: str, archive: Path, manifest: dict, data_home: P
         owned_root = target_root / package_id
         if package == "aurorae":
             owned_root = target_root / "io.github.loofiboss.noxforge.desktop"
+        elif package == "aurorae-obsidian":
+            owned_root = target_root / "io.github.loofiboss.noxforge.obsidian.desktop"
         if package == "wallpapers":
             owned = []
-            for variant in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide"):
+            for variant in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide", "NoxForge-Obsidian", "NoxForge-Obsidian-Ultrawide"):
                 source = package_stage / variant
                 destination = target_root / variant
                 shutil.copytree(source, destination, dirs_exist_ok=True)
@@ -144,7 +148,7 @@ def _knewstuff_install(package: str, archive: Path, manifest: dict, data_home: P
     if package == "colors":
         shutil.copy2(payload_root, target_root / payload_root.name)
     elif package == "wallpapers":
-        for variant in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide"):
+        for variant in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide", "NoxForge-Obsidian", "NoxForge-Obsidian-Ultrawide"):
             shutil.copytree(package_stage / variant, target_root / variant, dirs_exist_ok=True)
     else:
         shutil.copytree(payload_root, owned[0], dirs_exist_ok=True)

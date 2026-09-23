@@ -1,0 +1,20 @@
+{
+  "KPackageStructure": "Plasma/Theme",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Category": "Plasma Theme",
+    "Description": "Pure pitch-black OLED Plasma Style with an electric-lime accent",
+    "EnabledByDefault": false,
+    "Id": "io.github.loofiboss.noxforge.obsidian.desktop",
+    "License": "MIT",
+    "Name": "NoxForge Obsidian",
+    "Version": "13.0.0",
+    "Website": "https://github.com/loofiboss-bit/NoxForge"
+  },
+  "X-Plasma-API": "5.0"
+}

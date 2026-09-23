@@ -75,17 +75,25 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme|\
         /usr/share/noxforge/terminals/*|\
         /usr/share/noxforge/editors/vscode/*|\
+        /usr/share/noxforge/editors/neovim/*|\
+        /usr/share/noxforge/editors/helix/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/*|\
         /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop/*|\
         /usr/share/icons/NoxForge/*|\
         /usr/share/icons/NoxForge-Cursors/*|\
         /usr/share/sounds/NoxForge/*|\
         /usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/*|\
+        /usr/share/plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/*|\
         /usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/wallpapers/NoxForge/*|\
         /usr/share/wallpapers/NoxForge-Quiet/*|\
         /usr/share/wallpapers/NoxForge-Ultrawide/*|\
+        /usr/share/wallpapers/NoxForge-Obsidian/*|\
+        /usr/share/wallpapers/NoxForge-Obsidian-Ultrawide/*|\
         /usr/share/sddm/themes/NoxForge/*|\
+        /usr/share/sddm/themes/NoxForgeObsidian/*|\
         /usr/bin/noxforge-doctor|\
         /usr/share/noxforge/VERSION|\
         /usr/share/noxforge/release-manifest.json|\

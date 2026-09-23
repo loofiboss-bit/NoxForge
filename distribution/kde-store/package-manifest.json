@@ -4,9 +4,12 @@
   "storeProduct": "2367662",
   "components": [
     {"key": "global-theme", "id": "io.github.loofiboss.noxforge.desktop", "knsrc": "lookandfeel.knsrc", "targetRoot": "plasma/look-and-feel", "dependencies": ["plasma-style", "colors", "aurorae", "icons", "cursors", "kwin-switcher", "sounds", "wallpapers"]},
+    {"key": "global-theme-obsidian", "id": "io.github.loofiboss.noxforge.obsidian.desktop", "knsrc": "lookandfeel.knsrc", "targetRoot": "plasma/look-and-feel", "dependencies": ["plasma-style-obsidian", "colors", "aurorae-obsidian", "icons", "cursors", "kwin-switcher", "sounds", "wallpapers"]},
     {"key": "plasma-style", "id": "io.github.loofiboss.noxforge.desktop", "knsrc": "plasma-themes.knsrc", "targetRoot": "plasma/desktoptheme", "dependencies": []},
+    {"key": "plasma-style-obsidian", "id": "io.github.loofiboss.noxforge.obsidian.desktop", "knsrc": "plasma-themes.knsrc", "targetRoot": "plasma/desktoptheme", "dependencies": []},
     {"key": "colors", "id": "NoxForgeDark", "knsrc": "colorschemes.knsrc", "targetRoot": "color-schemes", "dependencies": []},
     {"key": "aurorae", "id": "io.github.loofiboss.noxforge.desktop", "knsrc": "aurorae.knsrc", "targetRoot": "aurorae/themes", "dependencies": []},
+    {"key": "aurorae-obsidian", "id": "io.github.loofiboss.noxforge.obsidian.desktop", "knsrc": "aurorae.knsrc", "targetRoot": "aurorae/themes", "dependencies": []},
     {"key": "icons", "id": "NoxForge", "knsrc": "icons.knsrc", "targetRoot": "icons", "dependencies": []},
     {"key": "cursors", "id": "NoxForge-Cursors", "knsrc": "xcursor.knsrc", "targetRoot": ".icons", "dependencies": []},
     {"key": "kwin-switcher", "id": "io.github.loofiboss.noxforge.desktop", "knsrc": "kwinswitcher.knsrc", "targetRoot": "kwin/tabbox", "dependencies": []},

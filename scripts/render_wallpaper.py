@@ -30,6 +30,14 @@ VARIANT_SOURCES = {
         "16:9": ROOT / "wallpapers/NoxForge-Ultrawide/contents/source/NoxForge.svg",
         "ultrawide": ROOT / "wallpapers/NoxForge-Ultrawide/contents/source/NoxForge-Ultrawide.svg",
     },
+    "NoxForge-Obsidian": {
+        "16:9": ROOT / "wallpapers/NoxForge-Obsidian/contents/source/NoxForge.svg",
+        "ultrawide": ROOT / "wallpapers/NoxForge-Obsidian/contents/source/NoxForge-Ultrawide.svg",
+    },
+    "NoxForge-Obsidian-Ultrawide": {
+        "16:9": ROOT / "wallpapers/NoxForge-Obsidian-Ultrawide/contents/source/NoxForge.svg",
+        "ultrawide": ROOT / "wallpapers/NoxForge-Obsidian-Ultrawide/contents/source/NoxForge-Ultrawide.svg",
+    },
 }
 OUTPUTS = (
     ("16:9", 1920, 1080),
@@ -41,6 +49,8 @@ WALLPAPER_VARIANTS = (
     ("NoxForge", False),
     ("NoxForge-Quiet", True),
     ("NoxForge-Ultrawide", False),
+    ("NoxForge-Obsidian", False),
+    ("NoxForge-Obsidian-Ultrawide", False),
 )
 
 
@@ -102,9 +112,15 @@ def main() -> int:
         sddm_background = temp / "sddm-background.png"
         render(magick, SOURCES["16:9"], sddm_background, 2560, 1440, dim=True)
         rendered.append((sddm_background, ROOT / "sddm/NoxForge/background.png"))
+        sddm_obsidian = temp / "sddm-obsidian-background.png"
+        render(magick, VARIANT_SOURCES["NoxForge-Obsidian"]["16:9"], sddm_obsidian, 2560, 1440, dim=True)
+        rendered.append((sddm_obsidian, ROOT / "sddm/NoxForgeObsidian/background.png"))
         look_preview = temp / "look-preview.png"
         render(magick, SOURCES["16:9"], look_preview, 960, 540)
         rendered.append((look_preview, ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/previews/fullscreenpreview.png"))
+        look_obsidian_preview = temp / "look-obsidian-preview.png"
+        render(magick, VARIANT_SOURCES["NoxForge-Obsidian"]["16:9"], look_obsidian_preview, 960, 540)
+        rendered.append((look_obsidian_preview, ROOT / "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/previews/fullscreenpreview.png"))
 
         drift = [target for generated, target in rendered if not target.is_file() or target.read_bytes() != generated.read_bytes()]
         if args.check:

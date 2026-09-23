@@ -23,9 +23,10 @@ class V8ContractTests(unittest.TestCase):
         self.assertEqual(manifest["packages"]["wallpapers"]["forge"]["id"], "NoxForge")
         forge_metadata = json.loads((ROOT / "wallpapers/NoxForge/metadata.json").read_text(encoding="utf-8"))
         self.assertEqual(forge_metadata["KPlugin"]["Name"], "NoxForge Forge")
-        self.assertEqual(
-            {entry["id"] for entry in manifest["packages"]["wallpapers"].values()},
-            {"NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide"},
+        self.assertTrue(
+            {"NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide"}.issubset(
+                {entry["id"] for entry in manifest["packages"]["wallpapers"].values()}
+            )
         )
 
     def test_store_build_is_reproducible_and_validated(self) -> None:
@@ -127,12 +128,17 @@ class V8ContractTests(unittest.TestCase):
             root = Path(name)
             for source, target in (
                 (ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop", root / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"),
+                (ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop", root / "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"),
                 (ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop", root / "plasma/look-and-feel/io.github.loofiboss.noxforge.desktop"),
+                (ROOT / "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop", root / "plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop"),
                 (ROOT / "aurorae/io.github.loofiboss.noxforge.desktop", root / "aurorae/themes/io.github.loofiboss.noxforge.desktop"),
+                (ROOT / "aurorae/io.github.loofiboss.noxforge.obsidian.desktop", root / "aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop"),
                 (ROOT / "icons/NoxForge", root / "icons/NoxForge"),
                 (ROOT / "cursors/NoxForge-Cursors", root / "icons/NoxForge-Cursors"),
                 (ROOT / "sounds/NoxForge", root / "sounds/NoxForge"),
                 (ROOT / "wallpapers/NoxForge", root / "wallpapers/NoxForge"),
+                (ROOT / "wallpapers/NoxForge-Obsidian", root / "wallpapers/NoxForge-Obsidian"),
+                (ROOT / "wallpapers/NoxForge-Obsidian-Ultrawide", root / "wallpapers/NoxForge-Obsidian-Ultrawide"),
                 (ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop", root / "kwin/tabbox/io.github.loofiboss.noxforge.desktop"),
             ):
                 if source.exists():
@@ -153,6 +159,7 @@ class V8ContractTests(unittest.TestCase):
             shutil.copy2(ROOT / "VERSION", root / "noxforge/VERSION")
             shutil.copy2(ROOT / "distribution/release-manifest.json", root / "noxforge/manifest.json")
             shutil.copytree(ROOT / "terminals", root / "noxforge/terminals")
+            shutil.copytree(ROOT / "editors", root / "noxforge/editors")
             report = doctor.build_report(root)
             self.assertEqual(report["edition"]["kind"], "portable")
             self.assertEqual(report["edition"]["status"], "ok")

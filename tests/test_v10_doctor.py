@@ -17,7 +17,7 @@ class DoctorV10Tests(unittest.TestCase):
             root = Path(temp)
             write(root / 'color-schemes/NoxForgeDark.colors')
             report = doctor['build_report'](root)
-            self.assertIn(report['schemaVersion'], (4, 5))
+            self.assertIn(report['schemaVersion'], (4, 5, 6))
             self.assertEqual(report['status'], 'ok')
             self.assertEqual(report['edition']['kind'], 'component')
             self.assertEqual(report['missing'], [])

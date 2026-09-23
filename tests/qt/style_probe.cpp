@@ -332,8 +332,29 @@ int main(int argc, char **argv)
     if (splitterImg.isNull()) return 44;
 
     const QString className = QString::fromLatin1(app.style()->metaObject()->className());
+    if (className != QStringLiteral("NoxForgeStyle")) return 20;
+
+    // Verify standard palette colors
+    const QPalette stdPal = style->standardPalette();
+    if (stdPal.color(QPalette::Base).name().toLower() != QStringLiteral("#0d1419")) return 45;
+    if (stdPal.color(QPalette::Window).name().toLower() != QStringLiteral("#141e25")) return 46;
+
+    // Verify dynamic obsidian palette switching via environment or option
+    qputenv("NOXFORGE_VARIANT", "obsidian");
+    QPalette obsPal;
+    style->polish(obsPal);
+    if (obsPal.color(QPalette::Base).name().toLower() != QStringLiteral("#000000")) return 47;
+    if (obsPal.color(QPalette::Window).name().toLower() != QStringLiteral("#0a0f13")) return 48;
+
+    QStyleOption lineEditOpt;
+    lineEditOpt.rect = QRect(0, 0, 100, 32);
+    lineEditOpt.palette = obsPal;
+    const QImage lineEditImg = renderPrimitive(style, QStyle::PE_PanelLineEdit, lineEditOpt);
+    if (!containsColor(lineEditImg, QColor(0, 0, 0))) return 49;
+    qunsetenv("NOXFORGE_VARIANT");
+
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"
                         << "Loaded style class: " << className << '\n'
-                        << "Geometry, hit testing, RTL, states, motion duration, indicators, busy, and high-DPI probes passed\n";
-    return className == QStringLiteral("NoxForgeStyle") ? 0 : 20;
+                        << "Geometry, hit testing, RTL, states, motion duration, indicators, busy, high-DPI, and dual-palette Obsidian probes passed\n";
+    return 0;
 }
