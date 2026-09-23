@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCTOR = ROOT / "tools/noxforge-doctor"
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
+THEME_OBSIDIAN_ID = "io.github.loofiboss.noxforge.obsidian.desktop"
 DOCTOR_FUNCTIONS = runpy.run_path(str(DOCTOR), run_name="noxforge_doctor_test")
 
 
@@ -30,7 +31,9 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
     share = root / "usr/share"
     write(share / "noxforge/VERSION", VERSION + "\n")
     write(share / f"plasma/look-and-feel/{THEME_ID}/metadata.json", metadata)
+    write(share / f"plasma/look-and-feel/{THEME_OBSIDIAN_ID}/metadata.json", metadata)
     write(share / f"plasma/desktoptheme/{THEME_ID}/metadata.json", metadata)
+    write(share / f"plasma/desktoptheme/{THEME_OBSIDIAN_ID}/metadata.json", metadata)
     write(share / "color-schemes/NoxForgeDark.colors")
     write(share / "color-schemes/NoxForgeObsidian.colors")
     write(share / "konsole/NoxForge.colorscheme")
@@ -48,15 +51,23 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
         "noxforge/terminals/kitty/noxforge-obsidian.conf",
         "noxforge/terminals/foot/noxforge.ini",
         "noxforge/terminals/foot/noxforge-obsidian.ini",
+        "noxforge/editors/neovim/colors/noxforge.lua",
+        "noxforge/editors/neovim/colors/noxforge_obsidian.lua",
+        "noxforge/editors/helix/themes/noxforge.toml",
+        "noxforge/editors/helix/themes/noxforge_obsidian.toml",
     ):
         write(share / relative)
     write(share / f"aurorae/themes/{THEME_ID}/metadata.desktop", desktop)
+    write(share / f"aurorae/themes/{THEME_OBSIDIAN_ID}/metadata.desktop", desktop)
     write(share / "icons/NoxForge/index.theme")
     write(share / "icons/NoxForge-Cursors/index.theme")
     write(share / "sounds/NoxForge/index.theme")
     write(share / "wallpapers/NoxForge/metadata.json", metadata)
+    write(share / "wallpapers/NoxForge-Obsidian/metadata.json", metadata)
+    write(share / "wallpapers/NoxForge-Obsidian-Ultrawide/metadata.json", metadata)
     write(share / f"kwin/tabbox/{THEME_ID}/metadata.json", metadata)
     write(share / "sddm/themes/NoxForge/metadata.desktop", sddm)
+    write(share / "sddm/themes/NoxForgeObsidian/metadata.desktop", sddm)
     write(root / "usr/lib64/qt6/plugins/styles/libnoxforge6.so", "plugin\n")
 
 

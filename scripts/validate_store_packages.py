@@ -48,8 +48,8 @@ def _prefixes(package: str) -> tuple[str, ...]:
             "scripts/",
             "components/",
         )
-    if package in {"global-theme", "plasma-style", "kwin-switcher"}:
-        if package == "global-theme":
+    if package in {"global-theme", "global-theme-obsidian", "plasma-style", "plasma-style-obsidian", "kwin-switcher"}:
+        if package in {"global-theme", "global-theme-obsidian"}:
             return ("metadata.json", "manifest.json", "contents/")
         if package == "kwin-switcher":
             return ("metadata.json", "contents/")
@@ -58,6 +58,8 @@ def _prefixes(package: str) -> tuple[str, ...]:
         return ("NoxForgeDark.colors", "NoxForgeObsidian.colors")
     if package == "aurorae":
         return ("io.github.loofiboss.noxforge.desktop/",)
+    if package == "aurorae-obsidian":
+        return ("io.github.loofiboss.noxforge.obsidian.desktop/",)
     if package == "icons":
         return ("NoxForge/",)
     if package == "cursors":
@@ -65,16 +67,19 @@ def _prefixes(package: str) -> tuple[str, ...]:
     if package == "sounds":
         return ("NoxForge/",)
     if package == "wallpapers":
-        return ("NoxForge/", "NoxForge-Quiet/", "NoxForge-Ultrawide/")
+        return ("NoxForge/", "NoxForge-Quiet/", "NoxForge-Ultrawide/", "NoxForge-Obsidian/", "NoxForge-Obsidian-Ultrawide/")
     return ()
 
 
 def _archive_root(package: str) -> str:
     return {
         "global-theme": "global-theme",
+        "global-theme-obsidian": "global-theme-obsidian",
         "plasma-style": "plasma-style",
+        "plasma-style-obsidian": "plasma-style-obsidian",
         "colors": "colors",
         "aurorae": "aurorae",
+        "aurorae-obsidian": "aurorae-obsidian",
         "icons": "icons",
         "cursors": "cursors",
         "kwin-switcher": "kwin-switcher",
@@ -105,7 +110,9 @@ def _validate_metadata(archive: Path, package: str, members: list[tarfile.TarInf
     version_values = {release_version(manifest), release_version(manifest, stable=True)}
     package_contract = {
         "global-theme": ("globalTheme", "io.github.loofiboss.noxforge.desktop"),
+        "global-theme-obsidian": ("globalThemeObsidian", "io.github.loofiboss.noxforge.obsidian.desktop"),
         "plasma-style": ("plasmaStyle", "io.github.loofiboss.noxforge.desktop"),
+        "plasma-style-obsidian": ("plasmaStyleObsidian", "io.github.loofiboss.noxforge.obsidian.desktop"),
         "kwin-switcher": ("kwinSwitcher", "io.github.loofiboss.noxforge.desktop"),
     }
     if package in package_contract:
@@ -119,19 +126,22 @@ def _validate_metadata(archive: Path, package: str, members: list[tarfile.TarInf
         plugin = metadata.get("KPlugin", {})
         if plugin.get("License") != "MIT" or plugin.get("Id") != expected_id or plugin.get("Version") not in version_values:
             raise ValueError(f"{package} metadata version/license/ID drift")
-    elif package == "aurorae":
+    elif package in {"aurorae", "aurorae-obsidian"}:
+        package_key = "aurorae" if package == "aurorae" else "auroraeObsidian"
         fields = _metadata_fields(archive, members, "/metadata.desktop")
         if (
             fields.get("X-KDE-PluginInfo-License") != "MIT"
-            or fields.get("X-KDE-PluginInfo-Name") != manifest["packages"]["aurorae"]["id"]
+            or fields.get("X-KDE-PluginInfo-Name") != manifest["packages"][package_key]["id"]
             or fields.get("X-KDE-PluginInfo-Version") not in version_values
         ):
-            raise ValueError("aurorae metadata version/license/ID drift")
+            raise ValueError(f"{package} metadata version/license/ID drift")
     elif package == "wallpapers":
         expected = {
             "NoxForge": manifest["packages"]["wallpapers"]["forge"]["id"],
             "NoxForge-Quiet": manifest["packages"]["wallpapers"]["quiet"]["id"],
             "NoxForge-Ultrawide": manifest["packages"]["wallpapers"]["ultrawide"]["id"],
+            "NoxForge-Obsidian": manifest["packages"]["wallpapers"]["obsidian"]["id"],
+            "NoxForge-Obsidian-Ultrawide": manifest["packages"]["wallpapers"]["obsidianUltrawide"]["id"],
         }
         with tarfile.open(archive, "r:*") as handle:
             for directory, expected_id in expected.items():
@@ -174,12 +184,12 @@ def validate_archive(archive: Path, package: str, manifest: dict) -> dict:
             for prefix in prefixes
         ):
             raise ValueError(f"foreign file in {package}: {name}")
-    if package in {"global-theme", "plasma-style", "kwin-switcher"}:
+    if package in {"global-theme", "global-theme-obsidian", "plasma-style", "plasma-style-obsidian", "kwin-switcher"}:
         if "metadata.json" not in relative_names:
             raise ValueError(f"{package} metadata must be at package root")
-    if package in {"aurorae", "wallpapers"}:
+    if package in {"aurorae", "aurorae-obsidian", "wallpapers"}:
         _validate_metadata(archive, package, members, manifest)
-    elif package in {"global-theme", "plasma-style", "kwin-switcher"}:
+    elif package in {"global-theme", "global-theme-obsidian", "plasma-style", "plasma-style-obsidian", "kwin-switcher"}:
         _validate_metadata(archive, package, members, manifest)
     if package == "portable":
         required = {

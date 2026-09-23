@@ -46,7 +46,7 @@ def validate() -> dict:
         if edition["widgetStyle"] not in {"Breeze", "NoxForge"}:
             raise ValueError(f"invalid widgetStyle for {key}")
     wallpapers = manifest["packages"]["wallpapers"]
-    if set(wallpapers) != {"forge", "quiet", "ultrawide"}:
+    if not {"forge", "quiet", "ultrawide"}.issubset(set(wallpapers)):
         raise ValueError("wallpaper contract must contain Forge, Quiet, and Ultrawide")
     if wallpapers["forge"]["id"] != "NoxForge":
         raise ValueError("the legacy NoxForge wallpaper ID must be retained")
@@ -63,9 +63,12 @@ def validate() -> dict:
         package = entry["key"]
         package_name = {
             "global-theme": "globalTheme",
+            "global-theme-obsidian": "globalThemeObsidian",
             "plasma-style": "plasmaStyle",
+            "plasma-style-obsidian": "plasmaStyleObsidian",
             "colors": "colors",
             "aurorae": "aurorae",
+            "aurorae-obsidian": "auroraeObsidian",
             "icons": "icons",
             "cursors": "cursors",
             "kwin-switcher": "kwinSwitcher",

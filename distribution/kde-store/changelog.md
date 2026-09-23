@@ -1,3 +1,13 @@
+# NoxForge 13.0.0 — True Obsidian OLED Parity & Dual-Stack Architecture
+
+- added dedicated Obsidian Plasma Style and Global Theme (`io.github.loofiboss.noxforge.obsidian.desktop`);
+- added Obsidian Aurorae window decoration with true-black titlebars, 6px border, and zero synthetic shadow;
+- implemented dynamic runtime-adaptive Qt 6 C++ style plugin seamlessly switching between standard deep slate and OLED true black;
+- added `NoxForge-Obsidian` (16:9 4K) and `NoxForge-Obsidian-Ultrawide` (21:9) wallpapers and SDDM Obsidian login theme;
+- added official Neovim (Lua) and Helix (TOML) editor themes in standard and Obsidian palettes;
+- upgraded Design Tokens to Schema 9 dual-palette authority and Doctor to Schema 6 with palette desynchronization diagnostics;
+- updated CMake, RPM, Arch, portable, and companion KDE Store package contracts.
+
 # NoxForge 12.0.1 — Aurorae Decoration Border Fix
 
 - fixed Aurorae window decoration borders appearing as thick black rectangles on Fedora and KWin Wayland;

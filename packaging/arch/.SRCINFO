@@ -1,6 +1,6 @@
 pkgbase = noxforge
-	pkgdesc = Ecosystem & App Parity Plasma components for Fedora and Arch KDE
-	pkgver = 12.0.1
+	pkgdesc = True Obsidian OLED Parity & Dual-Stack Architecture for Fedora and Arch KDE
+	pkgver = 13.0.0
 	pkgrel = 1
 	url = https://github.com/loofiboss-bit/NoxForge
 	arch = x86_64
@@ -15,7 +15,7 @@ pkgbase = noxforge
 	depends = plasma-workspace
 	depends = qt6-base
 	optdepends = sddm: qualified NoxForge custom login-screen compatibility
-	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v12.0.1/noxforge-12.0.1-source.tar.xz
-	sha256sums = fc960aa551abc2afb7f5d4fb4d4e9fa5a0416bb816ca3cc63364a203f7c205f1
+	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v13.0.0/noxforge-13.0.0-source.tar.xz
+	sha256sums = 4650c6ad49b8dcaf904e4ec0ffcb5271dca05ccb2417261303038e8ac77444ac
 
 pkgname = noxforge

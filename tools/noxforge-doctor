@@ -17,9 +17,12 @@ from pathlib import Path
 from typing import Any
 
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
+THEME_OBSIDIAN_ID = "io.github.loofiboss.noxforge.obsidian.desktop"
 COMPONENTS = {
     "global-theme": ("plasma/look-and-feel", THEME_ID, "metadata.json"),
+    "global-theme-obsidian": ("plasma/look-and-feel", THEME_OBSIDIAN_ID, "metadata.json"),
     "plasma-style": ("plasma/desktoptheme", THEME_ID, "metadata.json"),
+    "plasma-style-obsidian": ("plasma/desktoptheme", THEME_OBSIDIAN_ID, "metadata.json"),
     "color-scheme": ("color-schemes", "", "NoxForgeDark.colors"),
     "color-scheme-obsidian": ("color-schemes", "", "NoxForgeObsidian.colors"),
     "terminal-theme": ("konsole", "", "NoxForge.colorscheme"),
@@ -37,12 +40,20 @@ COMPONENTS = {
     "syntax-theme": ("org.kde.syntax-highlighting/themes", "", "NoxForge.theme"),
     "syntax-theme-obsidian": ("org.kde.syntax-highlighting/themes", "", "NoxForgeObsidian.theme"),
     "aurorae": ("aurorae/themes", THEME_ID, "metadata.desktop"),
+    "aurorae-obsidian": ("aurorae/themes", THEME_OBSIDIAN_ID, "metadata.desktop"),
     "icons": ("icons", "NoxForge", "index.theme"),
     "cursors": ("icons", "NoxForge-Cursors", "index.theme"),
     "sounds": ("sounds", "NoxForge", "index.theme"),
     "wallpaper": ("wallpapers", "NoxForge", "metadata.json"),
+    "wallpaper-obsidian": ("wallpapers", "NoxForge-Obsidian", "metadata.json"),
+    "wallpaper-obsidian-ultrawide": ("wallpapers", "NoxForge-Obsidian-Ultrawide", "metadata.json"),
     "kwin-switcher": ("kwin/tabbox", THEME_ID, "metadata.json"),
     "sddm": ("sddm/themes", "NoxForge", "metadata.desktop"),
+    "sddm-obsidian": ("sddm/themes", "NoxForgeObsidian", "metadata.desktop"),
+    "editor-neovim": ("noxforge/editors/neovim/colors", "", "noxforge.lua"),
+    "editor-neovim-obsidian": ("noxforge/editors/neovim/colors", "", "noxforge_obsidian.lua"),
+    "editor-helix": ("noxforge/editors/helix/themes", "", "noxforge.toml"),
+    "editor-helix-obsidian": ("noxforge/editors/helix/themes", "", "noxforge_obsidian.toml"),
 }
 STORE_REQUIRED = (
     "global-theme",
@@ -55,7 +66,23 @@ STORE_REQUIRED = (
     "wallpaper",
     "kwin-switcher",
 )
+STORE_OBSIDIAN_REQUIRED = (
+    "global-theme-obsidian",
+    "plasma-style-obsidian",
+    "color-scheme-obsidian",
+    "aurorae-obsidian",
+    "icons",
+    "cursors",
+    "sounds",
+    "wallpaper-obsidian",
+    "kwin-switcher",
+)
 PORTABLE_REQUIRED = STORE_REQUIRED + (
+    "global-theme-obsidian",
+    "plasma-style-obsidian",
+    "aurorae-obsidian",
+    "wallpaper-obsidian",
+    "wallpaper-obsidian-ultrawide",
     "color-scheme-obsidian",
     "terminal-theme",
     "terminal-theme-obsidian",
@@ -71,6 +98,10 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
     "gtk-theme-obsidian",
     "syntax-theme",
     "syntax-theme-obsidian",
+    "editor-neovim",
+    "editor-neovim-obsidian",
+    "editor-helix",
+    "editor-helix-obsidian",
 )
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
@@ -613,6 +644,8 @@ def edition_report(
         required = set(PORTABLE_REQUIRED)
     elif "global-theme" in found:
         required = set(STORE_REQUIRED)
+    elif "global-theme-obsidian" in found:
+        required = set(STORE_OBSIDIAN_REQUIRED)
     else:
         required = set()
     missing = sorted(required - found)
@@ -734,12 +767,7 @@ def build_report(root: Path) -> dict[str, Any]:
         digests = [
             content_digest(
                 match,
-                single_file=name in {
-                    "color-scheme",
-                    "color-scheme-obsidian",
-                    "syntax-theme",
-                    "syntax-theme-obsidian",
-                },
+                single_file=definition[1] == "",
             )
             for match in matches
         ]
@@ -791,7 +819,42 @@ def build_report(root: Path) -> dict[str, Any]:
         active["iconInheritance"] = ",".join(icons["inheritance"]) or "none"
         active["wallpaper"] = detect_wallpaper()
     edition = edition_report(roots, components, plugins, mixed, active, root)
+
+    active_color = active.get("colorScheme", "")
+    active_plasma = active.get("plasmaStyle", "")
+    active_aurorae = active.get("aurorae", "")
+    active_splash = active.get("splash", "")
+    active_wallpaper = active.get("wallpaper", "")
+
+    palette_targets: dict[str, str] = {}
+    if "NoxForge" in active_color:
+        palette_targets["colorScheme"] = "obsidian" if "Obsidian" in active_color else "standard"
+    if THEME_OBSIDIAN_ID in active_plasma:
+        palette_targets["plasmaStyle"] = "obsidian"
+    elif THEME_ID in active_plasma:
+        palette_targets["plasmaStyle"] = "standard"
+    if THEME_OBSIDIAN_ID in active_aurorae:
+        palette_targets["aurorae"] = "obsidian"
+    elif THEME_ID in active_aurorae:
+        palette_targets["aurorae"] = "standard"
+    if THEME_OBSIDIAN_ID in active_splash:
+        palette_targets["splash"] = "obsidian"
+    elif THEME_ID in active_splash:
+        palette_targets["splash"] = "standard"
+    if "NoxForge" in active_wallpaper:
+        palette_targets["wallpaper"] = "obsidian" if "Obsidian" in active_wallpaper else "standard"
+
+    distinct_palette_variants = set(palette_targets.values())
+    palette_desync = len(distinct_palette_variants) > 1
+
     issues: list[dict[str, str]] = []
+    if palette_desync:
+        issues.append({
+            "code": "palette-desynchronization",
+            "component": "session",
+            "severity": "warning",
+            "message": f"Active NoxForge components have mixed palette variants: {', '.join(f'{k}={v}' for k, v in sorted(palette_targets.items()))}."
+        })
     for name, state in components.items():
         duplicate = state["duplicateStatus"]
         if duplicate != "none" and duplicate != "not-applicable":
@@ -831,7 +894,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 5,
+        "schemaVersion": 6,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -843,6 +906,10 @@ def build_report(root: Path) -> dict[str, Any]:
         "criticalIcons": icons,
         "edition": edition,
         "loginSurface": login_surface_report(root, components),
+        "paletteSynchronization": {
+            "status": "desynchronized" if palette_desync else ("synchronized" if palette_targets else "not-active"),
+            "targets": palette_targets,
+        },
         "ecosystem": inspect_ecosystem(root),
         "nextAction": next_action,
         "session": {
@@ -897,6 +964,12 @@ def print_human(report: dict[str, Any]) -> None:
     eco = report.get("ecosystem", {})
     if eco:
         print(f"Ecosystem: Flatpak themes override={eco.get('flatpakThemesOverride', 'unknown')}")
+    palette_sync = report.get("paletteSynchronization", {})
+    if palette_sync.get("status") == "desynchronized":
+        targets = palette_sync.get("targets", {})
+        print(f"Palette synchronization: DESYNCHRONIZED ({', '.join(f'{k}={v}' for k, v in sorted(targets.items()))})")
+    elif palette_sync.get("status") == "synchronized":
+        print("Palette synchronization: synchronized")
     print(f"Next action: {report['nextAction']}")
 
 
@@ -913,13 +986,29 @@ def remediation_plan(report: dict[str, Any]) -> str:
     shadowed = edition.get("shadowed", [])
     eco = report.get("ecosystem", {})
     flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent"}
+    palette_sync = report.get("paletteSynchronization", {})
+    palette_needed = palette_sync.get("status") == "desynchronized"
 
-    if not missing and not shadowed and report.get("status") == "ok" and not flatpak_needed:
+    if not missing and not shadowed and report.get("status") == "ok" and not flatpak_needed and not palette_needed:
         lines.append("# Installation is clean and complete. No remediation required.")
         return "\n".join(lines) + "\n"
     if flatpak_needed:
         lines.append("# Flatpak theme access remediation:")
         lines.append("flatpak override --user --filesystem=xdg-data/themes:ro || true")
+        lines.append("")
+    if palette_needed:
+        targets = palette_sync.get("targets", {})
+        lines.append(f"# Palette desynchronization detected across active components: {', '.join(f'{k}={v}' for k, v in sorted(targets.items()))}")
+        lines.append("# Optional non-destructive alignment commands (run manually if you wish to align to Obsidian):")
+        lines.append("#   kwriteconfig6 --file kdeglobals --group General --key ColorScheme NoxForgeObsidian")
+        lines.append(f"#   kwriteconfig6 --file plasmarc --group Theme --key name {THEME_OBSIDIAN_ID}")
+        lines.append(f"#   kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__{THEME_OBSIDIAN_ID}")
+        lines.append(f"#   kwriteconfig6 --file ksplashrc --group KSplash --key Theme {THEME_OBSIDIAN_ID}")
+        lines.append("# Or to align to Standard Graphite:")
+        lines.append("#   kwriteconfig6 --file kdeglobals --group General --key ColorScheme NoxForgeDark")
+        lines.append(f"#   kwriteconfig6 --file plasmarc --group Theme --key name {THEME_ID}")
+        lines.append(f"#   kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__{THEME_ID}")
+        lines.append(f"#   kwriteconfig6 --file ksplashrc --group KSplash --key Theme {THEME_ID}")
         lines.append("")
     if not missing and not shadowed and report.get("status") == "ok":
         lines.append("# Core desktop components are clean.")

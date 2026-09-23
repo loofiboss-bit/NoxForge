@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
+AURORAE_OBSIDIAN = ROOT / "aurorae/io.github.loofiboss.noxforge.obsidian.desktop"
 ICONS = ROOT / "icons/NoxForge"
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 ARTWORK = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
@@ -401,17 +402,17 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
     return "\n".join([topleft, top, topright, left, center, right, bottomleft, bottom, bottomright])
 
 
-def decoration_svg() -> str:
+def decoration_svg(colors: dict[str, str] = COLORS) -> str:
     active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True)
     inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-Sunken", 0.9, active=False)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="92" height="40" viewBox="0 0 92 40">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Raised {{ color: {COLORS["surfaceRaised"]}; }}
-      .ColorScheme-Sunken {{ color: {COLORS["surfaceSunken"]}; }}
-      .ColorScheme-Highlight {{ color: {COLORS["accent"]}; }}
-      .NoxForge-EdgeHighlight {{ color: {COLORS["edgeHighlight"]}; }}
-      .NoxForge-OutlineMuted {{ color: {COLORS["border"]}; }}
+      .ColorScheme-Raised {{ color: {colors["surfaceRaised"]}; }}
+      .ColorScheme-Sunken {{ color: {colors["surfaceSunken"]}; }}
+      .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
+      .NoxForge-EdgeHighlight {{ color: {colors["edgeHighlight"]}; }}
+      .NoxForge-OutlineMuted {{ color: {colors["border"]}; }}
     ]]></style>
   </defs>
   {active}
@@ -440,24 +441,24 @@ GLYPHS = {
 }
 
 
-def button_svg(kind: str) -> str:
+def button_svg(kind: str, colors: dict[str, str] = COLORS) -> str:
     groups = []
     for index, (state, color_class, opacity) in enumerate(BUTTON_STATES):
         x = index * 32
         foreground = (
-            COLORS["negative"]
+            colors["negative"]
             if kind == "close" and state in {"hover", "pressed"}
-            else COLORS["textSecondary"]
+            else colors["textSecondary"]
             if "inactive" in state or state.startswith("deactivated")
-            else COLORS["textPrimary"]
+            else colors["textPrimary"]
         )
         border_stroke = (
-            f'<rect x="0.5" y="0.5" width="23" height="23" rx="{TOKENS["geometry"]["compactRadius"]}" fill="none" stroke="{COLORS["negative"] if kind == "close" else COLORS["edgeHighlight"]}" stroke-width="1" stroke-opacity="0.6"/>'
+            f'<rect x="0.5" y="0.5" width="23" height="23" rx="{TOKENS["geometry"]["compactRadius"]}" fill="none" stroke="{colors["negative"] if kind == "close" else colors["edgeHighlight"]}" stroke-width="1" stroke-opacity="0.6"/>'
             if state in {"hover", "pressed"}
             else ""
         )
         groups.append(
-            f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="{COLORS['textPrimary']}">
+            f'''<g id="{state}-center" transform="translate({x} 0)" class="{color_class}" color="{colors['textPrimary']}">
       <rect width="24" height="24" rx="{TOKENS['geometry']['compactRadius']}" fill="currentColor" fill-opacity="{opacity:g}"/>
       {border_stroke}
       <g fill="none" stroke="{foreground}" stroke-width="{TOKENS['iconography']['strokeWidth']}" stroke-linecap="round" stroke-linejoin="round">{GLYPHS[kind]}</g>
@@ -467,9 +468,9 @@ def button_svg(kind: str) -> str:
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="24" viewBox="0 0 {width} 24">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Text {{ color: {COLORS["textPrimary"]}; }}
-      .ColorScheme-Hover {{ color: {COLORS["surfaceHover"]}; }}
-      .ColorScheme-Pressed {{ color: {COLORS["surfaceSelected"]}; }}
+      .ColorScheme-Text {{ color: {colors["textPrimary"]}; }}
+      .ColorScheme-Hover {{ color: {colors["surfaceHover"]}; }}
+      .ColorScheme-Pressed {{ color: {colors["surfaceSelected"]}; }}
     ]]></style>
   </defs>
   {"\n  ".join(groups)}
@@ -501,9 +502,9 @@ def canonical_gzip(payload: bytes) -> bytes:
     return stream.getvalue()
 
 
-def write_aurorae_svg(name: str, content: str) -> None:
-    write(AURORAE / f"{name}.svg", content)
-    compressed_path = AURORAE / f"{name}.svgz"
+def write_aurorae_svg(target_dir: Path, name: str, content: str) -> None:
+    write(target_dir / f"{name}.svg", content)
+    compressed_path = target_dir / f"{name}.svgz"
     compressed = canonical_gzip(content.encode("utf-8"))
     if CHECK:
         if not compressed_path.is_file() or compressed_path.read_bytes() != compressed:
@@ -576,21 +577,26 @@ def main() -> None:
             indent=2,
         ) + "\n",
     )
-    write_aurorae_svg("decoration", decoration_svg())
-    for kind in GLYPHS:
-        write_aurorae_svg(kind, button_svg(kind))
+    aurorae_targets = (
+        (AURORAE, TOKENS["colors"]),
+        (AURORAE_OBSIDIAN, TOKENS["colorsObsidian"]),
+    )
+    for target_dir, colors in aurorae_targets:
+        write_aurorae_svg(target_dir, "decoration", decoration_svg(colors))
+        for kind in GLYPHS:
+            write_aurorae_svg(target_dir, kind, button_svg(kind, colors))
     if DRIFT:
         print("Visual asset generator drift: " + ", ".join(str(path.relative_to(ROOT)) for path in DRIFT), file=sys.stderr)
         raise SystemExit(1)
     if CHECK:
         print(
             f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants "
-            f"and {1 + len(GLYPHS)} Aurorae pairs"
+            f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
         )
         return
     print(
         f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants "
-        f"and {1 + len(GLYPHS)} Aurorae pairs"
+        f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
     )
 
 

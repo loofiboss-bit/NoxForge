@@ -1,20 +1,24 @@
 # NoxForge Implementation Plan
 
 This file is the canonical scope and release-gate index. The active authority is
-[`NOXFORGE_V12_PLAN.md`](NOXFORGE_V12_PLAN.md); the machine-readable companion is
+[`NOXFORGE_V13_PLAN.md`](NOXFORGE_V13_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Active release scope
 
-NoxForge 12.0.0 Ecosystem & App Parity expands the public 11.0.0 baseline with
-GTK 3 & GTK 4 themes, KDE KSyntaxHighlighting and VS Code/Cursor editor themes,
-The Big Four Wayland terminal configs (Ghostty, Alacritty, Kitty, Foot),
-Tokens Schema 8 syntax authority, and Doctor Schema 5 diagnostics. Implement
+NoxForge 13.0.0 True Obsidian OLED Parity & Dual-Stack Architecture expands the
+12.0.1 baseline with complete Obsidian Plasma Style, dedicated Obsidian Global
+Theme, Obsidian Aurorae window decoration, dynamic Qt 6 C++ style adaptation,
+Obsidian wallpapers, Neovim and Helix editor themes, Tokens Schema 9 dual-palette
+authority, and Doctor Schema 6 palette synchronization diagnostics. Implement
 phases sequentially according to that plan. Host installation and active desktop
 mutation remain outside the scope. Unavailable physical checks remain `pending`
 or `blocked`.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V12_PLAN.md`](NOXFORGE_V12_PLAN.md) records the completed 12.0.0
+  Ecosystem & App Parity and 12.0.1 Aurorae border fix scope and immutable lineage.
 
 - [`NOXFORGE_V11_PLAN.md`](NOXFORGE_V11_PLAN.md) records the completed 11.0.0
   Deep Focus & System Completeness scope, native Qt 6 C++ style completeness,

@@ -22,9 +22,12 @@ MANIFEST_PATH = ROOT / "distribution/release-manifest.json"
 
 PACKAGE_KEYS = (
     "global-theme",
+    "global-theme-obsidian",
     "plasma-style",
+    "plasma-style-obsidian",
     "colors",
     "aurorae",
+    "aurorae-obsidian",
     "icons",
     "cursors",
     "kwin-switcher",
@@ -107,10 +110,13 @@ def assemble_package(package: str, staging: Path, manifest: dict, *, edition: st
     staging.mkdir(parents=True, exist_ok=True)
     root_name = {
         "global-theme": "global-theme",
+        "global-theme-obsidian": "global-theme-obsidian",
         "plasma-style": "plasma-style",
+        "plasma-style-obsidian": "plasma-style-obsidian",
         "kwin-switcher": "kwin-switcher",
         "colors": "colors",
         "aurorae": "aurorae",
+        "aurorae-obsidian": "aurorae-obsidian",
         "icons": "icons",
         "cursors": "cursors",
         "sounds": "sounds",
@@ -119,8 +125,13 @@ def assemble_package(package: str, staging: Path, manifest: dict, *, edition: st
     if package == "global-theme":
         _copy_tree(ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop", staging)
         _rewrite_edition_defaults(staging, manifest, edition)
+    elif package == "global-theme-obsidian":
+        _copy_tree(ROOT / "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop", staging)
+        _rewrite_edition_defaults(staging, manifest, edition)
     elif package == "plasma-style":
         _copy_tree(ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop", staging)
+    elif package == "plasma-style-obsidian":
+        _copy_tree(ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop", staging)
     elif package == "kwin-switcher":
         _copy_tree(ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop", staging)
     elif package == "colors":
@@ -128,6 +139,8 @@ def assemble_package(package: str, staging: Path, manifest: dict, *, edition: st
             _copy_tree(ROOT / "color-schemes" / name, staging / name)
     elif package == "aurorae":
         _copy_tree(ROOT / "aurorae/io.github.loofiboss.noxforge.desktop", staging / "io.github.loofiboss.noxforge.desktop")
+    elif package == "aurorae-obsidian":
+        _copy_tree(ROOT / "aurorae/io.github.loofiboss.noxforge.obsidian.desktop", staging / "io.github.loofiboss.noxforge.obsidian.desktop")
     elif package == "icons":
         _copy_tree(ROOT / "icons/NoxForge", staging / "NoxForge")
     elif package == "cursors":
@@ -139,6 +152,8 @@ def assemble_package(package: str, staging: Path, manifest: dict, *, edition: st
             ("NoxForge", "NoxForge Forge"),
             ("NoxForge-Quiet", "NoxForge Quiet"),
             ("NoxForge-Ultrawide", "NoxForge Ultrawide"),
+            ("NoxForge-Obsidian", "NoxForge Obsidian"),
+            ("NoxForge-Obsidian-Ultrawide", "NoxForge Obsidian Ultrawide"),
         )
         for wallpaper_id, display_name in variants:
             _wallpaper_variant(
@@ -196,7 +211,7 @@ def build_package(package: str, output_dir: Path, manifest: dict) -> tuple[Path,
         staging = Path(name) / package
         root = assemble_package(package, staging, manifest, edition="store")
         archive = output_dir / artifact_filename(manifest, package)
-        checksum = create_archive(staging, archive, root_name=root.name if package not in {"aurorae", "icons", "cursors", "sounds", "wallpapers", "colors"} else package)
+        checksum = create_archive(staging, archive, root_name=root.name if package not in {"aurorae", "aurorae-obsidian", "icons", "cursors", "sounds", "wallpapers", "colors"} else package)
     checksum_path = archive.with_suffix(archive.suffix + ".sha256")
     checksum_path.write_text(f"{checksum}  {archive.name}\n", encoding="utf-8", newline="\n")
     return archive, checksum
@@ -242,6 +257,8 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
             _copy_tree(ROOT / "syntax/kate" / name, syntax_target / name)
         _copy_tree(ROOT / "terminals", component_root / "terminals")
         _copy_tree(ROOT / "editors/vscode", component_root / "editors/vscode")
+        _copy_tree(ROOT / "editors/neovim", component_root / "editors/neovim")
+        _copy_tree(ROOT / "editors/helix", component_root / "editors/helix")
         _assert_safe_tree(root)
         checksum = create_archive(root, portable, root_name="noxforge")
     portable.with_suffix(portable.suffix + ".sha256").write_text(f"{checksum}  {portable.name}\n", encoding="utf-8", newline="\n")

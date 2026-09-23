@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
+  <title>NoxForge Obsidian OLED Precision 16:9 wallpaper</title>
+  <defs>
+    <!-- Deep pitch-black OLED atmospheric space gradients -->
+    <linearGradient id="bg-canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1014"/>
+      <stop offset="35%" stop-color="#05080A"/>
+      <stop offset="70%" stop-color="#020304"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <!-- Obsidian layered plate gradients -->
+    <linearGradient id="plate-grad-1" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#141D24"/>
+      <stop offset="60%" stop-color="#0C1217"/>
+      <stop offset="100%" stop-color="#05080A"/>
+    </linearGradient>
+
+    <linearGradient id="plate-grad-2" x1="0" y1="0.2" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#121B21"/>
+      <stop offset="50%" stop-color="#0A0F13"/>
+      <stop offset="100%" stop-color="#020304"/>
+    </linearGradient>
+
+    <linearGradient id="plate-grad-3" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#0E151A"/>
+      <stop offset="100%" stop-color="#05080A"/>
+    </linearGradient>
+
+    <!-- Energy beam and lumina accent gradient -->
+    <linearGradient id="lumina-glow" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#A3FF47" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#22D3EE" stop-opacity="0.80"/>
+      <stop offset="85%" stop-color="#38BDF8" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="lumina-glow-subtle" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#A3FF47" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#22D3EE" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Filter for subtle atmospheric glow -->
+    <filter id="forge-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Deep True Black Canvas -->
+  <rect width="2560" height="1440" fill="#000000"/>
+  <rect width="2560" height="1440" fill="url(#bg-canvas)" opacity="0.85"/>
+
+  <!-- Subtle technical grid -->
+  <g stroke="#1A262F" stroke-width="1" opacity="0.22">
+    <line x1="0" y1="360" x2="2560" y2="360"/>
+    <line x1="0" y1="720" x2="2560" y2="720"/>
+    <line x1="0" y1="1080" x2="2560" y2="1080"/>
+    <line x1="640" y1="0" x2="640" y2="1440"/>
+    <line x1="1280" y1="0" x2="1280" y2="1440"/>
+    <line x1="1920" y1="0" x2="1920" y2="1440"/>
+  </g>
+
+  <!-- Monolithic Obsidian faceted plates -->
+  <path d="M-80 -40 L1120 -40 L940 760 L-80 520 Z" fill="url(#plate-grad-3)" opacity="0.9"/>
+  <path d="M-40 280 L1280 620 L1140 1140 L-40 980 Z" fill="url(#plate-grad-1)"/>
+  <path d="M-60 680 L1360 880 L1080 1480 L-60 1480 Z" fill="url(#plate-grad-2)"/>
+
+  <!-- Subtle edge bevel lines -->
+  <path d="M-80 -40 L1120 -40 L940 760" fill="none" stroke="#263640" stroke-width="1.5" opacity="0.6"/>
+  <path d="M-40 280 L1280 620 L1140 1140" fill="none" stroke="#2F414B" stroke-width="1.5" opacity="0.5"/>
+  <path d="M-60 680 L1360 880" fill="none" stroke="#263640" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Kinetic Lumina Rail - The Forge Accent -->
+  <path d="M320 220 L1040 540 L880 1020" fill="none" stroke="url(#lumina-glow)" stroke-width="4.5" filter="url(#forge-glow)"/>
+  <path d="M320 220 L1040 540 L880 1020" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.9"/>
+
+  <!-- Forge 4px Precision Notch detail on lumina intersection -->
+  <path d="M1036 532 L1048 532 L1048 548 L1036 548 Z" fill="#A3FF47"/>
+
+  <!-- High-tech cyan / violet atmospheric counterpoint -->
+  <line x1="1400" y1="892" x2="1680" y2="964" stroke="#22D3EE" stroke-width="2" opacity="0.35"/>
+  <line x1="1520" y1="924" x2="1520" y2="936" stroke="#A78BFA" stroke-width="2" opacity="0.45"/>
+  <circle cx="1680" cy="964" r="3" fill="#22D3EE" opacity="0.6"/>
+
+  <!-- Precision alignment reticles -->
+  <g stroke="#3D525C" stroke-width="1" opacity="0.3">
+    <circle cx="1280" cy="720" r="18" fill="none"/>
+    <line x1="1256" y1="720" x2="1304" y2="720"/>
+    <line x1="1280" y1="696" x2="1280" y2="744"/>
+  </g>
+</svg>

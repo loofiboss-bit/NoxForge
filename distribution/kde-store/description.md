@@ -1,9 +1,9 @@
-# NoxForge Ecosystem & App Parity
+# NoxForge True Obsidian OLED Parity & Dual-Stack Architecture
 
-NoxForge 12.0.1 Ecosystem & App Parity is an original MIT-licensed Linux
-visual system with graphite surfaces, electric lime and the Forge Notch. It
+NoxForge 13.0.0 True Obsidian OLED Parity & Dual-Stack Architecture is an original MIT-licensed Linux
+visual system with graphite and obsidian surfaces, electric lime and the Forge Notch. It
 extends the KDE Plasma system with GTK 3/4 themes, KSyntaxHighlighting themes,
-VS Code/Cursor themes, and matching Ghostty, Alacritty, Kitty, and Foot
+VS Code/Cursor themes, Neovim (Lua) and Helix (TOML) editor themes, and matching Ghostty, Alacritty, Kitty, and Foot
 terminal configurations while preserving the read-only, user-local
 installation boundary.
 
@@ -11,8 +11,8 @@ The Global Theme is a coordinator, not a complete one-click installer. Install t
 
 Installation never applies the theme, changes panels or wallpaper, or switches the display manager. Plasma Login Manager integration remains standard wallpaper integration, with NoxForge Quiet recommended. SDDM is an optional compatibility component of the system edition.
 
-Use the exact `noxforge-12.0.1-*.tar.xz` files and verify them against the
-release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v12.0.1
+Use the exact `noxforge-13.0.0-*.tar.xz` files and verify them against the
+release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.0
 
 Fedora 44 passes 72 offscreen tests in the local gate. Arch build/live login,
 physical login/PAM, audio, pointer/input, mixed physical displays, the full live

@@ -5,6 +5,7 @@
 
 #include <QAbstractItemView>
 #include <QApplication>
+#include <QDateTime>
 #include <QList>
 #include <QPainter>
 #include <QPainterPath>
@@ -27,6 +28,47 @@
 namespace NP = NoxForgePalette;
 
 namespace {
+
+bool isObsidianConfig()
+{
+    const QString env = qEnvironmentVariable("NOXFORGE_VARIANT");
+    if (env.compare(QLatin1String("obsidian"), Qt::CaseInsensitive) == 0) {
+        return true;
+    }
+    static QString cachedScheme;
+    static qint64 lastCheckedMs = 0;
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now - lastCheckedMs > 1000) {
+        lastCheckedMs = now;
+        const QString path = QStandardPaths::locate(
+            QStandardPaths::GenericConfigLocation, QStringLiteral("kdeglobals"));
+        if (!path.isEmpty()) {
+            QSettings settings(path, QSettings::IniFormat);
+            settings.beginGroup(QStringLiteral("General"));
+            cachedScheme = settings.value(QStringLiteral("ColorScheme")).toString();
+        } else {
+            cachedScheme.clear();
+        }
+    }
+    return cachedScheme.contains(QStringLiteral("Obsidian"), Qt::CaseInsensitive);
+}
+
+bool isObsidianMode(const QStyleOption *option = nullptr, const QWidget *widget = nullptr)
+{
+    if (option) {
+        const QColor base = option->palette.color(QPalette::Base);
+        if (base.isValid() && base.red() == 0 && base.green() == 0 && base.blue() == 0 && base.alpha() > 0) {
+            return true;
+        }
+    }
+    if (widget) {
+        const QColor base = widget->palette().color(QPalette::Base);
+        if (base.isValid() && base.red() == 0 && base.green() == 0 && base.blue() == 0 && base.alpha() > 0) {
+            return true;
+        }
+    }
+    return isObsidianConfig();
+}
 
 QPainterPath surfacePath(const QRectF &rect, bool notched, qreal radius = NP::radius)
 {
@@ -66,13 +108,13 @@ QColor mixedColor(const QColor &from, const QColor &to, qreal progress)
     );
 }
 
-QColor stateSurface(const QStyleOption *option, qreal hover, qreal press)
+QColor stateSurface(const QStyleOption *option, qreal hover, qreal press, bool obsidian = false)
 {
     if (!enabled(option)) {
-        return NP::surface();
+        return NP::surface(obsidian);
     }
-    const QColor hovered = mixedColor(NP::surfaceRaised(), NP::surfaceHover(), hover);
-    return mixedColor(hovered, NP::surfaceSunken(), press);
+    const QColor hovered = mixedColor(NP::surfaceRaised(obsidian), NP::surfaceHover(obsidian), hover);
+    return mixedColor(hovered, NP::surfaceSunken(obsidian), press);
 }
 
 void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
@@ -88,9 +130,9 @@ void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
 }
 
 void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirection direction,
-                          bool focused = false)
+                          bool focused = false, bool obsidian = false)
 {
-    paintSurface(painter, rect, NP::surfaceSelected(),
+    paintSurface(painter, rect, NP::surfaceSelected(obsidian),
                  focused ? NP::accent() : NP::borderStrong(),
                  focused ? NP::focusWidth : NP::borderWidth, true);
     painter->save();
@@ -161,27 +203,29 @@ QPalette NoxForgeStyle::standardPalette() const
 
 void NoxForgeStyle::polish(QPalette &palette)
 {
-    palette.setColor(QPalette::Window, NP::surface());
-    palette.setColor(QPalette::WindowText, NP::textPrimary());
-    palette.setColor(QPalette::Base, NP::background());
-    palette.setColor(QPalette::AlternateBase, NP::surface());
-    palette.setColor(QPalette::Text, NP::textPrimary());
-    palette.setColor(QPalette::Button, NP::surfaceRaised());
-    palette.setColor(QPalette::ButtonText, NP::textPrimary());
-    palette.setColor(QPalette::Light, NP::borderStrong());
-    palette.setColor(QPalette::Midlight, NP::border());
-    palette.setColor(QPalette::Mid, NP::border());
-    palette.setColor(QPalette::Dark, NP::background());
-    palette.setColor(QPalette::Shadow, QColor(QStringLiteral("#080B0E")));
-    palette.setColor(QPalette::Highlight, NP::surfaceSelected());
-    palette.setColor(QPalette::HighlightedText, NP::textPrimary());
-    palette.setColor(QPalette::PlaceholderText, NP::textDisabled());
-    palette.setColor(QPalette::Link, NP::cyan());
-    palette.setColor(QPalette::LinkVisited, NP::violet());
-    palette.setColor(QPalette::ToolTipBase, NP::surfaceRaised());
-    palette.setColor(QPalette::ToolTipText, NP::textPrimary());
+    const bool obsidian = isObsidianConfig();
+    const auto pal = NP::palette(obsidian);
+    palette.setColor(QPalette::Window, pal.surface);
+    palette.setColor(QPalette::WindowText, pal.textPrimary);
+    palette.setColor(QPalette::Base, pal.background);
+    palette.setColor(QPalette::AlternateBase, pal.surface);
+    palette.setColor(QPalette::Text, pal.textPrimary);
+    palette.setColor(QPalette::Button, pal.surfaceRaised);
+    palette.setColor(QPalette::ButtonText, pal.textPrimary);
+    palette.setColor(QPalette::Light, pal.borderStrong);
+    palette.setColor(QPalette::Midlight, pal.border);
+    palette.setColor(QPalette::Mid, pal.border);
+    palette.setColor(QPalette::Dark, pal.background);
+    palette.setColor(QPalette::Shadow, obsidian ? QColor(QStringLiteral("#000000")) : QColor(QStringLiteral("#080B0E")));
+    palette.setColor(QPalette::Highlight, pal.surfaceSelected);
+    palette.setColor(QPalette::HighlightedText, pal.textPrimary);
+    palette.setColor(QPalette::PlaceholderText, pal.textDisabled);
+    palette.setColor(QPalette::Link, pal.cyan);
+    palette.setColor(QPalette::LinkVisited, pal.violet);
+    palette.setColor(QPalette::ToolTipBase, pal.surfaceRaised);
+    palette.setColor(QPalette::ToolTipText, pal.textPrimary);
     for (QPalette::ColorRole role : {QPalette::WindowText, QPalette::Text, QPalette::ButtonText}) {
-        palette.setColor(QPalette::Disabled, role, NP::textDisabled());
+        palette.setColor(QPalette::Disabled, role, pal.textDisabled);
     }
 }
 
@@ -454,6 +498,7 @@ QRect NoxForgeStyle::subElementRect(SubElement element, const QStyleOption *opti
 void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *option,
                                   QPainter *painter, const QWidget *widget) const
 {
+    const bool obsidian = isObsidianMode(option, widget);
     switch (element) {
     case PE_PanelButtonCommand:
     case PE_PanelButtonTool: {
@@ -465,13 +510,14 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         const qreal press = motionValue(widget, NoxForgeMotion::Channel::Press, pressTarget);
         QColor fill = primary && enabled(option)
             ? mixedColor(NP::accent(), NP::accentPressed(), press)
-            : stateSurface(option, hover, press);
+            : stateSurface(option, hover, press, obsidian);
         QColor stroke = option->state.testFlag(State_HasFocus)
-            ? (primary ? NP::background() : NP::accent()) : NP::border();
+            ? (primary ? NP::background(obsidian) : NP::accent()) : NP::border();
         const bool focused = option->state.testFlag(State_HasFocus);
         if (enabled(option) && press < 0.98) {
-            const QColor shadow = mixedColor(QColor(8, 11, 14, 0),
-                                             QColor(8, 11, 14, 90), 1.0 - press);
+            const QColor shadowBase = obsidian ? QColor(0, 0, 0) : QColor(8, 11, 14);
+            const QColor shadow = mixedColor(QColor(shadowBase.red(), shadowBase.green(), shadowBase.blue(), 0),
+                                             QColor(shadowBase.red(), shadowBase.green(), shadowBase.blue(), 90), 1.0 - press);
             paintSurface(painter, option->rect.translated(0, 1), shadow, Qt::transparent,
                          0, false);
         }
@@ -481,36 +527,36 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     }
     case PE_PanelLineEdit:
     case PE_FrameLineEdit:
-        paintSurface(painter, option->rect, NP::background(),
+        paintSurface(painter, option->rect, NP::background(obsidian),
                      option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                      option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                      option->state.testFlag(State_HasFocus));
         return;
     case PE_PanelMenu:
     case PE_PanelTipLabel:
-        paintSurface(painter, option->rect, NP::surfaceOverlay(), NP::edgeHighlight());
+        paintSurface(painter, option->rect, NP::surfaceOverlay(obsidian), NP::edgeHighlight());
         return;
     case PE_Frame:
         if (qobject_cast<const QAbstractItemView *>(widget)) {
-            painter->fillRect(option->rect, NP::background());
+            painter->fillRect(option->rect, NP::background(obsidian));
             painter->fillRect(QRect(option->rect.left(), option->rect.top(),
                                     option->rect.width(), 1), NP::border());
             painter->fillRect(QRect(option->rect.left(), option->rect.bottom(),
                                     option->rect.width(), 1), NP::border());
         } else {
-            paintSurface(painter, option->rect, NP::surface(), NP::border());
+            paintSurface(painter, option->rect, NP::surface(obsidian), NP::border());
         }
         return;
     case PE_PanelItemViewItem:
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                                 option->direction, option->state.testFlag(State_HasFocus));
+                                 option->direction, option->state.testFlag(State_HasFocus), obsidian);
         } else if (option->state.testFlag(State_HasFocus)) {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         option->state.testFlag(State_MouseOver) ? NP::surfaceHover() : NP::background(),
+                         option->state.testFlag(State_MouseOver) ? NP::surfaceHover(obsidian) : NP::background(obsidian),
                          NP::accent(), NP::focusWidth, true);
         } else if (option->state.testFlag(State_MouseOver)) {
-            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), NP::surfaceHover(), NP::border());
+            paintSurface(painter, option->rect.adjusted(1, 1, -1, -1), NP::surfaceHover(obsidian), NP::border());
         }
         return;
     case PE_FrameFocusRect:
@@ -529,7 +575,7 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? NP::accent() : NP::borderStrong(), 1));
         painter->setBrush((option->state.testFlag(State_On) || mixed)
-                              ? NP::surfaceSelected() : NP::background());
+                              ? NP::surfaceSelected(obsidian) : NP::background(obsidian));
         radio
             ? painter->drawEllipse(box.adjusted(1, 1, -1, -1))
             : painter->drawPath(surfacePath(box.adjusted(1, 1, -1, -1),
@@ -570,8 +616,8 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_IndicatorTabClose:
         if (option->state.testFlag(State_MouseOver))
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected()
-                                                              : NP::surfaceHover(),
+                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected(obsidian)
+                                                              : NP::surfaceHover(obsidian),
                          option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border());
         paintCloseIndicator(painter, option->rect,
                             enabled(option) ? NP::textPrimary() : NP::textDisabled());
@@ -605,10 +651,10 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     }
     case PE_FrameTabWidget:
     case PE_FrameDockWidget:
-        paintSurface(painter, option->rect, NP::surface(), NP::border());
+        paintSurface(painter, option->rect, NP::surface(obsidian), NP::border());
         return;
     case PE_PanelStatusBar:
-        painter->fillRect(option->rect, NP::surface());
+        painter->fillRect(option->rect, NP::surface(obsidian));
         painter->fillRect(QRect(option->rect.left(), option->rect.top(), option->rect.width(), 1), NP::border());
         return;
     case PE_FrameStatusBarItem:
@@ -631,13 +677,14 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
 void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *option,
                                 QPainter *painter, const QWidget *widget) const
 {
+    const bool obsidian = isObsidianMode(option, widget);
     switch (element) {
     case CE_PushButtonLabel: {
         const auto *button = qstyleoption_cast<const QStyleOptionButton *>(option);
         if (!button) break;
         const bool primary = button->features.testFlag(QStyleOptionButton::DefaultButton);
         QStyleOptionButton copy = *button;
-        const QColor text = !enabled(option) ? NP::textDisabled() : (primary ? NP::accentInk() : NP::textPrimary());
+        const QColor text = !enabled(option) ? NP::textDisabled() : (primary ? NP::accentInk(obsidian) : NP::textPrimary());
         copy.palette.setColor(QPalette::ButtonText, text);
         copy.palette.setColor(QPalette::WindowText, text);
         QCommonStyle::drawControl(element, &copy, painter, widget);
@@ -667,7 +714,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         if (!item) break;
         if (option->state.testFlag(State_Selected) || option->state.testFlag(State_Sunken)) {
             paintSurface(painter, option->rect.adjusted(2, 2, -2, -2),
-                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected() : NP::surfaceHover(),
+                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected(obsidian) : NP::surfaceHover(obsidian),
                          option->state.testFlag(State_Sunken) ? NP::accent() : NP::border());
         }
         painter->save();
@@ -677,7 +724,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         return;
     }
     case CE_MenuBarEmptyArea:
-        painter->fillRect(option->rect, NP::surface());
+        painter->fillRect(option->rect, NP::surface(obsidian));
         return;
     case CE_MenuItem: {
         const auto *item = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
@@ -688,7 +735,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         }
         if (option->state.testFlag(State_Selected))
             paintSelectedSurface(painter, option->rect.adjusted(3, 2, -3, -2),
-                                 option->direction, option->state.testFlag(State_HasFocus));
+                                 option->direction, option->state.testFlag(State_HasFocus), obsidian);
         const int leadingWidth = 28;
         const QRect leading = visualRect(option->direction, option->rect,
                                          QRect(option->rect.left() + 6, option->rect.top(), leadingWidth, option->rect.height()));
@@ -728,7 +775,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         return;
     }
     case CE_ProgressBarGroove:
-        paintSurface(painter, option->rect, NP::background(), NP::border());
+        paintSurface(painter, option->rect, NP::background(obsidian), NP::border());
         return;
     case CE_ProgressBarContents: {
         const auto *progress = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
@@ -780,10 +827,10 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         const qreal hover = option->state.testFlag(State_MouseOver) ? 1.0 : 0.0;
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                                 option->direction, option->state.testFlag(State_HasFocus));
+                                 option->direction, option->state.testFlag(State_HasFocus), obsidian);
         } else {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         mixedColor(NP::surfaceRaised(), NP::surfaceHover(), hover),
+                         mixedColor(NP::surfaceRaised(obsidian), NP::surfaceHover(obsidian), hover),
                          option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                          option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                          option->state.testFlag(State_HasFocus));
@@ -793,7 +840,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
     case CE_HeaderSection:
         painter->fillRect(option->rect,
                           option->state.testFlag(State_MouseOver)
-                              ? NP::surfaceHover() : NP::surface());
+                              ? NP::surfaceHover(obsidian) : NP::surface(obsidian));
         painter->fillRect(QRect(option->rect.left(), option->rect.bottom(),
                                 option->rect.width(), 1), NP::border());
         painter->fillRect(QRect(option->direction == Qt::RightToLeft
@@ -801,7 +848,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
                                 option->rect.top(), 1, option->rect.height()), NP::border());
         return;
     case CE_ToolBar:
-        painter->fillRect(option->rect, NP::surface());
+        painter->fillRect(option->rect, NP::surface(obsidian));
         painter->fillRect(QRect(option->rect.left(), option->rect.bottom(), option->rect.width(), 1), NP::border());
         return;
     case CE_Splitter: {
@@ -826,13 +873,14 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
 void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
                                        QPainter *painter, const QWidget *widget) const
 {
+    const bool obsidian = isObsidianMode(option, widget);
     switch (control) {
     case CC_ComboBox: {
         const qreal hover = motionValue(
             widget, NoxForgeMotion::Channel::Hover,
             option->state.testFlag(State_MouseOver));
         paintSurface(painter, option->rect,
-                     mixedColor(NP::background(), NP::surfaceSunken(), hover),
+                     mixedColor(NP::background(obsidian), NP::surfaceSunken(obsidian), hover),
                      option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                      option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                      option->state.testFlag(State_HasFocus));
@@ -847,7 +895,7 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
             widget, NoxForgeMotion::Channel::Hover,
             option->state.testFlag(State_MouseOver));
         paintSurface(painter, option->rect,
-                     mixedColor(NP::background(), NP::surfaceSunken(), hover),
+                     mixedColor(NP::background(obsidian), NP::surfaceSunken(obsidian), hover),
                      option->state.testFlag(State_HasFocus) ? NP::accent() : NP::border(),
                      option->state.testFlag(State_HasFocus) ? NP::focusWidth : NP::borderWidth,
                      option->state.testFlag(State_HasFocus));
@@ -867,9 +915,9 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         const auto *group = qstyleoption_cast<const QStyleOptionGroupBox *>(option);
         if (!group) break;
         const QRect frame = subControlRect(CC_GroupBox, option, SC_GroupBoxFrame, widget);
-        paintSurface(painter, frame.adjusted(0, 6, 0, 0), NP::surface(), NP::border());
+        paintSurface(painter, frame.adjusted(0, 6, 0, 0), NP::surface(obsidian), NP::border());
         const QRect label = subControlRect(CC_GroupBox, option, SC_GroupBoxLabel, widget);
-        painter->fillRect(label.adjusted(-6, 0, 6, 0), NP::surface());
+        painter->fillRect(label.adjusted(-6, 0, 6, 0), NP::surface(obsidian));
         painter->save();
         painter->setPen(enabled(option) ? NP::textSecondary() : NP::textDisabled());
         painter->drawText(label, group->textAlignment | Qt::AlignVCenter | Qt::TextShowMnemonic, group->text);
@@ -931,7 +979,7 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
             visualSlider.setWidth(qMin(6, slider.width()));
             visualSlider.moveCenter(QPoint(option->rect.center().x(), slider.center().y()));
         }
-        painter->fillRect(option->rect, NP::background());
+        painter->fillRect(option->rect, NP::background(obsidian));
         const qreal hover = motionValue(
             widget, NoxForgeMotion::Channel::Hover,
             option->state.testFlag(State_MouseOver));

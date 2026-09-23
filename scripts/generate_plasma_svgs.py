@@ -10,9 +10,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-THEME = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
+THEME_STANDARD = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
+THEME_OBSIDIAN = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"
+THEME = THEME_STANDARD
 TOKENS = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
 COLORS = TOKENS["colors"]
+CURRENT_COLORS = COLORS
+CURRENT_THEME = THEME_STANDARD
 GLYPHS = json.loads((ROOT / "design/plasma-glyphs.json").read_text(encoding="utf-8"))
 CONTRACT = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
 RECIPES = CONTRACT["semanticRecipes"]
@@ -20,27 +24,29 @@ FAMILY_RECIPES = CONTRACT["familyRecipes"]
 CHECK_MODE = False
 DRIFT: list[str] = []
 
-SVG_HEADER = f"""<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+
+def make_svg_header(colors: dict[str, str]) -> str:
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
-      .ColorScheme-Background {{ color: {COLORS['surface']}; }}
-      .ColorScheme-ViewBackground {{ color: {COLORS['background']}; }}
-      .ColorScheme-ButtonBackground {{ color: {COLORS['surfaceRaised']}; }}
-      .ColorScheme-Text {{ color: {COLORS['textPrimary']}; }}
-      .ColorScheme-Highlight {{ color: {COLORS['accent']}; }}
-      .ColorScheme-ViewHover {{ color: {COLORS['detailCyan']}; }}
-      .ColorScheme-ButtonHover {{ color: {COLORS['detailCyan']}; }}
-      .ColorScheme-ButtonFocus {{ color: {COLORS['accent']}; }}
-      .NoxForge-Sunken {{ color: {COLORS['surfaceSunken']}; }}
-      .NoxForge-Overlay {{ color: {COLORS['surfaceOverlay']}; }}
-      .NoxForge-Hover {{ color: {COLORS['surfaceHover']}; }}
-      .NoxForge-Selected {{ color: {COLORS['surfaceSelected']}; }}
-      .NoxForge-AccentSoft {{ color: {COLORS['accentSoft']}; }}
-      .NoxForge-Attention {{ color: {COLORS['neutral']}; }}
-      .NoxForge-Progress {{ color: {COLORS['accent']}; }}
-      .NoxForge-Border {{ color: {COLORS['border']}; }}
-      .NoxForge-EdgeHighlight {{ color: {COLORS['edgeHighlight']}; }}
-      .NoxForge-OverlayShadow {{ color: {COLORS['shadowOverlay']}; }}
+      .ColorScheme-Background {{ color: {colors['surface']}; }}
+      .ColorScheme-ViewBackground {{ color: {colors['background']}; }}
+      .ColorScheme-ButtonBackground {{ color: {colors['surfaceRaised']}; }}
+      .ColorScheme-Text {{ color: {colors['textPrimary']}; }}
+      .ColorScheme-Highlight {{ color: {colors['accent']}; }}
+      .ColorScheme-ViewHover {{ color: {colors['detailCyan']}; }}
+      .ColorScheme-ButtonHover {{ color: {colors['detailCyan']}; }}
+      .ColorScheme-ButtonFocus {{ color: {colors['accent']}; }}
+      .NoxForge-Sunken {{ color: {colors['surfaceSunken']}; }}
+      .NoxForge-Overlay {{ color: {colors['surfaceOverlay']}; }}
+      .NoxForge-Hover {{ color: {colors['surfaceHover']}; }}
+      .NoxForge-Selected {{ color: {colors['surfaceSelected']}; }}
+      .NoxForge-AccentSoft {{ color: {colors['accentSoft']}; }}
+      .NoxForge-Attention {{ color: {colors['neutral']}; }}
+      .NoxForge-Progress {{ color: {colors['accent']}; }}
+      .NoxForge-Border {{ color: {colors['border']}; }}
+      .NoxForge-EdgeHighlight {{ color: {colors['edgeHighlight']}; }}
+      .NoxForge-OverlayShadow {{ color: {colors['shadowOverlay']}; }}
     ]]></style>
   </defs>
 """
@@ -155,7 +161,7 @@ def margins(prefix: str, x: int, y: int, size: int = 6) -> str:
 
 
 def svg(body: str) -> str:
-    return SVG_HEADER + "  " + body.replace("\n", "\n  ") + "\n</svg>\n"
+    return make_svg_header(CURRENT_COLORS) + "  " + body.replace("\n", "\n  ") + "\n</svg>\n"
 
 
 def background(
@@ -269,19 +275,16 @@ def write(relative: str, content: str) -> None:
         family = Path(relative).stem
         if family not in FAMILY_RECIPES:
             raise RuntimeError(f"Plasma family lacks a semantic recipe: {family}")
-    path = THEME / relative
+    path = CURRENT_THEME / relative
     if CHECK_MODE:
         if not path.is_file() or path.read_text(encoding="utf-8") != content:
-            DRIFT.append(relative)
+            DRIFT.append(f"{CURRENT_THEME.name}/{relative}")
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
-def main() -> None:
-    declared = set(CONTRACT["widgetFamilies"])
-    if declared != set(FAMILY_RECIPES):
-        raise RuntimeError("Plasma family recipe coverage differs from the 43-family contract")
+def generate_plasma_assets() -> None:
     write(
         "dialogs/background.svg",
         background(recipe("overlay"), notch=True, edge_highlight=True, overlay_shadow=True),
@@ -623,10 +626,29 @@ def main() -> None:
             ("bar-inactive", recipe("disabled")),
             ("bar-active", family_paint(relative)),
         ]))
+
+
+def main() -> None:
+    global CURRENT_THEME, CURRENT_COLORS
+    declared = set(CONTRACT["widgetFamilies"])
+    if declared != set(FAMILY_RECIPES):
+        raise RuntimeError("Plasma family recipe coverage differs from the 43-family contract")
+
+    targets = (
+        (THEME_STANDARD, TOKENS["colors"]),
+        (THEME_OBSIDIAN, TOKENS["colorsObsidian"]),
+    )
+    for theme_root, colors in targets:
+        CURRENT_THEME = theme_root
+        CURRENT_COLORS = colors
+        generate_plasma_assets()
+
     if CHECK_MODE and DRIFT:
         raise SystemExit("stale Plasma SVG assets: " + ", ".join(DRIFT))
     if not CHECK_MODE:
-        print(f"Generated {len(list(THEME.rglob('*.svg')))} original Plasma Style SVG assets")
+        std_count = len(list(THEME_STANDARD.rglob("*.svg")))
+        obs_count = len(list(THEME_OBSIDIAN.rglob("*.svg")))
+        print(f"Generated {std_count} Standard and {obs_count} Obsidian Plasma Style SVG assets")
 
 
 if __name__ == "__main__":

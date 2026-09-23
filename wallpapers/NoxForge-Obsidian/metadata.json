@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Description": "Original pure pitch-black OLED NoxForge wallpaper",
+    "Id": "NoxForge-Obsidian",
+    "License": "MIT",
+    "Name": "NoxForge Obsidian",
+    "Version": "13.0.0"
+  }
+}
