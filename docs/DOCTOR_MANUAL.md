@@ -69,9 +69,10 @@ including component formats without version metadata.
 
 `issues` contains `code`, `component`, `severity`, and `message`. Codes are
 `duplicate-identical`, `duplicate-conflict`, `duplicate-unknown`,
-`metadata-unknown`, `mixed-versions`, and `missing-required`. Text output renders
-the same issues and paths. Error issues yield exit status 1; warnings and
-informational issues alone do not fail an otherwise valid installation.
+`metadata-unknown`, `mixed-versions`, `missing-required`, and
+`palette-desynchronization`. Text output renders the same issues and paths.
+Error issues yield exit status 1; warnings and informational issues alone do
+not fail an otherwise valid installation.
 
 A standalone component is valid without the rest of the suite. The global theme
 requires the portable component set, matching its Store dependency declaration.

@@ -89,8 +89,7 @@ The v13 release scope is recorded in
 mkdir -p build/baseline-source
 baseline_commit=$(python3 -c 'import json; from pathlib import Path; print(json.loads(Path("distribution/release-manifest.json").read_text())["release"]["baseline"]["commit"])')
 git archive "$baseline_commit" | tar -x -C build/baseline-source
-python3 scripts/release-check.py --baseline-source build/baseline-source --skip-rpm
-python3 scripts/build.py --mode all --skip-tests
+python3 scripts/release-check.py --baseline-source build/baseline-source
 ```
 
 Full matrices remain temporary CI evidence; compact manifests and curated
