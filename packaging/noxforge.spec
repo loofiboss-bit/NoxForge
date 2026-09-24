@@ -1,4 +1,4 @@
-%global upstream_version 13.0.0
+%global upstream_version 13.0.1
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        13.0.0
+Version:        13.0.1
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -25,6 +25,7 @@ Requires:       kwin >= 6.7
 Requires:       plasma-workspace >= 6.7
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
+Recommends:     python3-pyside6
 %description
 NoxForge Ecosystem & App Parity is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
@@ -53,10 +54,14 @@ apply a theme, configure a login surface, or switch display managers.
 %license LICENSE LICENSES.md
 %doc README.md docs/INSTALL_FEDORA.md docs/TROUBLESHOOTING.md
 %{_bindir}/noxforge-doctor
+%{_bindir}/noxforge-opacity
 %{_mandir}/man1/noxforge-doctor.1*
+%{_mandir}/man1/noxforge-opacity.1*
 %{_qt6_plugindir}/styles/libnoxforge6.so
+%{_datadir}/applications/io.github.loofiboss.noxforge.opacity.desktop
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
+%{_datadir}/noxforge/opacity_gui.py
 %{_datadir}/color-schemes/NoxForgeDark.colors
 %{_datadir}/color-schemes/NoxForgeObsidian.colors
 %{_datadir}/konsole/NoxForge.colorscheme
@@ -86,6 +91,9 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Thu Sep 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.1-1
+- Add noxforge-opacity transparency configurator and Qt 6 GUI
+
 * Wed Sep 23 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.0-1
 - Release True Obsidian OLED Parity & Dual-Stack Architecture
 

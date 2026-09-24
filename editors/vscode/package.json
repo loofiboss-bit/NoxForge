@@ -2,7 +2,7 @@
   "name": "noxforge-theme",
   "displayName": "NoxForge Theme",
   "description": "NoxForge Graphite, Electric Lime and Obsidian True-Black theme for VS Code and Cursor.",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "publisher": "loofiboss",
   "engines": {
     "vscode": "^1.74.0"

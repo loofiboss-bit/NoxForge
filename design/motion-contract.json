@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "themeId": "io.github.loofiboss.noxforge.desktop",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "policy": {
     "character": "machined",
     "idleAnimationAllowed": false,

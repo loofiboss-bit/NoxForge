@@ -186,6 +186,18 @@ else
     install -m 0755 "${source_root}/tools/noxforge-doctor" "${stage}/noxforge/bin/noxforge-doctor"
 fi
 owned+=("noxforge/bin/noxforge-doctor")
+if [[ -f "${portable_root}/bin/noxforge-opacity" ]]; then
+    install -m 0755 "${portable_root}/bin/noxforge-opacity" "${stage}/noxforge/bin/noxforge-opacity"
+elif [[ -f "${source_root}/tools/noxforge-opacity" ]]; then
+    install -m 0755 "${source_root}/tools/noxforge-opacity" "${stage}/noxforge/bin/noxforge-opacity"
+fi
+owned+=("noxforge/bin/noxforge-opacity")
+if [[ -f "${portable_root}/bin/opacity_gui.py" ]]; then
+    install -m 0755 "${portable_root}/bin/opacity_gui.py" "${stage}/noxforge/bin/opacity_gui.py"
+elif [[ -f "${source_root}/tools/opacity_gui.py" ]]; then
+    install -m 0755 "${source_root}/tools/opacity_gui.py" "${stage}/noxforge/bin/opacity_gui.py"
+fi
+owned+=("noxforge/bin/opacity_gui.py")
 printf '%s\n' "${owned[@]}" "noxforge/.owned-files" | LC_ALL=C sort -u > "${stage}/noxforge/.owned-files"
 
 if [[ "${dry_run}" == true ]]; then
@@ -197,7 +209,7 @@ while IFS= read -r file; do
     [[ -n "${file}" ]] || continue
     mkdir -p -- "${data_home}/$(dirname -- "${file}")"
     mode=0644
-    [[ "${file}" == "noxforge/bin/noxforge-doctor" ]] && mode=0755
+    [[ "${file}" == noxforge/bin/* ]] && mode=0755
     install -m "${mode}" -- "${stage}/${file}" "${data_home}/${file}"
 done < <(find "${stage}" -type f -printf '%P\n' | LC_ALL=C sort)
 printf 'Installed NoxForge portable components below %s. No KDE settings were changed.\n' "${data_home}"

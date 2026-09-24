@@ -1,3 +1,11 @@
+# NoxForge 13.0.1 — Opacity & Transparency Configurator
+
+- added `noxforge-opacity` CLI utility and Qt 6 GUI configurator for customizing panel, popup, and Aurorae window decoration transparency levels;
+- added desktop entry `io.github.loofiboss.noxforge.opacity.desktop` for system application launcher integration;
+- included presets (`solid`, `original`, `frost`, `glass`, `ultra`) and fine-grained percentage sliders with 60fps real-time desktop preview;
+- integrated direct link to KDE Desktop Effects (Blur settings) for optimal contrast on transparent surfaces;
+- packaged into Fedora RPM (COPR), portable bundle, and companion store packages.
+
 # NoxForge 13.0.0 — True Obsidian OLED Parity & Dual-Stack Architecture
 
 - added dedicated Obsidian Plasma Style and Global Theme (`io.github.loofiboss.noxforge.obsidian.desktop`);

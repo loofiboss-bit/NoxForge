@@ -41,8 +41,8 @@ class LuminaContractTests(unittest.TestCase):
             (ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8")
         )
         self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V11_PLAN.md", "docs/NOXFORGE_V12_PLAN.md", "docs/NOXFORGE_V13_PLAN.md"))
-        self.assertIn(manifest["release"]["stableVersion"], ("11.0.0", "12.0.0", "12.0.1", "13.0.0"))
-        self.assertIn((ROOT / "VERSION").read_text(encoding="utf-8").strip(), ("11.0.0", "12.0.0", "12.0.1", "13.0.0"))
+        self.assertIn(manifest["release"]["stableVersion"], ("11.0.0", "12.0.0", "12.0.1", "13.0.0", "13.0.1"))
+        self.assertIn((ROOT / "VERSION").read_text(encoding="utf-8").strip(), ("11.0.0", "12.0.0", "12.0.1", "13.0.0", "13.0.1"))
         preview = ROOT / "sddm/NoxForge/preview.png"
         evidence = ROOT / "docs/evidence/sddm_login_100pct.png"
         self.assertEqual(png_dimensions(preview), (960, 540))

@@ -440,8 +440,18 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/NoxForgeObsidian"
 )
 install(
-    PROGRAMS tools/noxforge-doctor
+    PROGRAMS
+        tools/noxforge-doctor
+        tools/noxforge-opacity
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+install(
+    PROGRAMS tools/opacity_gui.py
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
+)
+install(
+    FILES distribution/io.github.loofiboss.noxforge.opacity.desktop
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
 )
 install(
     FILES VERSION
@@ -452,6 +462,8 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
 )
 install(
-    FILES docs/man/noxforge-doctor.1
+    FILES
+        docs/man/noxforge-doctor.1
+        docs/man/noxforge-opacity.1
     DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
 )

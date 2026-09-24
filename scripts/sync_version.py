@@ -60,6 +60,7 @@ VERSION_FILES = {
         (r"(?m)^Version:\s+.*$", "Version:        {rpm_version}"),
     ),
     "docs/man/noxforge-doctor.1": ((r'(?m)^\.TH NOXFORGE-DOCTOR 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge {version}" "User Commands"'),),
+    "docs/man/noxforge-opacity.1": ((r'(?m)^\.TH NOXFORGE-OPACITY 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-OPACITY 1 "September 2026" "NoxForge {version}" "User Commands"'),),
     "packaging/arch/PKGBUILD": (
         (r"(?m)^pkgver=.*$", "pkgver={version}"),
         (r"(?m)^source=\('https://github\.com/loofiboss-bit/NoxForge/releases/download/v[^/]+/noxforge-[^/]+-source\.tar\.xz'\)$", "source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v{version}/noxforge-{version}-source.tar.xz')"),

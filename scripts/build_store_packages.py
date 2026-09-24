@@ -234,6 +234,10 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         doctor = root / "bin/noxforge-doctor"
         doctor.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / "tools/noxforge-doctor", doctor)
+        opacity = root / "bin/noxforge-opacity"
+        shutil.copy2(ROOT / "tools/noxforge-opacity", opacity)
+        opacity_gui = root / "bin/opacity_gui.py"
+        shutil.copy2(ROOT / "tools/opacity_gui.py", opacity_gui)
         component_root = root / "components"
         for package in PACKAGE_KEYS:
             with tempfile.TemporaryDirectory(prefix=f"noxforge-portable-{package}-") as package_name:
