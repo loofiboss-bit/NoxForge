@@ -3,12 +3,12 @@
   "releaseState": "release-candidate",
   "releaseReady": false,
   "candidate": {
-    "version": "13.0.1",
+    "version": "13.0.2",
     "sourceRef": "release/v12.0.1",
     "sourceCommit": null,
     "baselineCommit": "bb3a686851766113daf5ef69542f94d876c72e7b",
     "worktreeDirty": true,
-    "package": "noxforge-13.0.1-1.fc44.x86_64.rpm",
+    "package": "noxforge-13.0.2-1.fc44.x86_64.rpm",
     "artifacts": [],
     "runtimeSourceHashes": "runtime-source-hashes.json"
   },

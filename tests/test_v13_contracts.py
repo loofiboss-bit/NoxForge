@@ -27,18 +27,18 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
 
     def test_v13_version_and_release_manifest_authority(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertIn(version, ("13.0.0", "13.0.1"))
+        self.assertIn(version, ("13.0.0", "13.0.1", "13.0.2"))
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertIn(manifest["release"]["version"], ("13.0.0", "13.0.1"))
-        self.assertIn(manifest["release"]["stableVersion"], ("13.0.0", "13.0.1"))
+        self.assertIn(manifest["release"]["version"], ("13.0.0", "13.0.1", "13.0.2"))
+        self.assertIn(manifest["release"]["stableVersion"], ("13.0.0", "13.0.1", "13.0.2"))
         self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V13_PLAN.md")
         self.assertEqual(manifest["evidence"]["activeRoot"], "docs/evidence/v13")
 
     def test_v13_tokens_schema_9_and_obsidian_palette(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
         self.assertEqual(tokens["schemaVersion"], 9)
-        self.assertIn(tokens["version"], ("13.0.0", "13.0.1"))
+        self.assertIn(tokens["version"], ("13.0.0", "13.0.1", "13.0.2"))
 
         colors = tokens["colors"]
         obsidian = tokens["colorsObsidian"]
@@ -141,11 +141,11 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
         self.assertIn("sddm-obsidian-qml-surface", cmake)
 
         spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
-        self.assertTrue(any(f"Version:        {v}" in spec for v in ("13.0.0", "13.0.1")))
+        self.assertTrue(any(f"Version:        {v}" in spec for v in ("13.0.0", "13.0.1", "13.0.2")))
         self.assertIn("NoxForgeObsidian", spec)
 
         pkgbuild = (ROOT / "packaging/arch/PKGBUILD").read_text(encoding="utf-8")
-        self.assertTrue(any(f"pkgver={v}" in pkgbuild for v in ("13.0.0", "13.0.1")))
+        self.assertTrue(any(f"pkgver={v}" in pkgbuild for v in ("13.0.0", "13.0.1", "13.0.2")))
 
 
 if __name__ == "__main__":

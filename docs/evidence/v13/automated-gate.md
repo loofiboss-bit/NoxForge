@@ -1,6 +1,6 @@
 # NoxForge 13.0.0 release and qualification status
 
-Version: 13.0.1
+Version: 13.0.2
 
 Commit: `4ffd11c15989602bcddb1f6202082029be2d3520`
 

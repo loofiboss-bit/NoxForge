@@ -2,9 +2,11 @@
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. Version 13.0.0 targets Fedora 44 and Arch Plasma/KWin 6.7+ with
+Forge Notch. Version 13.0.2 targets Fedora 44 and Arch Plasma/KWin 6.7+ with
 Qt 6.11 on Wayland. It brings the Obsidian OLED palette to a dedicated Plasma
 Style and Global Theme, Aurorae decoration, and the adaptive native Qt style.
+It also includes the NoxForge Opacity & Transparency Configurator (`noxforge-opacity`),
+providing presets and real-time live preview for custom panel and window translucency.
 The ecosystem also includes GTK 3/4, KDE syntax, VS Code/Cursor, Neovim,
 Helix, Ghostty, Alacritty, Kitty, and Foot themes. Doctor schema 6 reports
 components and palette synchronization in read-only mode. See the [v13
@@ -65,6 +67,8 @@ cursor, audio, PAM/login, power, and live-session gates.
   asset, and optional Graphite and Obsidian SDDM themes in the complete system
   edition;
 - Neovim and Helix themes in both palettes;
+- `noxforge-opacity` CLI utility and Qt 6 GUI configurator for adjusting panel,
+  popup, and Aurorae window decoration transparency levels;
 - read-only edition-aware diagnostics, palette synchronization reporting, and
   deterministic checksums.
 
@@ -75,7 +79,7 @@ defaults use `widgetStyle=Breeze`; system packages use `widgetStyle=NoxForge`.
 ## Compatibility and rollback
 
 See [compatibility](docs/COMPATIBILITY.md), [troubleshooting](docs/TROUBLESHOOTING.md),
-and the [doctor manual](docs/DOCTOR_MANUAL.md). Always select a known-good
+the [opacity manual](docs/OPACITY_MANUAL.md), and the [doctor manual](docs/DOCTOR_MANUAL.md). Always select a known-good
 theme and login surface before rollback. Portable removal is file-precise and
 RPM/Arch removal touches only package-owned paths.
 
