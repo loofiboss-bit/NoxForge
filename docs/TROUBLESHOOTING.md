@@ -16,7 +16,7 @@ requests privileges.
 
 ## Edition is mixed or incomplete
 
-Read schema 5 `issues`, `edition.missingMandatory`, and each component's
+Read schema 6 `issues`, `edition.missingMandatory`, and each component's
 `effectivePath` and `shadowedPaths`. Text output uses the same findings.
 
 | Finding | Interpretation and next action |
@@ -31,9 +31,12 @@ Read schema 5 `issues`, `edition.missingMandatory`, and each component's
 A standalone component does not require the full suite. A Global Theme has
 its declared component dependencies; portable and system editions require their
 respective component sets, including GTK, syntax, editor, terminal, Obsidian,
-and Konsole assets for v12. The `ecosystem.flatpakThemesOverride` field reports
-whether Flatpak applications have read-only access to the theme data root.
-Native Qt and login assets are not portable requirements. An active
+and Konsole assets. V13 also reports selected palette variants through
+`paletteSynchronization`; a `palette-desynchronization` issue means detected
+NoxForge surfaces use mixed Graphite and Obsidian variants. The
+`ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
+have read-only access to the theme data root. Native Qt and login assets are
+not portable requirements. An active
 `widgetStyle=NoxForge` without the native plugin requires selecting Breeze or
 installing the complete system package.
 

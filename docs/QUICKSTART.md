@@ -1,9 +1,9 @@
 # Quick start and rollback
 
-NoxForge 12 Ecosystem & App Parity targets Fedora 44 KDE and the target Arch
-Plasma/KWin 6.7+ and Qt 6.11 environment on Wayland. It includes matching GTK,
-syntax-highlighting, editor, and Wayland-terminal assets. Choose the edition
-that matches your boundary.
+NoxForge 13.0.0 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
+Wayland. Graphite and Obsidian variants cover the Plasma Style, Global Theme,
+Aurorae decoration, native Qt style, wallpapers, and editor themes. Choose the
+edition that matches your installation boundary.
 
 ## Fedora complete-system edition
 
@@ -24,22 +24,22 @@ Fedora 44 uses Plasma Login Manager by default: select **NoxForge Quiet** as its
 wallpaper through System Settings if desired. NoxForge does not supply a custom
 PLM greeter. Select
 Global Theme, application style, decorations, icons, cursors, sounds and one
-of the three wallpapers explicitly in System Settings.
+of the five wallpapers explicitly in System Settings.
 
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-12.0.1-portable.tar.xz
+tar -xJf noxforge-13.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user
 "${XDG_DATA_HOME:-$HOME/.local/share}/noxforge/bin/noxforge-doctor" --json
 ```
 
-Portable installs all user-local components, including the GTK, syntax,
-editor, and terminal assets, uses Breeze application controls, and writes no
-active KDE settings. Store components can likewise be installed individually;
-the Global Theme package is not a complete transaction.
+Portable installs all user-local components, including both palette variants
+of the GTK, syntax, editor, and terminal assets. It uses Breeze application
+controls and writes no active KDE settings. Store components can likewise be
+installed individually; the Global Theme package is not a complete transaction.
 
 ## Build locally
 

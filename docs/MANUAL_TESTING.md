@@ -1,15 +1,22 @@
 # Manual qualification
 
-Capture evidence before any candidate tag or publication. The active record is
-the V12 evidence under `docs/evidence/v12/` and the compact visual index at
-`media/manifest.json`. Offscreen, generated, and composited material is never
+Capture evidence for each release candidate. The current visual and versioned
+record is under `docs/evidence/v13/`, with its compact visual index at
+`media/manifest.json`. The canonical v13 automated gate passed; see the
+[qualification summary](evidence/v13/automated-gate.md) for its results. Some
+checked-in qualification counters are inherited from V12 and must not be used
+as v13 results. Offscreen, generated, and composited material is never
 reported as live evidence.
 
 ## Required isolated session
 
 Use a disposable Fedora 44 or version-pinned Arch Plasma/KWin 6.7+ Wayland session,
 2560x1440 at 100%, a neutral test user, the same wallpaper/panel/app set, and
-no personal data. Exercise display scales 100/125/140/150/175/200%, mixed
+no personal data. Exercise both Graphite and Obsidian palettes across the
+Global Theme, Plasma Style, color scheme, Aurorae, Qt style, wallpapers, and
+editor themes. Check that doctor reports synchronized selections and flags a
+deliberately mixed palette for the active surfaces it inspects. Exercise
+display scales 100/125/140/150/175/200%, mixed
 100+140 and 100+200, every panel edge, Aurorae and TabBox, shell/session
 surfaces, keyboard focus/mnemonics, RTL, translation expansion, and normal,
 reduced, and slow motion.
@@ -25,7 +32,7 @@ Physical cursor behavior, audio routing, PAM/login, power actions, and other
 unavailable hardware evidence stay `pending` or `blocked`; they are never
 promoted from CI or offscreen output.
 
-## V12 evidence boundaries
+## V13 evidence boundaries
 
 Capture desktop, Dolphin, System Settings, launcher, and Aurorae/TabBox in a
 neutral isolated session at 2560x1440. Run `python3 scripts/validate_media.py`
@@ -34,7 +41,7 @@ each image for personal data before adding it to the manifest. A container
 Wayland capture proves that isolated surface only; it cannot qualify hardware
 input, host login, audio, mixed physical displays, or an Arch runtime.
 
-For v11-to-v12, repeated installation, removal, and rollback, hash Plasma,
+For v12-to-v13 repeated installation, removal, and rollback, hash Plasma,
 panel, wallpaper, PLM and SDDM configuration before and after each operation.
 Compare bytes, including unrelated sentinels, in disposable roots. Exercise
 blur disabled, long translations, RTL, and keyboard focus on selected items.
