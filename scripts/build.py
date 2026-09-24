@@ -175,7 +175,7 @@ def main() -> int:
         print(f"Wrote {checksum_path.relative_to(ROOT)}")
         print(f"SHA256 {checksum}")
         if args.mode == "all":
-            portable = next(path for path in (ROOT / "dist").glob("*.tar.xz") if "-portable." in path.name)
+            portable = ROOT / "dist" / f"noxforge-{ARTIFACT_VERSION}-portable.tar.xz"
             print(f"Built {portable.relative_to(ROOT)}")
     else:
         print(f"Built {result[0].relative_to(ROOT)}")

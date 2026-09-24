@@ -1,5 +1,5 @@
 pkgname=noxforge
-pkgver=13.0.0
+pkgver=13.0.1
 pkgrel=1
 pkgdesc='True Obsidian OLED Parity & Dual-Stack Architecture for Fedora and Arch KDE'
 arch=('x86_64')
@@ -8,8 +8,8 @@ license=('MIT')
 depends=('breeze-icons' 'kwin' 'plasma-workspace' 'qt6-base')
 makedepends=('cmake' 'ninja' 'python' 'qt6-declarative' 'kirigami')
 optdepends=('sddm: qualified NoxForge custom login-screen compatibility')
-source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v13.0.0/noxforge-13.0.0-source.tar.xz')
-sha256sums=('4650c6ad49b8dcaf904e4ec0ffcb5271dca05ccb2417261303038e8ac77444ac')
+source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v13.0.1/noxforge-13.0.1-source.tar.xz')
+sha256sums=('2d01510f13d4300e3c99b5020d15aff94a745a02f6a92537be90130fcc2af847')
 
 build() {
   cmake -S "NoxForge-${pkgver}" -B build -G Ninja \

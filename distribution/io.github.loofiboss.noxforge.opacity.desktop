@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=NoxForge Opacity Configurator
+GenericName=Theme Transparency Settings
+Comment=Configure transparency and surface depth for NoxForge Plasma themes
+Exec=noxforge-opacity --gui
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;Qt;KDE;
+StartupNotify=true
+Keywords=noxforge;transparency;opacity;theme;blur;kde;plasma;

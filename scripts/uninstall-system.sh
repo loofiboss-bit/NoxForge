@@ -95,9 +95,13 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/sddm/themes/NoxForge/*|\
         /usr/share/sddm/themes/NoxForgeObsidian/*|\
         /usr/bin/noxforge-doctor|\
+        /usr/bin/noxforge-opacity|\
+        /usr/share/noxforge/opacity_gui.py|\
+        /usr/share/applications/io.github.loofiboss.noxforge.opacity.desktop|\
         /usr/share/noxforge/VERSION|\
         /usr/share/noxforge/release-manifest.json|\
-        /usr/share/man/man1/noxforge-doctor.1)
+        /usr/share/man/man1/noxforge-doctor.1|\
+        /usr/share/man/man1/noxforge-opacity.1)
             ;;
         *)
             printf 'Refusing non-NoxForge manifest entry: %s\n' "${installed_path}" >&2

@@ -1,0 +1,823 @@
+#!/usr/bin/env python3
+"""NoxForge Transparency & Opacity Configurator.
+
+Allows users to inspect, customize, and reset transparency levels across
+NoxForge Plasma Desktop Themes and Aurorae window decorations on KDE Plasma 6.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any
+
+VERSION = "13.0.1"
+
+# Target theme package identifiers
+GRAPHITE_THEME_ID = "io.github.loofiboss.noxforge.desktop"
+OBSIDIAN_THEME_ID = "io.github.loofiboss.noxforge.obsidian.desktop"
+
+# Presets mapping (panel, dialog, widget, tooltip, aurorae_active, aurorae_inactive)
+PRESETS: dict[str, dict[str, float]] = {
+    "solid": {
+        "panel": 0.98,
+        "dialog": 0.99,
+        "widget": 0.98,
+        "tooltip": 1.00,
+        "aurorae_active": 1.00,
+        "aurorae_inactive": 0.90,
+    },
+    "original": {
+        "panel": 0.94,
+        "dialog": 0.94,
+        "widget": 0.92,
+        "tooltip": 0.96,
+        "aurorae_active": 1.00,
+        "aurorae_inactive": 0.90,
+    },
+    "frost": {
+        "panel": 0.78,
+        "dialog": 0.78,
+        "widget": 0.76,
+        "tooltip": 0.88,
+        "aurorae_active": 0.85,
+        "aurorae_inactive": 0.75,
+    },
+    "glass": {
+        "panel": 0.60,
+        "dialog": 0.62,
+        "widget": 0.60,
+        "tooltip": 0.80,
+        "aurorae_active": 0.75,
+        "aurorae_inactive": 0.65,
+    },
+    "ultra": {
+        "panel": 0.40,
+        "dialog": 0.45,
+        "widget": 0.40,
+        "tooltip": 0.70,
+        "aurorae_active": 0.60,
+        "aurorae_inactive": 0.50,
+    },
+}
+
+PRESET_DESCRIPTIONS: dict[str, str] = {
+    "solid": "Solid OLED (98% panel) - Deep black, minimal light bleed",
+    "original": "Original default (94% panel) - Factory standard NoxForge",
+    "frost": "Balanced Frost (78% panel) - Recommended sweet spot with KWin Blur",
+    "glass": "Deep Glass (60% panel) - Clear frosted glass, wallpaper shines through",
+    "ultra": "Ultra Translucent (40% panel) - High transparency aesthetic",
+}
+
+
+@dataclass
+class OpacityRecipe:
+    panel: float
+    dialog: float
+    widget: float
+    tooltip: float
+    aurorae_active: float
+    aurorae_inactive: float
+
+    @classmethod
+    def from_base(cls, base: float) -> OpacityRecipe:
+        base = max(0.10, min(1.0, round(base, 2)))
+        return cls(
+            panel=base,
+            dialog=base,
+            widget=max(0.10, round(base - 0.02, 2)),
+            tooltip=min(1.0, round(base + 0.10, 2)),
+            aurorae_active=min(1.0, round(base + 0.07, 2)),
+            aurorae_inactive=max(0.10, round(base - 0.05, 2)),
+        )
+
+    @classmethod
+    def from_preset(cls, name: str) -> OpacityRecipe:
+        if name not in PRESETS:
+            raise ValueError(f"Unknown preset {name!r}. Available: {', '.join(PRESETS.keys())}")
+        values = PRESETS[name]
+        return cls(**values)
+
+
+def colorize(text: str, color_code: str, use_color: bool = True) -> str:
+    if not use_color or "NO_COLOR" in os.environ or not sys.stdout.isatty():
+        return text
+    return f"\033[{color_code}m{text}\033[0m"
+
+
+def get_xdg_data_home() -> Path:
+    env = os.environ.get("XDG_DATA_HOME")
+    if env and env.startswith("/"):
+        return Path(env)
+    return Path.home() / ".local/share"
+
+
+def get_xdg_cache_home() -> Path:
+    env = os.environ.get("XDG_CACHE_HOME")
+    if env and env.startswith("/"):
+        return Path(env)
+    return Path.home() / ".cache"
+
+
+def discover_theme_dirs(custom_theme_dir: Path | None = None, theme_filter: str = "all") -> list[tuple[str, Path, str]]:
+    """Discover available NoxForge desktoptheme directories: (variant, path, origin)."""
+    results: list[tuple[str, Path, str]] = []
+    if custom_theme_dir:
+        resolved = custom_theme_dir.resolve()
+        name = "obsidian" if "obsidian" in resolved.name.lower() else "graphite"
+        results.append((name, resolved, "custom"))
+        return results
+
+    data_home = get_xdg_data_home()
+    user_plasma = data_home / "plasma/desktoptheme"
+    system_plasma = Path("/usr/share/plasma/desktoptheme")
+    repo_root = Path(__file__).resolve().parents[1]
+
+    targets = []
+    if theme_filter in ("all", "graphite"):
+        targets.append(("graphite", GRAPHITE_THEME_ID))
+    if theme_filter in ("all", "obsidian"):
+        targets.append(("obsidian", OBSIDIAN_THEME_ID))
+
+    for variant_name, theme_id in targets:
+        user_path = user_plasma / theme_id
+        system_path = system_plasma / theme_id
+        repo_path = repo_root / "plasma/desktoptheme" / theme_id
+        if user_path.is_dir():
+            results.append((variant_name, user_path, "user-local"))
+        elif system_path.is_dir():
+            results.append((variant_name, system_path, "system-package"))
+        elif repo_path.is_dir():
+            results.append((variant_name, repo_path, "repository"))
+
+    return results
+
+
+def discover_aurorae_dirs(custom_aurorae_dir: Path | None = None, theme_filter: str = "all") -> list[tuple[str, Path, str]]:
+    """Discover available NoxForge Aurorae decoration directories: (variant, path, origin)."""
+    results: list[tuple[str, Path, str]] = []
+    if custom_aurorae_dir:
+        resolved = custom_aurorae_dir.resolve()
+        name = "obsidian" if "obsidian" in resolved.name.lower() else "graphite"
+        results.append((name, resolved, "custom"))
+        return results
+
+    data_home = get_xdg_data_home()
+    user_aurorae = data_home / "aurorae/themes"
+    system_aurorae = Path("/usr/share/aurorae/themes")
+    repo_root = Path(__file__).resolve().parents[1]
+
+    targets = []
+    if theme_filter in ("all", "graphite"):
+        targets.append(("graphite", GRAPHITE_THEME_ID))
+    if theme_filter in ("all", "obsidian"):
+        targets.append(("obsidian", OBSIDIAN_THEME_ID))
+
+    for variant_name, theme_id in targets:
+        user_path = user_aurorae / theme_id
+        system_path = system_aurorae / theme_id
+        repo_path = repo_root / "aurorae" / theme_id
+        if user_path.is_dir():
+            results.append((variant_name, user_path, "user-local"))
+        elif system_path.is_dir():
+            results.append((variant_name, system_path, "system-package"))
+        elif repo_path.is_dir():
+            results.append((variant_name, repo_path, "repository"))
+
+    return results
+
+
+def replace_svg_opacity(content: str, new_opacity: float) -> tuple[str, int]:
+    """Replace fill-opacity on background shapes (ColorScheme-Background & NoxForge-Overlay)."""
+    count = 0
+
+    def repl(m: re.Match[str]) -> str:
+        nonlocal count
+        tag = m.group(0)
+        if 'class="ColorScheme-Background"' in tag or 'class="NoxForge-Overlay"' in tag:
+            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{new_opacity:g}"', tag)
+            if n > 0:
+                count += n
+                return new_tag
+        return tag
+
+    new_content = re.sub(r'<(?:path|rect)\b[^>]+>', repl, content)
+    return new_content, count
+
+
+def replace_aurorae_opacity(content: str, active_opacity: float, inactive_opacity: float) -> tuple[str, int]:
+    """Replace fill-opacity on Aurorae window decoration frames."""
+    count = 0
+
+    def repl(m: re.Match[str]) -> str:
+        nonlocal count
+        tag = m.group(0)
+        if 'class="ColorScheme-Raised"' in tag:
+            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{active_opacity:g}"', tag)
+            if n > 0:
+                count += n
+                return new_tag
+        elif 'class="ColorScheme-Sunken"' in tag:
+            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{inactive_opacity:g}"', tag)
+            if n > 0:
+                count += n
+                return new_tag
+        return tag
+
+    new_content = re.sub(r'<(?:path|rect)\b[^>]+>', repl, content)
+    return new_content, count
+
+
+def extract_svg_opacity(content: str) -> float | None:
+    """Extract current fill-opacity of main background element."""
+    for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
+        tag = m.group(0)
+        if 'class="ColorScheme-Background"' in tag or 'class="NoxForge-Overlay"' in tag:
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            if op_m:
+                return float(op_m.group(1))
+    return None
+
+
+def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
+    """Extract current active and inactive fill-opacities of window titlebar."""
+    active_op = None
+    inactive_op = None
+    for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
+        tag = m.group(0)
+        if active_op is None and 'class="ColorScheme-Raised"' in tag:
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            if op_m:
+                active_op = float(op_m.group(1))
+        elif inactive_op is None and 'class="ColorScheme-Sunken"' in tag:
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            if op_m:
+                inactive_op = float(op_m.group(1))
+        if active_op is not None and inactive_op is not None:
+            break
+    return active_op, inactive_op
+
+
+def ensure_user_copy(target_path: Path, system_source: Path, dry_run: bool = False) -> bool:
+    """Ensure a writable user-local copy exists if only system package is present."""
+    if target_path.exists():
+        return True
+    if system_source.is_dir():
+        if dry_run:
+            print(f"[dry-run] Would copy system theme {system_source} -> {target_path}")
+            return True
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(system_source, target_path)
+        print(f"Created user-local theme copy at: {target_path}")
+        return True
+    return False
+
+
+def get_status(theme_filter: str = "all", custom_theme_dir: Path | None = None) -> dict[str, Any]:
+    """Query current opacity settings across NoxForge components."""
+    status: dict[str, Any] = {"version": VERSION, "themes": {}}
+    theme_dirs = discover_theme_dirs(custom_theme_dir, theme_filter)
+
+    for variant_name, theme_dir, origin in theme_dirs:
+        theme_info: dict[str, Any] = {
+            "path": str(theme_dir),
+            "origin": origin,
+            "exists": theme_dir.is_dir(),
+            "files": {},
+        }
+        if theme_dir.is_dir():
+            file_targets = [
+                ("panel", theme_dir / "translucent/widgets/panel-background.svg"),
+                ("dialog", theme_dir / "translucent/dialogs/background.svg"),
+                ("widget", theme_dir / "translucent/widgets/background.svg"),
+                ("tooltip", theme_dir / "translucent/widgets/tooltip.svg"),
+                ("root_panel", theme_dir / "widgets/panel-background.svg"),
+                ("root_dialog", theme_dir / "dialogs/background.svg"),
+            ]
+            for label, file_path in file_targets:
+                if file_path.is_file():
+                    content = file_path.read_text(encoding="utf-8")
+                    op = extract_svg_opacity(content)
+                    theme_info["files"][label] = {
+                        "path": str(file_path),
+                        "opacity": op,
+                        "percent": f"{round(op * 100)}%" if op is not None else None,
+                    }
+        status["themes"][variant_name] = theme_info
+
+    aurorae_dirs = discover_aurorae_dirs(theme_filter=theme_filter)
+    status["aurorae"] = {}
+    for variant_name, aurorae_dir, origin in aurorae_dirs:
+        dec_svg = aurorae_dir / "decoration.svg"
+        if dec_svg.is_file():
+            content = dec_svg.read_text(encoding="utf-8")
+            active_op, inactive_op = extract_aurorae_opacity(content)
+            status["aurorae"][variant_name] = {
+                "path": str(dec_svg),
+                "origin": origin,
+                "active_opacity": active_op,
+                "inactive_opacity": inactive_op,
+            }
+
+    return status
+
+
+def apply_opacity(
+    recipe: OpacityRecipe,
+    theme_filter: str = "all",
+    custom_theme_dir: Path | None = None,
+    custom_aurorae_dir: Path | None = None,
+    include_root: bool = False,
+    include_aurorae: bool = False,
+    dry_run: bool = False,
+) -> list[str]:
+    """Apply the opacity recipe to targeted NoxForge files."""
+    modified_files: list[str] = []
+    theme_dirs = discover_theme_dirs(custom_theme_dir, theme_filter)
+    user_plasma = get_xdg_data_home() / "plasma/desktoptheme"
+
+    for variant_name, theme_dir, origin in theme_dirs:
+        theme_id = OBSIDIAN_THEME_ID if variant_name == "obsidian" else GRAPHITE_THEME_ID
+        target_dir = theme_dir
+        source_dir = theme_dir
+        if origin == "system-package":
+            target_dir = user_plasma / theme_id
+            if not ensure_user_copy(target_dir, theme_dir, dry_run=dry_run):
+                continue
+            source_dir = target_dir if target_dir.is_dir() else theme_dir
+        elif not target_dir.is_dir():
+            print(f"Warning: Theme directory not found: {target_dir}", file=sys.stderr)
+            continue
+
+        file_tasks = [
+            ("translucent/widgets/panel-background.svg", recipe.panel, "panel"),
+            ("translucent/dialogs/background.svg", recipe.dialog, "dialog"),
+            ("translucent/widgets/background.svg", recipe.widget, "widget"),
+            ("translucent/widgets/tooltip.svg", recipe.tooltip, "tooltip"),
+        ]
+        if include_root:
+            file_tasks.extend([
+                ("widgets/panel-background.svg", recipe.panel, "root panel"),
+                ("dialogs/background.svg", recipe.dialog, "root dialog"),
+            ])
+
+        for rel_path, target_op, role_name in file_tasks:
+            src_file = source_dir / rel_path
+            dst_file = target_dir / rel_path
+            if not src_file.is_file():
+                continue
+            content = src_file.read_text(encoding="utf-8")
+            new_content, count = replace_svg_opacity(content, target_op)
+            if count > 0:
+                if not dry_run:
+                    dst_file.write_text(new_content, encoding="utf-8", newline="\n")
+                modified_files.append(f"{dst_file} ({role_name}: {round(target_op * 100)}%)")
+
+    if include_aurorae:
+        aurorae_dirs = discover_aurorae_dirs(custom_aurorae_dir, theme_filter)
+        user_aurorae = get_xdg_data_home() / "aurorae/themes"
+        for variant_name, aurorae_dir, origin in aurorae_dirs:
+            theme_id = OBSIDIAN_THEME_ID if variant_name == "obsidian" else GRAPHITE_THEME_ID
+            target_dir = aurorae_dir
+            source_dir = aurorae_dir
+            if origin == "system-package":
+                target_dir = user_aurorae / theme_id
+                if not ensure_user_copy(target_dir, aurorae_dir, dry_run=dry_run):
+                    continue
+                source_dir = target_dir if target_dir.is_dir() else aurorae_dir
+            src_dec = source_dir / "decoration.svg"
+            dst_dec = target_dir / "decoration.svg"
+            if src_dec.is_file():
+                content = src_dec.read_text(encoding="utf-8")
+                new_content, count = replace_aurorae_opacity(
+                    content, recipe.aurorae_active, recipe.aurorae_inactive
+                )
+                if count > 0:
+                    if not dry_run:
+                        dst_dec.write_text(new_content, encoding="utf-8", newline="\n")
+                    modified_files.append(
+                        f"{dst_dec} (aurorae titlebar: {round(recipe.aurorae_active * 100)}% / {round(recipe.aurorae_inactive * 100)}%)"
+                    )
+
+    return modified_files
+
+
+def clear_cache_and_reload(dry_run: bool = False) -> list[str]:
+    """Clear Plasma SVG render cache and signal running shell to refresh."""
+    actions: list[str] = []
+    cache_dir = get_xdg_cache_home()
+
+    # Plasma SVG caches
+    if cache_dir.is_dir():
+        for pattern in ("plasma_theme_*.kcache", "plasma-svgelements-*", "plasma_svgelements*"):
+            for match in cache_dir.glob(pattern):
+                if dry_run:
+                    actions.append(f"[dry-run] Would remove cache: {match}")
+                else:
+                    try:
+                        if match.is_dir():
+                            shutil.rmtree(match, ignore_errors=True)
+                        else:
+                            match.unlink(missing_ok=True)
+                        actions.append(f"Cleared cache: {match.name}")
+                    except OSError:
+                        pass
+
+    # Notify Plasma Shell and KWin via qdbus if available
+    qdbus_bin = shutil.which("qdbus-qt6") or shutil.which("qdbus")
+    if qdbus_bin and not dry_run:
+        try:
+            # Refresh plasma shell
+            subprocess.run(
+                [qdbus_bin, "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.refreshCurrentShell"],
+                capture_output=True,
+                timeout=2,
+            )
+            actions.append("Notified Plasma Shell to refresh theme")
+        except (subprocess.SubprocessError, OSError):
+            pass
+
+        try:
+            # Reconfigure KWin
+            subprocess.run(
+                [qdbus_bin, "org.kde.KWin", "/KWin", "reconfigure"],
+                capture_output=True,
+                timeout=2,
+            )
+            actions.append("Notified KWin to reconfigure")
+        except (subprocess.SubprocessError, OSError):
+            pass
+
+    return actions
+
+
+def run_gui_dialog() -> tuple[OpacityRecipe | None, bool]:
+    """Display an interactive dialog via kdialog or zenity to configure opacity."""
+    kdialog_bin = shutil.which("kdialog")
+    zenity_bin = shutil.which("zenity")
+
+    if not kdialog_bin and not zenity_bin:
+        print("Error: Neither 'kdialog' nor 'zenity' is installed for graphical dialogs.", file=sys.stderr)
+        print("Please use the CLI options (e.g., 'noxforge-opacity --preset frost').", file=sys.stderr)
+        return None, False
+
+    include_aurorae = False
+
+    if kdialog_bin:
+        cmd = [
+            kdialog_bin,
+            "--title",
+            "NoxForge Transparency Configurator",
+            "--radiolist",
+            "Choose a transparency preset for NoxForge surfaces:",
+            "frost",
+            "Balanced Frost (78% opacity) - Recommended sweet spot",
+            "on",
+            "glass",
+            "Deep Glass (60% opacity) - Noticeable wallpaper shine",
+            "off",
+            "ultra",
+            "Ultra Translucent (40% opacity) - High transparency",
+            "off",
+            "original",
+            "Original Default (94% opacity) - Factory NoxForge",
+            "off",
+            "solid",
+            "Solid OLED (98% opacity) - Pitch black / opaque",
+            "off",
+            "custom",
+            "Custom Percentage (10% - 100%)...",
+            "off",
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0 or not res.stdout.strip():
+            return None, False
+        selection = res.stdout.strip()
+
+        if selection == "custom":
+            input_cmd = [
+                kdialog_bin,
+                "--title",
+                "Custom Opacity",
+                "--inputbox",
+                "Enter opacity percentage (10 to 100):",
+                "75",
+            ]
+            res_val = subprocess.run(input_cmd, capture_output=True, text=True)
+            if res_val.returncode != 0 or not res_val.stdout.strip():
+                return None, False
+            try:
+                pct = float(res_val.stdout.strip())
+                recipe = OpacityRecipe.from_base(pct / 100.0)
+            except ValueError:
+                return None, False
+        else:
+            recipe = OpacityRecipe.from_preset(selection)
+
+        # Ask about window decorations
+        dec_cmd = [
+            kdialog_bin,
+            "--title",
+            "Window Decorations",
+            "--yesno",
+            "Also apply transparency to window titlebars (Aurorae)?",
+        ]
+        include_aurorae = (subprocess.run(dec_cmd).returncode == 0)
+        return recipe, include_aurorae
+
+    # Fallback to zenity
+    if zenity_bin:
+        cmd = [
+            zenity_bin,
+            "--list",
+            "--radiolist",
+            "--title=NoxForge Transparency Configurator",
+            "--text=Choose a transparency preset for NoxForge surfaces:",
+            "--column=",
+            "--column=Preset",
+            "--column=Description",
+            "TRUE", "frost", "Balanced Frost (78% opacity) - Recommended",
+            "FALSE", "glass", "Deep Glass (60% opacity)",
+            "FALSE", "ultra", "Ultra Translucent (40% opacity)",
+            "FALSE", "original", "Original Default (94% opacity)",
+            "FALSE", "solid", "Solid OLED (98% opacity)",
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0 or not res.stdout.strip():
+            return None, False
+        preset = res.stdout.strip()
+        recipe = OpacityRecipe.from_preset(preset)
+        return recipe, False
+
+    return None, False
+
+
+def parse_arguments(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="noxforge-opacity",
+        description="Configure, inspect, or reset transparency and opacity for NoxForge KDE Plasma themes.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""\
+presets:
+  solid      98% opacity - deep solid dark surfaces
+  original   94% opacity - default factory NoxForge
+  frost      78% opacity - balanced frosted glass (recommended with KWin blur)
+  glass      60% opacity - deep translucent glass
+  ultra      40% opacity - high transparency
+
+examples:
+  noxforge-opacity --preset frost           # Apply recommended 78% frost opacity
+  noxforge-opacity --level 75               # Set custom 75% opacity
+  noxforge-opacity --preset glass --aurorae # Glass opacity on panels and window titlebars
+  noxforge-opacity --status                 # Inspect current opacity levels
+  noxforge-opacity --reset                  # Restore original factory settings
+  noxforge-opacity --gui                    # Launch interactive graphical selector
+""",
+    )
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {VERSION}")
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "-p",
+        "--preset",
+        choices=list(PRESETS.keys()),
+        help="Select a predefined opacity profile (solid, original, frost, glass, ultra).",
+    )
+    group.add_argument(
+        "-l",
+        "--level",
+        type=float,
+        help="Set custom opacity percentage between 10 and 100 (e.g., 75 for 75%% opacity).",
+    )
+    group.add_argument(
+        "-o",
+        "--opacity",
+        type=float,
+        help="Set custom opacity decimal between 0.10 and 1.0 (e.g., 0.75).",
+    )
+    group.add_argument(
+        "-s",
+        "--status",
+        action="store_true",
+        help="Inspect and display currently configured opacity levels.",
+    )
+    group.add_argument(
+        "-r",
+        "--reset",
+        action="store_true",
+        help="Restore original factory NoxForge default opacities (equivalent to '--preset original').",
+    )
+    group.add_argument(
+        "-g",
+        "--gui",
+        action="store_true",
+        help="Open interactive graphical configuration dialog (uses kdialog or zenity).",
+    )
+
+    parser.add_argument(
+        "-t",
+        "--theme",
+        choices=["all", "graphite", "obsidian"],
+        default="all",
+        help="Theme variant to target (default: all).",
+    )
+    parser.add_argument(
+        "--aurorae",
+        action="store_true",
+        dest="include_aurorae",
+        help="Also adjust transparency in Aurorae window decoration titlebars.",
+    )
+    parser.add_argument(
+        "--include-root",
+        action="store_true",
+        help="Also update root panel and dialog backgrounds (in addition to translucent).",
+    )
+    parser.add_argument(
+        "--theme-dir",
+        type=Path,
+        help="Explicit path to a desktoptheme directory to modify.",
+    )
+    parser.add_argument(
+        "--aurorae-dir",
+        type=Path,
+        help="Explicit path to an Aurorae theme directory to modify.",
+    )
+    parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="Simulate modifications without writing changes to disk.",
+    )
+    parser.add_argument(
+        "--no-reload",
+        action="store_true",
+        help="Do not clear Plasma cache or signal Plasma/KWin after changing opacity.",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output results in JSON format.",
+    )
+
+    return parser.parse_args(argv)
+
+
+def print_status_report(status_data: dict[str, Any]) -> None:
+    print(colorize(f"NoxForge Opacity Status (v{status_data['version']})", "1;32"))
+    print("=" * 60)
+
+    themes = status_data.get("themes", {})
+    if not themes:
+        print("No installed NoxForge themes discovered.")
+    for variant, info in themes.items():
+        origin = info.get("origin")
+        origin_label = "user override" if origin == "user-local" else "system package" if origin == "system-package" else "repository" if origin == "repository" else "installed"
+        state = colorize(origin_label, "32") if info.get("exists") else colorize("not installed", "31")
+        print(f"\n{colorize(variant.capitalize() + ' Plasma Theme', '1;36')} [{state}]")
+        print(f"  Path: {info['path']}")
+        files = info.get("files", {})
+        if not files:
+            print("  No theme SVG files found.")
+        for label, file_info in files.items():
+            pct = file_info.get("percent") or "unknown"
+            op = file_info.get("opacity")
+            op_str = f"{op:.2f}" if op is not None else "n/a"
+            print(f"  • {label:12}: {colorize(pct, '1;33')} (fill-opacity: {op_str})")
+
+    aurorae = status_data.get("aurorae", {})
+    if aurorae:
+        print(f"\n{colorize('Aurorae Window Decorations', '1;36')}")
+        for variant, a_info in aurorae.items():
+            act = a_info.get("active_opacity")
+            inact = a_info.get("inactive_opacity")
+            act_str = f"{round(act * 100)}%" if act is not None else "n/a"
+            inact_str = f"{round(inact * 100)}%" if inact is not None else "n/a"
+            print(f"  • {variant.capitalize():10}: Active {colorize(act_str, '1;33')} / Inactive {colorize(inact_str, '1;33')}")
+    print()
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_arguments(argv)
+
+    # Status check
+    if args.status:
+        status_data = get_status(theme_filter=args.theme, custom_theme_dir=args.theme_dir)
+        if args.json:
+            print(json.dumps(status_data, indent=2))
+        else:
+            print_status_report(status_data)
+        return 0
+
+    # Determine recipe
+    recipe: OpacityRecipe | None = None
+    include_aurorae = args.include_aurorae
+
+    has_display = bool(os.environ.get("WAYLAND_DISPLAY") or os.environ.get("DISPLAY"))
+    should_launch_gui = args.gui or (len(sys.argv) == 1 and has_display and sys.stdin.isatty())
+
+    if should_launch_gui:
+        # First attempt: Launch rich Qt 6 graphical interface
+        try:
+            gui_candidates = [
+                Path(__file__).resolve().parent / "opacity_gui.py",
+                Path(sys.prefix) / "share/noxforge/opacity_gui.py",
+                Path.home() / ".local/share/noxforge/bin/opacity_gui.py",
+                Path("/usr/share/noxforge/opacity_gui.py"),
+                Path("/usr/local/share/noxforge/opacity_gui.py"),
+            ]
+            gui_path = next((p for p in gui_candidates if p.is_file()), None)
+            if gui_path and gui_path.is_file():
+                import importlib.util
+                spec = importlib.util.spec_from_file_location("opacity_gui", gui_path)
+                if spec and spec.loader:
+                    gui_mod = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(gui_mod)
+                    return gui_mod.launch_gui()
+        except Exception:
+            pass
+
+        # Second attempt: Fallback to kdialog / zenity dialog
+        recipe, gui_aurorae = run_gui_dialog()
+        if not recipe:
+            print("Operation cancelled.")
+            return 0
+        include_aurorae = include_aurorae or gui_aurorae
+    elif args.reset:
+        recipe = OpacityRecipe.from_preset("original")
+    elif args.preset:
+        recipe = OpacityRecipe.from_preset(args.preset)
+    elif args.level is not None:
+        if not (10 <= args.level <= 100):
+            print("Error: --level must be between 10 and 100 (percentage).", file=sys.stderr)
+            return 2
+        recipe = OpacityRecipe.from_base(args.level / 100.0)
+    elif args.opacity is not None:
+        if not (0.10 <= args.opacity <= 1.0):
+            print("Error: --opacity must be between 0.10 and 1.0.", file=sys.stderr)
+            return 2
+        recipe = OpacityRecipe.from_base(args.opacity)
+    else:
+        # If no display or non-interactive terminal, show status and usage
+        status_data = get_status(theme_filter=args.theme, custom_theme_dir=args.theme_dir)
+        if args.json:
+            print(json.dumps(status_data, indent=2))
+        else:
+            print_status_report(status_data)
+            print("To customize transparency, specify a preset, level, or launch GUI:")
+            print("  noxforge-opacity --preset frost")
+            print("  noxforge-opacity --level 75")
+            print("  noxforge-opacity --gui")
+            print("  noxforge-opacity --help")
+        return 0
+
+    # Apply changes
+    modified = apply_opacity(
+        recipe=recipe,
+        theme_filter=args.theme,
+        custom_theme_dir=args.theme_dir,
+        custom_aurorae_dir=args.aurorae_dir,
+        include_root=args.include_root,
+        include_aurorae=include_aurorae,
+        dry_run=args.dry_run,
+    )
+
+    reload_actions: list[str] = []
+    if not args.no_reload and modified:
+        reload_actions = clear_cache_and_reload(dry_run=args.dry_run)
+
+    if args.json:
+        result = {
+            "status": "dry-run" if args.dry_run else "applied",
+            "recipe": asdict(recipe),
+            "modified": modified,
+            "reload": reload_actions,
+        }
+        print(json.dumps(result, indent=2))
+    else:
+        mode_prefix = colorize("[dry-run] ", "1;33") if args.dry_run else ""
+        print(colorize(f"\n{mode_prefix}NoxForge Transparency Applied Successfully!", "1;32"))
+        print(f"Target opacity: {colorize(f'{round(recipe.panel * 100)}%', '1;33')} (panel/dialog)")
+        print(f"Updated {len(modified)} file(s):")
+        for f in modified:
+            print(f"  • {f}")
+        if reload_actions:
+            print("\nCache and environment refresh:")
+            for a in reload_actions:
+                print(f"  • {a}")
+        if not args.dry_run and modified:
+            print(colorize("\nTip: If panels or popups do not reflect changes immediately, run:", "36"))
+            print("  rm -rf ~/.cache/plasma* && systemctl --user restart plasma-plasmashell")
+        print()
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

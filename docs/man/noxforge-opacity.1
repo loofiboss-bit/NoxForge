@@ -1,0 +1,50 @@
+.TH NOXFORGE-OPACITY 1 "September 2026" "NoxForge 13.0.1" "User Commands"
+.SH NAME
+noxforge-opacity \- configure transparency and depth for NoxForge Plasma themes
+.SH SYNOPSIS
+.B noxforge-opacity
+.RB [ \-\-gui ]
+.RB [ \-\-preset
+.IR name ]
+.RB [ \-\-level
+.IR 10\-100 ]
+.RB [ \-\-status ]
+.RB [ \-\-reset ]
+.RB [ \-\-dry-run ]
+.RB [ \-\-json ]
+.RB [ \-\-aurorae ]
+.SH DESCRIPTION
+.B noxforge-opacity
+allows users to inspect, customize, and reset transparency levels across
+NoxForge Plasma Desktop Themes and Aurorae window decorations on KDE Plasma 6.
+It modifies translucent SVG assets in the user's local directory, invalidates
+Plasma caches, and signals the desktop shell to update dynamically.
+.SH OPTIONS
+.TP
+.B \-\-gui
+Launch the Qt 6 graphical configurator with real-time desktop preview.
+.TP
+.BI \-\-preset " name"
+Apply a predefined transparency recipe: solid, original, frost, glass, ultra.
+.TP
+.BI \-\-level " percent"
+Apply a uniform opacity percentage (10 to 100).
+.TP
+.B \-\-status
+Show current opacity levels of installed themes.
+.TP
+.B \-\-reset
+Restore original upstream NoxForge opacity values.
+.TP
+.B \-\-dry-run
+Simulate modifications without writing to disk or restarting services.
+.TP
+.B \-\-json
+Emit machine-readable JSON output.
+.TP
+.B \-\-aurorae
+Apply transparency adjustments to Aurorae window decoration frames.
+.SH EXIT STATUS
+Returns 0 on success, 1 on error, and 2 for invalid command arguments.
+.SH AUTHOR
+NoxForge Contributors.
