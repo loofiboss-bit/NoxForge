@@ -269,12 +269,12 @@ def extract_svg_opacity(content: str) -> float | None:
     for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
         tag = m.group(0)
         if 'class="ColorScheme-Background"' in tag or 'class="NoxForge-Overlay"' in tag:
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
-            if op_m:
-                return float(op_m.group(1))
             style_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag)
             if style_m:
                 return float(style_m.group(1))
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            if op_m:
+                return float(op_m.group(1))
     return None
 
 
@@ -285,11 +285,11 @@ def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
     for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
         tag = m.group(0)
         if active_op is None and 'class="ColorScheme-Raised"' in tag:
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag) or re.search(r'fill-opacity:\s*([0-9.]+)', tag)
+            op_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag) or re.search(r'fill-opacity="([0-9.]+)"', tag)
             if op_m:
                 active_op = float(op_m.group(1))
         elif inactive_op is None and 'class="ColorScheme-Sunken"' in tag:
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag) or re.search(r'fill-opacity:\s*([0-9.]+)', tag)
+            op_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag) or re.search(r'fill-opacity="([0-9.]+)"', tag)
             if op_m:
                 inactive_op = float(op_m.group(1))
         if active_op is not None and inactive_op is not None:

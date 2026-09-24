@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import sys
+import urllib.parse
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -278,7 +279,9 @@ class ApplyWorker(QtCore.QThread):
 
 def detect_active_plasma_wallpaper() -> Path | None:
     """Detect the active Plasma desktop wallpaper from KDE configuration."""
-    config_path = Path.home() / ".config/plasma-org.kde.plasma.desktop-appletsrc"
+    xdg_config = os.environ.get("XDG_CONFIG_HOME")
+    config_dir = Path(xdg_config) if xdg_config else Path.home() / ".config"
+    config_path = config_dir / "plasma-org.kde.plasma.desktop-appletsrc"
     if not config_path.is_file():
         return None
     try:
@@ -288,7 +291,9 @@ def detect_active_plasma_wallpaper() -> Path | None:
             if line.startswith("Image="):
                 val = line.split("=", 1)[1].strip()
                 if val.startswith("file://"):
-                    val = val[7:]
+                    val = urllib.parse.unquote(val[7:])
+                elif "%" in val:
+                    val = urllib.parse.unquote(val)
                 p = Path(val)
                 if p.is_file():
                     return p
@@ -394,13 +399,18 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         # 1. Background (Wallpaper or Atmospheric Gradient)
         if self.wallpaper_image and not self.wallpaper_image.isNull():
             if self._cached_scaled_wallpaper is None or self._cached_size != (w, h):
-                self._cached_scaled_wallpaper = self.wallpaper_image.scaled(
+                scaled = self.wallpaper_image.scaled(
                     w, h,
                     QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
                     QtCore.Qt.TransformationMode.SmoothTransformation
                 )
                 self._cached_size = (w, h)
-                # Create fast frosted blur
+                # Center crop to exact widget bounds
+                sx = max(0, (scaled.width() - w) // 2)
+                sy = max(0, (scaled.height() - h) // 2)
+                self._cached_scaled_wallpaper = scaled.copy(sx, sy, w, h)
+
+                # Create fast frosted blur on the exact same cropped canvas
                 blur_w = max(16, w // 8)
                 blur_h = max(16, h // 8)
                 small = self._cached_scaled_wallpaper.scaled(
@@ -414,10 +424,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
                     QtCore.Qt.TransformationMode.SmoothTransformation
                 )
 
-            # Center crop
-            sx = max(0, (self._cached_scaled_wallpaper.width() - w) // 2)
-            sy = max(0, (self._cached_scaled_wallpaper.height() - h) // 2)
-            painter.drawImage(0, 0, self._cached_scaled_wallpaper, sx, sy, w, h)
+            painter.drawImage(0, 0, self._cached_scaled_wallpaper)
         else:
             grad = QtGui.QLinearGradient(0, 0, w, h)
             if self.variant == "obsidian":
@@ -449,15 +456,14 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
                     painter.setClipPath(path)
                 else:
                     painter.setClipRect(rect)
-                bsx = max(0, (self._cached_blurred_wallpaper.width() - w) // 2)
-                bsy = max(0, (self._cached_blurred_wallpaper.height() - h) // 2)
-                painter.drawImage(0, 0, self._cached_blurred_wallpaper, bsx, bsy, w, h)
+                painter.drawImage(0, 0, self._cached_blurred_wallpaper)
                 painter.restore()
 
             if radius > 0:
                 painter.setBrush(surf_col)
                 painter.setPen(QtCore.Qt.PenStyle.NoPen)
                 painter.drawRoundedRect(rect, radius, radius)
+                painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
             else:
                 painter.fillRect(rect, surf_col)
 
@@ -583,6 +589,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
 
         panel_col = QtGui.QColor(*surf_rgb, int(self.panel_opacity * 255))
         draw_frosted_surface(panel_rect, panel_col, radius=6)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.setPen(QtGui.QColor(75, 96, 106, int(0.72 * 255)))
         painter.drawRoundedRect(panel_rect, 6, 6)
 
@@ -1014,13 +1021,16 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         if self.worker and self.worker.isRunning():
-            self.worker.wait(2000)
+            self.status_lbl.setText("Waiting for pending theme write to complete...")
+            self.worker.wait(5000)
             if self.worker.isRunning():
-                self.worker.terminate()
-                self.worker.wait(500)
+                event.ignore()
+                return
         event.accept()
 
     def _on_apply_clicked(self) -> None:
+        if self.worker and self.worker.isRunning():
+            return
         recipe = OpacityRecipe(
             panel=self.slider_panel.value() / 100.0,
             dialog=self.slider_dialog.value() / 100.0,
