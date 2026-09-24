@@ -103,8 +103,8 @@ QPushButton:disabled {
 
 QPushButton.presetBtn {
     text-align: left;
-    padding: 9px 12px;
-    font-size: 12px;
+    padding: 7px 10px;
+    font-size: 11px;
     border-radius: 5px;
 }
 
@@ -130,6 +130,10 @@ QPushButton#applyButton:hover {
 
 QPushButton#applyButton:pressed {
     background-color: #82D936;
+}
+
+QSlider {
+    min-height: 26px;
 }
 
 QSlider::groove:horizontal {
@@ -161,7 +165,8 @@ QSlider::handle:horizontal:hover {
 
 QCheckBox {
     spacing: 8px;
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 22px;
 }
 
 QCheckBox::indicator {
@@ -179,7 +184,8 @@ QCheckBox::indicator:checked {
 
 QRadioButton {
     spacing: 6px;
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 20px;
 }
 
 QRadioButton::indicator {
@@ -198,6 +204,34 @@ QRadioButton::indicator:checked {
 QScrollArea {
     border: none;
     background-color: transparent;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: #0D1419;
+    width: 7px;
+    margin: 0px;
+    border-radius: 3px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2F414B;
+    min-height: 25px;
+    border-radius: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4B606A;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
 }
 """
 
@@ -582,8 +616,8 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("NoxForge Depth & Opacity Configurator")
-        self.resize(860, 680)
-        self.setMinimumSize(780, 560)
+        self.resize(920, 680)
+        self.setMinimumSize(820, 540)
         self.setStyleSheet(STYLE_SHEET)
 
         mark_path = ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg"
@@ -600,18 +634,19 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         central = QtWidgets.QWidget(self)
         self.setCentralWidget(central)
         main_layout = QtWidgets.QHBoxLayout(central)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(16, 16, 16, 16)
+        main_layout.setSpacing(16)
 
-        # ----------------- Left Panel: Controls -----------------
-        left_widget = QtWidgets.QWidget()
-        left_layout = QtWidgets.QVBoxLayout(left_widget)
-        left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.setSpacing(14)
+        # ----------------- Left Panel: Controls with Scrolling -----------------
+        left_panel = QtWidgets.QWidget()
+        left_panel_layout = QtWidgets.QVBoxLayout(left_panel)
+        left_panel_layout.setContentsMargins(0, 0, 0, 0)
+        left_panel_layout.setSpacing(10)
 
-        # Header Title
+        # Fixed Header (Title + Re-check)
         title_box = QtWidgets.QHBoxLayout()
         header_vbox = QtWidgets.QVBoxLayout()
+        header_vbox.setSpacing(2)
         title_lbl = QtWidgets.QLabel("NOXFORGE // DEPTH & OPACITY")
         title_lbl.setStyleSheet("font-size: 16px; font-weight: 800; color: #A3FF47; letter-spacing: 1px;")
         sub_lbl = QtWidgets.QLabel("Surface Transparency Configurator - KDE Plasma 6")
@@ -626,7 +661,19 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.btn_refresh.clicked.connect(self._load_current_status)
         title_box.addWidget(self.btn_refresh)
 
-        left_layout.addLayout(title_box)
+        left_panel_layout.addLayout(title_box)
+
+        # Scrollable Configuration Controls
+        left_scroll = QtWidgets.QScrollArea()
+        left_scroll.setWidgetResizable(True)
+        left_scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        left_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        left_scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        scroll_content = QtWidgets.QWidget()
+        scroll_layout = QtWidgets.QVBoxLayout(scroll_content)
+        scroll_layout.setContentsMargins(0, 4, 8, 4)
+        scroll_layout.setSpacing(12)
 
         # Palette Variant Switcher
         var_group = QtWidgets.QGroupBox("Palette Target")
@@ -641,7 +688,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.radio_graphite.toggled.connect(self._on_variant_changed)
         self.radio_obsidian.toggled.connect(self._on_variant_changed)
         self.radio_all.toggled.connect(self._on_variant_changed)
-        left_layout.addWidget(var_group)
+        scroll_layout.addWidget(var_group)
 
         # Preset Profiles Group
         preset_group = QtWidgets.QGroupBox("Quick Presets")
@@ -654,21 +701,28 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda checked=False, k=p_key: self._on_preset_clicked(k))
             preset_layout.addWidget(btn)
             self.preset_buttons[p_key] = btn
-        left_layout.addWidget(preset_group)
+        scroll_layout.addWidget(preset_group)
 
         # Fine-Tuning Sliders Group
         slider_group = QtWidgets.QGroupBox("Precision Sliders")
         slider_layout = QtWidgets.QVBoxLayout(slider_group)
-        slider_layout.setSpacing(10)
+        slider_layout.setSpacing(8)
 
-        # Helper to create a slider with percentage badge
-        def make_slider_row(label_text: str, default_val: int) -> tuple[QtWidgets.QSlider, QtWidgets.QLabel]:
-            row = QtWidgets.QHBoxLayout()
+        # Helper to create a slider with percentage badge inside a guaranteed-height container
+        def make_slider_row(
+            label_text: str, default_val: int, target_layout: QtWidgets.QLayout
+        ) -> tuple[QtWidgets.QSlider, QtWidgets.QLabel]:
+            row_w = QtWidgets.QWidget()
+            row_w.setMinimumHeight(28)
+            row = QtWidgets.QHBoxLayout(row_w)
+            row.setContentsMargins(0, 0, 0, 0)
+            row.setSpacing(8)
             lbl = QtWidgets.QLabel(label_text)
             lbl.setFixedWidth(130)
             slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
             slider.setRange(10, 100)
             slider.setValue(default_val)
+            slider.setMinimumHeight(24)
             val_lbl = QtWidgets.QLabel(f"{default_val}%")
             val_lbl.setFixedWidth(40)
             val_lbl.setStyleSheet("font-weight: 700; color: #A3FF47;")
@@ -677,13 +731,13 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             row.addWidget(lbl)
             row.addWidget(slider)
             row.addWidget(val_lbl)
-            slider_layout.addLayout(row)
+            target_layout.addWidget(row_w)
             return slider, val_lbl
 
-        self.slider_panel, self.val_panel = make_slider_row("Panel:", 78)
-        self.slider_dialog, self.val_dialog = make_slider_row("Dialogs & Menus:", 78)
-        self.slider_widget, self.val_widget = make_slider_row("Widgets & Popups:", 76)
-        self.slider_tooltip, self.val_tooltip = make_slider_row("Tooltips:", 88)
+        self.slider_panel, self.val_panel = make_slider_row("Panel:", 78, slider_layout)
+        self.slider_dialog, self.val_dialog = make_slider_row("Dialogs & Menus:", 78, slider_layout)
+        self.slider_widget, self.val_widget = make_slider_row("Widgets & Popups:", 76, slider_layout)
+        self.slider_tooltip, self.val_tooltip = make_slider_row("Tooltips:", 88, slider_layout)
 
         # Aurorae Window Decorations Checkbox & Sliders
         self.chk_aurorae = QtWidgets.QCheckBox("Enable Titlebar Transparency (Aurorae)")
@@ -693,10 +747,12 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
         self.aurorae_container = QtWidgets.QWidget()
         aur_layout = QtWidgets.QVBoxLayout(self.aurorae_container)
-        aur_layout.setContentsMargins(16, 0, 0, 0)
-        self.slider_aurorae_act, self.val_aurorae_act = make_slider_row("Active Titlebar:", 85)
-        self.slider_aurorae_inact, self.val_aurorae_inact = make_slider_row("Inactive Titlebar:", 75)
+        aur_layout.setContentsMargins(16, 2, 0, 2)
+        aur_layout.setSpacing(6)
+        self.slider_aurorae_act, self.val_aurorae_act = make_slider_row("Active Titlebar:", 85, aur_layout)
+        self.slider_aurorae_inact, self.val_aurorae_inact = make_slider_row("Inactive Titlebar:", 75, aur_layout)
         self.aurorae_container.setEnabled(False)
+        self.aurorae_container.setVisible(False)
         slider_layout.addWidget(self.aurorae_container)
 
         # Additional Options
@@ -710,27 +766,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         slider_layout.addWidget(self.chk_reload)
         slider_layout.addWidget(self.chk_dry_run)
 
-        left_layout.addWidget(slider_group)
-        left_layout.addStretch()
-
-        # Action Buttons (Bottom)
-        action_layout = QtWidgets.QHBoxLayout()
-        self.btn_reset = QtWidgets.QPushButton("Reset Defaults")
-        self.btn_reset.clicked.connect(self._on_reset_clicked)
-
-        self.btn_apply = QtWidgets.QPushButton("Apply Transparency")
-        self.btn_apply.setObjectName("applyButton")
-        self.btn_apply.clicked.connect(self._on_apply_clicked)
-
-        action_layout.addWidget(self.btn_reset)
-        action_layout.addStretch()
-        action_layout.addWidget(self.btn_apply)
-        left_layout.addLayout(action_layout)
-
-        # Status Message Label
-        self.status_lbl = QtWidgets.QLabel("")
-        self.status_lbl.setStyleSheet("font-size: 12px; color: #22D3EE; padding-top: 4px;")
-        left_layout.addWidget(self.status_lbl)
+        scroll_layout.addWidget(slider_group)
 
         # Blur Tips Banner
         blur_tip = QtWidgets.QFrame()
@@ -750,7 +786,37 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         blur_layout.addStretch()
         blur_layout.addWidget(btn_effects)
         blur_layout.addWidget(btn_restart)
-        left_layout.addWidget(blur_tip)
+        scroll_layout.addWidget(blur_tip)
+
+        scroll_layout.addStretch()
+        left_scroll.setWidget(scroll_content)
+        left_panel_layout.addWidget(left_scroll, 1)
+
+        # Action Buttons (Fixed Footer at Bottom)
+        footer_widget = QtWidgets.QWidget()
+        footer_layout = QtWidgets.QVBoxLayout(footer_widget)
+        footer_layout.setContentsMargins(0, 4, 0, 0)
+        footer_layout.setSpacing(6)
+
+        action_layout = QtWidgets.QHBoxLayout()
+        self.btn_reset = QtWidgets.QPushButton("Reset Defaults")
+        self.btn_reset.clicked.connect(self._on_reset_clicked)
+
+        self.btn_apply = QtWidgets.QPushButton("Apply Transparency")
+        self.btn_apply.setObjectName("applyButton")
+        self.btn_apply.clicked.connect(self._on_apply_clicked)
+
+        action_layout.addWidget(self.btn_reset)
+        action_layout.addStretch()
+        action_layout.addWidget(self.btn_apply)
+        footer_layout.addLayout(action_layout)
+
+        # Status Message Label
+        self.status_lbl = QtWidgets.QLabel("")
+        self.status_lbl.setStyleSheet("font-size: 12px; color: #22D3EE; min-height: 18px;")
+        footer_layout.addWidget(self.status_lbl)
+
+        left_panel_layout.addWidget(footer_widget)
 
         # ----------------- Right Panel: Live Preview -----------------
         right_widget = QtWidgets.QWidget()
@@ -788,7 +854,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         right_layout.addWidget(self.preview_canvas)
 
         # Assemble Panels
-        main_layout.addWidget(left_widget, 1)
+        main_layout.addWidget(left_panel, 1)
         main_layout.addWidget(right_widget, 1)
 
         # Global Shortcuts
@@ -827,6 +893,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def _on_aurorae_toggled(self, checked: bool) -> None:
         self.aurorae_container.setEnabled(checked)
+        self.aurorae_container.setVisible(checked)
         self._sync_preview()
 
     def _on_preset_clicked(self, preset_name: str) -> None:
