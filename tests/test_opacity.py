@@ -196,6 +196,97 @@ class TestNoxForgeOpacity(unittest.TestCase):
         self.assertEqual(pix.width(), 400)
         self.assertEqual(pix.height(), 500)
 
+        # Test blur toggle
+        win.chk_simulate_blur.setChecked(False)
+        self.assertFalse(preview.simulate_blur)
+        preview.render(pix)
+        win.chk_simulate_blur.setChecked(True)
+        self.assertTrue(preview.simulate_blur)
+        preview.render(pix)
+
+        # Test closeEvent
+        close_event = QtGui.QCloseEvent()
+        win.closeEvent(close_event)
+        self.assertTrue(close_event.isAccepted())
+
+    def test_svg_opacity_injection_when_missing(self) -> None:
+        """Verify fill-opacity is cleanly injected into elements that lack it."""
+        sample_svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg">\n'
+            '  <rect class="ColorScheme-Background" fill="currentColor" width="10" height="10"/>\n'
+            '  <path class="NoxForge-Overlay" d="M0 0h10v10H0z" fill="#000000"/>\n'
+            '</svg>'
+        )
+        self.assertIsNone(noxforge_opacity.extract_svg_opacity(sample_svg))
+        modified, count = noxforge_opacity.replace_svg_opacity(sample_svg, 0.78)
+        self.assertEqual(count, 2)
+        self.assertIn('fill-opacity="0.78"', modified)
+        self.assertEqual(noxforge_opacity.extract_svg_opacity(modified), 0.78)
+
+    def test_aurorae_opacity_injection_when_missing(self) -> None:
+        """Verify fill-opacity is injected into Aurorae frames lacking fill-opacity."""
+        sample_svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg">\n'
+            '  <rect id="active-bg" class="ColorScheme-Raised" fill="currentColor"/>\n'
+            '  <rect id="inactive-bg" class="ColorScheme-Sunken" fill="currentColor"/>\n'
+            '</svg>'
+        )
+        modified, count = noxforge_opacity.replace_aurorae_opacity(sample_svg, 0.85, 0.75)
+        self.assertEqual(count, 2)
+        act, inact = noxforge_opacity.extract_aurorae_opacity(modified)
+        self.assertEqual(act, 0.85)
+    def test_extract_svg_opacity_inline_style_precedence(self) -> None:
+        """Verify inline style fill-opacity takes precedence over presentation attribute."""
+        sample_svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg">\n'
+            '  <rect class="ColorScheme-Background" fill-opacity="1.0" style="fill-opacity:0.65" width="10" height="10"/>\n'
+            '</svg>'
+        )
+        self.assertEqual(noxforge_opacity.extract_svg_opacity(sample_svg), 0.65)
+
+    def test_opacity_percentage_and_exponent_handling(self) -> None:
+        """Verify percentages and exponents are parsed cleanly and replaced in full."""
+        pct_svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect class="ColorScheme-Background" style="fill-opacity:50%"/></svg>'
+        self.assertAlmostEqual(noxforge_opacity.extract_svg_opacity(pct_svg), 0.5)
+        replaced, count = noxforge_opacity.replace_svg_opacity(pct_svg, 0.78)
+        self.assertEqual(count, 1)
+        self.assertIn('style="fill-opacity:0.78"', replaced)
+        self.assertNotIn('%', replaced)
+
+        exp_svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect class="ColorScheme-Background" fill-opacity="1e-1"/></svg>'
+        self.assertAlmostEqual(noxforge_opacity.extract_svg_opacity(exp_svg), 0.1)
+        replaced_exp, count = noxforge_opacity.replace_svg_opacity(exp_svg, 0.85)
+        self.assertEqual(count, 1)
+        self.assertIn('fill-opacity="0.85"', replaced_exp)
+        self.assertNotIn('1e-1', replaced_exp)
+
+    def test_detect_wallpaper_url_decoding(self) -> None:
+        """Verify detect_active_plasma_wallpaper handles XDG_CONFIG_HOME and percent-encoded URLs."""
+        if not HAVE_PYSIDE6:
+            self.skipTest("PySide6 not available")
+        from tools import opacity_gui
+        cfg_dir = self.temp_dir / "config"
+        cfg_dir.mkdir(parents=True, exist_ok=True)
+        wall_dir = self.temp_dir / "Wallpapers Folder"
+        wall_dir.mkdir(parents=True, exist_ok=True)
+        wall_file = wall_dir / "Custom Wallpaper.png"
+        wall_file.write_bytes(b"dummy")
+
+        appletsrc = cfg_dir / "plasma-org.kde.plasma.desktop-appletsrc"
+        appletsrc.write_text(f"[Containments][1][Applets][2][Configuration][Wallpaper]\nImage=file://{wall_dir.as_posix()}/Custom%20Wallpaper.png\n", encoding="utf-8")
+
+        old_xdg = os.environ.get("XDG_CONFIG_HOME")
+        try:
+            os.environ["XDG_CONFIG_HOME"] = str(cfg_dir)
+            detected = opacity_gui.detect_active_plasma_wallpaper()
+            self.assertIsNotNone(detected)
+            self.assertEqual(detected, wall_file)
+        finally:
+            if old_xdg is not None:
+                os.environ["XDG_CONFIG_HOME"] = old_xdg
+            else:
+                os.environ.pop("XDG_CONFIG_HOME", None)
+
 
 if __name__ == "__main__":
     unittest.main()

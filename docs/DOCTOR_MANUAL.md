@@ -60,15 +60,17 @@ shown relative to `$XDG_DATA_HOME` to avoid exposing account names. Native Qt
 plugin paths are discovered candidates; `effectivePath` is null because the
 loader's choice is not inferred from filesystem presence.
 
-`duplicateStatus` is `none`, `identical`, `conflict`, or `unknown` for data
+`duplicateStatus` is `none`, `identical`, `conflict`, `customized`, or `unknown` for data
 components and `not-applicable` for native plugin candidates. Identical payload
-copies are warnings; differing payloads fail even when version strings match.
+copies are warnings; differing payloads fail even when version strings match unless
+the difference is a valid user customization (e.g. customized SVG opacity with matching
+component version metadata), in which case `duplicateStatus` is `customized`.
 An unreadable comparison remains unknown. Review the listed shadowed copies
 manually; doctor never removes them. `metadataStatus: unknown` is informational,
 including component formats without version metadata.
 
 `issues` contains `code`, `component`, `severity`, and `message`. Codes are
-`duplicate-identical`, `duplicate-conflict`, `duplicate-unknown`,
+`duplicate-identical`, `duplicate-conflict`, `duplicate-customized`, `duplicate-unknown`,
 `metadata-unknown`, `mixed-versions`, `missing-required`, and
 `palette-desynchronization`. Text output renders the same issues and paths.
 Error issues yield exit status 1; warnings and informational issues alone do

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import sys
+import urllib.parse
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -103,8 +104,8 @@ QPushButton:disabled {
 
 QPushButton.presetBtn {
     text-align: left;
-    padding: 9px 12px;
-    font-size: 12px;
+    padding: 7px 10px;
+    font-size: 11px;
     border-radius: 5px;
 }
 
@@ -130,6 +131,10 @@ QPushButton#applyButton:hover {
 
 QPushButton#applyButton:pressed {
     background-color: #82D936;
+}
+
+QSlider {
+    min-height: 26px;
 }
 
 QSlider::groove:horizontal {
@@ -161,7 +166,8 @@ QSlider::handle:horizontal:hover {
 
 QCheckBox {
     spacing: 8px;
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 22px;
 }
 
 QCheckBox::indicator {
@@ -179,7 +185,8 @@ QCheckBox::indicator:checked {
 
 QRadioButton {
     spacing: 6px;
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 20px;
 }
 
 QRadioButton::indicator {
@@ -198,6 +205,34 @@ QRadioButton::indicator:checked {
 QScrollArea {
     border: none;
     background-color: transparent;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: #0D1419;
+    width: 7px;
+    margin: 0px;
+    border-radius: 3px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2F414B;
+    min-height: 25px;
+    border-radius: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4B606A;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
 }
 """
 
@@ -242,6 +277,40 @@ class ApplyWorker(QtCore.QThread):
             self.error.emit(str(exc))
 
 
+def detect_active_plasma_wallpaper() -> Path | None:
+    """Detect the active Plasma desktop wallpaper from KDE configuration."""
+    xdg_config = os.environ.get("XDG_CONFIG_HOME")
+    config_dir = Path(xdg_config) if xdg_config else Path.home() / ".config"
+    config_path = config_dir / "plasma-org.kde.plasma.desktop-appletsrc"
+    if not config_path.is_file():
+        return None
+    try:
+        text = config_path.read_text(encoding="utf-8", errors="replace")
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("Image="):
+                val = line.split("=", 1)[1].strip()
+                if val.startswith("file://"):
+                    val = urllib.parse.unquote(val[7:])
+                elif "%" in val:
+                    val = urllib.parse.unquote(val)
+                p = Path(val)
+                if p.is_file():
+                    return p
+                if p.is_dir():
+                    for sub in (
+                        "contents/images/1920x1080.png",
+                        "contents/images/1920x1080.jpg",
+                        "contents/images/2560x1440.png",
+                    ):
+                        sub_p = p / sub
+                        if sub_p.is_file():
+                            return sub_p
+    except Exception:
+        pass
+    return None
+
+
 class PreviewCanvasWidget(QtWidgets.QWidget):
     """Real-time desktop canvas rendering a simulated Plasma shell and window."""
 
@@ -257,23 +326,48 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         self.aurorae_active = 0.85
         self.aurorae_inactive = 0.75
         self.variant = "graphite"
+        self.simulate_blur = True
 
-        # Load background wallpaper if present
         self.wallpaper_image: QtGui.QImage | None = None
+        self._cached_size: tuple[int, int] | None = None
+        self._cached_scaled_wallpaper: QtGui.QImage | None = None
+        self._cached_blurred_wallpaper: QtGui.QImage | None = None
+
         self._load_wallpaper()
 
+    def set_simulate_blur(self, enabled: bool) -> None:
+        self.simulate_blur = enabled
+        self.update()
+
     def _load_wallpaper(self) -> None:
+        active = detect_active_plasma_wallpaper()
+        if active and active.is_file():
+            img = QtGui.QImage(str(active))
+            if not img.isNull():
+                self.wallpaper_image = img
+                self._invalidate_cache()
+                return
+
         candidates = [
-            ROOT / "wallpapers/NoxForge/contents/images/1920x1080.png",
             ROOT / "wallpapers/NoxForge-Quiet/contents/images/1920x1080.png",
+            ROOT / "wallpapers/NoxForge/contents/images/1920x1080.png",
             ROOT / "wallpapers/NoxForge-Obsidian/contents/images/1920x1080.png",
+            Path.home() / ".local/share/wallpapers/NoxForge-Quiet/contents/images/1920x1080.png",
+            Path("/usr/share/wallpapers/NoxForge-Quiet/contents/images/1920x1080.png"),
+            Path("/usr/share/wallpapers/Next/contents/images/1920x1080.png"),
         ]
         for c in candidates:
             if c.is_file():
                 img = QtGui.QImage(str(c))
                 if not img.isNull():
                     self.wallpaper_image = img
-                    break
+                    self._invalidate_cache()
+                    return
+
+    def _invalidate_cache(self) -> None:
+        self._cached_size = None
+        self._cached_scaled_wallpaper = None
+        self._cached_blurred_wallpaper = None
 
     def update_values(
         self,
@@ -304,15 +398,33 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
 
         # 1. Background (Wallpaper or Atmospheric Gradient)
         if self.wallpaper_image and not self.wallpaper_image.isNull():
-            scaled = self.wallpaper_image.scaled(
-                w, h,
-                QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
-                QtCore.Qt.TransformationMode.SmoothTransformation
-            )
-            # Center crop
-            sx = max(0, (scaled.width() - w) // 2)
-            sy = max(0, (scaled.height() - h) // 2)
-            painter.drawImage(0, 0, scaled, sx, sy, w, h)
+            if self._cached_scaled_wallpaper is None or self._cached_size != (w, h):
+                scaled = self.wallpaper_image.scaled(
+                    w, h,
+                    QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+                self._cached_size = (w, h)
+                # Center crop to exact widget bounds
+                sx = max(0, (scaled.width() - w) // 2)
+                sy = max(0, (scaled.height() - h) // 2)
+                self._cached_scaled_wallpaper = scaled.copy(sx, sy, w, h)
+
+                # Create fast frosted blur on the exact same cropped canvas
+                blur_w = max(16, w // 8)
+                blur_h = max(16, h // 8)
+                small = self._cached_scaled_wallpaper.scaled(
+                    blur_w, blur_h,
+                    QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+                self._cached_blurred_wallpaper = small.scaled(
+                    w, h,
+                    QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+
+            painter.drawImage(0, 0, self._cached_scaled_wallpaper)
         else:
             grad = QtGui.QLinearGradient(0, 0, w, h)
             if self.variant == "obsidian":
@@ -331,6 +443,30 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         surf_rgb = (0, 0, 0) if self.variant == "obsidian" else (20, 30, 37)
         overlay_rgb = (10, 14, 17) if self.variant == "obsidian" else (34, 50, 59)
 
+        def draw_frosted_surface(rect: QtCore.QRect, surf_col: QtGui.QColor, radius: int = 0) -> None:
+            if (
+                self.simulate_blur
+                and self._cached_blurred_wallpaper is not None
+                and not self._cached_blurred_wallpaper.isNull()
+            ):
+                painter.save()
+                if radius > 0:
+                    path = QtGui.QPainterPath()
+                    path.addRoundedRect(QtCore.QRectF(rect), radius, radius)
+                    painter.setClipPath(path)
+                else:
+                    painter.setClipRect(rect)
+                painter.drawImage(0, 0, self._cached_blurred_wallpaper)
+                painter.restore()
+
+            if radius > 0:
+                painter.setBrush(surf_col)
+                painter.setPen(QtCore.Qt.PenStyle.NoPen)
+                painter.drawRoundedRect(rect, radius, radius)
+                painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+            else:
+                painter.fillRect(rect, surf_col)
+
         # 2. Window (Aurorae window decoration + client area)
         win_x = 24
         win_y = 28
@@ -341,7 +477,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             # Titlebar with Aurorae active opacity
             tb_h = 32
             titlebar_col = QtGui.QColor(*surf_rgb, int(self.aurorae_active * 255))
-            painter.fillRect(QtCore.QRect(win_x, win_y, win_w, tb_h), titlebar_col)
+            tb_rect = QtCore.QRect(win_x, win_y, win_w, tb_h)
+            draw_frosted_surface(tb_rect, titlebar_col)
 
             # Forge Notch (4px corner cut top-left)
             painter.fillRect(QtCore.QRect(win_x, win_y, 4, 1), QtGui.QColor("#4B606A"))
@@ -372,7 +509,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
 
             # Window Body (Client Area)
             body_col = QtGui.QColor(*surf_rgb, int(min(1.0, self.panel_opacity + 0.1) * 255))
-            painter.fillRect(QtCore.QRect(win_x, win_y + tb_h, win_w, win_h - tb_h), body_col)
+            body_rect = QtCore.QRect(win_x, win_y + tb_h, win_w, win_h - tb_h)
+            draw_frosted_surface(body_rect, body_col)
 
             # Inner subtle content preview
             painter.fillRect(QtCore.QRect(win_x + 12, win_y + tb_h + 12, 70, win_h - tb_h - 24), QtGui.QColor(16, 25, 31, 180))
@@ -396,7 +534,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         if popup_y > 40:
             popup_col = QtGui.QColor(*overlay_rgb, int(self.dialog_opacity * 255))
             popup_rect = QtCore.QRect(popup_x, popup_y, popup_w, popup_h)
-            painter.fillRect(popup_rect, popup_col)
+            draw_frosted_surface(popup_rect, popup_col)
 
             # Forge Notch on popup dialog (top-left)
             painter.fillRect(QtCore.QRect(popup_x, popup_y, 4, 1), QtGui.QColor("#4B606A"))
@@ -433,9 +571,10 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         tip_w = 126
         tip_h = 32
         tip_col = QtGui.QColor(*overlay_rgb, int(self.tooltip_opacity * 255))
-        painter.fillRect(QtCore.QRect(tip_x, tip_y, tip_w, tip_h), tip_col)
+        tip_rect = QtCore.QRect(tip_x, tip_y, tip_w, tip_h)
+        draw_frosted_surface(tip_rect, tip_col)
         painter.setPen(QtGui.QColor(75, 96, 106, 200))
-        painter.drawRect(QtCore.QRect(tip_x, tip_y, tip_w, tip_h))
+        painter.drawRect(tip_rect)
         painter.setPen(QtGui.QColor("#E8F0F2"))
         font.setPointSize(9)
         painter.setFont(font)
@@ -449,7 +588,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         panel_rect = QtCore.QRect(panel_x, panel_y, panel_w, panel_h)
 
         panel_col = QtGui.QColor(*surf_rgb, int(self.panel_opacity * 255))
-        painter.setBrush(panel_col)
+        draw_frosted_surface(panel_rect, panel_col, radius=6)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.setPen(QtGui.QColor(75, 96, 106, int(0.72 * 255)))
         painter.drawRoundedRect(panel_rect, 6, 6)
 
@@ -483,8 +623,8 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("NoxForge Depth & Opacity Configurator")
-        self.resize(860, 680)
-        self.setMinimumSize(780, 560)
+        self.resize(920, 680)
+        self.setMinimumSize(820, 540)
         self.setStyleSheet(STYLE_SHEET)
 
         mark_path = ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg"
@@ -501,18 +641,19 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         central = QtWidgets.QWidget(self)
         self.setCentralWidget(central)
         main_layout = QtWidgets.QHBoxLayout(central)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(16, 16, 16, 16)
+        main_layout.setSpacing(16)
 
-        # ----------------- Left Panel: Controls -----------------
-        left_widget = QtWidgets.QWidget()
-        left_layout = QtWidgets.QVBoxLayout(left_widget)
-        left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.setSpacing(14)
+        # ----------------- Left Panel: Controls with Scrolling -----------------
+        left_panel = QtWidgets.QWidget()
+        left_panel_layout = QtWidgets.QVBoxLayout(left_panel)
+        left_panel_layout.setContentsMargins(0, 0, 0, 0)
+        left_panel_layout.setSpacing(10)
 
-        # Header Title
+        # Fixed Header (Title + Re-check)
         title_box = QtWidgets.QHBoxLayout()
         header_vbox = QtWidgets.QVBoxLayout()
+        header_vbox.setSpacing(2)
         title_lbl = QtWidgets.QLabel("NOXFORGE // DEPTH & OPACITY")
         title_lbl.setStyleSheet("font-size: 16px; font-weight: 800; color: #A3FF47; letter-spacing: 1px;")
         sub_lbl = QtWidgets.QLabel("Surface Transparency Configurator - KDE Plasma 6")
@@ -527,7 +668,19 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.btn_refresh.clicked.connect(self._load_current_status)
         title_box.addWidget(self.btn_refresh)
 
-        left_layout.addLayout(title_box)
+        left_panel_layout.addLayout(title_box)
+
+        # Scrollable Configuration Controls
+        left_scroll = QtWidgets.QScrollArea()
+        left_scroll.setWidgetResizable(True)
+        left_scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        left_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        left_scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        scroll_content = QtWidgets.QWidget()
+        scroll_layout = QtWidgets.QVBoxLayout(scroll_content)
+        scroll_layout.setContentsMargins(0, 4, 8, 4)
+        scroll_layout.setSpacing(12)
 
         # Palette Variant Switcher
         var_group = QtWidgets.QGroupBox("Palette Target")
@@ -542,7 +695,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.radio_graphite.toggled.connect(self._on_variant_changed)
         self.radio_obsidian.toggled.connect(self._on_variant_changed)
         self.radio_all.toggled.connect(self._on_variant_changed)
-        left_layout.addWidget(var_group)
+        scroll_layout.addWidget(var_group)
 
         # Preset Profiles Group
         preset_group = QtWidgets.QGroupBox("Quick Presets")
@@ -555,21 +708,28 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             btn.clicked.connect(lambda checked=False, k=p_key: self._on_preset_clicked(k))
             preset_layout.addWidget(btn)
             self.preset_buttons[p_key] = btn
-        left_layout.addWidget(preset_group)
+        scroll_layout.addWidget(preset_group)
 
         # Fine-Tuning Sliders Group
         slider_group = QtWidgets.QGroupBox("Precision Sliders")
         slider_layout = QtWidgets.QVBoxLayout(slider_group)
-        slider_layout.setSpacing(10)
+        slider_layout.setSpacing(8)
 
-        # Helper to create a slider with percentage badge
-        def make_slider_row(label_text: str, default_val: int) -> tuple[QtWidgets.QSlider, QtWidgets.QLabel]:
-            row = QtWidgets.QHBoxLayout()
+        # Helper to create a slider with percentage badge inside a guaranteed-height container
+        def make_slider_row(
+            label_text: str, default_val: int, target_layout: QtWidgets.QLayout
+        ) -> tuple[QtWidgets.QSlider, QtWidgets.QLabel]:
+            row_w = QtWidgets.QWidget()
+            row_w.setMinimumHeight(28)
+            row = QtWidgets.QHBoxLayout(row_w)
+            row.setContentsMargins(0, 0, 0, 0)
+            row.setSpacing(8)
             lbl = QtWidgets.QLabel(label_text)
             lbl.setFixedWidth(130)
             slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
             slider.setRange(10, 100)
             slider.setValue(default_val)
+            slider.setMinimumHeight(24)
             val_lbl = QtWidgets.QLabel(f"{default_val}%")
             val_lbl.setFixedWidth(40)
             val_lbl.setStyleSheet("font-weight: 700; color: #A3FF47;")
@@ -578,13 +738,13 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             row.addWidget(lbl)
             row.addWidget(slider)
             row.addWidget(val_lbl)
-            slider_layout.addLayout(row)
+            target_layout.addWidget(row_w)
             return slider, val_lbl
 
-        self.slider_panel, self.val_panel = make_slider_row("Panel:", 78)
-        self.slider_dialog, self.val_dialog = make_slider_row("Dialogs & Menus:", 78)
-        self.slider_widget, self.val_widget = make_slider_row("Widgets & Popups:", 76)
-        self.slider_tooltip, self.val_tooltip = make_slider_row("Tooltips:", 88)
+        self.slider_panel, self.val_panel = make_slider_row("Panel:", 78, slider_layout)
+        self.slider_dialog, self.val_dialog = make_slider_row("Dialogs & Menus:", 78, slider_layout)
+        self.slider_widget, self.val_widget = make_slider_row("Widgets & Popups:", 76, slider_layout)
+        self.slider_tooltip, self.val_tooltip = make_slider_row("Tooltips:", 88, slider_layout)
 
         # Aurorae Window Decorations Checkbox & Sliders
         self.chk_aurorae = QtWidgets.QCheckBox("Enable Titlebar Transparency (Aurorae)")
@@ -594,10 +754,12 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
         self.aurorae_container = QtWidgets.QWidget()
         aur_layout = QtWidgets.QVBoxLayout(self.aurorae_container)
-        aur_layout.setContentsMargins(16, 0, 0, 0)
-        self.slider_aurorae_act, self.val_aurorae_act = make_slider_row("Active Titlebar:", 85)
-        self.slider_aurorae_inact, self.val_aurorae_inact = make_slider_row("Inactive Titlebar:", 75)
+        aur_layout.setContentsMargins(16, 2, 0, 2)
+        aur_layout.setSpacing(6)
+        self.slider_aurorae_act, self.val_aurorae_act = make_slider_row("Active Titlebar:", 85, aur_layout)
+        self.slider_aurorae_inact, self.val_aurorae_inact = make_slider_row("Inactive Titlebar:", 75, aur_layout)
         self.aurorae_container.setEnabled(False)
+        self.aurorae_container.setVisible(False)
         slider_layout.addWidget(self.aurorae_container)
 
         # Additional Options
@@ -611,27 +773,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         slider_layout.addWidget(self.chk_reload)
         slider_layout.addWidget(self.chk_dry_run)
 
-        left_layout.addWidget(slider_group)
-        left_layout.addStretch()
-
-        # Action Buttons (Bottom)
-        action_layout = QtWidgets.QHBoxLayout()
-        self.btn_reset = QtWidgets.QPushButton("Reset Defaults")
-        self.btn_reset.clicked.connect(self._on_reset_clicked)
-
-        self.btn_apply = QtWidgets.QPushButton("Apply Transparency")
-        self.btn_apply.setObjectName("applyButton")
-        self.btn_apply.clicked.connect(self._on_apply_clicked)
-
-        action_layout.addWidget(self.btn_reset)
-        action_layout.addStretch()
-        action_layout.addWidget(self.btn_apply)
-        left_layout.addLayout(action_layout)
-
-        # Status Message Label
-        self.status_lbl = QtWidgets.QLabel("")
-        self.status_lbl.setStyleSheet("font-size: 12px; color: #22D3EE; padding-top: 4px;")
-        left_layout.addWidget(self.status_lbl)
+        scroll_layout.addWidget(slider_group)
 
         # Blur Tips Banner
         blur_tip = QtWidgets.QFrame()
@@ -643,10 +785,45 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         btn_effects = QtWidgets.QPushButton("KDE Effects...")
         btn_effects.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
         btn_effects.clicked.connect(self._open_kde_effects)
+        btn_restart = QtWidgets.QPushButton("Restart Shell...")
+        btn_restart.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
+        btn_restart.setToolTip("Restart the Plasma desktop shell session safely")
+        btn_restart.clicked.connect(self._restart_plasma_shell)
         blur_layout.addWidget(tip_text)
         blur_layout.addStretch()
         blur_layout.addWidget(btn_effects)
-        left_layout.addWidget(blur_tip)
+        blur_layout.addWidget(btn_restart)
+        scroll_layout.addWidget(blur_tip)
+
+        scroll_layout.addStretch()
+        left_scroll.setWidget(scroll_content)
+        left_panel_layout.addWidget(left_scroll, 1)
+
+        # Action Buttons (Fixed Footer at Bottom)
+        footer_widget = QtWidgets.QWidget()
+        footer_layout = QtWidgets.QVBoxLayout(footer_widget)
+        footer_layout.setContentsMargins(0, 4, 0, 0)
+        footer_layout.setSpacing(6)
+
+        action_layout = QtWidgets.QHBoxLayout()
+        self.btn_reset = QtWidgets.QPushButton("Reset Defaults")
+        self.btn_reset.clicked.connect(self._on_reset_clicked)
+
+        self.btn_apply = QtWidgets.QPushButton("Apply Transparency")
+        self.btn_apply.setObjectName("applyButton")
+        self.btn_apply.clicked.connect(self._on_apply_clicked)
+
+        action_layout.addWidget(self.btn_reset)
+        action_layout.addStretch()
+        action_layout.addWidget(self.btn_apply)
+        footer_layout.addLayout(action_layout)
+
+        # Status Message Label
+        self.status_lbl = QtWidgets.QLabel("")
+        self.status_lbl.setStyleSheet("font-size: 12px; color: #22D3EE; min-height: 18px;")
+        footer_layout.addWidget(self.status_lbl)
+
+        left_panel_layout.addWidget(footer_widget)
 
         # ----------------- Right Panel: Live Preview -----------------
         right_widget = QtWidgets.QWidget()
@@ -654,25 +831,44 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(8)
 
+        self.preview_canvas = PreviewCanvasWidget(self)
+
         preview_header = QtWidgets.QHBoxLayout()
         preview_title = QtWidgets.QLabel("LIVE DESKTOP PREVIEW")
         preview_title.setStyleSheet("font-size: 12px; font-weight: 700; color: #A6B4B9; letter-spacing: 0.5px;")
-        self.preview_badge = QtWidgets.QLabel("78% Frost")
+
+        self.chk_simulate_blur = QtWidgets.QCheckBox("Simulate KWin Blur")
+        self.chk_simulate_blur.setStyleSheet("font-size: 11px; color: #A6B4B9;")
+        self.chk_simulate_blur.setChecked(True)
+        self.chk_simulate_blur.toggled.connect(self.preview_canvas.set_simulate_blur)
+
+        self.btn_refresh_wallpaper = QtWidgets.QPushButton("Reload BG")
+        self.btn_refresh_wallpaper.setStyleSheet("font-size: 11px; padding: 3px 8px; background-color: #141E25;")
+        self.btn_refresh_wallpaper.setToolTip("Reload active desktop wallpaper image")
+        self.btn_refresh_wallpaper.clicked.connect(self._on_reload_wallpaper)
+
+        self.preview_badge = QtWidgets.QLabel("78% Frost (Recommended)")
         self.preview_badge.setStyleSheet(
             "background-color: #1A2E20; color: #A3FF47; border: 1px solid #A3FF47; "
             "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
         )
         preview_header.addWidget(preview_title)
         preview_header.addStretch()
+        preview_header.addWidget(self.chk_simulate_blur)
+        preview_header.addWidget(self.btn_refresh_wallpaper)
         preview_header.addWidget(self.preview_badge)
         right_layout.addLayout(preview_header)
-
-        self.preview_canvas = PreviewCanvasWidget(self)
         right_layout.addWidget(self.preview_canvas)
 
         # Assemble Panels
-        main_layout.addWidget(left_widget, 1)
+        main_layout.addWidget(left_panel, 1)
         main_layout.addWidget(right_widget, 1)
+
+        # Global Shortcuts
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"), self, self._on_apply_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self, self._on_apply_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+R"), self, self._on_reset_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Escape"), self, self.close)
 
     def _load_current_status(self) -> None:
         """Query installed themes and sync slider values."""
@@ -704,6 +900,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def _on_aurorae_toggled(self, checked: bool) -> None:
         self.aurorae_container.setEnabled(checked)
+        self.aurorae_container.setVisible(checked)
         self._sync_preview()
 
     def _on_preset_clicked(self, preset_name: str) -> None:
@@ -763,14 +960,77 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         a_act = (self.slider_aurorae_act.value() / 100.0) if self.chk_aurorae.isChecked() else 1.0
         a_inact = (self.slider_aurorae_inact.value() / 100.0) if self.chk_aurorae.isChecked() else 0.9
 
-        self.preview_badge.setText(f"{self.slider_panel.value()}% Opacity")
+        # Identify if current settings match a preset exactly
+        matched_preset = None
+        for p_key, p_vals in PRESETS.items():
+            if (
+                self.slider_panel.value() == int(round(p_vals["panel"] * 100))
+                and self.slider_dialog.value() == int(round(p_vals["dialog"] * 100))
+                and self.slider_widget.value() == int(round(p_vals["widget"] * 100))
+                and self.slider_tooltip.value() == int(round(p_vals["tooltip"] * 100))
+            ):
+                matched_preset = p_key
+                break
+
+        if matched_preset == "frost":
+            self.preview_badge.setText("78% Frost (Recommended)")
+            self.preview_badge.setStyleSheet(
+                "background-color: #1A2E20; color: #A3FF47; border: 1px solid #A3FF47; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+        elif matched_preset:
+            self.preview_badge.setText(f"{self.slider_panel.value()}% {matched_preset.capitalize()}")
+            self.preview_badge.setStyleSheet(
+                "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+        else:
+            self.preview_badge.setText(f"Custom ({self.slider_panel.value()}%)")
+            self.preview_badge.setStyleSheet(
+                "background-color: #262016; color: #F59E0B; border: 1px solid #F59E0B; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+
         self.preview_canvas.update_values(p_op, d_op, w_op, t_op, a_act, a_inact, variant)
 
     def _on_reset_clicked(self) -> None:
         self._on_preset_clicked("original")
         self.status_lbl.setText("Reset sliders to original factory defaults.")
 
+    def _on_reload_wallpaper(self) -> None:
+        self.preview_canvas._load_wallpaper()
+        self.preview_canvas.update()
+        self.status_lbl.setText("Reloaded desktop background wallpaper.")
+
+    def _restart_plasma_shell(self) -> None:
+        reply = QtWidgets.QMessageBox.question(
+            self,
+            "Restart Plasma Shell",
+            "This will clear the theme cache and restart the Plasma shell session in-place. Proceed?",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+            QtWidgets.QMessageBox.StandardButton.No,
+        )
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
+            import subprocess
+            try:
+                clear_cache_and_reload()
+                subprocess.Popen(["systemctl", "--user", "restart", "plasma-plasmashell"])
+                self.status_lbl.setText("Plasma Shell restart command dispatched.")
+            except Exception as exc:
+                self.status_lbl.setText(f"Could not restart shell: {exc}")
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        if self.worker and self.worker.isRunning():
+            self.status_lbl.setText("Waiting for pending theme write to complete...")
+            self.worker.wait(5000)
+            if self.worker.isRunning():
+                event.ignore()
+                return
+        event.accept()
+
     def _on_apply_clicked(self) -> None:
+        if self.worker and self.worker.isRunning():
+            return
         recipe = OpacityRecipe(
             panel=self.slider_panel.value() / 100.0,
             dialog=self.slider_dialog.value() / 100.0,
