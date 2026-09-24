@@ -1,3 +1,12 @@
+# NoxForge 13.0.2 — Opacity Configurator Stabilization & System Coherence
+
+- eliminated deprecated `org.kde.PlasmaShell.refreshCurrentShell` D-Bus call preventing SIGSEGV crashes on theme reload in Plasma 6 / Qt 6;
+- distinguished user opacity overrides from duplicate conflicts in `noxforge-doctor` (`[info: duplicate-customized]`), keeping edition status `ok`;
+- added robust SVG attribute injection fallback and complete opacity token parsing (including percentages and scientific notation);
+- added active desktop wallpaper sampling with `XDG_CONFIG_HOME` resolution and percent-encoded URL decoding;
+- improved 60fps simulated frosted glass blur with center-cropped wallpaper geometry alignment and painter brush state cleanup;
+- added High-DPI display scaling protection with `QScrollArea`, guaranteed slider heights, and cooperative thread termination safety.
+
 # NoxForge 13.0.1 — Opacity & Transparency Configurator
 
 - added `noxforge-opacity` CLI utility and Qt 6 GUI configurator for customizing panel, popup, and Aurorae window decoration transparency levels;

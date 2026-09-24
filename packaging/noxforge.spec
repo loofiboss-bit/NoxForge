@@ -1,4 +1,4 @@
-%global upstream_version 13.0.1
+%global upstream_version 13.0.2
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        13.0.1
+Version:        13.0.2
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -91,6 +91,9 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Thu Sep 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.2-1
+- Opacity configurator stabilization, active wallpaper sampling, and doctor coherence
+
 * Thu Sep 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.1-1
 - Add noxforge-opacity transparency configurator and Qt 6 GUI
 

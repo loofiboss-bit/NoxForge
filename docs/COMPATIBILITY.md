@@ -53,7 +53,7 @@ all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
 The v13 release is available from the
-[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.0).
+[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.2).
 Its exact-tag automated gate passed. The machine-readable `qualification.json`
 still contains inherited v12 counters; use the
 [v13 qualification status](evidence/v13/automated-gate.md) for verified

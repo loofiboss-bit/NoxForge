@@ -1,8 +1,9 @@
 # Quick start and rollback
 
-NoxForge 13.0.0 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
+NoxForge 13.0.2 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
 Wayland. Graphite and Obsidian variants cover the Plasma Style, Global Theme,
-Aurorae decoration, native Qt style, wallpapers, and editor themes. Choose the
+Aurorae decoration, native Qt style, wallpapers, and editor themes. It also includes
+the `noxforge-opacity` transparency configurator with a real-time Qt 6 GUI. Choose the
 edition that matches your installation boundary.
 
 ## Fedora complete-system edition
@@ -29,7 +30,7 @@ of the five wallpapers explicitly in System Settings.
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-13.0.0-portable.tar.xz
+tar -xJf noxforge-13.0.2-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user
