@@ -716,6 +716,58 @@ def content_digest(marker: Path, *, single_file: bool = False) -> str | None:
     return digest.hexdigest()
 
 
+def is_opacity_customized_copy(matches: list[Path]) -> bool:
+    """Check if effective user copy is an opacity customization of a shadowed package copy."""
+    if len(matches) < 2:
+        return False
+    user_match = matches[0]
+    sys_match = matches[1]
+
+    user_ver = metadata_version(user_match)
+    sys_ver = metadata_version(sys_match)
+    if not user_ver or user_ver != sys_ver:
+        return False
+
+    user_base = user_match.parent
+    sys_base = sys_match.parent
+    if not user_base.is_dir() or not sys_base.is_dir():
+        return False
+
+    try:
+        user_files = {p.relative_to(user_base): p for p in user_base.rglob("*") if p.is_file() and not p.name.startswith(".")}
+        sys_files = {p.relative_to(sys_base): p for p in sys_base.rglob("*") if p.is_file() and not p.name.startswith(".")}
+    except OSError:
+        return False
+
+    if set(user_files.keys()) != set(sys_files.keys()):
+        return False
+
+    def norm_svg(text: str) -> str:
+        return re.sub(r'\b(?:fill|stroke)-opacity="[^"]*"', '', text)
+
+    for rel_path in user_files:
+        p_user = user_files[rel_path]
+        p_sys = sys_files[rel_path]
+        try:
+            bytes_user = p_user.read_bytes()
+            bytes_sys = p_sys.read_bytes()
+        except OSError:
+            return False
+
+        if bytes_user != bytes_sys:
+            if rel_path.suffix.lower() != ".svg":
+                return False
+            try:
+                text_user = p_user.read_text(encoding="utf-8", errors="ignore")
+                text_sys = p_sys.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                return False
+            if norm_svg(text_user) != norm_svg(text_sys):
+                return False
+
+    return True
+
+
 def display_path(path: Path, root: Path) -> str:
     if root == Path("/"):
         user_root = data_roots(root)[0]
@@ -773,7 +825,14 @@ def build_report(root: Path) -> dict[str, Any]:
         ]
         duplicate = "none"
         if len(matches) > 1:
-            duplicate = "unknown" if None in digests else ("identical" if len(set(digests)) == 1 else "conflict")
+            if None in digests:
+                duplicate = "unknown"
+            elif len(set(digests)) == 1:
+                duplicate = "identical"
+            elif is_opacity_customized_copy(matches):
+                duplicate = "customized"
+            else:
+                duplicate = "conflict"
         components[name] = {
             "paths": [display_path(match, root) for match in matches],
             "effectivePath": display_path(matches[0], root) if matches else None,
@@ -858,9 +917,14 @@ def build_report(root: Path) -> dict[str, Any]:
     for name, state in components.items():
         duplicate = state["duplicateStatus"]
         if duplicate != "none" and duplicate != "not-applicable":
-            issues.append({"code": "duplicate-" + duplicate, "component": name,
-                           "severity": "error" if duplicate == "conflict" else "warning",
-                           "message": f"{name}: {duplicate} copies; first discovered path has precedence. Review shadowed paths manually."})
+            if duplicate == "customized":
+                issues.append({"code": "duplicate-customized", "component": name,
+                               "severity": "info",
+                               "message": f"{name}: user customized copy (opacity); first discovered path has precedence."})
+            else:
+                issues.append({"code": "duplicate-" + duplicate, "component": name,
+                               "severity": "error" if duplicate == "conflict" else "warning",
+                               "message": f"{name}: {duplicate} copies; first discovered path has precedence. Review shadowed paths manually."})
         if state["found"] and state["metadataStatus"] == "unknown":
             issues.append({"code": "metadata-unknown", "component": name, "severity": "info",
                            "message": f"{name}: component version metadata is unavailable."})
@@ -1010,14 +1074,14 @@ def remediation_plan(report: dict[str, Any]) -> str:
         lines.append(f"#   kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__{THEME_ID}")
         lines.append(f"#   kwriteconfig6 --file ksplashrc --group KSplash --key Theme {THEME_ID}")
         lines.append("")
-    if not missing and not shadowed and report.get("status") == "ok":
-        lines.append("# Core desktop components are clean.")
-        return "\n".join(lines) + "\n"
     if shadowed:
         lines.append("# Shadowed component copies detected in user data:")
         for name in shadowed:
             lines.append(f"# Note: user copy of '{name}' takes precedence over system package.")
         lines.append("")
+    if not missing and report.get("status") == "ok":
+        lines.append("# Core desktop components are clean.")
+        return "\n".join(lines) + "\n"
     if kind == "complete-system":
         lines.append("# Recommended system package remediation:")
         lines.append("if command -v dnf &>/dev/null; then")

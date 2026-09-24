@@ -67,6 +67,23 @@ class DoctorV10Tests(unittest.TestCase):
             self.assertEqual(report['components']['plasma-style']['duplicateStatus'], 'conflict')
             self.assertTrue(any(issue['code'] == 'duplicate-conflict' for issue in report['issues']))
 
+    def test_opacity_customized_copies_are_recognized_as_customized(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage_complete(root)
+            source = root / f'usr/share/plasma/desktoptheme/{THEME_ID}'
+            target = root / f'usr/local/share/plasma/desktoptheme/{THEME_ID}'
+            shutil.copytree(source, target)
+            panel_orig = '<svg><rect class="ColorScheme-Background" fill-opacity="0.98"/></svg>'
+            panel_custom = '<svg><rect class="ColorScheme-Background" fill-opacity="0.78"/></svg>'
+            write(source / 'widgets/panel-background.svg', panel_orig)
+            write(target / 'widgets/panel-background.svg', panel_custom)
+            report = doctor['build_report'](root)
+            component = report['components']['plasma-style']
+            self.assertEqual(report['status'], 'ok')
+            self.assertEqual(component['duplicateStatus'], 'customized')
+            self.assertTrue(any(issue['code'] == 'duplicate-customized' for issue in report['issues']))
+
     def test_shared_syntax_directories_hash_standalone_theme_files(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

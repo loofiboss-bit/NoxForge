@@ -299,8 +299,14 @@ def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
 
 def ensure_user_copy(target_path: Path, system_source: Path, dry_run: bool = False) -> bool:
     """Ensure a writable user-local copy exists if only system package is present."""
-    if target_path.exists():
+    has_meta = (target_path / "metadata.json").is_file() or (target_path / "metadata.desktop").is_file()
+    if target_path.is_dir() and has_meta:
         return True
+
+    if target_path.exists():
+        if not dry_run:
+            shutil.rmtree(target_path, ignore_errors=True)
+
     if system_source.is_dir():
         if dry_run:
             print(f"[dry-run] Would copy system theme {system_source} -> {target_path}")
@@ -413,6 +419,26 @@ def apply_opacity(
                 modified_files.append(f"{dst_file} ({role_name}: {round(target_op * 100)}%)")
 
         if not dry_run and target_dir.is_dir():
+            receipt = {
+                "tool": "noxforge-opacity",
+                "version": VERSION,
+                "variant": variant_name,
+                "recipe": {
+                    "panel": recipe.panel,
+                    "dialog": recipe.dialog,
+                    "widget": recipe.widget,
+                    "tooltip": recipe.tooltip,
+                    "aurorae_active": recipe.aurorae_active,
+                    "aurorae_inactive": recipe.aurorae_inactive,
+                },
+            }
+            try:
+                (target_dir / ".noxforge-customization.json").write_text(
+                    json.dumps(receipt, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+            except OSError:
+                pass
             for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop"):
                 if meta_file.is_file():
                     try:
@@ -446,6 +472,22 @@ def apply_opacity(
                         f"{dst_dec} (aurorae titlebar: {round(recipe.aurorae_active * 100)}% / {round(recipe.aurorae_inactive * 100)}%)"
                     )
             if not dry_run and target_dir.is_dir():
+                receipt = {
+                    "tool": "noxforge-opacity",
+                    "version": VERSION,
+                    "variant": variant_name,
+                    "recipe": {
+                        "aurorae_active": recipe.aurorae_active,
+                        "aurorae_inactive": recipe.aurorae_inactive,
+                    },
+                }
+                try:
+                    (target_dir / ".noxforge-customization.json").write_text(
+                        json.dumps(receipt, indent=2) + "\n",
+                        encoding="utf-8",
+                    )
+                except OSError:
+                    pass
                 for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop", target_dir / "themerc"):
                     if meta_file.is_file():
                         try:
@@ -457,11 +499,38 @@ def apply_opacity(
 
 
 def clear_cache_and_reload(dry_run: bool = False) -> list[str]:
-    """Clear Plasma SVG render cache and signal running shell to refresh."""
+    """Clear Plasma SVG render cache and signal running shell to refresh safely."""
     actions: list[str] = []
     cache_dir = get_xdg_cache_home()
 
-    # Plasma SVG caches
+    # Detect current Plasma theme
+    kreadconfig_bin = shutil.which("kreadconfig6") or shutil.which("kreadconfig5")
+    plasma_apply_bin = shutil.which("plasma-apply-desktoptheme")
+    current_theme = ""
+    if kreadconfig_bin:
+        try:
+            res = subprocess.run(
+                [kreadconfig_bin, "--file", "plasmarc", "--group", "Theme", "--key", "name"],
+                capture_output=True,
+                text=True,
+                timeout=2,
+            )
+            if res.returncode == 0:
+                current_theme = res.stdout.strip()
+        except (subprocess.SubprocessError, OSError):
+            pass
+
+    # If current theme is a NoxForge theme and plasma-apply-desktoptheme is available,
+    # temporarily switch to default theme before clearing cache so open kcache files are safely released
+    switched_for_reload = False
+    if plasma_apply_bin and current_theme in (GRAPHITE_THEME_ID, OBSIDIAN_THEME_ID) and not dry_run:
+        try:
+            subprocess.run([plasma_apply_bin, "default"], capture_output=True, timeout=3)
+            switched_for_reload = True
+        except (subprocess.SubprocessError, OSError):
+            pass
+
+    # Clear Plasma SVG caches
     if cache_dir.is_dir():
         for pattern in ("plasma_theme_*.kcache", "plasma-svgelements-*", "plasma_svgelements*"):
             for match in cache_dir.glob(pattern):
@@ -477,22 +546,18 @@ def clear_cache_and_reload(dry_run: bool = False) -> list[str]:
                     except OSError:
                         pass
 
-    # Notify Plasma Shell and KWin via qdbus if available
-    qdbus_bin = shutil.which("qdbus-qt6") or shutil.which("qdbus")
-    if qdbus_bin and not dry_run:
+    # Switch back to the NoxForge theme to re-render fresh SVGs cleanly
+    if switched_for_reload and plasma_apply_bin and not dry_run:
         try:
-            # Refresh plasma shell
-            subprocess.run(
-                [qdbus_bin, "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.refreshCurrentShell"],
-                capture_output=True,
-                timeout=2,
-            )
-            actions.append("Notified Plasma Shell to refresh theme")
+            subprocess.run([plasma_apply_bin, current_theme], capture_output=True, timeout=3)
+            actions.append(f"Refreshed Plasma theme: {current_theme}")
         except (subprocess.SubprocessError, OSError):
             pass
 
+    # Notify KWin via qdbus if available (safe decoration refresh)
+    qdbus_bin = shutil.which("qdbus-qt6") or shutil.which("qdbus")
+    if qdbus_bin and not dry_run:
         try:
-            # Reconfigure KWin
             subprocess.run(
                 [qdbus_bin, "org.kde.KWin", "/KWin", "reconfigure"],
                 capture_output=True,
@@ -861,7 +926,7 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  • {a}")
         if not args.dry_run and modified:
             print(colorize("\nTip: If panels or popups do not reflect changes immediately, run:", "36"))
-            print("  rm -rf ~/.cache/plasma* && systemctl --user restart plasma-plasmashell")
+            print("  systemctl --user restart plasma-plasmashell.service")
         print()
 
     return 0
