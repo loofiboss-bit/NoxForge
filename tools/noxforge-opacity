@@ -194,17 +194,44 @@ def discover_aurorae_dirs(custom_aurorae_dir: Path | None = None, theme_filter: 
     return results
 
 
+def _format_opacity(val: float) -> str:
+    """Format opacity cleanly to avoid IEEE 754 precision noise."""
+    rounded = round(val, 3)
+    return f"{rounded:g}"
+
+
+def _inject_or_replace_opacity(tag: str, new_val_str: str) -> tuple[str, bool]:
+    """Replace existing fill-opacity or inject it cleanly into tag attributes."""
+    # Check if style attribute contains fill-opacity
+    if 'style="' in tag and 'fill-opacity:' in tag:
+        new_tag, n = re.subn(r'fill-opacity:\s*[0-9.]+', f'fill-opacity:{new_val_str}', tag)
+        if n > 0:
+            return new_tag, True
+    # Check if direct fill-opacity attribute exists
+    if re.search(r'\bfill-opacity="[0-9.]*"', tag):
+        new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{new_val_str}"', tag)
+        if n > 0:
+            return new_tag, True
+    # Otherwise inject fill-opacity attribute before closing tag
+    if tag.endswith("/>"):
+        return f'{tag[:-2]} fill-opacity="{new_val_str}"/>', True
+    elif tag.endswith(">"):
+        return f'{tag[:-1]} fill-opacity="{new_val_str}">', True
+    return tag, False
+
+
 def replace_svg_opacity(content: str, new_opacity: float) -> tuple[str, int]:
     """Replace fill-opacity on background shapes (ColorScheme-Background & NoxForge-Overlay)."""
     count = 0
+    val_str = _format_opacity(new_opacity)
 
     def repl(m: re.Match[str]) -> str:
         nonlocal count
         tag = m.group(0)
         if 'class="ColorScheme-Background"' in tag or 'class="NoxForge-Overlay"' in tag:
-            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{new_opacity:g}"', tag)
-            if n > 0:
-                count += n
+            new_tag, ok = _inject_or_replace_opacity(tag, val_str)
+            if ok:
+                count += 1
                 return new_tag
         return tag
 
@@ -215,19 +242,21 @@ def replace_svg_opacity(content: str, new_opacity: float) -> tuple[str, int]:
 def replace_aurorae_opacity(content: str, active_opacity: float, inactive_opacity: float) -> tuple[str, int]:
     """Replace fill-opacity on Aurorae window decoration frames."""
     count = 0
+    act_str = _format_opacity(active_opacity)
+    inact_str = _format_opacity(inactive_opacity)
 
     def repl(m: re.Match[str]) -> str:
         nonlocal count
         tag = m.group(0)
         if 'class="ColorScheme-Raised"' in tag:
-            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{active_opacity:g}"', tag)
-            if n > 0:
-                count += n
+            new_tag, ok = _inject_or_replace_opacity(tag, act_str)
+            if ok:
+                count += 1
                 return new_tag
         elif 'class="ColorScheme-Sunken"' in tag:
-            new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{inactive_opacity:g}"', tag)
-            if n > 0:
-                count += n
+            new_tag, ok = _inject_or_replace_opacity(tag, inact_str)
+            if ok:
+                count += 1
                 return new_tag
         return tag
 
@@ -243,6 +272,9 @@ def extract_svg_opacity(content: str) -> float | None:
             op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
             if op_m:
                 return float(op_m.group(1))
+            style_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag)
+            if style_m:
+                return float(style_m.group(1))
     return None
 
 
@@ -253,11 +285,11 @@ def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
     for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
         tag = m.group(0)
         if active_op is None and 'class="ColorScheme-Raised"' in tag:
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag) or re.search(r'fill-opacity:\s*([0-9.]+)', tag)
             if op_m:
                 active_op = float(op_m.group(1))
         elif inactive_op is None and 'class="ColorScheme-Sunken"' in tag:
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag) or re.search(r'fill-opacity:\s*([0-9.]+)', tag)
             if op_m:
                 inactive_op = float(op_m.group(1))
         if active_op is not None and inactive_op is not None:
@@ -380,6 +412,14 @@ def apply_opacity(
                     dst_file.write_text(new_content, encoding="utf-8", newline="\n")
                 modified_files.append(f"{dst_file} ({role_name}: {round(target_op * 100)}%)")
 
+        if not dry_run and target_dir.is_dir():
+            for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop"):
+                if meta_file.is_file():
+                    try:
+                        meta_file.touch()
+                    except OSError:
+                        pass
+
     if include_aurorae:
         aurorae_dirs = discover_aurorae_dirs(custom_aurorae_dir, theme_filter)
         user_aurorae = get_xdg_data_home() / "aurorae/themes"
@@ -405,6 +445,13 @@ def apply_opacity(
                     modified_files.append(
                         f"{dst_dec} (aurorae titlebar: {round(recipe.aurorae_active * 100)}% / {round(recipe.aurorae_inactive * 100)}%)"
                     )
+            if not dry_run and target_dir.is_dir():
+                for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop", target_dir / "themerc"):
+                    if meta_file.is_file():
+                        try:
+                            meta_file.touch()
+                        except OSError:
+                            pass
 
     return modified_files
 
@@ -727,6 +774,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             gui_candidates = [
                 Path(__file__).resolve().parent / "opacity_gui.py",
+                get_xdg_data_home() / "noxforge/bin/opacity_gui.py",
                 Path(sys.prefix) / "share/noxforge/opacity_gui.py",
                 Path.home() / ".local/share/noxforge/bin/opacity_gui.py",
                 Path("/usr/share/noxforge/opacity_gui.py"),

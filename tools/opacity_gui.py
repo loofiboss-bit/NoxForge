@@ -242,6 +242,36 @@ class ApplyWorker(QtCore.QThread):
             self.error.emit(str(exc))
 
 
+def detect_active_plasma_wallpaper() -> Path | None:
+    """Detect the active Plasma desktop wallpaper from KDE configuration."""
+    config_path = Path.home() / ".config/plasma-org.kde.plasma.desktop-appletsrc"
+    if not config_path.is_file():
+        return None
+    try:
+        text = config_path.read_text(encoding="utf-8", errors="replace")
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("Image="):
+                val = line.split("=", 1)[1].strip()
+                if val.startswith("file://"):
+                    val = val[7:]
+                p = Path(val)
+                if p.is_file():
+                    return p
+                if p.is_dir():
+                    for sub in (
+                        "contents/images/1920x1080.png",
+                        "contents/images/1920x1080.jpg",
+                        "contents/images/2560x1440.png",
+                    ):
+                        sub_p = p / sub
+                        if sub_p.is_file():
+                            return sub_p
+    except Exception:
+        pass
+    return None
+
+
 class PreviewCanvasWidget(QtWidgets.QWidget):
     """Real-time desktop canvas rendering a simulated Plasma shell and window."""
 
@@ -257,23 +287,48 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         self.aurorae_active = 0.85
         self.aurorae_inactive = 0.75
         self.variant = "graphite"
+        self.simulate_blur = True
 
-        # Load background wallpaper if present
         self.wallpaper_image: QtGui.QImage | None = None
+        self._cached_size: tuple[int, int] | None = None
+        self._cached_scaled_wallpaper: QtGui.QImage | None = None
+        self._cached_blurred_wallpaper: QtGui.QImage | None = None
+
         self._load_wallpaper()
 
+    def set_simulate_blur(self, enabled: bool) -> None:
+        self.simulate_blur = enabled
+        self.update()
+
     def _load_wallpaper(self) -> None:
+        active = detect_active_plasma_wallpaper()
+        if active and active.is_file():
+            img = QtGui.QImage(str(active))
+            if not img.isNull():
+                self.wallpaper_image = img
+                self._invalidate_cache()
+                return
+
         candidates = [
-            ROOT / "wallpapers/NoxForge/contents/images/1920x1080.png",
             ROOT / "wallpapers/NoxForge-Quiet/contents/images/1920x1080.png",
+            ROOT / "wallpapers/NoxForge/contents/images/1920x1080.png",
             ROOT / "wallpapers/NoxForge-Obsidian/contents/images/1920x1080.png",
+            Path.home() / ".local/share/wallpapers/NoxForge-Quiet/contents/images/1920x1080.png",
+            Path("/usr/share/wallpapers/NoxForge-Quiet/contents/images/1920x1080.png"),
+            Path("/usr/share/wallpapers/Next/contents/images/1920x1080.png"),
         ]
         for c in candidates:
             if c.is_file():
                 img = QtGui.QImage(str(c))
                 if not img.isNull():
                     self.wallpaper_image = img
-                    break
+                    self._invalidate_cache()
+                    return
+
+    def _invalidate_cache(self) -> None:
+        self._cached_size = None
+        self._cached_scaled_wallpaper = None
+        self._cached_blurred_wallpaper = None
 
     def update_values(
         self,
@@ -304,15 +359,31 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
 
         # 1. Background (Wallpaper or Atmospheric Gradient)
         if self.wallpaper_image and not self.wallpaper_image.isNull():
-            scaled = self.wallpaper_image.scaled(
-                w, h,
-                QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
-                QtCore.Qt.TransformationMode.SmoothTransformation
-            )
+            if self._cached_scaled_wallpaper is None or self._cached_size != (w, h):
+                self._cached_scaled_wallpaper = self.wallpaper_image.scaled(
+                    w, h,
+                    QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+                self._cached_size = (w, h)
+                # Create fast frosted blur
+                blur_w = max(16, w // 8)
+                blur_h = max(16, h // 8)
+                small = self._cached_scaled_wallpaper.scaled(
+                    blur_w, blur_h,
+                    QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+                self._cached_blurred_wallpaper = small.scaled(
+                    w, h,
+                    QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                    QtCore.Qt.TransformationMode.SmoothTransformation
+                )
+
             # Center crop
-            sx = max(0, (scaled.width() - w) // 2)
-            sy = max(0, (scaled.height() - h) // 2)
-            painter.drawImage(0, 0, scaled, sx, sy, w, h)
+            sx = max(0, (self._cached_scaled_wallpaper.width() - w) // 2)
+            sy = max(0, (self._cached_scaled_wallpaper.height() - h) // 2)
+            painter.drawImage(0, 0, self._cached_scaled_wallpaper, sx, sy, w, h)
         else:
             grad = QtGui.QLinearGradient(0, 0, w, h)
             if self.variant == "obsidian":
@@ -331,6 +402,31 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         surf_rgb = (0, 0, 0) if self.variant == "obsidian" else (20, 30, 37)
         overlay_rgb = (10, 14, 17) if self.variant == "obsidian" else (34, 50, 59)
 
+        def draw_frosted_surface(rect: QtCore.QRect, surf_col: QtGui.QColor, radius: int = 0) -> None:
+            if (
+                self.simulate_blur
+                and self._cached_blurred_wallpaper is not None
+                and not self._cached_blurred_wallpaper.isNull()
+            ):
+                painter.save()
+                if radius > 0:
+                    path = QtGui.QPainterPath()
+                    path.addRoundedRect(QtCore.QRectF(rect), radius, radius)
+                    painter.setClipPath(path)
+                else:
+                    painter.setClipRect(rect)
+                bsx = max(0, (self._cached_blurred_wallpaper.width() - w) // 2)
+                bsy = max(0, (self._cached_blurred_wallpaper.height() - h) // 2)
+                painter.drawImage(0, 0, self._cached_blurred_wallpaper, bsx, bsy, w, h)
+                painter.restore()
+
+            if radius > 0:
+                painter.setBrush(surf_col)
+                painter.setPen(QtCore.Qt.PenStyle.NoPen)
+                painter.drawRoundedRect(rect, radius, radius)
+            else:
+                painter.fillRect(rect, surf_col)
+
         # 2. Window (Aurorae window decoration + client area)
         win_x = 24
         win_y = 28
@@ -341,7 +437,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             # Titlebar with Aurorae active opacity
             tb_h = 32
             titlebar_col = QtGui.QColor(*surf_rgb, int(self.aurorae_active * 255))
-            painter.fillRect(QtCore.QRect(win_x, win_y, win_w, tb_h), titlebar_col)
+            tb_rect = QtCore.QRect(win_x, win_y, win_w, tb_h)
+            draw_frosted_surface(tb_rect, titlebar_col)
 
             # Forge Notch (4px corner cut top-left)
             painter.fillRect(QtCore.QRect(win_x, win_y, 4, 1), QtGui.QColor("#4B606A"))
@@ -372,7 +469,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
 
             # Window Body (Client Area)
             body_col = QtGui.QColor(*surf_rgb, int(min(1.0, self.panel_opacity + 0.1) * 255))
-            painter.fillRect(QtCore.QRect(win_x, win_y + tb_h, win_w, win_h - tb_h), body_col)
+            body_rect = QtCore.QRect(win_x, win_y + tb_h, win_w, win_h - tb_h)
+            draw_frosted_surface(body_rect, body_col)
 
             # Inner subtle content preview
             painter.fillRect(QtCore.QRect(win_x + 12, win_y + tb_h + 12, 70, win_h - tb_h - 24), QtGui.QColor(16, 25, 31, 180))
@@ -396,7 +494,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         if popup_y > 40:
             popup_col = QtGui.QColor(*overlay_rgb, int(self.dialog_opacity * 255))
             popup_rect = QtCore.QRect(popup_x, popup_y, popup_w, popup_h)
-            painter.fillRect(popup_rect, popup_col)
+            draw_frosted_surface(popup_rect, popup_col)
 
             # Forge Notch on popup dialog (top-left)
             painter.fillRect(QtCore.QRect(popup_x, popup_y, 4, 1), QtGui.QColor("#4B606A"))
@@ -433,9 +531,10 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         tip_w = 126
         tip_h = 32
         tip_col = QtGui.QColor(*overlay_rgb, int(self.tooltip_opacity * 255))
-        painter.fillRect(QtCore.QRect(tip_x, tip_y, tip_w, tip_h), tip_col)
+        tip_rect = QtCore.QRect(tip_x, tip_y, tip_w, tip_h)
+        draw_frosted_surface(tip_rect, tip_col)
         painter.setPen(QtGui.QColor(75, 96, 106, 200))
-        painter.drawRect(QtCore.QRect(tip_x, tip_y, tip_w, tip_h))
+        painter.drawRect(tip_rect)
         painter.setPen(QtGui.QColor("#E8F0F2"))
         font.setPointSize(9)
         painter.setFont(font)
@@ -449,7 +548,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         panel_rect = QtCore.QRect(panel_x, panel_y, panel_w, panel_h)
 
         panel_col = QtGui.QColor(*surf_rgb, int(self.panel_opacity * 255))
-        painter.setBrush(panel_col)
+        draw_frosted_surface(panel_rect, panel_col, radius=6)
         painter.setPen(QtGui.QColor(75, 96, 106, int(0.72 * 255)))
         painter.drawRoundedRect(panel_rect, 6, 6)
 
@@ -643,9 +742,14 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         btn_effects = QtWidgets.QPushButton("KDE Effects...")
         btn_effects.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
         btn_effects.clicked.connect(self._open_kde_effects)
+        btn_restart = QtWidgets.QPushButton("Restart Shell...")
+        btn_restart.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
+        btn_restart.setToolTip("Restart the Plasma desktop shell session safely")
+        btn_restart.clicked.connect(self._restart_plasma_shell)
         blur_layout.addWidget(tip_text)
         blur_layout.addStretch()
         blur_layout.addWidget(btn_effects)
+        blur_layout.addWidget(btn_restart)
         left_layout.addWidget(blur_tip)
 
         # ----------------- Right Panel: Live Preview -----------------
@@ -654,25 +758,44 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(8)
 
+        self.preview_canvas = PreviewCanvasWidget(self)
+
         preview_header = QtWidgets.QHBoxLayout()
         preview_title = QtWidgets.QLabel("LIVE DESKTOP PREVIEW")
         preview_title.setStyleSheet("font-size: 12px; font-weight: 700; color: #A6B4B9; letter-spacing: 0.5px;")
-        self.preview_badge = QtWidgets.QLabel("78% Frost")
+
+        self.chk_simulate_blur = QtWidgets.QCheckBox("Simulate KWin Blur")
+        self.chk_simulate_blur.setStyleSheet("font-size: 11px; color: #A6B4B9;")
+        self.chk_simulate_blur.setChecked(True)
+        self.chk_simulate_blur.toggled.connect(self.preview_canvas.set_simulate_blur)
+
+        self.btn_refresh_wallpaper = QtWidgets.QPushButton("Reload BG")
+        self.btn_refresh_wallpaper.setStyleSheet("font-size: 11px; padding: 3px 8px; background-color: #141E25;")
+        self.btn_refresh_wallpaper.setToolTip("Reload active desktop wallpaper image")
+        self.btn_refresh_wallpaper.clicked.connect(self._on_reload_wallpaper)
+
+        self.preview_badge = QtWidgets.QLabel("78% Frost (Recommended)")
         self.preview_badge.setStyleSheet(
             "background-color: #1A2E20; color: #A3FF47; border: 1px solid #A3FF47; "
             "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
         )
         preview_header.addWidget(preview_title)
         preview_header.addStretch()
+        preview_header.addWidget(self.chk_simulate_blur)
+        preview_header.addWidget(self.btn_refresh_wallpaper)
         preview_header.addWidget(self.preview_badge)
         right_layout.addLayout(preview_header)
-
-        self.preview_canvas = PreviewCanvasWidget(self)
         right_layout.addWidget(self.preview_canvas)
 
         # Assemble Panels
         main_layout.addWidget(left_widget, 1)
         main_layout.addWidget(right_widget, 1)
+
+        # Global Shortcuts
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"), self, self._on_apply_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self, self._on_apply_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+R"), self, self._on_reset_clicked)
+        QtGui.QShortcut(QtGui.QKeySequence("Escape"), self, self.close)
 
     def _load_current_status(self) -> None:
         """Query installed themes and sync slider values."""
@@ -763,12 +886,72 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         a_act = (self.slider_aurorae_act.value() / 100.0) if self.chk_aurorae.isChecked() else 1.0
         a_inact = (self.slider_aurorae_inact.value() / 100.0) if self.chk_aurorae.isChecked() else 0.9
 
-        self.preview_badge.setText(f"{self.slider_panel.value()}% Opacity")
+        # Identify if current settings match a preset exactly
+        matched_preset = None
+        for p_key, p_vals in PRESETS.items():
+            if (
+                self.slider_panel.value() == int(round(p_vals["panel"] * 100))
+                and self.slider_dialog.value() == int(round(p_vals["dialog"] * 100))
+                and self.slider_widget.value() == int(round(p_vals["widget"] * 100))
+                and self.slider_tooltip.value() == int(round(p_vals["tooltip"] * 100))
+            ):
+                matched_preset = p_key
+                break
+
+        if matched_preset == "frost":
+            self.preview_badge.setText("78% Frost (Recommended)")
+            self.preview_badge.setStyleSheet(
+                "background-color: #1A2E20; color: #A3FF47; border: 1px solid #A3FF47; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+        elif matched_preset:
+            self.preview_badge.setText(f"{self.slider_panel.value()}% {matched_preset.capitalize()}")
+            self.preview_badge.setStyleSheet(
+                "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+        else:
+            self.preview_badge.setText(f"Custom ({self.slider_panel.value()}%)")
+            self.preview_badge.setStyleSheet(
+                "background-color: #262016; color: #F59E0B; border: 1px solid #F59E0B; "
+                "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
+            )
+
         self.preview_canvas.update_values(p_op, d_op, w_op, t_op, a_act, a_inact, variant)
 
     def _on_reset_clicked(self) -> None:
         self._on_preset_clicked("original")
         self.status_lbl.setText("Reset sliders to original factory defaults.")
+
+    def _on_reload_wallpaper(self) -> None:
+        self.preview_canvas._load_wallpaper()
+        self.preview_canvas.update()
+        self.status_lbl.setText("Reloaded desktop background wallpaper.")
+
+    def _restart_plasma_shell(self) -> None:
+        reply = QtWidgets.QMessageBox.question(
+            self,
+            "Restart Plasma Shell",
+            "This will clear the theme cache and restart the Plasma shell session in-place. Proceed?",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+            QtWidgets.QMessageBox.StandardButton.No,
+        )
+        if reply == QtWidgets.QMessageBox.StandardButton.Yes:
+            import subprocess
+            try:
+                clear_cache_and_reload()
+                subprocess.Popen(["systemctl", "--user", "restart", "plasma-plasmashell"])
+                self.status_lbl.setText("Plasma Shell restart command dispatched.")
+            except Exception as exc:
+                self.status_lbl.setText(f"Could not restart shell: {exc}")
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        if self.worker and self.worker.isRunning():
+            self.worker.wait(2000)
+            if self.worker.isRunning():
+                self.worker.terminate()
+                self.worker.wait(500)
+        event.accept()
 
     def _on_apply_clicked(self) -> None:
         recipe = OpacityRecipe(

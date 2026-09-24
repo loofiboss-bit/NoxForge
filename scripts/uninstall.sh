@@ -56,6 +56,8 @@ else
         "${data_home}/wallpapers/NoxForge-Obsidian-Ultrawide"
         "${data_home}/noxforge/terminals"
         "${data_home}/noxforge/editors"
+        "${data_home}/noxforge/bin/noxforge-opacity"
+        "${data_home}/noxforge/bin/opacity_gui.py"
     )
 fi
 

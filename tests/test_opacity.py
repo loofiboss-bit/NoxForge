@@ -196,6 +196,47 @@ class TestNoxForgeOpacity(unittest.TestCase):
         self.assertEqual(pix.width(), 400)
         self.assertEqual(pix.height(), 500)
 
+        # Test blur toggle
+        win.chk_simulate_blur.setChecked(False)
+        self.assertFalse(preview.simulate_blur)
+        preview.render(pix)
+        win.chk_simulate_blur.setChecked(True)
+        self.assertTrue(preview.simulate_blur)
+        preview.render(pix)
+
+        # Test closeEvent
+        close_event = QtGui.QCloseEvent()
+        win.closeEvent(close_event)
+        self.assertTrue(close_event.isAccepted())
+
+    def test_svg_opacity_injection_when_missing(self) -> None:
+        """Verify fill-opacity is cleanly injected into elements that lack it."""
+        sample_svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg">\n'
+            '  <rect class="ColorScheme-Background" fill="currentColor" width="10" height="10"/>\n'
+            '  <path class="NoxForge-Overlay" d="M0 0h10v10H0z" fill="#000000"/>\n'
+            '</svg>'
+        )
+        self.assertIsNone(noxforge_opacity.extract_svg_opacity(sample_svg))
+        modified, count = noxforge_opacity.replace_svg_opacity(sample_svg, 0.78)
+        self.assertEqual(count, 2)
+        self.assertIn('fill-opacity="0.78"', modified)
+        self.assertEqual(noxforge_opacity.extract_svg_opacity(modified), 0.78)
+
+    def test_aurorae_opacity_injection_when_missing(self) -> None:
+        """Verify fill-opacity is injected into Aurorae frames lacking fill-opacity."""
+        sample_svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg">\n'
+            '  <rect id="active-bg" class="ColorScheme-Raised" fill="currentColor"/>\n'
+            '  <rect id="inactive-bg" class="ColorScheme-Sunken" fill="currentColor"/>\n'
+            '</svg>'
+        )
+        modified, count = noxforge_opacity.replace_aurorae_opacity(sample_svg, 0.85, 0.75)
+        self.assertEqual(count, 2)
+        act, inact = noxforge_opacity.extract_aurorae_opacity(modified)
+        self.assertEqual(act, 0.85)
+        self.assertEqual(inact, 0.75)
+
 
 if __name__ == "__main__":
     unittest.main()
