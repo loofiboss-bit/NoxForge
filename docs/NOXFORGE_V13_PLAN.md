@@ -1,7 +1,8 @@
 # NoxForge 13.0.0 — True Obsidian OLED Parity & Dual-Stack Architecture
 
-This plan is the active implementation authority for the NoxForge version 13
-cycle. It builds upon the immutable 12.0.1 release and extends the NoxForge visual
+This plan records the NoxForge version 13 release scope and implementation
+sequence, published as `v13.0.0`. It builds upon the immutable 12.0.1 release
+and extends the NoxForge visual
 and precision contract across the entire Linux desktop ecosystem by elevating the
 Obsidian palette into a fully synchronized, first-class twin to standard Graphite.
 

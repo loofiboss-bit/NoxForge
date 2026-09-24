@@ -5,8 +5,9 @@
 is `/usr/bin/noxforge-doctor`.
 
 Use `--json` for automation and `--root /absolute/staged/root` for an isolated
-package tree or a portable data root. JSON schema 5 retains the top-level
-`loginSurface` and `edition` objects. `loginSurface` contains:
+package tree or a portable data root. JSON schema 6 includes the top-level
+`loginSurface`, `edition`, and `paletteSynchronization` objects.
+`loginSurface` contains:
 
 - `manager`: `plasmalogin`, `sddm`, `other`, or `not-detected`;
 - `serviceState`: `active`, `inactive`, `unknown`, or `not-applicable`;
@@ -30,16 +31,26 @@ The doctor never applies a theme, writes KDE or login-manager configuration,
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 5 diagnostics
+## Schema 6 diagnostics
 
-Schema 5 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
-Kate/KWrite syntax themes, and the packaged terminal/editor assets. The
+Schema 6 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
+Kate/KWrite syntax themes, packaged terminal/editor assets, and the v13
+Obsidian Plasma Style, Aurorae, wallpapers, SDDM theme, Neovim, and Helix
+themes. The
 `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
 have a read-only `xdg-data/themes` override. The doctor also reports
 fractional scaling factors when the inspected root provides them. The
 `--remediation-plan` option emits non-destructive shell guidance and preserves
 the report's status-derived exit code; it never claims that a suggested action
 was executed.
+
+`paletteSynchronization.status` is `synchronized`, `desynchronized`, or
+`not-active`. Its `targets` object reports detected variants for active color
+scheme, Plasma Style, Aurorae, splash, and wallpaper surfaces. A
+`palette-desynchronization` issue is a warning to review those selections.
+The remediation plan can print suggested commands for either palette, but it
+does not change settings. The native Qt plugin is discovered as an installed
+component; filesystem discovery does not prove which plugin Qt loaded.
 
 Each component exposes ordered `paths`, `effectivePath`, `shadowedPaths`,
 `copyVersions`, `metadataStatus`, and `duplicateStatus`. Data components use

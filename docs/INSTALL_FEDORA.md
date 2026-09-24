@@ -1,11 +1,11 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 12.0.1 is a scriptlet-free Fedora 44 package for the complete-system
-journey. It provides the native Qt style, system doctor, GTK 3/4 themes,
-syntax/editor/terminal assets, and all system theme components. Fedora 44 uses
-Plasma Login Manager (PLM) by default. NoxForge
-provides NoxForge Quiet as the recommended standard PLM wallpaper and retains
-its SDDM theme only as an explicitly selectable compatibility component.
+NoxForge 13.0.0 is a scriptlet-free Fedora 44 package for the complete-system
+journey. It provides the palette-adaptive native Qt style, system doctor, GTK
+3/4 themes, syntax/editor/terminal assets, both Obsidian and Graphite Plasma
+components, and both SDDM theme variants. Fedora 44 uses Plasma Login Manager
+(PLM) by default. NoxForge Quiet is the recommended standard PLM wallpaper;
+NoxForge does not ship a custom PLM greeter or write PLM configuration.
 
 Use the Fedora 44 COPR repository `loofitheboss/noxforge`. Verify the installed
 version with `rpm -q noxforge`; repository metadata may need refreshing after
@@ -28,8 +28,8 @@ deliberately chosen it.
 ## Build from the distributed source archive
 
 ```bash
-tar -xJf noxforge-12.0.1-source.tar.xz
-cd NoxForge-12.0.1
+tar -xJf noxforge-13.0.0-source.tar.xz
+cd NoxForge-13.0.0
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 DESTDIR="$PWD/stage" cmake --install build

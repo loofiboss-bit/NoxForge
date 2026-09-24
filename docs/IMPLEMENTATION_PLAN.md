@@ -1,19 +1,19 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The active authority is
+This file is the canonical scope and release-gate index. The v13 release contract is
 [`NOXFORGE_V13_PLAN.md`](NOXFORGE_V13_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
-## Active release scope
+## Current release scope
 
 NoxForge 13.0.0 True Obsidian OLED Parity & Dual-Stack Architecture expands the
-12.0.1 baseline with complete Obsidian Plasma Style, dedicated Obsidian Global
-Theme, Obsidian Aurorae window decoration, dynamic Qt 6 C++ style adaptation,
-Obsidian wallpapers, Neovim and Helix editor themes, Tokens Schema 9 dual-palette
-authority, and Doctor Schema 6 palette synchronization diagnostics. Implement
-phases sequentially according to that plan. Host installation and active desktop
-mutation remain outside the scope. Unavailable physical checks remain `pending`
-or `blocked`.
+12.0.1 baseline with a complete Obsidian Plasma Style, dedicated Obsidian Global
+Theme and Aurorae decoration, adaptive Qt 6 style, Obsidian wallpapers, Neovim
+and Helix themes, Tokens Schema 9 dual-palette authority, and Doctor Schema 6
+palette synchronization diagnostics. The v13 plan records the scope and
+implementation sequence for the published `v13.0.0` release. Host installation
+and active desktop mutation remain outside the scope. Unavailable physical and
+runtime checks remain `pending` or `blocked`; see the [v13 qualification status](evidence/v13/automated-gate.md).
 
 ## Historical release evidence
 

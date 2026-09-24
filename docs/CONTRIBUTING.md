@@ -1,7 +1,8 @@
 # Contributing to NoxForge
 
-NoxForge 12.0 targets Fedora KDE 44, Arch Plasma/KWin 6.7+, Qt 6.11 and Wayland,
-with GTK, syntax, editor, and terminal parity assets.
+NoxForge 13.0 targets Fedora KDE 44, Arch Plasma/KWin 6.7+, Qt 6.11 and Wayland,
+with Graphite and Obsidian desktop surfaces plus GTK, syntax, editor, and
+terminal parity assets.
 Keep changes focused, preserve the Forge Identity design authority in `DESIGN.md`, and
 do not copy artwork from another theme.
 
@@ -37,6 +38,6 @@ The release gate never applies NoxForge, changes KDE settings, restarts Plasma,
 or publishes artifacts. Live desktop checks belong in an isolated Fedora KDE
 test session and must follow `docs/MANUAL_TESTING.md`.
 
-V12 Arch runtime qualification remains pending. Record exact Qt, Plasma, KWin,
-OS and session versions with each test result; historical V11 evidence does not
-qualify the V12 candidate.
+V13 Arch build/live qualification and pacman lifecycle remain pending. Record
+exact Qt, Plasma, KWin, OS and session versions with each test result;
+historical V12 evidence does not qualify V13.

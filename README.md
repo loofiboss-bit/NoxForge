@@ -1,13 +1,15 @@
-# NoxForge Ecosystem & App Parity
+# NoxForge True Obsidian OLED Parity & Dual-Stack Architecture
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, exact electric-lime state markers, restrained detail, and a compact
-Forge Notch. Version 12.0.0 targets Fedora 44 and Arch Plasma/KWin 6.7+ and
-Qt 6.11 on Wayland, extending the system with GTK 3/4 themes, KDE syntax
-themes, VS Code/Cursor themes, and matching Ghostty, Alacritty, Kitty, and
-Foot terminal configurations. Doctor schema 5 reports the complete ecosystem
-in read-only mode. Physical qualification remains pending; see [the evidence
-record](docs/evidence/v12/qualification.json).
+Forge Notch. Version 13.0.0 targets Fedora 44 and Arch Plasma/KWin 6.7+ with
+Qt 6.11 on Wayland. It brings the Obsidian OLED palette to a dedicated Plasma
+Style and Global Theme, Aurorae decoration, and the adaptive native Qt style.
+The ecosystem also includes GTK 3/4, KDE syntax, VS Code/Cursor, Neovim,
+Helix, Ghostty, Alacritty, Kitty, and Foot themes. Doctor schema 6 reports
+components and palette synchronization in read-only mode. See the [v13
+qualification status](docs/evidence/v13/automated-gate.md); physical and Arch
+runtime checks remain pending.
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -18,9 +20,9 @@ in [media/manifest.json](media/manifest.json).
 
 | Journey | What it includes | Boundary |
 | --- | --- | --- |
-| Store/component | Independently selectable KDE packages | User-local; no native Qt style, login-manager integration, or root |
+| Store/component | Independently selectable KDE packages, including Graphite and Obsidian variants | User-local; no native Qt style, login-manager integration, or root |
 | Portable | All user-local components, Breeze controls, installer, uninstaller, doctor | No login-manager integration, native plugin, or active-settings write |
-| Complete system | Portable content plus native Qt style and system doctor | PLM wallpaper asset on Fedora; SDDM compatibility theme remains selectable |
+| Complete system | Portable content plus adaptive native Qt style and system doctor | PLM wallpaper asset on Fedora; Graphite and Obsidian SDDM themes remain selectable |
 
 Start with [Quick start](docs/QUICKSTART.md), or read the dedicated
 [portable](docs/INSTALL_PORTABLE.md), [Fedora](docs/INSTALL_FEDORA.md), and
@@ -38,26 +40,33 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
 Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
-recommended login wallpaper; NoxForge does not ship or claim a custom PLM QML
-greeter and never writes the active PLM configuration. The SDDM theme remains
-available for upgraded Fedora installations and the planned Arch journey.
+recommended PLM wallpaper; NoxForge does not ship or claim a custom PLM QML
+greeter and never writes the active PLM configuration. Graphite and Obsidian
+SDDM themes are optional compatibility components and are never selected
+automatically.
 
 These images carry explicit capture provenance in the media manifest. They are not a substitute for pending physical input,
 cursor, audio, PAM/login, power, and live-session gates.
 
 ## Components
 
-- Global Theme and Plasma Style with KDE-correct package roots;
+- Graphite and Obsidian Global Themes, Plasma Styles, and Aurorae decorations
+  with KDE-correct package roots;
 - NoxForge Dark and Obsidian colors, matching Konsole themes, Aurorae decoration,
   KWin switcher, icons, cursors, and sounds;
 - GTK 3 and GTK 4 themes, Kate/KWrite syntax themes, and VS Code/Cursor editor
   themes in standard and Obsidian palettes;
 - Ghostty, Alacritty, Kitty, and Foot configurations for both terminal palettes;
-- three selectable wallpapers: **NoxForge Forge** (`NoxForge`), **NoxForge Quiet**
-  (`NoxForge-Quiet`), and **NoxForge Ultrawide** (`NoxForge-Ultrawide`);
-- a native Qt 6 style, PLM wallpaper asset, and optional SDDM compatibility
-  theme in the complete system edition;
-- read-only edition-aware diagnostics and deterministic checksums.
+- five selectable wallpapers: **NoxForge Forge** (`NoxForge`), **NoxForge
+  Quiet** (`NoxForge-Quiet`), **NoxForge Ultrawide** (`NoxForge-Ultrawide`),
+  **NoxForge Obsidian** (`NoxForge-Obsidian`), and **NoxForge Obsidian
+  Ultrawide** (`NoxForge-Obsidian-Ultrawide`);
+- a native Qt 6 style that adapts to the active NoxForge palette, PLM wallpaper
+  asset, and optional Graphite and Obsidian SDDM themes in the complete system
+  edition;
+- Neovim and Helix themes in both palettes;
+- read-only edition-aware diagnostics, palette synchronization reporting, and
+  deterministic checksums.
 
 Store descriptions state that components install separately and that the Global
 Theme archive is not a complete one-click transaction. Store and portable
@@ -72,8 +81,9 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The active scope is [NOXFORGE_V12_PLAN.md](docs/NOXFORGE_V12_PLAN.md), indexed by
-[IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the phase gate with:
+The v13 release scope is recorded in
+[NOXFORGE_V13_PLAN.md](docs/NOXFORGE_V13_PLAN.md), indexed by
+[IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash
 mkdir -p build/baseline-source
