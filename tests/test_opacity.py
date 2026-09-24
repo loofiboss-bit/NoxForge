@@ -244,6 +244,22 @@ class TestNoxForgeOpacity(unittest.TestCase):
         )
         self.assertEqual(noxforge_opacity.extract_svg_opacity(sample_svg), 0.65)
 
+    def test_opacity_percentage_and_exponent_handling(self) -> None:
+        """Verify percentages and exponents are parsed cleanly and replaced in full."""
+        pct_svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect class="ColorScheme-Background" style="fill-opacity:50%"/></svg>'
+        self.assertAlmostEqual(noxforge_opacity.extract_svg_opacity(pct_svg), 0.5)
+        replaced, count = noxforge_opacity.replace_svg_opacity(pct_svg, 0.78)
+        self.assertEqual(count, 1)
+        self.assertIn('style="fill-opacity:0.78"', replaced)
+        self.assertNotIn('%', replaced)
+
+        exp_svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect class="ColorScheme-Background" fill-opacity="1e-1"/></svg>'
+        self.assertAlmostEqual(noxforge_opacity.extract_svg_opacity(exp_svg), 0.1)
+        replaced_exp, count = noxforge_opacity.replace_svg_opacity(exp_svg, 0.85)
+        self.assertEqual(count, 1)
+        self.assertIn('fill-opacity="0.85"', replaced_exp)
+        self.assertNotIn('1e-1', replaced_exp)
+
     def test_detect_wallpaper_url_decoding(self) -> None:
         """Verify detect_active_plasma_wallpaper handles XDG_CONFIG_HOME and percent-encoded URLs."""
         if not HAVE_PYSIDE6:

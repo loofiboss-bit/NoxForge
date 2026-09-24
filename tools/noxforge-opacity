@@ -200,16 +200,27 @@ def _format_opacity(val: float) -> str:
     return f"{rounded:g}"
 
 
+def _parse_opacity(val: str) -> float | None:
+    """Safely parse opacity float from decimal, scientific notation, or percentage."""
+    val = val.strip()
+    try:
+        if val.endswith("%"):
+            return float(val[:-1].strip()) / 100.0
+        return float(val)
+    except ValueError:
+        return None
+
+
 def _inject_or_replace_opacity(tag: str, new_val_str: str) -> tuple[str, bool]:
     """Replace existing fill-opacity or inject it cleanly into tag attributes."""
     # Check if style attribute contains fill-opacity
     if 'style="' in tag and 'fill-opacity:' in tag:
-        new_tag, n = re.subn(r'fill-opacity:\s*[0-9.]+', f'fill-opacity:{new_val_str}', tag)
+        new_tag, n = re.subn(r'fill-opacity:\s*[^;"]+', f'fill-opacity:{new_val_str}', tag)
         if n > 0:
             return new_tag, True
     # Check if direct fill-opacity attribute exists
-    if re.search(r'\bfill-opacity="[0-9.]*"', tag):
-        new_tag, n = re.subn(r'fill-opacity="[0-9.]*"', f'fill-opacity="{new_val_str}"', tag)
+    if re.search(r'\bfill-opacity="[^"]*"', tag):
+        new_tag, n = re.subn(r'\bfill-opacity="[^"]*"', f'fill-opacity="{new_val_str}"', tag)
         if n > 0:
             return new_tag, True
     # Otherwise inject fill-opacity attribute before closing tag
@@ -269,12 +280,16 @@ def extract_svg_opacity(content: str) -> float | None:
     for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
         tag = m.group(0)
         if 'class="ColorScheme-Background"' in tag or 'class="NoxForge-Overlay"' in tag:
-            style_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag)
+            style_m = re.search(r'fill-opacity:\s*([^;"]+)', tag)
             if style_m:
-                return float(style_m.group(1))
-            op_m = re.search(r'fill-opacity="([0-9.]+)"', tag)
+                val = _parse_opacity(style_m.group(1))
+                if val is not None:
+                    return val
+            op_m = re.search(r'\bfill-opacity="([^"]*)"', tag)
             if op_m:
-                return float(op_m.group(1))
+                val = _parse_opacity(op_m.group(1))
+                if val is not None:
+                    return val
     return None
 
 
@@ -285,13 +300,17 @@ def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
     for m in re.finditer(r'<(?:path|rect)\b[^>]+>', content):
         tag = m.group(0)
         if active_op is None and 'class="ColorScheme-Raised"' in tag:
-            op_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag) or re.search(r'fill-opacity="([0-9.]+)"', tag)
-            if op_m:
-                active_op = float(op_m.group(1))
+            style_m = re.search(r'fill-opacity:\s*([^;"]+)', tag)
+            op_m = re.search(r'\bfill-opacity="([^"]*)"', tag)
+            raw = style_m.group(1) if style_m else (op_m.group(1) if op_m else None)
+            if raw is not None:
+                active_op = _parse_opacity(raw)
         elif inactive_op is None and 'class="ColorScheme-Sunken"' in tag:
-            op_m = re.search(r'fill-opacity:\s*([0-9.]+)', tag) or re.search(r'fill-opacity="([0-9.]+)"', tag)
-            if op_m:
-                inactive_op = float(op_m.group(1))
+            style_m = re.search(r'fill-opacity:\s*([^;"]+)', tag)
+            op_m = re.search(r'\bfill-opacity="([^"]*)"', tag)
+            raw = style_m.group(1) if style_m else (op_m.group(1) if op_m else None)
+            if raw is not None:
+                inactive_op = _parse_opacity(raw)
         if active_op is not None and inactive_op is not None:
             break
     return active_op, inactive_op
