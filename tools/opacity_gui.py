@@ -30,11 +30,22 @@ else:
             get_status,
         )
     except ImportError:
-        # Fallback to local import if run from tools directory
+        # Fallback to local import if run from tools or system data directory
         import importlib.machinery
         import importlib.util
+        import shutil
 
-        tool_path = Path(__file__).resolve().parent / "noxforge-opacity"
+        tool_candidates = [
+            Path(__file__).resolve().parent / "noxforge-opacity",
+            Path(__file__).resolve().parent.parent / "tools/noxforge-opacity",
+            Path(shutil.which("noxforge-opacity") or "/usr/bin/noxforge-opacity"),
+            Path.home() / ".local/bin/noxforge-opacity",
+            Path("/usr/bin/noxforge-opacity"),
+        ]
+        tool_path = next((p for p in tool_candidates if p.is_file()), None)
+        if not tool_path:
+            raise FileNotFoundError("Could not find noxforge-opacity executable")
+
         loader = importlib.machinery.SourceFileLoader("noxforge_opacity", str(tool_path))
         spec = importlib.util.spec_from_loader("noxforge_opacity", loader)
         assert spec and spec.loader
@@ -627,8 +638,13 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(820, 540)
         self.setStyleSheet(STYLE_SHEET)
 
-        mark_path = ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg"
-        if mark_path.is_file():
+        mark_candidates = [
+            ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",
+            Path("/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg"),
+            Path.home() / ".local/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",
+        ]
+        mark_path = next((p for p in mark_candidates if p.is_file()), None)
+        if mark_path:
             self.setWindowIcon(QtGui.QIcon(str(mark_path)))
 
         self.worker: ApplyWorker | None = None

@@ -11,6 +11,8 @@ import importlib.machinery
 import importlib.util
 import json
 import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -18,11 +20,23 @@ from typing import Any
 from PySide6 import QtCore, QtGui, QtWidgets
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+SCRIPT_DIR = Path(__file__).resolve().parent
+for p in (str(SCRIPT_DIR), str(ROOT)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 # Load noxforge-ctl module
-ctl_path = ROOT / "tools/noxforge-ctl"
+ctl_candidates = [
+    ROOT / "tools/noxforge-ctl",
+    SCRIPT_DIR / "noxforge-ctl",
+    Path(shutil.which("noxforge-ctl") or "/usr/bin/noxforge-ctl"),
+    Path.home() / ".local/bin/noxforge-ctl",
+    Path("/usr/bin/noxforge-ctl"),
+]
+ctl_path = next((p for p in ctl_candidates if p.is_file()), None)
+if not ctl_path:
+    raise FileNotFoundError("Could not find noxforge-ctl executable")
+
 loader_ctl = importlib.machinery.SourceFileLoader("noxforge_ctl", str(ctl_path))
 spec_ctl = importlib.util.spec_from_loader("noxforge_ctl", loader_ctl)
 assert spec_ctl and spec_ctl.loader
@@ -30,7 +44,26 @@ noxforge_ctl = importlib.util.module_from_spec(spec_ctl)
 spec_ctl.loader.exec_module(noxforge_ctl)
 
 # Load opacity_gui module
-from tools import opacity_gui
+try:
+    from tools import opacity_gui
+except ImportError:
+    try:
+        import opacity_gui
+    except ImportError:
+        opacity_candidates = [
+            ROOT / "tools/opacity_gui.py",
+            SCRIPT_DIR / "opacity_gui.py",
+            Path("/usr/share/noxforge/opacity_gui.py"),
+            Path.home() / ".local/share/noxforge/opacity_gui.py",
+        ]
+        opacity_path = next((p for p in opacity_candidates if p.is_file()), None)
+        if not opacity_path:
+            raise FileNotFoundError("Could not find opacity_gui.py")
+        loader_op = importlib.machinery.SourceFileLoader("opacity_gui", str(opacity_path))
+        spec_op = importlib.util.spec_from_loader("opacity_gui", loader_op)
+        assert spec_op and spec_op.loader
+        opacity_gui = importlib.util.module_from_spec(spec_op)
+        spec_op.loader.exec_module(opacity_gui)
 
 STYLE_SHEET = opacity_gui.STYLE_SHEET + """
 QTabWidget::pane {
@@ -205,7 +238,17 @@ class HealthTab(QtWidgets.QWidget):
         self.run_doctor()
 
     def run_doctor(self) -> None:
-        tool_doctor = ROOT / "tools/noxforge-doctor"
+        doctor_candidates = [
+            ROOT / "tools/noxforge-doctor",
+            SCRIPT_DIR / "noxforge-doctor",
+            Path(shutil.which("noxforge-doctor") or "/usr/bin/noxforge-doctor"),
+            Path.home() / ".local/bin/noxforge-doctor",
+            Path("/usr/bin/noxforge-doctor"),
+        ]
+        tool_doctor = next((p for p in doctor_candidates if p.is_file()), None)
+        if not tool_doctor:
+            self.info_text.setPlainText("Kunde inte hitta noxforge-doctor verktyget.")
+            return
         try:
             res = subprocess.run([sys.executable, str(tool_doctor), "--json"], capture_output=True, text=True, check=False)
             data = json.loads(res.stdout)
@@ -261,7 +304,7 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.tabs.addTab(self.tab_profile, "Profil & Accent")
 
         # Tab 2: Opacity & Depth Configurator
-        self.opacity_window = opacity_gui.MainWindow()
+        self.opacity_window = opacity_gui.OpacityConfiguratorWindow()
         # Embed opacity central widget into tab
         opacity_inner = self.opacity_window.centralWidget()
         self.tabs.addTab(opacity_inner, "Transparens & Djup")

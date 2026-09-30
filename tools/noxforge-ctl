@@ -357,21 +357,48 @@ def main() -> int:
         return 0
 
     if args.command == "opacity":
-        tool_opacity = ROOT / "tools/noxforge-opacity"
+        candidates = [
+            ROOT / "tools/noxforge-opacity",
+            Path(shutil.which("noxforge-opacity") or "/usr/bin/noxforge-opacity"),
+            Path("/usr/bin/noxforge-opacity"),
+            Path.home() / ".local/bin/noxforge-opacity",
+        ]
+        tool_opacity = next((p for p in candidates if p.is_file()), None)
+        if not tool_opacity:
+            print("Error: noxforge-opacity executable not found", file=sys.stderr)
+            return 1
         sub_args = args.opacity_args or []
         res = subprocess.run([sys.executable, str(tool_opacity)] + sub_args)
         return res.returncode
 
     if args.command == "doctor":
-        tool_doctor = ROOT / "tools/noxforge-doctor"
+        candidates = [
+            ROOT / "tools/noxforge-doctor",
+            Path(shutil.which("noxforge-doctor") or "/usr/bin/noxforge-doctor"),
+            Path("/usr/bin/noxforge-doctor"),
+            Path.home() / ".local/bin/noxforge-doctor",
+        ]
+        tool_doctor = next((p for p in candidates if p.is_file()), None)
+        if not tool_doctor:
+            print("Error: noxforge-doctor executable not found", file=sys.stderr)
+            return 1
         sub_args = args.doctor_args or []
         res = subprocess.run([sys.executable, str(tool_doctor)] + sub_args)
         return res.returncode
 
     if args.command == "gui":
-        gui_script = ROOT / "tools/control_center.py"
-        if not gui_script.is_file():
-            gui_script = ROOT / "tools/opacity_gui.py"
+        gui_candidates = [
+            ROOT / "tools/control_center.py",
+            Path("/usr/share/noxforge/control_center.py"),
+            Path.home() / ".local/share/noxforge/control_center.py",
+            Path(__file__).resolve().parent / "control_center.py",
+            ROOT / "tools/opacity_gui.py",
+            Path("/usr/share/noxforge/opacity_gui.py"),
+        ]
+        gui_script = next((p for p in gui_candidates if p.is_file()), None)
+        if not gui_script:
+            print("Error: NoxForge Control Center GUI script not found", file=sys.stderr)
+            return 1
         os.execv(sys.executable, [sys.executable, str(gui_script)])
 
     return 0
