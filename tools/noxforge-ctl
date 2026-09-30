@@ -44,6 +44,15 @@ def get_kde_config_dir() -> Path:
 
 
 def read_kconfig(file_name: str, group: str, key: str, fallback: str = "") -> str:
+    reader = shutil.which("kreadconfig6") or shutil.which("kreadconfig5") or shutil.which("kreadconfig")
+    if reader:
+        try:
+            res = subprocess.run([reader, "--file", file_name, "--group", group, "--key", key], capture_output=True, text=True, check=False)
+            val = res.stdout.strip()
+            if val:
+                return val
+        except Exception:
+            pass
     path = get_kde_config_dir() / file_name
     if not path.is_file():
         return fallback
