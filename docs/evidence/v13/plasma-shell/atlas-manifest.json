@@ -179,7 +179,7 @@
     {
       "path": "widgets/switch.svg",
       "recipe": "disabled",
-      "sha256": "a83be9f048c768f0d6ec685b4f83acf484f424ba69aa0e1542f88c1198a93b1c"
+      "sha256": "fe8c930bc9cef180c1aa7021f504d9b6ac27867d567a1c83a49b430144d6f274"
     },
     {
       "path": "widgets/tabbar.svg",
