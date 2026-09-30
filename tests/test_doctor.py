@@ -55,6 +55,14 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
         "noxforge/editors/neovim/colors/noxforge_obsidian.lua",
         "noxforge/editors/helix/themes/noxforge.toml",
         "noxforge/editors/helix/themes/noxforge_obsidian.toml",
+        "noxforge/editors/zed/themes/noxforge.json",
+        "noxforge/editors/zed/themes/noxforge_obsidian.json",
+        "noxforge/terminals/btop/themes/noxforge.theme",
+        "noxforge/terminals/btop/themes/noxforge_obsidian.theme",
+        "noxforge/browsers/firefox/userChrome.css",
+        "noxforge/terminals/starship/starship.toml",
+        f"plasma/look-and-feel/{THEME_ID}/contents/lockscreen/LockScreen.qml",
+        f"plasma/look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/LockScreen.qml",
     ):
         write(share / relative)
     write(share / f"aurorae/themes/{THEME_ID}/metadata.desktop", desktop)
@@ -66,6 +74,7 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
     write(share / "wallpapers/NoxForge-Obsidian/metadata.json", metadata)
     write(share / "wallpapers/NoxForge-Obsidian-Ultrawide/metadata.json", metadata)
     write(share / f"kwin/tabbox/{THEME_ID}/metadata.json", metadata)
+    write(share / f"kwin/tabbox/{THEME_OBSIDIAN_ID}/metadata.json", metadata)
     write(share / "sddm/themes/NoxForge/metadata.desktop", sddm)
     write(share / "sddm/themes/NoxForgeObsidian/metadata.desktop", sddm)
     write(root / "usr/lib64/qt6/plugins/styles/libnoxforge6.so", "plugin\n")

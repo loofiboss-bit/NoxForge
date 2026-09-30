@@ -62,6 +62,9 @@ if [[ "${has_bundle}" == true ]]; then
     add_component "components/editors/vscode" "noxforge/editors/vscode"
     add_component "components/editors/neovim" "noxforge/editors/neovim"
     add_component "components/editors/helix" "noxforge/editors/helix"
+    add_component "components/editors/zed" "noxforge/editors/zed"
+    add_component "components/browsers" "noxforge/browsers"
+    add_component "components/kwin-switcher-obsidian" "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop"
 else
     add_component "color-schemes/NoxForgeDark.colors" "color-schemes/NoxForgeDark.colors"
     add_component "color-schemes/NoxForgeObsidian.colors" "color-schemes/NoxForgeObsidian.colors"
@@ -75,6 +78,8 @@ else
     add_component "editors/vscode" "noxforge/editors/vscode"
     add_component "editors/neovim" "noxforge/editors/neovim"
     add_component "editors/helix" "noxforge/editors/helix"
+    add_component "editors/zed" "noxforge/editors/zed"
+    add_component "browsers" "noxforge/browsers"
     add_component "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop" "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
     add_component "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop" "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"
     add_component "aurorae/io.github.loofiboss.noxforge.desktop" "aurorae/themes/io.github.loofiboss.noxforge.desktop"
@@ -85,6 +90,7 @@ else
     add_component "look-and-feel/io.github.loofiboss.noxforge.desktop" "plasma/look-and-feel/io.github.loofiboss.noxforge.desktop"
     add_component "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop" "plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop"
     add_component "kwin/tabbox/io.github.loofiboss.noxforge.desktop" "kwin/tabbox/io.github.loofiboss.noxforge.desktop"
+    add_component "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop" "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop"
     add_component "wallpapers/NoxForge" "wallpapers/NoxForge"
     add_component "wallpapers/NoxForge-Quiet" "wallpapers/NoxForge-Quiet"
     add_component "wallpapers/NoxForge-Ultrawide" "wallpapers/NoxForge-Ultrawide"
@@ -198,6 +204,18 @@ elif [[ -f "${source_root}/tools/opacity_gui.py" ]]; then
     install -m 0755 "${source_root}/tools/opacity_gui.py" "${stage}/noxforge/bin/opacity_gui.py"
 fi
 owned+=("noxforge/bin/opacity_gui.py")
+if [[ -f "${portable_root}/bin/noxforge-ctl" ]]; then
+    install -m 0755 "${portable_root}/bin/noxforge-ctl" "${stage}/noxforge/bin/noxforge-ctl"
+elif [[ -f "${source_root}/tools/noxforge-ctl" ]]; then
+    install -m 0755 "${source_root}/tools/noxforge-ctl" "${stage}/noxforge/bin/noxforge-ctl"
+fi
+owned+=("noxforge/bin/noxforge-ctl")
+if [[ -f "${portable_root}/bin/control_center.py" ]]; then
+    install -m 0755 "${portable_root}/bin/control_center.py" "${stage}/noxforge/bin/control_center.py"
+elif [[ -f "${source_root}/tools/control_center.py" ]]; then
+    install -m 0755 "${source_root}/tools/control_center.py" "${stage}/noxforge/bin/control_center.py"
+fi
+owned+=("noxforge/bin/control_center.py")
 printf '%s\n' "${owned[@]}" "noxforge/.owned-files" | LC_ALL=C sort -u > "${stage}/noxforge/.owned-files"
 
 if [[ "${dry_run}" == true ]]; then

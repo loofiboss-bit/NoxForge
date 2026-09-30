@@ -48,12 +48,21 @@ COMPONENTS = {
     "wallpaper-obsidian": ("wallpapers", "NoxForge-Obsidian", "metadata.json"),
     "wallpaper-obsidian-ultrawide": ("wallpapers", "NoxForge-Obsidian-Ultrawide", "metadata.json"),
     "kwin-switcher": ("kwin/tabbox", THEME_ID, "metadata.json"),
+    "kwin-switcher-obsidian": ("kwin/tabbox", THEME_OBSIDIAN_ID, "metadata.json"),
     "sddm": ("sddm/themes", "NoxForge", "metadata.desktop"),
     "sddm-obsidian": ("sddm/themes", "NoxForgeObsidian", "metadata.desktop"),
     "editor-neovim": ("noxforge/editors/neovim/colors", "", "noxforge.lua"),
     "editor-neovim-obsidian": ("noxforge/editors/neovim/colors", "", "noxforge_obsidian.lua"),
     "editor-helix": ("noxforge/editors/helix/themes", "", "noxforge.toml"),
     "editor-helix-obsidian": ("noxforge/editors/helix/themes", "", "noxforge_obsidian.toml"),
+    "editor-zed": ("noxforge/editors/zed/themes", "", "noxforge.json"),
+    "editor-zed-obsidian": ("noxforge/editors/zed/themes", "", "noxforge_obsidian.json"),
+    "terminal-btop": ("noxforge/terminals/btop/themes", "", "noxforge.theme"),
+    "terminal-btop-obsidian": ("noxforge/terminals/btop/themes", "", "noxforge_obsidian.theme"),
+    "browser-firefox": ("noxforge/browsers/firefox", "", "userChrome.css"),
+    "shell-starship": ("noxforge/terminals/starship", "", "starship.toml"),
+    "lockscreen": ("plasma/look-and-feel", f"{THEME_ID}/contents/lockscreen", "LockScreen.qml"),
+    "lockscreen-obsidian": ("plasma/look-and-feel", f"{THEME_OBSIDIAN_ID}/contents/lockscreen", "LockScreen.qml"),
 }
 STORE_REQUIRED = (
     "global-theme",
@@ -75,7 +84,7 @@ STORE_OBSIDIAN_REQUIRED = (
     "cursors",
     "sounds",
     "wallpaper-obsidian",
-    "kwin-switcher",
+    "kwin-switcher-obsidian",
 )
 PORTABLE_REQUIRED = STORE_REQUIRED + (
     "global-theme-obsidian",
@@ -84,6 +93,7 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
     "wallpaper-obsidian",
     "wallpaper-obsidian-ultrawide",
     "color-scheme-obsidian",
+    "kwin-switcher-obsidian",
     "terminal-theme",
     "terminal-theme-obsidian",
     "terminal-ghostty",
@@ -102,6 +112,14 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
     "editor-neovim-obsidian",
     "editor-helix",
     "editor-helix-obsidian",
+    "editor-zed",
+    "editor-zed-obsidian",
+    "terminal-btop",
+    "terminal-btop-obsidian",
+    "browser-firefox",
+    "shell-starship",
+    "lockscreen",
+    "lockscreen-obsidian",
 )
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
@@ -262,6 +280,11 @@ def parse_args() -> argparse.Namespace:
         "--remediation-plan",
         action="store_true",
         help="emit actionable, non-destructive remediation shell commands",
+    )
+    parser.add_argument(
+        "--apply-sync",
+        choices=["graphite", "obsidian"],
+        help="non-destructively align active desktop configuration to graphite or obsidian",
     )
     return parser.parse_args()
 
@@ -958,7 +981,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 6,
+        "schemaVersion": 7,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -1103,8 +1126,61 @@ def remediation_plan(report: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def apply_sync(target: str) -> None:
+    """Non-destructively align active desktop configuration to graphite or obsidian."""
+    is_obsidian = target == "obsidian"
+    color_scheme = "NoxForgeObsidian" if is_obsidian else "NoxForgeDark"
+    theme_id = THEME_OBSIDIAN_ID if is_obsidian else THEME_ID
+    aurorae = f"__aurorae__svg__{theme_id}"
+    tabbox = theme_id
+
+    writer = shutil.which("kwriteconfig6")
+    config_root = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+
+    settings = [
+        ("kdeglobals", "General", "ColorScheme", color_scheme),
+        ("plasmarc", "Theme", "name", theme_id),
+        ("kwinrc", "org.kde.kdecoration2", "theme", aurorae),
+        ("kwinrc", "TabBox", "LayoutName", tabbox),
+        ("ksplashrc", "KSplash", "Theme", theme_id),
+    ]
+
+    for filename, section, key, val in settings:
+        if writer:
+            try:
+                subprocess.run([writer, "--file", filename, "--group", section, "--key", key, val], check=False)
+            except OSError:
+                pass
+        else:
+            target_file = config_root / filename
+            target_file.parent.mkdir(parents=True, exist_ok=True)
+            parser = configparser.ConfigParser(interpolation=None, strict=False)
+            parser.optionxform = str
+            if target_file.is_file():
+                try:
+                    parser.read(target_file, encoding="utf-8")
+                except Exception:
+                    pass
+            if not parser.has_section(section):
+                parser.add_section(section)
+            parser.set(section, key, val)
+            with target_file.open("w", encoding="utf-8") as handle:
+                parser.write(handle)
+
+    qdbus = shutil.which("qdbus6") or shutil.which("qdbus")
+    if qdbus:
+        try:
+            subprocess.run([qdbus, "org.kde.KWin", "/KWin", "reconfigure"], check=False, timeout=2)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+
+
 def main() -> int:
     arguments = parse_args()
+    if arguments.apply_sync:
+        apply_sync(arguments.apply_sync)
+        print(f"Applied palette synchronization alignment to {arguments.apply_sync}.")
+        return 0
     root = arguments.root
     if not root.is_absolute():
         print("--root must be an absolute path", file=sys.stderr)

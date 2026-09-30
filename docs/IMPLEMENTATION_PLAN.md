@@ -1,21 +1,22 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v13 release contract is
-[`NOXFORGE_V13_PLAN.md`](NOXFORGE_V13_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v14 release contract is
+[`NOXFORGE_V14_PLAN.md`](NOXFORGE_V14_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 13.0.0 True Obsidian OLED Parity & Dual-Stack Architecture expands the
-12.0.1 baseline with a complete Obsidian Plasma Style, dedicated Obsidian Global
-Theme and Aurorae decoration, adaptive Qt 6 style, Obsidian wallpapers, Neovim
-and Helix themes, Tokens Schema 9 dual-palette authority, and Doctor Schema 6
-palette synchronization diagnostics. The v13 plan records the scope and
-implementation sequence for the published `v13.0.0` release. Host installation
-and active desktop mutation remain outside the scope. Unavailable physical and
-runtime checks remain `pending` or `blocked`; see the [v13 qualification status](evidence/v13/automated-gate.md).
+NoxForge 14.0.0 Unified Control, Dynamic Accents & Complete Desktop Immersion expands the
+13.0.2 baseline with a unified control suite (`noxforge-ctl` CLI and 3-tab Control Center GUI),
+Plasma 6 Lock Screen for Graphite and Obsidian, KWin Alt+Tab Obsidian switcher parity,
+Tokens Schema 10 Accent Matrix authority, native Qt 6 dynamic accenting, and an extended
+application ecosystem covering Firefox, Zed, btop, Starship, Fastfetch, and Discord.
+Host installation and active desktop mutation remain non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V13_PLAN.md`](NOXFORGE_V13_PLAN.md) records the completed 13.0.0
+  True Obsidian OLED Parity & Dual-Stack Architecture and 13.0.2 Opacity Configurator scope.
 
 - [`NOXFORGE_V12_PLAN.md`](NOXFORGE_V12_PLAN.md) records the completed 12.0.0
   Ecosystem & App Parity and 12.0.1 Aurorae border fix scope and immutable lineage.

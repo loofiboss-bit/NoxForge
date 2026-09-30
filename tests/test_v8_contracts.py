@@ -140,6 +140,7 @@ class V8ContractTests(unittest.TestCase):
                 (ROOT / "wallpapers/NoxForge-Obsidian", root / "wallpapers/NoxForge-Obsidian"),
                 (ROOT / "wallpapers/NoxForge-Obsidian-Ultrawide", root / "wallpapers/NoxForge-Obsidian-Ultrawide"),
                 (ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop", root / "kwin/tabbox/io.github.loofiboss.noxforge.desktop"),
+                (ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop", root / "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop"),
             ):
                 if source.exists():
                     target.parent.mkdir(parents=True, exist_ok=True)
@@ -160,6 +161,8 @@ class V8ContractTests(unittest.TestCase):
             shutil.copy2(ROOT / "distribution/release-manifest.json", root / "noxforge/manifest.json")
             shutil.copytree(ROOT / "terminals", root / "noxforge/terminals")
             shutil.copytree(ROOT / "editors", root / "noxforge/editors")
+            if (ROOT / "browsers").exists():
+                shutil.copytree(ROOT / "browsers", root / "noxforge/browsers")
             report = doctor.build_report(root)
             self.assertEqual(report["edition"]["kind"], "portable")
             self.assertEqual(report["edition"]["status"], "ok")

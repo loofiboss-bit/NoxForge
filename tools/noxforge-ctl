@@ -1,0 +1,372 @@
+#!/usr/bin/env python3
+"""NoxForge Unified Control Hub (noxforge-ctl).
+
+Provides single-command profile switching (Graphite <-> Obsidian), accent color
+management, opacity adjustment, system health checks, day/night automation, and
+the NoxForge Control Center GUI.
+"""
+
+from __future__ import annotations
+
+import argparse
+import configparser
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+VERSION = "14.0.0"
+ROOT = Path(__file__).resolve().parents[1]
+
+THEME_GRAPHITE_ID = "io.github.loofiboss.noxforge.desktop"
+THEME_OBSIDIAN_ID = "io.github.loofiboss.noxforge.obsidian.desktop"
+
+ACCENT_COLORS = {
+    "lime": "#A3FF47",
+    "cyan": "#22D3EE",
+    "violet": "#A78BFA",
+    "amber": "#FBBF24",
+}
+
+
+def run_cmd(cmd: list[str], check: bool = False) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, check=check, capture_output=True, text=True)
+
+
+def get_kde_config_dir() -> Path:
+    xdg_config = os.environ.get("XDG_CONFIG_HOME")
+    if xdg_config:
+        return Path(xdg_config)
+    return Path.home() / ".config"
+
+
+def read_kconfig(file_name: str, group: str, key: str, fallback: str = "") -> str:
+    path = get_kde_config_dir() / file_name
+    if not path.is_file():
+        return fallback
+    parser = configparser.ConfigParser(interpolation=None, strict=False)
+    parser.optionxform = str
+    try:
+        parser.read(path, encoding="utf-8")
+        return parser.get(group, key, fallback=fallback)
+    except Exception:
+        return fallback
+
+
+def write_kconfig(file_name: str, group: str, key: str, value: str) -> None:
+    # Prefer kwriteconfig6 if available on KDE Plasma 6
+    if shutil.which("kwriteconfig6"):
+        run_cmd(["kwriteconfig6", "--file", file_name, "--group", group, "--key", key, str(value)])
+        return
+    # Fallback to direct INI file write
+    path = get_kde_config_dir() / file_name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    parser = configparser.ConfigParser(interpolation=None, strict=False)
+    parser.optionxform = str
+    if path.is_file():
+        try:
+            parser.read(path, encoding="utf-8")
+        except Exception:
+            pass
+    if not parser.has_section(group):
+        parser.add_section(group)
+    parser.set(group, key, str(value))
+    with path.open("w", encoding="utf-8") as handle:
+        parser.write(handle)
+
+
+def notify_plasma_kwin() -> None:
+    """Notify KWin and Plasma components safely without triggering SIGSEGV."""
+    qdbus = shutil.which("qdbus6") or shutil.which("qdbus")
+    if not qdbus:
+        return
+    # Reconfigure KWin window decorations
+    run_cmd([qdbus, "org.kde.KWin", "/KWin", "reconfigure"])
+
+
+def switch_profile(profile: str, dry_run: bool = False) -> dict[str, Any]:
+    target = profile.lower().strip()
+    if target not in ("graphite", "obsidian"):
+        raise ValueError(f"Unknown profile: {profile}. Must be 'graphite' or 'obsidian'.")
+
+    is_obsidian = target == "obsidian"
+    theme_id = THEME_OBSIDIAN_ID if is_obsidian else THEME_GRAPHITE_ID
+    color_scheme = "NoxForgeObsidian" if is_obsidian else "NoxForgeDark"
+    aurorae_theme = f"__aurorae__svg__{theme_id}"
+    tabbox_layout = theme_id
+    gtk_theme = "NoxForgeObsidian" if is_obsidian else "NoxForge"
+
+    changes = {
+        "profile": target,
+        "colorScheme": color_scheme,
+        "plasmaStyle": theme_id,
+        "auroraeTheme": aurorae_theme,
+        "kwinTabBox": tabbox_layout,
+        "splashTheme": theme_id,
+        "gtkTheme": gtk_theme,
+    }
+
+    if dry_run:
+        return {"status": "dry-run", "changes": changes}
+
+    # Apply KDE Settings
+    write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
+    write_kconfig("plasmarc", "Theme", "name", theme_id)
+    write_kconfig("kwinrc", "org.kde.kdecoration2", "theme", aurorae_theme)
+    write_kconfig("kwinrc", "TabBox", "LayoutName", tabbox_layout)
+    write_kconfig("ksplashrc", "KSplash", "Theme", theme_id)
+
+    # Apply GTK 3 & 4 user settings
+    for gtk_dir in ("gtk-3.0", "gtk-4.0"):
+        settings_file = get_kde_config_dir() / gtk_dir / "settings.ini"
+        try:
+            write_kconfig(f"{gtk_dir}/settings.ini", "Settings", "gtk-theme-name", gtk_theme)
+        except Exception:
+            pass
+
+    notify_plasma_kwin()
+    return {"status": "applied", "changes": changes}
+
+
+def set_accent(accent: str, dry_run: bool = False) -> dict[str, Any]:
+    target = accent.lower().strip()
+    if target not in ("lime", "cyan", "violet", "amber", "system"):
+        raise ValueError(f"Unknown accent: {accent}. Must be one of: lime, cyan, violet, amber, system.")
+
+    hex_color = ACCENT_COLORS.get(target, "")
+
+    if dry_run:
+        return {"status": "dry-run", "accent": target, "hex": hex_color}
+
+    if target == "system":
+        # Let KDE system accent handle it
+        write_kconfig("kdeglobals", "General", "accentColorFromWallpaper", "false")
+    else:
+        # Convert hex to comma-separated RGB for kdeglobals AccentColor
+        r = int(hex_color[1:3], 16)
+        g = int(hex_color[3:5], 16)
+        b = int(hex_color[5:7], 16)
+        rgb_str = f"{r},{g},{b}"
+        write_kconfig("kdeglobals", "General", "AccentColor", rgb_str)
+        write_kconfig("kdeglobals", "General", "accentColorFromWallpaper", "false")
+
+    notify_plasma_kwin()
+    return {"status": "applied", "accent": target, "hex": hex_color}
+
+
+def get_current_status() -> dict[str, Any]:
+    scheme = read_kconfig("kdeglobals", "General", "ColorScheme", "unknown")
+    plasma_style = read_kconfig("plasmarc", "Theme", "name", "unknown")
+    aurorae = read_kconfig("kwinrc", "org.kde.kdecoration2", "theme", "unknown")
+    tabbox = read_kconfig("kwinrc", "TabBox", "LayoutName", "unknown")
+    accent_rgb = read_kconfig("kdeglobals", "General", "AccentColor", "")
+
+    is_obsidian = "obsidian" in scheme.lower() or "obsidian" in plasma_style.lower()
+    profile = "obsidian" if is_obsidian else ("graphite" if "noxforge" in scheme.lower() else "custom")
+
+    # Match accent
+    accent_name = "custom"
+    if accent_rgb:
+        for name, hex_code in ACCENT_COLORS.items():
+            r = int(hex_code[1:3], 16)
+            g = int(hex_code[3:5], 16)
+            b = int(hex_code[5:7], 16)
+            if accent_rgb.strip() == f"{r},{g},{b}":
+                accent_name = name
+                break
+    elif not accent_rgb:
+        accent_name = "default"
+
+    return {
+        "version": VERSION,
+        "profile": profile,
+        "colorScheme": scheme,
+        "plasmaStyle": plasma_style,
+        "aurorae": aurorae,
+        "kwinTabBox": tabbox,
+        "accent": accent_name,
+        "accentRgb": accent_rgb,
+    }
+
+
+def manage_schedule(action: str) -> dict[str, Any]:
+    systemd_user = Path.home() / ".config/systemd/user"
+    service_path = systemd_user / "noxforge-daynight.service"
+    timer_path = systemd_user / "noxforge-daynight.timer"
+
+    if action == "status":
+        has_timer = timer_path.is_file()
+        is_active = False
+        if has_timer and shutil.which("systemctl"):
+            res = run_cmd(["systemctl", "--user", "is-active", "noxforge-daynight.timer"])
+            is_active = res.stdout.strip() == "active"
+        return {"scheduled": has_timer, "active": is_active}
+
+    if action == "disable":
+        if shutil.which("systemctl"):
+            run_cmd(["systemctl", "--user", "disable", "--now", "noxforge-daynight.timer"])
+        if timer_path.exists():
+            timer_path.unlink()
+        if service_path.exists():
+            service_path.unlink()
+        return {"status": "disabled"}
+
+    if action == "enable":
+        systemd_user.mkdir(parents=True, exist_ok=True)
+        # Create user service
+        ctl_bin = Path(__file__).resolve()
+        service_content = f"""[Unit]
+Description=NoxForge Day/Night Profile Switcher
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'HOUR=$(date +%%H); if [ "$HOUR" -ge 7 ] && [ "$HOUR" -lt 20 ]; then {ctl_bin} switch graphite; else {ctl_bin} switch obsidian; fi'
+"""
+        service_path.write_text(service_content, encoding="utf-8")
+
+        timer_content = """[Unit]
+Description=NoxForge Day/Night Transition Timer
+
+[Timer]
+OnCalendar=*-*-* 07:00:00
+OnCalendar=*-*-* 20:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+"""
+        timer_path.write_text(timer_content, encoding="utf-8")
+
+        if shutil.which("systemctl"):
+            run_cmd(["systemctl", "--user", "daemon-reload"])
+            run_cmd(["systemctl", "--user", "enable", "--now", "noxforge-daynight.timer"])
+        return {"status": "enabled", "schedule": "07:00 (Graphite) / 20:00 (Obsidian)"}
+
+    return {"status": "unknown"}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        prog="noxforge-ctl",
+        description="NoxForge Unified Control Hub - Profile, Accent, Opacity, and Health Orchestration.",
+    )
+    parser.add_argument("-v", "--version", action="version", version=f"noxforge-ctl {VERSION}")
+    subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
+
+    # switch
+    switch_parser = subparsers.add_parser("switch", help="Switch between Graphite and Obsidian profiles")
+    switch_parser.add_argument("profile", choices=["graphite", "obsidian"], help="Target profile")
+    switch_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    switch_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # accent
+    accent_parser = subparsers.add_parser("accent", help="Select active Forge accent color")
+    accent_parser.add_argument(
+        "color",
+        choices=["lime", "cyan", "violet", "amber", "system"],
+        help="Accent color (lime, cyan, violet, amber, or system)",
+    )
+    accent_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    accent_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # status
+    status_parser = subparsers.add_parser("status", help="Display current NoxForge desktop status")
+    status_parser.add_argument("--json", action="store_true", help="Output status in JSON")
+
+    # opacity (delegates to noxforge-opacity)
+    opacity_parser = subparsers.add_parser("opacity", help="Configure transparency and depth (noxforge-opacity)")
+    opacity_parser.add_argument("opacity_args", nargs=argparse.REMAINDER, help="Arguments passed to noxforge-opacity")
+
+    # doctor (delegates to noxforge-doctor)
+    doctor_parser = subparsers.add_parser("doctor", help="Inspect installation health and diagnostics")
+    doctor_parser.add_argument("doctor_args", nargs=argparse.REMAINDER, help="Arguments passed to noxforge-doctor")
+
+    # schedule (day/night automation)
+    sched_parser = subparsers.add_parser("schedule", help="Manage automated Day/Night profile switching")
+    sched_group = sched_parser.add_mutually_exclusive_group(required=True)
+    sched_group.add_argument("--enable", action="store_true", help="Enable automatic Day/Night schedule timer")
+    sched_group.add_argument("--disable", action="store_true", help="Disable automatic Day/Night timer")
+    sched_group.add_argument("--status", action="store_true", help="Check schedule timer status")
+    sched_parser.add_argument("--json", action="store_true", help="Output schedule status in JSON")
+
+    # gui
+    gui_parser = subparsers.add_parser("gui", help="Launch the NoxForge Control Center GUI")
+
+    args = parser.parse_args()
+
+    if not args.command:
+        # Default behavior with no arguments: show status
+        status = get_current_status()
+        print(f"NoxForge Control Hub v{VERSION}")
+        print(f"  Active Profile: {status['profile'].upper()}")
+        print(f"  Color Scheme:   {status['colorScheme']}")
+        print(f"  Plasma Style:   {status['plasmaStyle']}")
+        print(f"  Aurorae Deco:   {status['aurorae']}")
+        print(f"  KWin TabBox:    {status['kwinTabBox']}")
+        print(f"  Accent Color:   {status['accent']} ({status['accentRgb'] or 'default'})")
+        print("\nRun 'noxforge-ctl --help' for commands, or 'noxforge-ctl gui' to launch Control Center.")
+        return 0
+
+    if args.command == "switch":
+        result = switch_profile(args.profile, dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            print(f"[NoxForge] Profile set to: {args.profile.upper()}" + (" (dry-run)" if args.dry_run else ""))
+            for k, v in result["changes"].items():
+                print(f"  {k}: {v}")
+        return 0
+
+    if args.command == "accent":
+        result = set_accent(args.color, dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            print(f"[NoxForge] Accent color set to: {args.color.upper()} ({result.get('hex', '')})")
+        return 0
+
+    if args.command == "status":
+        status = get_current_status()
+        if args.json:
+            print(json.dumps(status, indent=2))
+        else:
+            for k, v in status.items():
+                print(f"{k}: {v}")
+        return 0
+
+    if args.command == "schedule":
+        action = "enable" if args.enable else ("disable" if args.disable else "status")
+        res = manage_schedule(action)
+        if args.json:
+            print(json.dumps(res, indent=2))
+        else:
+            print(f"[NoxForge Schedule] {action}: {res}")
+        return 0
+
+    if args.command == "opacity":
+        tool_opacity = ROOT / "tools/noxforge-opacity"
+        sub_args = args.opacity_args or []
+        res = subprocess.run([sys.executable, str(tool_opacity)] + sub_args)
+        return res.returncode
+
+    if args.command == "doctor":
+        tool_doctor = ROOT / "tools/noxforge-doctor"
+        sub_args = args.doctor_args or []
+        res = subprocess.run([sys.executable, str(tool_doctor)] + sub_args)
+        return res.returncode
+
+    if args.command == "gui":
+        gui_script = ROOT / "tools/control_center.py"
+        if not gui_script.is_file():
+            gui_script = ROOT / "tools/opacity_gui.py"
+        os.execv(sys.executable, [sys.executable, str(gui_script)])
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

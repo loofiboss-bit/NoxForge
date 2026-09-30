@@ -1,4 +1,4 @@
-%global upstream_version 13.0.2
+%global upstream_version 14.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        13.0.2
+Version:        14.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -55,13 +55,16 @@ apply a theme, configure a login surface, or switch display managers.
 %doc README.md docs/INSTALL_FEDORA.md docs/TROUBLESHOOTING.md
 %{_bindir}/noxforge-doctor
 %{_bindir}/noxforge-opacity
+%{_bindir}/noxforge-ctl
 %{_mandir}/man1/noxforge-doctor.1*
 %{_mandir}/man1/noxforge-opacity.1*
 %{_qt6_plugindir}/styles/libnoxforge6.so
 %{_datadir}/applications/io.github.loofiboss.noxforge.opacity.desktop
+%{_datadir}/applications/io.github.loofiboss.noxforge.controlcenter.desktop
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
 %{_datadir}/noxforge/opacity_gui.py
+%{_datadir}/noxforge/control_center.py
 %{_datadir}/color-schemes/NoxForgeDark.colors
 %{_datadir}/color-schemes/NoxForgeObsidian.colors
 %{_datadir}/konsole/NoxForge.colorscheme
@@ -72,6 +75,7 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme
 %{_datadir}/noxforge/terminals/
 %{_datadir}/noxforge/editors/
+%{_datadir}/noxforge/browsers/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
@@ -82,6 +86,7 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/kwin/tabbox/io.github.loofiboss.noxforge.desktop/
+%{_datadir}/kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/wallpapers/NoxForge/
 %{_datadir}/wallpapers/NoxForge-Quiet/
 %{_datadir}/wallpapers/NoxForge-Ultrawide/
@@ -91,6 +96,10 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Wed Sep 30 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 14.0.0-1
+- Dual-palette parity (Graphite & Obsidian OLED), KWin Alt+Tab parity, Lock Screen,
+  Forge Accent Matrix, noxforge-ctl unified orchestration and Control Center GUI
+
 * Thu Sep 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 13.0.2-1
 - Opacity configurator stabilization, active wallpaper sampling, and doctor coherence
 
