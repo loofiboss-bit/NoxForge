@@ -351,6 +351,28 @@ int main(int argc, char **argv)
     lineEditOpt.palette = obsPal;
     const QImage lineEditImg = renderPrimitive(style, QStyle::PE_PanelLineEdit, lineEditOpt);
     if (!containsColor(lineEditImg, QColor(0, 0, 0))) return 49;
+    // Verify menu item sizing contract (prevents text clipping in QMenu)
+    {
+        QStyleOptionMenuItem menuItemOpt;
+        menuItemOpt.text = QStringLiteral("Öppna i nytt fönster\tCtrl+N");
+        menuItemOpt.maxIconWidth = 16;
+        menuItemOpt.fontMetrics = QFontMetrics(app.font());
+        const QSize itemSize = style->sizeFromContents(
+            QStyle::CT_MenuItem, &menuItemOpt, menuItemOpt.fontMetrics.size(0, menuItemOpt.text));
+        const int fontAdv = menuItemOpt.fontMetrics.horizontalAdvance(QStringLiteral("Öppna i nytt fönster"))
+                          + menuItemOpt.fontMetrics.horizontalAdvance(QStringLiteral("Ctrl+N"));
+        if (itemSize.height() < 30 || itemSize.width() < fontAdv + 40) return 50;
+
+        // Tray / iconless menu item check
+        QStyleOptionMenuItem trayOpt;
+        trayOpt.text = QStringLiteral("Open Antigravity");
+        trayOpt.maxIconWidth = 0;
+        trayOpt.fontMetrics = QFontMetrics(app.font());
+        const QSize traySize = style->sizeFromContents(
+            QStyle::CT_MenuItem, &trayOpt, trayOpt.fontMetrics.size(0, trayOpt.text));
+        const int trayAdv = trayOpt.fontMetrics.horizontalAdvance(QStringLiteral("Open Antigravity"));
+        if (traySize.height() < 30 || traySize.width() < trayAdv + 24) return 51;
+    }
     qunsetenv("NOXFORGE_VARIANT");
 
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"

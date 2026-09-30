@@ -3,6 +3,7 @@
 
 #include "noxforgepalette.h"
 
+#include <algorithm>
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QDateTime>
@@ -340,6 +341,11 @@ int NoxForgeStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, c
     case PM_TabBarTabVSpace: return 10;
     case PM_ToolBarIconSize: return 22;
     case PM_SmallIconSize: return 16;
+    case PM_MenuPanelWidth: return 1;
+    case PM_MenuHMargin: return 2;
+    case PM_MenuVMargin: return 4;
+    case PM_MenuButtonIndicator: return 20;
+    case PM_SubMenuOverlap: return 0;
     default: return QCommonStyle::pixelMetric(metric, option, widget);
     }
 }
@@ -381,11 +387,67 @@ QSize NoxForgeStyle::sizeFromContents(ContentsType type, const QStyleOption *opt
         size.setHeight(qMax(size.height(), NP::controlHeight));
         size.setWidth(qMax(size.width(), 48));
         break;
-    case CT_MenuItem: size.setHeight(qMax(size.height(), 30)); break;
-    case CT_MenuBarItem:
-        size.setHeight(qMax(size.height(), 30));
-        size.setWidth(qMax(size.width() + 12, 44));
+    case CT_MenuItem: {
+        const auto *item = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
+        if (!item) {
+            size.setHeight(qMax(size.height(), 30));
+            break;
+        }
+        if (item->menuItemType == QStyleOptionMenuItem::Separator) {
+            size.setHeight(qMax(size.height(), 8));
+            size.setWidth(qMax(size.width(), 10));
+            break;
+        }
+
+        const bool hasLeading = (item->maxIconWidth > 0)
+            || item->menuHasCheckableItems
+            || !item->icon.isNull()
+            || item->checked
+            || item->checkType != QStyleOptionMenuItem::NotCheckable;
+
+        const int iconWidth = std::max({item->maxIconWidth, pixelMetric(PM_SmallIconSize, option, widget), 16});
+        const int leadingWidth = hasLeading ? (iconWidth + 8) : 0;
+        const int leftOffset = hasLeading ? (6 + leadingWidth + 8) : 14;
+        const int rightMargin = (item->menuItemType == QStyleOptionMenuItem::SubMenu) ? 28 : 16;
+
+        const QStringList parts = item->text.split(QLatin1Char('\t'));
+        const QString mainText = parts.value(0);
+        const QString shortcutText = parts.value(1);
+
+        const int textWidth = qMax(
+            item->fontMetrics.horizontalAdvance(mainText),
+            item->fontMetrics.boundingRect(QRect(0, 0, 10000, 1000), Qt::TextShowMnemonic, mainText).width()
+        );
+        const int fontHeight = item->fontMetrics.height();
+        const int textHeight = qMax(contentsSize.height(), fontHeight);
+        const int itemHeight = std::max({textHeight + 10, item->maxIconWidth + 10, 30});
+
+        int itemWidth = leftOffset + textWidth + rightMargin;
+        if (!shortcutText.isEmpty()) {
+            const int shortcutWidth = item->fontMetrics.horizontalAdvance(shortcutText);
+            itemWidth += 20 + shortcutWidth;
+        }
+        itemWidth += 8;
+
+        size.setWidth(qMax(size.width(), itemWidth));
+        size.setHeight(qMax(size.height(), itemHeight));
         break;
+    }
+    case CT_MenuBarItem: {
+        const auto *item = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
+        int textWidth = contentsSize.width();
+        int fontHeight = contentsSize.height();
+        if (item) {
+            textWidth = qMax(
+                item->fontMetrics.horizontalAdvance(item->text),
+                item->fontMetrics.boundingRect(QRect(0, 0, 10000, 1000), Qt::TextShowMnemonic, item->text).width()
+            );
+            fontHeight = item->fontMetrics.height();
+        }
+        size.setHeight(std::max({size.height(), fontHeight + 10, 30}));
+        size.setWidth(std::max({size.width(), textWidth + 24, 44}));
+        break;
+    }
     case CT_ToolButton: size.setHeight(qMax(size.height(), 32)); break;
     case CT_TabBarTab: size.setHeight(qMax(size.height(), 32)); break;
     default: break;
@@ -795,26 +857,39 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         if (option->state.testFlag(State_Selected))
             paintSelectedSurface(painter, option->rect.adjusted(3, 2, -3, -2),
                                  option->direction, option->state.testFlag(State_HasFocus), obsidian, accent);
-        const int leadingWidth = 28;
-        const QRect leading = visualRect(option->direction, option->rect,
-                                         QRect(option->rect.left() + 6, option->rect.top(), leadingWidth, option->rect.height()));
-        if (item->checked) {
-            QStyleOption check = *option;
-            check.rect = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), leading);
-            check.state |= State_On;
-            drawPrimitive(PE_IndicatorCheckBox, &check, painter, widget);
-        } else if (!item->icon.isNull()) {
-            const QIcon::Mode mode = enabled(option) ? QIcon::Normal : QIcon::Disabled;
-            item->icon.paint(painter, leading, Qt::AlignCenter, mode);
+        const bool hasLeading = (item->maxIconWidth > 0)
+            || item->menuHasCheckableItems
+            || !item->icon.isNull()
+            || item->checked
+            || item->checkType != QStyleOptionMenuItem::NotCheckable;
+
+        const int iconWidth = std::max({item->maxIconWidth, pixelMetric(PM_SmallIconSize, option, widget), 16});
+        const int leadingWidth = hasLeading ? (iconWidth + 8) : 0;
+        const int leftOffset = hasLeading ? (6 + leadingWidth + 8) : 14;
+        const int rightMargin = (item->menuItemType == QStyleOptionMenuItem::SubMenu) ? 28 : 16;
+
+        if (hasLeading) {
+            const QRect leading = visualRect(option->direction, option->rect,
+                                             QRect(option->rect.left() + 6, option->rect.top(), leadingWidth, option->rect.height()));
+            if (item->checked) {
+                QStyleOption check = *option;
+                check.rect = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), leading);
+                check.state |= State_On;
+                drawPrimitive(PE_IndicatorCheckBox, &check, painter, widget);
+            } else if (!item->icon.isNull()) {
+                const QIcon::Mode mode = enabled(option) ? QIcon::Normal : QIcon::Disabled;
+                item->icon.paint(painter, leading, Qt::AlignCenter, mode);
+            }
         }
+
         const QStringList parts = item->text.split(QLatin1Char('\t'));
-        QRect logicalText = option->rect.adjusted(leadingWidth + 8, 0, -28, 0);
+        QRect logicalText = option->rect.adjusted(leftOffset, 0, -rightMargin, 0);
         QRect logicalShortcut;
-        if (parts.size() > 1) {
+        if (parts.size() > 1 && !parts.value(1).isEmpty()) {
             const int shortcutWidth = option->fontMetrics.horizontalAdvance(parts.value(1));
             logicalShortcut = QRect(logicalText.right() - shortcutWidth + 1,
                                     logicalText.top(), shortcutWidth, logicalText.height());
-            logicalText.setRight(logicalShortcut.left() - 12);
+            logicalText.setRight(logicalShortcut.left() - 16);
         }
         const QRect textRect = visualRect(option->direction, option->rect, logicalText);
         painter->save();
