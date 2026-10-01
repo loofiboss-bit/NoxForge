@@ -1,4 +1,4 @@
-# NoxForge 13 compatibility
+# NoxForge 14 compatibility
 
 The intended compatibility target is Fedora 44 KDE and the target Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -21,9 +21,16 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | VS Code/Cursor themes | `/usr/share/noxforge/editors/vscode/` |
 | Neovim themes | `/usr/share/noxforge/editors/neovim/` |
 | Helix themes | `/usr/share/noxforge/editors/helix/` |
+| Zed themes | `/usr/share/noxforge/editors/zed/` |
+| btop themes | `/usr/share/noxforge/apps/btop/` |
+| Starship prompts | `/usr/share/noxforge/apps/starship/` |
+| Fastfetch configurations | `/usr/share/noxforge/apps/fastfetch/` |
+| Firefox CSS | `/usr/share/noxforge/browsers/firefox/` |
+| Discord themes | `/usr/share/noxforge/apps/discord/` |
 | Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
 | Obsidian Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop/` |
 | KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
+| Obsidian KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/` |
 | Icons | `/usr/share/icons/NoxForge/` |
 | Cursors | `/usr/share/icons/NoxForge-Cursors/` |
 | Sounds | `/usr/share/sounds/NoxForge/` |
@@ -32,6 +39,10 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | PLM wallpaper asset | `/usr/share/wallpapers/NoxForge-Quiet/` |
 | SDDM compatibility theme | `/usr/share/sddm/themes/NoxForge/` |
 | Obsidian SDDM compatibility theme | `/usr/share/sddm/themes/NoxForgeObsidian/` |
+| Control Center GUI | `/usr/bin/noxforge-control-center` |
+| Control Center desktop launcher | `/usr/share/applications/io.github.loofiboss.noxforge.controlcenter.desktop` |
+| Control CLI tool | `/usr/bin/noxforge-ctl` |
+| Opacity CLI & GUI | `/usr/bin/noxforge-opacity` |
 | Doctor | `/usr/bin/noxforge-doctor` |
 
 Store and portable packages use Breeze application controls and install
@@ -52,11 +63,11 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v13 release is available from the
-[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.2).
+The v14 release is available from the
+[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v14.0.0).
 Its exact-tag automated gate passed. The machine-readable `qualification.json`
-still contains inherited v12 counters; use the
-[v13 qualification status](evidence/v13/automated-gate.md) for verified
+contains verified release counters; use the
+[v14 qualification status](evidence/v14/automated-gate.md) for verified
 results. Arch build/live login, pacman lifecycle, and physical qualification
 remain pending. Offscreen and generated results do not establish those
 behaviors.

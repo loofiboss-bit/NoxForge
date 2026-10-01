@@ -1,3 +1,15 @@
+# NoxForge 14.0.0 — Unified Control Suite & Full Ecosystem Parity
+
+- added dedicated Obsidian lock screen to the look-and-feel package (`io.github.loofiboss.noxforge.obsidian.desktop`);
+- added dedicated Obsidian TabBox KWin switcher (`io.github.loofiboss.noxforge.obsidian.desktop`);
+- implemented real-time dynamic accent matrix with high-contrast electric lime notches across both palettes;
+- fixed QMenu dynamic item sizing, margins, and font metrics to prevent text clipping across high-DPI scaling factors;
+- added high-contrast dynamic toggle switches with clear visual states and smooth transitions;
+- introduced `noxforge-ctl` CLI and PySide6 Control Center GUI (`noxforge-control-center`) for effortless palette management;
+- added systemd user timer for automated diurnal palette scheduling (Graphite by day, Obsidian at night);
+- added official themes for Zed editor, btop, Starship prompt, Fastfetch, Firefox CSS, and Discord;
+- upgraded `noxforge-doctor` to Schema 7 with automated configuration alignment (`--apply-sync [graphite|obsidian]`).
+
 # NoxForge 13.0.2 — Opacity Configurator Stabilization & System Coherence
 
 - eliminated deprecated `org.kde.PlasmaShell.refreshCurrentShell` D-Bus call preventing SIGSEGV crashes on theme reload in Plasma 6 / Qt 6;

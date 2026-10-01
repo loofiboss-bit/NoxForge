@@ -1,10 +1,11 @@
 # Quick start and rollback
 
-NoxForge 13.0.2 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
+NoxForge 14.0.0 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
 Wayland. Graphite and Obsidian variants cover the Plasma Style, Global Theme,
-Aurorae decoration, native Qt style, wallpapers, and editor themes. It also includes
-the `noxforge-opacity` transparency configurator with a real-time Qt 6 GUI. Choose the
-edition that matches your installation boundary.
+Lock Screen, Aurorae decoration, KWin switcher, native Qt style, wallpapers,
+and editor/terminal themes. It includes the unified `noxforge-ctl` CLI and
+Control Center GUI alongside the `noxforge-opacity` transparency configurator.
+Choose the edition that matches your installation boundary.
 
 ## Fedora complete-system edition
 
@@ -19,18 +20,20 @@ rpm -V noxforge
 noxforge-doctor --json
 ```
 
-The RPM installs the native Qt style and system doctor but never applies a
+The RPM installs the native Qt style, orchestration suite (`noxforge-ctl`,
+Control Center GUI), and system doctor but never automatically applies a
 theme, changes a panel, edits KDE configuration, or switches a display manager.
 Fedora 44 uses Plasma Login Manager by default: select **NoxForge Quiet** as its
 wallpaper through System Settings if desired. NoxForge does not supply a custom
 PLM greeter. Select
 Global Theme, application style, decorations, icons, cursors, sounds and one
-of the five wallpapers explicitly in System Settings.
+of the five wallpapers explicitly in System Settings, or orchestrate via
+`noxforge-ctl` / Control Center.
 
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-13.0.2-portable.tar.xz
+tar -xJf noxforge-14.0.0-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

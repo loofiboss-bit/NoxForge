@@ -5,7 +5,7 @@
 is `/usr/bin/noxforge-doctor`.
 
 Use `--json` for automation and `--root /absolute/staged/root` for an isolated
-package tree or a portable data root. JSON schema 6 includes the top-level
+package tree or a portable data root. JSON schema 7 includes the top-level
 `loginSurface`, `edition`, and `paletteSynchronization` objects.
 `loginSurface` contains:
 
@@ -27,22 +27,27 @@ not make an installation incomplete. With active PLM, an installed SDDM theme
 is reported only as a compatibility capability. PLM settings are read with
 `/usr/lib` defaults first and `/etc` overrides last.
 
-The doctor never applies a theme, writes KDE or login-manager configuration,
+The doctor never applies a theme by default, writes KDE or login-manager configuration,
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 6 diagnostics
+## Schema 7 diagnostics
 
-Schema 6 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
-Kate/KWrite syntax themes, packaged terminal/editor assets, and the v13
-Obsidian Plasma Style, Aurorae, wallpapers, SDDM theme, Neovim, and Helix
-themes. The
-`ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
+Schema 7 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
+Kate/KWrite syntax themes, packaged terminal/editor assets, and the v14
+Obsidian Plasma Style, Aurorae, wallpapers, SDDM theme, Neovim, Helix,
+Zed, btop, Starship, Fastfetch, Firefox, Discord themes, and Control Center
+binaries. The `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
 have a read-only `xdg-data/themes` override. The doctor also reports
-fractional scaling factors when the inspected root provides them. The
-`--remediation-plan` option emits non-destructive shell guidance and preserves
+fractional scaling factors when the inspected root provides them.
+
+The `--remediation-plan` option emits non-destructive shell guidance and preserves
 the report's status-derived exit code; it never claims that a suggested action
 was executed.
+
+The `--apply-sync [graphite|obsidian]` option non-destructively aligns the
+active desktop configuration (color scheme, Plasma style, window decorations,
+lock screen, and wallpaper) to the designated palette.
 
 `paletteSynchronization.status` is `synchronized`, `desynchronized`, or
 `not-active`. Its `targets` object reports detected variants for active color

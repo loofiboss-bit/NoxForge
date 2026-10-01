@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 12
+# Troubleshooting NoxForge 14
 
 ## Collect a read-only report
 
@@ -16,7 +16,7 @@ requests privileges.
 
 ## Edition is mixed or incomplete
 
-Read schema 6 `issues`, `edition.missingMandatory`, and each component's
+Read schema 7 `issues`, `edition.missingMandatory`, and each component's
 `effectivePath` and `shadowedPaths`. Text output uses the same findings.
 
 | Finding | Interpretation and next action |
@@ -31,10 +31,12 @@ Read schema 6 `issues`, `edition.missingMandatory`, and each component's
 A standalone component does not require the full suite. A Global Theme has
 its declared component dependencies; portable and system editions require their
 respective component sets, including GTK, syntax, editor, terminal, Obsidian,
-and Konsole assets. V13 also reports selected palette variants through
+and Konsole assets. V14 also reports selected palette variants through
 `paletteSynchronization`; a `palette-desynchronization` issue means detected
-NoxForge surfaces use mixed Graphite and Obsidian variants. The
-`ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
+NoxForge surfaces use mixed Graphite and Obsidian variants. You can quickly
+align your configuration using `noxforge-doctor --apply-sync graphite` or
+`noxforge-doctor --apply-sync obsidian`, or via `noxforge-ctl switch {graphite|obsidian}`.
+The `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
 have read-only access to the theme data root. Native Qt and login assets are
 not portable requirements. An active
 `widgetStyle=NoxForge` without the native plugin requires selecting Breeze or
