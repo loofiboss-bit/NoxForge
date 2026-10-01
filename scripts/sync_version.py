@@ -47,8 +47,8 @@ VERSION_FILES = {
     "sddm/NoxForgeObsidian/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "editors/vscode/package.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v13/artwork/artwork-contact-sheets.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v13/qualification.json": (
+    "docs/evidence/v14/artwork/artwork-contact-sheets.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "docs/evidence/v14/qualification.json": (
         (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
         (r'(?m)^(\s*"package":\s*)"noxforge-.*?-1\.fc44\.x86_64\.rpm"(,?)$', r'\g<1>"noxforge-{rpm_version}-1.fc44.x86_64.rpm"\g<2>'),
     ),
@@ -57,7 +57,7 @@ VERSION_FILES = {
         (r"(?m)^Use the exact `noxforge-.*?-\*\.tar\.xz` files and verify them against the", "Use the exact `noxforge-{version}-*.tar.xz` files and verify them against the"),
         (r"(?m)^release `SHA256SUMS`: https://github\.com/loofiboss-bit/NoxForge/releases/tag/v.*?$", "release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v{version}"),
     ),
-    "docs/evidence/v13/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
+    "docs/evidence/v14/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
     "packaging/noxforge.spec": (
         (r"(?m)^%global upstream_version\s+.*$", "%global upstream_version {release_version}"),
         (r"(?m)^Version:\s+.*$", "Version:        {rpm_version}"),

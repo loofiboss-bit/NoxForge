@@ -1,3 +1,13 @@
+# NoxForge 14.0.1 — Store Assets Refresh & Fluid TabBox Switcher
+
+- fixed non-responsive cycling in Alt+Tab window switcher by implementing bidirectional index synchronization (`tabBox.currentIndex`);
+- added smooth mouse wheel and touchpad scrolling support with wrap-around item cycling via `WheelHandler`;
+- added robust keyboard navigation for arrow keys (Left/Right/Up/Down) and Tab/Backtab with RTL support;
+- enhanced fluid motion with active card tactile scale (`scale: 1.03`), icon scale response (`scale: 1.08`), and kinetic expanding accent indicator bar;
+- added interactive hover feedback on window cards and centered viewport range alignment;
+- maintained complete parity across both Graphite and Obsidian TabBox variants;
+- updated all KDE Store / OpenDesktop screenshots, hero banners, thumbnail, and marketing media.
+
 # NoxForge 14.0.0 — Unified Control Suite & Full Ecosystem Parity
 
 - added dedicated Obsidian lock screen to the look-and-feel package (`io.github.loofiboss.noxforge.obsidian.desktop`);

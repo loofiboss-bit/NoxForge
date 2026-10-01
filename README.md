@@ -37,8 +37,8 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 ![NoxForge Hero Desktop Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 ![Dual Palettes: Graphite and Obsidian OLED](media/store/02_dual_palettes_obsidian_2560x1440.png)
 ![Aurorae Window Craft and Forge Notch](media/store/03_window_craft_aurorae_2560x1440.png)
-![Native Qt 6 Control Completeness](media/store/04_system_completeness_qt6_2560x1440.png)
-![Application Launcher and Floating Plasma Shell](media/store/05_launcher_and_plasma_shell_2560x1440.png)
+![Unified Control Center and Native Qt 6 Suite](media/store/04_system_completeness_qt6_2560x1440.png)
+![Application Launcher, Plasma Shell and Lock Screen](media/store/05_launcher_and_plasma_shell_2560x1440.png)
 ![Original Vector Iconography and File Hierarchy](media/store/06_original_iconography_2560x1440.png)
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
