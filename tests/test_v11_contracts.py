@@ -13,6 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 
 def relative_luminance(r: int, g: int, b: int) -> float:
@@ -78,7 +80,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
 
     def test_v11_tokens_are_the_authority_for_variants_and_terminal_colors(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (7, 8, 9))
+        self.assertIn(tokens["schemaVersion"], (7, 8, 9, 10))
         self.assertEqual(tokens["variants"]["obsidian"]["background"], "#000000")
         self.assertEqual(tokens["terminal"]["ansi"]["black"]["normal"], "#A6B4B9")
         self.assertEqual(
@@ -134,7 +136,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (4, 5, 6))
+        self.assertIn(report["schemaVersion"], (4, 5, 6, 7))
         self.assertIn("terminal-theme", report["missing"])
         self.assertIn("terminal-theme-obsidian", report["missing"])
 

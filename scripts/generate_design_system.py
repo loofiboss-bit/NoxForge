@@ -17,37 +17,48 @@ THEME_OBSIDIAN_ID = "io.github.loofiboss.noxforge.obsidian.desktop"
 QML_TARGETS = (
     (ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Tokens.qml", "standard"),
     (ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Tokens.qml", "standard"),
+    (ROOT / f"look-and-feel/{THEME_ID}/contents/lockscreen/Tokens.qml", "standard"),
     (ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Tokens.qml", "standard"),
     (ROOT / "sddm/NoxForge/Tokens.qml", "standard"),
     (ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/splash/Tokens.qml", "obsidian"),
     (ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/logout/Tokens.qml", "obsidian"),
+    (ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/Tokens.qml", "obsidian"),
+    (ROOT / f"kwin/tabbox/{THEME_OBSIDIAN_ID}/contents/ui/Tokens.qml", "obsidian"),
     (ROOT / "sddm/NoxForgeObsidian/Tokens.qml", "obsidian"),
 )
 
 MOTION_POLICY_TARGETS = (
     ROOT / f"look-and-feel/{THEME_ID}/contents/splash/MotionPolicy.qml",
     ROOT / f"look-and-feel/{THEME_ID}/contents/logout/MotionPolicy.qml",
+    ROOT / f"look-and-feel/{THEME_ID}/contents/lockscreen/MotionPolicy.qml",
     ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/MotionPolicy.qml",
     ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/splash/MotionPolicy.qml",
     ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/logout/MotionPolicy.qml",
+    ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/MotionPolicy.qml",
+    ROOT / f"kwin/tabbox/{THEME_OBSIDIAN_ID}/contents/ui/MotionPolicy.qml",
 )
 
 MARK_TARGETS = (
     ROOT / "design/brand/noxforge-mark.svg",
     ROOT / f"look-and-feel/{THEME_ID}/contents/splash/NoxForgeMark.svg",
     ROOT / f"look-and-feel/{THEME_ID}/contents/logout/NoxForgeMark.svg",
+    ROOT / f"look-and-feel/{THEME_ID}/contents/lockscreen/NoxForgeMark.svg",
     ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/NoxForgeMark.svg",
     ROOT / "sddm/NoxForge/NoxForgeMark.svg",
     ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/splash/NoxForgeMark.svg",
     ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/logout/NoxForgeMark.svg",
+    ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/NoxForgeMark.svg",
+    ROOT / f"kwin/tabbox/{THEME_OBSIDIAN_ID}/contents/ui/NoxForgeMark.svg",
     ROOT / "sddm/NoxForgeObsidian/NoxForgeMark.svg",
 )
 
 LOCKUP_TARGETS = (
     ROOT / "design/brand/noxforge-lockup.svg",
     ROOT / f"look-and-feel/{THEME_ID}/contents/splash/NoxForgeLockup.svg",
+    ROOT / f"look-and-feel/{THEME_ID}/contents/lockscreen/NoxForgeLockup.svg",
     ROOT / "sddm/NoxForge/NoxForgeLockup.svg",
     ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/splash/NoxForgeLockup.svg",
+    ROOT / f"look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/NoxForgeLockup.svg",
     ROOT / "sddm/NoxForgeObsidian/NoxForgeLockup.svg",
 )
 

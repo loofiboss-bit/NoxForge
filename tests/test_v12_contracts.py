@@ -13,6 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 
 def hex_to_rgb(hex_code: str) -> tuple[int, int, int]:
@@ -87,7 +89,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
 
     def test_schema_8_tokens_and_syntax_contract(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (8, 9))
+        self.assertIn(tokens["schemaVersion"], (8, 9, 10))
         self.assertEqual(tokens["version"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
         self.assertIn("syntax", tokens)
         self.assertEqual(set(tokens["syntax"]), {"standard", "obsidian"})
@@ -239,7 +241,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (5, 6))
+        self.assertIn(report["schemaVersion"], (5, 6, 7))
         self.assertIn("ecosystem", report)
         self.assertIn("flatpakThemesOverride", report["ecosystem"])
         self.assertIn("gtk-theme", report["missing"])

@@ -372,6 +372,14 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/helix"
 )
 install(
+    DIRECTORY editors/zed/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/editors/zed"
+)
+install(
+    DIRECTORY browsers/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/browsers"
+)
+install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
 )
@@ -412,6 +420,10 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/kwin/tabbox/${NOXFORGE_THEME_ID}"
 )
 install(
+    DIRECTORY "kwin/tabbox/${NOXFORGE_OBSIDIAN_THEME_ID}/"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/kwin/tabbox/${NOXFORGE_OBSIDIAN_THEME_ID}"
+)
+install(
     DIRECTORY wallpapers/NoxForge/
     DESTINATION "${CMAKE_INSTALL_DATADIR}/wallpapers/NoxForge"
 )
@@ -443,14 +455,19 @@ install(
     PROGRAMS
         tools/noxforge-doctor
         tools/noxforge-opacity
+        tools/noxforge-ctl
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 install(
-    PROGRAMS tools/opacity_gui.py
+    PROGRAMS
+        tools/opacity_gui.py
+        tools/control_center.py
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
 )
 install(
-    FILES distribution/io.github.loofiboss.noxforge.opacity.desktop
+    FILES
+        distribution/io.github.loofiboss.noxforge.opacity.desktop
+        distribution/io.github.loofiboss.noxforge.controlcenter.desktop
     DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
 )
 install(

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "version": "14.0.0",
+  "name": "NoxForge Desktop Theme",
+  "description": "NoxForge official quiet graphite and electric lime theme for Firefox",
+  "theme": {
+    "colors": {
+      "frame": "#0D1419",
+      "frame_inactive": "#0A1014",
+      "tab_selected": "#1B2831",
+      "tab_background_text": "#A6B4B9",
+      "tab_text": "#E8F0F2",
+      "tab_line": "#A3FF47",
+      "toolbar": "#141E25",
+      "toolbar_text": "#E8F0F2",
+      "toolbar_field": "#10191F",
+      "toolbar_field_text": "#E8F0F2",
+      "toolbar_field_border": "#2F414B",
+      "toolbar_field_focus": "#141E25",
+      "toolbar_bottom_separator": "#2F414B",
+      "popup": "#141E25",
+      "popup_text": "#E8F0F2",
+      "popup_border": "#2F414B",
+      "popup_highlight": "#223429",
+      "popup_highlight_text": "#A3FF47",
+      "ntp_background": "#0D1419",
+      "ntp_text": "#E8F0F2"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://zed.dev/schema/themes/v0.1.0.json",
+  "name": "NoxForge",
+  "author": "NoxForge Team",
+  "themes": [
+    {
+      "name": "NoxForge",
+      "appearance": "dark",
+      "style": {
+        "border": "#2F414B",
+        "border.variant": "#455A64",
+        "border.focused": "#A3FF47",
+        "background": "#0D1419",
+        "title_bar.background": "#0D1419",
+        "status_bar.background": "#141E25",
+        "panel.background": "#10191F",
+        "editor.background": "#0D1419",
+        "editor.foreground": "#E8F0F2",
+        "editor.gutter.background": "#0D1419",
+        "editor.active_line.background": "#141E25",
+        "editor.line_number": "#748289",
+        "editor.active_line_number": "#A3FF47",
+        "tab_bar.background": "#10191F",
+        "tab.active_background": "#141E25",
+        "tab.inactive_background": "#10191F",
+        "text": "#E8F0F2",
+        "text.muted": "#A6B4B9",
+        "text.accent": "#A3FF47",
+        "element.active": "#223429",
+        "element.hover": "#283942",
+        "element.selected": "#223429",
+        "drop_target_background": "#243528",
+        "syntax": {
+          "comment": {"color": "#748289"},
+          "keyword": {"color": "#A3FF47"},
+          "function": {"color": "#E8F0F2"},
+          "string": {"color": "#22D3EE"},
+          "type": {"color": "#A78BFA"},
+          "number": {"color": "#FBBF24"},
+          "operator": {"color": "#A6B4B9"},
+          "variable": {"color": "#E8F0F2"}
+        }
+      }
+    }
+  ]
+}

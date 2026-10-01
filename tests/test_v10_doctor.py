@@ -5,8 +5,12 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+import sys
 from pathlib import Path
 from unittest.mock import patch
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from tests.test_doctor import DOCTOR_FUNCTIONS as doctor, ROOT, THEME_ID, stage_complete, write
 
@@ -17,7 +21,7 @@ class DoctorV10Tests(unittest.TestCase):
             root = Path(temp)
             write(root / 'color-schemes/NoxForgeDark.colors')
             report = doctor['build_report'](root)
-            self.assertIn(report['schemaVersion'], (4, 5, 6))
+            self.assertIn(report['schemaVersion'], (4, 5, 6, 7))
             self.assertEqual(report['status'], 'ok')
             self.assertEqual(report['edition']['kind'], 'component')
             self.assertEqual(report['missing'], [])

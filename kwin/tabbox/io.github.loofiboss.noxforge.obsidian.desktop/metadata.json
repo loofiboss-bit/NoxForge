@@ -1,0 +1,12 @@
+{
+  "KPackageStructure": "KWin/WindowSwitcher",
+  "KPlugin": {
+    "Authors": [{"Email": "loofi@loofi.com", "Name": "Loofi"}],
+    "Description": "Compact NoxForge Obsidian OLED window switcher",
+    "Icon": "preferences-system-windows-switcher",
+    "Id": "io.github.loofiboss.noxforge.obsidian.desktop",
+    "License": "MIT",
+    "Name": "NoxForge Obsidian",
+    "Version": "14.0.0"
+  }
+}

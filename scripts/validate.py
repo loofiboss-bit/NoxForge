@@ -165,8 +165,12 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 10:
+        accents = tokens.get("accents")
+        if not isinstance(accents, dict) or not {"lime", "cyan", "violet", "amber"}.issubset(set(accents)):
+            raise ValidationError("accent matrix contract is incomplete")
     if tokens.get("schemaVersion") >= 9:
         colors_obsidian = tokens.get("colorsObsidian")
         if not isinstance(colors_obsidian, dict) or colors_obsidian.get("background") != "#000000":

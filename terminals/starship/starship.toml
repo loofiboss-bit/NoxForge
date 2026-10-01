@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MIT
+# NoxForge Starship Prompt Configuration
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = "[⚡](bold #A3FF47) "
+error_symbol = "[✖](bold #FF6B7A) "
+vimcmd_symbol = "[❮](bold #22D3EE) "
+
+[directory]
+style = "bold #22D3EE"
+truncation_length = 4
+truncate_to_repo = true
+read_only = " 🔒"
+read_only_style = "bold #FF6B7A"
+
+[git_branch]
+style = "bold #A3FF47"
+symbol = "🌱 "
+
+[git_status]
+style = "bold #FBBF24"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+conflicted = "🏳 "
+modified = "*${count}"
+staged = "+${count}"
+untracked = "?${count}"
+
+[cmd_duration]
+min_time = 2_000
+style = "bold #A6B4B9"
+format = "took [$duration]($style) "
+
+[username]
+style_user = "bold #E8F0F2"
+style_root = "bold #FF6B7A"
+format = "[$user]($style)@"
+
+[hostname]
+style = "bold #A6B4B9"
+format = "[$hostname]($style) in "
+trim_at = ".company"
+
+[fill]
+symbol = " "

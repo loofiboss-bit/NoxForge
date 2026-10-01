@@ -1,0 +1,31 @@
+/**
+ * @name NoxForge
+ * @author NoxForge Team
+ * @version 14.0.0
+ * @description Official NoxForge desktop theme for Discord (Vencord / BetterDiscord). Quiet graphite surfaces and electric-lime accents.
+ * @source https://github.com/loofiboss-bit/NoxForge
+ */
+
+:root {
+  --background-primary: #0D1419;
+  --background-secondary: #10191F;
+  --background-secondary-alt: #141E25;
+  --background-tertiary: #090C0F;
+  --background-floating: #141E25;
+  --channeltextarea-background: #141E25;
+  
+  --text-normal: #E8F0F2;
+  --text-muted: #A6B4B9;
+  --header-primary: #E8F0F2;
+  --header-secondary: #A6B4B9;
+  --interactive-normal: #A6B4B9;
+  --interactive-hover: #E8F0F2;
+  --interactive-active: #A3FF47;
+  --interactive-muted: #748289;
+
+  --brand-experiment: #A3FF47;
+  --brand-experiment-560: #82D936;
+  --accent-color: #A3FF47;
+  --button-positive-background: #A3FF47;
+  --button-positive-text: #0D1419;
+}

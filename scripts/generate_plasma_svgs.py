@@ -484,7 +484,7 @@ def generate_plasma_assets() -> None:
                 ("active", recipe("progress", opacity=0.72)),
             ]
         )
-        .replace("</svg>", '<rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
+        .replace("</svg>", '<rect id="hint-bar-size" x="0" y="0" width="38" height="16" fill="#000" fill-opacity="0"/><rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
     )
     write(
         "widgets/radiobutton.svg",
