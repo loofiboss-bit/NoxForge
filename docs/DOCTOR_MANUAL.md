@@ -36,8 +36,7 @@ queries time out and degrade to `unknown` instead of blocking the report.
 Schema 7 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
 Kate/KWrite syntax themes, packaged terminal/editor assets, and the v14
 Obsidian Plasma Style, Aurorae, wallpapers, SDDM theme, Neovim, Helix,
-Zed, btop, Starship, Fastfetch, Firefox, Discord themes, and Control Center
-binaries. The `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
+Zed, btop, Starship, Firefox, and lock screens. The `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
 have a read-only `xdg-data/themes` override. The doctor also reports
 fractional scaling factors when the inspected root provides them.
 

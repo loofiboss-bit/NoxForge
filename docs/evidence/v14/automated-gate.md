@@ -7,7 +7,7 @@ Commit: `ee84b0e36e25015de4eaa1dd2ec93272427315e8`
 Release state: published
 
 The [v14.0.0 GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v14.0.0)
-was built from the commit above. All release artifacts and qualification
+was built from the commit above. All release artifacts and automated qualification
 gates passed.
 
 ## Automated gate

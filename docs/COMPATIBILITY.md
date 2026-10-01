@@ -22,11 +22,9 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Neovim themes | `/usr/share/noxforge/editors/neovim/` |
 | Helix themes | `/usr/share/noxforge/editors/helix/` |
 | Zed themes | `/usr/share/noxforge/editors/zed/` |
-| btop themes | `/usr/share/noxforge/apps/btop/` |
-| Starship prompts | `/usr/share/noxforge/apps/starship/` |
-| Fastfetch configurations | `/usr/share/noxforge/apps/fastfetch/` |
+| btop themes | `/usr/share/noxforge/terminals/btop/` |
+| Starship prompts | `/usr/share/noxforge/terminals/starship/` |
 | Firefox CSS | `/usr/share/noxforge/browsers/firefox/` |
-| Discord themes | `/usr/share/noxforge/apps/discord/` |
 | Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
 | Obsidian Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop/` |
 | KWin switcher | `/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/` |
@@ -39,8 +37,8 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | PLM wallpaper asset | `/usr/share/wallpapers/NoxForge-Quiet/` |
 | SDDM compatibility theme | `/usr/share/sddm/themes/NoxForge/` |
 | Obsidian SDDM compatibility theme | `/usr/share/sddm/themes/NoxForgeObsidian/` |
-| Control Center GUI | `/usr/bin/noxforge-control-center` |
 | Control Center desktop launcher | `/usr/share/applications/io.github.loofiboss.noxforge.controlcenter.desktop` |
+| Control Center helper script | `/usr/share/noxforge/control_center.py` |
 | Control CLI tool | `/usr/bin/noxforge-ctl` |
 | Opacity CLI & GUI | `/usr/bin/noxforge-opacity` |
 | Doctor | `/usr/bin/noxforge-doctor` |

@@ -6,7 +6,7 @@
 
 ## 1. Overview
 
-Starting with **v14.0.0**, NoxForge includes both a full-featured command-line utility (`noxforge-ctl`) and an interactive graphical interface (`noxforge-control-center` / `noxforge-ctl gui`).
+Starting with **v14.0.0**, NoxForge includes both a full-featured command-line utility (`noxforge-ctl`) and an interactive graphical interface (`noxforge-ctl gui` / application launcher).
 
 Key capabilities:
 - **Profile Switching**: Instantly switch between the default deep slate **Graphite** palette and the pure **Obsidian OLED** true-black palette.
@@ -28,7 +28,7 @@ noxforge-ctl {switch,accent,status,opacity,doctor,schedule,gui} [options]
 ### Subcommands
 
 #### `switch`
-Switch between Graphite and Obsidian profiles across all active desktop surfaces (Plasma style, color scheme, window decorations, lock screen, and wallpaper).
+Switch between Graphite and Obsidian profiles across desktop surfaces (color scheme, Plasma style, window decorations, TabBox task switcher, splash screen, and GTK theme).
 
 ```bash
 # Switch to Obsidian OLED
@@ -56,7 +56,7 @@ noxforge-ctl accent system
 ```
 
 #### `status`
-Inspect the currently active profile, accent color, opacity state, and palette synchronization:
+Inspect the currently active profile, accent color, color scheme, Plasma style, Aurorae decoration, and TabBox switcher:
 
 ```bash
 noxforge-ctl status
@@ -129,5 +129,6 @@ The interface is organized into three dedicated tabs:
 ## 4. Architectural Safety & Standards
 
 - **Non-Destructive**: All modifications are performed within `$XDG_CONFIG_HOME` and `$XDG_DATA_HOME`. System packages and root filesystems are never altered.
-- **Fail-Safe Fallbacks**: If PySide6 or graphical dependencies are missing, `noxforge-ctl` gracefully falls back to command-line prompts or standard KDE dialogs (`kdialog`).
+- **Graceful CLI Operation**: On minimal or headless systems without PySide6 (`python3-pyside6`) installed, manage profiles, accents, opacity, and diagnostics directly using `noxforge-ctl` from the command line.
 - **Wayland-Native**: Full support for Plasma 6.7+ on Wayland with dynamic scaling awareness and zero tearing.
+

@@ -10,9 +10,9 @@
   - Add dynamic QMenu item sizing, paddings, and font metrics preventing text clipping or truncation across high-DPI displays and scaling factors.
   - Implement high-contrast dynamic toggle switches with clear visual states and smooth transitions.
 - Unified Control Suite:
-  - Add `noxforge-ctl` CLI command supporting palette inspection, instant switching, automated scheduling, background daemon synchronization, and doctor validation.
-  - Add PySide6/Qt 6 NoxForge Control Center GUI (`noxforge-control-center` with desktop launcher) integrating palette switching, opacity/blur customization, and diagnostics.
-  - Add systemd user timer and daemon configuration for automatic diurnal palette transitions.
+  - Add `noxforge-ctl` CLI command supporting palette inspection, instant switching, automated scheduling, and doctor validation.
+  - Add PySide6/Qt 6 NoxForge Control Center GUI (`noxforge-ctl gui` / desktop launcher) integrating palette switching, opacity/blur customization, and diagnostics.
+  - Add systemd user timer for automatic diurnal palette transitions.
 - Extended Ecosystem Parity:
   - Add themes and syntax definitions for Zed editor, btop, Starship prompt, Fastfetch, Firefox userChrome, and Discord.
 - Tooling & Packaging:

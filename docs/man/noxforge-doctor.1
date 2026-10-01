@@ -14,8 +14,9 @@ noxforge-doctor \- inspect a NoxForge installation without changing it
 reports the installed package version, component provenance and versions,
 safely readable active theme names, icon inheritance, actual per-output scales,
 and the effective login surface when it can be detected.
-It does not write files, clear caches, restart services, switch
-display managers, or request privileges.
+In default inspection mode, it does not write files, clear caches, restart services, switch
+display managers, or request privileges. When \-\-apply\-sync is invoked, it writes user
+desktop configuration entries to align the active palette.
 .PP
 JSON schema 7 retains stable
 .B edition
@@ -26,7 +27,7 @@ asset availability, selection, and status. An installed SDDM theme is not
 reported as active when Plasma Login Manager is active. Unselected optional
 login assets do not make the installation incomplete. Schema 7 also discovers
 GTK 3/4 themes, KSyntaxHighlighting themes, terminal/editor assets (including
-Zed, btop, Starship, Fastfetch, Firefox, and Discord), and the
+Zed, btop, Starship, and Firefox), and the
 Flatpak theme-override readiness state, while reporting fractional display
 scales when available.
 .SH OPTIONS

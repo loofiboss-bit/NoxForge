@@ -5,7 +5,7 @@
 - implemented real-time dynamic accent matrix with high-contrast electric lime notches across both palettes;
 - fixed QMenu dynamic item sizing, margins, and font metrics to prevent text clipping across high-DPI scaling factors;
 - added high-contrast dynamic toggle switches with clear visual states and smooth transitions;
-- introduced `noxforge-ctl` CLI and PySide6 Control Center GUI (`noxforge-control-center`) for effortless palette management;
+- introduced `noxforge-ctl` CLI and PySide6 Control Center GUI (`noxforge-ctl gui` / desktop launcher) for effortless palette management;
 - added systemd user timer for automated diurnal palette scheduling (Graphite by day, Obsidian at night);
 - added official themes for Zed editor, btop, Starship prompt, Fastfetch, Firefox CSS, and Discord;
 - upgraded `noxforge-doctor` to Schema 7 with automated configuration alignment (`--apply-sync [graphite|obsidian]`).
