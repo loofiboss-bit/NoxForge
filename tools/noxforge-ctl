@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "14.0.0"
+VERSION = "14.0.1"
 ROOT = Path(__file__).resolve().parents[1]
 
 THEME_GRAPHITE_ID = "io.github.loofiboss.noxforge.desktop"

@@ -1,5 +1,18 @@
 # Changelog
 
+## 14.0.1 — Store Assets Refresh & Fluid TabBox Switcher
+
+- KWin TabBox Window Switcher:
+  - Fixed non-responsive cycling under Alt+Tab by implementing bidirectional index synchronization (`tabBox.currentIndex`) with `Connections` signal handling.
+  - Added smooth mouse wheel and touchpad scrolling support with wrap-around item cycling via `WheelHandler`.
+  - Added outer dialog and list keyboard navigation for arrow keys (Left/Right/Up/Down) and Tab/Backtab with full RTL support.
+  - Enhanced fluid motion: active card tactile elevation (`scale: 1.03`), icon scale bounce (`scale: 1.08`), kinetic expanding accent indicator bar, and centered viewport range alignment (`preferredHighlightBegin`).
+  - Added interactive mouse hover feedback (`tokens.surfaceHover` and `tokens.edgeHighlight`).
+  - Maintained full parity across both Graphite and Obsidian TabBox variants (`io.github.loofiboss.noxforge.desktop` and `io.github.loofiboss.noxforge.obsidian.desktop`).
+- Visual Assets & Store Presentation:
+  - Fully regenerated high-resolution marketing and gallery screenshots across all 6 showcase slots for KDE Store / OpenDesktop and GitHub repository.
+  - Added updated store hero banners (1280x640, 1920x1080), social preview banners, store icon (400x400), and store thumbnail (480x380).
+
 ## 14.0.0 — Unified Control Suite & Full Ecosystem Parity
 
 - True Obsidian OLED Parity & Dual-Stack Architecture:

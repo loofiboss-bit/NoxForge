@@ -15,6 +15,7 @@ Item {
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
     readonly property bool horizontalMode: screenGeometry.width >= 1000
+    readonly property bool isRtl: Qt.locale().textDirection === Qt.RightToLeft
     readonly property int horizontalCardWidth: Kirigami.Units.gridUnit * 13
     readonly property int horizontalCardHeight: Kirigami.Units.gridUnit * 8
     readonly property int cardWidth: horizontalMode
@@ -37,6 +38,51 @@ Item {
 
     function focusFirstAction() {
         windowList.forceActiveFocus()
+    }
+
+    function selectPrevious() {
+        if (windowList.count <= 0) return
+        if (windowList.currentIndex <= 0) {
+            windowList.currentIndex = windowList.count - 1
+        } else {
+            windowList.decrementCurrentIndex()
+        }
+        windowList.positionViewAtIndex(windowList.currentIndex, ListView.Contain)
+        root.currentIndex = windowList.currentIndex
+    }
+
+    function selectNext() {
+        if (windowList.count <= 0) return
+        if (windowList.currentIndex >= windowList.count - 1) {
+            windowList.currentIndex = 0
+        } else {
+            windowList.incrementCurrentIndex()
+        }
+        windowList.positionViewAtIndex(windowList.currentIndex, ListView.Contain)
+        root.currentIndex = windowList.currentIndex
+    }
+
+    function activateCurrent() {
+        if (windowList.currentIndex >= 0 && windowList.currentIndex < windowList.count) {
+            if (windowList.model && typeof windowList.model.activate === "function") {
+                windowList.model.activate(windowList.currentIndex)
+            }
+        }
+    }
+
+    function syncFromTabBox(index) {
+        if (index >= 0 && index !== windowList.currentIndex) {
+            windowList.currentIndex = index
+            windowList.positionViewAtIndex(index, ListView.Contain)
+            root.currentIndex = index
+        }
+    }
+
+    onCurrentIndexChanged: {
+        if (windowList.currentIndex !== root.currentIndex && root.currentIndex >= 0) {
+            windowList.currentIndex = root.currentIndex
+            windowList.positionViewAtIndex(root.currentIndex, ListView.Contain)
+        }
     }
 
     Rectangle {
@@ -84,21 +130,47 @@ Item {
             focus: true
             boundsBehavior: Flickable.StopAtBounds
             highlightRangeMode: ListView.ApplyRange
-            preferredHighlightBegin: 0
-            preferredHighlightEnd: root.horizontalMode
-                ? width - root.horizontalCardWidth
-                : height - Kirigami.Units.gridUnit * 4
+            preferredHighlightBegin: root.horizontalMode
+                ? Math.round((width - root.horizontalCardWidth) / 2)
+                : Math.round((height - Kirigami.Units.gridUnit * 4) / 2)
+            preferredHighlightEnd: preferredHighlightBegin
             highlightMoveDuration: root.reducedMotion
                 ? tokens.reducedMotionDuration
                 : motion.duration(tokens.selectionDuration)
             highlightMoveVelocity: -1
-            onCurrentIndexChanged: root.currentIndex = currentIndex
-            Keys.onReturnPressed: if (currentIndex >= 0) model.activate(currentIndex)
-            Keys.onSpacePressed: if (currentIndex >= 0) model.activate(currentIndex)
+            highlightFollowsCurrentItem: true
+            onCurrentIndexChanged: {
+                if (root.currentIndex !== currentIndex) {
+                    root.currentIndex = currentIndex
+                }
+            }
+            Keys.onReturnPressed: if (currentIndex >= 0 && model) model.activate(currentIndex)
+            Keys.onSpacePressed: if (currentIndex >= 0 && model) model.activate(currentIndex)
+            Keys.onLeftPressed: root.isRtl && root.horizontalMode ? root.selectNext() : root.selectPrevious()
+            Keys.onRightPressed: root.isRtl && root.horizontalMode ? root.selectPrevious() : root.selectNext()
+            Keys.onUpPressed: root.selectPrevious()
+            Keys.onDownPressed: root.selectNext()
+            Keys.onTabPressed: root.selectNext()
+            Keys.onBacktabPressed: root.selectPrevious()
             Accessible.role: Accessible.List
             Accessible.name: qsTr("Open windows")
             LayoutMirroring.enabled: Qt.locale().textDirection === Qt.RightToLeft
             LayoutMirroring.childrenInherit: true
+
+            WheelHandler {
+                id: wheelHandler
+                target: null
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                onWheel: event => {
+                    const delta = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x
+                    if (delta > 0) {
+                        root.selectPrevious()
+                    } else if (delta < 0) {
+                        root.selectNext()
+                    }
+                    event.accepted = true
+                }
+            }
 
             highlight: Rectangle {
                 objectName: "selectionHighlight"
@@ -119,26 +191,54 @@ Item {
                 readonly property var resolvedIcon: icon === undefined || icon === null || icon === ""
                     ? "application-x-executable"
                     : icon
+                readonly property bool isCurrent: index === windowList.currentIndex
                 width: root.horizontalMode ? root.horizontalCardWidth : windowList.width
                 height: root.horizontalMode
                     ? root.horizontalCardHeight
                     : Math.max(Kirigami.Units.gridUnit * 4, delegateContent.implicitHeight + tokens.standardSpacing * 2)
-                color: tokens.surfaceRaised
-                border.color: tokens.outlineMuted
+                color: isCurrent
+                    ? tokens.surfaceSelected
+                    : (hoverHandler.hovered ? tokens.surfaceHover : tokens.surfaceRaised)
+                border.color: isCurrent
+                    ? tokens.accentMuted
+                    : (hoverHandler.hovered ? tokens.edgeHighlight : tokens.outlineMuted)
                 border.width: tokens.borderWidth
                 radius: tokens.radius
-                state: index === windowList.currentIndex ? "selected" : "normal"
+                scale: (isCurrent && !root.reducedMotion) ? 1.03 : 1.0
+
+                Behavior on scale {
+                    enabled: !root.reducedMotion
+                    NumberAnimation {
+                        duration: motion.duration(tokens.selectionDuration)
+                        easing.type: Easing.OutQuad
+                    }
+                }
+
+                HoverHandler {
+                    id: hoverHandler
+                }
+
+                state: isCurrent ? "selected" : (hoverHandler.hovered ? "hovered" : "normal")
                 states: [
                     State {
                         name: "normal"
                         PropertyChanges {
                             windowDelegate.color: tokens.surfaceRaised
+                            windowDelegate.border.color: tokens.outlineMuted
+                        }
+                    },
+                    State {
+                        name: "hovered"
+                        PropertyChanges {
+                            windowDelegate.color: tokens.surfaceHover
+                            windowDelegate.border.color: tokens.edgeHighlight
                         }
                     },
                     State {
                         name: "selected"
                         PropertyChanges {
                             windowDelegate.color: tokens.surfaceSelected
+                            windowDelegate.border.color: tokens.accentMuted
                         }
                     }
                 ]
@@ -146,6 +246,13 @@ Item {
                     ColorAnimation {
                         target: windowDelegate
                         property: "color"
+                        duration: root.reducedMotion
+                            ? tokens.reducedMotionDuration
+                            : motion.duration(tokens.selectionDuration)
+                    }
+                    ColorAnimation {
+                        target: windowDelegate
+                        property: "border.color"
                         duration: root.reducedMotion
                             ? tokens.reducedMotionDuration
                             : motion.duration(tokens.selectionDuration)
@@ -158,14 +265,32 @@ Item {
                     anchors.bottom: root.horizontalMode ? parent.bottom : undefined
                     anchors.bottomMargin: root.horizontalMode ? tokens.compactSpacing : 0
                     anchors.verticalCenter: root.horizontalMode ? undefined : parent.verticalCenter
-                    width: root.horizontalMode ? parent.width - tokens.standardSpacing * 2 : tokens.activeMarkerWidth
-                    height: root.horizontalMode ? tokens.activeMarkerWidth : parent.height - tokens.standardSpacing * 2
+                    width: windowDelegate.index === windowList.currentIndex
+                        ? (root.horizontalMode ? parent.width - tokens.standardSpacing * 2 : tokens.activeMarkerWidth)
+                        : (root.horizontalMode ? parent.width / 3 : tokens.activeMarkerWidth)
+                    height: windowDelegate.index === windowList.currentIndex
+                        ? (root.horizontalMode ? tokens.activeMarkerWidth : parent.height - tokens.standardSpacing * 2)
+                        : (root.horizontalMode ? tokens.activeMarkerWidth : parent.height / 3)
                     radius: tokens.activeMarkerWidth / 2
                     color: tokens.accent
                     opacity: windowDelegate.index === windowList.currentIndex ? 1 : 0
                     Behavior on opacity {
                         enabled: !root.reducedMotion
                         NumberAnimation { duration: motion.duration(tokens.productiveDuration) }
+                    }
+                    Behavior on width {
+                        enabled: !root.reducedMotion && root.horizontalMode
+                        NumberAnimation {
+                            duration: motion.duration(tokens.selectionDuration)
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+                    Behavior on height {
+                        enabled: !root.reducedMotion && !root.horizontalMode
+                        NumberAnimation {
+                            duration: motion.duration(tokens.selectionDuration)
+                            easing.type: Easing.OutCubic
+                        }
                     }
                 }
 
@@ -182,6 +307,14 @@ Item {
                             : Kirigami.Units.iconSizes.medium
                         Layout.preferredHeight: Layout.preferredWidth
                         Layout.alignment: root.horizontalMode ? Qt.AlignHCenter : Qt.AlignVCenter
+                        scale: (windowDelegate.index === windowList.currentIndex && !root.reducedMotion) ? 1.08 : 1.0
+                        Behavior on scale {
+                            enabled: !root.reducedMotion
+                            NumberAnimation {
+                                duration: motion.duration(tokens.selectionDuration)
+                                easing.type: Easing.OutQuad
+                            }
+                        }
                     }
                     Text {
                         text: windowDelegate.caption
@@ -210,7 +343,10 @@ Item {
                 TapHandler {
                     onTapped: {
                         windowList.currentIndex = windowDelegate.index
-                        windowList.model.activate(windowDelegate.index)
+                        root.currentIndex = windowDelegate.index
+                        if (windowList.model && typeof windowList.model.activate === "function") {
+                            windowList.model.activate(windowDelegate.index)
+                        }
                     }
                 }
             }
@@ -225,5 +361,8 @@ Item {
             easing.bezierCurve: tokens.productiveEnterCurve
         }
     }
-    Component.onCompleted: entryReady = true
+    Component.onCompleted: {
+        entryReady = true
+        Qt.callLater(focusFirstAction)
+    }
 }
