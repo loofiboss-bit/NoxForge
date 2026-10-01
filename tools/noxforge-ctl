@@ -87,6 +87,26 @@ def write_kconfig(file_name: str, group: str, key: str, value: str) -> None:
         parser.write(handle)
 
 
+def delete_kconfig(file_name: str, group: str, key: str) -> None:
+    # Prefer kwriteconfig6 if available on KDE Plasma 6
+    if shutil.which("kwriteconfig6"):
+        run_cmd(["kwriteconfig6", "--file", file_name, "--group", group, "--key", key, "--delete", ""])
+        return
+    path = get_kde_config_dir() / file_name
+    if not path.is_file():
+        return
+    parser = configparser.ConfigParser(interpolation=None, strict=False)
+    parser.optionxform = str
+    try:
+        parser.read(path, encoding="utf-8")
+        if parser.has_section(group) and parser.has_option(group, key):
+            parser.remove_option(group, key)
+            with path.open("w", encoding="utf-8") as handle:
+                parser.write(handle)
+    except Exception:
+        pass
+
+
 def notify_plasma_kwin() -> None:
     """Notify KWin and Plasma components safely without triggering SIGSEGV."""
     qdbus = shutil.which("qdbus6") or shutil.which("qdbus")
@@ -151,8 +171,9 @@ def set_accent(accent: str, dry_run: bool = False) -> dict[str, Any]:
         return {"status": "dry-run", "accent": target, "hex": hex_color}
 
     if target == "system":
-        # Let KDE system accent handle it
-        write_kconfig("kdeglobals", "General", "accentColorFromWallpaper", "false")
+        # Reset custom AccentColor to restore system-controlled accent
+        delete_kconfig("kdeglobals", "General", "AccentColor")
+        delete_kconfig("kdeglobals", "General", "accentColorFromWallpaper")
     else:
         # Convert hex to comma-separated RGB for kdeglobals AccentColor
         r = int(hex_color[1:3], 16)

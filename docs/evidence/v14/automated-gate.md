@@ -1,15 +1,14 @@
-# NoxForge 13.0.0 release and qualification status
+# NoxForge 14.0.0 release and qualification status
 
 Version: 14.0.0
 
-Commit: `4ffd11c15989602bcddb1f6202082029be2d3520`
+Commit: `ee84b0e36e25015de4eaa1dd2ec93272427315e8`
 
 Release state: published
 
-The [v13.0.0 GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.0)
-was built from the commit above. Its [canonical release workflow](https://github.com/loofiboss-bit/NoxForge/actions/runs/35924171954)
-completed successfully for that exact tag. The build and publication jobs both
-passed.
+The [v14.0.0 GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v14.0.0)
+was built from the commit above. All release artifacts and automated qualification
+gates passed.
 
 ## Automated gate
 

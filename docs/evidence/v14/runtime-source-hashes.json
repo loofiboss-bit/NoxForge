@@ -877,7 +877,7 @@
   "tools/fastfetch/noxforge.jsonc": "40b0f27cea89675a605491b7fb9fadbd42c6d48005a5c6027444e8997f5c4fea",
   "tools/motion_state_renderer.cpp": "2120055d06bbd2b989911610caba455459d3c856a5b39389020e703033ef0106",
   "tools/north_star_renderer.cpp": "951b6290429ae8a83985f9246f27b54f873fcdcce26c45c89bbfe0edd685df3f",
-  "tools/noxforge-ctl": "ad86410ecd6a4a3c115a360d6b149ee376c6e145d58624ea7382df9edda28063",
+  "tools/noxforge-ctl": "947237a21c8180a28e59786f45ec46387fcfdc8cca000588ba6105d387f0e312",
   "tools/noxforge-doctor": "6a724e0c18645c42124d95f7cfa7a0842241f9e1e627eb08a9c22eb6fe3a1cf8",
   "tools/noxforge-live-input.cpp": "e043115717b583054fbf45cfd211a587b49a3288f159e10282241b1f65adaa97",
   "tools/noxforge-live-probe.cpp": "ad4f7992fbfc0d7bbe6f8cab620ce855bcc8f7e91f0bcadc44a29575281c4be8",

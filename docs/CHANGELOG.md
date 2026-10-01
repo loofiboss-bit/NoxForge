@@ -1,5 +1,24 @@
 # Changelog
 
+## 14.0.0 — Unified Control Suite & Full Ecosystem Parity
+
+- True Obsidian OLED Parity & Dual-Stack Architecture:
+  - Add dedicated Obsidian lock screen in look-and-feel package (`io.github.loofiboss.noxforge.obsidian.desktop`).
+  - Add dedicated Obsidian TabBox KWin switcher (`io.github.loofiboss.noxforge.obsidian.desktop`).
+  - Real-time dynamic accent matrix with high-contrast electric lime notches across both palettes.
+- Qt 6 C++ Style Engine:
+  - Add dynamic QMenu item sizing, paddings, and font metrics preventing text clipping or truncation across high-DPI displays and scaling factors.
+  - Implement high-contrast dynamic toggle switches with clear visual states and smooth transitions.
+- Unified Control Suite:
+  - Add `noxforge-ctl` CLI command supporting palette inspection, instant switching, automated scheduling, and doctor validation.
+  - Add PySide6/Qt 6 NoxForge Control Center GUI (`noxforge-ctl gui` / desktop launcher) integrating palette switching, opacity/blur customization, and diagnostics.
+  - Add systemd user timer for automatic diurnal palette transitions.
+- Extended Ecosystem Parity:
+  - Add themes and syntax definitions for Zed editor, btop, Starship prompt, Fastfetch, Firefox userChrome, and Discord.
+- Tooling & Packaging:
+  - Upgrade `noxforge-doctor` to Schema 7 with automated desktop configuration alignment (`--apply-sync [graphite|obsidian]`).
+  - Re-qualify Fedora 44 RPM/SRPM, Arch Linux PKGBUILD, portable bundle, and 18 release artifacts.
+
 ## 13.0.2 — Opacity Configurator Stabilization & System Coherence
 
 - Eliminate deprecated `org.kde.PlasmaShell.refreshCurrentShell` D-Bus call to prevent SIGSEGV crashes on theme reload in Plasma 6 / Qt 6.
