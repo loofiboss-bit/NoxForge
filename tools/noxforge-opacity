@@ -18,7 +18,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-VERSION = "14.0.1"
+VERSION = "14.0.2"
 
 # Target theme package identifiers
 GRAPHITE_THEME_ID = "io.github.loofiboss.noxforge.desktop"
@@ -150,7 +150,10 @@ def discover_theme_dirs(custom_theme_dir: Path | None = None, theme_filter: str 
         user_path = user_plasma / theme_id
         system_path = system_plasma / theme_id
         repo_path = repo_root / "plasma/desktoptheme" / theme_id
-        if user_path.is_dir():
+        user_valid = user_path.is_dir() and (
+            (user_path / "metadata.json").is_file() or (user_path / "metadata.desktop").is_file()
+        )
+        if user_valid:
             results.append((variant_name, user_path, "user-local"))
         elif system_path.is_dir():
             results.append((variant_name, system_path, "system-package"))
@@ -184,7 +187,12 @@ def discover_aurorae_dirs(custom_aurorae_dir: Path | None = None, theme_filter: 
         user_path = user_aurorae / theme_id
         system_path = system_aurorae / theme_id
         repo_path = repo_root / "aurorae" / theme_id
-        if user_path.is_dir():
+        user_valid = user_path.is_dir() and (
+            (user_path / "decoration.svg").is_file()
+            or (user_path / "themerc").is_file()
+            or (user_path / "metadata.desktop").is_file()
+        )
+        if user_valid:
             results.append((variant_name, user_path, "user-local"))
         elif system_path.is_dir():
             results.append((variant_name, system_path, "system-package"))
@@ -318,7 +326,12 @@ def extract_aurorae_opacity(content: str) -> tuple[float | None, float | None]:
 
 def ensure_user_copy(target_path: Path, system_source: Path, dry_run: bool = False) -> bool:
     """Ensure a writable user-local copy exists if only system package is present."""
-    has_meta = (target_path / "metadata.json").is_file() or (target_path / "metadata.desktop").is_file()
+    has_meta = (
+        (target_path / "metadata.json").is_file()
+        or (target_path / "metadata.desktop").is_file()
+        or (target_path / "decoration.svg").is_file()
+        or (target_path / "themerc").is_file()
+    )
     if target_path.is_dir() and has_meta:
         return True
 
@@ -438,32 +451,34 @@ def apply_opacity(
                 modified_files.append(f"{dst_file} ({role_name}: {round(target_op * 100)}%)")
 
         if not dry_run and target_dir.is_dir():
-            receipt = {
-                "tool": "noxforge-opacity",
-                "version": VERSION,
-                "variant": variant_name,
-                "recipe": {
-                    "panel": recipe.panel,
-                    "dialog": recipe.dialog,
-                    "widget": recipe.widget,
-                    "tooltip": recipe.tooltip,
-                    "aurorae_active": recipe.aurorae_active,
-                    "aurorae_inactive": recipe.aurorae_inactive,
-                },
-            }
-            try:
-                (target_dir / ".noxforge-customization.json").write_text(
-                    json.dumps(receipt, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-            except OSError:
-                pass
-            for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop"):
-                if meta_file.is_file():
-                    try:
-                        meta_file.touch()
-                    except OSError:
-                        pass
+            has_meta = (target_dir / "metadata.json").is_file() or (target_dir / "metadata.desktop").is_file()
+            if has_meta:
+                receipt = {
+                    "tool": "noxforge-opacity",
+                    "version": VERSION,
+                    "variant": variant_name,
+                    "recipe": {
+                        "panel": recipe.panel,
+                        "dialog": recipe.dialog,
+                        "widget": recipe.widget,
+                        "tooltip": recipe.tooltip,
+                        "aurorae_active": recipe.aurorae_active,
+                        "aurorae_inactive": recipe.aurorae_inactive,
+                    },
+                }
+                try:
+                    (target_dir / ".noxforge-customization.json").write_text(
+                        json.dumps(receipt, indent=2) + "\n",
+                        encoding="utf-8",
+                    )
+                except OSError:
+                    pass
+                for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop"):
+                    if meta_file.is_file():
+                        try:
+                            meta_file.touch()
+                        except OSError:
+                            pass
 
     if include_aurorae:
         aurorae_dirs = discover_aurorae_dirs(custom_aurorae_dir, theme_filter)
@@ -491,28 +506,30 @@ def apply_opacity(
                         f"{dst_dec} (aurorae titlebar: {round(recipe.aurorae_active * 100)}% / {round(recipe.aurorae_inactive * 100)}%)"
                     )
             if not dry_run and target_dir.is_dir():
-                receipt = {
-                    "tool": "noxforge-opacity",
-                    "version": VERSION,
-                    "variant": variant_name,
-                    "recipe": {
-                        "aurorae_active": recipe.aurorae_active,
-                        "aurorae_inactive": recipe.aurorae_inactive,
-                    },
-                }
-                try:
-                    (target_dir / ".noxforge-customization.json").write_text(
-                        json.dumps(receipt, indent=2) + "\n",
-                        encoding="utf-8",
-                    )
-                except OSError:
-                    pass
-                for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop", target_dir / "themerc"):
-                    if meta_file.is_file():
-                        try:
-                            meta_file.touch()
-                        except OSError:
-                            pass
+                has_dec = (target_dir / "decoration.svg").is_file() or (target_dir / "themerc").is_file()
+                if has_dec:
+                    receipt = {
+                        "tool": "noxforge-opacity",
+                        "version": VERSION,
+                        "variant": variant_name,
+                        "recipe": {
+                            "aurorae_active": recipe.aurorae_active,
+                            "aurorae_inactive": recipe.aurorae_inactive,
+                        },
+                    }
+                    try:
+                        (target_dir / ".noxforge-customization.json").write_text(
+                            json.dumps(receipt, indent=2) + "\n",
+                            encoding="utf-8",
+                        )
+                    except OSError:
+                        pass
+                    for meta_file in (target_dir / "metadata.json", target_dir / "metadata.desktop", target_dir / "themerc"):
+                        if meta_file.is_file():
+                            try:
+                                meta_file.touch()
+                            except OSError:
+                                pass
 
     return modified_files
 

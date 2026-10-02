@@ -1,3 +1,11 @@
+# NoxForge 14.0.2 — Opacity Configurator Stability & Desktop Theme Crash Fix
+
+- fixed KDE Plasma 6 System Settings crash (`SIGSEGV` in `KSvg::ImageSet`) caused by hollow user directories shadowing system themes;
+- updated `noxforge-opacity` to require valid metadata (`metadata.json`/`metadata.desktop`) and Aurorae assets (`decoration.svg`/`themerc`) before classifying user-local directories;
+- enhanced `ensure_user_copy` to safely clean up hollow shells and clone complete theme trees from system packages;
+- protected `.noxforge-customization.json` receipt generation so receipts are never written to incomplete directories;
+- added regression test coverage ensuring automatic recovery from hollow directory states.
+
 # NoxForge 14.0.1 — Store Assets Refresh & Fluid TabBox Switcher
 
 - fixed non-responsive cycling in Alt+Tab window switcher by implementing bidirectional index synchronization (`tabBox.currentIndex`);

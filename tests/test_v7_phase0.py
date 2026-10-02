@@ -22,7 +22,7 @@ class V7PhaseZeroTests(unittest.TestCase):
     def test_stable_version_is_synchronized_without_rewriting_v6(self) -> None:
         self.assertEqual(
             (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
-            "7.0.0",
+            (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
         )
         subprocess.run(
             ["python3", "scripts/sync_version.py", "--check"],

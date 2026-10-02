@@ -50,11 +50,11 @@
     "viewBox": "0 0 92 40"
   },
   "sourceHashes": {
-    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svg": "63574b7e6b138df10a86837ea50dc25d095d4df60770b8c98618c85178a207a9",
-    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svgz": "af7cd3d30528edc043450face9798e6a07a518c53195584a62654cae35f51aa3",
-    "aurorae/io.github.loofiboss.noxforge.desktop/io.github.loofiboss.noxforge.desktoprc": "9a4578cc6b807cfde00f50efb8f3f6517546fa4699fd8beec6567bd89f058d1c",
-    "design/edge-polish-contract.json": "c21bff28a576bd2eb8a7b0b1628e883e566687f2346609deedbee57a1e33e4c4",
-    "scripts/generate_visual_assets.py": "faf73b55471a4cba92caaa46e15ddcf7048c12a48fbeed814ab0d5ed0304fed4"
+    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svg": "9359a31b3e6593a117f5e50973666bd9dbc2cf782935ed8d66297d01c1b1a260",
+    "aurorae/io.github.loofiboss.noxforge.desktop/decoration.svgz": "343f3be93208719614ed42c07c2d1df2036988e7778f39b31838f4ecb6dbc1e7",
+    "aurorae/io.github.loofiboss.noxforge.desktop/io.github.loofiboss.noxforge.desktoprc": "4f12bb3bd561bd48e6fbbbcf83bfe6652c39c9977d4e57a2566e503e75b23d8e",
+    "design/edge-polish-contract.json": "6bdddd28cce6744d02dc82d3fa9f75295fc812111469306410e0163b9261f45f",
+    "scripts/generate_visual_assets.py": "ce1b3a0d008a3f11ae7cf595d337669d6cc42362cc44d56ca25073eac2c832d8"
   },
   "staticMatrix": [
     {
