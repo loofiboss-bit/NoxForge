@@ -1,5 +1,14 @@
 # Changelog
 
+## 14.0.2 — Opacity Configurator Stability & Desktop Theme Crash Fix
+
+- Fix KDE Plasma 6 System Settings crash (`SIGSEGV` in `KSvg::ImageSet`):
+  - Prevent `noxforge-opacity` from classifying hollow/empty user directories as valid local themes.
+  - Require valid metadata (`metadata.json` or `metadata.desktop`) and Aurorae assets (`decoration.svg` or `themerc`) before treating a directory as `user-local`.
+  - Fix `ensure_user_copy` to safely clean up hollow directory shells and clone complete theme assets from `/usr/share/plasma/desktoptheme` and `/usr/share/aurorae/themes`.
+  - Prevent writing customization receipt (`.noxforge-customization.json`) to incomplete directories lacking metadata.
+  - Add regression unit tests in `tests/test_opacity.py` verifying fallback and self-healing behavior.
+
 ## 14.0.1 — Store Assets Refresh & Fluid TabBox Switcher
 
 - KWin TabBox Window Switcher:

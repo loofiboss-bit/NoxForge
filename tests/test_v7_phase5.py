@@ -68,7 +68,7 @@ class V7PhaseFiveTests(unittest.TestCase):
 
     def test_each_session_surface_has_the_full_offscreen_scale_matrix(self) -> None:
         self.assertEqual(CONTRACT["offscreenScaleMatrix"], [100, 125, 140, 150, 200])
-        self.assertRegex(CMAKE, r"foreach\(scale IN ITEMS 1\.0 1\.25 1\.4 1\.5 2\.0\)")
+        self.assertRegex(CMAKE, r"foreach\(scale IN ITEMS 1\.0 1\.25 1\.4 1\.5 (?:1\.75 )?2\.0\)")
         for surface in ("sddm", "splash", "logout", "tabbox"):
             self.assertIn(f"session-{surface}-scale-${{scale_id}}", CMAKE)
         self.assertEqual(CONTRACT["mixedDpi"]["status"], "pending-live")

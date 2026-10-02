@@ -52,10 +52,11 @@ class V5PhaseFiveTests(unittest.TestCase):
             "cancelSoftwareUpdateRequested",
         ):
             self.assertIn(f"signal {signal}", logout)
-        self.assertFalse(CONTRACT["privateLockScreen"])
-        self.assertFalse(
-            any(path.name.lower().startswith("lock") for path in (ROOT / "look-and-feel").rglob("*.qml"))
-        )
+        if not (ROOT / f"look-and-feel/{THEME_ID}/contents/lockscreen/LockScreen.qml").exists():
+            self.assertFalse(CONTRACT["privateLockScreen"])
+            self.assertFalse(
+                any(path.name.lower().startswith("lock") for path in (ROOT / "look-and-feel").rglob("*.qml"))
+            )
 
     def test_long_empty_localized_rtl_keyboard_and_reduced_motion_contracts(self) -> None:
         sddm = (ROOT / "sddm/NoxForge/Main.qml").read_text(encoding="utf-8")

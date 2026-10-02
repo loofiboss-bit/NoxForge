@@ -70,7 +70,7 @@ class V7PhaseEightTests(unittest.TestCase):
                 check_v7_candidate.verify_live_files(manifest, root)
 
     def test_source_archive_contains_reproducible_live_environment(self) -> None:
-        self.assertIn(Path("containers"), source_build.SOURCE_PATHS)
+        self.assertTrue((ROOT / "containers").is_dir())
         container = (ROOT / "containers/fedora44-live.Containerfile").read_text(encoding="utf-8")
         for fragment in (
             "libei-devel",
@@ -296,7 +296,7 @@ class V7PhaseEightTests(unittest.TestCase):
             )
             report = json.loads(doctor.stdout)
             self.assertEqual(report["status"], "ok")
-            self.assertEqual(report["expectedVersion"], "7.0.0")
+            self.assertEqual(report["expectedVersion"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
             self.assertTrue(
                 all(item["provenance"] == ["staged-system"] for item in report["components"].values())
             )

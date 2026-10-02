@@ -286,8 +286,37 @@ class TestNoxForgeOpacity(unittest.TestCase):
         finally:
             if old_xdg is not None:
                 os.environ["XDG_CONFIG_HOME"] = old_xdg
+    def test_discover_theme_dirs_ignores_hollow_user_dir(self) -> None:
+        """Verify hollow user directories lacking metadata.json fall back to system/repo theme."""
+        user_plasma = self.temp_dir / "user_plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
+        user_plasma.mkdir(parents=True, exist_ok=True)
+        # Only put customization json, no metadata.json
+        (user_plasma / ".noxforge-customization.json").write_text("{}", encoding="utf-8")
+
+        old_xdg = os.environ.get("XDG_DATA_HOME")
+        try:
+            os.environ["XDG_DATA_HOME"] = str(self.temp_dir / "user_plasma")
+            discovered = noxforge_opacity.discover_theme_dirs(theme_filter="graphite")
+            for variant, path, origin in discovered:
+                # Must not classify hollow directory as user-local
+                self.assertNotEqual(origin, "user-local")
+                self.assertNotEqual(path, user_plasma)
+        finally:
+            if old_xdg is not None:
+                os.environ["XDG_DATA_HOME"] = old_xdg
             else:
-                os.environ.pop("XDG_CONFIG_HOME", None)
+                os.environ.pop("XDG_DATA_HOME", None)
+
+    def test_ensure_user_copy_repairs_hollow_dir(self) -> None:
+        """Verify ensure_user_copy replaces a hollow dir lacking metadata with full system source."""
+        hollow_dir = self.temp_dir / "hollow_user_theme"
+        hollow_dir.mkdir(parents=True, exist_ok=True)
+        (hollow_dir / ".noxforge-customization.json").write_text("{}", encoding="utf-8")
+
+        res = noxforge_opacity.ensure_user_copy(hollow_dir, self.theme_dir)
+        self.assertTrue(res)
+        self.assertTrue((hollow_dir / "metadata.json").is_file())
+        self.assertTrue((hollow_dir / "translucent/widgets/panel-background.svg").is_file())
 
 
 if __name__ == "__main__":

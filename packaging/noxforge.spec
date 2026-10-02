@@ -1,4 +1,4 @@
-%global upstream_version 14.0.1
+%global upstream_version 14.0.2
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        14.0.1
+Version:        14.0.2
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -96,6 +96,10 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Fri Oct 02 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 14.0.2-1
+- Fix noxforge-opacity hollow user theme directories and prevent System Settings KSvg crash
+- Validate metadata integrity before writing user-local customization receipts
+
 * Wed Sep 30 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 14.0.0-1
 - Dual-palette parity (Graphite & Obsidian OLED), KWin Alt+Tab parity, Lock Screen,
   Forge Accent Matrix, noxforge-ctl unified orchestration and Control Center GUI

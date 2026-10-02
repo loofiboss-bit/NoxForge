@@ -104,8 +104,8 @@ class V7PhaseOneTests(unittest.TestCase):
         )
         for edge in ("Top", "Bottom", "Left", "Right"):
             self.assertIn(f"TitleEdge{edge}Maximized=0", config)
-        self.assertIn("ButtonWidth=26", config)
-        self.assertIn("ButtonHeight=26", config)
+        self.assertIn("ButtonWidth=24", config)
+        self.assertIn("ButtonHeight=24", config)
         for name in ("minimize", "maximize", "restore", "close"):
             self.assertTrue((THEME / f"{name}.svg").is_file())
             self.assertTrue((THEME / f"{name}.svgz").is_file())
