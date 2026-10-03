@@ -47,8 +47,8 @@ Rectangle {
     LayoutMirroring.childrenInherit: true
 
     function requestLogin() {
-        if (usernameField.editor.text.trim().length === 0 || passwordField.editor.text.length === 0) {
-            statusMessage = qsTr("Enter both username and password")
+        if (usernameField.editor.text.trim().length === 0) {
+            statusMessage = qsTr("Enter username")
             statusDanger = true
             return
         }
