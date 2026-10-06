@@ -381,6 +381,15 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(880, 680)
         self.setStyleSheet(STYLE_SHEET)
 
+        icon_candidates = [
+            ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg",
+            Path("/usr/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg"),
+            Path.home() / ".local/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg",
+        ]
+        icon_path = next((p for p in icon_candidates if p.is_file()), None)
+        if icon_path:
+            self.setWindowIcon(QtGui.QIcon(str(icon_path)))
+
         central_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(central_widget)
         main_layout = QtWidgets.QVBoxLayout(central_widget)

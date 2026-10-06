@@ -206,6 +206,27 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
         self.assertEqual(data["changes"]["widgetStyle"], "NoxForge")
         self.assertEqual(data["changes"]["iconTheme"], "NoxForge")
 
+    def test_application_icons_and_desktop_entries(self) -> None:
+        cc_icon = ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg"
+        op_icon = ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg"
+        self.assertTrue(cc_icon.is_file(), "Control center app icon must exist")
+        self.assertTrue(op_icon.is_file(), "Opacity configurator app icon must exist")
+        self.assertIn("viewBox=\"0 0 512 512\"", cc_icon.read_text(encoding="utf-8"))
+        self.assertIn("viewBox=\"0 0 512 512\"", op_icon.read_text(encoding="utf-8"))
+
+        cc_desk = (ROOT / "distribution/io.github.loofiboss.noxforge.controlcenter.desktop").read_text(encoding="utf-8")
+        op_desk = (ROOT / "distribution/io.github.loofiboss.noxforge.opacity.desktop").read_text(encoding="utf-8")
+        self.assertIn("Icon=io.github.loofiboss.noxforge.controlcenter", cc_desk)
+        self.assertIn("Icon=io.github.loofiboss.noxforge.opacity", op_desk)
+
+        cmake = (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg", cmake)
+        self.assertIn("icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg", cmake)
+
+        spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
+        self.assertIn("%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg", spec)
+        self.assertIn("%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg", spec)
+
 
 if __name__ == "__main__":
     unittest.main()

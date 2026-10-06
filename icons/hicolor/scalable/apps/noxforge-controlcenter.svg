@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="NoxForge Control Center icon">
+  <defs>
+    <linearGradient id="bgGrad" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#18252E"/>
+      <stop offset="50%" stop-color="#101920"/>
+      <stop offset="100%" stop-color="#080D11"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4EE8C4" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#A3FF47" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#1B382B" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="limeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#BFFF6B"/>
+      <stop offset="100%" stop-color="#7CE622"/>
+    </linearGradient>
+    <linearGradient id="plateGrad" x1="120" y1="120" x2="392" y2="392" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E2E38"/>
+      <stop offset="100%" stop-color="#0E161C"/>
+    </linearGradient>
+    <filter id="hubShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Canvas Base -->
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="url(#bgGrad)"/>
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="none" stroke="url(#rimGrad)" stroke-width="4"/>
+
+  <!-- Top Specular Shine -->
+  <path d="M72 64 C 180 40, 332 40, 440 64 C 400 120, 280 140, 72 64 Z" fill="#FFFFFF" opacity="0.03"/>
+
+  <!-- Tactical Radial Grid / Control Dial Background -->
+  <g opacity="0.18" stroke="#3A5261" stroke-width="1.5" fill="none">
+    <circle cx="256" cy="256" r="160" stroke-dasharray="6 8"/>
+    <circle cx="256" cy="256" r="190" stroke-dasharray="3 12"/>
+    <line x1="256" y1="76" x2="256" y2="100"/>
+    <line x1="256" y1="412" x2="256" y2="436"/>
+    <line x1="76" y1="256" x2="100" y2="256"/>
+    <line x1="412" y1="256" x2="436" y2="256"/>
+  </g>
+
+  <!-- Central Hub Elevated Plate -->
+  <g filter="url(#hubShadow)">
+    <rect x="108" y="108" width="296" height="296" rx="64" fill="url(#plateGrad)" stroke="#263A47" stroke-width="2.5"/>
+
+    <!-- Inner Control Orbit Ring -->
+    <circle cx="256" cy="256" r="118" fill="none" stroke="#22333E" stroke-width="4"/>
+    <path d="M 256 138 A 118 118 0 0 1 374 256" fill="none" stroke="url(#limeGlow)" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- 3 Orbit Telemetry Node Indicators -->
+    <circle cx="374" cy="256" r="7" fill="#A3FF47"/>
+    <circle cx="172" cy="172" r="5" fill="#38BDF8"/>
+    <circle cx="172" cy="340" r="5" fill="#748289"/>
+
+    <!-- Central Kinetic Mark: NoxForge Geometric Monogram -->
+    <g transform="translate(136, 166) scale(1.25)">
+      <path d="M18 116 L46 28 L108 116 L136 28 H184 M123 70 H168"
+            fill="none" stroke="#E8F0F2" stroke-width="13" stroke-linecap="square" stroke-linejoin="miter"/>
+      <path d="M47 30 L106 114 M136 28 H184"
+            fill="none" stroke="url(#limeGlow)" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter"/>
+    </g>
+  </g>
+</svg>

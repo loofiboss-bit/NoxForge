@@ -61,6 +61,10 @@ apply a theme, configure a login surface, or switch display managers.
 %{_qt6_plugindir}/styles/libnoxforge6.so
 %{_datadir}/applications/io.github.loofiboss.noxforge.opacity.desktop
 %{_datadir}/applications/io.github.loofiboss.noxforge.controlcenter.desktop
+%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg
+%{_datadir}/icons/hicolor/scalable/apps/noxforge-opacity.svg
+%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg
+%{_datadir}/icons/hicolor/scalable/apps/noxforge-controlcenter.svg
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
 %{_datadir}/noxforge/opacity_gui.py

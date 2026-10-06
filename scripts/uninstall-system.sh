@@ -102,6 +102,10 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/noxforge/control_center.py|\
         /usr/share/applications/io.github.loofiboss.noxforge.opacity.desktop|\
         /usr/share/applications/io.github.loofiboss.noxforge.controlcenter.desktop|\
+        /usr/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg|\
+        /usr/share/icons/hicolor/scalable/apps/noxforge-opacity.svg|\
+        /usr/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg|\
+        /usr/share/icons/hicolor/scalable/apps/noxforge-controlcenter.svg|\
         /usr/share/noxforge/VERSION|\
         /usr/share/noxforge/release-manifest.json|\
         /usr/share/man/man1/noxforge-doctor.1|\
