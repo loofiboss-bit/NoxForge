@@ -148,8 +148,8 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
         self.assertTrue(cc_path.is_file())
         content = cc_path.read_text(encoding="utf-8")
 
-        self.assertIn("Live Ikon- & Rörelseförhandsgranskning", content)
-        self.assertIn("Testa Kinetisk Skakning (220ms)", content)
+        self.assertIn("Live Icon & Kinetic Motion Preview", content)
+        self.assertIn("Test Kinetic Spring Motion (220ms)", content)
         self.assertIn("play_test_shake", content)
         self.assertIn("preview_badges", content)
 
@@ -188,6 +188,23 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
 
         srcinfo = (ROOT / "packaging/arch/.SRCINFO").read_text(encoding="utf-8")
         self.assertIn("pkgver = 15.0.0", srcinfo)
+
+    def test_ctl_sync_subcommand(self) -> None:
+        ctl = ROOT / "tools/noxforge-ctl"
+        res = subprocess.run(
+            [sys.executable, str(ctl), "sync", "-n", "--json"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(res.returncode, 0)
+        data = json.loads(res.stdout)
+        self.assertEqual(data["status"], "dry-run")
+        self.assertIn("cursorTheme", data["changes"])
+        self.assertEqual(data["changes"]["cursorTheme"], "NoxForge-Cursors")
+        self.assertEqual(data["changes"]["widgetStyle"], "NoxForge")
+        self.assertEqual(data["changes"]["iconTheme"], "NoxForge")
 
 
 if __name__ == "__main__":

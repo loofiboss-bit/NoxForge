@@ -22,7 +22,7 @@ Key capabilities:
 ### Synopsis
 
 ```bash
-noxforge-ctl {switch,accent,status,opacity,doctor,schedule,gui} [options]
+noxforge-ctl {switch,sync,accent,status,opacity,doctor,schedule,gui} [options]
 ```
 
 ### Subcommands
@@ -42,6 +42,20 @@ noxforge-ctl switch obsidian --dry-run
 
 # Output JSON for scripts and status widgets
 noxforge-ctl switch obsidian --json
+```
+
+#### `sync`
+Synchronize the full NoxForge suite across all desktop layers (Look-and-Feel, color scheme, Plasma desktop style, widget style, window decorations, icons, cursors, sounds, and GTK 3/4 themes) and apply live to running Plasma session:
+
+```bash
+# Synchronize active profile across all desktop components
+noxforge-ctl sync
+
+# Synchronize explicitly to Obsidian OLED
+noxforge-ctl sync --profile obsidian
+
+# Dry-run preview
+noxforge-ctl sync --dry-run --json
 ```
 
 #### `accent`
