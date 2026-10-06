@@ -27,6 +27,32 @@ Rectangle {
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
     property real shakeOffset: 0
+    onSessionIndexChanged: root.syncFaceAuthenticationSelection()
+
+    function syncFaceAuthenticationSelection() {
+        if (!faceAuthenticationControl.item) {
+            return
+        }
+        faceAuthenticationControl.item.selectedUser = usernameField.editor.text.trim()
+        faceAuthenticationControl.item.sessionIndex = root.sessionIndex
+    }
+
+    function clearFaceAuthenticationSelection() {
+        if (!faceAuthenticationControl.item) {
+            return
+        }
+        sddm.suppressFaceAuthenticationActivity()
+        if (sddm.faceAuthenticationActive) {
+            sddm.cancelFaceAuthentication()
+        }
+        faceAuthenticationControl.item.selectedUser = ""
+    }
+
+    function cancelFaceAuthentication() {
+        if (faceAuthenticationControl.item && sddm.faceAuthenticationActive) {
+            sddm.cancelFaceAuthentication()
+        }
+    }
 
     SequentialAnimation {
         id: errorShakeAnim
@@ -66,6 +92,7 @@ Rectangle {
     LayoutMirroring.childrenInherit: true
 
     function requestLogin() {
+        cancelFaceAuthentication()
         if (usernameField.editor.text.trim().length === 0 || passwordField.editor.text.length === 0) {
             statusMessage = qsTr("Enter both username and password")
             statusDanger = true
@@ -253,6 +280,16 @@ Rectangle {
                 editor.focus: true
                 editor.KeyNavigation.tab: passwordField.editor
                 editor.KeyNavigation.backtab: powerOffButton
+                editor.onTextChanged: {
+                    root.clearFaceAuthenticationSelection()
+                    faceUserSync.restart()
+                }
+                editor.onActiveFocusChanged: {
+                    if (!editor.activeFocus && faceUserSync.running) {
+                        faceUserSync.stop()
+                        root.syncFaceAuthenticationSelection()
+                    }
+                }
             }
             ForgeField {
                 id: passwordField
@@ -262,6 +299,28 @@ Rectangle {
                 editor.KeyNavigation.tab: sessionButton
                 editor.KeyNavigation.backtab: usernameField.editor
                 editor.onAccepted: root.requestLogin()
+                editor.onTextChanged: {
+                    if (editor.text.length > 0) {
+                        root.cancelFaceAuthentication()
+                    }
+                }
+            }
+
+            Loader {
+                id: faceAuthenticationControl
+                property var loadedControl: item
+                Layout.fillWidth: true
+                Layout.preferredHeight: loadedControl ? loadedControl.height : 0
+                active: typeof sddm.registerFaceAuthenticationUi === "function"
+                source: active ? "qrc:/theme/FaceAuthenticationControl.qml" : ""
+                onLoaded: root.syncFaceAuthenticationSelection()
+            }
+
+            Timer {
+                id: faceUserSync
+                interval: 250
+                repeat: false
+                onTriggered: root.syncFaceAuthenticationSelection()
             }
 
             ForgeButton {

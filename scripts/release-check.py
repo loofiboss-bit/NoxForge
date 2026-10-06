@@ -47,6 +47,9 @@ V6_GENERATOR_CHECKS = (
 )
 QML_SURFACES = (
     "sddm/NoxForge/Main.qml",
+    "sddm/NoxForgeObsidian/Main.qml",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml",
+    "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml",
