@@ -161,6 +161,67 @@ class ProfileAccentTab(QtWidgets.QWidget):
         a_layout.addLayout(accent_grid)
         layout.addWidget(accent_group)
 
+        # Live Icon & Kinetic Motion Preview Section (v15.0.0)
+        preview_group = QtWidgets.QGroupBox("Live Ikon- & Rörelseförhandsgranskning (v15.0.0 Adaptive Vector Suite)")
+        prev_layout = QtWidgets.QVBoxLayout(preview_group)
+
+        prev_desc = QtWidgets.QLabel("Adaptiva vektorsymboler (Wi-Fi 0%–100%, Batteri, Ljud) och kinetisk skakningstest:")
+        prev_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
+        prev_layout.addWidget(prev_desc)
+
+        icons_row = QtWidgets.QHBoxLayout()
+        icons_row.setSpacing(10)
+        self.preview_badges: list[tuple[QtWidgets.QLabel, QtWidgets.QLabel, Path]] = []
+
+        icon_samples = [
+            ("Wi-Fi 100%", ROOT / "icons/NoxForge/scalable/status/network-wireless.svg"),
+            ("Wi-Fi 75%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-75.svg"),
+            ("Wi-Fi 50%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-50.svg"),
+            ("Wi-Fi 25%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-25.svg"),
+            ("Wi-Fi 0%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-00.svg"),
+            ("Frånkopplad", ROOT / "icons/NoxForge/scalable/status/network-wireless-disconnected.svg"),
+            ("Batteri", ROOT / "icons/NoxForge/scalable/status/battery-100.svg"),
+            ("Ljud", ROOT / "icons/NoxForge/scalable/status/audio-volume-high.svg"),
+        ]
+
+        for title, svg_path in icon_samples:
+            col = QtWidgets.QVBoxLayout()
+            col.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            img_lbl = QtWidgets.QLabel()
+            img_lbl.setFixedSize(36, 36)
+            img_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            img_lbl.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px; padding: 4px;")
+            if svg_path.is_file():
+                img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
+
+            txt_lbl = QtWidgets.QLabel(title)
+            txt_lbl.setStyleSheet("color: #748289; font-size: 10px; font-weight: 600;")
+            txt_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            col.addWidget(img_lbl)
+            col.addWidget(txt_lbl)
+            icons_row.addLayout(col)
+            self.preview_badges.append((img_lbl, txt_lbl, svg_path))
+
+        prev_layout.addLayout(icons_row)
+
+        # Kinetic Motion Test Row
+        motion_row = QtWidgets.QHBoxLayout()
+        self.test_box = QtWidgets.QLineEdit("Lösenordsprov / Feltest")
+        self.test_box.setReadOnly(True)
+        self.test_box.setStyleSheet(
+            "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+            "color: #E8F0F2; padding: 6px 12px; font-size: 12px;"
+        )
+        self.btn_test_shake = QtWidgets.QPushButton("Testa Kinetisk Skakning (220ms)")
+        self.btn_test_shake.setMinimumHeight(32)
+        self.btn_test_shake.clicked.connect(self.play_test_shake)
+
+        motion_row.addWidget(self.test_box, stretch=1)
+        motion_row.addWidget(self.btn_test_shake)
+        prev_layout.addLayout(motion_row)
+
+        layout.addWidget(preview_group)
+
         # Day/Night Automation Section
         sched_group = QtWidgets.QGroupBox("Dag / Natt Automatisering")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
@@ -173,6 +234,30 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addStretch()
         self.refresh_state()
 
+    def play_test_shake(self) -> None:
+        orig_rect = self.test_box.geometry()
+        anim = QtCore.QSequentialAnimationGroup(self)
+        for dx, dur in [(-8, 40), (8, 40), (-4, 40), (4, 40), (0, 60)]:
+            step = QtCore.QPropertyAnimation(self.test_box, b"geometry")
+            step.setDuration(dur)
+            step.setStartValue(self.test_box.geometry())
+            target_rect = QtCore.QRect(orig_rect.x() + dx, orig_rect.y(), orig_rect.width(), orig_rect.height())
+            step.setEndValue(target_rect)
+            anim.addAnimation(step)
+        self.test_box.setStyleSheet(
+            "background-color: #1A1215; border: 2px solid #FF6B7A; border-radius: 5px; "
+            "color: #FF6B7A; padding: 6px 12px; font-size: 12px; font-weight: bold;"
+        )
+        def restore():
+            self.test_box.setStyleSheet(
+                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                "color: #E8F0F2; padding: 6px 12px; font-size: 12px;"
+            )
+            self.test_box.setGeometry(orig_rect)
+        anim.finished.connect(restore)
+        self._shake_anim = anim
+        anim.start()
+
     def refresh_state(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
@@ -182,6 +267,12 @@ class ProfileAccentTab(QtWidgets.QWidget):
         else:
             self.btn_graphite.setStyleSheet("background-color: #1A2E20; border: 2px solid #A3FF47; color: #FFFFFF; font-weight: bold;")
             self.btn_obsidian.setStyleSheet("")
+
+        # Update preview badges
+        if hasattr(self, "preview_badges"):
+            for img_lbl, _, svg_path in self.preview_badges:
+                if svg_path.is_file():
+                    img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
 
         sched = noxforge_ctl.manage_schedule("status")
         self.sched_check.blockSignals(True)
@@ -195,6 +286,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
     def apply_accent(self, accent: str) -> None:
         res = noxforge_ctl.set_accent(accent)
+        self.refresh_state()
         self.statusChanged.emit(f"Accentfärg aktiverad: {accent.upper()}")
 
     def toggle_schedule(self, checked: bool) -> None:

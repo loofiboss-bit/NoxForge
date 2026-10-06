@@ -570,6 +570,71 @@ def icon_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any
     }
 
 
+V15_SIGNAL_SUITE = (
+    "status/network-wireless-connected-00.svg",
+    "status/network-wireless-connected-25.svg",
+    "status/network-wireless-connected-50.svg",
+    "status/network-wireless-connected-75.svg",
+    "status/network-wireless-connected-100.svg",
+    "status/network-wireless-acquiring.svg",
+    "status/network-wireless-locked.svg",
+    "status/network-wireless-hotspot.svg",
+    "status/network-wireless-disconnected.svg",
+    "status/battery-000.svg",
+    "status/battery-100.svg",
+)
+
+
+def icon_adaptation_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    theme_roots = [candidate / "icons/NoxForge" for candidate in roots]
+    installed = next((candidate for candidate in theme_roots if scoped_file(candidate / "index.theme", root)), None)
+    if installed is None:
+        return {
+            "status": "theme-missing",
+            "scalableAdaptiveCount": 0,
+            "missingAdaptive": [],
+            "v15SignalSuite": {
+                "status": "theme-missing",
+                "checked": len(V15_SIGNAL_SUITE),
+                "missing": list(V15_SIGNAL_SUITE),
+            },
+        }
+
+    scalable = installed / "scalable"
+    adaptive_count = 0
+    missing_adaptive: list[str] = []
+    if scalable.is_dir():
+        for svg_path in sorted(scalable.glob("*/*.svg")):
+            if not scoped_file(svg_path, root):
+                continue
+            try:
+                content = svg_path.read_text(encoding="utf-8")
+                if 'id="current-color-scheme"' in content or "current-color-scheme" in content:
+                    adaptive_count += 1
+                else:
+                    missing_adaptive.append(str(svg_path.relative_to(scalable)))
+            except OSError:
+                pass
+
+    missing_v15 = [
+        relative
+        for relative in V15_SIGNAL_SUITE
+        if not scoped_file(scalable / relative, root)
+    ]
+
+    ok = bool(adaptive_count > 0 and not missing_adaptive and not missing_v15)
+    return {
+        "status": "ok" if ok else "incomplete",
+        "scalableAdaptiveCount": adaptive_count,
+        "missingAdaptive": sorted(missing_adaptive),
+        "v15SignalSuite": {
+            "status": "ok" if not missing_v15 else "missing-icons",
+            "checked": len(V15_SIGNAL_SUITE),
+            "missing": sorted(missing_v15),
+        },
+    }
+
+
 def parse_kscreen_doctor(output: str) -> list[dict[str, Any]]:
     outputs: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
@@ -890,6 +955,7 @@ def build_report(root: Path) -> dict[str, Any]:
     }
 
     icons = icon_diagnostics(roots, root)
+    icon_adaptation = icon_adaptation_diagnostics(roots, root)
 
     expected = expected_version(root)
     mixed = len(versions) > 1 or (
@@ -954,6 +1020,21 @@ def build_report(root: Path) -> dict[str, Any]:
     if mixed:
         issues.append({"code": "mixed-versions", "component": "installation", "severity": "error",
                        "message": "Installed component versions disagree with each other or the installed VERSION marker."})
+    if icon_adaptation["status"] == "incomplete":
+        if icon_adaptation["missingAdaptive"]:
+            issues.append({
+                "code": "non-adaptive-scalable-icons",
+                "component": "icons",
+                "severity": "warning",
+                "message": f"Icons: {len(icon_adaptation['missingAdaptive'])} scalable icons lack CurrentColorScheme adaptation.",
+            })
+        if icon_adaptation["v15SignalSuite"]["missing"]:
+            issues.append({
+                "code": "missing-v15-signal-icons",
+                "component": "icons",
+                "severity": "warning",
+                "message": f"Icons: missing v15 signal suite icons: {', '.join(icon_adaptation['v15SignalSuite']['missing'])}.",
+            })
     if icons["status"] == "unresolved":
         edition["missingMandatory"] = sorted(set(edition["missingMandatory"]) | {"critical-icons"})
     missing = edition["missingMandatory"]
@@ -981,7 +1062,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 7,
+        "schemaVersion": 8,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -991,6 +1072,7 @@ def build_report(root: Path) -> dict[str, Any]:
         "missing": missing,
         "components": components,
         "criticalIcons": icons,
+        "iconAdaptation": icon_adaptation,
         "edition": edition,
         "loginSurface": login_surface_report(root, components),
         "paletteSynchronization": {
@@ -1057,6 +1139,11 @@ def print_human(report: dict[str, Any]) -> None:
         print(f"Palette synchronization: DESYNCHRONIZED ({', '.join(f'{k}={v}' for k, v in sorted(targets.items()))})")
     elif palette_sync.get("status") == "synchronized":
         print("Palette synchronization: synchronized")
+    icon_adapt = report.get("iconAdaptation", {})
+    if icon_adapt.get("status") == "ok":
+        print(f"Icon adaptation: ok ({icon_adapt.get('scalableAdaptiveCount', 0)} scalable icons with CurrentColorScheme, v15 signal suite complete)")
+    elif icon_adapt.get("status") == "incomplete":
+        print(f"Icon adaptation: INCOMPLETE ({len(icon_adapt.get('missingAdaptive', []))} non-adaptive, {len(icon_adapt.get('v15SignalSuite', {}).get('missing', []))} missing v15 icons)")
     print(f"Next action: {report['nextAction']}")
 
 

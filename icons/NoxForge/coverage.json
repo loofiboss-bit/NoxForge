@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
-  "iconCount": 193,
-  "opticalCount": 272,
+  "iconCount": 201,
+  "opticalCount": 288,
   "opticalSizes": [
     16,
     22
@@ -180,7 +180,7 @@
     "mimetypes": 21,
     "places": 15,
     "preferences": 15,
-    "status": 28
+    "status": 36
   },
   "icons": [
     "actions/application-exit.svg",
@@ -352,6 +352,8 @@
     "status/audio-volume-low.svg",
     "status/audio-volume-medium.svg",
     "status/audio-volume-muted.svg",
+    "status/battery-000.svg",
+    "status/battery-100.svg",
     "status/battery-caution.svg",
     "status/battery-charging.svg",
     "status/battery-good.svg",
@@ -365,9 +367,15 @@
     "status/network-wired-activated.svg",
     "status/network-wired-disconnected.svg",
     "status/network-wired.svg",
+    "status/network-wireless-acquiring.svg",
+    "status/network-wireless-connected-00.svg",
     "status/network-wireless-connected-100.svg",
+    "status/network-wireless-connected-25.svg",
     "status/network-wireless-connected-50.svg",
+    "status/network-wireless-connected-75.svg",
     "status/network-wireless-disconnected.svg",
+    "status/network-wireless-hotspot.svg",
+    "status/network-wireless-locked.svg",
     "status/network-wireless.svg",
     "status/printer-error.svg",
     "status/security-high.svg",

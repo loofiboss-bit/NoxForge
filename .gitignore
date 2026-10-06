@@ -10,3 +10,6 @@ __pycache__/
 docs/evidence/v8/live/full-matrices/
 media/full-matrices/
 *.qualification-matrix.png
+*.tar.xz
+NoxForge-v10/
+NoxForge.wiki/

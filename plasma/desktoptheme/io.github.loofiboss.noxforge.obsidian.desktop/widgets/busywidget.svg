@@ -22,8 +22,8 @@
     ]]></style>
   </defs>
   <g id="stopped" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 1 0 0-16z M8 12h8"/></g>
-  <g id="busywidget" transform="translate(32 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 0 0-8 8"/></g>
-  <g id="22-22-busywidget" transform="translate(64 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 0 0-8 8"/></g>
-  <g id="16-16-busywidget" transform="translate(96 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 0 0-8 8"/></g>
+  <g id="busywidget" transform="translate(32 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 3a9 9 0 0 0-9 9 M12 7a5 5 0 0 1 5 5"/></g>
+  <g id="22-22-busywidget" transform="translate(64 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 3a9 9 0 0 0-9 9 M12 7a5 5 0 0 1 5 5"/></g>
+  <g id="16-16-busywidget" transform="translate(96 0)" class="NoxForge-Progress" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 4a8 8 0 0 0-8 8 M12 8a4 4 0 0 1 4 4"/></g>
   <g id="hint-rotation-angle" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12"/></g>
 </svg>

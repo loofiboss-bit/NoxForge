@@ -1,6 +1,6 @@
 # NoxForge True Obsidian OLED Parity & Dual-Stack Architecture
 
-NoxForge 14.0.2 True Obsidian OLED Parity & Dual-Stack Architecture is an original MIT-licensed Linux
+NoxForge 15.0.0 True Obsidian OLED Parity & Dual-Stack Architecture is an original MIT-licensed Linux
 visual system with graphite and obsidian surfaces, electric lime and the Forge Notch. It
 extends the KDE Plasma system with GTK 3/4 themes, KSyntaxHighlighting themes,
 VS Code/Cursor themes, Neovim (Lua) and Helix (TOML) editor themes, and matching Ghostty, Alacritty, Kitty, and Foot
@@ -11,8 +11,8 @@ The Global Theme is a coordinator, not a complete one-click installer. Install t
 
 Installation never applies the theme, changes panels or wallpaper, or switches the display manager. Plasma Login Manager integration remains standard wallpaper integration, with NoxForge Quiet recommended. SDDM is an optional compatibility component of the system edition.
 
-Use the exact `noxforge-14.0.2-*.tar.xz` files and verify them against the
-release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v14.0.2
+Use the exact `noxforge-15.0.0-*.tar.xz` files and verify them against the
+release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v15.0.0
 
 Fedora 44 passes 72 offscreen tests in the local gate. Arch build/live login,
 physical login/PAM, audio, pointer/input, mixed physical displays, the full live

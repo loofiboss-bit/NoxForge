@@ -165,8 +165,12 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 11:
+        signal = tokens.get("iconography", {}).get("signal")
+        if not isinstance(signal, dict) or signal.get("tiers") != [0, 25, 50, 75, 100]:
+            raise ValidationError("signal token contract is incomplete")
     if tokens.get("schemaVersion") >= 10:
         accents = tokens.get("accents")
         if not isinstance(accents, dict) or not {"lime", "cyan", "violet", "amber"}.issubset(set(accents)):
@@ -350,6 +354,15 @@ def validate_tokens(version: str) -> dict[str, object]:
             "opacityTransitions": False,
         },
     }
+    if tokens.get("schemaVersion") >= 11 and "interactions" in motion:
+        expected_motion["interactions"] = {
+            "errorShake": {
+                "durationMs": 220,
+                "steps": [-8, 8, -5, 5, -2, 0],
+            },
+            "cardScale": 1.04,
+            "progressPulseMs": 1200,
+        }
     if motion != expected_motion:
         raise ValidationError("design motion does not match Kinetic Precision")
     if states.get("focusStyle") != "single-2px-outline" or states.get("normalNotch") is not False:
