@@ -639,6 +639,9 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.setStyleSheet(STYLE_SHEET)
 
         mark_candidates = [
+            ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg",
+            Path("/usr/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg"),
+            Path.home() / ".local/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg",
             ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",
             Path("/usr/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg"),
             Path.home() / ".local/share/kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/NoxForgeMark.svg",

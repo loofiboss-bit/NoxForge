@@ -1,4 +1,4 @@
-%global upstream_version 14.0.2
+%global upstream_version 15.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        14.0.2
+Version:        15.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -61,6 +61,10 @@ apply a theme, configure a login surface, or switch display managers.
 %{_qt6_plugindir}/styles/libnoxforge6.so
 %{_datadir}/applications/io.github.loofiboss.noxforge.opacity.desktop
 %{_datadir}/applications/io.github.loofiboss.noxforge.controlcenter.desktop
+%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg
+%{_datadir}/icons/hicolor/scalable/apps/noxforge-opacity.svg
+%{_datadir}/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg
+%{_datadir}/icons/hicolor/scalable/apps/noxforge-controlcenter.svg
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
 %{_datadir}/noxforge/opacity_gui.py
@@ -96,6 +100,14 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Tue Oct 06 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 15.0.0-1
+- Release v15.0.0 Kinetic Signal & Adaptive Motion Suite
+- Multi-tier dynamic Wi-Fi/networking kinetic icons
+- Dynamic audio waves and reactive visualizers
+- Kinetic battery charging glyphs and pulse cues
+- Adaptive spring & easing curves in Plasma style & KWin switcher
+- Plasma 6.7 compatibility and complete-system parity
+
 * Fri Oct 02 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 14.0.2-1
 - Fix noxforge-opacity hollow user theme directories and prevent System Settings KSvg crash
 - Validate metadata integrity before writing user-local customization receipts

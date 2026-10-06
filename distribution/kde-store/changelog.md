@@ -1,3 +1,14 @@
+# NoxForge 15.0.0 — Kinetic Signal & Adaptive Motion Suite
+
+- added native FreeDesktop / KDE `<style id="current-color-scheme">` support across all 201 scalable SVGs and 288 optical variants;
+- implemented multi-stage geometric Wi-Fi and signal family (connected-00, 25, 50, 75, 100, acquiring, disconnected, locked, hotspot);
+- upgraded Plasma busy widget (`busywidget.svg`) across Graphite and Obsidian themes to dual concentric orbital radar arcs;
+- integrated 220ms damped horizontal error-shake on authentication failure in Lock Screen and SDDM;
+- added live network and battery status badges to the lock screen;
+- added Live Icon & Kinetic Motion Preview canvas to the Control Center GUI with dynamic accent previews;
+- upgraded `noxforge-doctor` to Schema 8 with automated `iconAdaptation` audit;
+- full v15 release contract coverage across all release gates.
+
 # NoxForge 14.0.2 — Opacity Configurator Stability & Desktop Theme Crash Fix
 
 - fixed KDE Plasma 6 System Settings crash (`SIGSEGV` in `KSvg::ImageSet`) caused by hollow user directories shadowing system themes;

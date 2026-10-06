@@ -1,6 +1,6 @@
 # NoxForge 14.0.0 release and qualification status
 
-Version: 14.0.2
+Version: 15.0.0
 
 Commit: `ee84b0e36e25015de4eaa1dd2ec93272427315e8`
 

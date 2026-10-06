@@ -23,6 +23,7 @@ Rectangle {
     property bool statusDanger: false
     property bool authenticating: false
     property bool reducedMotion: motion.reducedMotion
+    property real shakeOffset: 0
     property date currentDateTime: new Date()
 
     signal clearPassword()
@@ -34,6 +35,24 @@ Rectangle {
         running: true
         repeat: true
         onTriggered: root.currentDateTime = new Date()
+    }
+
+    SequentialAnimation {
+        id: errorShakeAnim
+        running: false
+        loops: 1
+        alwaysRunToEnd: true
+        NumberAnimation { target: root; property: "shakeOffset"; to: -8; duration: 40; easing.type: Easing.OutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 8; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: -4; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 4; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 0; duration: 60; easing.type: Easing.InOutQuad }
+    }
+
+    onStatusDangerChanged: {
+        if (statusDanger && !root.reducedMotion) {
+            errorShakeAnim.restart()
+        }
     }
 
     onClearPassword: {
@@ -48,6 +67,9 @@ Rectangle {
         if (password.length === 0) {
             statusMessage = qsTr("Enter password")
             statusDanger = true
+            if (!root.reducedMotion) {
+                errorShakeAnim.restart()
+            }
             return
         }
         statusMessage = qsTr("Authenticating…")
@@ -61,12 +83,26 @@ Rectangle {
         }
     }
 
-    // Top status row (caps lock, battery, indicators)
+    // Top status row (caps lock, network, battery, indicators)
     RowLayout {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: tokens.largeSpacing ?? 24
         spacing: tokens.standardSpacing
+
+        Kirigami.Icon {
+            source: "network-wireless"
+            implicitWidth: 18
+            implicitHeight: 18
+            opacity: 0.85
+        }
+
+        Kirigami.Icon {
+            source: "battery-good"
+            implicitWidth: 18
+            implicitHeight: 18
+            opacity: 0.85
+        }
 
         Rectangle {
             id: capsWarning
@@ -135,15 +171,35 @@ Rectangle {
 
         Item { Layout.preferredHeight: 16 }
 
-        // Password Input with Forge Notch
+        // Password Input with Forge Notch & Kinetic Shake
         Rectangle {
             id: passwordBox
             Layout.fillWidth: true
             Layout.preferredHeight: tokens.largeControlHeight
             radius: tokens.radius
             color: passwordInput.activeFocus ? tokens.surface : tokens.surfaceRaised
-            border.color: passwordInput.activeFocus ? tokens.accent : tokens.outlineMuted
-            border.width: passwordInput.activeFocus ? tokens.focusWidth : tokens.borderWidth
+            border.color: root.statusDanger
+                ? tokens.negative
+                : (passwordInput.activeFocus ? tokens.accent : tokens.outlineMuted)
+            border.width: (passwordInput.activeFocus || root.statusDanger) ? tokens.focusWidth : tokens.borderWidth
+            transform: Translate { x: root.shakeOffset }
+
+            Behavior on color {
+                enabled: !root.reducedMotion
+                ColorAnimation {
+                    duration: motion.duration(tokens.productiveDuration)
+                    easing.type: Easing.Bezier
+                    easing.bezierCurve: tokens.productiveEnterCurve
+                }
+            }
+            Behavior on border.color {
+                enabled: !root.reducedMotion
+                ColorAnimation {
+                    duration: motion.duration(tokens.productiveDuration)
+                    easing.type: Easing.Bezier
+                    easing.bezierCurve: tokens.productiveEnterCurve
+                }
+            }
 
             // Forge Notch Accent
             Rectangle {
@@ -152,7 +208,7 @@ Rectangle {
                 height: tokens.notch
                 x: 0
                 y: 0
-                color: tokens.accent
+                color: root.statusDanger ? tokens.negative : tokens.accent
             }
 
             RowLayout {
@@ -179,17 +235,31 @@ Rectangle {
                     Keys.onEnterPressed: root.submitPassword()
                 }
 
-                // Unlock action button
+                // Unlock action button with micro-motion
                 Rectangle {
                     id: submitButton
                     implicitWidth: 32
                     implicitHeight: 32
                     radius: tokens.compactRadius
+                    scale: submitArea.pressed ? 0.94 : (submitArea.containsMouse ? 1.06 : 1.0)
                     color: submitArea.containsMouse
                         ? tokens.accentPressed
                         : (passwordInput.text.length > 0 ? tokens.accent : tokens.surfaceOverlay)
                     border.color: tokens.accent
                     border.width: passwordInput.text.length > 0 ? 1 : 0
+
+                    Behavior on scale {
+                        enabled: !root.reducedMotion
+                        NumberAnimation { duration: motion.duration(tokens.pressDuration); easing.type: Easing.OutQuad }
+                    }
+                    Behavior on color {
+                        enabled: !root.reducedMotion
+                        ColorAnimation {
+                            duration: motion.duration(tokens.pressDuration)
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: tokens.productiveEnterCurve
+                        }
+                    }
 
                     Text {
                         anchors.centerIn: parent

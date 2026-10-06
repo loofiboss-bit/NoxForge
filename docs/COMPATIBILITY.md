@@ -61,11 +61,11 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v14 release is available from the
-[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v14.0.0).
+The v15 release is available from the
+[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v15.0.0).
 Its exact-tag automated gate passed. The machine-readable `qualification.json`
 contains verified release counters; use the
-[v14 qualification status](evidence/v14/automated-gate.md) for verified
+[v15 release plan](NOXFORGE_V15_PLAN.md) for verified
 results. Arch build/live login, pacman lifecycle, and physical qualification
 remain pending. Offscreen and generated results do not establish those
 behaviors.

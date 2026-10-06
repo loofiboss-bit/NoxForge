@@ -471,6 +471,14 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
 )
 install(
+    FILES
+        icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg
+        icons/hicolor/scalable/apps/noxforge-opacity.svg
+        icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg
+        icons/hicolor/scalable/apps/noxforge-controlcenter.svg
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps"
+)
+install(
     FILES VERSION
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
 )

@@ -1,9 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
-  <style>
-    .accent { stroke: #22D3EE; }
-    .accent-fill { fill: #22D3EE; stroke: none; }
-  </style>
-  <g fill="none" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #748289; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+      .accent { stroke: #A3FF47; }
+      .accent-fill { fill: #A3FF47; stroke: none; }
+      .dimmed { opacity: 0.25; stroke: currentColor; }
+      .negative { stroke: #FF6B7A; }
+      .negative-fill { fill: #FF6B7A; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
     <rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/><path class="accent" d="M8 10h8"/>
   </g>
 </svg>

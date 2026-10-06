@@ -18,7 +18,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-VERSION = "14.0.2"
+VERSION = "15.0.0"
 
 # Target theme package identifiers
 GRAPHITE_THEME_ID = "io.github.loofiboss.noxforge.desktop"

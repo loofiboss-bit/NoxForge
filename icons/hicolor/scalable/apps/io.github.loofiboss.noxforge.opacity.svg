@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="NoxForge Opacity Configurator icon">
+  <defs>
+    <linearGradient id="bgGrad" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#18252E"/>
+      <stop offset="50%" stop-color="#101920"/>
+      <stop offset="100%" stop-color="#080D11"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#A3FF47" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#142B24" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="limeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#BFFF6B"/>
+      <stop offset="100%" stop-color="#7CE622"/>
+    </linearGradient>
+    <linearGradient id="glassFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#223644" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#121D25" stop-opacity="0.75"/>
+    </linearGradient>
+    <linearGradient id="glassBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F0F2" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#38BDF8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#A3FF47" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="specularReflection" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <pattern id="checker" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="14" height="14" fill="#1B2932"/>
+      <rect x="14" y="0" width="14" height="14" fill="#131D24"/>
+      <rect x="0" y="14" width="14" height="14" fill="#131D24"/>
+      <rect x="14" y="14" width="14" height="14" fill="#1B2932"/>
+    </pattern>
+  </defs>
+
+  <!-- Squircle Canvas Base -->
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="url(#bgGrad)"/>
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="none" stroke="url(#rimGrad)" stroke-width="4"/>
+
+  <!-- Top Specular Shine -->
+  <path d="M72 64 C 180 40, 332 40, 440 64 C 400 120, 280 140, 72 64 Z" fill="#FFFFFF" opacity="0.03"/>
+
+  <!-- Background Checkerboard Grid (Visible Behind & Through Glass) -->
+  <g opacity="0.45">
+    <rect x="80" y="80" width="352" height="352" rx="72" fill="url(#checker)"/>
+  </g>
+
+  <!-- Diagonal Light Beam Across Background -->
+  <path d="M80 340 L 340 80 L 400 80 L 80 400 Z" fill="#38BDF8" opacity="0.07"/>
+
+  <!-- Floating Frosted Glass Card -->
+  <g filter="url(#glassShadow)">
+    <rect x="112" y="112" width="288" height="288" rx="56" fill="url(#glassFill)"/>
+    <!-- Glass Specular Highlight Sheen -->
+    <rect x="112" y="112" width="288" height="288" rx="56" fill="url(#specularReflection)"/>
+    <!-- Crisp Glass Chamfer / Border -->
+    <rect x="112" y="112" width="288" height="288" rx="56" fill="none" stroke="url(#glassBorder)" stroke-width="2.5"/>
+  </g>
+
+  <!-- Foreground Opacity / Layer Venn Symbolism -->
+  <g transform="translate(256, 226)">
+    <!-- Left Layer (Solid White) -->
+    <circle cx="-36" cy="0" r="52" fill="none" stroke="#E8F0F2" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+    <circle cx="-36" cy="0" r="49" fill="#E8F0F2" fill-opacity="0.15"/>
+
+    <!-- Right Layer (Translucent Dotted Ring) -->
+    <circle cx="36" cy="0" r="52" fill="none" stroke="#38BDF8" stroke-width="6" stroke-dasharray="10 6" opacity="0.75"/>
+
+    <!-- Overlap / Transparency Intersection (Glowing Electric Lime) -->
+    <path d="M 0 -38 A 52 52 0 0 1 0 38 A 52 52 0 0 1 0 -38" fill="url(#limeGlow)" fill-opacity="0.85" stroke="#A3FF47" stroke-width="2.5"/>
+
+    <!-- Optical Center Focus Dot -->
+    <circle cx="0" cy="0" r="5" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Precision Opacity Slider Bar -->
+  <g transform="translate(156, 326)">
+    <!-- Slider Track Rail -->
+    <rect x="0" y="4" width="200" height="8" rx="4" fill="#0D151B" stroke="#1F303C" stroke-width="1.5"/>
+    <!-- Active Slider Fill (70% opacity level) -->
+    <rect x="0" y="4" width="140" height="8" rx="4" fill="url(#limeGlow)"/>
+
+    <!-- Subtle Tick Marks -->
+    <line x1="50" y1="18" x2="50" y2="24" stroke="#385060" stroke-width="2" stroke-linecap="round"/>
+    <line x1="100" y1="18" x2="100" y2="26" stroke="#4C687C" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="150" y1="18" x2="150" y2="24" stroke="#385060" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Interactive Slider Thumb / Knob -->
+    <circle cx="140" cy="8" r="14" fill="#131E26" stroke="#A3FF47" stroke-width="3"/>
+    <circle cx="140" cy="8" r="6" fill="#A3FF47"/>
+  </g>
+</svg>

@@ -27,18 +27,18 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
 
     def test_v13_version_and_release_manifest_authority(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertIn(version, ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2"))
+        self.assertIn(version, ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertIn(manifest["release"]["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2"))
-        self.assertIn(manifest["release"]["stableVersion"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2"))
-        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V13_PLAN.md", "docs/NOXFORGE_V14_PLAN.md"))
-        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v13", "docs/evidence/v14"))
+        self.assertIn(manifest["release"]["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
+        self.assertIn(manifest["release"]["stableVersion"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
+        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V13_PLAN.md", "docs/NOXFORGE_V14_PLAN.md", "docs/NOXFORGE_V15_PLAN.md"))
+        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v13", "docs/evidence/v14", "docs/evidence/v15"))
 
     def test_v13_tokens_schema_9_and_obsidian_palette(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (9, 10))
-        self.assertIn(tokens["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2"))
+        self.assertIn(tokens["schemaVersion"], (9, 10, 11))
+        self.assertIn(tokens["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
 
         colors = tokens["colors"]
         obsidian = tokens["colorsObsidian"]
@@ -120,7 +120,7 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (6, 7))
+        self.assertIn(report["schemaVersion"], (6, 7, 8))
         self.assertIn("paletteSynchronization", report)
         self.assertIn("editor-neovim", report["missing"])
         self.assertIn("editor-neovim-obsidian", report["missing"])
@@ -141,11 +141,11 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
         self.assertIn("sddm-obsidian-qml-surface", cmake)
 
         spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
-        self.assertTrue(any(f"Version:        {v}" in spec for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2")))
+        self.assertTrue(any(f"Version:        {v}" in spec for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0")))
         self.assertIn("NoxForgeObsidian", spec)
 
         pkgbuild = (ROOT / "packaging/arch/PKGBUILD").read_text(encoding="utf-8")
-        self.assertTrue(any(f"pkgver={v}" in pkgbuild for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2")))
+        self.assertTrue(any(f"pkgver={v}" in pkgbuild for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0")))
 
 
 if __name__ == "__main__":

@@ -109,10 +109,10 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.setSpacing(16)
 
         # Profile Switcher Section
-        profile_group = QtWidgets.QGroupBox("Skrivbordsprofil (KDE, GTK & Terminals)")
+        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK & Terminals)")
         p_layout = QtWidgets.QVBoxLayout(profile_group)
 
-        desc = QtWidgets.QLabel("Växla mellan standard grafitgrå ytor och sann pitch-black OLED-svärta med ett klick:")
+        desc = QtWidgets.QLabel("Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:")
         desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
         p_layout.addWidget(desc)
 
@@ -136,7 +136,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         accent_group = QtWidgets.QGroupBox("Forge Accent Matrix")
         a_layout = QtWidgets.QVBoxLayout(accent_group)
 
-        a_desc = QtWidgets.QLabel("Välj signaturaccentfärg för kontroller, fokusramar och notch-markeringar:")
+        a_desc = QtWidgets.QLabel("Select signature accent color for controls, focus rings, and notch indicators:")
         a_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
         a_layout.addWidget(a_desc)
 
@@ -161,10 +161,71 @@ class ProfileAccentTab(QtWidgets.QWidget):
         a_layout.addLayout(accent_grid)
         layout.addWidget(accent_group)
 
+        # Live Icon & Kinetic Motion Preview Section (v15.0.0)
+        preview_group = QtWidgets.QGroupBox("Live Icon & Kinetic Motion Preview (v15.0.0 Adaptive Vector Suite)")
+        prev_layout = QtWidgets.QVBoxLayout(preview_group)
+
+        prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
+        prev_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
+        prev_layout.addWidget(prev_desc)
+
+        icons_row = QtWidgets.QHBoxLayout()
+        icons_row.setSpacing(10)
+        self.preview_badges: list[tuple[QtWidgets.QLabel, QtWidgets.QLabel, Path]] = []
+
+        icon_samples = [
+            ("Wi-Fi 100%", ROOT / "icons/NoxForge/scalable/status/network-wireless.svg"),
+            ("Wi-Fi 75%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-75.svg"),
+            ("Wi-Fi 50%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-50.svg"),
+            ("Wi-Fi 25%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-25.svg"),
+            ("Wi-Fi 0%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-00.svg"),
+            ("Disconnected", ROOT / "icons/NoxForge/scalable/status/network-wireless-disconnected.svg"),
+            ("Battery", ROOT / "icons/NoxForge/scalable/status/battery-100.svg"),
+            ("Audio", ROOT / "icons/NoxForge/scalable/status/audio-volume-high.svg"),
+        ]
+
+        for title, svg_path in icon_samples:
+            col = QtWidgets.QVBoxLayout()
+            col.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            img_lbl = QtWidgets.QLabel()
+            img_lbl.setFixedSize(36, 36)
+            img_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            img_lbl.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px; padding: 4px;")
+            if svg_path.is_file():
+                img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
+
+            txt_lbl = QtWidgets.QLabel(title)
+            txt_lbl.setStyleSheet("color: #748289; font-size: 10px; font-weight: 600;")
+            txt_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            col.addWidget(img_lbl)
+            col.addWidget(txt_lbl)
+            icons_row.addLayout(col)
+            self.preview_badges.append((img_lbl, txt_lbl, svg_path))
+
+        prev_layout.addLayout(icons_row)
+
+        # Kinetic Motion Test Row
+        motion_row = QtWidgets.QHBoxLayout()
+        self.test_box = QtWidgets.QLineEdit("NoxForge Kinetic Motion v15.0.0")
+        self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
+        self.test_box.setStyleSheet(
+            "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+            "color: #E8F0F2; padding: 6px 12px; font-size: 12px;"
+        )
+        self.btn_test_shake = QtWidgets.QPushButton("Test Kinetic Spring Motion (220ms)")
+        self.btn_test_shake.setMinimumHeight(32)
+        self.btn_test_shake.clicked.connect(self.play_test_shake)
+
+        motion_row.addWidget(self.test_box, stretch=1)
+        motion_row.addWidget(self.btn_test_shake)
+        prev_layout.addLayout(motion_row)
+
+        layout.addWidget(preview_group)
+
         # Day/Night Automation Section
-        sched_group = QtWidgets.QGroupBox("Dag / Natt Automatisering")
+        sched_group = QtWidgets.QGroupBox("Day / Night Automation")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
-        self.sched_check = QtWidgets.QCheckBox("Aktivera automatisk profilväxling: Graphite (07:00) / Obsidian (20:00)")
+        self.sched_check = QtWidgets.QCheckBox("Enable automatic profile switching: Graphite (07:00) / Obsidian (20:00)")
         self.sched_check.setStyleSheet("color: #E8F0F2; font-weight: 500;")
         self.sched_check.toggled.connect(self.toggle_schedule)
         s_layout.addWidget(self.sched_check)
@@ -172,6 +233,30 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         layout.addStretch()
         self.refresh_state()
+
+    def play_test_shake(self) -> None:
+        orig_rect = self.test_box.geometry()
+        anim = QtCore.QSequentialAnimationGroup(self)
+        for dx, dur in [(-8, 40), (8, 40), (-4, 40), (4, 40), (0, 60)]:
+            step = QtCore.QPropertyAnimation(self.test_box, b"geometry")
+            step.setDuration(dur)
+            step.setStartValue(self.test_box.geometry())
+            target_rect = QtCore.QRect(orig_rect.x() + dx, orig_rect.y(), orig_rect.width(), orig_rect.height())
+            step.setEndValue(target_rect)
+            anim.addAnimation(step)
+        self.test_box.setStyleSheet(
+            "background-color: #142218; border: 2px solid #A3FF47; border-radius: 5px; "
+            "color: #A3FF47; padding: 6px 12px; font-size: 12px; font-weight: bold;"
+        )
+        def restore():
+            self.test_box.setStyleSheet(
+                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                "color: #E8F0F2; padding: 6px 12px; font-size: 12px;"
+            )
+            self.test_box.setGeometry(orig_rect)
+        anim.finished.connect(restore)
+        self._shake_anim = anim
+        anim.start()
 
     def refresh_state(self) -> None:
         status = noxforge_ctl.get_current_status()
@@ -183,6 +268,12 @@ class ProfileAccentTab(QtWidgets.QWidget):
             self.btn_graphite.setStyleSheet("background-color: #1A2E20; border: 2px solid #A3FF47; color: #FFFFFF; font-weight: bold;")
             self.btn_obsidian.setStyleSheet("")
 
+        # Update preview badges
+        if hasattr(self, "preview_badges"):
+            for img_lbl, _, svg_path in self.preview_badges:
+                if svg_path.is_file():
+                    img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
+
         sched = noxforge_ctl.manage_schedule("status")
         self.sched_check.blockSignals(True)
         self.sched_check.setChecked(sched.get("scheduled", False))
@@ -191,16 +282,17 @@ class ProfileAccentTab(QtWidgets.QWidget):
     def apply_profile(self, profile: str) -> None:
         res = noxforge_ctl.switch_profile(profile)
         self.refresh_state()
-        self.statusChanged.emit(f"Profil aktiverad: {profile.upper()}")
+        self.statusChanged.emit(f"Profile activated: {profile.upper()}")
 
     def apply_accent(self, accent: str) -> None:
         res = noxforge_ctl.set_accent(accent)
-        self.statusChanged.emit(f"Accentfärg aktiverad: {accent.upper()}")
+        self.refresh_state()
+        self.statusChanged.emit(f"Accent color activated: {accent.upper()}")
 
     def toggle_schedule(self, checked: bool) -> None:
         action = "enable" if checked else "disable"
         noxforge_ctl.manage_schedule(action)
-        self.statusChanged.emit(f"Dag/Natt-automatisering: {action.upper()}")
+        self.statusChanged.emit(f"Day/Night automation: {action.upper()}")
 
 
 class HealthTab(QtWidgets.QWidget):
@@ -212,7 +304,7 @@ class HealthTab(QtWidgets.QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(14)
 
-        header = QtWidgets.QLabel("NoxForge Systemhälsa & Ekosystemstatus")
+        header = QtWidgets.QLabel("NoxForge System Health & Ecosystem Status")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
@@ -225,9 +317,9 @@ class HealthTab(QtWidgets.QWidget):
         layout.addWidget(self.info_text)
 
         btn_row = QtWidgets.QHBoxLayout()
-        self.btn_refresh = QtWidgets.QPushButton("Kör hälsokontroll (Doctor)")
+        self.btn_refresh = QtWidgets.QPushButton("Run Health Check (Doctor)")
         self.btn_refresh.clicked.connect(self.run_doctor)
-        self.btn_sync = QtWidgets.QPushButton("Synkronisera hela skrivbordet")
+        self.btn_sync = QtWidgets.QPushButton("Synchronize Desktop")
         self.btn_sync.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold;")
         self.btn_sync.clicked.connect(self.align_desktop)
 
@@ -247,39 +339,39 @@ class HealthTab(QtWidgets.QWidget):
         ]
         tool_doctor = next((p for p in doctor_candidates if p.is_file()), None)
         if not tool_doctor:
-            self.info_text.setPlainText("Kunde inte hitta noxforge-doctor verktyget.")
+            self.info_text.setPlainText("Could not find noxforge-doctor utility.")
             return
         try:
             res = subprocess.run([sys.executable, str(tool_doctor), "--json"], capture_output=True, text=True, check=False)
             data = json.loads(res.stdout)
             status = data.get("status", "ok")
             missing = data.get("missing", [])
-            edition = data.get("edition", {}).get("kind", "portable")
+            edition = data.get("edition", {}).get("kind", "complete-system")
             eco = data.get("ecosystem", {})
             flatpak = eco.get("flatpakThemesOverride", "ok")
             palette_sync = data.get("paletteSynchronization", {}).get("status", "synchronized")
 
-            text = f"=== NOXFORGE DOCTOR RAPPORT ===\n"
+            text = f"=== NOXFORGE DOCTOR REPORT ===\n"
             text += f"Status: {status.upper()}\n"
-            text += f"Utgåva: {edition}\n"
-            text += f"Paketversion: {data.get('packageVersion') or 'lokal / källa'}\n"
-            text += f"Palettsynkronisering: {palette_sync.upper()}\n"
-            text += f"Flatpak-temaåtkomst: {flatpak}\n"
-            text += f"Saknade komponenter: {len(missing)}\n"
+            text += f"Edition: {edition}\n"
+            text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
+            text += f"Palette Synchronization: {palette_sync.upper()}\n"
+            text += f"Flatpak Themes Override: {flatpak}\n"
+            text += f"Missing Components: {len(missing)}\n"
             if missing:
                 text += f"  - " + "\n  - ".join(missing) + "\n"
             self.info_text.setPlainText(text)
         except Exception as err:
-            self.info_text.setPlainText(f"Kunde inte köra noxforge-doctor: {err}")
+            self.info_text.setPlainText(f"Could not execute noxforge-doctor: {err}")
 
     def align_desktop(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
         if profile not in ("graphite", "obsidian"):
             profile = "graphite"
-        noxforge_ctl.switch_profile(profile)
+        noxforge_ctl.sync_desktop(profile)
         self.run_doctor()
-        self.statusChanged.emit(f"Hela skrivbordet synkroniserat till {profile.upper()}!")
+        self.statusChanged.emit(f"Desktop successfully synchronized to {profile.upper()}!")
 
 
 class ControlCenterWindow(QtWidgets.QMainWindow):
@@ -288,6 +380,15 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("NoxForge Control Center")
         self.setMinimumSize(880, 680)
         self.setStyleSheet(STYLE_SHEET)
+
+        icon_candidates = [
+            ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg",
+            Path("/usr/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg"),
+            Path.home() / ".local/share/icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg",
+        ]
+        icon_path = next((p for p in icon_candidates if p.is_file()), None)
+        if icon_path:
+            self.setWindowIcon(QtGui.QIcon(str(icon_path)))
 
         central_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(central_widget)
@@ -301,23 +402,23 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         # Tab 1: Profile & Accent Hub
         self.tab_profile = ProfileAccentTab()
         self.tab_profile.statusChanged.connect(self.show_status)
-        self.tabs.addTab(self.tab_profile, "Profil & Accent")
+        self.tabs.addTab(self.tab_profile, "Profile && Accent")
 
         # Tab 2: Opacity & Depth Configurator
         self.opacity_window = opacity_gui.OpacityConfiguratorWindow()
         # Embed opacity central widget into tab
         opacity_inner = self.opacity_window.centralWidget()
-        self.tabs.addTab(opacity_inner, "Transparens & Djup")
+        self.tabs.addTab(opacity_inner, "Transparency && Depth")
 
         # Tab 3: Health & Diagnostics
         self.tab_health = HealthTab()
         self.tab_health.statusChanged.connect(self.show_status)
-        self.tabs.addTab(self.tab_health, "Systemhälsa & Doctor")
+        self.tabs.addTab(self.tab_health, "System Health && Doctor")
 
         main_layout.addWidget(self.tabs)
 
         # Status Bar
-        self.statusBar().showMessage("NoxForge Control Center v14.0.0 redo.")
+        self.statusBar().showMessage("NoxForge Control Center v15.0.0 ready.")
 
     def show_status(self, msg: str) -> None:
         self.statusBar().showMessage(msg, 5000)

@@ -26,6 +26,25 @@ Rectangle {
     property real testProgress: -1
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
+    property real shakeOffset: 0
+
+    SequentialAnimation {
+        id: errorShakeAnim
+        running: false
+        loops: 1
+        alwaysRunToEnd: true
+        NumberAnimation { target: root; property: "shakeOffset"; to: -8; duration: 40; easing.type: Easing.OutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 8; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: -4; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 4; duration: 40; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: root; property: "shakeOffset"; to: 0; duration: 60; easing.type: Easing.InOutQuad }
+    }
+
+    onStatusDangerChanged: {
+        if (statusDanger && !root.reducedMotion) {
+            errorShakeAnim.restart()
+        }
+    }
 
     KeyboardIndicator.KeyState {
         id: capsLockState
@@ -189,7 +208,7 @@ Rectangle {
         id: loginCard
         width: Math.min(root.width - 48, 440)
         height: form.implicitHeight + 64
-        x: (root.width - width) / 2
+        x: (root.width - width) / 2 + root.shakeOffset
         y: (root.height - height) / 2 + (root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress))
         opacity: root.entryProgress
         radius: tokens.overlayRadius + 4

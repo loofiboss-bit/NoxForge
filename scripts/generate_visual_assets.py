@@ -110,7 +110,10 @@ STATE_ICON_SPECS = {
     "status/battery-low.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M7 12h3"/><path class="accent" d="M7 12h3"/>',
     "status/battery-caution.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M11 9v4"/><circle class="accent-fill" cx="11" cy="15.5" r="1"/>',
     "status/battery-charging.svg": '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2M13 8l-4 5h3l-1 4 4-6h-3z"/><path class="accent" d="M13 8l-2 3"/>',
-    "status/network-wireless-disconnected.svg": '<path d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0M4 4l16 16"/><path class="accent" d="M4 4l5 5"/>',
+    "status/network-wireless-disconnected.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="dimmed" cx="12" cy="19" r="1.5"/><path class="negative" stroke-width="2" d="M4 4l16 16"/>'
+    ),
     "status/network-wired-disconnected.svg": '<path d="M4 4h16v10h-6v3h3v3H7v-3h3v-3H4zM5 5l14 14"/><path class="accent" d="M5 5l5 5"/>',
 }
 
@@ -163,6 +166,51 @@ V7_CORE_ICON_SPECS = {
     "actions/system-shutdown.svg": '<path d="M12 3v9M7 6a8 8 0 1 0 10 0"/><path class="accent" d="M12 3v6"/>',
     "actions/system-lock-screen.svg": '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/><path class="accent" d="M8 10h8"/>',
     "actions/system-log-out.svg": '<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M14 8l4 4M8 12h5"/>',
+}
+
+V15_ICON_SPECS = {
+    "status/network-wireless-connected-75.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0"/>'
+        '<path d="M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
+    ),
+    "status/network-wireless-connected-50.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0"/>'
+        '<path d="M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
+    ),
+    "status/network-wireless-connected-25.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
+    ),
+    "status/network-wireless-connected-00.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="dimmed" cx="12" cy="19" r="1.5"/>'
+    ),
+    "status/network-wireless-acquiring.svg": (
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0"/>'
+        '<path class="accent" d="M6 12a9 9 0 0 1 12 0"/>'
+        '<path class="dimmed" d="M9 15.5a5 5 0 0 1 6 0"/>'
+        '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
+    ),
+    "status/network-wireless-locked.svg": (
+        '<path d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 10 0M9 15.5a5 5 0 0 1 4 0"/>'
+        '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
+        '<rect class="accent" x="16" y="16" width="6" height="5" rx="1"/>'
+        '<path class="accent" d="M17.5 16v-2a1.5 1.5 0 0 1 3 0v2"/>'
+    ),
+    "status/network-wireless-hotspot.svg": (
+        '<path d="M12 7v10M9 17h6M7 10a7 7 0 0 0 0 8M17 10a7 7 0 0 1 0 8M4 7a11 11 0 0 0 0 14M20 7a11 11 0 0 1 0 14"/>'
+        '<circle class="accent-fill" cx="12" cy="7" r="1.5"/>'
+    ),
+    "status/battery-000.svg": (
+        '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2"/>'
+        '<path class="negative" d="M11 9v4"/><circle class="negative-fill" cx="11" cy="15.5" r="1"/>'
+    ),
+    "status/battery-100.svg": (
+        '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2"/>'
+        '<path class="accent" d="M6 10h10M6 14h10"/>'
+    ),
 }
 
 ICON_ALIASES = {
@@ -263,8 +311,6 @@ ICON_ALIASES = {
     "status/battery-caution.svg": "status/battery-good.svg",
     "status/battery-charging.svg": "status/battery-good.svg",
     "status/network-wireless-connected-100.svg": "status/network-wireless.svg",
-    "status/network-wireless-connected-50.svg": "status/network-wireless.svg",
-    "status/network-wireless-disconnected.svg": "status/network-wireless.svg",
     "status/network-wired-activated.svg": "status/network-wired.svg",
     "status/network-wired-disconnected.svg": "status/network-wired.svg",
     "status/dialog-question.svg": "status/dialog-information.svg",
@@ -319,11 +365,21 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
     size = optical_size or 24
     stroke_width = 1.9 if optical_size == 16 else 1.75 if optical_size == 22 else TOKENS["iconography"]["strokeWidth"]
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24">
-  <style>
-    .accent {{ stroke: {COLORS["detailCyan"]}; }}
-    .accent-fill {{ fill: {COLORS["detailCyan"]}; stroke: none; }}
-  </style>
-  <g fill="none" stroke="{COLORS["textPrimary"]}" stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text {{ color: {COLORS["textPrimary"]}; }}
+      .ColorScheme-Highlight {{ color: {COLORS["accent"]}; }}
+      .ColorScheme-NeutralText {{ color: {COLORS["textDisabled"]}; }}
+      .ColorScheme-PositiveText {{ color: {COLORS["accent"]}; }}
+      .ColorScheme-NegativeText {{ color: {COLORS["negative"]}; }}
+      .accent {{ stroke: {COLORS["accent"]}; }}
+      .accent-fill {{ fill: {COLORS["accent"]}; stroke: none; }}
+      .dimmed {{ opacity: 0.25; stroke: currentColor; }}
+      .negative {{ stroke: {COLORS["negative"]}; }}
+      .negative-fill {{ fill: {COLORS["negative"]}; stroke: none; }}
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round">
     {body}
   </g>
 </svg>
@@ -521,6 +577,7 @@ def main() -> None:
         **V5_RUNTIME_ICON_SPECS,
         **PHASE6_PRIORITY_ICON_SPECS,
         **V7_CORE_ICON_SPECS,
+        **V15_ICON_SPECS,
     }
     effective_aliases: dict[str, str] = {}
 

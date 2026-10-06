@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "14.0.2"
+VERSION = "15.0.0"
 ROOT = Path(__file__).resolve().parents[1]
 
 THEME_GRAPHITE_ID = "io.github.loofiboss.noxforge.desktop"
@@ -108,12 +108,12 @@ def delete_kconfig(file_name: str, group: str, key: str) -> None:
 
 
 def notify_plasma_kwin() -> None:
-    """Notify KWin and Plasma components safely without triggering SIGSEGV."""
-    qdbus = shutil.which("qdbus6") or shutil.which("qdbus")
-    if not qdbus:
-        return
-    # Reconfigure KWin window decorations
-    run_cmd([qdbus, "org.kde.KWin", "/KWin", "reconfigure"])
+    """Notify KWin window decorations safely without triggering SIGSEGV or shell teardown."""
+    qdbus = shutil.which("qdbus-qt6") or shutil.which("qdbus6") or shutil.which("qdbus")
+    if qdbus:
+        run_cmd([qdbus, "org.kde.KWin", "/KWin", "reconfigure"])
+    elif shutil.which("dbus-send"):
+        run_cmd(["dbus-send", "--session", "--type=method_call", "--dest=org.kde.KWin", "/KWin", "org.kde.KWin.reconfigure"])
 
 
 def switch_profile(profile: str, dry_run: bool = False) -> dict[str, Any]:
@@ -150,11 +150,82 @@ def switch_profile(profile: str, dry_run: bool = False) -> dict[str, Any]:
 
     # Apply GTK 3 & 4 user settings
     for gtk_dir in ("gtk-3.0", "gtk-4.0"):
-        settings_file = get_kde_config_dir() / gtk_dir / "settings.ini"
         try:
             write_kconfig(f"{gtk_dir}/settings.ini", "Settings", "gtk-theme-name", gtk_theme)
         except Exception:
             pass
+
+    # Plasma live CLI appliers (gentle and safe)
+    if shutil.which("plasma-apply-colorscheme"):
+        run_cmd(["plasma-apply-colorscheme", color_scheme])
+    if shutil.which("plasma-apply-desktoptheme"):
+        run_cmd(["plasma-apply-desktoptheme", theme_id])
+
+    notify_plasma_kwin()
+    return {"status": "applied", "changes": changes}
+
+
+def sync_desktop(profile: str | None = None, dry_run: bool = False) -> dict[str, Any]:
+    """Perform complete synchronization of all NoxForge desktop layers."""
+    target = (profile or "").lower().strip()
+    if not target:
+        status = get_current_status()
+        target = status.get("profile", "graphite")
+    if target not in ("graphite", "obsidian"):
+        target = "graphite"
+
+    is_obsidian = target == "obsidian"
+    theme_id = THEME_OBSIDIAN_ID if is_obsidian else THEME_GRAPHITE_ID
+    color_scheme = "NoxForgeObsidian" if is_obsidian else "NoxForgeDark"
+    aurorae_theme = f"__aurorae__svg__{theme_id}"
+    tabbox_layout = theme_id
+    gtk_theme = "NoxForgeObsidian" if is_obsidian else "NoxForge"
+
+    changes = {
+        "profile": target,
+        "colorScheme": color_scheme,
+        "plasmaStyle": theme_id,
+        "widgetStyle": "NoxForge",
+        "auroraeTheme": aurorae_theme,
+        "kwinTabBox": tabbox_layout,
+        "cursorTheme": "NoxForge-Cursors",
+        "iconTheme": "NoxForge",
+        "soundTheme": "NoxForge",
+        "splashTheme": theme_id,
+        "gtkTheme": gtk_theme,
+    }
+
+    if dry_run:
+        return {"status": "dry-run", "changes": changes}
+
+    # KDE Configuration files
+    write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
+    write_kconfig("kdeglobals", "KDE", "widgetStyle", "NoxForge")
+    write_kconfig("kdeglobals", "Icons", "Theme", "NoxForge")
+    write_kconfig("kdeglobals", "Sounds", "Theme", "NoxForge")
+    write_kconfig("kcminputrc", "Mouse", "cursorTheme", "NoxForge-Cursors")
+    write_kconfig("kdeglobals", "Mouse", "cursorTheme", "NoxForge-Cursors")
+    write_kconfig("plasmarc", "Theme", "name", theme_id)
+    write_kconfig("kwinrc", "org.kde.kdecoration2", "library", "org.kde.kwin.aurorae")
+    write_kconfig("kwinrc", "org.kde.kdecoration2", "theme", aurorae_theme)
+    write_kconfig("kwinrc", "TabBox", "LayoutName", tabbox_layout)
+    write_kconfig("ksplashrc", "KSplash", "Theme", theme_id)
+
+    # GTK 3 & 4 settings
+    for gtk_dir in ("gtk-3.0", "gtk-4.0"):
+        try:
+            write_kconfig(f"{gtk_dir}/settings.ini", "Settings", "gtk-theme-name", gtk_theme)
+            write_kconfig(f"{gtk_dir}/settings.ini", "Settings", "gtk-icon-theme-name", "NoxForge")
+        except Exception:
+            pass
+
+    # Plasma live CLI appliers (gentle and safe)
+    if shutil.which("plasma-apply-colorscheme"):
+        run_cmd(["plasma-apply-colorscheme", color_scheme])
+    if shutil.which("plasma-apply-desktoptheme"):
+        run_cmd(["plasma-apply-desktoptheme", theme_id])
+    if shutil.which("plasma-apply-cursortheme"):
+        run_cmd(["plasma-apply-cursortheme", "NoxForge-Cursors"])
 
     notify_plasma_kwin()
     return {"status": "applied", "changes": changes}
@@ -182,6 +253,11 @@ def set_accent(accent: str, dry_run: bool = False) -> dict[str, Any]:
         rgb_str = f"{r},{g},{b}"
         write_kconfig("kdeglobals", "General", "AccentColor", rgb_str)
         write_kconfig("kdeglobals", "General", "accentColorFromWallpaper", "false")
+
+    # Re-apply color scheme so Plasma immediately picks up accent changes
+    active_scheme = read_kconfig("kdeglobals", "General", "ColorScheme", "NoxForgeDark")
+    if shutil.which("plasma-apply-colorscheme"):
+        run_cmd(["plasma-apply-colorscheme", active_scheme])
 
     notify_plasma_kwin()
     return {"status": "applied", "accent": target, "hex": hex_color}
@@ -293,6 +369,12 @@ def main() -> int:
     switch_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     switch_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
+    # sync
+    sync_parser = subparsers.add_parser("sync", help="Synchronize entire desktop (Plasma, GTK, icons, cursors, styles)")
+    sync_parser.add_argument("--profile", choices=["graphite", "obsidian"], help="Target profile to synchronize (defaults to active profile)")
+    sync_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    sync_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
     # accent
     accent_parser = subparsers.add_parser("accent", help="Select active Forge accent color")
     accent_parser.add_argument(
@@ -347,6 +429,16 @@ def main() -> int:
             print(json.dumps(result, indent=2))
         else:
             print(f"[NoxForge] Profile set to: {args.profile.upper()}" + (" (dry-run)" if args.dry_run else ""))
+            for k, v in result["changes"].items():
+                print(f"  {k}: {v}")
+        return 0
+
+    if args.command == "sync":
+        result = sync_desktop(profile=args.profile, dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            print(f"[NoxForge] Desktop synchronized to: {result['changes']['profile'].upper()}" + (" (dry-run)" if args.dry_run else ""))
             for k, v in result["changes"].items():
                 print(f"  {k}: {v}")
         return 0

@@ -44,7 +44,7 @@
     {
       "path": "widgets/busywidget.svg",
       "recipe": "progress",
-      "sha256": "804bf2869d32c1de5815b49c870695d30ab3d62a6a69ad1a680bbaae96ab3345"
+      "sha256": "f51ac63df1f58f5566403c2eea710437bbe044d0fc71a0ea1d36c2c5e82736d1"
     },
     {
       "path": "widgets/button.svg",
@@ -287,42 +287,42 @@
       "file": "plasma-style-atlas-100pct.png",
       "height": 872,
       "scale": 1.0,
-      "sha256": "9cd0c2f1ab31302dd56298ee8a16555e9473235bd4cce94e33a8c15e8634ba31",
+      "sha256": "0e6c7b98fb89df8792bd010bd563e0389fdbc11b4135496f2a6989596acd6c15",
       "width": 1316
     },
     {
       "file": "plasma-style-atlas-125pct.png",
       "height": 1082,
       "scale": 1.25,
-      "sha256": "39af8dc7906ac90382c20c28978a2b7ee69fa67dc37163e444effb9186a31f8c",
+      "sha256": "599aa8d0a21e3d323e637f6eb15b00f1f11c388d246a4d808dc3fd159a9ad9fc",
       "width": 1636
     },
     {
       "file": "plasma-style-atlas-140pct.png",
       "height": 1208,
       "scale": 1.4,
-      "sha256": "1d2c24adb9222b72655aa0aaa91e73a4b4f7eea0fed1f1d6289f0eecf9c5960c",
+      "sha256": "474ae640d5bd2cc517f2e661e79796688b5f62113b9394671ee78945a618a548",
       "width": 1828
     },
     {
       "file": "plasma-style-atlas-150pct.png",
       "height": 1292,
       "scale": 1.5,
-      "sha256": "710eaaa7a7ab836fc6751a1ba98150a6244a60d86e928dfe62091d48f9979727",
+      "sha256": "f610b7692dbc8e5edf740997bace8423f3fecd98c2e2964b63b395b844ad7a2d",
       "width": 1956
     },
     {
       "file": "plasma-style-atlas-175pct.png",
       "height": 1502,
       "scale": 1.75,
-      "sha256": "0240ad1906c75b62da6c909b8d72570e0b49683f379940644d530bdefcfc1593",
+      "sha256": "eec72aa6e8e5567fdf79278df05b5ce6d348df17c8a4fec50f49a54f8c415deb",
       "width": 2276
     },
     {
       "file": "plasma-style-atlas-200pct.png",
       "height": 1712,
       "scale": 2.0,
-      "sha256": "644edd5e71ad88989b3118121a5d9e3154140884b2ba57871f6602b24712ee0f",
+      "sha256": "9a61c8e0cc0237852784aa691e6df086f85e4cd3920ba778cf996d31e0d933da",
       "width": 2596
     }
   ],
@@ -596,5 +596,5 @@
   },
   "staticScenarioCount": 128,
   "themeId": "io.github.loofiboss.noxforge.desktop",
-  "version": "14.0.2"
+  "version": "15.0.0"
 }

@@ -1,5 +1,28 @@
 # Changelog
 
+## 15.0.0 — Kinetic Signal & Adaptive Motion Suite
+
+- Adaptive FreeDesktop / KDE Current-Color-Scheme Iconography:
+  - Embed `<style id="current-color-scheme">` across all 201 scalable SVGs and 288 optical variants (16x16 and 22x22).
+  - Native response to active Plasma color schemes using `ColorScheme-Text`, `ColorScheme-Highlight`, `ColorScheme-NeutralText`, and `ColorScheme-NegativeText`.
+- Multi-Stage Geometric Wi-Fi & Signal Family:
+  - High-precision geometric curves for signal levels: `network-wireless-connected-00`, `25`, `50`, `75`, `100`.
+  - Specialized states: `acquiring`, `locked`, `hotspot`, and `disconnected` with 45° Forge Notch negative slash.
+  - Complete battery indicator suite: `battery-000` through `battery-100` and charging glyphs.
+- Dual-Ring Orbital Radar Busy Widget:
+  - Overhaul `busywidget.svg` across Graphite and Obsidian themes to dual concentric orbital radar arcs.
+- Kinetic Motion Polish Across Plasma Surfaces:
+  - Integrated 220ms damped horizontal error-shake (`errorShakeAnim`, +/-8px -> +/-4px -> 0px) on authentication failure in Lock Screen (`LockScreen.qml`) and SDDM (`Main.qml`).
+  - Added live network and battery status badges to lock screen.
+  - Fluid bezier curves and tactile elevation in KWin window switcher.
+- Control Center GUI Live Visual Hub:
+  - Interactive Live Icon & Kinetic Motion Preview canvas previewing Wi-Fi, battery, and audio indicators reflecting dynamic accents.
+  - Interactive test trigger for 220ms kinetic error-shake spring animation.
+- Diagnostics & Automated Contracts:
+  - Upgraded `noxforge-doctor` to Schema 8 with automated `iconAdaptation` audit.
+  - Added `tests/test_v15_contracts.py` ensuring contract adherence across all release gates.
+  - Updated dedicated application icons for Control Center and Opacity Configurator in hicolor icon theme.
+
 ## 14.0.2 — Opacity Configurator Stability & Desktop Theme Crash Fix
 
 - Fix KDE Plasma 6 System Settings crash (`SIGSEGV` in `KSvg::ImageSet`):
