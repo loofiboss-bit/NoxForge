@@ -16,6 +16,6 @@ pkgbase = noxforge
 	depends = qt6-base
 	optdepends = sddm: qualified NoxForge custom login-screen compatibility
 	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v15.0.0/noxforge-15.0.0-source.tar.xz
-	sha256sums = 43842cc4f9ff3f8df42f70e5543157b4411a1bc24e85adac42257792d8f9e9ad
+	sha256sums = aeb1adddd1d0c2c1b52434bfbc64b8af86e9c7f19798f9c4e79a18db50f01d43
 
 pkgname = noxforge

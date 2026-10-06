@@ -1,17 +1,15 @@
-# NoxForge Dual-Palette Parity, Accent Matrix, Lock Screen & Unified Control Suite
+# NoxForge Kinetic Signal & Adaptive Motion Suite
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 14.0.0 targets Fedora 44 and Arch
+detail, and a compact Forge Notch. Version 15.0.0 targets Fedora 44 and Arch
 Plasma/KWin 6.7+ with Qt 6.11 on Wayland. It elevates the visual system with
-full dual-palette parity across Graphite (#0D1419) and True Obsidian OLED (#000000),
-a native Plasma 6 / Wayland Lock Screen, an Obsidian KWin TabBox switcher, the
-Forge Accent Matrix (Lime, Cyan, Violet, Amber), dynamic QMenu sizing, and a
-unified orchestration suite (`noxforge-ctl` CLI and 3-tab PySide6 Control Center GUI).
-It also maintains the Opacity & Transparency Configurator (`noxforge-opacity`),
-extended application ecosystem styling (Firefox, Zed, btop, Starship, Fastfetch,
-Discord), and Doctor Schema 7 with automated `--apply-sync` desktop alignment.
-See the [v14 qualification status](docs/evidence/v14/automated-gate.md); physical and
+native FreeDesktop/KDE `<style id="current-color-scheme">` vector iconography,
+a multi-stage geometric Wi-Fi and signal suite (0%–100%, acquiring, locked, hotspot, disconnected),
+dual-ring orbital radar busy widgets, 220ms damped horizontal error-shake motion in Lock Screen
+and SDDM, an interactive Live Icon & Motion Preview canvas in the Control Center GUI,
+dedicated application icons, and Doctor Schema 8 diagnostics.
+See the [v15 release plan](docs/NOXFORGE_V15_PLAN.md); physical and
 Arch runtime checks remain pending.
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
@@ -75,7 +73,7 @@ cursor, audio, PAM/login, power, and live-session gates.
   (`io.github.loofiboss.noxforge.controlcenter.desktop`);
 - `noxforge-opacity` CLI utility and Qt 6 GUI configurator for adjusting panel,
   popup, and Aurorae window decoration transparency levels;
-- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 7),
+- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 8),
   and deterministic checksums.
 
 Store descriptions state that components install separately and that the Global
@@ -92,8 +90,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v14 release scope is recorded in
-[NOXFORGE_V14_PLAN.md](docs/NOXFORGE_V14_PLAN.md), indexed by
+The v15 release scope is recorded in
+[NOXFORGE_V15_PLAN.md](docs/NOXFORGE_V15_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

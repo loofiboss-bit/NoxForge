@@ -1,4 +1,4 @@
-# NoxForge True Obsidian OLED Parity & Dual-Stack Architecture
+# NoxForge Kinetic Signal & Adaptive Motion Suite
 
 NoxForge 15.0.0 True Obsidian OLED Parity & Dual-Stack Architecture is an original MIT-licensed Linux
 visual system with graphite and obsidian surfaces, electric lime and the Forge Notch. It
