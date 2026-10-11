@@ -21,6 +21,8 @@ KWin.TabBoxSwitcher {
         visible: tabBox.visible
         flags: Qt.Popup | Qt.X11BypassWindowManagerHint
         location: PlasmaCore.Types.Floating
+        Accessible.role: Accessible.Dialog
+        Accessible.name: qsTr("Task Switcher")
         x: tabBox.screenGeometry.x + (tabBox.screenGeometry.width - width) / 2
         y: tabBox.screenGeometry.y + (tabBox.screenGeometry.height - height) / 2
 

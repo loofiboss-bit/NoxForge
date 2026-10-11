@@ -20,8 +20,8 @@ class ReleaseWorkflowTests(unittest.TestCase):
         combined = self.ci_workflow + self.workflow
         self.assertNotIn("actions/checkout@v4", combined)
         self.assertNotIn("actions/setup-python@v5", combined)
-        self.assertEqual(combined.count("actions/checkout@v7"), 4)
-        self.assertEqual(combined.count("actions/setup-python@v7"), 1)
+        self.assertEqual(combined.count("actions/checkout@v7"), 5)
+        self.assertEqual(combined.count("actions/setup-python@v7"), 2)
 
     def test_release_metadata_is_selected_from_the_manifest_and_tag(self) -> None:
         self.assertNotIn("docs/evidence/v3/", self.workflow)

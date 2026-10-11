@@ -31,6 +31,41 @@ ACCENT_COLORS = {
     "amber": "#FBBF24",
 }
 
+GRAPHITE_SURFACE = "#141E25"
+OBSIDIAN_SURFACE = "#000000"
+
+
+def relative_luminance(hex_color: str) -> float:
+    channels = [int(hex_color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
+    linear = [
+        value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+        for value in channels
+    ]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(first: str, second: str) -> float:
+    light, dark = sorted(
+        (relative_luminance(first), relative_luminance(second)),
+        reverse=True,
+    )
+    return (light + 0.05) / (dark + 0.05)
+
+
+def validate_custom_accent_contrast(hex_code: str) -> tuple[float, float]:
+    clean_hex = hex_code.strip()
+    if not clean_hex.startswith("#") or len(clean_hex) != 7 or not all(c in "0123456789abcdefABCDEF" for c in clean_hex[1:]):
+        raise ValueError(f"Invalid hex color format: {hex_code!r}. Must be '#RRGGBB'.")
+    c_graphite = contrast_ratio(clean_hex, GRAPHITE_SURFACE)
+    c_obsidian = contrast_ratio(clean_hex, OBSIDIAN_SURFACE)
+    if c_graphite < 4.5 or c_obsidian < 4.5:
+        raise ValueError(
+            f"Custom accent {clean_hex} fails WCAG AA 4.5:1 contrast requirement. "
+            f"Contrast on Graphite (#141E25): {c_graphite:.2f}:1, "
+            f"Contrast on Obsidian (#000000): {c_obsidian:.2f}:1."
+        )
+    return c_graphite, c_obsidian
+
 
 def run_cmd(cmd: list[str], check: bool = False) -> subprocess.CompletedProcess[str]:
     return subprocess.run(cmd, check=check, capture_output=True, text=True)
@@ -231,15 +266,37 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False) -> dict[str,
     return {"status": "applied", "changes": changes}
 
 
-def set_accent(accent: str, dry_run: bool = False) -> dict[str, Any]:
-    target = accent.lower().strip()
-    if target not in ("lime", "cyan", "violet", "amber", "system"):
-        raise ValueError(f"Unknown accent: {accent}. Must be one of: lime, cyan, violet, amber, system.")
+def set_accent(accent: str, custom_hex: str | None = None, dry_run: bool = False) -> dict[str, Any]:
+    target = accent.strip()
+    hex_color = ""
+    contrast_info: dict[str, float] = {}
 
-    hex_color = ACCENT_COLORS.get(target, "")
+    if target.lower() == "custom":
+        if not custom_hex:
+            raise ValueError("Missing custom hex color. Usage: noxforge-ctl accent custom '#RRGGBB'")
+        c_g, c_o = validate_custom_accent_contrast(custom_hex)
+        target = "custom"
+        hex_color = custom_hex.upper()
+        contrast_info = {"contrastGraphite": round(c_g, 2), "contrastObsidian": round(c_o, 2)}
+    elif target.startswith("#"):
+        c_g, c_o = validate_custom_accent_contrast(target)
+        hex_color = target.upper()
+        target = "custom"
+        contrast_info = {"contrastGraphite": round(c_g, 2), "contrastObsidian": round(c_o, 2)}
+    elif target.lower() in ACCENT_COLORS:
+        target = target.lower()
+        hex_color = ACCENT_COLORS[target]
+    elif target.lower() == "system":
+        target = "system"
+        hex_color = ""
+    else:
+        raise ValueError(f"Unknown accent: {accent}. Must be one of: lime, cyan, violet, amber, system, custom, or '#RRGGBB'.")
 
     if dry_run:
-        return {"status": "dry-run", "accent": target, "hex": hex_color}
+        res: dict[str, Any] = {"status": "dry-run", "accent": target, "hex": hex_color}
+        if contrast_info:
+            res.update(contrast_info)
+        return res
 
     if target == "system":
         # Reset custom AccentColor to restore system-controlled accent
@@ -260,7 +317,10 @@ def set_accent(accent: str, dry_run: bool = False) -> dict[str, Any]:
         run_cmd(["plasma-apply-colorscheme", active_scheme])
 
     notify_plasma_kwin()
-    return {"status": "applied", "accent": target, "hex": hex_color}
+    res = {"status": "applied", "accent": target, "hex": hex_color}
+    if contrast_info:
+        res.update(contrast_info)
+    return res
 
 
 def get_current_status() -> dict[str, Any]:
@@ -376,11 +436,16 @@ def main() -> int:
     sync_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
     # accent
-    accent_parser = subparsers.add_parser("accent", help="Select active Forge accent color")
+    accent_parser = subparsers.add_parser("accent", help="Select active Forge accent color or custom WCAG AA hex")
     accent_parser.add_argument(
         "color",
-        choices=["lime", "cyan", "violet", "amber", "system"],
-        help="Accent color (lime, cyan, violet, amber, or system)",
+        help="Accent color (lime, cyan, violet, amber, system, custom, or #RRGGBB)",
+    )
+    accent_parser.add_argument(
+        "custom_hex",
+        nargs="?",
+        default=None,
+        help="Hex color for custom accent (e.g. '#A3FF47')",
     )
     accent_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     accent_parser.add_argument("--json", action="store_true", help="Output result as JSON")
@@ -444,11 +509,20 @@ def main() -> int:
         return 0
 
     if args.command == "accent":
-        result = set_accent(args.color, dry_run=args.dry_run)
+        try:
+            result = set_accent(args.color, custom_hex=args.custom_hex, dry_run=args.dry_run)
+        except ValueError as err:
+            if args.json:
+                print(json.dumps({"status": "error", "message": str(err)}, indent=2), file=sys.stderr)
+            else:
+                print(f"[NoxForge Error] {err}", file=sys.stderr)
+            return 1
         if args.json:
             print(json.dumps(result, indent=2))
         else:
-            print(f"[NoxForge] Accent color set to: {args.color.upper()} ({result.get('hex', '')})")
+            print(f"[NoxForge] Accent color set to: {result['accent'].upper()}" + (f" ({result.get('hex', '')})" if result.get('hex') else ""))
+            if "contrastGraphite" in result:
+                print(f"  WCAG AA Contrast: Graphite {result['contrastGraphite']}:1, Obsidian {result['contrastObsidian']}:1")
         return 0
 
     if args.command == "status":

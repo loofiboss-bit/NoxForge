@@ -324,7 +324,7 @@ import QtQuick
 import org.kde.kirigami as Kirigami
 
 QtObject {
-    readonly property real durationScale: Kirigami.Units.shortDuration <= 0
+    readonly property real durationScale: (Kirigami.Units.shortDuration <= 0 || Kirigami.Units.longDuration <= 0)
         ? 0
         : Kirigami.Units.shortDuration / 100.0
     readonly property bool reducedMotion: durationScale <= 0
