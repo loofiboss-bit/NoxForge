@@ -184,7 +184,7 @@ class NoxForgeV14ContractsTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 1)
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (7, 8))
+        self.assertIn(report["schemaVersion"], (7, 8, 9))
 
         missing = set(report["missing"])
         v14_required = {

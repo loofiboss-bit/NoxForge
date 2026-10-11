@@ -97,6 +97,39 @@ class RollingReleaseContractTests(unittest.TestCase):
             for item in pdir.rglob("*"):
                 self.assertFalse(item.is_symlink(), f"Forbidden symlink in package: {item}")
 
+    def test_doctor_schema_9_contract(self) -> None:
+        import subprocess
+        import sys
+
+        doctor = ROOT / "tools/noxforge-doctor"
+        res = subprocess.run(
+            [sys.executable, str(doctor), "--root", str(ROOT), "--json"],
+            capture_output=True,
+            text=True,
+            check=False,
+            cwd=ROOT,
+        )
+        self.assertEqual(res.returncode, 0, f"doctor failed: {res.stderr}")
+        report = json.loads(res.stdout)
+        self.assertEqual(report["schemaVersion"], 9)
+        self.assertIn("qmlVariantDrift", report)
+        self.assertIn("reducedMotion", report)
+        self.assertIn("customAccentContrast", report)
+        self.assertIn("faceAuthApi", report)
+        self.assertIn("versionCoherence", report)
+
+        qml = report["qmlVariantDrift"]
+        self.assertEqual(qml["status"], "ok")
+        self.assertEqual(qml["checked"], 6)
+        self.assertEqual(qml["drift"], [])
+
+        motion = report["reducedMotion"]
+        self.assertEqual(motion["status"], "ok")
+        self.assertIn(motion["effective"], ("standard", "reduced"))
+
+        coherence = report["versionCoherence"]
+        self.assertEqual(coherence["status"], "coherent")
+
 
 if __name__ == "__main__":
     unittest.main()

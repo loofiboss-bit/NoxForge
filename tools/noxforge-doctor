@@ -635,6 +635,258 @@ def icon_adaptation_diagnostics(roots: list[Path], root: Path = Path("/")) -> di
     }
 
 
+GRAPHITE_SURFACE = "#141E25"
+OBSIDIAN_SURFACE = "#000000"
+
+
+def _relative_luminance(hex_code: str) -> float:
+    hex_clean = hex_code.lstrip("#")
+    if len(hex_clean) != 6:
+        return 0.0
+    try:
+        rgb = [int(hex_clean[i : i + 2], 16) / 255.0 for i in (0, 2, 4)]
+    except ValueError:
+        return 0.0
+    linear = [
+        c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+        for c in rgb
+    ]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def _contrast_ratio(first: str, second: str) -> float:
+    l1 = _relative_luminance(first)
+    l2 = _relative_luminance(second)
+    light, dark = max(l1, l2), min(l1, l2)
+    return (light + 0.05) / (dark + 0.05)
+
+
+def qml_variant_drift_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    variants_spec = root / "design/qml-variants.json"
+    drift: list[str] = []
+    checked = 0
+
+    if variants_spec.is_file():
+        try:
+            spec = json.loads(variants_spec.read_text(encoding="utf-8"))
+            for entry in spec.get("targets", []):
+                source_rel = entry.get("source")
+                source_path = root / source_rel
+                if not source_path.is_file():
+                    drift.append(f"missing-source:{source_rel}")
+                    continue
+                source_content = source_path.read_text(encoding="utf-8")
+                header = f"// GENERATED from {source_rel} — do not edit directly\n"
+                expected_content = header + source_content if not source_content.startswith(header) else source_content
+                for out_rel in entry.get("outputs", []):
+                    target_path = root / out_rel
+                    checked += 1
+                    if not target_path.is_file():
+                        drift.append(f"missing:{out_rel}")
+                        continue
+                    content = target_path.read_text(encoding="utf-8")
+                    if content != expected_content:
+                        drift.append(f"content-drift:{out_rel}")
+        except Exception as err:
+            drift.append(f"spec-error:{err}")
+    else:
+        qml_targets = [
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml", "qml/shared/lockscreen/LockScreen.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml", "qml/shared/lockscreen/LockScreen.qml"),
+            ("sddm/themes/NoxForge/Main.qml", "qml/shared/sddm/Main.qml"),
+            ("sddm/themes/NoxForgeObsidian/Main.qml", "qml/shared/sddm/Main.qml"),
+            ("kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml", "qml/shared/tabbox/main.qml"),
+            ("kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/contents/ui/main.qml", "qml/shared/tabbox/main.qml"),
+        ]
+        exp_ver = expected_version(root)
+        if exp_ver and int(exp_ver.split(".")[0]) >= 16:
+            for rel_path, shared_source in qml_targets:
+                for data_root in roots:
+                    candidate = data_root / rel_path
+                    if scoped_file(candidate, root):
+                        try:
+                            content = candidate.read_text(encoding="utf-8", errors="ignore")
+                            if "import " in content or "pragma " in content:
+                                checked += 1
+                                if not content.startswith(f"// GENERATED from {shared_source}"):
+                                    drift.append(f"header-drift:{rel_path}")
+                        except OSError:
+                            drift.append(f"unreadable:{rel_path}")
+
+    status = "ok" if (checked > 0 and not drift) else ("not-applicable" if checked == 0 else "drift-detected")
+    return {
+        "status": status,
+        "checked": checked,
+        "drift": sorted(drift),
+    }
+
+
+def reduced_motion_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    env_override = os.environ.get("NOXFORGE_REDUCED_MOTION")
+    animation_factor: float | None = None
+    kdeglobals_path: Path | None = None
+
+    if root == Path("/"):
+        kdeglobals_path = Path.home() / ".config/kdeglobals"
+    else:
+        for candidate in (root / ".config/kdeglobals", root / "etc/xdg/kdeglobals"):
+            if candidate.is_file():
+                kdeglobals_path = candidate
+                break
+
+    if kdeglobals_path and kdeglobals_path.is_file():
+        try:
+            parser = configparser.ConfigParser(interpolation=None)
+            parser.read(kdeglobals_path, encoding="utf-8")
+            if parser.has_option("KDE", "AnimationDurationFactor"):
+                animation_factor = float(parser.get("KDE", "AnimationDurationFactor"))
+        except (configparser.Error, ValueError, OSError):
+            pass
+
+    sddm_policy: str = "auto"
+    for r in roots:
+        theme_conf = r / "sddm/themes/NoxForge/theme.conf"
+        if scoped_file(theme_conf, root):
+            try:
+                parser = configparser.ConfigParser(interpolation=None)
+                parser.read(theme_conf, encoding="utf-8")
+                if parser.has_option("General", "reducedMotion"):
+                    sddm_policy = parser.get("General", "reducedMotion")
+            except (configparser.Error, OSError):
+                pass
+            break
+
+    effective = "standard"
+    if env_override in ("1", "true", "True", "on"):
+        effective = "reduced"
+    elif animation_factor is not None and animation_factor <= 0.0:
+        effective = "reduced"
+
+    return {
+        "status": "ok",
+        "effective": effective,
+        "envOverride": env_override,
+        "animationDurationFactor": animation_factor,
+        "sddmPolicy": sddm_policy,
+    }
+
+
+def custom_accent_contrast_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    kdeglobals_path: Path | None = None
+    if root == Path("/"):
+        kdeglobals_path = Path.home() / ".config/kdeglobals"
+    else:
+        for candidate in (root / ".config/kdeglobals", root / "etc/xdg/kdeglobals"):
+            if candidate.is_file():
+                kdeglobals_path = candidate
+                break
+
+    hex_color: str | None = None
+    if kdeglobals_path and kdeglobals_path.is_file():
+        try:
+            parser = configparser.ConfigParser(interpolation=None)
+            parser.read(kdeglobals_path, encoding="utf-8")
+            raw_accent = None
+            if parser.has_option("General", "AccentColor"):
+                raw_accent = parser.get("General", "AccentColor").strip()
+            elif parser.has_option("General", "LastUsedCustomAccentColor"):
+                raw_accent = parser.get("General", "LastUsedCustomAccentColor").strip()
+            if raw_accent:
+                if raw_accent.startswith("#") and len(raw_accent) == 7:
+                    hex_color = raw_accent.upper()
+                elif "," in raw_accent:
+                    parts = raw_accent.split(",")
+                    if len(parts) >= 3:
+                        r, g, b = (int(p.strip()) for p in parts[:3])
+                        hex_color = f"#{r:02X}{g:02X}{b:02X}"
+        except Exception:
+            pass
+
+    if not hex_color:
+        return {
+            "status": "not-configured",
+            "activeAccent": None,
+            "contrastGraphite": None,
+            "contrastObsidian": None,
+            "wcagCompliant": True,
+        }
+
+    c_g = _contrast_ratio(hex_color, GRAPHITE_SURFACE)
+    c_o = _contrast_ratio(hex_color, OBSIDIAN_SURFACE)
+    wcag_compliant = bool(c_g >= 4.5 and c_o >= 4.5)
+
+    return {
+        "status": "compliant" if wcag_compliant else "low-contrast",
+        "activeAccent": hex_color,
+        "contrastGraphite": round(c_g, 2),
+        "contrastObsidian": round(c_o, 2),
+        "wcagCompliant": wcag_compliant,
+    }
+
+
+def face_auth_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    theme_configured = False
+    for r in roots:
+        theme_conf = r / "sddm/themes/NoxForge/theme.conf"
+        if scoped_file(theme_conf, root):
+            try:
+                content = theme_conf.read_text(encoding="utf-8")
+                if "faceAuthenticationApi=1" in content or "faceAuthenticationApi = 1" in content:
+                    theme_configured = True
+            except OSError:
+                pass
+            break
+
+    pam_present = False
+    if root == Path("/"):
+        pam_candidates = [
+            Path("/usr/lib64/security/pam_loofifaceid.so"),
+            Path("/usr/lib/security/pam_loofifaceid.so"),
+            Path("/usr/lib/x86_64-linux-gnu/security/pam_loofifaceid.so"),
+        ]
+        pam_present = any(p.is_file() for p in pam_candidates) or (shutil.which("loofifaceid") is not None)
+
+    return {
+        "status": "available" if (theme_configured or pam_present) else "absent",
+        "sddmThemeConfigured": theme_configured,
+        "systemModulePresent": pam_present,
+        "mode": "experimental-opt-in",
+    }
+
+
+def version_coherence_diagnostics(
+    components: dict[str, dict[str, Any]],
+    expected: str | None,
+    root: Path = Path("/"),
+) -> dict[str, Any]:
+    deviations: list[dict[str, str]] = []
+    detected_versions: set[str] = set()
+
+    for name, state in components.items():
+        if not state["found"]:
+            continue
+        for copy_idx, ver in enumerate(state.get("copyVersions", [])):
+            if ver is not None:
+                detected_versions.add(ver)
+                if expected is not None and ver != expected:
+                    path = state["paths"][copy_idx] if copy_idx < len(state["paths"]) else name
+                    deviations.append({
+                        "component": name,
+                        "path": path,
+                        "detectedVersion": ver,
+                        "expectedVersion": expected,
+                    })
+
+    coherent = bool(not deviations) and (len(detected_versions) <= 1)
+
+    return {
+        "status": "coherent" if coherent else "divergent",
+        "expectedVersion": expected,
+        "detectedVersions": sorted(detected_versions),
+        "deviations": deviations,
+    }
+
+
 def parse_kscreen_doctor(output: str) -> list[dict[str, Any]]:
     outputs: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
@@ -956,11 +1208,16 @@ def build_report(root: Path) -> dict[str, Any]:
 
     icons = icon_diagnostics(roots, root)
     icon_adaptation = icon_adaptation_diagnostics(roots, root)
+    qml_variant_drift = qml_variant_drift_diagnostics(roots, root)
+    reduced_motion = reduced_motion_diagnostics(roots, root)
+    custom_accent_contrast = custom_accent_contrast_diagnostics(root)
+    face_auth = face_auth_diagnostics(roots, root)
 
     expected = expected_version(root)
     mixed = len(versions) > 1 or (
         expected is not None and any(version != expected for version in versions)
     )
+    version_coherence = version_coherence_diagnostics(components, expected, root)
     active: dict[str, str] = {}
     if root == Path("/"):
         active = read_active_components()
@@ -1020,6 +1277,27 @@ def build_report(root: Path) -> dict[str, Any]:
     if mixed:
         issues.append({"code": "mixed-versions", "component": "installation", "severity": "error",
                        "message": "Installed component versions disagree with each other or the installed VERSION marker."})
+    if version_coherence["status"] == "divergent" and not mixed:
+        issues.append({
+            "code": "version-incoherence",
+            "component": "installation",
+            "severity": "warning",
+            "message": f"Version incoherence detected across installed components: {len(version_coherence['deviations'])} deviations from {expected}.",
+        })
+    if qml_variant_drift["status"] == "drift-detected":
+        issues.append({
+            "code": "qml-variant-drift",
+            "component": "qml",
+            "severity": "warning",
+            "message": f"QML variant drift detected: {', '.join(qml_variant_drift['drift'])}.",
+        })
+    if custom_accent_contrast["status"] == "low-contrast":
+        issues.append({
+            "code": "custom-accent-low-contrast",
+            "component": "accent",
+            "severity": "warning",
+            "message": f"Active custom accent {custom_accent_contrast['activeAccent']} fails WCAG AA 4.5:1 contrast requirement.",
+        })
     if icon_adaptation["status"] == "incomplete":
         if icon_adaptation["missingAdaptive"]:
             issues.append({
@@ -1062,13 +1340,14 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 8,
+        "schemaVersion": 9,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
         "expectedVersion": expected,
         "componentVersions": sorted(versions),
         "mixedVersions": mixed,
+        "versionCoherence": version_coherence,
         "missing": missing,
         "components": components,
         "criticalIcons": icons,
@@ -1079,6 +1358,10 @@ def build_report(root: Path) -> dict[str, Any]:
             "status": "desynchronized" if palette_desync else ("synchronized" if palette_targets else "not-active"),
             "targets": palette_targets,
         },
+        "qmlVariantDrift": qml_variant_drift,
+        "reducedMotion": reduced_motion,
+        "customAccentContrast": custom_accent_contrast,
+        "faceAuthApi": face_auth,
         "ecosystem": inspect_ecosystem(root),
         "nextAction": next_action,
         "session": {
@@ -1144,6 +1427,24 @@ def print_human(report: dict[str, Any]) -> None:
         print(f"Icon adaptation: ok ({icon_adapt.get('scalableAdaptiveCount', 0)} scalable icons with CurrentColorScheme, v15 signal suite complete)")
     elif icon_adapt.get("status") == "incomplete":
         print(f"Icon adaptation: INCOMPLETE ({len(icon_adapt.get('missingAdaptive', []))} non-adaptive, {len(icon_adapt.get('v15SignalSuite', {}).get('missing', []))} missing v15 icons)")
+    qml_drift = report.get("qmlVariantDrift", {})
+    if qml_drift.get("status") == "ok":
+        print(f"QML variants: synchronized ({qml_drift.get('checked', 0)} checked)")
+    elif qml_drift.get("status") == "drift-detected":
+        print(f"QML variants: DRIFT DETECTED ({', '.join(qml_drift.get('drift', []))})")
+    mot = report.get("reducedMotion", {})
+    print(f"Motion policy: {mot.get('effective', 'standard')} (env={mot.get('envOverride') or 'none'}, factor={mot.get('animationDurationFactor')}, sddm={mot.get('sddmPolicy')})")
+    acc = report.get("customAccentContrast", {})
+    if acc.get("status") == "compliant":
+        print(f"Custom accent: compliant ({acc.get('activeAccent')}, Graphite {acc.get('contrastGraphite')}:1, Obsidian {acc.get('contrastObsidian')}:1)")
+    elif acc.get("status") == "low-contrast":
+        print(f"Custom accent: LOW CONTRAST ({acc.get('activeAccent')}, Graphite {acc.get('contrastGraphite')}:1, Obsidian {acc.get('contrastObsidian')}:1)")
+    face = report.get("faceAuthApi", {})
+    if face.get("status") == "available":
+        print(f"Face auth API: available (theme={face.get('sddmThemeConfigured')}, system={face.get('systemModulePresent')})")
+    v_coh = report.get("versionCoherence", {})
+    if v_coh.get("status") == "divergent":
+        print(f"Version coherence: DIVERGENT ({len(v_coh.get('deviations', []))} deviations)")
     print(f"Next action: {report['nextAction']}")
 
 

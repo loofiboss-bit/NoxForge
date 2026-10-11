@@ -241,7 +241,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (5, 6, 7, 8))
+        self.assertIn(report["schemaVersion"], (5, 6, 7, 8, 9))
         self.assertIn("ecosystem", report)
         self.assertIn("flatpakThemesOverride", report["ecosystem"])
         self.assertIn("gtk-theme", report["missing"])

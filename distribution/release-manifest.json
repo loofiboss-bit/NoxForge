@@ -371,9 +371,11 @@
       "wallpapers",
       "scripts",
       "tests",
+      "qml/shared",
       "docs/evidence/v12",
       "docs/evidence/v13",
       "docs/evidence/v14",
+      "docs/evidence/v16",
       "docs/man",
       "docs/QUICKSTART.md",
       "docs/INSTALL_FEDORA.md",
@@ -393,6 +395,8 @@
       "docs/NOXFORGE_V13_PLAN.md",
       "docs/NOXFORGE_V14_PLAN.md",
       "docs/NOXFORGE_V15_PLAN.md",
+      "docs/NOXFORGE_V16_PLAN.md",
+      "docs/EXPERIMENTAL_FACE_AUTH.md",
       "docs/IMPLEMENTATION_PLAN.md",
       "docs/MANUAL_TESTING.md"
     ],
@@ -414,7 +418,7 @@
     ]
   },
   "evidence": {
-    "activeRoot": "docs/evidence/v14",
+    "activeRoot": "docs/evidence/v16",
     "policy": {
       "offscreenIsLiveEvidence": false,
       "physicalUnavailable": "pending"
