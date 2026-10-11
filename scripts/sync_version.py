@@ -53,9 +53,33 @@ VERSION_FILES = {
         (r'(?m)^(\s*"package":\s*)"noxforge-.*?-1\.fc44\.x86_64\.rpm"(,?)$', r'\g<1>"noxforge-{rpm_version}-1.fc44.x86_64.rpm"\g<2>'),
     ),
     "distribution/kde-store/description.md": (
-        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} True Obsidian OLED Parity & Dual-Stack Architecture is an original"),
+        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} Single Source & Verified Truth is an original"),
         (r"(?m)^Use the exact `noxforge-.*?-\*\.tar\.xz` files and verify them against the", "Use the exact `noxforge-{version}-*.tar.xz` files and verify them against the"),
         (r"(?m)^release `SHA256SUMS`: https://github\.com/loofiboss-bit/NoxForge/releases/tag/v.*?$", "release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v{version}"),
+    ),
+    "browsers/firefox/manifest.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "apps/discord/noxforge.theme.css": ((r'(?m)^(\s*\*\s*@version\s+).*?$', r'\g<1>{version}'),),
+    "apps/discord/noxforge_obsidian.theme.css": ((r'(?m)^(\s*\*\s*@version\s+).*?$', r'\g<1>{version}'),),
+    "docs/COMPATIBILITY.md": ((r'(?m)^# NoxForge \d+ compatibility', '# NoxForge {major} compatibility'),),
+    "docs/TROUBLESHOOTING.md": ((r'(?m)^# Troubleshooting NoxForge \d+', '# Troubleshooting NoxForge {major}'),),
+    "docs/QUICKSTART.md": (
+        (r'(?m)^NoxForge \d+\.\d+\.\d+ targets', 'NoxForge {version} targets'),
+        (r'noxforge-\d+\.\d+\.\d+-portable\.tar\.xz', 'noxforge-{version}-portable.tar.xz'),
+    ),
+    "docs/INSTALL_ARCH.md": (
+        (r'Download the exact \d+\.\d+\.\d+ archive', 'Download the exact {version} archive'),
+        (r'releases/tag/v\d+\.\d+\.\d+', 'releases/tag/v{version}'),
+        (r'noxforge-\d+\.\d+\.\d+-source\.tar\.xz', 'noxforge-{version}-source.tar.xz'),
+    ),
+    "docs/INSTALL_FEDORA.md": (
+        (r'(?m)^NoxForge \d+\.\d+\.\d+ is a', 'NoxForge {version} is a'),
+        (r'noxforge-\d+\.\d+\.\d+-source\.tar\.xz', 'noxforge-{version}-source.tar.xz'),
+        (r'cd NoxForge-\d+\.\d+\.\d+', 'cd NoxForge-{version}'),
+    ),
+    "docs/INSTALL_PORTABLE.md": (
+        (r'Download the exact \d+\.\d+\.\d+ archive', 'Download the exact {version} archive'),
+        (r'releases/tag/v\d+\.\d+\.\d+', 'releases/tag/v{version}'),
+        (r'noxforge-\d+\.\d+\.\d+-portable\.tar\.xz', 'noxforge-{version}-portable.tar.xz'),
     ),
     "docs/evidence/v14/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
     "packaging/noxforge.spec": (
@@ -109,6 +133,7 @@ def main() -> int:
                     version=version,
                     rpm_version=rpm_version,
                     release_version=manifest["release"]["stableVersion"],
+                    major=version.split(".")[0],
                 ),
                 output,
                 count=1,

@@ -2,19 +2,19 @@
   "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "15.0.0",
-    "stableVersion": "15.0.0",
-    "activePlan": "docs/NOXFORGE_V15_PLAN.md",
+    "version": "16.0.0",
+    "stableVersion": "16.0.0",
+    "activePlan": "docs/NOXFORGE_V16_PLAN.md",
     "baseline": {
-      "version": "13.0.0",
-      "commit": "4ffd11c15989602bcddb1f6202082029be2d3520",
-      "tag": "v13.0.0",
-      "tagCommit": "4ffd11c15989602bcddb1f6202082029be2d3520",
+      "version": "15.0.0",
+      "commit": "6c2a90dec1fd6d91439a55d8801ba5abf626f843",
+      "tag": "v15.0.0",
+      "tagCommit": "6c2a90dec1fd6d91439a55d8801ba5abf626f843",
       "rpmBytes": 1685866,
       "srpmBytes": 10948301,
       "githubSourceBytes": 10924124,
-      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.0",
-      "rpmFilename": "noxforge-13.0.0-1.fc44.x86_64.rpm",
+      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v15.0.0",
+      "rpmFilename": "noxforge-15.0.0-1.fc44.x86_64.rpm",
       "rpmSha256": "78f417060bfe7cc0543beff59ee5773378d582d0d0933f10c3eb2e8cd8f71b24",
       "kdeStoreProduct": "2367662"
     }

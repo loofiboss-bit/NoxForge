@@ -165,8 +165,15 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 12:
+        motion = tokens.get("motion")
+        if not isinstance(motion, dict) or "reducedMotion" not in motion:
+            raise ValidationError("motion token contract is missing reducedMotion")
+        accents = tokens.get("accents", {})
+        if "custom" not in accents:
+            raise ValidationError("custom accent token contract is missing")
     if tokens.get("schemaVersion") >= 11:
         signal = tokens.get("iconography", {}).get("signal")
         if not isinstance(signal, dict) or signal.get("tiers") != [0, 25, 50, 75, 100]:

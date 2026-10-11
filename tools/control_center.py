@@ -25,6 +25,26 @@ for p in (str(SCRIPT_DIR), str(ROOT)):
     if p not in sys.path:
         sys.path.insert(0, p)
 
+
+def get_app_version() -> str:
+    candidates = [
+        ROOT / "VERSION",
+        SCRIPT_DIR.parent / "VERSION",
+        Path("/usr/share/noxforge/VERSION"),
+    ]
+    for p in candidates:
+        if p.is_file():
+            try:
+                v = p.read_text(encoding="utf-8").strip()
+                if v:
+                    return v
+            except Exception:
+                pass
+    return "16.0.0"
+
+
+APP_VERSION = get_app_version()
+
 # Load noxforge-ctl module
 ctl_candidates = [
     ROOT / "tools/noxforge-ctl",
@@ -161,8 +181,8 @@ class ProfileAccentTab(QtWidgets.QWidget):
         a_layout.addLayout(accent_grid)
         layout.addWidget(accent_group)
 
-        # Live Icon & Kinetic Motion Preview Section (v15.0.0)
-        preview_group = QtWidgets.QGroupBox("Live Icon & Kinetic Motion Preview (v15.0.0 Adaptive Vector Suite)")
+        # Live Icon & Kinetic Motion Preview Section
+        preview_group = QtWidgets.QGroupBox(f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
         prev_layout = QtWidgets.QVBoxLayout(preview_group)
 
         prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
@@ -206,7 +226,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # Kinetic Motion Test Row
         motion_row = QtWidgets.QHBoxLayout()
-        self.test_box = QtWidgets.QLineEdit("NoxForge Kinetic Motion v15.0.0")
+        self.test_box = QtWidgets.QLineEdit(f"NoxForge Kinetic Motion v{APP_VERSION}")
         self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
         self.test_box.setStyleSheet(
             "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
@@ -418,7 +438,7 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         main_layout.addWidget(self.tabs)
 
         # Status Bar
-        self.statusBar().showMessage("NoxForge Control Center v15.0.0 ready.")
+        self.statusBar().showMessage(f"NoxForge Control Center v{APP_VERSION} ready.")
 
     def show_status(self, msg: str) -> None:
         self.statusBar().showMessage(msg, 5000)
