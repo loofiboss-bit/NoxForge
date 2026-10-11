@@ -44,7 +44,7 @@
     {
       "path": "widgets/busywidget.svg",
       "recipe": "progress",
-      "sha256": "f51ac63df1f58f5566403c2eea710437bbe044d0fc71a0ea1d36c2c5e82736d1"
+      "sha256": "e413955a3583c7225866cbd67fa111d2b4dfe267eb380ad8dcb660761b3d1189"
     },
     {
       "path": "widgets/button.svg",
@@ -287,42 +287,42 @@
       "file": "plasma-style-atlas-100pct.png",
       "height": 872,
       "scale": 1.0,
-      "sha256": "0e6c7b98fb89df8792bd010bd563e0389fdbc11b4135496f2a6989596acd6c15",
+      "sha256": "195ac8a04f3b776bdea83cf13b8836f1000283db84e0c472a334ed9c5c7e647b",
       "width": 1316
     },
     {
       "file": "plasma-style-atlas-125pct.png",
       "height": 1082,
       "scale": 1.25,
-      "sha256": "599aa8d0a21e3d323e637f6eb15b00f1f11c388d246a4d808dc3fd159a9ad9fc",
+      "sha256": "a0f5dbc59f00c852f7804aa371719e5e51e74d76435109966bd39762efae40be",
       "width": 1636
     },
     {
       "file": "plasma-style-atlas-140pct.png",
       "height": 1208,
       "scale": 1.4,
-      "sha256": "474ae640d5bd2cc517f2e661e79796688b5f62113b9394671ee78945a618a548",
+      "sha256": "de7e20de4e24fbe14e6b725e3985684233959125be9e3ad6c902bc63881c3426",
       "width": 1828
     },
     {
       "file": "plasma-style-atlas-150pct.png",
       "height": 1292,
       "scale": 1.5,
-      "sha256": "f610b7692dbc8e5edf740997bace8423f3fecd98c2e2964b63b395b844ad7a2d",
+      "sha256": "ebb64d760dcc491966ef28097a429d95ea0885331dff97981971fdbe46f0ab7d",
       "width": 1956
     },
     {
       "file": "plasma-style-atlas-175pct.png",
       "height": 1502,
       "scale": 1.75,
-      "sha256": "eec72aa6e8e5567fdf79278df05b5ce6d348df17c8a4fec50f49a54f8c415deb",
+      "sha256": "f107866bba4f27fea6804f472dd62851b1b486180c0c8bbfb646c9f309c1406a",
       "width": 2276
     },
     {
       "file": "plasma-style-atlas-200pct.png",
       "height": 1712,
       "scale": 2.0,
-      "sha256": "9a61c8e0cc0237852784aa691e6df086f85e4cd3920ba778cf996d31e0d933da",
+      "sha256": "7eb0a4a09e864b5d299ebb3e23ce0ba18dfc33abcf88eebac246c1e9cdfb1a19",
       "width": 2596
     }
   ],
