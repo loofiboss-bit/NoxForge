@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/tabbox/main.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 // qmllint disable unqualified
 pragma ComponentBehavior: Bound

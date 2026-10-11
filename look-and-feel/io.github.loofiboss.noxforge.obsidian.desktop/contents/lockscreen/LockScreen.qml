@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/lockscreen/LockScreen.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 // qmllint disable unqualified
 pragma ComponentBehavior: Bound

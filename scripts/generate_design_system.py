@@ -1430,7 +1430,29 @@ def outputs(tokens: dict[str, object]) -> dict[Path, str]:
     generated[MONO_MARK_TARGET] = monochrome_brand_mark(tokens)
     lockup = brand_lockup(tokens)
     generated.update({path: lockup for path in LOCKUP_TARGETS})
+    generated.update(qml_variant_outputs())
     return generated
+
+
+QML_VARIANTS_CONFIG = ROOT / "design/qml-variants.json"
+
+
+def qml_variant_outputs() -> dict[Path, str]:
+    if not QML_VARIANTS_CONFIG.is_file():
+        return {}
+    data = json.loads(QML_VARIANTS_CONFIG.read_text(encoding="utf-8"))
+    results: dict[Path, str] = {}
+    for target in data.get("targets", []):
+        source_rel = target.get("source")
+        source_path = ROOT / source_rel
+        if not source_path.is_file():
+            raise RuntimeError(f"canonical QML source missing: {source_rel}")
+        source_content = source_path.read_text(encoding="utf-8")
+        header = f"// GENERATED from {source_rel} — do not edit directly\n"
+        content = header + source_content if not source_content.startswith(header) else source_content
+        for out_rel in target.get("outputs", []):
+            results[ROOT / out_rel] = content
+    return results
 
 
 def main() -> int:
