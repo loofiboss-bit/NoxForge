@@ -10,12 +10,10 @@ from __future__ import annotations
 import importlib.machinery
 import importlib.util
 import json
-import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -371,7 +369,7 @@ class HealthTab(QtWidgets.QWidget):
             flatpak = eco.get("flatpakThemesOverride", "ok")
             palette_sync = data.get("paletteSynchronization", {}).get("status", "synchronized")
 
-            text = f"=== NOXFORGE DOCTOR REPORT ===\n"
+            text = "=== NOXFORGE DOCTOR REPORT ===\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
@@ -379,7 +377,7 @@ class HealthTab(QtWidgets.QWidget):
             text += f"Flatpak Themes Override: {flatpak}\n"
             text += f"Missing Components: {len(missing)}\n"
             if missing:
-                text += f"  - " + "\n  - ".join(missing) + "\n"
+                text += "  - " + "\n  - ".join(missing) + "\n"
             self.info_text.setPlainText(text)
         except Exception as err:
             self.info_text.setPlainText(f"Could not execute noxforge-doctor: {err}")

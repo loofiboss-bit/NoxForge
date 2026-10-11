@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import configparser
 import gzip
 import hashlib
@@ -12,6 +13,7 @@ import re
 import struct
 import subprocess
 import sys
+import time
 import wave
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -1828,7 +1830,7 @@ def validate_v6_phase7_evidence(version: str) -> None:
         raise ValidationError("v6 Phase 7 motion stress evidence failed")
 
 
-def validate_tooling(version: str) -> None:
+def validate_historical_v7_tooling(version: str) -> None:
     required = (
         ROOT / "scripts/build.py",
         ROOT / "scripts/release-check.py",
@@ -2192,7 +2194,7 @@ def validate_tooling(version: str) -> None:
         raise ValidationError("V8 evidence policy must keep offscreen separate from live")
 
 
-def validate_generated_sources(version: str) -> None:
+def validate_historical_v7_generated_sources(version: str) -> None:
     scripts = [
         "scripts/sync_version.py",
         "scripts/generate_design_system.py",
@@ -2294,46 +2296,116 @@ def validate_no_package_symlinks() -> None:
             raise ValidationError(f"package symlinks are forbidden: {links}")
 
 
-def validate() -> None:
-    version = validate_version()
-    tokens = validate_tokens(version)
-    validate_motion_contract(tokens, version)
+def validate_color_schemes() -> None:
     validate_color_scheme(ROOT / "color-schemes/NoxForgeDark.colors", "NoxForgeDark")
     validate_color_scheme(ROOT / "color-schemes/NoxForgeObsidian.colors", "NoxForgeObsidian")
     validate_color_scheme(ROOT / f"plasma/desktoptheme/{THEME_ID}/colors", "NoxForgeDark")
-    validate_konsole()
     if (ROOT / "color-schemes/NoxForgeDark.colors").read_bytes() != (
         ROOT / f"plasma/desktoptheme/{THEME_ID}/colors"
     ).read_bytes():
         raise ValidationError("standalone and Plasma Style color schemes differ")
-    validate_metadata(version)
-    validate_repository_urls()
-    validate_plasma_style()
-    validate_look_and_feel(version)
-    validate_tabbox(version)
-    validate_aurorae(version)
-    validate_icons()
-    validate_cursors()
-    validate_sounds()
-    validate_sddm(version)
-    validate_wallpaper(version)
-    validate_artwork_evidence(version)
-    if version == V6_RELEASE_VERSION:
-        validate_v6_brand_previews(version)
-        validate_v6_north_star(version)
-        validate_v6_motion_evidence(version)
-        validate_v6_session_evidence(version)
-        validate_v6_edge_evidence(version)
-        validate_v6_phase7_evidence(version)
-    validate_tooling(version)
-    validate_generated_sources(version)
-    validate_json_and_xml()
-    validate_no_package_symlinks()
 
 
-def main() -> int:
+def validate_qml_variants() -> None:
+    manifest_path = ROOT / "design/qml-variants.json"
+    if not manifest_path.exists():
+        raise ValidationError("missing design/qml-variants.json")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for source_rel, targets in manifest.get("variants", {}).items():
+        source_path = ROOT / source_rel
+        if not source_path.exists():
+            raise ValidationError(f"missing canonical QML source: {source_rel}")
+        content = source_path.read_text(encoding="utf-8")
+        header = f"// GENERATED from {source_rel} via scripts/generate_design_system.py. DO NOT EDIT DIRECTLY.\n"
+        expected = header + content
+        for target_rel in targets:
+            target_path = ROOT / target_rel
+            if not target_path.exists():
+                raise ValidationError(f"missing variant target: {target_rel}")
+            if target_path.read_text(encoding="utf-8") != expected:
+                raise ValidationError(f"variant out of sync with {source_rel}: {target_rel}")
+
+
+VALIDATION_STEPS = (
+    ("version", "Validate root VERSION semver", lambda ctx: ctx.setdefault("version", validate_version())),
+    ("tokens", "Validate design/tokens.json schema and structure", lambda ctx: ctx.setdefault("tokens", validate_tokens(str(ctx.get("version") or validate_version())))),
+    ("motion_contract", "Validate motion contracts and reduced-motion spec", lambda ctx: validate_motion_contract(dict(ctx.get("tokens") or validate_tokens(str(ctx.get("version") or validate_version()))), str(ctx.get("version") or validate_version()))),
+    ("color_schemes", "Validate color schemes and parity", lambda _ctx: validate_color_schemes()),
+    ("konsole", "Validate Konsole color schemes", lambda _ctx: validate_konsole()),
+    ("metadata", "Validate desktop metadata and versions", lambda ctx: validate_metadata(str(ctx.get("version") or validate_version()))),
+    ("repository_urls", "Validate repository URLs across manifests", lambda _ctx: validate_repository_urls()),
+    ("plasma_style", "Validate plasma desktoptheme SVGs and states", lambda _ctx: validate_plasma_style()),
+    ("look_and_feel", "Validate look-and-feel package structure", lambda ctx: validate_look_and_feel(str(ctx.get("version") or validate_version()))),
+    ("qml_variants", "Validate QML variants against canonical qml/shared sources", lambda _ctx: validate_qml_variants()),
+    ("tabbox", "Validate KWin TabBox switcher packages", lambda ctx: validate_tabbox(str(ctx.get("version") or validate_version()))),
+    ("aurorae", "Validate Aurorae window decoration packages", lambda ctx: validate_aurorae(str(ctx.get("version") or validate_version()))),
+    ("icons", "Validate icon themes and symlinks", lambda _ctx: validate_icons()),
+    ("cursors", "Validate cursor theme definitions", lambda _ctx: validate_cursors()),
+    ("sounds", "Validate sound theme index and audio formats", lambda _ctx: validate_sounds()),
+    ("sddm", "Validate SDDM themes and metadata", lambda ctx: validate_sddm(str(ctx.get("version") or validate_version()))),
+    ("wallpaper", "Validate wallpaper packages and resolutions", lambda ctx: validate_wallpaper(str(ctx.get("version") or validate_version()))),
+    ("artwork_evidence", "Validate artwork evidence and render hashes", lambda ctx: validate_artwork_evidence(str(ctx.get("version") or validate_version()))),
+    ("tooling", "Validate CLI tools and scripts", lambda ctx: validate_tooling(str(ctx.get("version") or validate_version()))),
+    ("generated_sources", "Validate generated sources and build artifacts", lambda ctx: validate_generated_sources(str(ctx.get("version") or validate_version()))),
+    ("json_and_xml", "Validate JSON and XML syntax across repository", lambda _ctx: validate_json_and_xml()),
+    ("no_package_symlinks", "Validate absence of forbidden package symlinks", lambda _ctx: validate_no_package_symlinks()),
+)
+
+
+def validate(progress: bool = True, only: list[str] | tuple[str, ...] | None = None) -> None:
+    if only:
+        step_dict = {name: (desc, fn) for name, desc, fn in VALIDATION_STEPS}
+        selected_names: list[str] = []
+        for item in only:
+            for sub in item.split(","):
+                sub = sub.strip()
+                if sub:
+                    if sub not in step_dict:
+                        raise ValidationError(f"unknown validation check: {sub!r}. Use --list to see available checks.")
+                    selected_names.append(sub)
+        active_steps = [(name, *step_dict[name]) for name in selected_names]
+    else:
+        active_steps = list(VALIDATION_STEPS)
+
+    total = len(active_steps)
+    ctx: dict[str, object] = {}
+    t_start = time.perf_counter()
+
+    for idx, (name, _desc, fn) in enumerate(active_steps, 1):
+        t0 = time.perf_counter()
+        if progress:
+            print(f"[{idx:2d}/{total}] {name:<22} ... ", end="", flush=True)
+        try:
+            fn(ctx)
+            dt = time.perf_counter() - t0
+            if progress:
+                print(f"ok ({dt:.2f}s)")
+        except Exception as error:
+            dt = time.perf_counter() - t0
+            if progress:
+                print(f"FAILED ({dt:.2f}s)")
+            raise error
+
+    if progress:
+        total_time = time.perf_counter() - t_start
+        print(f"All {total} validation checks passed in {total_time:.2f}s")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate NoxForge sources and package contracts.")
+    parser.add_argument("--only", action="append", help="run only specified check(s), comma-separated or repeatable")
+    parser.add_argument("--list", action="store_true", help="list all available check names and exit")
+    parser.add_argument("-q", "--quiet", action="store_true", help="suppress step progress output")
+    parsed = parser.parse_args(argv)
+
+    if parsed.list:
+        print("Available validation checks:")
+        for name, desc, _ in VALIDATION_STEPS:
+            print(f"  {name:<22} - {desc}")
+        return 0
+
     try:
-        validate()
+        validate(progress=not parsed.quiet, only=parsed.only)
     except (OSError, ValidationError) as error:
         print(f"validation failed: {error}", file=sys.stderr)
         return 1

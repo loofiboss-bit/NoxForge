@@ -12,10 +12,8 @@ Showcases NoxForge v14.0.0 features:
 
 from __future__ import annotations
 
-import math
 import os
 import shutil
-import sys
 from pathlib import Path
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
@@ -23,10 +21,8 @@ os.environ["QT_QPA_PLATFORM"] = "offscreen"
 from PIL import Image, ImageFilter
 from PyQt6.QtCore import QPointF, QRect, QRectF, Qt
 from PyQt6.QtGui import (
-    QBrush,
     QColor,
     QFont,
-    QFontDatabase,
     QGuiApplication,
     QImage,
     QLinearGradient,

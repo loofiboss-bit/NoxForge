@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import importlib.machinery
 import importlib.util
-import json
 import os
 import shutil
 import tempfile
@@ -29,11 +28,8 @@ noxforge_opacity = importlib.util.module_from_spec(spec)
 sys.modules["noxforge_opacity"] = noxforge_opacity
 spec.loader.exec_module(noxforge_opacity)
 
-try:
-    import PySide6
-    HAVE_PYSIDE6 = True
-except ImportError:
-    HAVE_PYSIDE6 = False
+HAVE_PYSIDE6 = bool(importlib.util.find_spec("PySide6"))
+
 
 
 class TestNoxForgeOpacity(unittest.TestCase):
@@ -167,7 +163,7 @@ class TestNoxForgeOpacity(unittest.TestCase):
 
     @unittest.skipUnless(HAVE_PYSIDE6, "PySide6 not installed in environment")
     def test_gui_components_and_preview(self) -> None:
-        from PySide6 import QtCore, QtGui, QtWidgets
+        from PySide6 import QtGui, QtWidgets
         import importlib.util
 
         gui_path = ROOT / "tools/opacity_gui.py"
