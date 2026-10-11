@@ -1,4 +1,4 @@
-# NoxForge 14 compatibility
+# NoxForge 16 compatibility
 
 The intended compatibility target is Fedora 44 KDE and the target Arch
 Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -57,15 +57,20 @@ The packaged SDDM theme supports upgraded Fedora systems that still use SDDM.
 The Arch qualification journey uses optional SDDM. An installed SDDM theme does not imply that SDDM
 is active.
 
+The Graphite and Obsidian SDDM themes and Plasma lock screens include guarded,
+experimental LoofiFaceID theme controls. They stay password-only unless the
+matching version-pinned SDDM or KScreenLocker API is installed and an
+administrator separately enables a user's face policy. See
+[`EXPERIMENTAL_FACE_AUTH.md`](EXPERIMENTAL_FACE_AUTH.md).
+
 KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v15 release is available from the
-[GitHub release page](https://github.com/loofiboss-bit/NoxForge/releases/tag/v15.0.0).
-Its exact-tag automated gate passed. The machine-readable `qualification.json`
-contains verified release counters; use the
-[v15 release plan](NOXFORGE_V15_PLAN.md) for verified
-results. Arch build/live login, pacman lifecycle, and physical qualification
+The v16 release candidate is documented in the
+[v16 release plan](NOXFORGE_V16_PLAN.md). Its automated gates and single-source
+design system verification pass locally and in preflight CI. The machine-readable
+`qualification.json` contains verified candidate counters.
+Arch build/live login, pacman lifecycle, and physical qualification
 remain pending. Offscreen and generated results do not establish those
 behaviors.

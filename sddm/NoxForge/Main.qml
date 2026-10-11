@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/sddm/Main.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 // qmllint disable unqualified
 pragma ComponentBehavior: Bound
@@ -23,10 +24,44 @@ Rectangle {
     property date currentDateTime: new Date()
     property bool authenticating: false
     property bool reducedMotion: motion.reducedMotion
+    property bool edgeFlash: false
     property real testProgress: -1
     property bool entryReady: false
     property real entryProgress: testProgress >= 0 ? testProgress : entryReady ? 1 : 0
     property real shakeOffset: 0
+    onSessionIndexChanged: root.syncFaceAuthenticationSelection()
+
+    function syncFaceAuthenticationSelection() {
+        if (!faceAuthenticationControl.item) {
+            return
+        }
+        faceAuthenticationControl.item.selectedUser = usernameField.editor.text.trim()
+        faceAuthenticationControl.item.sessionIndex = root.sessionIndex
+    }
+
+    function clearFaceAuthenticationSelection() {
+        if (!faceAuthenticationControl.item) {
+            return
+        }
+        sddm.suppressFaceAuthenticationActivity()
+        if (sddm.faceAuthenticationActive) {
+            sddm.cancelFaceAuthentication()
+        }
+        faceAuthenticationControl.item.selectedUser = ""
+    }
+
+    function cancelFaceAuthentication() {
+        if (faceAuthenticationControl.item && sddm.faceAuthenticationActive) {
+            sddm.cancelFaceAuthentication()
+        }
+    }
+
+    Timer {
+        id: edgeFlashTimer
+        interval: 220
+        repeat: false
+        onTriggered: root.edgeFlash = false
+    }
 
     SequentialAnimation {
         id: errorShakeAnim
@@ -41,8 +76,16 @@ Rectangle {
     }
 
     onStatusDangerChanged: {
-        if (statusDanger && !root.reducedMotion) {
-            errorShakeAnim.restart()
+        if (statusDanger) {
+            if (root.reducedMotion) {
+                root.edgeFlash = true
+                edgeFlashTimer.restart()
+            } else {
+                errorShakeAnim.restart()
+            }
+        } else {
+            root.edgeFlash = false
+            edgeFlashTimer.stop()
         }
     }
 
@@ -53,7 +96,8 @@ Rectangle {
 
     QtObject {
         id: motion
-        readonly property real durationScale: Platform.Units.shortDuration <= 0
+        readonly property bool sddmReduced: (typeof config !== "undefined" && config && (config.reducedMotion === "true" || config.reducedMotion === true))
+        readonly property real durationScale: (sddmReduced || Platform.Units.shortDuration <= 0 || Platform.Units.longDuration <= 0)
             ? 0
             : Platform.Units.shortDuration / 100.0
         readonly property bool reducedMotion: durationScale <= 0
@@ -66,6 +110,7 @@ Rectangle {
     LayoutMirroring.childrenInherit: true
 
     function requestLogin() {
+        cancelFaceAuthentication()
         if (usernameField.editor.text.trim().length === 0 || passwordField.editor.text.length === 0) {
             statusMessage = qsTr("Enter both username and password")
             statusDanger = true
@@ -208,14 +253,14 @@ Rectangle {
         id: loginCard
         width: Math.min(root.width - 48, 440)
         height: form.implicitHeight + 64
-        x: (root.width - width) / 2 + root.shakeOffset
+        x: (root.width - width) / 2 + (root.reducedMotion ? 0 : root.shakeOffset)
         y: (root.height - height) / 2 + (root.reducedMotion ? 0 : tokens.standardSpacing * (1 - root.entryProgress))
         opacity: root.entryProgress
         radius: tokens.overlayRadius + 4
         color: tokens.surfaceOverlay
-        border.color: tokens.edgeHighlight
-        border.width: tokens.borderWidth
-        Rectangle { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: parent.top; width: 48; height: 3; radius: 1.5; color: tokens.accent }
+        border.color: (root.statusDanger && (root.reducedMotion || root.edgeFlash)) ? tokens.negative : tokens.edgeHighlight
+        border.width: (root.statusDanger && (root.reducedMotion || root.edgeFlash)) ? tokens.focusWidth : tokens.borderWidth
+        Rectangle { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: parent.top; width: 48; height: 3; radius: 1.5; color: (root.statusDanger && (root.reducedMotion || root.edgeFlash)) ? tokens.negative : tokens.accent }
 
         ColumnLayout {
             id: form
@@ -253,6 +298,16 @@ Rectangle {
                 editor.focus: true
                 editor.KeyNavigation.tab: passwordField.editor
                 editor.KeyNavigation.backtab: powerOffButton
+                editor.onTextChanged: {
+                    root.clearFaceAuthenticationSelection()
+                    faceUserSync.restart()
+                }
+                editor.onActiveFocusChanged: {
+                    if (!editor.activeFocus && faceUserSync.running) {
+                        faceUserSync.stop()
+                        root.syncFaceAuthenticationSelection()
+                    }
+                }
             }
             ForgeField {
                 id: passwordField
@@ -262,6 +317,28 @@ Rectangle {
                 editor.KeyNavigation.tab: sessionButton
                 editor.KeyNavigation.backtab: usernameField.editor
                 editor.onAccepted: root.requestLogin()
+                editor.onTextChanged: {
+                    if (editor.text.length > 0) {
+                        root.cancelFaceAuthentication()
+                    }
+                }
+            }
+
+            Loader {
+                id: faceAuthenticationControl
+                property var loadedControl: item
+                Layout.fillWidth: true
+                Layout.preferredHeight: loadedControl ? loadedControl.height : 0
+                active: typeof sddm.registerFaceAuthenticationUi === "function"
+                source: active ? "qrc:/theme/FaceAuthenticationControl.qml" : ""
+                onLoaded: root.syncFaceAuthenticationSelection()
+            }
+
+            Timer {
+                id: faceUserSync
+                interval: 250
+                repeat: false
+                onTriggered: root.syncFaceAuthenticationSelection()
             }
 
             ForgeButton {
@@ -350,7 +427,7 @@ Rectangle {
                 maximumLineCount: 2
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                Accessible.role: Accessible.StaticText
+                Accessible.role: root.statusDanger ? Accessible.AlertMessage : Accessible.StaticText
                 Accessible.name: text
             }
             ForgeButton {

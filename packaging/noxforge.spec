@@ -1,4 +1,4 @@
-%global upstream_version 15.0.0
+%global upstream_version 16.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        15.0.0
+Version:        16.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -100,6 +100,14 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sun Oct 11 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 16.0.0-1
+- Release v16.0.0 Single-Source Architecture, Kinetic Edge Polish & LoofiFaceID
+- Canonical single-source QML architecture and synchronized variant generation
+- Kinetic motion accessibility (reduced-motion, edge-flash, WCAG AA custom accent)
+- Guarded LoofiFaceID face authentication in SDDM and lockscreen
+- Unified Control Center with Accessibility tab, --tab routing, and headless tests
+- Doctor Schema 9 comprehensive diagnostics and release qualification
+
 * Tue Oct 06 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 15.0.0-1
 - Release v15.0.0 Kinetic Signal & Adaptive Motion Suite
 - Multi-tier dynamic Wi-Fi/networking kinetic icons

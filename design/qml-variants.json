@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "description": "Mapping of canonical shared QML sources to theme variant outputs",
+  "targets": [
+    {
+      "source": "qml/shared/lockscreen/LockScreen.qml",
+      "outputs": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml",
+        "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml"
+      ]
+    },
+    {
+      "source": "qml/shared/sddm/Main.qml",
+      "outputs": [
+        "sddm/NoxForge/Main.qml",
+        "sddm/NoxForgeObsidian/Main.qml"
+      ]
+    },
+    {
+      "source": "qml/shared/tabbox/main.qml",
+      "outputs": [
+        "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml",
+        "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/contents/ui/main.qml"
+      ]
+    }
+  ]
+}

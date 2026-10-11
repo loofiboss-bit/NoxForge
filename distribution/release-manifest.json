@@ -2,19 +2,19 @@
   "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "15.0.0",
-    "stableVersion": "15.0.0",
-    "activePlan": "docs/NOXFORGE_V15_PLAN.md",
+    "version": "16.0.0",
+    "stableVersion": "16.0.0",
+    "activePlan": "docs/NOXFORGE_V16_PLAN.md",
     "baseline": {
-      "version": "13.0.0",
-      "commit": "4ffd11c15989602bcddb1f6202082029be2d3520",
-      "tag": "v13.0.0",
-      "tagCommit": "4ffd11c15989602bcddb1f6202082029be2d3520",
+      "version": "15.0.0",
+      "commit": "6c2a90dec1fd6d91439a55d8801ba5abf626f843",
+      "tag": "v15.0.0",
+      "tagCommit": "6c2a90dec1fd6d91439a55d8801ba5abf626f843",
       "rpmBytes": 1685866,
       "srpmBytes": 10948301,
       "githubSourceBytes": 10924124,
-      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v13.0.0",
-      "rpmFilename": "noxforge-13.0.0-1.fc44.x86_64.rpm",
+      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v15.0.0",
+      "rpmFilename": "noxforge-15.0.0-1.fc44.x86_64.rpm",
       "rpmSha256": "78f417060bfe7cc0543beff59ee5773378d582d0d0933f10c3eb2e8cd8f71b24",
       "kdeStoreProduct": "2367662"
     }
@@ -219,109 +219,109 @@
   "artifacts": [
     {
       "key": "source",
-      "filename": "noxforge-15.0.0-source.tar.xz",
+      "filename": "noxforge-16.0.0-source.tar.xz",
       "kind": "source",
       "budgetBytes": 20971520
     },
     {
       "key": "portable",
-      "filename": "noxforge-15.0.0-portable.tar.xz",
+      "filename": "noxforge-16.0.0-portable.tar.xz",
       "kind": "portable",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme",
-      "filename": "noxforge-15.0.0-global-theme.tar.xz",
+      "filename": "noxforge-16.0.0-global-theme.tar.xz",
       "kind": "store",
       "package": "globalTheme",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme-obsidian",
-      "filename": "noxforge-15.0.0-global-theme-obsidian.tar.xz",
+      "filename": "noxforge-16.0.0-global-theme-obsidian.tar.xz",
       "kind": "store",
       "package": "globalThemeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style",
-      "filename": "noxforge-15.0.0-plasma-style.tar.xz",
+      "filename": "noxforge-16.0.0-plasma-style.tar.xz",
       "kind": "store",
       "package": "plasmaStyle",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style-obsidian",
-      "filename": "noxforge-15.0.0-plasma-style-obsidian.tar.xz",
+      "filename": "noxforge-16.0.0-plasma-style-obsidian.tar.xz",
       "kind": "store",
       "package": "plasmaStyleObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "colors",
-      "filename": "noxforge-15.0.0-colors.tar.xz",
+      "filename": "noxforge-16.0.0-colors.tar.xz",
       "kind": "store",
       "package": "colors",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae",
-      "filename": "noxforge-15.0.0-aurorae.tar.xz",
+      "filename": "noxforge-16.0.0-aurorae.tar.xz",
       "kind": "store",
       "package": "aurorae",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae-obsidian",
-      "filename": "noxforge-15.0.0-aurorae-obsidian.tar.xz",
+      "filename": "noxforge-16.0.0-aurorae-obsidian.tar.xz",
       "kind": "store",
       "package": "auroraeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "icons",
-      "filename": "noxforge-15.0.0-icons.tar.xz",
+      "filename": "noxforge-16.0.0-icons.tar.xz",
       "kind": "store",
       "package": "icons",
       "budgetBytes": 10485760
     },
     {
       "key": "cursors",
-      "filename": "noxforge-15.0.0-cursors.tar.xz",
+      "filename": "noxforge-16.0.0-cursors.tar.xz",
       "kind": "store",
       "package": "cursors",
       "budgetBytes": 10485760
     },
     {
       "key": "kwin-switcher",
-      "filename": "noxforge-15.0.0-kwin-switcher.tar.xz",
+      "filename": "noxforge-16.0.0-kwin-switcher.tar.xz",
       "kind": "store",
       "package": "kwinSwitcher",
       "budgetBytes": 10485760
     },
     {
       "key": "sounds",
-      "filename": "noxforge-15.0.0-sounds.tar.xz",
+      "filename": "noxforge-16.0.0-sounds.tar.xz",
       "kind": "store",
       "package": "sounds",
       "budgetBytes": 10485760
     },
     {
       "key": "wallpapers",
-      "filename": "noxforge-15.0.0-wallpapers.tar.xz",
+      "filename": "noxforge-16.0.0-wallpapers.tar.xz",
       "kind": "store",
       "package": "wallpapers",
       "budgetBytes": 8388608
     },
     {
       "key": "rpm",
-      "filename": "noxforge-15.0.0-1.fc44.x86_64.rpm",
+      "filename": "noxforge-16.0.0-1.fc44.x86_64.rpm",
       "kind": "rpm",
       "budgetBytes": 2097152
     },
     {
       "key": "srpm",
-      "filename": "noxforge-15.0.0-1.fc44.src.rpm",
+      "filename": "noxforge-16.0.0-1.fc44.src.rpm",
       "kind": "srpm",
       "budgetBytes": 20971520
     },
@@ -339,7 +339,7 @@
     }
   ],
   "source": {
-    "archiveRoot": "NoxForge-15.0.0",
+    "archiveRoot": "NoxForge-16.0.0",
     "include": [
       "LICENSE",
       "LICENSES.md",
@@ -371,9 +371,11 @@
       "wallpapers",
       "scripts",
       "tests",
+      "qml/shared",
       "docs/evidence/v12",
       "docs/evidence/v13",
       "docs/evidence/v14",
+      "docs/evidence/v16",
       "docs/man",
       "docs/QUICKSTART.md",
       "docs/INSTALL_FEDORA.md",
@@ -393,6 +395,8 @@
       "docs/NOXFORGE_V13_PLAN.md",
       "docs/NOXFORGE_V14_PLAN.md",
       "docs/NOXFORGE_V15_PLAN.md",
+      "docs/NOXFORGE_V16_PLAN.md",
+      "docs/EXPERIMENTAL_FACE_AUTH.md",
       "docs/IMPLEMENTATION_PLAN.md",
       "docs/MANUAL_TESTING.md"
     ],
@@ -414,7 +418,7 @@
     ]
   },
   "evidence": {
-    "activeRoot": "docs/evidence/v14",
+    "activeRoot": "docs/evidence/v16",
     "policy": {
       "offscreenIsLiveEvidence": false,
       "physicalUnavailable": "pending"

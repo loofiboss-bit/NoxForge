@@ -158,7 +158,7 @@ copy_into_stage() {
     local target="${stage}/${relative}"
     if [[ -d "${source}" ]]; then
         while IFS= read -r -d '' file; do
-            local child="${file#${source}/}"
+            local child="${file#"${source}"/}"
             local child_target="${target}/${child}"
             mkdir -p -- "$(dirname -- "${child_target}")"
             install -m 0644 -- "${file}" "${child_target}"

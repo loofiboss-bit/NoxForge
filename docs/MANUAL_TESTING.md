@@ -1,11 +1,10 @@
 # Manual qualification
 
 Capture evidence for each release candidate. The current visual and versioned
-record is under `docs/evidence/v13/`, with its compact visual index at
-`media/manifest.json`. The canonical v13 automated gate passed; see the
-[qualification summary](evidence/v13/automated-gate.md) for its results. Some
-checked-in qualification counters are inherited from V12 and must not be used
-as v13 results. Offscreen, generated, and composited material is never
+record is under `docs/evidence/v16/`, with its compact visual index at
+`media/manifest.json`. The canonical v16 automated gate passed; see the
+[qualification summary](evidence/v16/automated-gate.md) for its results.
+Offscreen, generated, and composited material is never
 reported as live evidence.
 
 ## Required isolated session

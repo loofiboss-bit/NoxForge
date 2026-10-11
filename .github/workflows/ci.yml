@@ -14,8 +14,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    name: Fast preflight checks (<3m)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install preflight tooling
+        run: |
+          pip install ruff pytest pytest-subtests
+
+      - name: Python lint (ruff)
+        run: ruff check scripts tools tests
+
+      - name: Shell script syntax
+        run: |
+          bash -n scripts/*.sh
+          shellcheck scripts/*.sh
+
+      - name: Version sync check
+        run: python3 scripts/sync_version.py --check
+
+      - name: Design system & QML variants check
+        run: python3 scripts/generate_design_system.py --check
+
+      - name: Fast validation checks
+        run: python3 scripts/validate.py --only version,tokens,motion_contract,color_schemes,konsole,metadata,repository_urls,qml_variants,no_package_symlinks
+
+      - name: Active Python test suite
+        run: pytest -q
+
   release-gate:
     name: Fedora 44 release gate
+    needs: preflight
     runs-on: ubuntu-24.04
     container: fedora:44
     timeout-minutes: 30
@@ -62,6 +98,7 @@ jobs:
 
   gzip-determinism:
     name: Canonical gzip on Python ${{ matrix.python }}
+    needs: preflight
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false

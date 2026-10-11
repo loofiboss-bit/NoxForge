@@ -232,6 +232,18 @@ endfunction()
 
 add_noxforge_session_test(session-sddm-surface sddm sddm/NoxForge/Main.qml long-rtl)
 add_noxforge_session_test(
+    session-lockscreen-surface
+    lockscreen
+    look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml
+    standard
+)
+add_noxforge_session_test(
+    session-lockscreen-obsidian-surface
+    lockscreen
+    look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml
+    standard
+)
+add_noxforge_session_test(
     session-splash-surface
     splash
     look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml

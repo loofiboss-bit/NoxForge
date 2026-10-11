@@ -31,10 +31,19 @@ The doctor never applies a theme by default, writes KDE or login-manager configu
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 7 diagnostics
+## Schema 9 diagnostics
 
-Schema 7 discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
-Kate/KWrite syntax themes, packaged terminal/editor assets, and the v14
+Schema 9 introduces comprehensive checks for QML variant synchronization,
+kinetic reduced-motion policies, custom accent contrast, experimental face authentication,
+and cross-component version coherence:
+- `qmlVariantDrift`: Verifies that installed QML variant files (SDDM, LockScreen, TabBox) remain byte-for-byte identical to what the canonical generator (`scripts/generate_design_system.py`) produces from `qml/shared/`.
+- `reducedMotion`: Audits active motion policy (`respect-system`, `NOXFORGE_REDUCED_MOTION`, and `AnimationDurationFactor`).
+- `customAccentContrast`: Audits active custom accent colors for mathematical relative luminance and enforces WCAG AA 4.5:1 minimum contrast on graphite and obsidian canvases.
+- `faceAuthApi`: Audits SDDM theme configuration and system PAM module presence for experimental LoofiFaceID integration.
+- `versionCoherence`: Reports detected component versions and highlights any divergent legacy copies.
+
+Schema 9 also retains all prior diagnostics: discovers the standard and Obsidian Konsole schemes, GTK 3/4 themes,
+Kate/KWrite syntax themes, packaged terminal/editor assets, and the
 Obsidian Plasma Style, Aurorae, wallpapers, SDDM theme, Neovim, Helix,
 Zed, btop, Starship, Firefox, and lock screens. The `ecosystem.flatpakThemesOverride` field reports whether Flatpak applications
 have a read-only `xdg-data/themes` override. The doctor also reports

@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/lockscreen/LockScreen.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 // qmllint disable unqualified
 pragma ComponentBehavior: Bound
@@ -23,6 +24,7 @@ Rectangle {
     property bool statusDanger: false
     property bool authenticating: false
     property bool reducedMotion: motion.reducedMotion
+    property bool edgeFlash: false
     property real shakeOffset: 0
     property date currentDateTime: new Date()
 
@@ -35,6 +37,13 @@ Rectangle {
         running: true
         repeat: true
         onTriggered: root.currentDateTime = new Date()
+    }
+
+    Timer {
+        id: edgeFlashTimer
+        interval: 220
+        repeat: false
+        onTriggered: root.edgeFlash = false
     }
 
     SequentialAnimation {
@@ -50,8 +59,16 @@ Rectangle {
     }
 
     onStatusDangerChanged: {
-        if (statusDanger && !root.reducedMotion) {
-            errorShakeAnim.restart()
+        if (statusDanger) {
+            if (root.reducedMotion) {
+                root.edgeFlash = true
+                edgeFlashTimer.restart()
+            } else {
+                errorShakeAnim.restart()
+            }
+        } else {
+            root.edgeFlash = false
+            edgeFlashTimer.stop()
         }
     }
 
@@ -63,11 +80,15 @@ Rectangle {
     }
 
     function submitPassword() {
+        root.cancelFaceAuthentication()
         const password = passwordInput.text
         if (password.length === 0) {
             statusMessage = qsTr("Enter password")
             statusDanger = true
-            if (!root.reducedMotion) {
+            if (root.reducedMotion) {
+                root.edgeFlash = true
+                edgeFlashTimer.restart()
+            } else {
                 errorShakeAnim.restart()
             }
             return
@@ -80,6 +101,22 @@ Rectangle {
             authenticator.respond(password)
         } else if (typeof authenticator !== "undefined" && authenticator && typeof authenticator.tryUnlock === "function") {
             authenticator.tryUnlock(password)
+        }
+    }
+
+    function hasFaceAuthenticationApi() {
+        return typeof faceAuthenticator !== "undefined"
+            && faceAuthenticator
+            && typeof faceAuthenticator.registerThemeComponent === "function"
+    }
+
+    function faceAuthenticationBusy() {
+        return root.hasFaceAuthenticationApi() && faceAuthenticator.busy
+    }
+
+    function cancelFaceAuthentication() {
+        if (root.hasFaceAuthenticationApi()) {
+            faceAuthenticator.cancel()
         }
     }
 
@@ -171,18 +208,18 @@ Rectangle {
 
         Item { Layout.preferredHeight: 16 }
 
-        // Password Input with Forge Notch & Kinetic Shake
+        // Password Input with Forge Notch & Kinetic Shake / Static Edge-Flash
         Rectangle {
             id: passwordBox
             Layout.fillWidth: true
             Layout.preferredHeight: tokens.largeControlHeight
             radius: tokens.radius
             color: passwordInput.activeFocus ? tokens.surface : tokens.surfaceRaised
-            border.color: root.statusDanger
+            border.color: (root.statusDanger || root.edgeFlash)
                 ? tokens.negative
                 : (passwordInput.activeFocus ? tokens.accent : tokens.outlineMuted)
-            border.width: (passwordInput.activeFocus || root.statusDanger) ? tokens.focusWidth : tokens.borderWidth
-            transform: Translate { x: root.shakeOffset }
+            border.width: (passwordInput.activeFocus || root.statusDanger || root.edgeFlash) ? tokens.focusWidth : tokens.borderWidth
+            transform: Translate { x: root.reducedMotion ? 0 : root.shakeOffset }
 
             Behavior on color {
                 enabled: !root.reducedMotion
@@ -208,7 +245,7 @@ Rectangle {
                 height: tokens.notch
                 x: 0
                 y: 0
-                color: root.statusDanger ? tokens.negative : tokens.accent
+                color: (root.statusDanger || root.edgeFlash) ? tokens.negative : tokens.accent
             }
 
             RowLayout {
@@ -229,10 +266,21 @@ Rectangle {
                     font.family: "Noto Sans, Inter, sans-serif"
                     background: null
                     focus: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: qsTr("Password")
+                    Accessible.description: qsTr("Enter password to unlock")
                     readonly property bool capsLockActive: (passwordInput.inputMethodHints & Qt.ImhNoPredictiveText) !== 0
 
+                    onTextEdited: root.cancelFaceAuthentication()
                     Keys.onReturnPressed: root.submitPassword()
                     Keys.onEnterPressed: root.submitPassword()
+                    Keys.onEscapePressed: {
+                        const faceAttemptWasActive = root.faceAuthenticationBusy()
+                        root.cancelFaceAuthentication()
+                        if (!faceAttemptWasActive) {
+                            passwordInput.text = ""
+                        }
+                    }
                 }
 
                 // Unlock action button with micro-motion
@@ -247,6 +295,9 @@ Rectangle {
                         : (passwordInput.text.length > 0 ? tokens.accent : tokens.surfaceOverlay)
                     border.color: tokens.accent
                     border.width: passwordInput.text.length > 0 ? 1 : 0
+                    Accessible.role: Accessible.Button
+                    Accessible.name: qsTr("Unlock")
+                    Accessible.description: qsTr("Submit password to unlock")
 
                     Behavior on scale {
                         enabled: !root.reducedMotion
@@ -280,6 +331,23 @@ Rectangle {
             }
         }
 
+        Loader {
+            id: faceAuthenticationControl
+            property var loadedControl: item
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            Layout.preferredHeight: loadedControl && loadedControl.visible ? loadedControl.implicitHeight : 0
+            active: root.hasFaceAuthenticationApi()
+            source: active ? "qrc:/fallbacktheme/FaceAuthenticationControl.qml" : ""
+        }
+
+        Connections {
+            target: faceAuthenticationControl.loadedControl
+            function onUsePasswordRequested() {
+                passwordInput.forceActiveFocus()
+            }
+        }
+
         // Status or error message
         Text {
             id: statusText
@@ -288,6 +356,8 @@ Rectangle {
             text: root.statusMessage.length > 0 ? root.statusMessage : root.notification
             color: root.statusDanger ? tokens.negative : tokens.textSecondary
             font.pixelSize: 12
+            Accessible.role: root.statusDanger ? Accessible.AlertMessage : Accessible.StaticText
+            Accessible.name: text
         }
     }
 }

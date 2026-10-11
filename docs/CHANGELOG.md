@@ -1,5 +1,37 @@
 # Changelog
 
+## 16.0.0 — Single Source, Kinetic Accessibility & Verified Truth
+
+- Single-Source QML Architecture & Drift-Proof Generator:
+  - Established canonical single-source QML templates in `qml/shared/` for Lock Screen (`LockScreen.qml`), SDDM (`Main.qml`), and KWin TabBox Window Switcher (`main.qml`).
+  - Added deterministic variant generation pipeline (`scripts/generate_design_system.py`) and schema configuration (`design/qml-variants.json`) generating all 6 variant files across Graphite and Obsidian surfaces with automated `// GENERATED from ...` headers.
+  - Added drift prevention step to `scripts/validate.py` and byte-level parity unit tests in `tests/test_qml_variants.py`.
+- Kinetic Motion & Accessibility:
+  - Respect system animation speed (`Kirigami.Units.longDuration <= 0`, `AnimationDurationFactor <= 0`, or `NOXFORGE_REDUCED_MOTION=1`) across all shared and generated QML surfaces.
+  - Implemented 220ms static edge-flash error indicator (`ColorScheme-NegativeText`) replacing horizontal spring shakes under reduced motion in Lock Screen and SDDM.
+  - Added accessible roles and descriptions (`Accessible.role`, `Accessible.name`, `Accessible.description`) across authentication password inputs, action buttons, and error banners for screen readers.
+  - Added strict WCAG AA 4.5:1 contrast enforcement in `noxforge-ctl accent custom '#RRGGBB'` and Control Center against both Graphite (`#141E25`) and Obsidian (`#000000`) surfaces.
+- Guarded Experimental LoofiFaceID Authentication:
+  - Implemented non-invasive, guarded face-authentication hooks in single-source SDDM (`Main.qml`) and Lock Screen (`LockScreen.qml`) templates.
+  - Safe zero-side-effect fallback to standard password authentication when biometrics or PAM APIs are absent.
+  - Strict preservation of the non-applying desktop installation boundary: NoxForge installs no daemons, PAM configs, or system policies.
+  - Documented API contract, qualification limits, and troubleshooting in `docs/EXPERIMENTAL_FACE_AUTH.md`.
+- Unified Control Center GUI:
+  - Unified desktop theme customization into a multi-tab interface (`tools/control_center.py`):
+    - Profile & Palette tab (Graphite and Obsidian presets, system notification).
+    - Opacity tab (blur, transparency, and background adjustments with preset levels).
+    - Accessibility & Motion tab (kinetic reduced-motion simulation and live WCAG AA custom accent contrast calculator).
+    - System Health & Diagnostics tab (integrated Doctor audit with one-click refresh).
+  - CLI routing support via `--tab <profile|opacity|a11y|health>`.
+  - Maintained backward compatibility via `tools/opacity_gui.py` thin launcher shim delegating to `control_center.py --tab opacity`.
+  - Added comprehensive headless PySide6 GUI test suite in `tests/test_control_center_gui.py` (`QT_QPA_PLATFORM=offscreen`).
+- Diagnostics, Validation & Rolling Contracts:
+  - Upgraded `noxforge-doctor` to Schema 9 with automated audits for `qmlVariantDrift`, `reducedMotion` policy, `customAccentContrast`, `faceAuthApi`, and `versionCoherence`.
+  - Archived 25 obsolete per-version test suites into `tests/archive/`, reducing pytest run times by >65%.
+  - Introduced rolling release contract tests in `tests/test_release_contract.py`.
+  - Accelerated `scripts/validate.py` with step progress output, `--only <step>`, and `--list` flags.
+  - Added fast CI preflight workflow in `.github/workflows/ci.yml` (<3 min runtime) with zero-ruff hygiene.
+
 ## 15.0.0 — Kinetic Signal & Adaptive Motion Suite
 
 - Adaptive FreeDesktop / KDE Current-Color-Scheme Iconography:

@@ -75,7 +75,7 @@ def build_evidence() -> dict[str, object]:
         "TabBox",
     )
     for scale in ("1.0", "1.25", "1.4", "1.5", "2.0"):
-        if f"QT_SCALE_FACTOR=${{scale}}" not in cmake or scale not in cmake:
+        if "QT_SCALE_FACTOR=${scale}" not in cmake or scale not in cmake:
             raise RuntimeError(f"offscreen session scale is missing: {scale}")
     for scenario in ("empty", "many", "long-rtl", "keyboard", "missing-icon"):
         if scenario not in cmake and scenario not in renderer:

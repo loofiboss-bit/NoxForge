@@ -521,6 +521,7 @@ def button_svg(kind: str, colors: dict[str, str] = COLORS) -> str:
     </g>'''
         )
     width = len(BUTTON_STATES) * 32
+    body = "\n  ".join(groups)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="24" viewBox="0 0 {width} 24">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
@@ -529,7 +530,7 @@ def button_svg(kind: str, colors: dict[str, str] = COLORS) -> str:
       .ColorScheme-Pressed {{ color: {colors["surfaceSelected"]}; }}
     ]]></style>
   </defs>
-  {"\n  ".join(groups)}
+  {body}
 </svg>
 '''
 

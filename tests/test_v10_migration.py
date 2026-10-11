@@ -1,5 +1,4 @@
 """Behavioral checks for migration evidence validation."""
-import importlib.util
 import json
 import os
 import subprocess

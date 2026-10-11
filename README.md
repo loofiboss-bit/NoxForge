@@ -1,15 +1,14 @@
-# NoxForge Kinetic Signal & Adaptive Motion Suite
+# NoxForge 16.0.0 — Single Source, Kinetic Accessibility & Verified Truth
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 15.0.0 targets Fedora 44 and Arch
+detail, and a compact Forge Notch. Version 16.0.0 targets Fedora 44 and Arch
 Plasma/KWin 6.7+ with Qt 6.11 on Wayland. It elevates the visual system with
-native FreeDesktop/KDE `<style id="current-color-scheme">` vector iconography,
-a multi-stage geometric Wi-Fi and signal suite (0%–100%, acquiring, locked, hotspot, disconnected),
-dual-ring orbital radar busy widgets, 220ms damped horizontal error-shake motion in Lock Screen
-and SDDM, an interactive Live Icon & Motion Preview canvas in the Control Center GUI,
-dedicated application icons, and Doctor Schema 8 diagnostics.
-See the [v15 release plan](docs/NOXFORGE_V15_PLAN.md); physical and
+single-source QML generation for SDDM, Lock Screen, and TabBox, kinetic
+reduced-motion accessibility fallbacks (220ms static edge-flash), strict WCAG AA 4.5:1
+custom accent contrast enforcement, guarded experimental LoofiFaceID login support,
+a unified multi-tab Control Center GUI, and Doctor Schema 9 diagnostics.
+See the [v16 release plan](docs/NOXFORGE_V16_PLAN.md); physical and
 Arch runtime checks remain pending.
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
@@ -46,6 +45,12 @@ greeter and never writes the active PLM configuration. Graphite and Obsidian
 SDDM themes are optional compatibility components and are never selected
 automatically.
 
+Both SDDM themes and both Plasma lock screens can expose the experimental
+LoofiFaceID factor when the matching version-pinned SDDM or KScreenLocker API
+is installed. NoxForge does not install or enable biometric authentication;
+ordinary SDDM and KScreenLocker continue to use their password paths. See the
+[experimental face-authentication integration](docs/EXPERIMENTAL_FACE_AUTH.md).
+
 These images carry explicit capture provenance in the media manifest. They are not a substitute for pending physical input,
 cursor, audio, PAM/login, power, and live-session gates.
 
@@ -69,11 +74,11 @@ cursor, audio, PAM/login, power, and live-session gates.
 - a native Qt 6 style that dynamically adapts to the active NoxForge palette and
   Forge Accent Matrix (Lime, Cyan, Violet, Amber) via `NOXFORGE_ACCENT` and `kdeglobals`;
 - dynamic QMenu and menubar layout preventing text truncation across fractional display scales;
-- unified orchestration suite: `noxforge-ctl` CLI and 3-tab PySide6 Control Center GUI
+- unified orchestration suite: `noxforge-ctl` CLI and 4-tab PySide6 Control Center GUI
   (`io.github.loofiboss.noxforge.controlcenter.desktop`);
-- `noxforge-opacity` CLI utility and Qt 6 GUI configurator for adjusting panel,
-  popup, and Aurorae window decoration transparency levels;
-- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 8),
+- `noxforge-opacity` CLI utility and Qt 6 GUI configurator (with seamless Control Center integration)
+  for adjusting panel, popup, and Aurorae window decoration transparency levels;
+- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 9),
   and deterministic checksums.
 
 Store descriptions state that components install separately and that the Global
@@ -90,8 +95,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v15 release scope is recorded in
-[NOXFORGE_V15_PLAN.md](docs/NOXFORGE_V15_PLAN.md), indexed by
+The v16 release scope is recorded in
+[NOXFORGE_V16_PLAN.md](docs/NOXFORGE_V16_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

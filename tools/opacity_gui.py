@@ -12,7 +12,7 @@ import os
 import sys
 import urllib.parse
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -1107,17 +1107,20 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
                 continue
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Compatibility shim: delegates to unified Control Center on the opacity tab."""
+    try:
+        from tools import control_center
+    except ImportError:
+        import control_center
+    forwarded = list(argv) if argv is not None else sys.argv[1:]
+    return control_center.main(["--tab", "opacity", *forwarded])
+
+
 def launch_gui() -> int:
     """Entry point to start the Qt 6 GUI application."""
-    app = QtWidgets.QApplication.instance()
-    if not app:
-        app = QtWidgets.QApplication(sys.argv)
-    app.setApplicationName("NoxForge Depth & Opacity Configurator")
-
-    window = OpacityConfiguratorWindow()
-    window.show()
-    return app.exec()
+    return main()
 
 
 if __name__ == "__main__":
-    sys.exit(launch_gui())
+    sys.exit(main())

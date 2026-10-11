@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 14
+# Troubleshooting NoxForge 16
 
 ## Collect a read-only report
 
@@ -16,7 +16,7 @@ requests privileges.
 
 ## Edition is mixed or incomplete
 
-Read schema 7 `issues`, `edition.missingMandatory`, and each component's
+Read schema 9 `issues`, `edition.missingMandatory`, and each component's
 `effectivePath` and `shadowedPaths`. Text output uses the same findings.
 
 | Finding | Interpretation and next action |
@@ -26,12 +26,17 @@ Read schema 7 `issues`, `edition.missingMandatory`, and each component's
 | `duplicate-conflict` | Payloads differ, even if versions match; retain the intended installation and remove only the identified conflicting copy. |
 | `duplicate-unknown` | Contents could not be compared; inspect permissions and the listed paths before deciding what to remove. |
 | `mixed-versions` | Reinstall the affected components from the same candidate or release. |
+| `version-incoherence` | Installed components report differing versions; run package update or reinstall matching components. |
+| `qml-variant-drift` | Installed variant QML files deviate from the canonical single-source generator. Re-run `scripts/generate_design_system.py` or reinstall the package. |
+| `custom-accent-low-contrast` | The active custom accent color fails the WCAG AA 4.5:1 minimum contrast requirement on graphite or obsidian canvases. Adjust accent via `noxforge-ctl accent custom '#RRGGBB'` or Control Center. |
 | `metadata-unknown` | Version metadata is unavailable; this informational finding alone does not make a component broken. |
 
 A standalone component does not require the full suite. A Global Theme has
 its declared component dependencies; portable and system editions require their
 respective component sets, including GTK, syntax, editor, terminal, Obsidian,
-and Konsole assets. V14 also reports selected palette variants through
+and Konsole assets. V16 also audits QML variant synchronization (`qmlVariantDrift`),
+motion policies (`reducedMotion`), and experimental face authentication (`faceAuthApi`).
+Doctor also reports selected palette variants through
 `paletteSynchronization`; a `palette-desynchronization` issue means detected
 NoxForge surfaces use mixed Graphite and Obsidian variants. You can quickly
 align your configuration using `noxforge-doctor --apply-sync graphite` or
