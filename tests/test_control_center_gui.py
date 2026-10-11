@@ -14,12 +14,15 @@ ROOT = Path(__file__).resolve().parents[1]
 import sys
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+import importlib.util
 
-from PySide6 import QtWidgets  # noqa: E402
+HAVE_PYSIDE6 = bool(importlib.util.find_spec("PySide6"))
+if HAVE_PYSIDE6:
+    from PySide6 import QtWidgets  # noqa: E402
+    from tools import control_center, opacity_gui  # noqa: E402
 
-from tools import control_center, opacity_gui  # noqa: E402
 
-
+@unittest.skipUnless(HAVE_PYSIDE6, "PySide6 not installed in environment")
 class TestControlCenterGUI(unittest.TestCase):
     """Test suite for the unified tabbed Control Center GUI."""
 

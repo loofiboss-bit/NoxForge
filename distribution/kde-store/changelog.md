@@ -1,3 +1,13 @@
+# NoxForge 16.0.0 — Single Source, Kinetic Accessibility & Verified Truth
+
+- single-source QML architecture for Lock Screen, SDDM greeters, and KWin TabBox switchers with deterministic byte-parity generation;
+- full WCAG 2.2.2 / 2.3.3 motion accessibility compliance with static 220ms edge-flash error indicators replacing kinetic spring shakes under reduced motion;
+- guarded LoofiFaceID integration for biometric facial unlock in Plasma lock screens and SDDM with zero-friction password fallback;
+- unified Control Center GUI (`tools/control_center.py`) consolidating Profile, Opacity, Accessibility, and System Health diagnostics;
+- real-time WCAG AA 4.5:1 contrast calculator for custom accent colors;
+- updated Plasma busy indicator widget to smooth continuous single-arc rotation;
+- upgraded `noxforge-doctor` to Schema 9 with automated checks for QML drift, motion policies, accent contrast, and version coherence.
+
 # NoxForge 15.0.0 — Kinetic Signal & Adaptive Motion Suite
 
 - added native FreeDesktop / KDE `<style id="current-color-scheme">` support across all 201 scalable SVGs and 288 optical variants;
