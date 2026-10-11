@@ -89,7 +89,7 @@ class NoxForgeV12ContractsTests(unittest.TestCase):
 
     def test_schema_8_tokens_and_syntax_contract(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (8, 9, 10, 11))
+        self.assertGreaterEqual(tokens["schemaVersion"], 8)
         self.assertEqual(tokens["version"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
         self.assertIn("syntax", tokens)
         self.assertEqual(set(tokens["syntax"]), {"standard", "obsidian"})

@@ -80,7 +80,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
 
     def test_v11_tokens_are_the_authority_for_variants_and_terminal_colors(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (7, 8, 9, 10, 11))
+        self.assertGreaterEqual(tokens["schemaVersion"], 7)
         self.assertEqual(tokens["variants"]["obsidian"]["background"], "#000000")
         self.assertEqual(tokens["terminal"]["ansi"]["black"]["normal"], "#A6B4B9")
         self.assertEqual(

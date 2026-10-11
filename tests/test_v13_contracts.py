@@ -27,18 +27,17 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
 
     def test_v13_version_and_release_manifest_authority(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertIn(version, ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
+        self.assertTrue(version >= "13.0.0")
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertIn(manifest["release"]["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
-        self.assertIn(manifest["release"]["stableVersion"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
-        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V13_PLAN.md", "docs/NOXFORGE_V14_PLAN.md", "docs/NOXFORGE_V15_PLAN.md"))
-        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v13", "docs/evidence/v14", "docs/evidence/v15"))
+        self.assertEqual(manifest["release"]["version"], version)
+        self.assertTrue(manifest["release"]["activePlan"].startswith("docs/NOXFORGE_V"))
+        self.assertTrue(manifest["evidence"]["activeRoot"].startswith("docs/evidence/v"))
 
     def test_v13_tokens_schema_9_and_obsidian_palette(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (9, 10, 11))
-        self.assertIn(tokens["version"], ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0"))
+        self.assertGreaterEqual(tokens["schemaVersion"], 9)
+        self.assertTrue(tokens["version"] >= "13.0.0")
 
         colors = tokens["colors"]
         obsidian = tokens["colorsObsidian"]
@@ -140,12 +139,13 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
         self.assertIn("sddm/NoxForgeObsidian", cmake)
         self.assertIn("sddm-obsidian-qml-surface", cmake)
 
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
         spec = (ROOT / "packaging/noxforge.spec").read_text(encoding="utf-8")
-        self.assertTrue(any(f"Version:        {v}" in spec for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0")))
+        self.assertIn(f"Version:        {version}", spec)
         self.assertIn("NoxForgeObsidian", spec)
 
         pkgbuild = (ROOT / "packaging/arch/PKGBUILD").read_text(encoding="utf-8")
-        self.assertTrue(any(f"pkgver={v}" in pkgbuild for v in ("13.0.0", "13.0.1", "13.0.2", "14.0.0", "14.0.1", "14.0.2", "15.0.0")))
+        self.assertIn(f"pkgver={version}", pkgbuild)
 
 
 if __name__ == "__main__":

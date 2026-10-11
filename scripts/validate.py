@@ -370,6 +370,16 @@ def validate_tokens(version: str) -> dict[str, object]:
             "cardScale": 1.04,
             "progressPulseMs": 1200,
         }
+    if tokens.get("schemaVersion") >= 12:
+        expected_motion["reducedMotion"] = {
+            "policy": "respect-system",
+            "fallbackMs": 0,
+            "durationMs": 0,
+            "spatialMotion": False,
+            "busyIndicatorStatic": True,
+            "opacityTransitions": False,
+            "shakeReplacement": "edge-flash",
+        }
     if motion != expected_motion:
         raise ValidationError("design motion does not match Kinetic Precision")
     if states.get("focusStyle") != "single-2px-outline" or states.get("normalNotch") is not False:
