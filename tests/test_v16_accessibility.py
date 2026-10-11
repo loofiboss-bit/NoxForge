@@ -129,6 +129,37 @@ class TestV16Accessibility(unittest.TestCase):
                 content = path.read_text(encoding="utf-8")
                 self.assertIn("reducedMotion=false", content)
 
+    def test_experimental_face_auth_theme_contracts(self) -> None:
+        """SDDM and LockScreen variants must expose guarded LoofiFaceID integration hooks."""
+        for theme in ("NoxForge", "NoxForgeObsidian"):
+            config = (ROOT / f"sddm/{theme}/theme.conf").read_text(encoding="utf-8")
+            qml = (ROOT / f"sddm/{theme}/Main.qml").read_text(encoding="utf-8")
+            self.assertIn("faceAuthenticationApi=1", config)
+            self.assertIn('typeof sddm.registerFaceAuthenticationUi === "function"', qml)
+            self.assertIn('qrc:/theme/FaceAuthenticationControl.qml', qml)
+            self.assertIn("item.selectedUser = usernameField.editor.text.trim()", qml)
+            self.assertIn("item.sessionIndex = root.sessionIndex", qml)
+            self.assertIn("onSessionIndexChanged: root.syncFaceAuthenticationSelection()", qml)
+            self.assertIn("root.cancelFaceAuthentication()", qml)
+            self.assertIn("faceUserSync.restart()", qml)
+
+        lock_screens = (
+            ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml",
+            ROOT / "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml",
+        )
+        for lock_screen in lock_screens:
+            qml = lock_screen.read_text(encoding="utf-8")
+            self.assertIn('typeof faceAuthenticator !== "undefined"', qml)
+            self.assertIn('qrc:/fallbacktheme/FaceAuthenticationControl.qml', qml)
+            self.assertIn("onTextEdited: root.cancelFaceAuthentication()", qml)
+            self.assertIn("Keys.onEscapePressed", qml)
+            self.assertIn("onUsePasswordRequested", qml)
+
+        integration_doc = (ROOT / "docs/EXPERIMENTAL_FACE_AUTH.md").read_text(encoding="utf-8")
+        self.assertIn("defaults to off", integration_doc)
+        self.assertIn("install no daemon", integration_doc)
+        self.assertIn("remain pending", integration_doc)
+
 
 if __name__ == "__main__":
     unittest.main()

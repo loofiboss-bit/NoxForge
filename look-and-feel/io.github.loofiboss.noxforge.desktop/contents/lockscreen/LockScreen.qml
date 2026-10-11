@@ -80,6 +80,7 @@ Rectangle {
     }
 
     function submitPassword() {
+        root.cancelFaceAuthentication()
         const password = passwordInput.text
         if (password.length === 0) {
             statusMessage = qsTr("Enter password")
@@ -100,6 +101,22 @@ Rectangle {
             authenticator.respond(password)
         } else if (typeof authenticator !== "undefined" && authenticator && typeof authenticator.tryUnlock === "function") {
             authenticator.tryUnlock(password)
+        }
+    }
+
+    function hasFaceAuthenticationApi() {
+        return typeof faceAuthenticator !== "undefined"
+            && faceAuthenticator
+            && typeof faceAuthenticator.registerThemeComponent === "function"
+    }
+
+    function faceAuthenticationBusy() {
+        return root.hasFaceAuthenticationApi() && faceAuthenticator.busy
+    }
+
+    function cancelFaceAuthentication() {
+        if (root.hasFaceAuthenticationApi()) {
+            faceAuthenticator.cancel()
         }
     }
 
@@ -254,8 +271,16 @@ Rectangle {
                     Accessible.description: qsTr("Enter password to unlock")
                     readonly property bool capsLockActive: (passwordInput.inputMethodHints & Qt.ImhNoPredictiveText) !== 0
 
+                    onTextEdited: root.cancelFaceAuthentication()
                     Keys.onReturnPressed: root.submitPassword()
                     Keys.onEnterPressed: root.submitPassword()
+                    Keys.onEscapePressed: {
+                        const faceAttemptWasActive = root.faceAuthenticationBusy()
+                        root.cancelFaceAuthentication()
+                        if (!faceAttemptWasActive) {
+                            passwordInput.text = ""
+                        }
+                    }
                 }
 
                 // Unlock action button with micro-motion
@@ -303,6 +328,23 @@ Rectangle {
                         onClicked: root.submitPassword()
                     }
                 }
+            }
+        }
+
+        Loader {
+            id: faceAuthenticationControl
+            property var loadedControl: item
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            Layout.preferredHeight: loadedControl && loadedControl.visible ? loadedControl.implicitHeight : 0
+            active: root.hasFaceAuthenticationApi()
+            source: active ? "qrc:/fallbacktheme/FaceAuthenticationControl.qml" : ""
+        }
+
+        Connections {
+            target: faceAuthenticationControl.loadedControl
+            function onUsePasswordRequested() {
+                passwordInput.forceActiveFocus()
             }
         }
 

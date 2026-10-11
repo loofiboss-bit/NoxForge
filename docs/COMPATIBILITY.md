@@ -57,6 +57,12 @@ The packaged SDDM theme supports upgraded Fedora systems that still use SDDM.
 The Arch qualification journey uses optional SDDM. An installed SDDM theme does not imply that SDDM
 is active.
 
+The Graphite and Obsidian SDDM themes and Plasma lock screens include guarded,
+experimental LoofiFaceID theme controls. They stay password-only unless the
+matching version-pinned SDDM or KScreenLocker API is installed and an
+administrator separately enables a user's face policy. See
+[`EXPERIMENTAL_FACE_AUTH.md`](EXPERIMENTAL_FACE_AUTH.md).
+
 KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.

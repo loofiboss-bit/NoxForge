@@ -46,6 +46,12 @@ greeter and never writes the active PLM configuration. Graphite and Obsidian
 SDDM themes are optional compatibility components and are never selected
 automatically.
 
+Both SDDM themes and both Plasma lock screens can expose the experimental
+LoofiFaceID factor when the matching version-pinned SDDM or KScreenLocker API
+is installed. NoxForge does not install or enable biometric authentication;
+ordinary SDDM and KScreenLocker continue to use their password paths. See the
+[experimental face-authentication integration](docs/EXPERIMENTAL_FACE_AUTH.md).
+
 These images carry explicit capture provenance in the media manifest. They are not a substitute for pending physical input,
 cursor, audio, PAM/login, power, and live-session gates.
 
