@@ -7,6 +7,7 @@ depth & opacity configuration, and system diagnostics into a modern tabbed hub.
 
 from __future__ import annotations
 
+import argparse
 import importlib.machinery
 import importlib.util
 import json
@@ -392,8 +393,151 @@ class HealthTab(QtWidgets.QWidget):
         self.statusChanged.emit(f"Desktop successfully synchronized to {profile.upper()}!")
 
 
+class AccessibilityTab(QtWidgets.QWidget):
+    statusChanged = QtCore.Signal(str)
+
+    def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
+        super().__init__(parent)
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(16)
+
+        # Reduced Motion Section
+        motion_group = QtWidgets.QGroupBox("Reduced Motion & Focus Indicators (WCAG 2.2.2 / 2.3.3)")
+        m_layout = QtWidgets.QVBoxLayout(motion_group)
+
+        m_desc = QtWidgets.QLabel(
+            "Configure accessible kinetic motion policies across Plasma lock screens, "
+            "SDDM greeters, and KWin TabBox switchers. When reduced motion is active, "
+            "dynamic spring shakes are replaced by high-contrast static 220ms edge-flash borders."
+        )
+        m_desc.setWordWrap(True)
+        m_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
+        m_layout.addWidget(m_desc)
+
+        # Simulation preview box
+        sim_row = QtWidgets.QHBoxLayout()
+        self.sim_input = QtWidgets.QLineEdit("Authentication Error Indicator")
+        self.sim_input.setReadOnly(True)
+        self.sim_input.setStyleSheet(
+            "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+            "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
+        )
+        self.btn_sim_kinetic = QtWidgets.QPushButton("Test Kinetic Shake (Standard)")
+        self.btn_sim_kinetic.clicked.connect(self.play_kinetic_shake)
+        self.btn_sim_edge = QtWidgets.QPushButton("Test Static Edge-Flash (Reduced Motion)")
+        self.btn_sim_edge.setStyleSheet("background-color: #1A2832; border: 1px solid #A3FF47; color: #A3FF47; font-weight: bold;")
+        self.btn_sim_edge.clicked.connect(self.play_edge_flash)
+
+        sim_row.addWidget(self.sim_input, stretch=1)
+        sim_row.addWidget(self.btn_sim_kinetic)
+        sim_row.addWidget(self.btn_sim_edge)
+        m_layout.addLayout(sim_row)
+        layout.addWidget(motion_group)
+
+        # Custom Accent WCAG AA Calculator Section
+        accent_group = QtWidgets.QGroupBox("Custom Accent WCAG AA Contrast Calculator")
+        a_layout = QtWidgets.QVBoxLayout(accent_group)
+
+        a_desc = QtWidgets.QLabel(
+            "Test and apply custom accent colors. Enforces a minimum 4.5:1 contrast ratio against "
+            "both dark graphite surfaces (#141E25) and pure OLED obsidian (#000000):"
+        )
+        a_desc.setWordWrap(True)
+        a_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
+        a_layout.addWidget(a_desc)
+
+        input_row = QtWidgets.QHBoxLayout()
+        self.hex_input = QtWidgets.QLineEdit("#A3FF47")
+        self.hex_input.setPlaceholderText("#RRGGBB (e.g. #A3FF47)")
+        self.hex_input.setMaxLength(7)
+        self.hex_input.textChanged.connect(self.update_contrast_readout)
+
+        self.color_swatch = QtWidgets.QLabel("  PREVIEW  ")
+        self.color_swatch.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.color_swatch.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;")
+
+        self.btn_apply_custom = QtWidgets.QPushButton("Apply Custom Accent")
+        self.btn_apply_custom.clicked.connect(self.apply_custom_accent)
+
+        input_row.addWidget(QtWidgets.QLabel("Custom Hex:"))
+        input_row.addWidget(self.hex_input)
+        input_row.addWidget(self.color_swatch)
+        input_row.addWidget(self.btn_apply_custom)
+        a_layout.addLayout(input_row)
+
+        self.contrast_label = QtWidgets.QLabel("Contrast: Graphite 13.65:1 (PASS) | Obsidian 16.95:1 (PASS)")
+        self.contrast_label.setStyleSheet("color: #A3FF47; font-weight: 600; margin-top: 6px;")
+        a_layout.addWidget(self.contrast_label)
+
+        layout.addWidget(accent_group)
+        layout.addStretch()
+
+    def play_kinetic_shake(self) -> None:
+        orig = self.sim_input.geometry()
+        anim = QtCore.QSequentialAnimationGroup(self)
+        for dx, dur in [(-8, 40), (8, 40), (-4, 40), (4, 40), (0, 60)]:
+            step = QtCore.QPropertyAnimation(self.sim_input, b"geometry")
+            step.setDuration(dur)
+            step.setStartValue(self.sim_input.geometry())
+            step.setEndValue(QtCore.QRect(orig.x() + dx, orig.y(), orig.width(), orig.height()))
+            anim.addAnimation(step)
+        self.sim_input.setStyleSheet(
+            "background-color: #2D1418; border: 2px solid #FF5555; border-radius: 5px; "
+            "color: #FF7777; padding: 8px 12px; font-size: 13px; font-weight: bold;"
+        )
+        def restore():
+            self.sim_input.setStyleSheet(
+                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
+            )
+            self.sim_input.setGeometry(orig)
+        anim.finished.connect(restore)
+        anim.start()
+        self.statusChanged.emit("Simulating kinetic spring shake (220ms)...")
+
+    def play_edge_flash(self) -> None:
+        self.sim_input.setStyleSheet(
+            "background-color: #10191F; border: 2px solid #FF5555; border-radius: 5px; "
+            "color: #FF5555; padding: 8px 12px; font-size: 13px; font-weight: bold;"
+        )
+        def restore():
+            self.sim_input.setStyleSheet(
+                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
+            )
+        QtCore.QTimer.singleShot(220, restore)
+        self.statusChanged.emit("Simulating static edge-flash indicator (220ms, 0px translation)...")
+
+    def update_contrast_readout(self, hex_text: str) -> None:
+        clean = hex_text.strip()
+        if len(clean) == 7 and clean.startswith("#"):
+            try:
+                cg, co = noxforge_ctl.validate_custom_accent_contrast(clean)
+                self.color_swatch.setStyleSheet(f"background-color: {clean}; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;")
+                self.contrast_label.setText(f"Contrast: Graphite {cg:.2f}:1 (PASS) | Obsidian {co:.2f}:1 (PASS)")
+                self.contrast_label.setStyleSheet("color: #A3FF47; font-weight: 600; margin-top: 6px;")
+                self.btn_apply_custom.setEnabled(True)
+            except Exception as err:
+                self.contrast_label.setText(f"FAIL: {err}")
+                self.contrast_label.setStyleSheet("color: #FF5555; font-weight: 600; margin-top: 6px;")
+                self.btn_apply_custom.setEnabled(False)
+        else:
+            self.contrast_label.setText("Enter valid 7-character hex code (e.g. #A3FF47)")
+            self.contrast_label.setStyleSheet("color: #A6B4B9; margin-top: 6px;")
+            self.btn_apply_custom.setEnabled(False)
+
+    def apply_custom_accent(self) -> None:
+        clean = self.hex_input.text().strip()
+        try:
+            noxforge_ctl.set_accent("custom", custom_hex=clean)
+            self.statusChanged.emit(f"Custom accent applied: {clean}")
+        except Exception as err:
+            self.statusChanged.emit(f"Error applying accent: {err}")
+
+
 class ControlCenterWindow(QtWidgets.QMainWindow):
-    def __init__(self) -> None:
+    def __init__(self, initial_tab: str | None = None) -> None:
         super().__init__()
         self.setWindowTitle("NoxForge Control Center")
         self.setMinimumSize(880, 680)
@@ -428,10 +572,30 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         opacity_inner = self.opacity_window.centralWidget()
         self.tabs.addTab(opacity_inner, "Transparency && Depth")
 
-        # Tab 3: Health & Diagnostics
+        # Tab 3: Accessibility & Motion
+        self.tab_a11y = AccessibilityTab()
+        self.tab_a11y.statusChanged.connect(self.show_status)
+        self.tabs.addTab(self.tab_a11y, "Accessibility && Motion")
+
+        # Tab 4: Health & Diagnostics
         self.tab_health = HealthTab()
         self.tab_health.statusChanged.connect(self.show_status)
         self.tabs.addTab(self.tab_health, "System Health && Doctor")
+
+        tab_map = {
+            "profile": 0,
+            "accent": 0,
+            "opacity": 1,
+            "transparency": 1,
+            "depth": 1,
+            "a11y": 2,
+            "accessibility": 2,
+            "motion": 2,
+            "health": 3,
+            "doctor": 3,
+        }
+        if initial_tab and initial_tab.lower() in tab_map:
+            self.tabs.setCurrentIndex(tab_map[initial_tab.lower()])
 
         main_layout.addWidget(self.tabs)
 
@@ -442,10 +606,20 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.statusBar().showMessage(msg, 5000)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="NoxForge Control Center")
+    parser.add_argument(
+        "--tab",
+        choices=["profile", "accent", "opacity", "transparency", "depth", "a11y", "accessibility", "motion", "health", "doctor"],
+        default=None,
+        help="Initial tab to display",
+    )
+    parser.add_argument("-v", "--version", action="version", version=f"control-center {APP_VERSION}")
+    args = parser.parse_args(argv if argv is not None else sys.argv[1:])
+
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
     app.setStyle("Fusion")
-    win = ControlCenterWindow()
+    win = ControlCenterWindow(initial_tab=args.tab)
     win.show()
     return app.exec()
 
