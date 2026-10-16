@@ -31,13 +31,14 @@ class TestControlCenterGUI(unittest.TestCase):
         cls.app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(["test"])
 
     def test_window_tabs_instantiation(self) -> None:
-        """ControlCenterWindow must instantiate 4 functional tabs."""
+        """ControlCenterWindow must instantiate 5 functional tabs."""
         win = control_center.ControlCenterWindow()
-        self.assertEqual(win.tabs.count(), 4)
+        self.assertEqual(win.tabs.count(), 5)
         self.assertIn("Profile", win.tabs.tabText(0))
         self.assertIn("Transparency", win.tabs.tabText(1))
         self.assertIn("Accessibility", win.tabs.tabText(2))
         self.assertIn("Health", win.tabs.tabText(3))
+        self.assertIn("Ecosystem", win.tabs.tabText(4))
         win.close()
 
     def test_initial_tab_navigation(self) -> None:
@@ -57,6 +58,17 @@ class TestControlCenterGUI(unittest.TestCase):
         win_health = control_center.ControlCenterWindow(initial_tab="health")
         self.assertEqual(win_health.tabs.currentIndex(), 3)
         win_health.close()
+
+        win_eco = control_center.ControlCenterWindow(initial_tab="ecosystem")
+        self.assertEqual(win_eco.tabs.currentIndex(), 4)
+        win_eco.close()
+
+    def test_ecosystem_tab_instantiation(self) -> None:
+        """EcosystemTab instantiates with application table and action buttons."""
+        tab = control_center.EcosystemTab()
+        self.assertGreaterEqual(tab.table.rowCount(), 5)
+        self.assertTrue(tab.btn_apply_all.isEnabled())
+        self.assertTrue(tab.btn_refresh.isEnabled())
 
     def test_accessibility_tab_contrast_readout(self) -> None:
         """AccessibilityTab contrast readout validates high-contrast vs low-contrast hex."""

@@ -237,6 +237,10 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         shutil.copy2(ROOT / "tools/noxforge-opacity", opacity)
         opacity_gui = root / "bin/opacity_gui.py"
         shutil.copy2(ROOT / "tools/opacity_gui.py", opacity_gui)
+        ctl = root / "bin/noxforge-ctl"
+        shutil.copy2(ROOT / "tools/noxforge-ctl", ctl)
+        cc = root / "bin/control_center.py"
+        shutil.copy2(ROOT / "tools/control_center.py", cc)
         component_root = root / "components"
         for package in PACKAGE_KEYS:
             with tempfile.TemporaryDirectory(prefix=f"noxforge-portable-{package}-") as package_name:
@@ -262,6 +266,11 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         _copy_tree(ROOT / "editors/vscode", component_root / "editors/vscode")
         _copy_tree(ROOT / "editors/neovim", component_root / "editors/neovim")
         _copy_tree(ROOT / "editors/helix", component_root / "editors/helix")
+        _copy_tree(ROOT / "editors/zed", component_root / "editors/zed")
+        _copy_tree(ROOT / "browsers", component_root / "browsers")
+        _copy_tree(ROOT / "apps", component_root / "apps")
+        _copy_tree(ROOT / "tools/fastfetch", component_root / "fastfetch")
+        _copy_tree(ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop", component_root / "kwin-switcher-obsidian")
         _assert_safe_tree(root)
         checksum = create_archive(root, portable, root_name="noxforge")
     portable.with_suffix(portable.suffix + ".sha256").write_text(f"{checksum}  {portable.name}\n", encoding="utf-8", newline="\n")

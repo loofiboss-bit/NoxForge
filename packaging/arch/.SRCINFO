@@ -1,6 +1,6 @@
 pkgbase = noxforge
 	pkgdesc = True Obsidian OLED Parity & Dual-Stack Architecture for Fedora and Arch KDE
-	pkgver = 16.0.0
+	pkgver = 17.0.0
 	pkgrel = 1
 	url = https://github.com/loofiboss-bit/NoxForge
 	arch = x86_64
@@ -15,7 +15,7 @@ pkgbase = noxforge
 	depends = plasma-workspace
 	depends = qt6-base
 	optdepends = sddm: qualified NoxForge custom login-screen compatibility
-	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v16.0.0/noxforge-16.0.0-source.tar.xz
+	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v17.0.0/noxforge-17.0.0-source.tar.xz
 	sha256sums = 285fb0e2a4d7633243f3c16c8c1028861c431e1358f9d07ee5ddb0a7623bb968
 
 pkgname = noxforge

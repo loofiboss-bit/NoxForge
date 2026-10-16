@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "16.0.0"
+VERSION = "17.0.0"
 ROOT = Path(__file__).resolve().parents[1]
 
 THEME_GRAPHITE_ID = "io.github.loofiboss.noxforge.desktop"
@@ -266,6 +266,40 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False) -> dict[str,
     return {"status": "applied", "changes": changes}
 
 
+def sync_gtk_accent(hex_color: str, dry_run: bool = False) -> list[str]:
+    config_dir = get_kde_config_dir()
+    modified: list[str] = []
+    for gtk_dir in ("gtk-3.0", "gtk-4.0"):
+        css_file = config_dir / gtk_dir / "gtk.css"
+        existing = css_file.read_text(encoding="utf-8") if css_file.is_file() else ""
+        lines = [
+            line for line in existing.splitlines()
+            if not line.startswith("/* NoxForge Dynamic Accent")
+            and not "@define-color accent" in line
+        ]
+        if hex_color:
+            accent_block = [
+                "/* NoxForge Dynamic Accent */",
+                f"@define-color accent_color {hex_color};",
+                f"@define-color accent_bg_color {hex_color};",
+                f"@define-color accent_fg_color #0D1419;",
+            ]
+            new_text = "\n".join(lines).strip()
+            if new_text:
+                new_text += "\n\n" + "\n".join(accent_block) + "\n"
+            else:
+                new_text = "\n".join(accent_block) + "\n"
+        else:
+            new_text = "\n".join(lines).strip()
+            if new_text:
+                new_text += "\n"
+        if not dry_run:
+            css_file.parent.mkdir(parents=True, exist_ok=True)
+            css_file.write_text(new_text, encoding="utf-8")
+        modified.append(str(css_file))
+    return modified
+
+
 def set_accent(accent: str, custom_hex: str | None = None, dry_run: bool = False) -> dict[str, Any]:
     target = accent.strip()
     hex_color = ""
@@ -296,6 +330,7 @@ def set_accent(accent: str, custom_hex: str | None = None, dry_run: bool = False
         res: dict[str, Any] = {"status": "dry-run", "accent": target, "hex": hex_color}
         if contrast_info:
             res.update(contrast_info)
+        res["gtkSynced"] = sync_gtk_accent(hex_color, dry_run=True)
         return res
 
     if target == "system":
@@ -311,13 +346,16 @@ def set_accent(accent: str, custom_hex: str | None = None, dry_run: bool = False
         write_kconfig("kdeglobals", "General", "AccentColor", rgb_str)
         write_kconfig("kdeglobals", "General", "accentColorFromWallpaper", "false")
 
+    # Sync GTK 3 & 4 accent overrides
+    gtk_synced = sync_gtk_accent(hex_color, dry_run=False)
+
     # Re-apply color scheme so Plasma immediately picks up accent changes
     active_scheme = read_kconfig("kdeglobals", "General", "ColorScheme", "NoxForgeDark")
     if shutil.which("plasma-apply-colorscheme"):
         run_cmd(["plasma-apply-colorscheme", active_scheme])
 
     notify_plasma_kwin()
-    res = {"status": "applied", "accent": target, "hex": hex_color}
+    res = {"status": "applied", "accent": target, "hex": hex_color, "gtkSynced": gtk_synced}
     if contrast_info:
         res.update(contrast_info)
     return res
@@ -358,7 +396,7 @@ def get_current_status() -> dict[str, Any]:
     }
 
 
-def manage_schedule(action: str) -> dict[str, Any]:
+def manage_schedule(action: str, day_time: str = "07:00", night_time: str = "20:00") -> dict[str, Any]:
     systemd_user = Path.home() / ".config/systemd/user"
     service_path = systemd_user / "noxforge-daynight.service"
     timer_path = systemd_user / "noxforge-daynight.timer"
@@ -366,10 +404,21 @@ def manage_schedule(action: str) -> dict[str, Any]:
     if action == "status":
         has_timer = timer_path.is_file()
         is_active = False
+        sched_desc = "none"
+        if has_timer:
+            try:
+                txt = timer_path.read_text(encoding="utf-8")
+                times = [line.split()[-1] for line in txt.splitlines() if line.startswith("OnCalendar=")]
+                if len(times) >= 2:
+                    sched_desc = f"{times[0][:5]} (Graphite) / {times[1][:5]} (Obsidian)"
+                else:
+                    sched_desc = "configured"
+            except Exception:
+                sched_desc = "configured"
         if has_timer and shutil.which("systemctl"):
             res = run_cmd(["systemctl", "--user", "is-active", "noxforge-daynight.timer"])
             is_active = res.stdout.strip() == "active"
-        return {"scheduled": has_timer, "active": is_active}
+        return {"scheduled": has_timer, "active": is_active, "schedule": sched_desc}
 
     if action == "disable":
         if shutil.which("systemctl"):
@@ -381,6 +430,10 @@ def manage_schedule(action: str) -> dict[str, Any]:
         return {"status": "disabled"}
 
     if action == "enable":
+        import re
+        time_re = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+        if not time_re.match(day_time) or not time_re.match(night_time):
+            raise ValueError(f"Invalid time format (expected HH:MM): day={day_time!r}, night={night_time!r}")
         systemd_user.mkdir(parents=True, exist_ok=True)
         # Create user service
         ctl_bin = Path(__file__).resolve()
@@ -390,16 +443,16 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c 'HOUR=$(date +%%H); if [ "$HOUR" -ge 7 ] && [ "$HOUR" -lt 20 ]; then {ctl_bin} switch graphite; else {ctl_bin} switch obsidian; fi'
+ExecStart=/bin/bash -c 'TIME=$(date +%%H:%%M); if [[ "$TIME" > "{day_time}" || "$TIME" == "{day_time}" ]] && [[ "$TIME" < "{night_time}" ]]; then {ctl_bin} switch graphite; else {ctl_bin} switch obsidian; fi'
 """
         service_path.write_text(service_content, encoding="utf-8")
 
-        timer_content = """[Unit]
+        timer_content = f"""[Unit]
 Description=NoxForge Day/Night Transition Timer
 
 [Timer]
-OnCalendar=*-*-* 07:00:00
-OnCalendar=*-*-* 20:00:00
+OnCalendar=*-*-* {day_time}:00
+OnCalendar=*-*-* {night_time}:00
 Persistent=true
 
 [Install]
@@ -410,9 +463,195 @@ WantedBy=timers.target
         if shutil.which("systemctl"):
             run_cmd(["systemctl", "--user", "daemon-reload"])
             run_cmd(["systemctl", "--user", "enable", "--now", "noxforge-daynight.timer"])
-        return {"status": "enabled", "schedule": "07:00 (Graphite) / 20:00 (Obsidian)"}
+        return {"status": "enabled", "schedule": f"{day_time} (Graphite) / {night_time} (Obsidian)"}
 
     return {"status": "unknown"}
+
+
+def find_asset(rel_path: str) -> Path | None:
+    data_home = Path(os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local/share"))
+    for base in [ROOT, data_home / "noxforge", Path("/usr/share/noxforge")]:
+        candidate = base / rel_path
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def get_firefox_chrome_dir() -> Path | None:
+    for base in (Path.home() / ".mozilla/firefox", Path.home() / ".librewolf"):
+        if base.is_dir():
+            for p in base.glob("*.default*"):
+                if p.is_dir():
+                    return p / "chrome"
+    return None
+
+
+SUPPORTED_ECOSYSTEM_APPS: dict[str, dict[str, Any]] = {
+    "zed": {
+        "name": "Zed Editor",
+        "description": "NoxForge & Obsidian theme JSON definitions",
+        "detect": lambda: shutil.which("zed") is not None or (Path.home() / ".config/zed").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/zed/themes",
+        "source_subpath": "editors/zed/themes",
+        "check": lambda: (Path.home() / ".config/zed/themes/noxforge.json").is_file(),
+    },
+    "btop": {
+        "name": "btop System Monitor",
+        "description": "NoxForge & Obsidian color themes for btop++",
+        "detect": lambda: shutil.which("btop") is not None or (Path.home() / ".config/btop").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/btop/themes",
+        "source_subpath": "terminals/btop/themes",
+        "check": lambda: (Path.home() / ".config/btop/themes/noxforge.theme").is_file(),
+    },
+    "discord": {
+        "name": "Discord (Vencord / BetterDiscord)",
+        "description": "Graphite & Obsidian CSS theme overlays",
+        "detect": lambda: (Path.home() / ".config/Vencord").is_dir() or (Path.home() / ".config/BetterDiscord").is_dir(),
+        "target_dir": lambda: (Path.home() / ".config/Vencord/themes") if (Path.home() / ".config/Vencord").is_dir() else (Path.home() / ".config/BetterDiscord/themes"),
+        "source_subpath": "apps/discord",
+        "check": lambda: ((Path.home() / ".config/Vencord/themes/noxforge.theme.css").is_file() or (Path.home() / ".config/BetterDiscord/themes/noxforge.theme.css").is_file()),
+    },
+    "firefox": {
+        "name": "Firefox / LibreWolf",
+        "description": "Precision userChrome.css with Forge Notch tab styling",
+        "detect": lambda: (Path.home() / ".mozilla/firefox").is_dir() or (Path.home() / ".librewolf").is_dir(),
+        "target_dir": lambda: get_firefox_chrome_dir(),
+        "source_subpath": "browsers/firefox",
+        "check": lambda: bool(get_firefox_chrome_dir() and (get_firefox_chrome_dir() / "userChrome.css").is_file()),
+    },
+    "starship": {
+        "name": "Starship Prompt",
+        "description": "Minimalist shell prompt configuration with Forge glyph cues",
+        "detect": lambda: shutil.which("starship") is not None or (Path.home() / ".config/starship.toml").is_file(),
+        "target_dir": lambda: Path.home() / ".config",
+        "source_subpath": "terminals/starship",
+        "check": lambda: (Path.home() / ".config/starship.toml").is_file(),
+    },
+    "fastfetch": {
+        "name": "Fastfetch System Info",
+        "description": "ASCII Forge mark and dynamic palette key info",
+        "detect": lambda: shutil.which("fastfetch") is not None or (Path.home() / ".config/fastfetch").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/fastfetch",
+        "source_subpath": "tools/fastfetch",
+        "check": lambda: (Path.home() / ".config/fastfetch/config.jsonc").is_file(),
+    },
+    "vscode": {
+        "name": "VS Code / Cursor",
+        "description": "NoxForge dark color theme extension package",
+        "detect": lambda: shutil.which("code") is not None or (Path.home() / ".vscode").is_dir(),
+        "target_dir": lambda: Path.home() / ".vscode/extensions/noxforge-theme",
+        "source_subpath": "editors/vscode",
+        "check": lambda: (Path.home() / ".vscode/extensions/noxforge-theme/package.json").is_file(),
+    },
+    "helix": {
+        "name": "Helix Editor",
+        "description": "NoxForge TOML color themes for Helix",
+        "detect": lambda: shutil.which("hx") is not None or (Path.home() / ".config/helix").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/helix/themes",
+        "source_subpath": "editors/helix/themes",
+        "check": lambda: (Path.home() / ".config/helix/themes/noxforge.toml").is_file(),
+    },
+    "neovim": {
+        "name": "Neovim",
+        "description": "Lua color schemes for Neovim",
+        "detect": lambda: shutil.which("nvim") is not None or (Path.home() / ".config/nvim").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/nvim/colors",
+        "source_subpath": "editors/neovim/colors",
+        "check": lambda: (Path.home() / ".config/nvim/colors/noxforge.lua").is_file(),
+    },
+    "ghostty": {
+        "name": "Ghostty Terminal",
+        "description": "Ghostty terminal palette configs",
+        "detect": lambda: shutil.which("ghostty") is not None or (Path.home() / ".config/ghostty").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/ghostty/themes",
+        "source_subpath": "terminals/ghostty",
+        "check": lambda: (Path.home() / ".config/ghostty/themes/noxforge").is_file(),
+    },
+    "kitty": {
+        "name": "Kitty Terminal",
+        "description": "Kitty color scheme configs",
+        "detect": lambda: shutil.which("kitty") is not None or (Path.home() / ".config/kitty").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/kitty",
+        "source_subpath": "terminals/kitty",
+        "check": lambda: (Path.home() / ".config/kitty/noxforge.conf").is_file(),
+    },
+    "alacritty": {
+        "name": "Alacritty Terminal",
+        "description": "Alacritty TOML theme configurations",
+        "detect": lambda: shutil.which("alacritty") is not None or (Path.home() / ".config/alacritty").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/alacritty/themes",
+        "source_subpath": "terminals/alacritty",
+        "check": lambda: (Path.home() / ".config/alacritty/themes/noxforge.toml").is_file(),
+    },
+    "foot": {
+        "name": "Foot Terminal",
+        "description": "Foot INI theme configurations",
+        "detect": lambda: shutil.which("foot") is not None or (Path.home() / ".config/foot").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/foot/themes",
+        "source_subpath": "terminals/foot",
+        "check": lambda: (Path.home() / ".config/foot/themes/noxforge.ini").is_file(),
+    },
+}
+
+
+def ecosystem_status() -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for app_id, app in SUPPORTED_ECOSYSTEM_APPS.items():
+        detected = bool(app["detect"]())
+        installed = bool(app["check"]())
+        result[app_id] = {
+            "name": app["name"],
+            "description": app["description"],
+            "detected": detected,
+            "installed": installed,
+        }
+    return result
+
+
+def ecosystem_apply(app_names: list[str] | None = None, dry_run: bool = False) -> dict[str, Any]:
+    targets = app_names if app_names and "all" not in app_names else list(SUPPORTED_ECOSYSTEM_APPS.keys())
+    applied: list[str] = []
+    skipped: list[str] = []
+    errors: dict[str, str] = {}
+
+    for app_id in targets:
+        if app_id not in SUPPORTED_ECOSYSTEM_APPS:
+            errors[app_id] = f"Unknown ecosystem application: {app_id}"
+            continue
+        app = SUPPORTED_ECOSYSTEM_APPS[app_id]
+        src = find_asset(app["source_subpath"])
+        if not src or not src.exists():
+            errors[app_id] = f"Source assets not found: {app['source_subpath']}"
+            continue
+        target_dir = app["target_dir"]()
+        if not target_dir:
+            skipped.append(app_id)
+            continue
+        try:
+            if not dry_run:
+                target_dir.mkdir(parents=True, exist_ok=True)
+                if app_id == "starship":
+                    shutil.copy2(src / "starship.toml", target_dir / "starship.toml")
+                elif app_id == "fastfetch":
+                    shutil.copy2(src / "noxforge.jsonc", target_dir / "config.jsonc")
+                elif app_id == "firefox":
+                    shutil.copy2(src / "userChrome.css", target_dir / "userChrome.css")
+                elif src.is_dir():
+                    for item in src.iterdir():
+                        if item.is_file():
+                            shutil.copy2(item, target_dir / item.name)
+                elif src.is_file():
+                    shutil.copy2(src, target_dir / src.name)
+            applied.append(app_id)
+        except Exception as err:
+            errors[app_id] = str(err)
+
+    return {
+        "status": "applied" if not dry_run else "dry-run",
+        "applied": applied,
+        "skipped": skipped,
+        "errors": errors,
+    }
 
 
 def main() -> int:
@@ -468,7 +707,21 @@ def main() -> int:
     sched_group.add_argument("--enable", action="store_true", help="Enable automatic Day/Night schedule timer")
     sched_group.add_argument("--disable", action="store_true", help="Disable automatic Day/Night timer")
     sched_group.add_argument("--status", action="store_true", help="Check schedule timer status")
+    sched_parser.add_argument("--day-time", default="07:00", help="Day transition time (HH:MM, default: 07:00)")
+    sched_parser.add_argument("--night-time", default="20:00", help="Night transition time (HH:MM, default: 20:00)")
     sched_parser.add_argument("--json", action="store_true", help="Output schedule status in JSON")
+
+    # ecosystem
+    eco_parser = subparsers.add_parser("ecosystem", help="Opt-in theme synchronization for developer ecosystem and apps")
+    eco_sub = eco_parser.add_subparsers(dest="eco_command", help="Ecosystem action")
+
+    eco_status = eco_sub.add_parser("status", help="List ecosystem apps and detection/installation status")
+    eco_status.add_argument("--json", action="store_true", help="Output status as JSON")
+
+    eco_apply = eco_sub.add_parser("apply", help="Deploy themes to ecosystem applications")
+    eco_apply.add_argument("apps", nargs="*", default=["all"], help="Target app names (e.g. zed, btop, discord, firefox, starship, fastfetch, vscode, helix, neovim, ghostty, kitty, alacritty, foot, or 'all')")
+    eco_apply.add_argument("-n", "--dry-run", action="store_true", help="Simulate without copying files")
+    eco_apply.add_argument("--json", action="store_true", help="Output result as JSON")
 
     # gui
     gui_parser = subparsers.add_parser("gui", help="Launch the NoxForge Control Center GUI")
@@ -536,12 +789,49 @@ def main() -> int:
 
     if args.command == "schedule":
         action = "enable" if args.enable else ("disable" if args.disable else "status")
-        res = manage_schedule(action)
+        try:
+            res = manage_schedule(action, day_time=args.day_time, night_time=args.night_time)
+        except ValueError as err:
+            if args.json:
+                print(json.dumps({"status": "error", "message": str(err)}, indent=2), file=sys.stderr)
+            else:
+                print(f"[NoxForge Error] {err}", file=sys.stderr)
+            return 1
         if args.json:
             print(json.dumps(res, indent=2))
         else:
             print(f"[NoxForge Schedule] {action}: {res}")
         return 0
+
+    if args.command == "ecosystem":
+        if getattr(args, "eco_command", None) == "apply":
+            res = ecosystem_apply(app_names=args.apps, dry_run=args.dry_run)
+            if args.json:
+                print(json.dumps(res, indent=2))
+            else:
+                print(f"[NoxForge Ecosystem] Status: {res['status']}")
+                if res["applied"]:
+                    print(f"  Applied: {', '.join(res['applied'])}")
+                if res["skipped"]:
+                    print(f"  Skipped (not detected/configured): {', '.join(res['skipped'])}")
+                if res["errors"]:
+                    print("  Errors:")
+                    for app, err in res["errors"].items():
+                        print(f"    {app}: {err}")
+            return 0
+        else:
+            status = ecosystem_status()
+            if getattr(args, "json", False):
+                print(json.dumps(status, indent=2))
+            else:
+                print("NoxForge Ecosystem Applications:")
+                for app_id, info in status.items():
+                    det = "✓" if info["detected"] else " "
+                    inst = "✓" if info["installed"] else " "
+                    print(f"  [{det}] [{inst}] {app_id:<12} {info['name']:<25} - {info['description']}")
+                print("\nLegend: [Detected] [Theme Installed]")
+                print("Run 'noxforge-ctl ecosystem apply [apps...]' to deploy themes.")
+            return 0
 
     if args.command == "opacity":
         candidates = [

@@ -693,10 +693,16 @@ def qml_variant_drift_diagnostics(roots: list[Path], root: Path = Path("/")) -> 
         qml_targets = [
             ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml", "qml/shared/lockscreen/LockScreen.qml"),
             ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml", "qml/shared/lockscreen/LockScreen.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml", "qml/shared/splash/Splash.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/splash/Splash.qml", "qml/shared/splash/Splash.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml", "qml/shared/logout/Logout.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/logout/Logout.qml", "qml/shared/logout/Logout.qml"),
             ("sddm/themes/NoxForge/Main.qml", "qml/shared/sddm/Main.qml"),
             ("sddm/themes/NoxForgeObsidian/Main.qml", "qml/shared/sddm/Main.qml"),
             ("kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml", "qml/shared/tabbox/main.qml"),
             ("kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/contents/ui/main.qml", "qml/shared/tabbox/main.qml"),
+            ("kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml", "qml/shared/tabbox/Switcher.qml"),
+            ("kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/contents/ui/Switcher.qml", "qml/shared/tabbox/Switcher.qml"),
         ]
         exp_ver = expected_version(root)
         if exp_ver and int(exp_ver.split(".")[0]) >= 16:
@@ -1133,8 +1139,18 @@ def inspect_ecosystem(root: Path) -> dict[str, Any]:
             flatpak_override = "unreadable"
     else:
         flatpak_override = "absent"
+
+    templates = {
+        "zed": (root / "editors/zed/themes/noxforge.json").is_file() or (root / "usr/share/noxforge/editors/zed/themes/noxforge.json").is_file(),
+        "btop": (root / "terminals/btop/themes/noxforge.theme").is_file() or (root / "usr/share/noxforge/terminals/btop/themes/noxforge.theme").is_file(),
+        "discord": (root / "apps/discord/noxforge.theme.css").is_file() or (root / "usr/share/noxforge/apps/discord/noxforge.theme.css").is_file(),
+        "firefox": (root / "browsers/firefox/userChrome.css").is_file() or (root / "usr/share/noxforge/browsers/firefox/userChrome.css").is_file(),
+        "starship": (root / "terminals/starship/starship.toml").is_file() or (root / "usr/share/noxforge/terminals/starship/starship.toml").is_file(),
+        "fastfetch": (root / "tools/fastfetch/noxforge.jsonc").is_file() or (root / "usr/share/noxforge/fastfetch/noxforge.jsonc").is_file(),
+    }
     return {
         "flatpakThemesOverride": flatpak_override,
+        "themeTemplates": templates,
     }
 
 
@@ -1340,7 +1356,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 9,
+        "schemaVersion": 10,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),

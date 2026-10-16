@@ -23,6 +23,7 @@ Rectangle {
     property bool freezeClock: false
     property date currentDateTime: new Date()
     property bool authenticating: false
+    readonly property bool allowEmptyPassword: (typeof config !== "undefined" && config && (config.allowEmptyPassword === "true" || config.allowEmptyPassword === true))
     property bool reducedMotion: motion.reducedMotion
     property bool edgeFlash: false
     property real testProgress: -1
@@ -111,15 +112,17 @@ Rectangle {
 
     function requestLogin() {
         cancelFaceAuthentication()
-        if (usernameField.editor.text.trim().length === 0 || passwordField.editor.text.length === 0) {
-            statusMessage = qsTr("Enter both username and password")
+        const userEmpty = usernameField.editor.text.trim().length === 0
+        const passEmpty = passwordField.editor.text.length === 0
+        if (userEmpty || (!root.allowEmptyPassword && passEmpty)) {
+            statusMessage = (userEmpty && passEmpty) ? qsTr("Enter both username and password") : (userEmpty ? qsTr("Enter username") : qsTr("Enter password"))
             statusDanger = true
             return
         }
         statusMessage = qsTr("Authenticating…")
         statusDanger = false
         authenticating = true
-        sddm.login(usernameField.editor.text, passwordField.editor.text, sessionIndex)
+        sddm.login(usernameField.editor.text.trim(), passwordField.editor.text, sessionIndex)
     }
 
     function focusFirstAction() {
@@ -193,6 +196,7 @@ Rectangle {
         required property string label
         property alias editor: editor
         property bool password: false
+        property bool revealPassword: false
         spacing: tokens.compactSpacing
         Text { text: field.label; color: tokens.textSecondary; font.pixelSize: tokens.metadataSize; elide: Text.ElideRight; Layout.fillWidth: true }
         Rectangle {
@@ -206,19 +210,65 @@ Rectangle {
                 enabled: !root.reducedMotion
                 ColorAnimation { duration: motion.duration(tokens.productiveDuration) }
             }
-            TextInput {
-                id: editor
+            Timer {
+                id: revealTimer
+                interval: 5000
+                repeat: false
+                onTriggered: field.revealPassword = false
+            }
+            RowLayout {
                 anchors.fill: parent
-                anchors.margins: tokens.standardSpacing
-                color: tokens.textPrimary
-                selectionColor: tokens.surfaceSelected
-                selectedTextColor: tokens.textPrimary
-                echoMode: field.password ? TextInput.Password : TextInput.Normal
-                passwordCharacter: "•"
-                clip: true
-                activeFocusOnTab: true
-                Accessible.role: Accessible.EditableText
-                Accessible.name: field.label
+                anchors.leftMargin: tokens.standardSpacing
+                anchors.rightMargin: tokens.compactSpacing
+                spacing: tokens.compactSpacing
+                TextInput {
+                    id: editor
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    verticalAlignment: TextInput.AlignVCenter
+                    color: tokens.textPrimary
+                    selectionColor: tokens.surfaceSelected
+                    selectedTextColor: tokens.textPrimary
+                    echoMode: (field.password && !field.revealPassword) ? TextInput.Password : TextInput.Normal
+                    passwordCharacter: "•"
+                    clip: true
+                    activeFocusOnTab: true
+                    Accessible.role: Accessible.EditableText
+                    Accessible.name: field.label
+                }
+                Rectangle {
+                    id: revealBtn
+                    visible: field.password && editor.text.length > 0
+                    Layout.alignment: Qt.AlignVCenter
+                    implicitWidth: 26
+                    implicitHeight: 26
+                    radius: tokens.compactRadius
+                    color: revealArea.containsMouse ? tokens.surfaceHover : "transparent"
+                    Accessible.role: Accessible.Button
+                    Accessible.name: field.revealPassword ? qsTr("Hide password") : qsTr("Show password")
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: field.revealPassword ? "👁" : "•"
+                        font.pixelSize: 13
+                        color: field.revealPassword ? tokens.accent : tokens.textSecondary
+                    }
+
+                    MouseArea {
+                        id: revealArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            field.revealPassword = !field.revealPassword
+                            if (field.revealPassword) {
+                                revealTimer.restart()
+                            } else {
+                                revealTimer.stop()
+                            }
+                        }
+                    }
+                }
             }
         }
     }

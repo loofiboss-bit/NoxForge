@@ -39,7 +39,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "16.0.0"
+    return "17.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -244,10 +244,32 @@ class ProfileAccentTab(QtWidgets.QWidget):
         # Day/Night Automation Section
         sched_group = QtWidgets.QGroupBox("Day / Night Automation")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
-        self.sched_check = QtWidgets.QCheckBox("Enable automatic profile switching: Graphite (07:00) / Obsidian (20:00)")
+        self.sched_check = QtWidgets.QCheckBox("Enable automatic profile switching:")
         self.sched_check.setStyleSheet("color: #E8F0F2; font-weight: 500;")
         self.sched_check.toggled.connect(self.toggle_schedule)
         s_layout.addWidget(self.sched_check)
+
+        day_lbl = QtWidgets.QLabel("Day (Graphite):")
+        day_lbl.setStyleSheet("color: #A6B4B9;")
+        self.day_time = QtWidgets.QTimeEdit()
+        self.day_time.setDisplayFormat("HH:mm")
+        self.day_time.setTime(QtCore.QTime(7, 0))
+        self.day_time.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; color: #E8F0F2; padding: 4px;")
+        self.day_time.timeChanged.connect(self.on_time_changed)
+
+        night_lbl = QtWidgets.QLabel("Night (Obsidian):")
+        night_lbl.setStyleSheet("color: #A6B4B9;")
+        self.night_time = QtWidgets.QTimeEdit()
+        self.night_time.setDisplayFormat("HH:mm")
+        self.night_time.setTime(QtCore.QTime(20, 0))
+        self.night_time.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; color: #E8F0F2; padding: 4px;")
+        self.night_time.timeChanged.connect(self.on_time_changed)
+
+        s_layout.addWidget(day_lbl)
+        s_layout.addWidget(self.day_time)
+        s_layout.addWidget(night_lbl)
+        s_layout.addWidget(self.night_time)
+        s_layout.addStretch()
         layout.addWidget(sched_group)
 
         layout.addStretch()
@@ -294,9 +316,24 @@ class ProfileAccentTab(QtWidgets.QWidget):
                     img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
 
         sched = noxforge_ctl.manage_schedule("status")
+        is_sched = sched.get("scheduled", False)
         self.sched_check.blockSignals(True)
-        self.sched_check.setChecked(sched.get("scheduled", False))
+        self.sched_check.setChecked(is_sched)
         self.sched_check.blockSignals(False)
+        sched_desc = sched.get("schedule", "")
+        if " / " in sched_desc:
+            parts = sched_desc.split(" / ")
+            try:
+                d_str = parts[0].split()[0]
+                n_str = parts[1].split()[0]
+                self.day_time.blockSignals(True)
+                self.night_time.blockSignals(True)
+                self.day_time.setTime(QtCore.QTime.fromString(d_str, "HH:mm"))
+                self.night_time.setTime(QtCore.QTime.fromString(n_str, "HH:mm"))
+                self.day_time.blockSignals(False)
+                self.night_time.blockSignals(False)
+            except Exception:
+                pass
 
     def apply_profile(self, profile: str) -> None:
         res = noxforge_ctl.switch_profile(profile)
@@ -308,10 +345,19 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.refresh_state()
         self.statusChanged.emit(f"Accent color activated: {accent.upper()}")
 
+    def on_time_changed(self) -> None:
+        if self.sched_check.isChecked():
+            self.toggle_schedule(True)
+
     def toggle_schedule(self, checked: bool) -> None:
         action = "enable" if checked else "disable"
-        noxforge_ctl.manage_schedule(action)
-        self.statusChanged.emit(f"Day/Night automation: {action.upper()}")
+        dt = self.day_time.time().toString("HH:mm")
+        nt = self.night_time.time().toString("HH:mm")
+        try:
+            noxforge_ctl.manage_schedule(action, day_time=dt, night_time=nt)
+            self.statusChanged.emit(f"Day/Night automation: {action.upper()} ({dt} / {nt})")
+        except Exception as err:
+            self.statusChanged.emit(f"Day/Night schedule error: {err}")
 
 
 class HealthTab(QtWidgets.QWidget):
@@ -536,6 +582,107 @@ class AccessibilityTab(QtWidgets.QWidget):
             self.statusChanged.emit(f"Error applying accent: {err}")
 
 
+class EcosystemTab(QtWidgets.QWidget):
+    statusChanged = QtCore.Signal(str)
+
+    def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
+        super().__init__(parent)
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(14)
+
+        header = QtWidgets.QLabel("Developer Tools & Ecosystem Synchronization")
+        header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
+        layout.addWidget(header)
+
+        desc = QtWidgets.QLabel(
+            "Synchronize NoxForge themes with external developer applications, editors, and terminals. "
+            "All ecosystem theme deployments are strictly opt-in and non-destructive."
+        )
+        desc.setWordWrap(True)
+        desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
+        layout.addWidget(desc)
+
+        # Table for ecosystem apps
+        self.table = QtWidgets.QTableWidget()
+        self.table.setColumnCount(4)
+        self.table.setHorizontalHeaderLabels(["Application", "Status", "Theme Installed", "Action"])
+        self.table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.table.verticalHeader().setVisible(False)
+        self.table.setAlternatingRowColors(True)
+        self.table.setStyleSheet(
+            "QTableWidget { background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px; gridline-color: #1B2831; }"
+            "QHeaderView::section { background-color: #141E25; color: #E8F0F2; padding: 6px; border: 1px solid #2F414B; font-weight: 600; }"
+            "QTableWidget::item { padding: 6px; color: #E8F0F2; }"
+        )
+        layout.addWidget(self.table)
+
+        # Buttons row
+        btn_row = QtWidgets.QHBoxLayout()
+        self.btn_apply_all = QtWidgets.QPushButton("Deploy All Detected Themes")
+        self.btn_apply_all.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold; min-height: 36px;")
+        self.btn_apply_all.clicked.connect(self.apply_all_detected)
+
+        self.btn_refresh = QtWidgets.QPushButton("Refresh Status")
+        self.btn_refresh.setMinimumHeight(36)
+        self.btn_refresh.clicked.connect(self.refresh_table)
+
+        btn_row.addWidget(self.btn_apply_all)
+        btn_row.addWidget(self.btn_refresh)
+        btn_row.addStretch()
+        layout.addLayout(btn_row)
+
+        self.refresh_table()
+
+    def refresh_table(self) -> None:
+        status = noxforge_ctl.ecosystem_status()
+        self.table.setRowCount(len(status))
+        for row, (app_id, info) in enumerate(status.items()):
+            # Col 0: App Name + desc
+            name_item = QtWidgets.QTableWidgetItem(f"{info['name']} ({app_id})")
+            name_item.setToolTip(info["description"])
+            self.table.setItem(row, 0, name_item)
+
+            # Col 1: Detected
+            det_str = "● Detected" if info["detected"] else "○ Not Found"
+            det_item = QtWidgets.QTableWidgetItem(det_str)
+            det_item.setForeground(QtGui.QBrush(QtGui.QColor("#A3FF47" if info["detected"] else "#748289")))
+            det_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            self.table.setItem(row, 1, det_item)
+
+            # Col 2: Installed
+            inst_str = "✓ Synced" if info["installed"] else "○ Not Deployed"
+            inst_item = QtWidgets.QTableWidgetItem(inst_str)
+            inst_item.setForeground(QtGui.QBrush(QtGui.QColor("#22D3EE" if info["installed"] else "#748289")))
+            inst_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            self.table.setItem(row, 2, inst_item)
+
+            # Col 3: Action button
+            action_btn = QtWidgets.QPushButton(f"Deploy Theme to {info['name']}")
+            action_btn.setStyleSheet("padding: 4px 10px; font-size: 11px;")
+            action_btn.clicked.connect(lambda _, a=app_id: self.apply_app(a))
+            self.table.setCellWidget(row, 3, action_btn)
+
+    def apply_app(self, app_id: str) -> None:
+        res = noxforge_ctl.ecosystem_apply([app_id])
+        if res.get("errors"):
+            self.statusChanged.emit(f"Error deploying to {app_id}: {res['errors'].get(app_id)}")
+        elif app_id in res.get("applied", []):
+            self.statusChanged.emit(f"Successfully deployed theme to {app_id}!")
+        elif app_id in res.get("skipped", []):
+            self.statusChanged.emit(f"Skipped {app_id} (target configuration not detected).")
+        self.refresh_table()
+
+    def apply_all_detected(self) -> None:
+        res = noxforge_ctl.ecosystem_apply()
+        applied = res.get("applied", [])
+        self.statusChanged.emit(f"Ecosystem themes applied: {len(applied)} applications updated.")
+        self.refresh_table()
+
+
 class ControlCenterWindow(QtWidgets.QMainWindow):
     def __init__(self, initial_tab: str | None = None) -> None:
         super().__init__()
@@ -582,6 +729,11 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.tab_health.statusChanged.connect(self.show_status)
         self.tabs.addTab(self.tab_health, "System Health && Doctor")
 
+        # Tab 5: Ecosystem & Developer Tools
+        self.tab_eco = EcosystemTab()
+        self.tab_eco.statusChanged.connect(self.show_status)
+        self.tabs.addTab(self.tab_eco, "Ecosystem && Apps")
+
         tab_map = {
             "profile": 0,
             "accent": 0,
@@ -593,6 +745,8 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
             "motion": 2,
             "health": 3,
             "doctor": 3,
+            "ecosystem": 4,
+            "apps": 4,
         }
         if initial_tab and initial_tab.lower() in tab_map:
             self.tabs.setCurrentIndex(tab_map[initial_tab.lower()])
@@ -610,7 +764,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="NoxForge Control Center")
     parser.add_argument(
         "--tab",
-        choices=["profile", "accent", "opacity", "transparency", "depth", "a11y", "accessibility", "motion", "health", "doctor"],
+        choices=["profile", "accent", "opacity", "transparency", "depth", "a11y", "accessibility", "motion", "health", "doctor", "ecosystem", "apps"],
         default=None,
         help="Initial tab to display",
     )

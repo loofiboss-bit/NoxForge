@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/tabbox/Switcher.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 pragma ComponentBehavior: Bound
 import QtQuick

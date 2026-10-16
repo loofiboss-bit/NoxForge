@@ -79,10 +79,12 @@ Rectangle {
         passwordInput.forceActiveFocus()
     }
 
+    property bool allowEmptyPassword: false
+
     function submitPassword() {
         root.cancelFaceAuthentication()
         const password = passwordInput.text
-        if (password.length === 0) {
+        if (!root.allowEmptyPassword && password.length === 0) {
             statusMessage = qsTr("Enter password")
             statusDanger = true
             if (root.reducedMotion) {
@@ -254,11 +256,20 @@ Rectangle {
                 anchors.rightMargin: 4
                 spacing: tokens.compactSpacing
 
+                property bool revealPassword: false
+
+                Timer {
+                    id: lockRevealTimer
+                    interval: 5000
+                    repeat: false
+                    onTriggered: passwordBox.revealPassword = false
+                }
+
                 QQC2.TextField {
                     id: passwordInput
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    echoMode: TextInput.Password
+                    echoMode: passwordBox.revealPassword ? TextInput.Normal : TextInput.Password
                     placeholderText: qsTr("Password")
                     placeholderTextColor: tokens.textDisabled
                     color: tokens.textPrimary
@@ -279,6 +290,40 @@ Rectangle {
                         root.cancelFaceAuthentication()
                         if (!faceAttemptWasActive) {
                             passwordInput.text = ""
+                        }
+                    }
+                }
+
+                // Password visibility toggle
+                Rectangle {
+                    id: lockRevealBtn
+                    visible: passwordInput.text.length > 0
+                    implicitWidth: 26
+                    implicitHeight: 26
+                    radius: tokens.compactRadius
+                    color: lockRevealArea.containsMouse ? tokens.surfaceHover : "transparent"
+                    Accessible.role: Accessible.Button
+                    Accessible.name: passwordBox.revealPassword ? qsTr("Hide password") : qsTr("Show password")
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: passwordBox.revealPassword ? "👁" : "•"
+                        font.pixelSize: 13
+                        color: passwordBox.revealPassword ? tokens.accent : tokens.textSecondary
+                    }
+
+                    MouseArea {
+                        id: lockRevealArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            passwordBox.revealPassword = !passwordBox.revealPassword
+                            if (passwordBox.revealPassword) {
+                                lockRevealTimer.restart()
+                            } else {
+                                lockRevealTimer.stop()
+                            }
                         }
                     }
                 }

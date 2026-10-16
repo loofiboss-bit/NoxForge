@@ -132,10 +132,17 @@ QColor mixedColor(const QColor &from, const QColor &to, qreal progress)
 
 QColor activeAccentPressed(const QColor &accent)
 {
-    if (accent == NP::accent()) {
-        return NP::accentPressed();
-    }
-    return mixedColor(accent, QColor(0, 0, 0), 0.2);
+    return NP::accentPressedForAccent(accent);
+}
+
+QColor activeSurfaceSelected(const QColor &accent, bool obsidian = false)
+{
+    return NP::surfaceSelectedForAccent(accent, obsidian);
+}
+
+QColor activeAccentSoft(const QColor &accent, bool obsidian = false)
+{
+    return NP::accentSoftForAccent(accent, obsidian);
 }
 
 QPainterPath surfacePath(const QRectF &rect, bool notched, qreal radius = NP::radius)
@@ -189,7 +196,7 @@ void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
 void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirection direction,
                           bool focused = false, bool obsidian = false, const QColor &accent = NP::accent())
 {
-    paintSurface(painter, rect, NP::surfaceSelected(obsidian),
+    paintSurface(painter, rect, activeSurfaceSelected(accent, obsidian),
                  focused ? accent : NP::borderStrong(),
                  focused ? NP::focusWidth : NP::borderWidth, true);
     painter->save();
@@ -262,6 +269,8 @@ void NoxForgeStyle::polish(QPalette &palette)
 {
     const bool obsidian = isObsidianConfig();
     const auto pal = NP::palette(obsidian);
+    const QColor accent = activeAccent();
+    const QColor surfSel = activeSurfaceSelected(accent, obsidian);
     palette.setColor(QPalette::Window, pal.surface);
     palette.setColor(QPalette::WindowText, pal.textPrimary);
     palette.setColor(QPalette::Base, pal.background);
@@ -274,13 +283,14 @@ void NoxForgeStyle::polish(QPalette &palette)
     palette.setColor(QPalette::Mid, pal.border);
     palette.setColor(QPalette::Dark, pal.background);
     palette.setColor(QPalette::Shadow, obsidian ? QColor(QStringLiteral("#000000")) : QColor(QStringLiteral("#080B0E")));
-    palette.setColor(QPalette::Highlight, pal.surfaceSelected);
+    palette.setColor(QPalette::Highlight, surfSel);
     palette.setColor(QPalette::HighlightedText, pal.textPrimary);
     palette.setColor(QPalette::PlaceholderText, pal.textDisabled);
     palette.setColor(QPalette::Link, pal.cyan);
     palette.setColor(QPalette::LinkVisited, pal.violet);
     palette.setColor(QPalette::ToolTipBase, pal.surfaceRaised);
     palette.setColor(QPalette::ToolTipText, pal.textPrimary);
+    palette.setColor(QPalette::Accent, accent);
     for (QPalette::ColorRole role : {QPalette::WindowText, QPalette::Text, QPalette::ButtonText}) {
         palette.setColor(QPalette::Disabled, role, pal.textDisabled);
     }
@@ -695,7 +705,7 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? accent : NP::borderStrong(), 1));
         painter->setBrush((option->state.testFlag(State_On) || mixed)
-                              ? NP::surfaceSelected(obsidian) : NP::background(obsidian));
+                              ? activeSurfaceSelected(accent, obsidian) : NP::background(obsidian));
         radio
             ? painter->drawEllipse(box.adjusted(1, 1, -1, -1))
             : painter->drawPath(surfacePath(box.adjusted(1, 1, -1, -1),
@@ -736,7 +746,7 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_IndicatorTabClose:
         if (option->state.testFlag(State_MouseOver))
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected(obsidian)
+                         option->state.testFlag(State_Sunken) ? activeSurfaceSelected(accent, obsidian)
                                                               : NP::surfaceHover(obsidian),
                          option->state.testFlag(State_HasFocus) ? accent : NP::border());
         paintCloseIndicator(painter, option->rect,
@@ -835,7 +845,7 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         if (!item) break;
         if (option->state.testFlag(State_Selected) || option->state.testFlag(State_Sunken)) {
             paintSurface(painter, option->rect.adjusted(2, 2, -2, -2),
-                         option->state.testFlag(State_Sunken) ? NP::surfaceSelected(obsidian) : NP::surfaceHover(obsidian),
+                         option->state.testFlag(State_Sunken) ? activeSurfaceSelected(accent, obsidian) : NP::surfaceHover(obsidian),
                          option->state.testFlag(State_Sunken) ? accent : NP::border());
         }
         painter->save();

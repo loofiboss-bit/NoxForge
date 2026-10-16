@@ -64,6 +64,8 @@ if [[ "${has_bundle}" == true ]]; then
     add_component "components/editors/helix" "noxforge/editors/helix"
     add_component "components/editors/zed" "noxforge/editors/zed"
     add_component "components/browsers" "noxforge/browsers"
+    add_component "components/apps" "noxforge/apps"
+    add_component "components/fastfetch" "noxforge/fastfetch"
     add_component "components/kwin-switcher-obsidian" "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop"
 else
     add_component "color-schemes/NoxForgeDark.colors" "color-schemes/NoxForgeDark.colors"
@@ -80,6 +82,8 @@ else
     add_component "editors/helix" "noxforge/editors/helix"
     add_component "editors/zed" "noxforge/editors/zed"
     add_component "browsers" "noxforge/browsers"
+    add_component "apps" "noxforge/apps"
+    add_component "tools/fastfetch" "noxforge/fastfetch"
     add_component "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop" "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
     add_component "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop" "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"
     add_component "aurorae/io.github.loofiboss.noxforge.desktop" "aurorae/themes/io.github.loofiboss.noxforge.desktop"

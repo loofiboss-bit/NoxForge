@@ -1,4 +1,4 @@
-%global upstream_version 16.0.0
+%global upstream_version 17.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        16.0.0
+Version:        17.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -58,6 +58,7 @@ apply a theme, configure a login surface, or switch display managers.
 %{_bindir}/noxforge-ctl
 %{_mandir}/man1/noxforge-doctor.1*
 %{_mandir}/man1/noxforge-opacity.1*
+%{_mandir}/man1/noxforge-ctl.1*
 %{_qt6_plugindir}/styles/libnoxforge6.so
 %{_datadir}/applications/io.github.loofiboss.noxforge.opacity.desktop
 %{_datadir}/applications/io.github.loofiboss.noxforge.controlcenter.desktop
@@ -80,6 +81,8 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/noxforge/terminals/
 %{_datadir}/noxforge/editors/
 %{_datadir}/noxforge/browsers/
+%{_datadir}/noxforge/apps/
+%{_datadir}/noxforge/fastfetch/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
@@ -100,6 +103,15 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Fri Oct 16 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 17.0.0-1
+- Release v17.0.0 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
+- Total single-source generation across all 12 QML variant surfaces (QML Schema 2)
+- Token Schema 13 with dynamic selection tinting and accent matrix harmonization
+- SDDM & Lock Screen security posture (allowEmptyPassword=false, reveal toggle with 5s auto-hide)
+- Control Center Tab 5 Ecosystem & Apps and unified devtool integration (Zed, btop, Discord, Firefox, Starship, Fastfetch)
+- noxforge-ctl GTK 3/4 accent override syncing and configurable schedule time windows
+- Portable bundle parity and Doctor Schema 10 diagnostics
+
 * Sun Oct 11 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 16.0.0-1
 - Release v16.0.0 Single-Source Architecture, Kinetic Edge Polish & LoofiFaceID
 - Canonical single-source QML architecture and synchronized variant generation

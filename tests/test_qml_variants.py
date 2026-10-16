@@ -12,7 +12,7 @@ class QmlVariantsContractTests(unittest.TestCase):
     def test_qml_variants_schema_and_mapping(self) -> None:
         self.assertTrue(QML_CONFIG.is_file(), "qml-variants.json must exist")
         data = json.loads(QML_CONFIG.read_text(encoding="utf-8"))
-        self.assertEqual(data.get("schemaVersion"), 1)
+        self.assertIn(data.get("schemaVersion"), (1, 2))
         targets = data.get("targets", [])
         self.assertGreaterEqual(len(targets), 3)
 

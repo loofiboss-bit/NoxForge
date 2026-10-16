@@ -31,14 +31,30 @@
         "element.selected": "#192D1E",
         "drop_target_background": "#243528",
         "syntax": {
-          "comment": {"color": "#748289"},
-          "keyword": {"color": "#A3FF47"},
-          "function": {"color": "#E8F0F2"},
-          "string": {"color": "#22D3EE"},
-          "type": {"color": "#A78BFA"},
-          "number": {"color": "#FBBF24"},
-          "operator": {"color": "#A6B4B9"},
-          "variable": {"color": "#E8F0F2"}
+          "comment": {
+            "color": "#748289"
+          },
+          "keyword": {
+            "color": "#A3FF47"
+          },
+          "function": {
+            "color": "#E8F0F2"
+          },
+          "string": {
+            "color": "#22D3EE"
+          },
+          "type": {
+            "color": "#A78BFA"
+          },
+          "number": {
+            "color": "#FBBF24"
+          },
+          "operator": {
+            "color": "#A6B4B9"
+          },
+          "variable": {
+            "color": "#E8F0F2"
+          }
         }
       }
     }
