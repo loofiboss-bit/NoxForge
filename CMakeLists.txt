@@ -392,6 +392,14 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/browsers"
 )
 install(
+    DIRECTORY apps/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/apps"
+)
+install(
+    DIRECTORY tools/fastfetch/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/fastfetch"
+)
+install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
 )
@@ -502,5 +510,6 @@ install(
     FILES
         docs/man/noxforge-doctor.1
         docs/man/noxforge-opacity.1
+        docs/man/noxforge-ctl.1
     DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
 )

@@ -1,3 +1,12 @@
+# NoxForge 17.0.0 — Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
+
+- upgraded single-source QML architecture to Schema 2, unifying Lock Screen, SDDM greeters, KWin TabBox switchers, Splash screen, and Logout greeter with byte-parity generation across Graphite and Obsidian surfaces;
+- implemented dynamic accent harmonization across native Qt 6 C++ style plugin, CLI, and Control Center for all accent modes (Electric Lime, Forge Cyan, Cyber Violet, Molten Amber, and WCAG AA validated custom accents);
+- hardened authentication surfaces with password reveal security policies (`allowEmptyPassword=false` default) and visual indicators;
+- introduced `noxforge-ctl ecosystem` CLI commands (`status`, `apply`, `sync`, `list`) and configurable diurnal schedule transition times (`--day-time` and `--night-time`);
+- added 5th tab to Control Center GUI ("Ecosystem & Apps") for seamless management of Terminal themes, Neovim/Helix/Zed editors, Fastfetch, Starship, Firefox, and Discord;
+- upgraded `noxforge-doctor` to Schema 10 with ecosystem alignment and comprehensive single-source validation.
+
 # NoxForge 16.0.0 — Single Source, Kinetic Accessibility & Verified Truth
 
 - single-source QML architecture for Lock Screen, SDDM greeters, and KWin TabBox switchers with deterministic byte-parity generation;

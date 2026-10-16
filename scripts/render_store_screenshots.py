@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Render professional, captivating marketing and gallery screenshots for NoxForge on KDE Store / OpenDesktop.
 
-Showcases NoxForge v14.0.0 features:
-- Dual-Palette Parity (Quiet Graphite #0D1419 & True Obsidian OLED #000000)
-- Forge Accent Matrix (Electric Lime, Forge Cyan, Cyber Violet, Molten Amber)
+Showcases NoxForge v17.0.0 features:
+- Total Single-Source Authority (Single-Source QML Schema 2 with Lockscreen, SDDM, TabBox, Splash, Logout)
+- Dynamic Accent Ecosystem (Electric Lime, Forge Cyan, Cyber Violet, Molten Amber harmonized across Qt6 C++, CLI, Apps)
 - Architectural Window Craft (18px Chamfered Forge Notch Aurorae & KWin Switcher)
-- Unified Control Suite (3-Tab PySide6 Control Center & Depth/Opacity Configurator)
+- Unified Control Suite (5-Tab PySide6 Control Center & Depth/Opacity Configurator)
 - Native Plasma 6 / Wayland Shell & Kickoff Launcher & Lock Screen
-- 100% Original Scalable Vector Iconography & Ecosystem Integrations
+- 100% Original Scalable Vector Iconography & Ecosystem Integrations (Zed, btop, Fastfetch, Starship, Firefox, Discord)
 """
 
 from __future__ import annotations
@@ -637,7 +637,7 @@ def create_control_center_window(
         accent=ACCENT_LIME,
     )
 
-    # 3 Notched Tabs
+    # 5 Notched Tabs
     tab_h = 42
     tab_rect = QRectF(content.left(), content.top(), content.width(), tab_h)
     p.fillRect(tab_rect, SURFACE_SUNKEN)
@@ -645,14 +645,16 @@ def create_control_center_window(
     p.drawLine(QPointF(tab_rect.left(), tab_rect.bottom()), QPointF(tab_rect.right(), tab_rect.bottom()))
 
     tabs = [
-        ("Profil & Accent", True),
-        ("Opacitet & Djup", False),
-        ("Diagnostik & Doctor", False),
+        ("Profile & Accent", True),
+        ("Transparency & Depth", False),
+        ("Accessibility & Motion", False),
+        ("System Health & Doctor", False),
+        ("Ecosystem & Apps", False),
     ]
 
     tx = content.left() + 20
     for tname, is_sel in tabs:
-        tw = 170
+        tw = 165
         tpath = notched_path(QRectF(tx, tab_rect.top() + 6, tw, tab_h - 6), radius=5, notch=12 if is_sel else 0)
         p.setPen(BORDER_STRONG if is_sel else BORDER_DEFAULT)
         p.setBrush(SURFACE_GRAPHITE if is_sel else SURFACE_RAISED)
@@ -660,10 +662,10 @@ def create_control_center_window(
         if is_sel:
             p.setPen(QPen(ACCENT_LIME, 2.5))
             p.drawLine(QPointF(tx, tab_rect.top() + 18), QPointF(tx + 12, tab_rect.top() + 6))
-        p.setFont(get_font("Inter", 10, QFont.Weight.DemiBold if is_sel else QFont.Weight.Normal))
+        p.setFont(get_font("Inter", 9, QFont.Weight.DemiBold if is_sel else QFont.Weight.Normal))
         p.setPen(ACCENT_LIME if is_sel else TEXT_SECONDARY)
         p.drawText(QRectF(tx, tab_rect.top() + 6, tw, tab_h - 6), Qt.AlignmentFlag.AlignCenter, tname)
-        tx += tw + 10
+        tx += tw + 8
 
     # Body
     body = QRectF(content.left() + 24, content.top() + tab_h + 20, content.width() - 48, content.height() - tab_h - 36)

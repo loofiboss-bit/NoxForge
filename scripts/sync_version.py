@@ -22,7 +22,7 @@ SEMVER = re.compile(
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
 
-VERSION_FILES = {
+BASE_VERSION_FILES = {
     "design/tokens.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "design/motion-contract.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "design/edge-polish-contract.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
@@ -47,13 +47,8 @@ VERSION_FILES = {
     "sddm/NoxForgeObsidian/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "editors/vscode/package.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v14/artwork/artwork-contact-sheets.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
-    "docs/evidence/v14/qualification.json": (
-        (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
-        (r'(?m)^(\s*"package":\s*)"noxforge-.*?-1\.fc44\.x86_64\.rpm"(,?)$', r'\g<1>"noxforge-{rpm_version}-1.fc44.x86_64.rpm"\g<2>'),
-    ),
     "distribution/kde-store/description.md": (
-        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} Single Source & Verified Truth is an original"),
+        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity is an original"),
         (r"(?m)^Use the exact `noxforge-.*?-\*\.tar\.xz` files and verify them against the", "Use the exact `noxforge-{version}-*.tar.xz` files and verify them against the"),
         (r"(?m)^release `SHA256SUMS`: https://github\.com/loofiboss-bit/NoxForge/releases/tag/v.*?$", "release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v{version}"),
     ),
@@ -81,13 +76,13 @@ VERSION_FILES = {
         (r'releases/tag/v\d+\.\d+\.\d+', 'releases/tag/v{version}'),
         (r'noxforge-\d+\.\d+\.\d+-portable\.tar\.xz', 'noxforge-{version}-portable.tar.xz'),
     ),
-    "docs/evidence/v14/automated-gate.md": ((r'(?m)^Version:\s+.*$', "Version: {version}"),),
     "packaging/noxforge.spec": (
         (r"(?m)^%global upstream_version\s+.*$", "%global upstream_version {release_version}"),
         (r"(?m)^Version:\s+.*$", "Version:        {rpm_version}"),
     ),
-    "docs/man/noxforge-doctor.1": ((r'(?m)^\.TH NOXFORGE-DOCTOR 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-DOCTOR 1 "September 2026" "NoxForge {version}" "User Commands"'),),
-    "docs/man/noxforge-opacity.1": ((r'(?m)^\.TH NOXFORGE-OPACITY 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-OPACITY 1 "September 2026" "NoxForge {version}" "User Commands"'),),
+    "docs/man/noxforge-doctor.1": ((r'(?m)^\.TH NOXFORGE-DOCTOR 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-DOCTOR 1 "October 2026" "NoxForge {version}" "User Commands"'),),
+    "docs/man/noxforge-opacity.1": ((r'(?m)^\.TH NOXFORGE-OPACITY 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-OPACITY 1 "October 2026" "NoxForge {version}" "User Commands"'),),
+    "docs/man/noxforge-ctl.1": ((r'(?m)^\.TH NOXFORGE-CTL 1 "[^"]+" "NoxForge .*?" "User Commands"$', '.TH NOXFORGE-CTL 1 "October 2026" "NoxForge {version}" "User Commands"'),),
     "packaging/arch/PKGBUILD": (
         (r"(?m)^pkgver=.*$", "pkgver={version}"),
         (r"(?m)^source=\('https://github\.com/loofiboss-bit/NoxForge/releases/download/v[^/]+/noxforge-[^/]+-source\.tar\.xz'\)$", "source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v{version}/noxforge-{version}-source.tar.xz')"),
@@ -106,6 +101,22 @@ def load_manifest() -> dict:
     return data
 
 
+def get_version_files(manifest: dict) -> dict[str, tuple]:
+    active_root = manifest.get("evidence", {}).get("activeRoot", "docs/evidence/v17")
+    consumers = dict(BASE_VERSION_FILES)
+    consumers[f"{active_root}/artwork/artwork-contact-sheets.json"] = (
+        (r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
+    )
+    consumers[f"{active_root}/qualification.json"] = (
+        (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
+        (r'(?m)^(\s*"package":\s*)"noxforge-.*?-1\.fc44\.x86_64\.rpm"(,?)$', r'\g<1>"noxforge-{rpm_version}-1.fc44.x86_64.rpm"\g<2>'),
+    )
+    consumers[f"{active_root}/automated-gate.md"] = (
+        (r'(?m)^Version:\s+.*$', "Version: {version}"),
+    )
+    return consumers
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="fail on version drift")
@@ -121,7 +132,7 @@ def main() -> int:
     drift: list[Path] = []
     outputs: dict[Path, str] = {}
     replacement_count = 0
-    for relative, replacements in VERSION_FILES.items():
+    for relative, replacements in get_version_files(manifest).items():
         path = ROOT / relative
         if not path.exists():
             raise RuntimeError(f"version consumer is missing: {relative}")

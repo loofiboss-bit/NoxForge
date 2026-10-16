@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/splash/Splash.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 import QtQuick
 import org.kde.kirigami as Kirigami

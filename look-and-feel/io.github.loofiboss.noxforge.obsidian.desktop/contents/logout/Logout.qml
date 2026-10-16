@@ -1,3 +1,4 @@
+// GENERATED from qml/shared/logout/Logout.qml — do not edit directly
 // SPDX-License-Identifier: MIT
 // qmllint disable unqualified
 import QtQuick

@@ -77,6 +77,7 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/noxforge/editors/*|\
         /usr/share/noxforge/browsers/*|\
         /usr/share/noxforge/apps/*|\
+        /usr/share/noxforge/fastfetch/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/*|\
         /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\
@@ -109,7 +110,8 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/noxforge/VERSION|\
         /usr/share/noxforge/release-manifest.json|\
         /usr/share/man/man1/noxforge-doctor.1|\
-        /usr/share/man/man1/noxforge-opacity.1)
+        /usr/share/man/man1/noxforge-opacity.1|\
+        /usr/share/man/man1/noxforge-ctl.1)
             ;;
         *)
             printf 'Refusing non-NoxForge manifest entry: %s\n' "${installed_path}" >&2

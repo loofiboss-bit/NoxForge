@@ -1,18 +1,22 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v16 release contract is
-[`NOXFORGE_V16_PLAN.md`](NOXFORGE_V16_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v17 release contract is
+[`NOXFORGE_V17_PLAN.md`](NOXFORGE_V17_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 16.0.0 Single Source & Verified Truth consolidates the 15.0.0 baseline
-with single-source variant QML generation, system-wide reduced-motion compliance
-and edge-flash indicators, WCAG custom accent validation, formalized LoofiFaceID
-opt-in authentication, a unified Control Center GUI, and Doctor Schema 9.
-Host installation and active desktop mutation remain non-applying by default.
+NoxForge 17.0.0 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable
+Integrity completes full single-source QML generation across all 6 component pairs
+(12 variants), dynamic C++ Qt 6 & GTK accent harmonization, SDDM/Lock Screen UX
+polish, portable bundle packaging parity, an expanded 5-tab Control Center,
+and Doctor Schema 10. Host installation and active desktop mutation remain
+non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V16_PLAN.md`](NOXFORGE_V16_PLAN.md) records the completed 16.0.0
+  Single Source, Kinetic Accessibility & Verified Truth scope.
 
 - [`NOXFORGE_V15_PLAN.md`](NOXFORGE_V15_PLAN.md) records the completed 15.0.0
   Kinetic Motion, Adaptive Vector Iconography & Visual Precision scope.

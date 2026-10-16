@@ -1,0 +1,64 @@
+.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 17.0.0" "User Commands"
+.SH NAME
+noxforge-ctl \- NoxForge Unified Control Hub and Orchestration Suite
+.SH SYNOPSIS
+.B noxforge-ctl
+.RI [ command ]
+.RI [ options ]
+.SH DESCRIPTION
+.B noxforge-ctl
+is the unified command-line and graphical control suite for the NoxForge desktop visual system.
+It orchestrates profile switching (Graphite <-> Obsidian), accent color management with WCAG AA
+validation, system-wide desktop synchronization, diurnal Day/Night scheduling, third-party
+developer tool theme deployment, and launches the NoxForge Control Center GUI.
+.PP
+By default, without subcommands,
+.B noxforge-ctl
+displays the current desktop profile, active color scheme, Plasma style, Aurorae decoration,
+KWin switcher layout, and accent color.
+.SH COMMANDS
+.TP
+.BR switch " [" graphite | obsidian "]"
+Switch between standard Graphite gray surfaces and true OLED pitch-black Obsidian.
+Supports \fB-n\fR (\fB--dry-run\fR) and \fB--json\fR.
+.TP
+.BR sync " [\fB--profile\fR " graphite | obsidian "]"
+Synchronize all desktop layers (Plasma, GTK 3/4, icons, cursors, sounds, widget styles).
+.TP
+.BR accent " [" lime | cyan | violet | amber | system | custom | \fI#RRGGBB\fR "]"
+Set the active Forge accent color or a custom hex code. Custom accents enforce WCAG AA (4.5:1)
+minimum contrast against both dark graphite (#141E25) and OLED obsidian (#000000).
+Also non-destructively updates user GTK 3/4 accent overrides.
+.TP
+.BR status
+Display the current NoxForge desktop profile and component state.
+.TP
+.BR schedule " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
+Manage automated Day/Night profile switching via systemd user timers.
+\fB--enable\fR accepts optional \fB--day-time\fR \fIHH:MM\fR (default 07:00) and
+\fB--night-time\fR \fIHH:MM\fR (default 20:00).
+.TP
+.BR ecosystem " [" status " | " apply " [" \fIapp\fR | all "] ]"
+Audit or non-destructively deploy NoxForge theme configurations to user application
+directories (Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, Starship, Fastfetch).
+.TP
+.BR opacity " [" \fIargs\fR... "]"
+Configure panel, popup, and window decoration transparency levels via \fBnoxforge-opacity\fR.
+.TP
+.BR doctor " [" \fIargs\fR... "]"
+Run the read-only NoxForge system diagnostics and verification via \fBnoxforge-doctor\fR.
+.TP
+.BR gui
+Launch the interactive PySide6 / Qt 6 NoxForge Control Center GUI.
+.SH OPTIONS
+.TP
+.B \-v, \-\-version
+Show program version and exit.
+.TP
+.B \-h, \-\-help
+Show help message and exit.
+.SH SEE ALSO
+.BR noxforge-doctor (1),
+.BR noxforge-opacity (1)
+.SH AUTHORS
+NoxForge Contributors.
