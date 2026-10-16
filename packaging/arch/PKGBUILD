@@ -9,7 +9,7 @@ depends=('breeze-icons' 'kwin' 'plasma-workspace' 'qt6-base')
 makedepends=('cmake' 'ninja' 'python' 'qt6-declarative' 'kirigami')
 optdepends=('sddm: qualified NoxForge custom login-screen compatibility')
 source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v17.0.0/noxforge-17.0.0-source.tar.xz')
-sha256sums=('743d068519944887b9728123f5c656749d595fdfb32d755949ce64c5d5fc564f')
+sha256sums=('6683319af8a7e272d222749018c781aae029e51c44fe05e945827719ddac495d')
 
 build() {
   cmake -S "NoxForge-${pkgver}" -B build -G Ninja \
