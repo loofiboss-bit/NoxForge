@@ -18,6 +18,8 @@ RUNTIME_QML = (
     ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
     ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
     ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
+    ROOT / f"look-and-feel/{THEME_ID}/contents/splash/MotionPolicy.qml",
+    ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/MotionPolicy.qml",
 )
 
 
@@ -63,12 +65,13 @@ def create_report() -> dict[str, object]:
         ratios[pair["name"]] = {"actual": actual, "minimum": minimum}
 
     qml_text = {str(path.relative_to(ROOT)): path.read_text(encoding="utf-8") for path in RUNTIME_QML}
+    font_family_pattern = re.compile(r"\bfont\.family\s*:")
     hardcoded_fonts = [
-        path for path, text in qml_text.items() if re.search(r"\bfont\.family\s*:", text)
+        path for path, text in qml_text.items() if font_family_pattern.search(text)
     ]
     if hardcoded_fonts:
         raise RuntimeError(f"runtime QML hardcodes font families: {hardcoded_fonts}")
-    if "KDE's configured system font is the only application and shell typeface." not in (
+    if "The KDE-configured system font is the only application and shell typeface." not in (
         ROOT / "DESIGN.md"
     ).read_text(encoding="utf-8"):
         raise RuntimeError("DESIGN.md does not preserve the system-font contract")
@@ -87,7 +90,7 @@ def create_report() -> dict[str, object]:
             tokens["motion"]["reducedMotion"]["durationMs"] == 0
             and tokens["motion"]["reducedMotion"]["spatialMotion"] is False
             and all(
-                value in splash + switcher
+                value in qml_text[f"look-and-feel/{THEME_ID}/contents/splash/MotionPolicy.qml"] + qml_text[f"kwin/tabbox/{THEME_ID}/contents/ui/MotionPolicy.qml"] + splash + switcher
                 for value in ("reducedMotionDuration", "Kirigami.Units.longDuration <= 0")
             )
         ),
