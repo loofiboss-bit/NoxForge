@@ -50,6 +50,54 @@ class TestNoxForgeOpacity(unittest.TestCase):
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
+    def test_get_xdg_cache_home(self) -> None:
+        """Verify get_xdg_cache_home handles valid and invalid XDG_CACHE_HOME env vars."""
+        old_env = os.environ.get("XDG_CACHE_HOME")
+
+        try:
+            # 1. Absolute path
+            os.environ["XDG_CACHE_HOME"] = "/tmp/custom_cache"
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path("/tmp/custom_cache"))
+
+            # 2. Relative path (should be ignored, fallback to ~/.cache)
+            os.environ["XDG_CACHE_HOME"] = "relative/path"
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path.home() / ".cache")
+
+            # 3. Unset
+            os.environ.pop("XDG_CACHE_HOME", None)
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path.home() / ".cache")
+        finally:
+            if old_env is not None:
+                os.environ["XDG_CACHE_HOME"] = old_env
+            else:
+                os.environ.pop("XDG_CACHE_HOME", None)
+
+    def test_parse_opacity(self) -> None:
+        """Test the _parse_opacity function for various valid and invalid inputs."""
+        # Valid decimals
+        self.assertEqual(noxforge_opacity._parse_opacity("0.5"), 0.5)
+        self.assertEqual(noxforge_opacity._parse_opacity("1.0"), 1.0)
+        self.assertEqual(noxforge_opacity._parse_opacity("0"), 0.0)
+        self.assertEqual(noxforge_opacity._parse_opacity(".75"), 0.75)
+
+        # Valid percentages
+        self.assertEqual(noxforge_opacity._parse_opacity("50%"), 0.5)
+        self.assertEqual(noxforge_opacity._parse_opacity("100%"), 1.0)
+        self.assertEqual(noxforge_opacity._parse_opacity("0%"), 0.0)
+
+        # Whitespace handling
+        self.assertEqual(noxforge_opacity._parse_opacity("  0.6  "), 0.6)
+        self.assertEqual(noxforge_opacity._parse_opacity("  60 %  "), 0.6)
+
+        # Scientific notation
+        self.assertEqual(noxforge_opacity._parse_opacity("5e-1"), 0.5)
+
+        # Invalid inputs yielding None
+        self.assertIsNone(noxforge_opacity._parse_opacity("invalid"))
+        self.assertIsNone(noxforge_opacity._parse_opacity(""))
+        self.assertIsNone(noxforge_opacity._parse_opacity("50%%"))
+        self.assertIsNone(noxforge_opacity._parse_opacity("abc%"))
+
     def test_presets_defined(self) -> None:
         self.assertIn("solid", noxforge_opacity.PRESETS)
         self.assertIn("original", noxforge_opacity.PRESETS)
@@ -313,6 +361,34 @@ class TestNoxForgeOpacity(unittest.TestCase):
         self.assertTrue(res)
         self.assertTrue((hollow_dir / "metadata.json").is_file())
         self.assertTrue((hollow_dir / "translucent/widgets/panel-background.svg").is_file())
+
+    def test_get_xdg_data_home(self) -> None:
+        """Verify get_xdg_data_home returns correct paths based on XDG_DATA_HOME env variable."""
+        original_xdg_data_home = os.environ.get("XDG_DATA_HOME")
+
+        try:
+            # Test 1: Absolute path
+            os.environ["XDG_DATA_HOME"] = "/custom/absolute/path"
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path("/custom/absolute/path"))
+
+            # Test 2: Relative path (should fallback to default)
+            os.environ["XDG_DATA_HOME"] = "custom/relative/path"
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+            # Test 3: Empty value (should fallback to default)
+            os.environ["XDG_DATA_HOME"] = ""
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+            # Test 4: Not set (should fallback to default)
+            if "XDG_DATA_HOME" in os.environ:
+                del os.environ["XDG_DATA_HOME"]
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+        finally:
+            if original_xdg_data_home is not None:
+                os.environ["XDG_DATA_HOME"] = original_xdg_data_home
+            elif "XDG_DATA_HOME" in os.environ:
+                del os.environ["XDG_DATA_HOME"]
 
 
 if __name__ == "__main__":

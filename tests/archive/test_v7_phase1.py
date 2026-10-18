@@ -4,7 +4,7 @@ import gzip
 import json
 import subprocess
 import unittest
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from pathlib import Path
 
 
