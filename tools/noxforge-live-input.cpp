@@ -237,7 +237,8 @@ int main(int argc, char **argv)
         if (count > 32) {
             std::fprintf(stderr, "Too many keys; maximum is 32\n");
             result = 2;
-        } else {
+        }
+        if (result == 0) {
             for (int index = 0; index < count; ++index) {
                 if (!parseInteger(argv[keyStart + index], &keys[index])) {
                     std::fprintf(stderr, "Invalid key code: %s\n", argv[keyStart + index]);
@@ -245,19 +246,19 @@ int main(int argc, char **argv)
                     break;
                 }
             }
-            if (result == 0) {
-                ei_device_start_emulating(devices.keyboard, 1);
-                for (int index = 0; index < count; ++index) {
-                    ei_device_keyboard_key(devices.keyboard, keys[index], true);
-                }
-                frame(context, devices.keyboard);
-                QThread::msleep(static_cast<unsigned long>(holdMs));
-                for (int index = count - 1; index >= 0; --index) {
-                    ei_device_keyboard_key(devices.keyboard, keys[index], false);
-                }
-                frame(context, devices.keyboard);
-                ei_device_stop_emulating(devices.keyboard);
+        }
+        if (result == 0) {
+            ei_device_start_emulating(devices.keyboard, 1);
+            for (int index = 0; index < count; ++index) {
+                ei_device_keyboard_key(devices.keyboard, keys[index], true);
             }
+            frame(context, devices.keyboard);
+            QThread::msleep(static_cast<unsigned long>(holdMs));
+            for (int index = count - 1; index >= 0; --index) {
+                ei_device_keyboard_key(devices.keyboard, keys[index], false);
+            }
+            frame(context, devices.keyboard);
+            ei_device_stop_emulating(devices.keyboard);
         }
     } else if (operation == "move") {
         ei_device_start_emulating(devices.pointer, 1);
