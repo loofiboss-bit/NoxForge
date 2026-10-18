@@ -6,7 +6,7 @@ import importlib.util
 import json
 import struct
 import unittest
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
