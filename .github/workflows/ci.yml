@@ -27,7 +27,7 @@ jobs:
 
       - name: Install preflight tooling
         run: |
-          pip install ruff pytest pytest-subtests
+          pip install ruff pytest pytest-subtests defusedxml
 
       - name: Python lint (ruff)
         run: ruff check scripts tools tests
