@@ -65,6 +65,17 @@ QImage renderComplex(QStyle *style, QStyle::ComplexControl control,
     return image;
 }
 
+qreal measureTopEdgeCoverage(const QImage &rendered, const QColor &fill, int rows)
+{
+    qreal coverage = 0;
+    for (int y = 0; y < rows; ++y) {
+        const QColor pixel = rendered.pixelColor(rendered.width() / 2, y);
+        coverage += pixel.alphaF() * qBound(0.0,
+            (pixel.greenF() - fill.greenF()) / (1.0 - fill.greenF()), 1.0);
+    }
+    return coverage;
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -196,12 +207,7 @@ int main(int argc, char **argv)
                 const QImage rendered = renderPrimitive(style, QStyle::PE_PanelItemViewItem, item, scale);
                 if (!containsColor(rendered, QColor("#A3FF47"))) return 35;
                 const QColor fill(selected ? "#223429" : "#0D1419");
-                qreal coverage = 0;
-                for (int y = 0; y < qCeil(5 * scale); ++y) {
-                    const QColor pixel = rendered.pixelColor(rendered.width() / 2, y);
-                    coverage += pixel.alphaF() * qBound(0.0,
-                        (pixel.greenF() - fill.greenF()) / (1.0 - fill.greenF()), 1.0);
-                }
+                const qreal coverage = measureTopEdgeCoverage(rendered, fill, qCeil(5 * scale));
                 if (qAbs(coverage / scale - 2.0) > 0.16) return 36;
             }
         }
@@ -209,13 +215,7 @@ int main(int argc, char **argv)
         input.rect = QRect(0, 0, 160, 40);
         input.state = QStyle::State_Enabled | QStyle::State_HasFocus;
         const QImage rendered = renderPrimitive(style, QStyle::PE_PanelLineEdit, input, scale);
-        qreal coverage = 0;
-        for (int y = 0; y < qCeil(4 * scale); ++y) {
-            const QColor pixel = rendered.pixelColor(rendered.width() / 2, y);
-            coverage += pixel.alphaF() * qBound(0.0,
-                (pixel.greenF() - QColor("#0D1419").greenF())
-                    / (1.0 - QColor("#0D1419").greenF()), 1.0);
-        }
+        const qreal coverage = measureTopEdgeCoverage(rendered, QColor("#0D1419"), qCeil(4 * scale));
         if (qAbs(coverage / scale - 2.0) > 0.16) return 37;
     }
     QStyleOption overlay;
