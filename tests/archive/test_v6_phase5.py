@@ -93,14 +93,17 @@ class V6PhaseFiveTests(unittest.TestCase):
 
     def test_runtime_qml_uses_semantic_motion_and_test_progress_is_opt_in(self) -> None:
         combined = ""
+        hex_color_pattern = re.compile(r"#[0-9A-Fa-f]{3,8}\b")
+        duration_pattern = re.compile(r"\bduration:\s*\d+")
+        bezier_curve_pattern = re.compile(r"easing\.bezierCurve:\s*([^\n]+)")
         for surface, path in SURFACES.items():
             text = path.read_text(encoding="utf-8")
             combined += text
             with self.subTest(surface=surface):
                 self.assertIn("property real testProgress: -1", text)
-                self.assertIsNone(re.search(r"#[0-9A-Fa-f]{3,8}\b", text))
-                self.assertIsNone(re.search(r"\bduration:\s*\d+", text))
-                for curve in re.findall(r"easing\.bezierCurve:\s*([^\n]+)", text):
+                self.assertIsNone(hex_color_pattern.search(text))
+                self.assertIsNone(duration_pattern.search(text))
+                for curve in bezier_curve_pattern.findall(text):
                     self.assertTrue(curve.strip().startswith("tokens."))
         self.assertIn("Behavior on", combined)
         self.assertIn("transitions: Transition", combined)
