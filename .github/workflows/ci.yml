@@ -86,6 +86,7 @@ jobs:
       - name: Run the authoritative release gate
         shell: bash
         run: |
+          pip install defusedxml
           mkdir -p build/baseline-source
           baseline_commit=$(python3 - <<'PY'
           import json
