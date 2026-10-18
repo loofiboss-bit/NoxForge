@@ -72,6 +72,32 @@ class TestNoxForgeOpacity(unittest.TestCase):
             else:
                 os.environ.pop("XDG_CACHE_HOME", None)
 
+    def test_parse_opacity(self) -> None:
+        """Test the _parse_opacity function for various valid and invalid inputs."""
+        # Valid decimals
+        self.assertEqual(noxforge_opacity._parse_opacity("0.5"), 0.5)
+        self.assertEqual(noxforge_opacity._parse_opacity("1.0"), 1.0)
+        self.assertEqual(noxforge_opacity._parse_opacity("0"), 0.0)
+        self.assertEqual(noxforge_opacity._parse_opacity(".75"), 0.75)
+
+        # Valid percentages
+        self.assertEqual(noxforge_opacity._parse_opacity("50%"), 0.5)
+        self.assertEqual(noxforge_opacity._parse_opacity("100%"), 1.0)
+        self.assertEqual(noxforge_opacity._parse_opacity("0%"), 0.0)
+
+        # Whitespace handling
+        self.assertEqual(noxforge_opacity._parse_opacity("  0.6  "), 0.6)
+        self.assertEqual(noxforge_opacity._parse_opacity("  60 %  "), 0.6)
+
+        # Scientific notation
+        self.assertEqual(noxforge_opacity._parse_opacity("5e-1"), 0.5)
+
+        # Invalid inputs yielding None
+        self.assertIsNone(noxforge_opacity._parse_opacity("invalid"))
+        self.assertIsNone(noxforge_opacity._parse_opacity(""))
+        self.assertIsNone(noxforge_opacity._parse_opacity("50%%"))
+        self.assertIsNone(noxforge_opacity._parse_opacity("abc%"))
+
     def test_presets_defined(self) -> None:
         self.assertIn("solid", noxforge_opacity.PRESETS)
         self.assertIn("original", noxforge_opacity.PRESETS)
