@@ -2,20 +2,20 @@
   "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "17.0.0",
-    "stableVersion": "17.0.0",
+    "version": "17.0.1",
+    "stableVersion": "17.0.1",
     "activePlan": "docs/NOXFORGE_V17_PLAN.md",
     "baseline": {
-      "version": "16.0.0",
-      "commit": "8fff7aff15cc7aa4f27812cd9c8ee429c1d21396",
-      "tag": "v16.0.0",
-      "tagCommit": "8fff7aff15cc7aa4f27812cd9c8ee429c1d21396",
-      "rpmBytes": 1785866,
-      "srpmBytes": 10948301,
-      "githubSourceBytes": 10924124,
-      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v16.0.0",
-      "rpmFilename": "noxforge-16.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "78f417060bfe7cc0543beff59ee5773378d582d0d0933f10c3eb2e8cd8f71b24",
+      "version": "17.0.0",
+      "commit": "a8b26808b606cbd9fc4f9f356e9b46f4c9020d4d",
+      "tag": "v17.0.0",
+      "tagCommit": "a8b26808b606cbd9fc4f9f356e9b46f4c9020d4d",
+      "rpmBytes": 1800674,
+      "srpmBytes": 14967302,
+      "githubSourceBytes": 14935140,
+      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v17.0.0",
+      "rpmFilename": "noxforge-17.0.0-1.fc44.x86_64.rpm",
+      "rpmSha256": "d6bb3494d805e70f60ddec066f884244185fca4ac02dec5752a6e6081255e7c0",
       "kdeStoreProduct": "2367662"
     }
   },
@@ -219,109 +219,109 @@
   "artifacts": [
     {
       "key": "source",
-      "filename": "noxforge-17.0.0-source.tar.xz",
+      "filename": "noxforge-17.0.1-source.tar.xz",
       "kind": "source",
       "budgetBytes": 20971520
     },
     {
       "key": "portable",
-      "filename": "noxforge-17.0.0-portable.tar.xz",
+      "filename": "noxforge-17.0.1-portable.tar.xz",
       "kind": "portable",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme",
-      "filename": "noxforge-17.0.0-global-theme.tar.xz",
+      "filename": "noxforge-17.0.1-global-theme.tar.xz",
       "kind": "store",
       "package": "globalTheme",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme-obsidian",
-      "filename": "noxforge-17.0.0-global-theme-obsidian.tar.xz",
+      "filename": "noxforge-17.0.1-global-theme-obsidian.tar.xz",
       "kind": "store",
       "package": "globalThemeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style",
-      "filename": "noxforge-17.0.0-plasma-style.tar.xz",
+      "filename": "noxforge-17.0.1-plasma-style.tar.xz",
       "kind": "store",
       "package": "plasmaStyle",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style-obsidian",
-      "filename": "noxforge-17.0.0-plasma-style-obsidian.tar.xz",
+      "filename": "noxforge-17.0.1-plasma-style-obsidian.tar.xz",
       "kind": "store",
       "package": "plasmaStyleObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "colors",
-      "filename": "noxforge-17.0.0-colors.tar.xz",
+      "filename": "noxforge-17.0.1-colors.tar.xz",
       "kind": "store",
       "package": "colors",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae",
-      "filename": "noxforge-17.0.0-aurorae.tar.xz",
+      "filename": "noxforge-17.0.1-aurorae.tar.xz",
       "kind": "store",
       "package": "aurorae",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae-obsidian",
-      "filename": "noxforge-17.0.0-aurorae-obsidian.tar.xz",
+      "filename": "noxforge-17.0.1-aurorae-obsidian.tar.xz",
       "kind": "store",
       "package": "auroraeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "icons",
-      "filename": "noxforge-17.0.0-icons.tar.xz",
+      "filename": "noxforge-17.0.1-icons.tar.xz",
       "kind": "store",
       "package": "icons",
       "budgetBytes": 10485760
     },
     {
       "key": "cursors",
-      "filename": "noxforge-17.0.0-cursors.tar.xz",
+      "filename": "noxforge-17.0.1-cursors.tar.xz",
       "kind": "store",
       "package": "cursors",
       "budgetBytes": 10485760
     },
     {
       "key": "kwin-switcher",
-      "filename": "noxforge-17.0.0-kwin-switcher.tar.xz",
+      "filename": "noxforge-17.0.1-kwin-switcher.tar.xz",
       "kind": "store",
       "package": "kwinSwitcher",
       "budgetBytes": 10485760
     },
     {
       "key": "sounds",
-      "filename": "noxforge-17.0.0-sounds.tar.xz",
+      "filename": "noxforge-17.0.1-sounds.tar.xz",
       "kind": "store",
       "package": "sounds",
       "budgetBytes": 10485760
     },
     {
       "key": "wallpapers",
-      "filename": "noxforge-17.0.0-wallpapers.tar.xz",
+      "filename": "noxforge-17.0.1-wallpapers.tar.xz",
       "kind": "store",
       "package": "wallpapers",
       "budgetBytes": 8388608
     },
     {
       "key": "rpm",
-      "filename": "noxforge-17.0.0-1.fc44.x86_64.rpm",
+      "filename": "noxforge-17.0.1-1.fc44.x86_64.rpm",
       "kind": "rpm",
       "budgetBytes": 2097152
     },
     {
       "key": "srpm",
-      "filename": "noxforge-17.0.0-1.fc44.src.rpm",
+      "filename": "noxforge-17.0.1-1.fc44.src.rpm",
       "kind": "srpm",
       "budgetBytes": 20971520
     },
@@ -339,7 +339,7 @@
     }
   ],
   "source": {
-    "archiveRoot": "NoxForge-17.0.0",
+    "archiveRoot": "NoxForge-17.0.1",
     "include": [
       "LICENSE",
       "LICENSES.md",

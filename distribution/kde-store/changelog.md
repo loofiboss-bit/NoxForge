@@ -1,3 +1,10 @@
+# NoxForge 17.0.1 — Authentic Dolphin Grid & Quick Onboarding
+
+- aligned Dolphin store screenshot showcase with authentic KDE Plasma 6 icon grid view and standard navigation;
+- enabled floating panel mode (`panel.floating = true`) in desktop layout script for modern elevated dock aesthetics;
+- introduced `noxforge-ctl apply [profile] [--layout]` for automated 1-click end-to-end desktop profile setup;
+- added quick onboarding "Apply NoxForge Setup" button in Control Center GUI overview tab.
+
 # NoxForge 17.0.0 — Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
 
 - upgraded single-source QML architecture to Schema 2, unifying Lock Screen, SDDM greeters, KWin TabBox switchers, Splash screen, and Logout greeter with byte-parity generation across Graphite and Obsidian surfaces;

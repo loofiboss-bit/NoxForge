@@ -36,6 +36,7 @@ BASE_VERSION_FILES = {
     "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "tools/noxforge-opacity": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),
     "tools/noxforge-ctl": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),
+    "tools/control_center.py": ((r'(?m)^(\s*return\s*)"\d+\.\d+\.\d+"$', r'\g<1>"{version}"'),),
     "wallpapers/NoxForge/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "wallpapers/NoxForge-Quiet/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "wallpapers/NoxForge-Ultrawide/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
