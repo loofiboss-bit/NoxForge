@@ -348,51 +348,54 @@ def create_dolphin_window(
         p.drawText(QRectF(drect.left() + 40, drect.top(), 140, 32), Qt.AlignmentFlag.AlignVCenter, dname)
         item_y += 34
 
-    # Main Grid Area (File Browser)
+    # Main Grid Area (Authentic KDE 6 Dolphin File Grid)
     main_rect = QRectF(side_rect.right() + 1, content.top() + tb_h, content.width() - side_w - 1, content.height() - tb_h - 32)
     p.fillRect(main_rect, BG_OBSIDIAN if is_obsidian else SURFACE_GRAPHITE)
 
     folders_and_files = [
-        ("apps", "places/folder.svg", True, "App Integrations"),
-        ("aurorae", "places/folder.svg", True, "Forge Notch 18px"),
-        ("color-schemes", "places/folder.svg", True, "Graphite & Obsidian"),
-        ("design", "places/folder.svg", True, "Tokens & Branding"),
-        ("icons", "places/folder.svg", True, "Original Vector Icon Theme"),
-        ("plasma", "places/folder.svg", True, "Plasma 6 Desktop Theme"),
-        ("tools", "places/folder.svg", True, "Control Center & Opacity"),
-        ("wallpapers", "places/folder.svg", True, "Geometric Visuals"),
-        ("CMakeLists.txt", "mimetypes/text-x-generic.svg", False, "CMake Build Engine"),
-        ("README.md", "mimetypes/text-markdown.svg", False, "v14.0.0 Specification"),
-        ("VERSION", "mimetypes/text-plain.svg", False, "Release: 14.0.0"),
-        ("LICENSE", "mimetypes/text-plain.svg", False, "MIT License"),
+        ("apps", "places/folder.svg", True),
+        ("aurorae", "places/folder.svg", True),
+        ("color-schemes", "places/folder.svg", True),
+        ("design", "places/folder.svg", True),
+        ("icons", "places/folder.svg", True),
+        ("plasma", "places/folder.svg", True),
+        ("tools", "places/folder.svg", True),
+        ("wallpapers", "places/folder.svg", True),
+        ("CMakeLists.txt", "mimetypes/text-x-generic.svg", False),
+        ("README.md", "mimetypes/text-markdown.svg", False),
+        ("VERSION", "mimetypes/text-plain.svg", False),
+        ("LICENSE", "mimetypes/text-plain.svg", False),
     ]
 
     grid_cols = 4
     col_w = (main_rect.width() - 40) / grid_cols
-    row_h = 96
+    row_h = 104
     gx = main_rect.left() + 20
     gy = main_rect.top() + 20
 
-    for i, (fname, ficon, is_dir, fdesc) in enumerate(folders_and_files):
+    for i, (fname, ficon, is_dir) in enumerate(folders_and_files):
         c = i % grid_cols
         r = i // grid_cols
         bx = gx + c * col_w
         by = gy + r * row_h
-        card_rect = QRectF(bx + 4, by + 4, col_w - 8, row_h - 8)
+        cell_rect = QRectF(bx + 8, by + 4, col_w - 16, row_h - 8)
 
-        p.setPen(BORDER_OBSIDIAN if is_obsidian else BORDER_DEFAULT)
-        p.setBrush(SURFACE_OBSIDIAN_RAISED if is_obsidian else SURFACE_RAISED)
-        p.drawRoundedRect(card_rect, 6, 6)
+        # Highlight active selection on 'apps' to demonstrate authentic Dolphin focus
+        is_selected = (fname == "apps" and is_active)
+        if is_selected:
+            p.setPen(QPen(accent, 1.0))
+            p.setBrush(SURFACE_SELECTED)
+            p.drawRoundedRect(cell_rect, 5, 5)
 
-        render_svg(p, ICONS / ficon, QRectF(card_rect.left() + 12, card_rect.top() + (row_h - 8 - 36) / 2, 36, 36))
+        icon_sz = 48
+        icon_x = cell_rect.center().x() - icon_sz / 2
+        icon_y = cell_rect.top() + 6
+        render_svg(p, ICONS / ficon, QRectF(icon_x, icon_y, icon_sz, icon_sz))
 
-        p.setFont(get_font("Inter", 10, QFont.Weight.Medium))
-        p.setPen(TEXT_PRIMARY)
-        p.drawText(QRectF(card_rect.left() + 56, card_rect.top() + 16, card_rect.width() - 60, 20), Qt.AlignmentFlag.AlignVCenter, fname)
-
-        p.setFont(get_font("Inter", 8, QFont.Weight.Normal))
-        p.setPen(accent if is_dir else ACCENT_CYAN)
-        p.drawText(QRectF(card_rect.left() + 56, card_rect.top() + 36, card_rect.width() - 60, 16), Qt.AlignmentFlag.AlignVCenter, fdesc)
+        p.setFont(get_font("Inter", 9, QFont.Weight.Medium if is_selected else QFont.Weight.Normal))
+        p.setPen(accent if is_selected else TEXT_PRIMARY)
+        lbl_rect = QRectF(cell_rect.left() + 2, icon_y + icon_sz + 6, cell_rect.width() - 4, 22)
+        p.drawText(lbl_rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, fname)
 
     # Status Bar
     stat_rect = QRectF(content.left(), content.bottom() - 32, content.width(), 32)

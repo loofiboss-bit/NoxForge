@@ -204,6 +204,23 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
         self.assertEqual(data["changes"]["widgetStyle"], "NoxForge")
         self.assertEqual(data["changes"]["iconTheme"], "NoxForge")
 
+    def test_ctl_apply_subcommand(self) -> None:
+        ctl = ROOT / "tools/noxforge-ctl"
+        res = subprocess.run(
+            [sys.executable, str(ctl), "apply", "graphite", "--layout", "-n", "--json"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(res.returncode, 0)
+        data = json.loads(res.stdout)
+        self.assertEqual(data["status"], "dry-run")
+        self.assertIn("wallpaper", data["changes"])
+        self.assertEqual(data["changes"]["wallpaper"], "NoxForge")
+        self.assertEqual(data["changes"]["desktopLayout"], "floating-panel")
+        self.assertEqual(data["changes"]["globalTheme"], "io.github.loofiboss.noxforge.desktop")
+
     def test_application_icons_and_desktop_entries(self) -> None:
         cc_icon = ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg"
         op_icon = ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.opacity.svg"

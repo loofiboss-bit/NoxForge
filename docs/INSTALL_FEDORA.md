@@ -21,11 +21,28 @@ rpm -V noxforge
 noxforge-doctor --json
 ```
 
+## Quick Start — Apply NoxForge
+
 Package installation does not automatically apply NoxForge, change a panel, edit KDE
 configuration, restart Plasma, install a display manager, or switch display
-managers. PLM does not support arbitrary third-party greeter QML, so NoxForge
-does not ship a replacement PLM greeter or write PLM configuration. Select components explicitly
-in System Settings, or orchestrate via `noxforge-ctl` / Control Center.
+managers. To immediately apply the complete NoxForge experience:
+
+```bash
+# Apply Graphite (standard) or Obsidian (OLED) across theme, icons, cursors & wallpaper:
+noxforge-ctl apply graphite
+# Or with the optional floating panel desktop layout:
+noxforge-ctl apply graphite --layout
+
+# Or launch the graphical Control Center:
+noxforge-ctl gui
+```
+
+### Dolphin & Desktop Clean Look
+
+To get the clean, modern look featured in the showcase:
+* **Dolphin:** Press `Ctrl+M` to hide the classic menubar (Dolphin will use the modern hamburger menu on the toolbar). In *Configure Dolphin → View Modes*, the vector icons scale cleanly in Icons mode.
+* **Floating Panel:** In KDE Plasma 6, right-click the bottom panel → *Enter Edit Mode* → enable *Floating* (or use `noxforge-ctl apply --layout`).
+
 
 ## Build from the distributed source archive
 

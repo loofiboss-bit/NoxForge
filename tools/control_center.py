@@ -149,6 +149,19 @@ class ProfileAccentTab(QtWidgets.QWidget):
         btn_row.addWidget(self.btn_graphite)
         btn_row.addWidget(self.btn_obsidian)
         p_layout.addLayout(btn_row)
+
+        # 1-Click Full Setup Action
+        setup_row = QtWidgets.QHBoxLayout()
+        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors & Wallpaper)")
+        self.setup_full_btn.setMinimumHeight(34)
+        self.setup_full_btn.setStyleSheet(
+            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 5px; "
+            "color: #A3FF47; font-weight: bold; font-size: 11px; padding: 4px 12px;"
+        )
+        self.setup_full_btn.clicked.connect(self.apply_full_active_setup)
+        setup_row.addWidget(self.setup_full_btn)
+        p_layout.addLayout(setup_row)
+
         layout.addWidget(profile_group)
 
         # Accent Color Section
@@ -336,9 +349,22 @@ class ProfileAccentTab(QtWidgets.QWidget):
                 pass
 
     def apply_profile(self, profile: str) -> None:
-        res = noxforge_ctl.switch_profile(profile)
+        if hasattr(noxforge_ctl, "apply_setup"):
+            res = noxforge_ctl.apply_setup(profile)
+        else:
+            res = noxforge_ctl.switch_profile(profile)
         self.refresh_state()
-        self.statusChanged.emit(f"Profile activated: {profile.upper()}")
+        self.statusChanged.emit(f"Profile activated: {profile.upper()} (complete desktop synchronized)")
+
+    def apply_full_active_setup(self) -> None:
+        status = noxforge_ctl.get_current_status()
+        profile = status.get("profile", "graphite")
+        if hasattr(noxforge_ctl, "apply_setup"):
+            res = noxforge_ctl.apply_setup(profile)
+        else:
+            res = noxforge_ctl.sync_desktop(profile)
+        self.refresh_state()
+        self.statusChanged.emit(f"Complete {profile.upper()} setup applied (Theme, Icons, Cursors, Wallpaper)")
 
     def apply_accent(self, accent: str) -> None:
         res = noxforge_ctl.set_accent(accent)
