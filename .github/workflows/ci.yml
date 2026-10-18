@@ -27,7 +27,7 @@ jobs:
 
       - name: Install preflight tooling
         run: |
-          pip install ruff pytest pytest-subtests
+          pip install ruff pytest pytest-subtests defusedxml
 
       - name: Python lint (ruff)
         run: ruff check scripts tools tests
@@ -78,6 +78,10 @@ jobs:
           rpm-build
           rpmlint
           xz
+          python3-pip
+
+      - name: Install Python dependencies
+        run: pip install defusedxml
 
       - uses: actions/checkout@v7
         with:

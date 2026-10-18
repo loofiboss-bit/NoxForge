@@ -33,8 +33,10 @@ jobs:
           dnf install -y breeze-icon-theme cmake ffmpeg-free gcc-c++ git
           glibc-langpack-en google-noto-sans-fonts ImageMagick kf6-kirigami
           kf6-kpackage kwin
-          libasan libubsan ninja-build plasma-workspace python3
+          libasan libubsan ninja-build plasma-workspace python3 python3-pip
           qt6-qtbase-devel qt6-qtdeclarative-devel rpm-build rpmlint xz
+      - name: Install Python dependencies
+        run: pip install defusedxml
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
