@@ -23,12 +23,20 @@ noxforge-doctor --json
 The RPM installs the native Qt style, orchestration suite (`noxforge-ctl`,
 Control Center GUI), and system doctor but never automatically applies a
 theme, changes a panel, edits KDE configuration, or switches a display manager.
+To immediately apply the full setup:
+
+```bash
+# Apply Graphite (standard) or Obsidian (OLED):
+noxforge-ctl apply graphite
+# Or launch the graphical Control Center:
+noxforge-ctl gui
+```
+
 Fedora 44 uses Plasma Login Manager by default: select **NoxForge Quiet** as its
-wallpaper through System Settings if desired. NoxForge does not supply a custom
-PLM greeter. Select
+wallpaper through System Settings if desired. Select
 Global Theme, application style, decorations, icons, cursors, sounds and one
 of the five wallpapers explicitly in System Settings, or orchestrate via
-`noxforge-ctl` / Control Center.
+`noxforge-ctl` / Control Center. Press `Ctrl+M` in Dolphin to hide the legacy menubar for the clean modern aesthetic.
 
 ## Portable user-local edition
 

@@ -266,6 +266,62 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False) -> dict[str,
     return {"status": "applied", "changes": changes}
 
 
+def find_wallpaper_image(wallpaper_name: str) -> Path | None:
+    """Locate the wallpaper image file in repo, system, or user directory."""
+    candidates = [
+        ROOT / f"wallpapers/{wallpaper_name}/contents/images/2560x1440.png",
+        ROOT / f"wallpapers/{wallpaper_name}/contents/images/1920x1080.png",
+        Path(f"/usr/share/wallpapers/{wallpaper_name}/contents/images/2560x1440.png"),
+        Path(f"/usr/share/wallpapers/{wallpaper_name}/contents/images/1920x1080.png"),
+        Path.home() / f".local/share/wallpapers/{wallpaper_name}/contents/images/2560x1440.png",
+        Path.home() / f".local/share/wallpapers/{wallpaper_name}/contents/images/1920x1080.png",
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def apply_setup(profile: str | None = None, apply_layout: bool = False, dry_run: bool = False) -> dict[str, Any]:
+    """Apply complete NoxForge setup: Global Theme, styles, icons, Aurorae, wallpaper, and optional desktop layout."""
+    target = (profile or "").lower().strip()
+    if not target:
+        status = get_current_status()
+        target = status.get("profile", "graphite")
+    if target not in ("graphite", "obsidian"):
+        target = "graphite"
+
+    is_obsidian = target == "obsidian"
+    theme_id = THEME_OBSIDIAN_ID if is_obsidian else THEME_GRAPHITE_ID
+    wallpaper_name = "NoxForge-Obsidian" if is_obsidian else "NoxForge"
+
+    # Step 1: Run comprehensive desktop synchronization
+    sync_res = sync_desktop(profile=target, dry_run=dry_run)
+    changes = dict(sync_res.get("changes", {}))
+    changes["wallpaper"] = wallpaper_name
+    changes["globalTheme"] = theme_id
+    if apply_layout:
+        changes["desktopLayout"] = "floating-panel"
+
+    if dry_run:
+        return {"status": "dry-run", "changes": changes}
+
+    # Step 2: Apply Global Look-and-Feel Theme
+    if shutil.which("plasma-apply-lookandfeel"):
+        cmd = ["plasma-apply-lookandfeel", "-a", theme_id]
+        if apply_layout:
+            cmd.append("--resetLayout")
+        run_cmd(cmd)
+
+    # Step 3: Apply Wallpaper
+    wp_path = find_wallpaper_image(wallpaper_name)
+    if wp_path and shutil.which("plasma-apply-wallpaperimage"):
+        run_cmd(["plasma-apply-wallpaperimage", str(wp_path)])
+
+    notify_plasma_kwin()
+    return {"status": "applied", "changes": changes}
+
+
 def sync_gtk_accent(hex_color: str, dry_run: bool = False) -> list[str]:
     config_dir = get_kde_config_dir()
     modified: list[str] = []
@@ -668,6 +724,27 @@ def main() -> int:
     switch_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     switch_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
+    # apply / setup
+    apply_parser = subparsers.add_parser(
+        "apply",
+        aliases=["setup"],
+        help="Apply complete NoxForge setup (Global Theme, styles, icons, Aurorae, wallpaper)",
+    )
+    apply_parser.add_argument(
+        "profile",
+        nargs="?",
+        choices=["graphite", "obsidian"],
+        default=None,
+        help="Target profile (graphite or obsidian, defaults to active)",
+    )
+    apply_parser.add_argument(
+        "--layout",
+        action="store_true",
+        help="Also apply the NoxForge floating panel desktop layout",
+    )
+    apply_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    apply_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
     # sync
     sync_parser = subparsers.add_parser("sync", help="Synchronize entire desktop (Plasma, GTK, icons, cursors, styles)")
     sync_parser.add_argument("--profile", choices=["graphite", "obsidian"], help="Target profile to synchronize (defaults to active profile)")
@@ -738,7 +815,23 @@ def main() -> int:
         print(f"  Aurorae Deco:   {status['aurorae']}")
         print(f"  KWin TabBox:    {status['kwinTabBox']}")
         print(f"  Accent Color:   {status['accent']} ({status['accentRgb'] or 'default'})")
+        print("\nQuick Start:")
+        print("  noxforge-ctl apply graphite     Apply complete Graphite setup (theme, icons, wallpaper)")
+        print("  noxforge-ctl apply obsidian     Apply complete Obsidian OLED setup")
+        print("  noxforge-ctl gui                Launch interactive Control Center GUI")
         print("\nRun 'noxforge-ctl --help' for commands, or 'noxforge-ctl gui' to launch Control Center.")
+        return 0
+
+    if args.command in ("apply", "setup"):
+        result = apply_setup(profile=args.profile, apply_layout=getattr(args, "layout", False), dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            print(f"[NoxForge] Complete setup applied: {result['changes']['profile'].upper()}" + (" (dry-run)" if args.dry_run else ""))
+            for k, v in result["changes"].items():
+                print(f"  {k}: {v}")
+            print("\nSetup complete! Enjoy your unified NoxForge desktop.")
+            print("Tip: In Dolphin, press Ctrl+M to hide classic menubar for the clean modern look.")
         return 0
 
     if args.command == "switch":

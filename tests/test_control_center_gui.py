@@ -63,6 +63,14 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertEqual(win_eco.tabs.currentIndex(), 4)
         win_eco.close()
 
+    def test_profile_accent_tab_setup_button(self) -> None:
+        """ProfileAccentTab has working 1-click full setup button and profile buttons."""
+        tab = control_center.ProfileAccentTab()
+        self.assertTrue(hasattr(tab, "setup_full_btn"))
+        self.assertTrue(tab.setup_full_btn.isEnabled())
+        self.assertTrue(tab.btn_graphite.isEnabled())
+        self.assertTrue(tab.btn_obsidian.isEnabled())
+
     def test_ecosystem_tab_instantiation(self) -> None:
         """EcosystemTab instantiates with application table and action buttons."""
         tab = control_center.EcosystemTab()
