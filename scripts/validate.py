@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate NoxForge sources and package contracts using the standard library."""
+"""Validate NoxForge sources and package contracts."""
 
 from __future__ import annotations
 
@@ -15,8 +15,9 @@ import subprocess
 import sys
 import time
 import wave
-import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import defusedxml.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME_ID = "io.github.loofiboss.noxforge.desktop"
