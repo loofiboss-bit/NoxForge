@@ -772,13 +772,19 @@ def validate_plasma_style() -> None:
         raise ValidationError("Plasma background recipes must separate blur-on and blur-off variants")
     for relative in background_variants:
         path = theme / relative
-        found = svg_ids(path)
-        if not POSITIONS.issubset(found):
+        try:
+            tree = ET.parse(path)
+        except (OSError, ET.ParseError) as error:
+            raise ValidationError(f"invalid SVG {path.relative_to(ROOT)}: {error}") from error
+
+        elements = {element.get("id"): element for element in tree.iter() if element.get("id") in POSITIONS}
+        if len(elements) != len(POSITIONS):
             raise ValidationError(f"{relative} has an incomplete seam-free background frame")
-        elements = {element.get("id"): element for element in ET.parse(path).iter() if element.get("id") in POSITIONS}
+
         paints = {frame_base_paint(element) for element in elements.values()}
-        if len(elements) != len(POSITIONS) or len(paints) != 1:
+        if len(paints) != 1:
             raise ValidationError(f"{relative} uses inconsistent frame paints that can create dark seams")
+
         variant = variant_recipes[relative]
         if set(variant) != {"recipe", "opacity", "edgeHighlight", "overlayShadow", "blur"}:
             raise ValidationError(f"{relative} has an incomplete material recipe")
