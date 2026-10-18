@@ -1,4 +1,4 @@
-%global upstream_version 17.0.0
+%global upstream_version 17.0.1
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        17.0.0
+Version:        17.0.1
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -103,6 +103,13 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sun Oct 18 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 17.0.1-1
+- Release v17.0.1 Authentic Dolphin Grid & Quick Onboarding
+- Genuine KDE Plasma 6 Dolphin icon grid view showcase in store screenshots
+- Elevated floating panel mode in desktop layout script
+- Automated 1-click noxforge-ctl apply [profile] [--layout] profile onboarding
+- Quick Onboarding button in Control Center GUI overview tab
+
 * Fri Oct 16 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 17.0.0-1
 - Release v17.0.0 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
 - Total single-source generation across all 12 QML variant surfaces (QML Schema 2)

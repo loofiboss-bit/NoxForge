@@ -3,12 +3,12 @@
   "releaseState": "release-candidate",
   "releaseReady": false,
   "candidate": {
-    "version": "17.0.0",
+    "version": "17.0.1",
     "sourceRef": "feat/v17-single-source-ecosystem",
     "sourceCommit": null,
-    "baselineCommit": "8fff7aff15cc7aa4f27812cd9c8ee429c1d21396",
+    "baselineCommit": "a8b26808b606cbd9fc4f9f356e9b46f4c9020d4d",
     "worktreeDirty": true,
-    "package": "noxforge-17.0.0-1.fc44.x86_64.rpm",
+    "package": "noxforge-17.0.1-1.fc44.x86_64.rpm",
     "artifacts": [],
     "runtimeSourceHashes": "runtime-source-hashes.json"
   },

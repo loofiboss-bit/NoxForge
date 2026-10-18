@@ -1,10 +1,10 @@
-# NoxForge 17.0.0 candidate qualification status
+# NoxForge 17.0.1 candidate qualification status
 
-Version: 17.0.0
+Version: 17.0.1
 
 Release state: candidate
 
-Baseline: 16.0.0 (`8fff7aff15cc7aa4f27812cd9c8ee429c1d21396`)
+Baseline: 17.0.0 (`a8b26808b606cbd9fc4f9f356e9b46f4c9020d4d`)
 
 ## Automated gate
 
