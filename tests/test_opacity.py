@@ -314,6 +314,34 @@ class TestNoxForgeOpacity(unittest.TestCase):
         self.assertTrue((hollow_dir / "metadata.json").is_file())
         self.assertTrue((hollow_dir / "translucent/widgets/panel-background.svg").is_file())
 
+    def test_get_xdg_data_home(self) -> None:
+        """Verify get_xdg_data_home returns correct paths based on XDG_DATA_HOME env variable."""
+        original_xdg_data_home = os.environ.get("XDG_DATA_HOME")
+
+        try:
+            # Test 1: Absolute path
+            os.environ["XDG_DATA_HOME"] = "/custom/absolute/path"
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path("/custom/absolute/path"))
+
+            # Test 2: Relative path (should fallback to default)
+            os.environ["XDG_DATA_HOME"] = "custom/relative/path"
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+            # Test 3: Empty value (should fallback to default)
+            os.environ["XDG_DATA_HOME"] = ""
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+            # Test 4: Not set (should fallback to default)
+            if "XDG_DATA_HOME" in os.environ:
+                del os.environ["XDG_DATA_HOME"]
+            self.assertEqual(noxforge_opacity.get_xdg_data_home(), Path.home() / ".local/share")
+
+        finally:
+            if original_xdg_data_home is not None:
+                os.environ["XDG_DATA_HOME"] = original_xdg_data_home
+            elif "XDG_DATA_HOME" in os.environ:
+                del os.environ["XDG_DATA_HOME"]
+
 
 if __name__ == "__main__":
     unittest.main()
