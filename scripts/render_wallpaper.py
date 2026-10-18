@@ -78,7 +78,7 @@ def render(
         "-strip",
         "-define", "png:exclude-chunks=date,time",
         "-define", "png:compression-level=9",
-        "-define", "png:compression-filter=5",
+
         f"{'PNG8' if indexed else 'PNG24'}:{destination}",
     ]
     subprocess.run(command, check=True)
@@ -88,7 +88,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="fail when rendered files drift")
     args = parser.parse_args()
-    magick = shutil.which("magick")
+    magick = shutil.which("magick") or shutil.which("convert")
     if not magick:
         print("ImageMagick 'magick' is required to render the wallpaper", file=sys.stderr)
         return 1

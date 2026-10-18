@@ -233,7 +233,7 @@ def main() -> int:
     mode.add_argument("--check", action="store_true", help="verify committed atlas evidence (default)")
     arguments = parser.parse_args()
 
-    magick = shutil.which("magick")
+    magick = shutil.which("magick") or shutil.which("convert")
     if not magick:
         raise SystemExit("ImageMagick 'magick' is required for Plasma raster checks")
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
