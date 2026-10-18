@@ -15,7 +15,7 @@ import subprocess
 import sys
 import time
 import wave
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
