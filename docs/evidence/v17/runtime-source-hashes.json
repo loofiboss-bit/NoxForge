@@ -898,7 +898,7 @@
   "src/style/noxforgemotion.cpp": "b7b8aa7c9e04656d3cc6ddd38835fe5257d5180c24ebe8c6ba1d85a411333af9",
   "src/style/noxforgemotion.h": "476ccad20222bbe33f839374b0bdd459102eece2df4c3272a0665f19a52f1d5f",
   "src/style/noxforgepalette.h": "955bfc582b37057e3a9eaef0c1bde04f0da550ec9b33583924d31ace1dbb16a5",
-  "src/style/noxforgestyle.cpp": "30f966a6bfce450e7f480ddefd940f4ba2c74c8ed9d327e78f79169e46bff2b2",
+  "src/style/noxforgestyle.cpp": "e36628f9e2292f2d5fbe8b45eeb1cb8dd4ba0ab7649f162afe016252ab1b2a0a",
   "src/style/noxforgestyle.h": "50130bf9df26695ddcfe38a6053ec03c0c899ff634c65c2e4f97768c4776ae0a",
   "src/style/noxforgestyleplugin.cpp": "fc975cca83a0c59aa5a12cc1bcedd2d6c7546ddde5a64e0ef486888747faf8ba",
   "src/style/noxforgestyleplugin.json": "0dd81f894bf9d2bc02e0bc01429a7044f3730553b1b44671f5db180576297704",
