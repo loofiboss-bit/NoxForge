@@ -114,5 +114,8 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: Install dependencies
+        run: pip install defusedxml
+
       - name: Verify committed Aurorae streams
         run: python -m unittest tests.test_phase3.PhaseThreeTests.test_aurorae_compression_is_reproducible -v
