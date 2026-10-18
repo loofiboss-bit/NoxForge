@@ -30,6 +30,25 @@ namespace NP = NoxForgePalette;
 
 namespace {
 
+QColor parseKdeAccentColor(const QString &accentStr)
+{
+    if (accentStr.isEmpty()) {
+        return QColor();
+    }
+    const auto parts = accentStr.split(QLatin1Char(','));
+    if (parts.size() < 3) {
+        return QColor();
+    }
+    bool okR = false, okG = false, okB = false;
+    const int r = parts[0].trimmed().toInt(&okR);
+    const int g = parts[1].trimmed().toInt(&okG);
+    const int b = parts[2].trimmed().toInt(&okB);
+    if (okR && okG && okB) {
+        return QColor(r, g, b);
+    }
+    return QColor();
+}
+
 bool isObsidianConfig()
 {
     const QString env = qEnvironmentVariable("NOXFORGE_VARIANT");
@@ -94,20 +113,7 @@ QColor activeAccent(const QStyleOption *option = nullptr)
             QSettings settings(path, QSettings::IniFormat);
             settings.beginGroup(QStringLiteral("General"));
             const QString accentStr = settings.value(QStringLiteral("AccentColor")).toString();
-            if (!accentStr.isEmpty()) {
-                const auto parts = accentStr.split(QLatin1Char(','));
-                if (parts.size() >= 3) {
-                    bool okR = false, okG = false, okB = false;
-                    const int r = parts[0].trimmed().toInt(&okR);
-                    const int g = parts[1].trimmed().toInt(&okG);
-                    const int b = parts[2].trimmed().toInt(&okB);
-                    if (okR && okG && okB) {
-                        cachedAccent = QColor(r, g, b);
-                    }
-                }
-            } else {
-                cachedAccent = QColor();
-            }
+            cachedAccent = parseKdeAccentColor(accentStr);
         } else {
             cachedAccent = QColor();
         }
