@@ -50,6 +50,28 @@ class TestNoxForgeOpacity(unittest.TestCase):
     def tearDown(self) -> None:
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
+    def test_get_xdg_cache_home(self) -> None:
+        """Verify get_xdg_cache_home handles valid and invalid XDG_CACHE_HOME env vars."""
+        old_env = os.environ.get("XDG_CACHE_HOME")
+
+        try:
+            # 1. Absolute path
+            os.environ["XDG_CACHE_HOME"] = "/tmp/custom_cache"
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path("/tmp/custom_cache"))
+
+            # 2. Relative path (should be ignored, fallback to ~/.cache)
+            os.environ["XDG_CACHE_HOME"] = "relative/path"
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path.home() / ".cache")
+
+            # 3. Unset
+            os.environ.pop("XDG_CACHE_HOME", None)
+            self.assertEqual(noxforge_opacity.get_xdg_cache_home(), Path.home() / ".cache")
+        finally:
+            if old_env is not None:
+                os.environ["XDG_CACHE_HOME"] = old_env
+            else:
+                os.environ.pop("XDG_CACHE_HOME", None)
+
     def test_presets_defined(self) -> None:
         self.assertIn("solid", noxforge_opacity.PRESETS)
         self.assertIn("original", noxforge_opacity.PRESETS)
