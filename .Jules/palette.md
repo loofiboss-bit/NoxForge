@@ -1,0 +1,3 @@
+## 2025-02-23 - Accessibility Names and Shortcut Discoverability
+**Learning:** In Qt applications, dynamically created `QSlider` widgets and widgets without a directly associated buddy label (via `setBuddy()`) will often lack accessible names for screen readers unless explicitly set with `setAccessibleName()`. Also, global `QShortcut` bindings are hidden from users unless explicitly documented in UI tooltips.
+**Action:** Always assign explicit `setAccessibleName` values when dynamically generating input components or when the standard label association pattern isn't applicable. Ensure all global shortcuts are discoverable by appending them to the tooltips of their corresponding visual action buttons.
