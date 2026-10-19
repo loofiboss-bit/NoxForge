@@ -911,7 +911,7 @@
   "tools/noxforge-live-input.cpp": "e043115717b583054fbf45cfd211a587b49a3288f159e10282241b1f65adaa97",
   "tools/noxforge-live-probe.cpp": "ad4f7992fbfc0d7bbe6f8cab620ce855bcc8f7e91f0bcadc44a29575281c4be8",
   "tools/noxforge-opacity": "db156495b900603236289ee8043025b3fd188fdf0232b39d9ac1ef8a627fe255",
-  "tools/opacity_gui.py": "a7aa9bdb30ec2e5cc26c0fe19b2085103ff8b05904e5d48f4d1b1405c02f7e49",
+  "tools/opacity_gui.py": "d2c3504313fe0de88ab9ba7aa359d68b20fb455f3410478eee821e2eb3085443",
   "tools/sddm_renderer.cpp": "7d939bbda1a0de5441f2ed46686387bb4ac4f6a7a9176a01ad742d3221a7fc17",
   "tools/session_renderer.cpp": "8b71db33ef475b1e73387cd8751888eb37efc8d5b6a2041dcf56c38425a10f31",
   "tools/widget_gallery.cpp": "2e2aa5ad055d9cf645e88431cf316700d0f2f69e7603f2fea3325f607272e256",
