@@ -1,0 +1,3 @@
+## 2026-10-20 - [Keyboard Navigation Enhancements]
+**Learning:** PySide6/Qt applications within this codebase require explicit `setAccessibleName()` values to dynamically generated inputs (like `QSlider`) or widgets lacking a `setBuddy()` association. Also, ensure all global `QShortcut` bindings are discoverable by appending them to the tooltips of their corresponding visual action buttons.
+**Action:** Append tooltips specifying keyboard shortcuts for `Apply Transparency` and `Reset Defaults` buttons. Explicitly define accessible names to sliders generated through helper functions like `make_slider_row`.
