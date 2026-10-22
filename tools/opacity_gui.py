@@ -411,9 +411,10 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         if self.wallpaper_image and not self.wallpaper_image.isNull():
             if self._cached_scaled_wallpaper is None or self._cached_size != (w, h):
                 scaled = self.wallpaper_image.scaled(
-                    w, h,
+                    w,
+                    h,
                     QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
+                    QtCore.Qt.TransformationMode.SmoothTransformation,
                 )
                 self._cached_size = (w, h)
                 # Center crop to exact widget bounds
@@ -425,14 +426,13 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
                 blur_w = max(16, w // 8)
                 blur_h = max(16, h // 8)
                 small = self._cached_scaled_wallpaper.scaled(
-                    blur_w, blur_h,
+                    blur_w,
+                    blur_h,
                     QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
+                    QtCore.Qt.TransformationMode.SmoothTransformation,
                 )
                 self._cached_blurred_wallpaper = small.scaled(
-                    w, h,
-                    QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
+                    w, h, QtCore.Qt.AspectRatioMode.IgnoreAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation
                 )
 
             painter.drawImage(0, 0, self._cached_scaled_wallpaper)
@@ -524,7 +524,9 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             draw_frosted_surface(body_rect, body_col)
 
             # Inner subtle content preview
-            painter.fillRect(QtCore.QRect(win_x + 12, win_y + tb_h + 12, 70, win_h - tb_h - 24), QtGui.QColor(16, 25, 31, 180))
+            painter.fillRect(
+                QtCore.QRect(win_x + 12, win_y + tb_h + 12, 70, win_h - tb_h - 24), QtGui.QColor(16, 25, 31, 180)
+            )
             painter.setPen(QtGui.QColor("#A6B4B9"))
             font.setPointSize(9)
             font.setBold(False)
@@ -608,16 +610,20 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         painter.fillRect(QtCore.QRect(panel_x + 10, panel_y + 10, 24, 24), QtGui.QColor(27, 40, 49, 200))
         painter.setPen(QtGui.QColor("#A3FF47"))
         painter.setBrush(QtGui.QColor("#A3FF47"))
-        painter.drawPolygon([
-            QtCore.QPoint(panel_x + 14, panel_y + 14),
-            QtCore.QPoint(panel_x + 30, panel_y + 14),
-            QtCore.QPoint(panel_x + 22, panel_y + 30),
-        ])
+        painter.drawPolygon(
+            [
+                QtCore.QPoint(panel_x + 14, panel_y + 14),
+                QtCore.QPoint(panel_x + 30, panel_y + 14),
+                QtCore.QPoint(panel_x + 22, panel_y + 30),
+            ]
+        )
 
         # Active task on panel
         task_w = 110
         painter.fillRect(QtCore.QRect(panel_x + 44, panel_y + 8, task_w, 28), QtGui.QColor(27, 40, 49, 160))
-        painter.fillRect(QtCore.QRect(panel_x + 44, panel_y + panel_h - 2, task_w, 2), QtGui.QColor("#A3FF47"))  # Lime bottom rail
+        painter.fillRect(
+            QtCore.QRect(panel_x + 44, panel_y + panel_h - 2, task_w, 2), QtGui.QColor("#A3FF47")
+        )  # Lime bottom rail
         painter.setPen(QtGui.QColor("#E8F0F2"))
         font.setPointSize(9)
         painter.setFont(font)
@@ -746,6 +752,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             lbl = QtWidgets.QLabel(label_text)
             lbl.setFixedWidth(130)
             slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
+            slider.setAccessibleName(label_text.replace(":", "").strip())
             slider.setRange(10, 100)
             slider.setValue(default_val)
             slider.setMinimumHeight(24)
@@ -826,10 +833,12 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
         action_layout = QtWidgets.QHBoxLayout()
         self.btn_reset = QtWidgets.QPushButton("Reset Defaults")
+        self.btn_reset.setToolTip("Reset Defaults (Ctrl+R)")
         self.btn_reset.clicked.connect(self._on_reset_clicked)
 
         self.btn_apply = QtWidgets.QPushButton("Apply Transparency")
         self.btn_apply.setObjectName("applyButton")
+        self.btn_apply.setToolTip("Apply Transparency (Ctrl+S / Ctrl+Return)")
         self.btn_apply.clicked.connect(self._on_apply_clicked)
 
         action_layout.addWidget(self.btn_reset)
@@ -1031,6 +1040,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         )
         if reply == QtWidgets.QMessageBox.StandardButton.Yes:
             import subprocess
+
             try:
                 clear_cache_and_reload()
                 subprocess.Popen(["systemctl", "--user", "restart", "plasma-plasmashell"])
@@ -1060,8 +1070,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         )
 
         theme_filter = (
-            "graphite" if self.radio_graphite.isChecked() else
-            "obsidian" if self.radio_obsidian.isChecked() else "all"
+            "graphite" if self.radio_graphite.isChecked() else "obsidian" if self.radio_obsidian.isChecked() else "all"
         )
 
         self.btn_apply.setEnabled(False)
@@ -1099,6 +1108,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def _open_kde_effects(self) -> None:
         import subprocess
+
         for cmd in (["systemsettings", "kcm_kwin_effects"], ["kcmshell6", "kcm_kwin_effects"]):
             try:
                 subprocess.Popen(cmd)
