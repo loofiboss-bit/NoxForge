@@ -70,6 +70,8 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(tab.setup_full_btn.isEnabled())
         self.assertTrue(tab.btn_graphite.isEnabled())
         self.assertTrue(tab.btn_obsidian.isEnabled())
+        self.assertEqual(tab.test_box.accessibleName(), "Kinetic Motion Test Input")
+        self.assertEqual(tab.sched_check.accessibleName(), "Enable automatic profile switching")
 
     def test_ecosystem_tab_instantiation(self) -> None:
         """EcosystemTab instantiates with application table and action buttons."""
@@ -81,6 +83,8 @@ class TestControlCenterGUI(unittest.TestCase):
     def test_accessibility_tab_contrast_readout(self) -> None:
         """AccessibilityTab contrast readout validates high-contrast vs low-contrast hex."""
         tab = control_center.AccessibilityTab()
+        self.assertEqual(tab.sim_input.accessibleName(), "Simulation preview box")
+        self.assertEqual(tab.hex_input.accessibleName(), "Custom Hex Input")
 
         # Valid high-contrast Electric Lime
         tab.update_contrast_readout("#A3FF47")
