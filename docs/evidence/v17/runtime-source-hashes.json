@@ -902,7 +902,7 @@
   "src/style/noxforgestyle.h": "50130bf9df26695ddcfe38a6053ec03c0c899ff634c65c2e4f97768c4776ae0a",
   "src/style/noxforgestyleplugin.cpp": "fc975cca83a0c59aa5a12cc1bcedd2d6c7546ddde5a64e0ef486888747faf8ba",
   "src/style/noxforgestyleplugin.json": "0dd81f894bf9d2bc02e0bc01429a7044f3730553b1b44671f5db180576297704",
-  "tools/control_center.py": "dd92bc5219ddbead1f72cbbdd5c7dc628762f19d9ab8523fa0759ee99f4ef0f3",
+  "tools/control_center.py": "5d349931480e7a9ee2751a4e9d16fe400a30994c205b0ce7c1d7964bf5ec670b",
   "tools/fastfetch/noxforge.jsonc": "38e276d5d22954c8a1209010f2feb493c0c33fc18e4d541fab9207d409d4fde6",
   "tools/motion_state_renderer.cpp": "2120055d06bbd2b989911610caba455459d3c856a5b39389020e703033ef0106",
   "tools/north_star_renderer.cpp": "951b6290429ae8a83985f9246f27b54f873fcdcce26c45c89bbfe0edd685df3f",

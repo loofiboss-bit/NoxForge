@@ -240,6 +240,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         motion_row = QtWidgets.QHBoxLayout()
         self.test_box = QtWidgets.QLineEdit(f"NoxForge Kinetic Motion v{APP_VERSION}")
         self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
+        self.test_box.setAccessibleName("Kinetic Motion Test Input")
         self.test_box.setStyleSheet(
             "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
             "color: #E8F0F2; padding: 6px 12px; font-size: 12px;"
@@ -258,6 +259,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         sched_group = QtWidgets.QGroupBox("Day / Night Automation")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
         self.sched_check = QtWidgets.QCheckBox("Enable automatic profile switching:")
+        self.sched_check.setAccessibleName("Enable automatic profile switching")
         self.sched_check.setStyleSheet("color: #E8F0F2; font-weight: 500;")
         self.sched_check.toggled.connect(self.toggle_schedule)
         s_layout.addWidget(self.sched_check)
@@ -491,6 +493,7 @@ class AccessibilityTab(QtWidgets.QWidget):
         sim_row = QtWidgets.QHBoxLayout()
         self.sim_input = QtWidgets.QLineEdit("Authentication Error Indicator")
         self.sim_input.setReadOnly(True)
+        self.sim_input.setAccessibleName("Simulation preview box")
         self.sim_input.setStyleSheet(
             "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
             "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
@@ -523,6 +526,7 @@ class AccessibilityTab(QtWidgets.QWidget):
         self.hex_input = QtWidgets.QLineEdit("#A3FF47")
         self.hex_input.setPlaceholderText("#RRGGBB (e.g. #A3FF47)")
         self.hex_input.setMaxLength(7)
+        self.hex_input.setAccessibleName("Custom Hex Input")
         self.hex_input.textChanged.connect(self.update_contrast_readout)
 
         self.color_swatch = QtWidgets.QLabel("  PREVIEW  ")
