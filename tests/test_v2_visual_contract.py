@@ -17,11 +17,10 @@ class VisualContractTests(unittest.TestCase):
             ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
             ROOT / "sddm/NoxForge/Main.qml",
         )
-        pattern = re.compile(r"#[0-9A-Fa-f]{6,8}")
         for path in files:
             text = path.read_text(encoding="utf-8")
             self.assertIn("Tokens {", text)
-            self.assertIsNone(pattern.search(text))
+            self.assertIsNone(re.search(r"#[0-9A-Fa-f]{6,8}", text))
 
     def test_token_and_brand_copies_are_physical_and_identical(self) -> None:
         roots = (

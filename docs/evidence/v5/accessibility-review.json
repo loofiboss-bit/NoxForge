@@ -13,63 +13,55 @@
   },
   "contrastPairs": {
     "busy-on-control": {
-      "actual": 8.33,
+      "actual": 8.81,
       "minimum": 4.5
     },
     "disabled-on-control": {
-      "actual": 3.8,
+      "actual": 3.7,
       "minimum": 3.0
     },
     "error-on-control": {
-      "actual": 5.48,
+      "actual": 5.79,
       "minimum": 4.5
     },
     "pressed-primary-action": {
-      "actual": 10.54,
+      "actual": 10.6,
       "minimum": 7.0
     },
     "primary-action": {
-      "actual": 14.99,
+      "actual": 15.07,
       "minimum": 7.0
     },
     "primary-on-canvas": {
-      "actual": 16.07,
+      "actual": 16.16,
       "minimum": 7.0
     },
     "primary-on-control": {
-      "actual": 13.04,
+      "actual": 13.78,
       "minimum": 7.0
     },
     "primary-on-hover": {
-      "actual": 10.36,
-      "minimum": 7.0
-    },
-    "primary-on-overlay": {
-      "actual": 11.45,
+      "actual": 12.35,
       "minimum": 7.0
     },
     "primary-on-selection": {
-      "actual": 11.42,
-      "minimum": 7.0
-    },
-    "primary-on-sunken": {
-      "actual": 15.39,
+      "actual": 11.17,
       "minimum": 7.0
     },
     "primary-on-surface": {
-      "actual": 14.63,
+      "actual": 15.04,
       "minimum": 7.0
     },
     "secondary-on-canvas": {
-      "actual": 8.71,
+      "actual": 8.76,
       "minimum": 4.5
     },
     "secondary-on-surface": {
-      "actual": 7.93,
+      "actual": 8.15,
       "minimum": 4.5
     },
     "success-on-control": {
-      "actual": 12.16,
+      "actual": 12.85,
       "minimum": 4.5
     }
   },
@@ -85,15 +77,13 @@
   },
   "schemaVersion": 1,
   "sources": {
-    "DESIGN.md": "318cc8652c32f92c7daf96d81b393cdfd440e1346516e452e5bc4f6113600a98",
-    "design/tokens.json": "75412a48c461bdcc69c19c01e220c5419b96c670b024046ab750e3aec472a30b",
+    "DESIGN.md": "6833adfb38eb6b30ac6359721925a290fbe993bb7479451ec7be9c719ec14e81",
+    "design/tokens.json": "396f2c583b4291af4b5278e3cd8ac38bc4c20275ec4184c5f86322358b7f3e1a",
     "docs/evidence/v5/session-surfaces.json": "d3efbb59831945140729a3693034e2f5ea498f752e99887335062ef4bc66549e",
-    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/MotionPolicy.qml": "f85a2b37b7246011b30dc70bba781dca7d8c92518e0591e3a82f88a25bbd9281",
-    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "ed58d424fbc0d4cf41cb5185a80416cc67d69f0f514f95cab543a87131882f0c",
-    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "d06b9378f8a00a408fe969c04603a2e632820c036c2991d26234ccc51b773771",
-    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/MotionPolicy.qml": "f85a2b37b7246011b30dc70bba781dca7d8c92518e0591e3a82f88a25bbd9281",
-    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "16b8e0306f55fcd6adabfefd377ad53f80bf431f221e52dafc82f26eeefb248e",
-    "sddm/NoxForge/Main.qml": "d0f5c6c6acaee46fae2aad1cc02dcbdcd8c0f41595178138923f7ac33bf23e53"
+    "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml": "39498711fb415bafe5d37c0abc819e76595a4591d35d6fad3234fb31e0ce748b",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml": "a11f4ac45a00252ff494e9c2cdc75ef7177ae56d5b72ab1d19adc5acab36033c",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml": "16d5d6bcaa7f70bd61203e7ff2fc3b8bfd760e7b786d38222f052be069ad2d7d",
+    "sddm/NoxForge/Main.qml": "78fda9408bc826d71ff50e704f226eefd1506cad1482ad982f91a6a02581bb0e"
   },
-  "systemFont": "DejaVu Sans"
+  "systemFont": "Noto Sans"
 }

@@ -71,37 +71,6 @@ bool isObsidianMode(const QStyleOption *option = nullptr, const QWidget *widget 
     return isObsidianConfig();
 }
 
-static void updateCachedAccent(QColor &cachedAccent)
-{
-    const QString path = QStandardPaths::locate(
-        QStandardPaths::GenericConfigLocation, QStringLiteral("kdeglobals"));
-    if (path.isEmpty()) {
-        cachedAccent = QColor();
-        return;
-    }
-
-    QSettings settings(path, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("General"));
-    const QString accentStr = settings.value(QStringLiteral("AccentColor")).toString();
-    if (accentStr.isEmpty()) {
-        cachedAccent = QColor();
-        return;
-    }
-
-    const auto parts = accentStr.split(QLatin1Char(','));
-    if (parts.size() < 3) {
-        return;
-    }
-
-    bool okR = false, okG = false, okB = false;
-    const int r = parts[0].trimmed().toInt(&okR);
-    const int g = parts[1].trimmed().toInt(&okG);
-    const int b = parts[2].trimmed().toInt(&okB);
-    if (okR && okG && okB) {
-        cachedAccent = QColor(r, g, b);
-    }
-}
-
 QColor activeAccent(const QStyleOption *option = nullptr)
 {
     Q_UNUSED(option);
@@ -119,7 +88,29 @@ QColor activeAccent(const QStyleOption *option = nullptr)
     const qint64 now = QDateTime::currentMSecsSinceEpoch();
     if (now - lastCheckedMs > 1000) {
         lastCheckedMs = now;
-        updateCachedAccent(cachedAccent);
+        const QString path = QStandardPaths::locate(
+            QStandardPaths::GenericConfigLocation, QStringLiteral("kdeglobals"));
+        if (!path.isEmpty()) {
+            QSettings settings(path, QSettings::IniFormat);
+            settings.beginGroup(QStringLiteral("General"));
+            const QString accentStr = settings.value(QStringLiteral("AccentColor")).toString();
+            if (!accentStr.isEmpty()) {
+                const auto parts = accentStr.split(QLatin1Char(','));
+                if (parts.size() >= 3) {
+                    bool okR = false, okG = false, okB = false;
+                    const int r = parts[0].trimmed().toInt(&okR);
+                    const int g = parts[1].trimmed().toInt(&okG);
+                    const int b = parts[2].trimmed().toInt(&okB);
+                    if (okR && okG && okB) {
+                        cachedAccent = QColor(r, g, b);
+                    }
+                }
+            } else {
+                cachedAccent = QColor();
+            }
+        } else {
+            cachedAccent = QColor();
+        }
     }
     if (cachedAccent.isValid()) {
         return cachedAccent;

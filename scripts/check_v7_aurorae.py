@@ -9,7 +9,7 @@ import gzip
 import hashlib
 import json
 import sys
-import defusedxml.ElementTree as ET
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 

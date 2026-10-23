@@ -144,9 +144,8 @@ def create_report() -> dict[str, object]:
         path.relative_to(ROOT).as_posix(): path.read_text(encoding="utf-8")
         for path in RUNTIME_QML
     }
-    font_family_pattern = re.compile(r"\bfont\.family\s*:")
     hardcoded_fonts = [
-        path for path, text in qml_text.items() if font_family_pattern.search(text)
+        path for path, text in qml_text.items() if re.search(r"\bfont\.family\s*:", text)
     ]
     if hardcoded_fonts:
         raise RuntimeError(f"runtime QML hardcodes font families: {hardcoded_fonts}")
