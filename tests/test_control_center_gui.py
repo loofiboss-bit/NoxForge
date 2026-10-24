@@ -71,7 +71,6 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(tab.btn_graphite.isEnabled())
         self.assertTrue(tab.btn_obsidian.isEnabled())
         self.assertEqual(tab.test_box.accessibleName(), "Kinetic Motion Test Input")
-        self.assertEqual(tab.sched_check.accessibleName(), "Enable automatic profile switching")
 
     def test_ecosystem_tab_instantiation(self) -> None:
         """EcosystemTab instantiates with application table and action buttons."""

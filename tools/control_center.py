@@ -253,7 +253,6 @@ class ProfileAccentTab(QtWidgets.QWidget):
         sched_group = QtWidgets.QGroupBox("Day / Night Automation")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
         self.sched_check = QtWidgets.QCheckBox("Enable automatic profile switching:")
-        self.sched_check.setAccessibleName("Enable automatic profile switching")
         self.sched_check.setStyleSheet("color: #E8F0F2; font-weight: 500;")
         self.sched_check.toggled.connect(self.toggle_schedule)
         s_layout.addWidget(self.sched_check)
@@ -570,7 +569,6 @@ class AccessibilityTab(QtWidgets.QWidget):
         # System-Wide Reduced Motion Live Toggle
         toggle_row = QtWidgets.QHBoxLayout()
         self.chk_reduced_motion = QtWidgets.QCheckBox("Enable System-Wide Reduced Motion (0ms animations, static focus rings)")
-        self.chk_reduced_motion.setAccessibleName("Enable System-Wide Reduced Motion")
         self.chk_reduced_motion.setStyleSheet("font-weight: 600;")
         self.chk_reduced_motion.toggled.connect(self.toggle_reduced_motion)
 
