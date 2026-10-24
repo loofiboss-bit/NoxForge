@@ -179,6 +179,114 @@ progressbar progress, scale highlight {
     border-color: @accent_color;
 }
 
+/* Text and view selections */
+selection, ::selection, entry selection, textview text selection, label selection {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* Libadwaita & GTK 4 Navigation Sidebars, Boxed Lists & Cards */
+.navigation-sidebar {
+    background-color: #10191F;
+    color: #E8F0F2;
+}
+
+.navigation-sidebar > row {
+    background-color: transparent;
+    border-radius: 6px;
+    margin: 2px 6px;
+    padding: 6px 10px;
+}
+
+.navigation-sidebar > row:hover {
+    background-color: #283942;
+}
+
+.navigation-sidebar > row:selected {
+    background-color: @theme_view_active;
+    color: #E8F0F2;
+    border-left: 3px solid @accent_color;
+}
+
+list.boxed-list, card, .card {
+    background-color: #1B2831;
+    border: 1px solid #2F414B;
+    border-radius: 6px;
+    color: #E8F0F2;
+}
+
+list.boxed-list > row {
+    background-color: #1B2831;
+    border-bottom: 1px solid #2F414B;
+    padding: 8px 12px;
+}
+
+list.boxed-list > row:hover {
+    background-color: #283942;
+}
+
+/* Libadwaita TabBar, Popovers, Menus, Toasts & Banners */
+tabbar tab {
+    background-color: #10191F;
+    color: #A6B4B9;
+    border: 1px solid #2F414B;
+    border-bottom: none;
+    padding: 6px 12px;
+}
+
+tabbar tab:checked, tabbar tab:selected {
+    background-color: #141E25;
+    color: #E8F0F2;
+    border-top: 2px solid @accent_color;
+}
+
+popover > contents, popover.menu > contents, menu {
+    background-color: #22323B;
+    border: 1px solid #4B606A;
+    border-radius: 8px;
+    color: #E8F0F2;
+    padding: 4px;
+}
+
+modelbutton:hover, menuitem:hover {
+    background-color: @theme_view_active;
+    color: #E8F0F2;
+    border-left: 2px solid @accent_color;
+}
+
+toast {
+    background-color: #22323B;
+    border: 1px solid @accent_color;
+    border-radius: 6px;
+    color: #E8F0F2;
+    padding: 8px 14px;
+}
+
+banner > revealer > widget {
+    background-color: @theme_view_active;
+    border-bottom: 1px solid @accent_color;
+    color: #E8F0F2;
+    padding: 6px 12px;
+}
+
+actionbar > revealer > box, searchbar > revealer > box {
+    background-color: #10191F;
+    border-color: #2F414B;
+    color: #E8F0F2;
+}
+
+spinbutton, dropdown > button {
+    background-color: #1B2831;
+    border: 1px solid #2F414B;
+    border-radius: 6px;
+    color: #E8F0F2;
+}
+
+spinbutton:focus-within, dropdown > button:focus {
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
+}
+
 /* Tooltips */
 tooltip {
     background-color: #22323B;

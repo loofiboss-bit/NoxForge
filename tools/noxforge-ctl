@@ -543,21 +543,36 @@ def manage_flatpak(action: str = "status", dry_run: bool = False) -> dict[str, A
     raise ValueError(f"Unknown flatpak action: {action!r}")
 
 
-def manage_schedule(action: str, day_time: str = "07:00", night_time: str = "20:00") -> dict[str, Any]:
-    systemd_user = Path.home() / ".config/systemd/user"
+def manage_schedule(
+    action: str,
+    day_time: str = "07:00",
+    night_time: str = "20:00",
+    now_hm: str | None = None,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    systemd_user = get_kde_config_dir() / "systemd/user"
     service_path = systemd_user / "noxforge-daynight.service"
     timer_path = systemd_user / "noxforge-daynight.timer"
+    can_use_systemctl = bool(
+        not dry_run
+        and shutil.which("systemctl")
+        and systemd_user.resolve() == (Path.home() / ".config/systemd/user").resolve()
+    )
 
     if action == "status":
         has_timer = timer_path.is_file()
         is_active = False
         sched_desc = "none"
+        parsed_day = day_time
+        parsed_night = night_time
         if has_timer:
             try:
                 txt = timer_path.read_text(encoding="utf-8")
                 times = [line.split()[-1] for line in txt.splitlines() if line.startswith("OnCalendar=")]
                 if len(times) >= 2:
-                    sched_desc = f"{times[0][:5]} (Graphite) / {times[1][:5]} (Obsidian)"
+                    parsed_day = times[0][:5]
+                    parsed_night = times[1][:5]
+                    sched_desc = f"{parsed_day} (Graphite) / {parsed_night} (Obsidian)"
                 else:
                     sched_desc = "configured"
             except Exception:
@@ -565,34 +580,61 @@ def manage_schedule(action: str, day_time: str = "07:00", night_time: str = "20:
         if has_timer and shutil.which("systemctl"):
             res = run_cmd(["systemctl", "--user", "is-active", "noxforge-daynight.timer"])
             is_active = res.stdout.strip() == "active"
-        return {"scheduled": has_timer, "active": is_active, "schedule": sched_desc}
+        return {
+            "scheduled": has_timer,
+            "active": is_active,
+            "schedule": sched_desc,
+            "dayTime": parsed_day,
+            "nightTime": parsed_night,
+        }
 
     if action == "disable":
-        if shutil.which("systemctl"):
+        if can_use_systemctl:
             run_cmd(["systemctl", "--user", "disable", "--now", "noxforge-daynight.timer"])
-        if timer_path.exists():
-            timer_path.unlink()
-        if service_path.exists():
-            service_path.unlink()
-        return {"status": "disabled"}
+        if not dry_run:
+            if timer_path.exists():
+                timer_path.unlink()
+            if service_path.exists():
+                service_path.unlink()
+        return {"status": "disabled" if not dry_run else "dry-run"}
+
+    if action == "apply-now":
+        info = manage_schedule("status", day_time=day_time, night_time=night_time)
+        eff_day = info.get("dayTime") or day_time
+        eff_night = info.get("nightTime") or night_time
+        if not now_hm:
+            import datetime
+
+            now_hm = datetime.datetime.now().strftime("%H:%M")
+        target_profile = noxforge_core.evaluate_schedule_profile(now_hm, eff_day, eff_night)
+        switch_res = switch_profile(target_profile, dry_run=dry_run)
+        return {
+            "status": "applied" if not dry_run else "dry-run",
+            "now": now_hm,
+            "dayTime": eff_day,
+            "nightTime": eff_night,
+            "profile": target_profile,
+            "changes": switch_res.get("changes", {}),
+        }
 
     if action == "enable":
         time_re = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
         if not time_re.match(day_time) or not time_re.match(night_time):
             raise ValueError(f"Invalid time format (expected HH:MM): day={day_time!r}, night={night_time!r}")
-        systemd_user.mkdir(parents=True, exist_ok=True)
-        ctl_bin = Path(__file__).resolve()
-        service_content = f"""[Unit]
+        if not dry_run:
+            systemd_user.mkdir(parents=True, exist_ok=True)
+            ctl_bin = Path(__file__).resolve()
+            service_content = f"""[Unit]
 Description=NoxForge Day/Night Profile Switcher
 After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c 'TIME=$(date +%%H:%%M); if [[ "$TIME" > "{day_time}" || "$TIME" == "{day_time}" ]] && [[ "$TIME" < "{night_time}" ]]; then {ctl_bin} switch graphite; else {ctl_bin} switch obsidian; fi'
+ExecStart="{sys.executable}" "{ctl_bin}" schedule --apply-now --day-time {day_time} --night-time {night_time}
 """
-        service_path.write_text(service_content, encoding="utf-8")
+            service_path.write_text(service_content, encoding="utf-8")
 
-        timer_content = f"""[Unit]
+            timer_content = f"""[Unit]
 Description=NoxForge Day/Night Transition Timer
 
 [Timer]
@@ -603,14 +645,221 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 """
-        timer_path.write_text(timer_content, encoding="utf-8")
+            timer_path.write_text(timer_content, encoding="utf-8")
 
-        if shutil.which("systemctl"):
-            run_cmd(["systemctl", "--user", "daemon-reload"])
-            run_cmd(["systemctl", "--user", "enable", "--now", "noxforge-daynight.timer"])
-        return {"status": "enabled", "schedule": f"{day_time} (Graphite) / {night_time} (Obsidian)"}
+            if can_use_systemctl:
+                run_cmd(["systemctl", "--user", "daemon-reload"])
+                run_cmd(["systemctl", "--user", "enable", "--now", "noxforge-daynight.timer"])
+        return {
+            "status": "enabled" if not dry_run else "dry-run",
+            "schedule": f"{day_time} (Graphite) / {night_time} (Obsidian)",
+            "dayTime": day_time,
+            "nightTime": night_time,
+        }
 
     return {"status": "unknown"}
+
+
+def manage_motion(action: str = "status", dry_run: bool = False) -> dict[str, Any]:
+    """Inspect or configure KDE Plasma / NoxForge Reduced Motion policy."""
+    act = action.strip().lower()
+    if act == "status":
+        factor_raw = read_kconfig("kdeglobals", "KDE", "AnimationDurationFactor", "").strip()
+        env_override = os.environ.get("NOXFORGE_REDUCED_MOTION", "").strip()
+        try:
+            factor_val = float(factor_raw) if factor_raw else 1.0
+        except ValueError:
+            factor_val = 1.0
+        is_reduced = factor_val == 0.0 or env_override in ("1", "true", "yes")
+        return {
+            "status": "ok",
+            "mode": "reduced" if is_reduced else "standard",
+            "reducedMotion": is_reduced,
+            "animationDurationFactor": factor_val,
+        }
+
+    if act in ("reduced", "enable"):
+        if not dry_run:
+            write_kconfig("kdeglobals", "KDE", "AnimationDurationFactor", "0")
+            notify_plasma_kwin()
+        return {
+            "status": "applied" if not dry_run else "dry-run",
+            "mode": "reduced",
+            "reducedMotion": True,
+            "animationDurationFactor": 0.0,
+        }
+
+    if act in ("standard", "disable"):
+        if not dry_run:
+            write_kconfig("kdeglobals", "KDE", "AnimationDurationFactor", "1")
+            notify_plasma_kwin()
+        return {
+            "status": "applied" if not dry_run else "dry-run",
+            "mode": "standard",
+            "reducedMotion": False,
+            "animationDurationFactor": 1.0,
+        }
+
+    raise ValueError(f"Unknown motion action: {action!r}. Expected 'status', 'reduced', or 'standard'.")
+
+
+def _get_preferences_path() -> Path:
+    return get_kde_config_dir() / "noxforge/preferences.json"
+
+
+def _load_preferences() -> dict[str, Any]:
+    path = _get_preferences_path()
+    if path.is_file():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return data
+        except Exception:
+            pass
+    return {}
+
+
+def _save_preferences(prefs: dict[str, Any]) -> None:
+    path = _get_preferences_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(prefs, indent=2) + "\n", encoding="utf-8")
+
+
+def manage_wallpaper(variant: str = "list", dry_run: bool = False) -> dict[str, Any]:
+    """List or apply any of the 5 NoxForge wallpaper variants."""
+    variants_map = noxforge_core.WALLPAPER_VARIANTS
+    prefs = _load_preferences()
+    active_key = prefs.get("wallpaperVariant")
+    if not active_key:
+        status = get_current_status()
+        active_key = "obsidian" if status.get("profile") == "obsidian" else "standard"
+
+    clean = (variant or "list").strip()
+    if clean.lower() in ("list", "status"):
+        available: dict[str, Any] = {}
+        for k, meta in variants_map.items():
+            img = find_wallpaper_image(meta["id"])
+            available[k] = {
+                "id": meta["id"],
+                "label": meta["label"],
+                "profile": meta["profile"],
+                "available": img is not None,
+                "path": str(img) if img else None,
+            }
+        return {
+            "status": "ok",
+            "activeVariant": active_key,
+            "activeId": variants_map.get(active_key, variants_map["standard"])["id"],
+            "variants": available,
+        }
+
+    matched_key = clean.lower() if clean.lower() in variants_map else next(
+        (k for k, m in variants_map.items() if m["id"].lower() == clean.lower()),
+        None,
+    )
+    if not matched_key:
+        valid = ", ".join(variants_map.keys())
+        raise ValueError(f"Unknown wallpaper variant {variant!r}. Choose from: {valid}")
+
+    meta = variants_map[matched_key]
+    wp_path = find_wallpaper_image(meta["id"])
+    if not dry_run:
+        prefs["wallpaperVariant"] = matched_key
+        prefs["wallpaperId"] = meta["id"]
+        _save_preferences(prefs)
+        if wp_path and shutil.which("plasma-apply-wallpaperimage"):
+            run_cmd(["plasma-apply-wallpaperimage", str(wp_path)])
+    return {
+        "status": "applied" if not dry_run else "dry-run",
+        "variant": matched_key,
+        "wallpaperId": meta["id"],
+        "label": meta["label"],
+        "path": str(wp_path) if wp_path else None,
+    }
+
+
+def export_preset(file_path: str | None = None) -> dict[str, Any]:
+    """Export current NoxForge configuration state as a portable JSON preset."""
+    status = get_current_status()
+    motion = manage_motion("status")
+    flatpak = manage_flatpak("status")
+    sched = manage_schedule("status")
+    wp = manage_wallpaper("status")
+    payload: dict[str, Any] = {
+        "schemaVersion": 1,
+        "version": VERSION,
+        "profile": status.get("profile") if status.get("profile") in ("graphite", "obsidian") else "graphite",
+        "accent": status.get("accent", "lime"),
+        "accentHex": status.get("accentHex", ACCENT_COLORS["lime"]),
+        "reducedMotion": bool(motion.get("reducedMotion", False)),
+        "wallpaperVariant": wp.get("activeVariant", "standard"),
+        "flatpakEnabled": bool(flatpak.get("enabled", False)),
+        "schedule": {
+            "enabled": bool(sched.get("scheduled", False)),
+            "dayTime": sched.get("dayTime", "07:00"),
+            "nightTime": sched.get("nightTime", "20:00"),
+        },
+    }
+    if file_path:
+        out = Path(file_path).expanduser()
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return payload
+
+
+def import_preset(file_path: str, dry_run: bool = False) -> dict[str, Any]:
+    """Import and apply a NoxForge JSON preset file."""
+    src = Path(file_path).expanduser()
+    if not src.is_file():
+        raise FileNotFoundError(f"Preset file not found: {file_path}")
+    data = json.loads(src.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("Invalid preset JSON structure: expected object.")
+
+    profile = str(data.get("profile", "graphite")).lower()
+    if profile not in ("graphite", "obsidian"):
+        raise ValueError(f"Invalid profile in preset: {profile!r}")
+
+    accent_hex = str(data.get("accentHex") or ACCENT_COLORS["lime"]).strip()
+    accent_key = str(data.get("accent") or "lime").strip().lower()
+    if accent_key in ACCENT_COLORS:
+        set_accent(accent_key, dry_run=dry_run)
+    elif accent_key == "system":
+        set_accent("system", dry_run=dry_run)
+    else:
+        set_accent("custom", custom_hex=accent_hex, dry_run=dry_run)
+
+    switch_profile(profile, dry_run=dry_run)
+
+    reduced = bool(data.get("reducedMotion", False))
+    manage_motion("reduced" if reduced else "standard", dry_run=dry_run)
+
+    wp_var = str(data.get("wallpaperVariant") or ("obsidian" if profile == "obsidian" else "standard"))
+    if wp_var in noxforge_core.WALLPAPER_VARIANTS:
+        manage_wallpaper(wp_var, dry_run=dry_run)
+
+    if "flatpakEnabled" in data:
+        manage_flatpak("enable" if data["flatpakEnabled"] else "disable", dry_run=dry_run)
+
+    sched = data.get("schedule")
+    if isinstance(sched, dict) and not dry_run:
+        if sched.get("enabled"):
+            manage_schedule(
+                "enable",
+                day_time=str(sched.get("dayTime", "07:00")),
+                night_time=str(sched.get("nightTime", "20:00")),
+            )
+        else:
+            manage_schedule("disable")
+
+    return {
+        "status": "imported" if not dry_run else "dry-run",
+        "source": str(src),
+        "profile": profile,
+        "accentHex": accent_hex,
+        "reducedMotion": reduced,
+        "wallpaperVariant": wp_var,
+    }
 
 
 def find_asset(rel_path: str) -> Path | None:
@@ -780,12 +1029,22 @@ def render_ecosystem_content(raw_text: str, profile: str, accent_hex: str) -> st
     return text
 
 
-def _deploy_tracked_file(src_file: Path, dst_file: Path, profile: str, accent_hex: str) -> dict[str, Any]:
+def _deploy_tracked_file(
+    src_file: Path,
+    dst_file: Path,
+    profile: str,
+    accent_hex: str,
+    existing_meta: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Safely back up existing user file before writing rendered NoxForge content."""
     bak_file = Path(str(dst_file) + BACKUP_SUFFIX)
+    dst_key = str(dst_file)
     had_original = False
     if bak_file.is_file():
         had_original = True
+    elif existing_meta is not None and dst_key in existing_meta:
+        # Target is already managed by NoxForge; preserve original hadOriginal flag without backing up NoxForge output
+        had_original = bool(existing_meta[dst_key].get("hadOriginal", False))
     elif dst_file.is_file():
         shutil.copy2(dst_file, bak_file)
         had_original = True
@@ -795,7 +1054,7 @@ def _deploy_tracked_file(src_file: Path, dst_file: Path, profile: str, accent_he
     rendered = render_ecosystem_content(raw, profile=profile, accent_hex=accent_hex)
     dst_file.write_text(rendered, encoding="utf-8")
     return {
-        "target": str(dst_file),
+        "target": dst_key,
         "backup": str(bak_file) if had_original else None,
         "hadOriginal": had_original,
     }
@@ -847,6 +1106,17 @@ def ecosystem_apply(
     state = load_ecosystem_state()
     apps_state: dict[str, Any] = state.setdefault("apps", {})
 
+    primary_pairs = {
+        "zed": ("noxforge.json", "noxforge_obsidian.json"),
+        "btop": ("noxforge.theme", "noxforge_obsidian.theme"),
+        "helix": ("noxforge.toml", "noxforge_obsidian.toml"),
+        "neovim": ("noxforge.lua", "noxforge_obsidian.lua"),
+        "ghostty": ("noxforge", "noxforge-obsidian"),
+        "kitty": ("noxforge.conf", "noxforge-obsidian.conf"),
+        "alacritty": ("noxforge.toml", "noxforge-obsidian.toml"),
+        "foot": ("noxforge.ini", "noxforge-obsidian.ini"),
+    }
+
     for app_id in targets:
         if app_id not in SUPPORTED_ECOSYSTEM_APPS:
             errors[app_id] = f"Unknown ecosystem application: {app_id}"
@@ -862,33 +1132,75 @@ def ecosystem_apply(
             continue
         try:
             deployed_files: list[dict[str, Any]] = []
+            existing_list = apps_state.get(app_id, {}).get("files", [])
+            existing_meta = {
+                str(f["target"]): f
+                for f in existing_list
+                if isinstance(f, dict) and "target" in f
+            }
             if not dry_run:
                 target_dir.mkdir(parents=True, exist_ok=True)
                 if app_id == "starship":
                     deployed_files.append(
-                        _deploy_tracked_file(src / "starship.toml", target_dir / "starship.toml", active_profile, active_accent)
+                        _deploy_tracked_file(
+                            src / "starship.toml",
+                            target_dir / "starship.toml",
+                            active_profile,
+                            active_accent,
+                            existing_meta,
+                        )
                     )
                 elif app_id == "fastfetch":
                     deployed_files.append(
-                        _deploy_tracked_file(src / "noxforge.jsonc", target_dir / "config.jsonc", active_profile, active_accent)
+                        _deploy_tracked_file(
+                            src / "noxforge.jsonc",
+                            target_dir / "config.jsonc",
+                            active_profile,
+                            active_accent,
+                            existing_meta,
+                        )
                     )
                 elif app_id == "firefox":
                     src_css = src / ("userChrome_obsidian.css" if is_obsidian and (src / "userChrome_obsidian.css").is_file() else "userChrome.css")
                     deployed_files.append(
-                        _deploy_tracked_file(src_css, target_dir / "userChrome.css", active_profile, active_accent)
+                        _deploy_tracked_file(
+                            src_css,
+                            target_dir / "userChrome.css",
+                            active_profile,
+                            active_accent,
+                            existing_meta,
+                        )
                     )
                 elif app_id == "discord":
                     for item in sorted(src.iterdir()):
                         if item.is_file():
-                            deployed_files.append(_deploy_tracked_file(item, target_dir / item.name, active_profile, active_accent))
-                    active_src = src / ("noxforge_obsidian.theme.css" if is_obsidian and (src / "noxforge_obsidian.theme.css").is_file() else "noxforge.theme.css")
-                    if active_src.is_file():
-                        _deploy_tracked_file(active_src, target_dir / "noxforge.theme.css", active_profile, active_accent)
+                            item_src = item
+                            if item.name == "noxforge.theme.css" and is_obsidian and (src / "noxforge_obsidian.theme.css").is_file():
+                                item_src = src / "noxforge_obsidian.theme.css"
+                            deployed_files.append(
+                                _deploy_tracked_file(
+                                    item_src,
+                                    target_dir / item.name,
+                                    active_profile,
+                                    active_accent,
+                                    existing_meta,
+                                )
+                            )
                 elif src.is_dir():
+                    std_name, obs_name = primary_pairs.get(app_id, ("", ""))
                     for item in sorted(src.iterdir()):
                         if item.is_file():
+                            item_src = item
+                            if std_name and item.name == std_name and is_obsidian and (src / obs_name).is_file():
+                                item_src = src / obs_name
                             deployed_files.append(
-                                _deploy_tracked_file(item, target_dir / item.name, active_profile, active_accent)
+                                _deploy_tracked_file(
+                                    item_src,
+                                    target_dir / item.name,
+                                    active_profile,
+                                    active_accent,
+                                    existing_meta,
+                                )
                             )
                         elif item.is_dir():
                             sub_dst = target_dir / item.name
@@ -896,34 +1208,29 @@ def ecosystem_apply(
                             for sub_item in sorted(item.iterdir()):
                                 if sub_item.is_file():
                                     deployed_files.append(
-                                        _deploy_tracked_file(sub_item, sub_dst / sub_item.name, active_profile, active_accent)
+                                        _deploy_tracked_file(
+                                            sub_item,
+                                            sub_dst / sub_item.name,
+                                            active_profile,
+                                            active_accent,
+                                            existing_meta,
+                                        )
                                     )
-                    # Also align primary theme filename to active profile (Graphite vs Obsidian)
-                    primary_pairs = {
-                        "zed": ("noxforge.json", "noxforge_obsidian.json"),
-                        "btop": ("noxforge.theme", "noxforge_obsidian.theme"),
-                        "helix": ("noxforge.toml", "noxforge_obsidian.toml"),
-                        "neovim": ("noxforge.lua", "noxforge_obsidian.lua"),
-                        "ghostty": ("noxforge", "noxforge-obsidian"),
-                        "kitty": ("noxforge.conf", "noxforge-obsidian.conf"),
-                        "alacritty": ("noxforge.toml", "noxforge-obsidian.toml"),
-                        "foot": ("noxforge.ini", "noxforge-obsidian.ini"),
-                    }
-                    if app_id in primary_pairs:
-                        std_name, obs_name = primary_pairs[app_id]
-                        chosen_src = src / (obs_name if is_obsidian and (src / obs_name).is_file() else std_name)
-                        if chosen_src.is_file():
-                            _deploy_tracked_file(chosen_src, target_dir / std_name, active_profile, active_accent)
                 elif src.is_file():
                     deployed_files.append(
-                        _deploy_tracked_file(src, target_dir / src.name, active_profile, active_accent)
+                        _deploy_tracked_file(
+                            src,
+                            target_dir / src.name,
+                            active_profile,
+                            active_accent,
+                            existing_meta,
+                        )
                     )
 
-                existing_files = apps_state.get(app_id, {}).get("files", [])
                 apps_state[app_id] = {
                     "profile": active_profile,
                     "accent": active_accent,
-                    "files": existing_files if existing_files else deployed_files,
+                    "files": deployed_files,
                 }
             applied.append(app_id)
         except Exception as err:
@@ -1014,7 +1321,7 @@ def sync_tracked_ecosystem(
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="noxforge-ctl",
-        description="NoxForge Unified Control Hub - Profile, Accent, Opacity, Flatpak, and Health Orchestration.",
+        description="NoxForge Unified Control Hub - Profile, Accent, Opacity, Flatpak, Motion, Wallpaper, and Health Orchestration.",
     )
     parser.add_argument("-v", "--version", action="version", version=f"noxforge-ctl {VERSION}")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
@@ -1080,6 +1387,36 @@ def main() -> int:
     fp_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     fp_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
+    # motion
+    mot_parser = subparsers.add_parser("motion", help="Manage system-wide Reduced Motion & Kinetic physics policy")
+    mot_group = mot_parser.add_mutually_exclusive_group(required=False)
+    mot_group.add_argument("--reduced", action="store_true", help="Enable Reduced Motion (0ms animations, static edge-flash)")
+    mot_group.add_argument("--standard", action="store_true", help="Enable Standard Kinetic Motion (spring physics)")
+    mot_group.add_argument("--status", action="store_true", help="Inspect active motion policy")
+    mot_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    mot_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # wallpaper
+    wp_parser = subparsers.add_parser("wallpaper", help="List or apply NoxForge wallpaper variants")
+    wp_parser.add_argument(
+        "variant",
+        nargs="?",
+        default="list",
+        help="Wallpaper variant (standard, obsidian, quiet, ultrawide, obsidian-ultrawide, or list)",
+    )
+    wp_parser.add_argument("--list", action="store_true", help="List available NoxForge wallpaper variants")
+    wp_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
+    wp_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # export / import
+    exp_parser = subparsers.add_parser("export", help="Export current NoxForge configuration state as a JSON preset")
+    exp_parser.add_argument("path", nargs="?", default=None, help="Optional destination file path (.json)")
+
+    imp_parser = subparsers.add_parser("import", help="Import and apply a NoxForge JSON preset file")
+    imp_parser.add_argument("path", help="Source JSON preset file path")
+    imp_parser.add_argument("-n", "--dry-run", action="store_true", help="Validate and simulate without applying")
+    imp_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
     # opacity (delegates to noxforge-opacity)
     opacity_parser = subparsers.add_parser("opacity", help="Configure transparency and depth (noxforge-opacity)")
     opacity_parser.add_argument("opacity_args", nargs=argparse.REMAINDER, help="Arguments passed to noxforge-opacity")
@@ -1094,6 +1431,7 @@ def main() -> int:
     sched_group.add_argument("--enable", action="store_true", help="Enable automatic Day/Night schedule timer")
     sched_group.add_argument("--disable", action="store_true", help="Disable automatic Day/Night timer")
     sched_group.add_argument("--status", action="store_true", help="Check schedule timer status")
+    sched_group.add_argument("--apply-now", action="store_true", help="Evaluate schedule and switch profile immediately")
     sched_parser.add_argument("--day-time", default="07:00", help="Day transition time (HH:MM, default: 07:00)")
     sched_parser.add_argument("--night-time", default="20:00", help="Night transition time (HH:MM, default: 20:00)")
     sched_parser.add_argument("--json", action="store_true", help="Output schedule status in JSON")
@@ -1203,8 +1541,62 @@ def main() -> int:
             print(f"[NoxForge Flatpak] {action}: {res['status']} ({res['path']})")
         return 0
 
+    if args.command == "motion":
+        action = "reduced" if args.reduced else ("standard" if args.standard else "status")
+        res = manage_motion(action, dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(res, indent=2))
+        else:
+            print(f"[NoxForge Motion] Mode: {res['mode'].upper()} (AnimationDurationFactor={res['animationDurationFactor']})")
+        return 0
+
+    if args.command == "wallpaper":
+        target_var = "list" if args.list else args.variant
+        try:
+            res = manage_wallpaper(target_var, dry_run=args.dry_run)
+        except ValueError as err:
+            if args.json:
+                print(json.dumps({"status": "error", "message": str(err)}, indent=2), file=sys.stderr)
+            else:
+                print(f"[NoxForge Error] {err}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(res, indent=2))
+        elif "variants" in res:
+            print(f"NoxForge Wallpaper Suite (Active: {res['activeVariant']}):")
+            for k, info in res["variants"].items():
+                mark = "●" if k == res["activeVariant"] else "○"
+                print(f"  {mark} {k:<20} {info['label']} ({info['id']})")
+        else:
+            print(f"[NoxForge Wallpaper] Applied: {res['label']} ({res['wallpaperId']})")
+        return 0
+
+    if args.command == "export":
+        res = export_preset(file_path=args.path)
+        print(json.dumps(res, indent=2))
+        return 0
+
+    if args.command == "import":
+        try:
+            res = import_preset(args.path, dry_run=args.dry_run)
+        except Exception as err:
+            if args.json:
+                print(json.dumps({"status": "error", "message": str(err)}, indent=2), file=sys.stderr)
+            else:
+                print(f"[NoxForge Error] {err}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(res, indent=2))
+        else:
+            print(f"[NoxForge Import] {res['status'].upper()}: profile={res['profile']}, accent={res['accentHex']}")
+        return 0
+
     if args.command == "schedule":
-        action = "enable" if args.enable else ("disable" if args.disable else "status")
+        action = (
+            "enable"
+            if args.enable
+            else ("disable" if args.disable else ("apply-now" if getattr(args, "apply_now", False) else "status"))
+        )
         try:
             res = manage_schedule(action, day_time=args.day_time, night_time=args.night_time)
         except ValueError as err:

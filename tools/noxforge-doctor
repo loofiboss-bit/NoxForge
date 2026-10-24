@@ -1557,7 +1557,7 @@ def remediation_plan(report: dict[str, Any]) -> str:
     missing = edition.get("missingMandatory", [])
     shadowed = edition.get("shadowed", [])
     eco = report.get("ecosystem", {})
-    flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent"}
+    flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent", "partial"}
     palette_sync = report.get("paletteSynchronization", {})
     palette_needed = palette_sync.get("status") == "desynchronized"
 
@@ -1565,8 +1565,8 @@ def remediation_plan(report: dict[str, Any]) -> str:
         lines.append("# Installation is clean and complete. No remediation required.")
         return "\n".join(lines) + "\n"
     if flatpak_needed:
-        lines.append("# Flatpak theme access remediation:")
-        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro || true")
+        lines.append("# Flatpak theme & Libadwaita access remediation:")
+        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro --filesystem=xdg-config/gtk-3.0:ro --filesystem=xdg-config/gtk-4.0:ro || true")
         lines.append("")
     if palette_needed:
         targets = palette_sync.get("targets", {})

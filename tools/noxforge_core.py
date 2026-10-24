@@ -46,6 +46,62 @@ ACCENT_SURFACE_SELECTED: dict[str, tuple[str, str]] = {
 GRAPHITE_SURFACE = "#141E25"
 OBSIDIAN_SURFACE = "#000000"
 
+WALLPAPER_VARIANTS: dict[str, dict[str, str]] = {
+    "standard": {
+        "id": "NoxForge",
+        "label": "NoxForge Standard (Graphite)",
+        "profile": "graphite",
+    },
+    "obsidian": {
+        "id": "NoxForge-Obsidian",
+        "label": "NoxForge Obsidian (OLED)",
+        "profile": "obsidian",
+    },
+    "quiet": {
+        "id": "NoxForge-Quiet",
+        "label": "NoxForge Quiet (Minimal)",
+        "profile": "graphite",
+    },
+    "ultrawide": {
+        "id": "NoxForge-Ultrawide",
+        "label": "NoxForge Ultrawide (21:9 / 32:9)",
+        "profile": "graphite",
+    },
+    "obsidian-ultrawide": {
+        "id": "NoxForge-Obsidian-Ultrawide",
+        "label": "NoxForge Obsidian Ultrawide (OLED)",
+        "profile": "obsidian",
+    },
+}
+
+
+def parse_hm_minutes(hm_str: str) -> int:
+    """Convert HH:MM string (00:00..23:59) into minutes since midnight."""
+    parts = hm_str.strip().split(":")
+    if len(parts) != 2 or not (parts[0].isdigit() and parts[1].isdigit()):
+        raise ValueError(f"Invalid HH:MM time string: {hm_str!r}")
+    hours, minutes = int(parts[0]), int(parts[1])
+    if not (0 <= hours <= 23 and 0 <= minutes <= 59):
+        raise ValueError(f"Out-of-range HH:MM time string: {hm_str!r}")
+    return hours * 60 + minutes
+
+
+def evaluate_schedule_profile(
+    now_hm: str,
+    day_time: str = "07:00",
+    night_time: str = "20:00",
+) -> str:
+    """Determine active profile ('graphite' or 'obsidian') with midnight wrap-around support."""
+    now_min = parse_hm_minutes(now_hm)
+    day_min = parse_hm_minutes(day_time)
+    night_min = parse_hm_minutes(night_time)
+    if day_min <= night_min:
+        is_day = day_min <= now_min < night_min
+    else:
+        # Wrap-around past midnight (e.g. day=07:00, night=01:00)
+        is_day = now_min >= day_min or now_min < night_min
+    return "graphite" if is_day else "obsidian"
+
 
 def get_app_version(fallback: str = DEFAULT_VERSION) -> str:
     """Resolve active NoxForge version from repo or installed system paths."""
@@ -405,6 +461,91 @@ QLineEdit, QTimeEdit {{
 
 QLineEdit:focus, QTimeEdit:focus {{
     border: 1px solid {acc};
+}}
+
+QTextEdit {{
+    background-color: {bg_sunken};
+    border: 1px solid #2F414B;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 10px;
+    color: #A6B4B9;
+}}
+
+QTableWidget {{
+    background-color: {bg_sunken};
+    alternate-background-color: {bg_surface};
+    border: 1px solid #2F414B;
+    border-radius: 6px;
+    gridline-color: {bg_raised};
+}}
+
+QHeaderView::section {{
+    background-color: {bg_surface};
+    color: #E8F0F2;
+    padding: 6px;
+    border: 1px solid #2F414B;
+    font-weight: 600;
+}}
+
+QTableWidget::item {{
+    padding: 6px;
+    color: #E8F0F2;
+}}
+
+QTableWidget::item:selected {{
+    background-color: {surf_sel};
+    color: #FFFFFF;
+}}
+
+QCheckBox, QRadioButton {{
+    color: #E8F0F2;
+    spacing: 6px;
+}}
+
+QCheckBox::indicator, QRadioButton::indicator {{
+    width: 15px;
+    height: 15px;
+    background-color: {bg_sunken};
+    border: 1px solid #455A64;
+    border-radius: 3px;
+}}
+
+QRadioButton::indicator {{
+    border-radius: 8px;
+}}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {{
+    background-color: {acc};
+    border-color: {acc};
+}}
+
+QScrollBar:vertical {{
+    background: {bg_sunken};
+    width: 8px;
+    margin: 0;
+    border-radius: 4px;
+}}
+
+QScrollBar::handle:vertical {{
+    background: #2F414B;
+    min-height: 24px;
+    border-radius: 4px;
+}}
+
+QScrollBar::handle:vertical:hover {{
+    background: {acc};
+}}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+    height: 0px;
+}}
+
+QFrame#headerBanner, QFrame#tipBanner {{
+    background-color: {bg_sunken};
+    border: 1px solid #2F414B;
+    border-radius: 6px;
 }}
 
 QStatusBar {{

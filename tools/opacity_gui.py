@@ -166,6 +166,7 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         self.aurorae_active = 0.85
         self.aurorae_inactive = 0.75
         self.variant = "graphite"
+        self.accent_hex = "#A3FF47"
         self.simulate_blur = True
 
         self.wallpaper_image: QtGui.QImage | None = None
@@ -321,8 +322,9 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             draw_frosted_surface(tb_rect, titlebar_col)
 
             # Forge Notch (4px corner cut top-left)
+            acc_col = QtGui.QColor(self.accent_hex)
             painter.fillRect(QtCore.QRect(win_x, win_y, 4, 1), QtGui.QColor("#4B606A"))
-            painter.fillRect(QtCore.QRect(win_x + 6, win_y, 20, 2), QtGui.QColor("#A3FF47"))  # Lime active rail
+            painter.fillRect(QtCore.QRect(win_x + 6, win_y, 20, 2), acc_col)  # Active accent rail
 
             # Titlebar Top Edge Highlight
             painter.fillRect(QtCore.QRect(win_x + 4, win_y, win_w - 4, 1), QtGui.QColor(75, 96, 106, 160))
@@ -364,8 +366,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             painter.drawText(win_x + 20, win_y + tb_h + 52, "Documents")
             painter.drawText(win_x + 20, win_y + tb_h + 72, "Downloads")
 
-            # Active selection item with lime marker
-            painter.fillRect(QtCore.QRect(win_x + 12, win_y + tb_h + 20, 2, 16), QtGui.QColor("#A3FF47"))
+            # Active selection item with accent marker
+            painter.fillRect(QtCore.QRect(win_x + 12, win_y + tb_h + 20, 2, 16), acc_col)
 
         # 3. Application Launcher Popup Dialog (Translucent Overlay)
         popup_w = min(190, int(w * 0.52))
@@ -399,9 +401,9 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
             for idx, item in enumerate(entries):
                 ey = popup_y + 44 + idx * 24
                 if idx == 0:
-                    # Hover item with lime bar
+                    # Hover item with accent bar
                     painter.fillRect(QtCore.QRect(popup_x + 8, ey - 2, popup_w - 16, 22), QtGui.QColor(40, 57, 66, 140))
-                    painter.fillRect(QtCore.QRect(popup_x + 8, ey - 2, 2, 22), QtGui.QColor("#A3FF47"))
+                    painter.fillRect(QtCore.QRect(popup_x + 8, ey - 2, 2, 22), QtGui.QColor(self.accent_hex))
                     painter.setPen(QtGui.QColor("#E8F0F2"))
                 else:
                     painter.setPen(QtGui.QColor("#A6B4B9"))
@@ -436,9 +438,10 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         painter.drawRoundedRect(panel_rect, 6, 6)
 
         # Launcher button on panel (Forge icon)
+        panel_acc = QtGui.QColor(self.accent_hex)
         painter.fillRect(QtCore.QRect(panel_x + 10, panel_y + 10, 24, 24), QtGui.QColor(27, 40, 49, 200))
-        painter.setPen(QtGui.QColor("#A3FF47"))
-        painter.setBrush(QtGui.QColor("#A3FF47"))
+        painter.setPen(panel_acc)
+        painter.setBrush(panel_acc)
         painter.drawPolygon(
             [
                 QtCore.QPoint(panel_x + 14, panel_y + 14),
@@ -451,8 +454,8 @@ class PreviewCanvasWidget(QtWidgets.QWidget):
         task_w = 110
         painter.fillRect(QtCore.QRect(panel_x + 44, panel_y + 8, task_w, 28), QtGui.QColor(27, 40, 49, 160))
         painter.fillRect(
-            QtCore.QRect(panel_x + 44, panel_y + panel_h - 2, task_w, 2), QtGui.QColor("#A3FF47")
-        )  # Lime bottom rail
+            QtCore.QRect(panel_x + 44, panel_y + panel_h - 2, task_w, 2), panel_acc
+        )  # Active accent bottom rail
         painter.setPen(QtGui.QColor("#E8F0F2"))
         font.setPointSize(9)
         painter.setFont(font)
@@ -471,6 +474,9 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("NoxForge Depth & Opacity Configurator")
         self.resize(920, 680)
         self.setMinimumSize(820, 540)
+        self.active_profile = "graphite"
+        self.active_accent_hex = "#A3FF47"
+        self.slider_value_labels: list[QtWidgets.QLabel] = []
         self.setStyleSheet(STYLE_SHEET)
 
         mark_candidates = [
@@ -492,14 +498,24 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self._load_current_status()
 
     def refresh_theme(self, profile: str = "graphite", accent_hex: str = "#A3FF47") -> None:
-        qss = noxforge_core.build_qt_stylesheet(profile=profile, accent_hex=accent_hex)
+        self.active_profile = profile.lower() if profile.lower() in ("graphite", "obsidian") else "graphite"
+        pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(self.active_profile == "obsidian"))
+        self.active_accent_hex = pal["accent"]
+        qss = noxforge_core.build_qt_stylesheet(profile=self.active_profile, accent_hex=self.active_accent_hex)
         self.setStyleSheet(qss)
         cw = self.centralWidget()
         if cw:
             cw.setStyleSheet(qss)
         if hasattr(self, "title_lbl"):
-            pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile.lower() == "obsidian"))
-            self.title_lbl.setStyleSheet(f"font-size: 16px; font-weight: 800; color: {pal['accent']}; letter-spacing: 1px;")
+            self.title_lbl.setStyleSheet(
+                f"font-size: 16px; font-weight: 800; color: {self.active_accent_hex}; letter-spacing: 1px;"
+            )
+        for v_lbl in self.slider_value_labels:
+            v_lbl.setStyleSheet(f"font-weight: 700; color: {self.active_accent_hex};")
+        if hasattr(self, "preview_canvas"):
+            self.preview_canvas.accent_hex = self.active_accent_hex
+        self._highlight_active_preset()
+        self._sync_preview()
 
     def _build_ui(self) -> None:
         central = QtWidgets.QWidget(self)
@@ -597,7 +613,8 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             slider.setMinimumHeight(24)
             val_lbl = QtWidgets.QLabel(f"{default_val}%")
             val_lbl.setFixedWidth(40)
-            val_lbl.setStyleSheet("font-weight: 700; color: #A3FF47;")
+            val_lbl.setStyleSheet(f"font-weight: 700; color: {self.active_accent_hex};")
+            self.slider_value_labels.append(val_lbl)
             slider.valueChanged.connect(lambda v: val_lbl.setText(f"{v}%"))
             slider.valueChanged.connect(self._on_slider_changed)
             row.addWidget(lbl)
@@ -642,16 +659,16 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
         # Blur Tips Banner
         blur_tip = QtWidgets.QFrame()
-        blur_tip.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px;")
+        blur_tip.setObjectName("tipBanner")
         blur_layout = QtWidgets.QHBoxLayout(blur_tip)
         blur_layout.setContentsMargins(10, 6, 10, 6)
         tip_text = QtWidgets.QLabel("Tip: Enable <b>Blur</b> in KDE Desktop Effects for frosted glass depth.")
         tip_text.setStyleSheet("font-size: 11px; color: #A6B4B9;")
         btn_effects = QtWidgets.QPushButton("KDE Effects...")
-        btn_effects.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
+        btn_effects.setStyleSheet("font-size: 11px; padding: 4px 10px;")
         btn_effects.clicked.connect(self._open_kde_effects)
         btn_restart = QtWidgets.QPushButton("Restart Shell...")
-        btn_restart.setStyleSheet("font-size: 11px; padding: 4px 10px; background-color: #141E25;")
+        btn_restart.setStyleSheet("font-size: 11px; padding: 4px 10px;")
         btn_restart.setToolTip("Restart the Plasma desktop shell session safely")
         btn_restart.clicked.connect(self._restart_plasma_shell)
         blur_layout.addWidget(tip_text)
@@ -810,22 +827,29 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def _highlight_active_preset(self, active_key: str | None = None) -> None:
         current_panel = self.slider_panel.value()
+        pal = noxforge_core.resolve_accent_palette(self.active_accent_hex, is_obsidian=(self.active_profile == "obsidian"))
+        acc = pal["accent"]
+        surf_sel = pal["surfaceSelected"]
         for key, btn in self.preset_buttons.items():
             preset_val = int(round(PRESETS[key]["panel"] * 100))
             is_active = (active_key == key) or (active_key is None and current_panel == preset_val)
             if is_active:
-                btn.setStyleSheet("border: 1px solid #A3FF47; background-color: #1A2E20; color: #FFFFFF;")
+                btn.setStyleSheet(f"border: 1px solid {acc}; background-color: {surf_sel}; color: #FFFFFF;")
             else:
                 btn.setStyleSheet("")
 
     def _sync_preview(self) -> None:
-        variant = "obsidian" if self.radio_obsidian.isChecked() else "graphite"
+        variant = "obsidian" if (self.radio_obsidian.isChecked() or self.active_profile == "obsidian") else "graphite"
         p_op = self.slider_panel.value() / 100.0
         d_op = self.slider_dialog.value() / 100.0
         w_op = self.slider_widget.value() / 100.0
         t_op = self.slider_tooltip.value() / 100.0
         a_act = (self.slider_aurorae_act.value() / 100.0) if self.chk_aurorae.isChecked() else 1.0
         a_inact = (self.slider_aurorae_inact.value() / 100.0) if self.chk_aurorae.isChecked() else 0.9
+
+        pal = noxforge_core.resolve_accent_palette(self.active_accent_hex, is_obsidian=(variant == "obsidian"))
+        acc = pal["accent"]
+        surf_sel = pal["surfaceSelected"]
 
         # Identify if current settings match a preset exactly
         matched_preset = None
@@ -842,7 +866,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         if matched_preset == "frost":
             self.preview_badge.setText("78% Frost (Recommended)")
             self.preview_badge.setStyleSheet(
-                "background-color: #1A2E20; color: #A3FF47; border: 1px solid #A3FF47; "
+                f"background-color: {surf_sel}; color: {acc}; border: 1px solid {acc}; "
                 "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
             )
         elif matched_preset:
@@ -858,6 +882,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
                 "border-radius: 3px; padding: 2px 6px; font-size: 11px; font-weight: 700;"
             )
 
+        self.preview_canvas.accent_hex = acc
         self.preview_canvas.update_values(p_op, d_op, w_op, t_op, a_act, a_inact, variant)
 
     def _on_reset_clicked(self) -> None:

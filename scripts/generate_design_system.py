@@ -812,6 +812,114 @@ progressbar progress, scale highlight {{
     border-color: @accent_color;
 }}
 
+/* Text and view selections */
+selection, ::selection, entry selection, textview text selection, label selection {{
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}}
+
+/* Libadwaita & GTK 4 Navigation Sidebars, Boxed Lists & Cards */
+.navigation-sidebar {{
+    background-color: {surface_sunken};
+    color: {fg};
+}}
+
+.navigation-sidebar > row {{
+    background-color: transparent;
+    border-radius: 6px;
+    margin: 2px 6px;
+    padding: 6px 10px;
+}}
+
+.navigation-sidebar > row:hover {{
+    background-color: {surface_hover};
+}}
+
+.navigation-sidebar > row:selected {{
+    background-color: @theme_view_active;
+    color: {fg};
+    border-left: 3px solid @accent_color;
+}}
+
+list.boxed-list, card, .card {{
+    background-color: {surface_raised};
+    border: 1px solid {border};
+    border-radius: 6px;
+    color: {fg};
+}}
+
+list.boxed-list > row {{
+    background-color: {surface_raised};
+    border-bottom: 1px solid {border};
+    padding: 8px 12px;
+}}
+
+list.boxed-list > row:hover {{
+    background-color: {surface_hover};
+}}
+
+/* Libadwaita TabBar, Popovers, Menus, Toasts & Banners */
+tabbar tab {{
+    background-color: {surface_sunken};
+    color: {fg_secondary};
+    border: 1px solid {border};
+    border-bottom: none;
+    padding: 6px 12px;
+}}
+
+tabbar tab:checked, tabbar tab:selected {{
+    background-color: {surface};
+    color: {fg};
+    border-top: 2px solid @accent_color;
+}}
+
+popover > contents, popover.menu > contents, menu {{
+    background-color: {colors["surfaceOverlay"]};
+    border: 1px solid {edge_highlight};
+    border-radius: 8px;
+    color: {fg};
+    padding: 4px;
+}}
+
+modelbutton:hover, menuitem:hover {{
+    background-color: @theme_view_active;
+    color: {fg};
+    border-left: 2px solid @accent_color;
+}}
+
+toast {{
+    background-color: {colors["surfaceOverlay"]};
+    border: 1px solid @accent_color;
+    border-radius: 6px;
+    color: {fg};
+    padding: 8px 14px;
+}}
+
+banner > revealer > widget {{
+    background-color: @theme_view_active;
+    border-bottom: 1px solid @accent_color;
+    color: {fg};
+    padding: 6px 12px;
+}}
+
+actionbar > revealer > box, searchbar > revealer > box {{
+    background-color: {surface_sunken};
+    border-color: {border};
+    color: {fg};
+}}
+
+spinbutton, dropdown > button {{
+    background-color: {surface_raised};
+    border: 1px solid {border};
+    border-radius: 6px;
+    color: {fg};
+}}
+
+spinbutton:focus-within, dropdown > button:focus {{
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
+}}
+
 /* Tooltips */
 tooltip {{
     background-color: {colors["surfaceOverlay"]};

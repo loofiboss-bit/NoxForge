@@ -119,6 +119,41 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(callable(opacity_gui.main))
         self.assertTrue(callable(opacity_gui.launch_gui))
 
+    def test_header_banner_and_v18_gui_features(self) -> None:
+        """ControlCenterWindow header banner, wallpaper selector, motion toggle, and opacity canvas accent sync."""
+        win = control_center.ControlCenterWindow()
+        self.assertTrue(hasattr(win, "header_banner"))
+        self.assertTrue(hasattr(win, "header_profile_badge"))
+        self.assertTrue(hasattr(win, "header_accent_badge"))
+        self.assertTrue(hasattr(win, "btn_export_preset"))
+        self.assertTrue(hasattr(win, "btn_import_preset"))
+
+        # ProfileAccentTab wallpaper variant selector & accent button states
+        self.assertTrue(hasattr(win.tab_profile, "wallpaper_combo"))
+        self.assertEqual(win.tab_profile.wallpaper_combo.count(), 5)
+        self.assertTrue(hasattr(win.tab_profile, "btn_apply_wallpaper"))
+
+        # AccessibilityTab reduced motion checkbox and color picker button
+        self.assertTrue(hasattr(win.tab_a11y, "chk_reduced_motion"))
+        self.assertTrue(hasattr(win.tab_a11y, "motion_status_badge"))
+        self.assertTrue(hasattr(win.tab_a11y, "btn_pick_color"))
+
+        # HealthTab visual badges
+        self.assertTrue(hasattr(win.tab_health, "badge_core"))
+        self.assertTrue(hasattr(win.tab_health, "badge_palette"))
+        self.assertTrue(hasattr(win.tab_health, "badge_flatpak"))
+        self.assertTrue(hasattr(win.tab_health, "badge_gtk"))
+        self.assertTrue(hasattr(win.tab_health, "badge_eco"))
+
+        # Dynamic accent & profile propagation into OpacityConfiguratorWindow & PreviewCanvasWidget
+        win.refresh_theme(profile="obsidian", accent_hex="#22D3EE")
+        self.assertEqual(win.opacity_window.active_accent_hex, "#22D3EE")
+        self.assertEqual(win.opacity_window.preview_canvas.accent_hex, "#22D3EE")
+        self.assertEqual(win.opacity_window.preview_canvas.variant, "obsidian")
+        self.assertIn("OBSIDIAN", win.header_profile_badge.text())
+        self.assertIn("#22D3EE", win.header_accent_badge.text())
+        win.close()
+
 
 if __name__ == "__main__":
     unittest.main()

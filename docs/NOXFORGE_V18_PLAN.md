@@ -59,6 +59,11 @@ Version 18 expands and hardens the system across five major pillars:
    - Enhances Control Center Tab 5 (`Ecosystem & Apps`) with per-application
      `Restore Backup` actions, `Restore All Backups`, live profile/accent sync
      badges, and an interactive Flatpak Theme Override card.
+   - Adds system-wide Reduced Motion orchestration (`noxforge-ctl motion`),
+     5-variant Wallpaper Suite switching (`noxforge-ctl wallpaper`), portable
+     JSON preset export/import (`noxforge-ctl export` / `import`), interactive
+     `QColorDialog` custom accent picking, Top Status Header Banner, visual
+     Doctor health summary badges, and accent-reactive 60fps Opacity preview canvas.
 5. **Doctor Schema 11, Packaging Parity & Release Qualification:**
    - Upgrades `tools/noxforge-doctor` to Schema 11, auditing `noxforge_core.py`
      presence, GTK 3/4/Libadwaita `@import` and `@accent_color` chain coherence

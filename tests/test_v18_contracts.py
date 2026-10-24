@@ -64,6 +64,20 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         qss_obsidian = noxforge_core.build_qt_stylesheet("obsidian", "#22D3EE")
         self.assertIn("#000000", qss_obsidian)
         self.assertIn("#22D3EE", qss_obsidian)
+        self.assertIn("QTableWidget", qss_obsidian)
+        self.assertIn("QScrollBar:vertical", qss_obsidian)
+        self.assertIn("QFrame#headerBanner", qss_obsidian)
+
+    def test_libadwaita_deep_gtk_css_selectors(self) -> None:
+        for theme_dir in ("themes/NoxForge", "themes/NoxForgeObsidian"):
+            for gtk_ver in ("gtk-3.0", "gtk-4.0"):
+                css = (ROOT / theme_dir / gtk_ver / "gtk.css").read_text(encoding="utf-8")
+                self.assertIn(".navigation-sidebar", css)
+                self.assertIn("list.boxed-list", css)
+                self.assertIn("tabbar tab:checked", css)
+                self.assertIn("toast", css)
+                self.assertIn("popover", css)
+                self.assertIn("::selection", css)
 
     def test_gtk_3_4_dynamic_accent_variables_and_import_chaining(self) -> None:
         for theme_dir in ("themes/NoxForge", "themes/NoxForgeObsidian"):
@@ -299,6 +313,129 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         ):
             text = (ROOT / rel_file).read_text(encoding="utf-8")
             self.assertIn("noxforge_core.py", text, f"Missing noxforge_core.py in {rel_file}")
+
+    def test_ecosystem_backup_idempotency_without_preexisting_files(self) -> None:
+        """Applying and re-syncing ecosystem configs when no user files existed must not create fake .noxforge.bak backups."""
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_idempotency_test")
+        with tempfile.TemporaryDirectory(prefix="noxforge-v18-eco-clean-") as temp:
+            temp_path = Path(temp)
+            cfg_home = temp_path / ".config"
+            data_home = temp_path / ".local/share"
+            old_cfg = os.environ.get("XDG_CONFIG_HOME")
+            old_data = os.environ.get("XDG_DATA_HOME")
+            old_home = os.environ.get("HOME")
+            try:
+                os.environ["HOME"] = str(temp_path)
+                os.environ["XDG_CONFIG_HOME"] = str(cfg_home)
+                os.environ["XDG_DATA_HOME"] = str(data_home)
+
+                # Apply when NO files exist beforehand
+                res1 = ctl_ns["ecosystem_apply"](
+                    app_names=["starship", "fastfetch", "discord"],
+                    dry_run=False,
+                    profile="graphite",
+                    accent_hex="#A3FF47",
+                )
+                self.assertEqual(res1["status"], "applied")
+                self.assertFalse((cfg_home / "starship.toml.noxforge.bak").exists())
+                self.assertFalse((cfg_home / "Vencord/themes/noxforge.theme.css.noxforge.bak").exists())
+
+                # Re-sync via sync_tracked_ecosystem and a second ecosystem_apply
+                ctl_ns["sync_tracked_ecosystem"](
+                    profile="obsidian",
+                    accent_hex="#22D3EE",
+                    dry_run=False,
+                )
+                self.assertFalse((cfg_home / "starship.toml.noxforge.bak").exists())
+                self.assertFalse((cfg_home / "Vencord/themes/noxforge.theme.css.noxforge.bak").exists())
+                self.assertIn("#22D3EE", (cfg_home / "starship.toml").read_text(encoding="utf-8"))
+
+                # Restore must remove the NoxForge-created files cleanly
+                res_restore = ctl_ns["ecosystem_restore"](app_names=["all"], dry_run=False)
+                self.assertEqual(res_restore["status"], "restored")
+                self.assertFalse((cfg_home / "starship.toml").exists())
+                self.assertFalse((cfg_home / "fastfetch/config.jsonc").exists())
+                self.assertFalse((cfg_home / "Vencord/themes/noxforge.theme.css").exists())
+            finally:
+                for key, val in (("HOME", old_home), ("XDG_CONFIG_HOME", old_cfg), ("XDG_DATA_HOME", old_data)):
+                    if val is None:
+                        os.environ.pop(key, None)
+                    else:
+                        os.environ[key] = val
+
+    def test_schedule_midnight_wraparound_and_safe_quoting(self) -> None:
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("12:00", "07:00", "20:00"), "graphite")
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("22:00", "07:00", "20:00"), "obsidian")
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("03:00", "07:00", "20:00"), "obsidian")
+        # Wrap-around schedule (e.g. night shift day mode 22:00 -> 06:00)
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("23:00", "22:00", "06:00"), "graphite")
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("02:00", "22:00", "06:00"), "graphite")
+        self.assertEqual(noxforge_core.evaluate_schedule_profile("14:00", "22:00", "06:00"), "obsidian")
+
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_sched_test")
+        with tempfile.TemporaryDirectory(prefix="noxforge-v18-sched-") as temp:
+            old_cfg = os.environ.get("XDG_CONFIG_HOME")
+            try:
+                os.environ["XDG_CONFIG_HOME"] = str(Path(temp) / ".config")
+                res = ctl_ns["manage_schedule"](
+                    action="enable",
+                    day_time="07:30",
+                    night_time="20:30",
+                    dry_run=False,
+                )
+                self.assertEqual(res["status"], "enabled")
+                svc_file = Path(temp) / ".config/systemd/user/noxforge-daynight.service"
+                self.assertTrue(svc_file.is_file())
+                svc_text = svc_file.read_text(encoding="utf-8")
+                self.assertIn("--apply-now --day-time 07:30 --night-time 20:30", svc_text)
+                self.assertIn('"', svc_text)
+            finally:
+                if old_cfg is None:
+                    os.environ.pop("XDG_CONFIG_HOME", None)
+                else:
+                    os.environ["XDG_CONFIG_HOME"] = old_cfg
+
+    def test_motion_wallpaper_and_preset_export_import(self) -> None:
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_features_test")
+        with tempfile.TemporaryDirectory(prefix="noxforge-v18-feat-") as temp:
+            temp_path = Path(temp)
+            old_cfg = os.environ.get("XDG_CONFIG_HOME")
+            old_data = os.environ.get("XDG_DATA_HOME")
+            try:
+                os.environ["XDG_CONFIG_HOME"] = str(temp_path / ".config")
+                os.environ["XDG_DATA_HOME"] = str(temp_path / ".local/share")
+
+                # Motion dry-run and status check
+                st_motion = ctl_ns["manage_motion"](action="status", dry_run=True)
+                self.assertIn("reducedMotion", st_motion)
+                red_motion = ctl_ns["manage_motion"](action="reduced", dry_run=True)
+                self.assertTrue(red_motion["reducedMotion"])
+                std_motion = ctl_ns["manage_motion"](action="standard", dry_run=True)
+                self.assertFalse(std_motion["reducedMotion"])
+
+                # Wallpaper listing and dry-run apply
+                wp_list = ctl_ns["manage_wallpaper"](variant="list", dry_run=True)
+                self.assertEqual(wp_list["status"], "ok")
+                self.assertIn("ultrawide", wp_list["variants"])
+                wp_apply = ctl_ns["manage_wallpaper"](variant="obsidian", dry_run=True)
+                self.assertEqual(wp_apply["status"], "dry-run")
+                self.assertEqual(wp_apply["variant"], "obsidian")
+
+                # Preset export and dry-run import
+                preset_file = temp_path / "my-preset.json"
+                exp = ctl_ns["export_preset"](file_path=str(preset_file))
+                self.assertEqual(exp["schemaVersion"], 1)
+                self.assertTrue(preset_file.is_file())
+
+                imp = ctl_ns["import_preset"](file_path=str(preset_file), dry_run=True)
+                self.assertEqual(imp["status"], "dry-run")
+                self.assertIn(imp["profile"], ("graphite", "obsidian"))
+            finally:
+                for key, val in (("XDG_CONFIG_HOME", old_cfg), ("XDG_DATA_HOME", old_data)):
+                    if val is None:
+                        os.environ.pop(key, None)
+                    else:
+                        os.environ[key] = val
 
 
 if __name__ == "__main__":
