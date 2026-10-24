@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import runpy
@@ -15,6 +16,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+HAVE_PYSIDE6 = bool(importlib.util.find_spec("PySide6"))
 
 from tools import noxforge_core  # noqa: E402
 
@@ -268,6 +271,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                     else:
                         os.environ[key] = val
 
+    @unittest.skipUnless(HAVE_PYSIDE6, "PySide6 not installed in environment")
     def test_control_center_v3_self_theming_and_restore_controls(self) -> None:
         os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
         from PySide6.QtWidgets import QApplication
