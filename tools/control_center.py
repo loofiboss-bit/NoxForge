@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""NoxForge Control Center - Qt 6 Graphical Hub.
+"""NoxForge Control Center v3 - Qt 6 Graphical Hub.
 
 Unifies profile switching (Graphite <-> Obsidian), accent color management,
-depth & opacity configuration, and system diagnostics into a modern tabbed hub.
+real-time self-theming, depth & opacity configuration, Flatpak overrides,
+reversible ecosystem deployment/restoration, and system diagnostics.
 """
 
 from __future__ import annotations
@@ -20,9 +21,17 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
-for p in (str(SCRIPT_DIR), str(ROOT)):
-    if p not in sys.path:
-        sys.path.insert(0, p)
+for _p in (
+    str(SCRIPT_DIR),
+    str(ROOT / "tools"),
+    str(ROOT),
+    "/usr/share/noxforge",
+    str(Path.home() / ".local/share/noxforge"),
+):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+import noxforge_core  # noqa: E402
 
 
 def get_app_version() -> str:
@@ -84,42 +93,12 @@ except ImportError:
         opacity_gui = importlib.util.module_from_spec(spec_op)
         spec_op.loader.exec_module(opacity_gui)
 
-STYLE_SHEET = opacity_gui.STYLE_SHEET + """
-QTabWidget::pane {
-    border: 1px solid #2F414B;
-    background-color: #0D1419;
-    border-radius: 6px;
-    top: -1px;
-}
-
-QTabBar::tab {
-    background-color: #141E25;
-    color: #A6B4B9;
-    border: 1px solid #2F414B;
-    border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    padding: 8px 18px;
-    margin-right: 4px;
-    font-weight: 600;
-    font-size: 12px;
-}
-
-QTabBar::tab:selected {
-    background-color: #1B2831;
-    color: #E8F0F2;
-    border-top: 2px solid #A3FF47;
-}
-
-QTabBar::tab:hover:!selected {
-    background-color: #22323B;
-    color: #E8F0F2;
-}
-"""
+STYLE_SHEET = noxforge_core.build_qt_stylesheet()
 
 
 class ProfileAccentTab(QtWidgets.QWidget):
     statusChanged = QtCore.Signal(str)
+    themeChanged = QtCore.Signal(str, str)
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -128,7 +107,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.setSpacing(16)
 
         # Profile Switcher Section
-        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK & Terminals)")
+        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita & Terminals)")
         p_layout = QtWidgets.QVBoxLayout(profile_group)
 
         desc = QtWidgets.QLabel("Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:")
@@ -168,7 +147,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         accent_group = QtWidgets.QGroupBox("Forge Accent Matrix")
         a_layout = QtWidgets.QVBoxLayout(accent_group)
 
-        a_desc = QtWidgets.QLabel("Select signature accent color for controls, focus rings, and notch indicators:")
+        a_desc = QtWidgets.QLabel("Select signature accent color for controls, focus rings, GTK/Libadwaita, and notch indicators:")
         a_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
         a_layout.addWidget(a_desc)
 
@@ -319,14 +298,24 @@ class ProfileAccentTab(QtWidgets.QWidget):
     def refresh_state(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
+        accent_hex = status.get("accentHex", "#A3FF47")
+        pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile == "obsidian"))
+        acc = pal["accent"]
+        surf_sel = pal["surfaceSelected"]
+
+        active_btn_style = f"background-color: {surf_sel}; border: 2px solid {acc}; color: #FFFFFF; font-weight: bold;"
         if profile == "obsidian":
-            self.btn_obsidian.setStyleSheet("background-color: #1A2E20; border: 2px solid #A3FF47; color: #FFFFFF; font-weight: bold;")
+            self.btn_obsidian.setStyleSheet(active_btn_style)
             self.btn_graphite.setStyleSheet("")
         else:
-            self.btn_graphite.setStyleSheet("background-color: #1A2E20; border: 2px solid #A3FF47; color: #FFFFFF; font-weight: bold;")
+            self.btn_graphite.setStyleSheet(active_btn_style)
             self.btn_obsidian.setStyleSheet("")
 
-        # Update preview badges
+        self.setup_full_btn.setStyleSheet(
+            f"background-color: {surf_sel}; border: 1px solid {acc}; border-radius: 5px; "
+            f"color: {acc}; font-weight: bold; font-size: 11px; padding: 4px 12px;"
+        )
+
         if hasattr(self, "preview_badges"):
             for img_lbl, _, svg_path in self.preview_badges:
                 if svg_path.is_file():
@@ -354,25 +343,33 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
     def apply_profile(self, profile: str) -> None:
         if hasattr(noxforge_ctl, "apply_setup"):
-            res = noxforge_ctl.apply_setup(profile)
+            noxforge_ctl.apply_setup(profile)
         else:
-            res = noxforge_ctl.switch_profile(profile)
+            noxforge_ctl.switch_profile(profile)
         self.refresh_state()
+        status = noxforge_ctl.get_current_status()
+        self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
         self.statusChanged.emit(f"Profile activated: {profile.upper()} (complete desktop synchronized)")
 
     def apply_full_active_setup(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
+        if profile not in ("graphite", "obsidian"):
+            profile = "graphite"
         if hasattr(noxforge_ctl, "apply_setup"):
-            res = noxforge_ctl.apply_setup(profile)
+            noxforge_ctl.apply_setup(profile)
         else:
-            res = noxforge_ctl.sync_desktop(profile)
+            noxforge_ctl.sync_desktop(profile)
         self.refresh_state()
+        self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
         self.statusChanged.emit(f"Complete {profile.upper()} setup applied (Theme, Icons, Cursors, Wallpaper)")
 
     def apply_accent(self, accent: str) -> None:
         res = noxforge_ctl.set_accent(accent)
         self.refresh_state()
+        status = noxforge_ctl.get_current_status()
+        hex_color = res.get("hex") or status.get("accentHex", "#A3FF47")
+        self.themeChanged.emit(status.get("profile", "graphite"), hex_color)
         self.statusChanged.emit(f"Accent color activated: {accent.upper()}")
 
     def on_time_changed(self) -> None:
@@ -415,7 +412,7 @@ class HealthTab(QtWidgets.QWidget):
         self.btn_refresh = QtWidgets.QPushButton("Run Health Check (Doctor)")
         self.btn_refresh.clicked.connect(self.run_doctor)
         self.btn_sync = QtWidgets.QPushButton("Synchronize Desktop")
-        self.btn_sync.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold;")
+        self.btn_sync.setObjectName("applyButton")
         self.btn_sync.clicked.connect(self.align_desktop)
 
         btn_row.addWidget(self.btn_refresh)
@@ -445,12 +442,17 @@ class HealthTab(QtWidgets.QWidget):
             eco = data.get("ecosystem", {})
             flatpak = eco.get("flatpakThemesOverride", "ok")
             palette_sync = data.get("paletteSynchronization", {}).get("status", "synchronized")
+            gtk_chain = data.get("gtkChainStatus", {}).get("status", "ok")
+            core_status = data.get("noxforgeCoreStatus", "ok")
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
+            text += f"Schema Version: {data.get('schemaVersion', 11)}\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
+            text += f"Core Library (noxforge_core.py): {core_status.upper()}\n"
             text += f"Palette Synchronization: {palette_sync.upper()}\n"
+            text += f"GTK 3/4 & Libadwaita Chain: {gtk_chain.upper()}\n"
             text += f"Flatpak Themes Override: {flatpak}\n"
             text += f"Missing Components: {len(missing)}\n"
             if missing:
@@ -471,6 +473,7 @@ class HealthTab(QtWidgets.QWidget):
 
 class AccessibilityTab(QtWidgets.QWidget):
     statusChanged = QtCore.Signal(str)
+    themeChanged = QtCore.Signal(str, str)
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -609,6 +612,8 @@ class AccessibilityTab(QtWidgets.QWidget):
         clean = self.hex_input.text().strip()
         try:
             noxforge_ctl.set_accent("custom", custom_hex=clean)
+            status = noxforge_ctl.get_current_status()
+            self.themeChanged.emit(status.get("profile", "graphite"), clean.upper())
             self.statusChanged.emit(f"Custom accent applied: {clean}")
         except Exception as err:
             self.statusChanged.emit(f"Error applying accent: {err}")
@@ -621,28 +626,46 @@ class EcosystemTab(QtWidgets.QWidget):
         super().__init__(parent)
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(14)
+        layout.setSpacing(12)
 
-        header = QtWidgets.QLabel("Developer Tools & Ecosystem Synchronization")
+        header = QtWidgets.QLabel("Developer Tools, Reversible Ecosystem & Flatpak")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
         desc = QtWidgets.QLabel(
             "Synchronize NoxForge themes with external developer applications, editors, and terminals. "
-            "All ecosystem theme deployments are strictly opt-in and non-destructive."
+            "Deployments automatically create .noxforge.bak backups and stay synchronized when switching profiles or accents."
         )
         desc.setWordWrap(True)
-        desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
+        desc.setStyleSheet("color: #A6B4B9; margin-bottom: 4px;")
         layout.addWidget(desc)
+
+        # Flatpak Theme & Libadwaita Override Card
+        self.flatpak_group = QtWidgets.QGroupBox("Flatpak & Libadwaita Sandbox Theme Access")
+        fp_layout = QtWidgets.QHBoxLayout(self.flatpak_group)
+        self.flatpak_status_lbl = QtWidgets.QLabel("Status: Checking...")
+        self.flatpak_status_lbl.setStyleSheet("color: #A6B4B9; font-weight: 600;")
+        self.btn_flatpak_enable = QtWidgets.QPushButton("Enable Flatpak Override")
+        self.btn_flatpak_enable.setAccessibleName("Enable Flatpak Override")
+        self.btn_flatpak_enable.clicked.connect(lambda: self.toggle_flatpak("enable"))
+        self.btn_flatpak_disable = QtWidgets.QPushButton("Disable Override")
+        self.btn_flatpak_disable.setAccessibleName("Disable Flatpak Override")
+        self.btn_flatpak_disable.clicked.connect(lambda: self.toggle_flatpak("disable"))
+
+        fp_layout.addWidget(self.flatpak_status_lbl, stretch=1)
+        fp_layout.addWidget(self.btn_flatpak_enable)
+        fp_layout.addWidget(self.btn_flatpak_disable)
+        layout.addWidget(self.flatpak_group)
 
         # Table for ecosystem apps
         self.table = QtWidgets.QTableWidget()
-        self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(["Application", "Status", "Theme Installed", "Action"])
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["Application", "Status", "Theme Installed", "Deploy", "Restore Backup"])
         self.table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.table.verticalHeader().setVisible(False)
         self.table.setAlternatingRowColors(True)
         self.table.setStyleSheet(
@@ -655,21 +678,40 @@ class EcosystemTab(QtWidgets.QWidget):
         # Buttons row
         btn_row = QtWidgets.QHBoxLayout()
         self.btn_apply_all = QtWidgets.QPushButton("Deploy All Detected Themes")
-        self.btn_apply_all.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold; min-height: 36px;")
+        self.btn_apply_all.setObjectName("applyButton")
+        self.btn_apply_all.setMinimumHeight(36)
         self.btn_apply_all.clicked.connect(self.apply_all_detected)
+
+        self.btn_restore_all = QtWidgets.QPushButton("Restore All Backups")
+        self.btn_restore_all.setAccessibleName("Restore All Backups")
+        self.btn_restore_all.setMinimumHeight(36)
+        self.btn_restore_all.clicked.connect(self.restore_all_backups)
 
         self.btn_refresh = QtWidgets.QPushButton("Refresh Status")
         self.btn_refresh.setMinimumHeight(36)
         self.btn_refresh.clicked.connect(self.refresh_table)
 
         btn_row.addWidget(self.btn_apply_all)
+        btn_row.addWidget(self.btn_restore_all)
         btn_row.addWidget(self.btn_refresh)
         btn_row.addStretch()
         layout.addLayout(btn_row)
 
         self.refresh_table()
 
+    def toggle_flatpak(self, action: str) -> None:
+        res = noxforge_ctl.manage_flatpak(action)
+        self.refresh_table()
+        self.statusChanged.emit(f"Flatpak override {action}: {res.get('status')}")
+
     def refresh_table(self) -> None:
+        fp_info = noxforge_ctl.manage_flatpak("status") if hasattr(noxforge_ctl, "manage_flatpak") else {"status": "unknown", "enabled": False}
+        fp_enabled = bool(fp_info.get("enabled"))
+        self.flatpak_status_lbl.setText(
+            f"Flatpak GTK/Libadwaita Override: {'● ENABLED (xdg-data/themes + gtk-3.0/4.0)' if fp_enabled else '○ NOT CONFIGURED'}"
+        )
+        self.flatpak_status_lbl.setStyleSheet(f"color: {'#A3FF47' if fp_enabled else '#A6B4B9'}; font-weight: 600;")
+
         status = noxforge_ctl.ecosystem_status()
         self.table.setRowCount(len(status))
         for row, (app_id, info) in enumerate(status.items()):
@@ -685,18 +727,29 @@ class EcosystemTab(QtWidgets.QWidget):
             det_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(row, 1, det_item)
 
-            # Col 2: Installed
-            inst_str = "✓ Synced" if info["installed"] else "○ Not Deployed"
+            # Col 2: Installed + Sync state
+            synced_prof = info.get("syncedProfile")
+            if info["installed"]:
+                inst_str = f"✓ Synced ({synced_prof.capitalize()})" if synced_prof else "✓ Synced"
+            else:
+                inst_str = "○ Not Deployed"
             inst_item = QtWidgets.QTableWidgetItem(inst_str)
             inst_item.setForeground(QtGui.QBrush(QtGui.QColor("#22D3EE" if info["installed"] else "#748289")))
             inst_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(row, 2, inst_item)
 
-            # Col 3: Action button
+            # Col 3: Deploy Action button
             action_btn = QtWidgets.QPushButton(f"Deploy Theme to {info['name']}")
             action_btn.setStyleSheet("padding: 4px 10px; font-size: 11px;")
             action_btn.clicked.connect(lambda _, a=app_id: self.apply_app(a))
             self.table.setCellWidget(row, 3, action_btn)
+
+            # Col 4: Restore Backup button
+            restore_btn = QtWidgets.QPushButton("Restore Backup")
+            restore_btn.setStyleSheet("padding: 4px 10px; font-size: 11px;")
+            restore_btn.setEnabled(bool(info.get("hasBackup") or info.get("installed")))
+            restore_btn.clicked.connect(lambda _, a=app_id: self.restore_app(a))
+            self.table.setCellWidget(row, 4, restore_btn)
 
     def apply_app(self, app_id: str) -> None:
         res = noxforge_ctl.ecosystem_apply([app_id])
@@ -708,10 +761,28 @@ class EcosystemTab(QtWidgets.QWidget):
             self.statusChanged.emit(f"Skipped {app_id} (target configuration not detected).")
         self.refresh_table()
 
+    def restore_app(self, app_id: str) -> None:
+        if hasattr(noxforge_ctl, "ecosystem_restore"):
+            res = noxforge_ctl.ecosystem_restore([app_id])
+            if res.get("errors"):
+                self.statusChanged.emit(f"Error restoring {app_id}: {res['errors'].get(app_id)}")
+            elif app_id in res.get("restored", []):
+                self.statusChanged.emit(f"Restored original configuration for {app_id}.")
+            else:
+                self.statusChanged.emit(f"No backup to restore for {app_id}.")
+        self.refresh_table()
+
     def apply_all_detected(self) -> None:
         res = noxforge_ctl.ecosystem_apply()
         applied = res.get("applied", [])
         self.statusChanged.emit(f"Ecosystem themes applied: {len(applied)} applications updated.")
+        self.refresh_table()
+
+    def restore_all_backups(self) -> None:
+        if hasattr(noxforge_ctl, "ecosystem_restore"):
+            res = noxforge_ctl.ecosystem_restore()
+            restored = res.get("restored", [])
+            self.statusChanged.emit(f"Restored backups for {len(restored)} applications.")
         self.refresh_table()
 
 
@@ -720,7 +791,8 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.setWindowTitle("NoxForge Control Center")
         self.setMinimumSize(880, 680)
-        self.setStyleSheet(STYLE_SHEET)
+        self.active_profile = "graphite"
+        self.active_accent_hex = "#A3FF47"
 
         icon_candidates = [
             ROOT / "icons/hicolor/scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg",
@@ -739,21 +811,22 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
 
         # Tab Widget
         self.tabs = QtWidgets.QTabWidget()
-        
+
         # Tab 1: Profile & Accent Hub
         self.tab_profile = ProfileAccentTab()
         self.tab_profile.statusChanged.connect(self.show_status)
+        self.tab_profile.themeChanged.connect(self.refresh_theme)
         self.tabs.addTab(self.tab_profile, "Profile && Accent")
 
         # Tab 2: Opacity & Depth Configurator
         self.opacity_window = opacity_gui.OpacityConfiguratorWindow()
-        # Embed opacity central widget into tab
         opacity_inner = self.opacity_window.centralWidget()
         self.tabs.addTab(opacity_inner, "Transparency && Depth")
 
         # Tab 3: Accessibility & Motion
         self.tab_a11y = AccessibilityTab()
         self.tab_a11y.statusChanged.connect(self.show_status)
+        self.tab_a11y.themeChanged.connect(self.refresh_theme)
         self.tabs.addTab(self.tab_a11y, "Accessibility && Motion")
 
         # Tab 4: Health & Diagnostics
@@ -785,8 +858,27 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
 
         main_layout.addWidget(self.tabs)
 
+        # Apply initial dynamic theme from active status
+        status = noxforge_ctl.get_current_status()
+        init_prof = status.get("profile", "graphite")
+        if init_prof not in ("graphite", "obsidian"):
+            init_prof = "graphite"
+        init_acc = status.get("accentHex", "#A3FF47")
+        self.refresh_theme(init_prof, init_acc)
+
         # Status Bar
         self.statusBar().showMessage(f"NoxForge Control Center v{APP_VERSION} ready.")
+
+    def refresh_theme(self, profile: str = "graphite", accent_hex: str = "#A3FF47") -> None:
+        """Dynamically re-skin the Control Center GUI to match the active profile and accent."""
+        self.active_profile = profile.lower() if profile.lower() in ("graphite", "obsidian") else "graphite"
+        self.active_accent_hex = accent_hex or "#A3FF47"
+        qss = noxforge_core.build_qt_stylesheet(profile=self.active_profile, accent_hex=self.active_accent_hex)
+        self.setStyleSheet(qss)
+        if hasattr(self.opacity_window, "refresh_theme"):
+            self.opacity_window.refresh_theme(self.active_profile, self.active_accent_hex)
+        self.tab_profile.refresh_state()
+        self.tab_eco.refresh_table()
 
     def show_status(self, msg: str) -> None:
         self.statusBar().showMessage(msg, 5000)

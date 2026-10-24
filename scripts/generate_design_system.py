@@ -646,6 +646,7 @@ def gtk_theme_css(tokens: dict[str, object], variant: str = "standard", gtk_vers
 @define-color accent_color {accent};
 @define-color accent_bg_color {accent};
 @define-color accent_fg_color {accent_ink};
+@define-color accent_pressed_color {accent_pressed};
 @define-color window_bg_color {bg};
 @define-color window_fg_color {fg};
 @define-color view_bg_color {surface};
@@ -702,7 +703,7 @@ button:active, button:checked {{
 }}
 
 button:focus {{
-    outline: 2px solid {accent};
+    outline: 2px solid @accent_color;
     outline-offset: 1px;
 }}
 
@@ -712,15 +713,15 @@ button:disabled {{
 }}
 
 button.suggested-action {{
-    background-color: {accent};
-    border-color: {accent};
-    color: {accent_ink};
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
     font-weight: 600;
 }}
 
 button.suggested-action:hover {{
-    background-color: {accent_pressed};
-    border-color: {accent_pressed};
+    background-color: @accent_pressed_color;
+    border-color: @accent_pressed_color;
 }}
 
 button.destructive-action {{
@@ -740,8 +741,8 @@ entry {{
 }}
 
 entry:focus {{
-    border-color: {accent};
-    outline: 1px solid {accent};
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
 }}
 
 /* List views and item trees */
@@ -755,9 +756,9 @@ row:hover {{
 }}
 
 row:selected {{
-    background-color: {surface_selected};
+    background-color: @theme_view_active;
     color: {fg};
-    border-left: 3px solid {accent};
+    border-left: 3px solid @accent_color;
 }}
 
 /* Tabs / Notebook */
@@ -773,7 +774,7 @@ notebook > header.top > tab {{
 notebook > header.top > tab:checked, notebook > header.top > tab:active {{
     background-color: {surface};
     color: {fg};
-    border-top: 2px solid {accent};
+    border-top: 2px solid @accent_color;
 }}
 
 /* Scrollbars */
@@ -788,7 +789,7 @@ scrollbar slider:hover {{
     background-color: {border_strong};
 }}
 
-/* Checkboxes and Radio buttons */
+/* Checkboxes, switches, and progress indicators */
 check, radio {{
     border: 1px solid {border_strong};
     border-radius: 4px;
@@ -800,10 +801,15 @@ radio {{
     border-radius: 50%;
 }}
 
-check:checked, radio:checked {{
-    background-color: {accent};
-    border-color: {accent};
-    color: {accent_ink};
+check:checked, radio:checked, checkbutton:checked, radiobutton:checked, switch:checked {{
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
+}}
+
+progressbar progress, scale highlight {{
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
 }}
 
 /* Tooltips */

@@ -99,6 +99,7 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/bin/noxforge-doctor|\
         /usr/bin/noxforge-opacity|\
         /usr/bin/noxforge-ctl|\
+        /usr/share/noxforge/noxforge_core.py|\
         /usr/share/noxforge/opacity_gui.py|\
         /usr/share/noxforge/control_center.py|\
         /usr/share/applications/io.github.loofiboss.noxforge.opacity.desktop|\

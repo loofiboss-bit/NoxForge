@@ -68,6 +68,7 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/icons/hicolor/scalable/apps/noxforge-controlcenter.svg
 %{_datadir}/noxforge/VERSION
 %{_datadir}/noxforge/release-manifest.json
+%{_datadir}/noxforge/noxforge_core.py
 %{_datadir}/noxforge/opacity_gui.py
 %{_datadir}/noxforge/control_center.py
 %{_datadir}/color-schemes/NoxForgeDark.colors

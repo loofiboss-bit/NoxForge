@@ -65,6 +65,8 @@ else
         "${data_home}/noxforge/bin/control_center.py"
         "${data_home}/noxforge/bin/noxforge-opacity"
         "${data_home}/noxforge/bin/opacity_gui.py"
+        "${data_home}/noxforge/bin/noxforge_core.py"
+        "${data_home}/noxforge/noxforge_core.py"
     )
 fi
 

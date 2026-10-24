@@ -13,6 +13,7 @@
 @define-color accent_color #A3FF47;
 @define-color accent_bg_color #A3FF47;
 @define-color accent_fg_color #0D1419;
+@define-color accent_pressed_color #82D936;
 @define-color window_bg_color #000000;
 @define-color window_fg_color #E8F0F2;
 @define-color view_bg_color #0A0F13;
@@ -69,7 +70,7 @@ button:active, button:checked {
 }
 
 button:focus {
-    outline: 2px solid #A3FF47;
+    outline: 2px solid @accent_color;
     outline-offset: 1px;
 }
 
@@ -79,15 +80,15 @@ button:disabled {
 }
 
 button.suggested-action {
-    background-color: #A3FF47;
-    border-color: #A3FF47;
-    color: #0D1419;
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
     font-weight: 600;
 }
 
 button.suggested-action:hover {
-    background-color: #82D936;
-    border-color: #82D936;
+    background-color: @accent_pressed_color;
+    border-color: @accent_pressed_color;
 }
 
 button.destructive-action {
@@ -107,8 +108,8 @@ entry {
 }
 
 entry:focus {
-    border-color: #A3FF47;
-    outline: 1px solid #A3FF47;
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
 }
 
 /* List views and item trees */
@@ -122,9 +123,9 @@ row:hover {
 }
 
 row:selected {
-    background-color: #192D1E;
+    background-color: @theme_view_active;
     color: #E8F0F2;
-    border-left: 3px solid #A3FF47;
+    border-left: 3px solid @accent_color;
 }
 
 /* Tabs / Notebook */
@@ -140,7 +141,7 @@ notebook > header.top > tab {
 notebook > header.top > tab:checked, notebook > header.top > tab:active {
     background-color: #0A0F13;
     color: #E8F0F2;
-    border-top: 2px solid #A3FF47;
+    border-top: 2px solid @accent_color;
 }
 
 /* Scrollbars */
@@ -155,7 +156,7 @@ scrollbar slider:hover {
     background-color: #455A64;
 }
 
-/* Checkboxes and Radio buttons */
+/* Checkboxes, switches, and progress indicators */
 check, radio {
     border: 1px solid #455A64;
     border-radius: 4px;
@@ -167,10 +168,15 @@ radio {
     border-radius: 50%;
 }
 
-check:checked, radio:checked {
-    background-color: #A3FF47;
-    border-color: #A3FF47;
-    color: #0D1419;
+check:checked, radio:checked, checkbutton:checked, radiobutton:checked, switch:checked {
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
+}
+
+progressbar progress, scale highlight {
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
 }
 
 /* Tooltips */

@@ -241,6 +241,8 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         shutil.copy2(ROOT / "tools/noxforge-ctl", ctl)
         cc = root / "bin/control_center.py"
         shutil.copy2(ROOT / "tools/control_center.py", cc)
+        core = root / "bin/noxforge_core.py"
+        shutil.copy2(ROOT / "tools/noxforge_core.py", core)
         component_root = root / "components"
         for package in PACKAGE_KEYS:
             with tempfile.TemporaryDirectory(prefix=f"noxforge-portable-{package}-") as package_name:

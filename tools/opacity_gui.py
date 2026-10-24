@@ -60,192 +60,21 @@ else:
         get_status = mod.get_status
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPT_DIR = Path(__file__).resolve().parent
+for _cand in (
+    str(SCRIPT_DIR),
+    str(ROOT / "tools"),
+    str(ROOT),
+    "/usr/share/noxforge",
+    str(Path.home() / ".local/share/noxforge"),
+):
+    if _cand not in sys.path:
+        sys.path.insert(0, _cand)
 
-# NoxForge Everyday Precision QSS
-STYLE_SHEET = """
-QWidget {
-    background-color: #0D1419;
-    color: #E8F0F2;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
-    font-size: 13px;
-}
+import noxforge_core  # noqa: E402
 
-QGroupBox {
-    background-color: #141E25;
-    border: 1px solid #2F414B;
-    border-radius: 6px;
-    margin-top: 20px;
-    padding: 16px 12px 12px 12px;
-    font-weight: 600;
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 12px;
-    padding: 0 6px;
-    color: #A6B4B9;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-QPushButton {
-    background-color: #1B2831;
-    color: #E8F0F2;
-    border: 1px solid #2F414B;
-    border-radius: 5px;
-    padding: 7px 14px;
-    font-weight: 500;
-}
-
-QPushButton:hover {
-    background-color: #283942;
-    border-color: #4B606A;
-}
-
-QPushButton:pressed {
-    background-color: #10191F;
-}
-
-QPushButton:disabled {
-    color: #55636A;
-    border-color: #1B2831;
-}
-
-QPushButton.presetBtn {
-    text-align: left;
-    padding: 7px 10px;
-    font-size: 11px;
-    border-radius: 5px;
-}
-
-QPushButton.presetBtnActive {
-    border: 1px solid #A3FF47;
-    background-color: #1A2E20;
-    color: #FFFFFF;
-}
-
-QPushButton#applyButton {
-    background-color: #A3FF47;
-    color: #0D1419;
-    font-weight: 700;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 24px;
-}
-
-QPushButton#applyButton:hover {
-    background-color: #B4FF6B;
-}
-
-QPushButton#applyButton:pressed {
-    background-color: #82D936;
-}
-
-QSlider {
-    min-height: 26px;
-}
-
-QSlider::groove:horizontal {
-    height: 6px;
-    background: #10191F;
-    border: 1px solid #2F414B;
-    border-radius: 3px;
-}
-
-QSlider::sub-page:horizontal {
-    background: #A3FF47;
-    border-radius: 3px;
-}
-
-QSlider::handle:horizontal {
-    background: #E8F0F2;
-    border: 1px solid #4B606A;
-    width: 16px;
-    height: 16px;
-    margin-top: -5px;
-    margin-bottom: -5px;
-    border-radius: 8px;
-}
-
-QSlider::handle:horizontal:hover {
-    background: #22D3EE;
-    border-color: #22D3EE;
-}
-
-QCheckBox {
-    spacing: 8px;
-    font-size: 12px;
-    min-height: 22px;
-}
-
-QCheckBox::indicator {
-    width: 16px;
-    height: 16px;
-    border: 1px solid #2F414B;
-    border-radius: 3px;
-    background-color: #10191F;
-}
-
-QCheckBox::indicator:checked {
-    background-color: #A3FF47;
-    border-color: #A3FF47;
-}
-
-QRadioButton {
-    spacing: 6px;
-    font-size: 12px;
-    min-height: 20px;
-}
-
-QRadioButton::indicator {
-    width: 14px;
-    height: 14px;
-    border: 1px solid #2F414B;
-    border-radius: 7px;
-    background-color: #10191F;
-}
-
-QRadioButton::indicator:checked {
-    background-color: #A3FF47;
-    border-color: #A3FF47;
-}
-
-QScrollArea {
-    border: none;
-    background-color: transparent;
-}
-
-QScrollBar:vertical {
-    border: none;
-    background: #0D1419;
-    width: 7px;
-    margin: 0px;
-    border-radius: 3px;
-}
-
-QScrollBar::handle:vertical {
-    background: #2F414B;
-    min-height: 25px;
-    border-radius: 3px;
-}
-
-QScrollBar::handle:vertical:hover {
-    background: #4B606A;
-}
-
-QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-    border: none;
-    background: none;
-    height: 0px;
-}
-
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-    background: none;
-}
-"""
+# NoxForge Everyday Precision QSS (dynamically generated from noxforge_core)
+STYLE_SHEET = noxforge_core.build_qt_stylesheet()
 
 
 class ApplyWorker(QtCore.QThread):
@@ -662,6 +491,16 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         self._build_ui()
         self._load_current_status()
 
+    def refresh_theme(self, profile: str = "graphite", accent_hex: str = "#A3FF47") -> None:
+        qss = noxforge_core.build_qt_stylesheet(profile=profile, accent_hex=accent_hex)
+        self.setStyleSheet(qss)
+        cw = self.centralWidget()
+        if cw:
+            cw.setStyleSheet(qss)
+        if hasattr(self, "title_lbl"):
+            pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile.lower() == "obsidian"))
+            self.title_lbl.setStyleSheet(f"font-size: 16px; font-weight: 800; color: {pal['accent']}; letter-spacing: 1px;")
+
     def _build_ui(self) -> None:
         central = QtWidgets.QWidget(self)
         self.setCentralWidget(central)
@@ -679,11 +518,11 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         title_box = QtWidgets.QHBoxLayout()
         header_vbox = QtWidgets.QVBoxLayout()
         header_vbox.setSpacing(2)
-        title_lbl = QtWidgets.QLabel("NOXFORGE // DEPTH & OPACITY")
-        title_lbl.setStyleSheet("font-size: 16px; font-weight: 800; color: #A3FF47; letter-spacing: 1px;")
+        self.title_lbl = QtWidgets.QLabel("NOXFORGE // DEPTH & OPACITY")
+        self.title_lbl.setStyleSheet("font-size: 16px; font-weight: 800; color: #A3FF47; letter-spacing: 1px;")
         sub_lbl = QtWidgets.QLabel("Surface Transparency Configurator - KDE Plasma 6")
         sub_lbl.setStyleSheet("font-size: 11px; color: #A6B4B9;")
-        header_vbox.addWidget(title_lbl)
+        header_vbox.addWidget(self.title_lbl)
         header_vbox.addWidget(sub_lbl)
         title_box.addLayout(header_vbox)
         title_box.addStretch()
