@@ -1,4 +1,4 @@
-.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 17.0.1" "User Commands"
+.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 18.0.0" "User Commands"
 .SH NAME
 noxforge-ctl \- NoxForge Unified Control Hub and Orchestration Suite
 .SH SYNOPSIS
@@ -33,14 +33,36 @@ Also non-destructively updates user GTK 3/4 accent overrides.
 .BR status
 Display the current NoxForge desktop profile and component state.
 .TP
-.BR schedule " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
+.BR schedule " [" \-\-enable " | " \-\-disable " | " \-\-status " | " \-\-apply\-now "]"
 Manage automated Day/Night profile switching via systemd user timers.
 \fB--enable\fR accepts optional \fB--day-time\fR \fIHH:MM\fR (default 07:00) and
-\fB--night-time\fR \fIHH:MM\fR (default 20:00).
+\fB--night-time\fR \fIHH:MM\fR (default 20:00). \fB--apply-now\fR evaluates the current
+local time against the schedule (including midnight wrap-around schedules) and switches profile.
 .TP
-.BR ecosystem " [" status " | " apply " [" \fIapp\fR | all "] ]"
-Audit or non-destructively deploy NoxForge theme configurations to user application
-directories (Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, Starship, Fastfetch).
+.BR motion " [" \-\-status " | " \-\-reduced " | " \-\-standard "]"
+Inspect or toggle system-wide Reduced Motion across KDE Plasma (\fBAnimationDurationFactor\fR)
+and GNOME/GTK (\fBenable-animations\fR).
+.TP
+.BR wallpaper " [" standard | obsidian | quiet | ultrawide | obsidian\-ultrawide " | " \-\-list "]"
+Switch or list the active NoxForge desktop wallpaper variant across connected Plasma monitors.
+.TP
+.BR export " [\fB\-\-output\fR " \fIFILE\fR "]"
+Export a portable JSON preset snapshot capturing profile, accent, opacity, motion, schedule,
+Flatpak, and ecosystem state.
+.TP
+.BR import " " \fIFILE\fR
+Import and apply a portable JSON preset snapshot created by \fBnoxforge-ctl export\fR.
+.TP
+.BR flatpak " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
+Manage user Flatpak overrides (\fBxdg-data/themes:ro\fR, \fBxdg-config/gtk-3.0:ro\fR, \fBxdg-config/gtk-4.0:ro\fR)
+so sandboxed GTK 3, GTK 4, and Libadwaita applications adopt the active NoxForge theme and accent.
+.TP
+.BR ecosystem " [" status " | " apply " [" \fIapp\fR | all "] | " restore " [" \fIapp\fR | all "] ]"
+Audit, deploy, or restore NoxForge theme configurations for user application directories
+(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship, Fastfetch).
+\fBapply\fR creates automatic \fB.noxforge.bak\fR backups and tracks deployed apps in
+\fB~/.config/noxforge/ecosystem-state.json\fR for reactive profile and accent synchronization;
+\fBrestore\fR restores original user configurations.
 .TP
 .BR opacity " [" \fIargs\fR... "]"
 Configure panel, popup, and window decoration transparency levels via \fBnoxforge-opacity\fR.

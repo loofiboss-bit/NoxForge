@@ -1,5 +1,28 @@
 # Changelog
 
+## 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
+
+- GTK 3/4, Libadwaita & Flatpak Parity:
+  - Bound interactive and focus selectors in generated GTK 3.0 and 4.0 CSS (`themes/NoxForge` and `themes/NoxForgeObsidian`) to `@accent_color`, `@accent_bg_color`, `@accent_fg_color`, and `@theme_selected_bg_color`.
+  - Replaced partial GTK accent snippets with a managed `@import` + `@define-color` block in `~/.config/gtk-3.0/gtk.css` and `~/.config/gtk-4.0/gtk.css` for full Libadwaita surface and accent parity.
+  - Added opt-in `noxforge-ctl flatpak --enable|--disable|--status` orchestration.
+- Reversible & Reactive Ecosystem Engine v2:
+  - Added automatic `.noxforge.bak` backups before deploying over user configs (`starship.toml`, `fastfetch/config.jsonc`, Firefox `userChrome.css`, etc.) and `noxforge-ctl ecosystem restore [apps...|all]`.
+  - Added stateful tracking in `~/.config/noxforge/ecosystem-state.json` and automatic propagation of profile switches (`graphite`/`obsidian`) and custom/matrix accents across deployed ecosystem tools and Konsole profiles.
+- Shared Python Core & Control Center v3:
+  - Extracted `tools/noxforge_core.py` to unify version resolution, XDG paths, KConfig access, WCAG 2.1 contrast calculation, and dynamic Qt stylesheet generation.
+  - Upgraded `tools/control_center.py` and `tools/opacity_gui.py` with live self-theming (`build_qt_stylesheet()`), per-app `Restore Backup` controls, and a Flatpak Theme Override card.
+- Tokens Schema 14 & Doctor Schema 11:
+  - Upgraded `design/tokens.json` to Schema 14 (`gtk` and `ecosystem` contracts) and `tools/noxforge-doctor` to Schema 11 (`noxforgeCoreStatus`, `gtkChainStatus`, `ecosystemState`).
+
+## 17.0.1 — Authentic Dolphin Grid & Quick Onboarding
+
+- Aligned Dolphin store showcase with authentic Plasma 6 icon grid view and added 1-click `noxforge-ctl apply` onboarding.
+
+## 17.0.0 — Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
+
+- Upgraded single-source QML generation to Schema 2 across all 6 component pairs (12 variants), Tokens Schema 13, dynamic C++ style selection tinting, Control Center Tab 5 (`Ecosystem & Apps`), and Doctor Schema 10.
+
 ## 16.0.0 — Single Source, Kinetic Accessibility & Verified Truth
 
 - Single-Source QML Architecture & Drift-Proof Generator:

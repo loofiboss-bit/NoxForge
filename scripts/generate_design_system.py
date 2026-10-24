@@ -646,6 +646,7 @@ def gtk_theme_css(tokens: dict[str, object], variant: str = "standard", gtk_vers
 @define-color accent_color {accent};
 @define-color accent_bg_color {accent};
 @define-color accent_fg_color {accent_ink};
+@define-color accent_pressed_color {accent_pressed};
 @define-color window_bg_color {bg};
 @define-color window_fg_color {fg};
 @define-color view_bg_color {surface};
@@ -702,7 +703,7 @@ button:active, button:checked {{
 }}
 
 button:focus {{
-    outline: 2px solid {accent};
+    outline: 2px solid @accent_color;
     outline-offset: 1px;
 }}
 
@@ -712,15 +713,15 @@ button:disabled {{
 }}
 
 button.suggested-action {{
-    background-color: {accent};
-    border-color: {accent};
-    color: {accent_ink};
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
     font-weight: 600;
 }}
 
 button.suggested-action:hover {{
-    background-color: {accent_pressed};
-    border-color: {accent_pressed};
+    background-color: @accent_pressed_color;
+    border-color: @accent_pressed_color;
 }}
 
 button.destructive-action {{
@@ -740,8 +741,8 @@ entry {{
 }}
 
 entry:focus {{
-    border-color: {accent};
-    outline: 1px solid {accent};
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
 }}
 
 /* List views and item trees */
@@ -755,9 +756,9 @@ row:hover {{
 }}
 
 row:selected {{
-    background-color: {surface_selected};
+    background-color: @theme_view_active;
     color: {fg};
-    border-left: 3px solid {accent};
+    border-left: 3px solid @accent_color;
 }}
 
 /* Tabs / Notebook */
@@ -773,7 +774,7 @@ notebook > header.top > tab {{
 notebook > header.top > tab:checked, notebook > header.top > tab:active {{
     background-color: {surface};
     color: {fg};
-    border-top: 2px solid {accent};
+    border-top: 2px solid @accent_color;
 }}
 
 /* Scrollbars */
@@ -788,7 +789,7 @@ scrollbar slider:hover {{
     background-color: {border_strong};
 }}
 
-/* Checkboxes and Radio buttons */
+/* Checkboxes, switches, and progress indicators */
 check, radio {{
     border: 1px solid {border_strong};
     border-radius: 4px;
@@ -800,10 +801,123 @@ radio {{
     border-radius: 50%;
 }}
 
-check:checked, radio:checked {{
-    background-color: {accent};
-    border-color: {accent};
-    color: {accent_ink};
+check:checked, radio:checked, checkbutton:checked, radiobutton:checked, switch:checked {{
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+    color: @accent_fg_color;
+}}
+
+progressbar progress, scale highlight {{
+    background-color: @accent_bg_color;
+    border-color: @accent_color;
+}}
+
+/* Text and view selections */
+selection, ::selection, entry selection, textview text selection, label selection {{
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}}
+
+/* Libadwaita & GTK 4 Navigation Sidebars, Boxed Lists & Cards */
+.navigation-sidebar {{
+    background-color: {surface_sunken};
+    color: {fg};
+}}
+
+.navigation-sidebar > row {{
+    background-color: transparent;
+    border-radius: 6px;
+    margin: 2px 6px;
+    padding: 6px 10px;
+}}
+
+.navigation-sidebar > row:hover {{
+    background-color: {surface_hover};
+}}
+
+.navigation-sidebar > row:selected {{
+    background-color: @theme_view_active;
+    color: {fg};
+    border-left: 3px solid @accent_color;
+}}
+
+list.boxed-list, card, .card {{
+    background-color: {surface_raised};
+    border: 1px solid {border};
+    border-radius: 6px;
+    color: {fg};
+}}
+
+list.boxed-list > row {{
+    background-color: {surface_raised};
+    border-bottom: 1px solid {border};
+    padding: 8px 12px;
+}}
+
+list.boxed-list > row:hover {{
+    background-color: {surface_hover};
+}}
+
+/* Libadwaita TabBar, Popovers, Menus, Toasts & Banners */
+tabbar tab {{
+    background-color: {surface_sunken};
+    color: {fg_secondary};
+    border: 1px solid {border};
+    border-bottom: none;
+    padding: 6px 12px;
+}}
+
+tabbar tab:checked, tabbar tab:selected {{
+    background-color: {surface};
+    color: {fg};
+    border-top: 2px solid @accent_color;
+}}
+
+popover > contents, popover.menu > contents, menu {{
+    background-color: {colors["surfaceOverlay"]};
+    border: 1px solid {edge_highlight};
+    border-radius: 8px;
+    color: {fg};
+    padding: 4px;
+}}
+
+modelbutton:hover, menuitem:hover {{
+    background-color: @theme_view_active;
+    color: {fg};
+    border-left: 2px solid @accent_color;
+}}
+
+toast {{
+    background-color: {colors["surfaceOverlay"]};
+    border: 1px solid @accent_color;
+    border-radius: 6px;
+    color: {fg};
+    padding: 8px 14px;
+}}
+
+banner > revealer > widget {{
+    background-color: @theme_view_active;
+    border-bottom: 1px solid @accent_color;
+    color: {fg};
+    padding: 6px 12px;
+}}
+
+actionbar > revealer > box, searchbar > revealer > box {{
+    background-color: {surface_sunken};
+    border-color: {border};
+    color: {fg};
+}}
+
+spinbutton, dropdown > button {{
+    background-color: {surface_raised};
+    border: 1px solid {border};
+    border-radius: 6px;
+    color: {fg};
+}}
+
+spinbutton:focus-within, dropdown > button:focus {{
+    border-color: @accent_color;
+    outline: 1px solid @accent_color;
 }}
 
 /* Tooltips */

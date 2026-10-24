@@ -1122,6 +1122,84 @@ def display_path(path: Path, root: Path) -> str:
     return str(path)
 
 
+def noxforge_core_diagnostics(root: Path) -> str:
+    candidates = [
+        root / "tools/noxforge_core.py",
+        root / "usr/share/noxforge/noxforge_core.py",
+        root / ".local/share/noxforge/noxforge_core.py",
+        root / ".local/share/noxforge/bin/noxforge_core.py",
+        Path(__file__).resolve().parent / "noxforge_core.py",
+    ]
+    return "ok" if any(c.is_file() for c in candidates) else "missing"
+
+
+def gtk_chain_diagnostics(roots: list[Path], root: Path) -> dict[str, Any]:
+    gtk_files: list[Path] = []
+    for base in [root, *roots]:
+        for rel in (
+            "themes/NoxForge/gtk-3.0/gtk.css",
+            "themes/NoxForge/gtk-4.0/gtk.css",
+            "themes/NoxForgeObsidian/gtk-3.0/gtk.css",
+            "themes/NoxForgeObsidian/gtk-4.0/gtk.css",
+        ):
+            cand = base / rel
+            if cand.is_file():
+                gtk_files.append(cand)
+    dynamic_bound = True
+    for gf in gtk_files:
+        try:
+            text = gf.read_text(encoding="utf-8", errors="ignore")
+            if "@define-color" in text and "@accent_color" not in text:
+                dynamic_bound = False
+        except OSError:
+            pass
+    config_base = (
+        Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        if root == Path("/")
+        else root / ".config"
+    )
+    gtk3_cfg = config_base / "gtk-3.0/gtk.css"
+    gtk4_cfg = config_base / "gtk-4.0/gtk.css"
+    return {
+        "status": "ok" if dynamic_bound else "legacy",
+        "dynamicAccentBinding": dynamic_bound,
+        "gtk3Chained": (
+            "NoxForge Dynamic Accent" in gtk3_cfg.read_text(encoding="utf-8", errors="ignore")
+            if gtk3_cfg.is_file()
+            else False
+        ),
+        "gtk4Chained": (
+            "NoxForge Dynamic Accent" in gtk4_cfg.read_text(encoding="utf-8", errors="ignore")
+            if gtk4_cfg.is_file()
+            else False
+        ),
+    }
+
+
+def ecosystem_state_diagnostics(root: Path) -> dict[str, Any]:
+    config_base = (
+        Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        if root == Path("/")
+        else root / ".config"
+    )
+    state_file = config_base / "noxforge/ecosystem-state.json"
+    deployed_apps: list[str] = []
+    if state_file.is_file():
+        try:
+            data = json.loads(state_file.read_text(encoding="utf-8"))
+            if isinstance(data.get("apps"), dict):
+                deployed_apps = sorted(data["apps"].keys())
+        except (OSError, json.JSONDecodeError):
+            pass
+    return {
+        "status": "ok",
+        "reversible": True,
+        "backupSuffix": ".noxforge.bak",
+        "stateFilePresent": state_file.is_file(),
+        "deployedApps": deployed_apps,
+    }
+
+
 def inspect_ecosystem(root: Path) -> dict[str, Any]:
     if root == Path("/"):
         override_file = data_roots(root)[0] / "flatpak/overrides/global"
@@ -1356,7 +1434,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 10,
+        "schemaVersion": 11,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -1379,6 +1457,9 @@ def build_report(root: Path) -> dict[str, Any]:
         "customAccentContrast": custom_accent_contrast,
         "faceAuthApi": face_auth,
         "ecosystem": inspect_ecosystem(root),
+        "noxforgeCoreStatus": noxforge_core_diagnostics(root),
+        "gtkChainStatus": gtk_chain_diagnostics(roots, root),
+        "ecosystemState": ecosystem_state_diagnostics(root),
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown") if root == Path("/") else "not-applicable",
@@ -1476,7 +1557,7 @@ def remediation_plan(report: dict[str, Any]) -> str:
     missing = edition.get("missingMandatory", [])
     shadowed = edition.get("shadowed", [])
     eco = report.get("ecosystem", {})
-    flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent"}
+    flatpak_needed = eco.get("flatpakThemesOverride") in {"not-configured", "absent", "partial"}
     palette_sync = report.get("paletteSynchronization", {})
     palette_needed = palette_sync.get("status") == "desynchronized"
 
@@ -1484,8 +1565,8 @@ def remediation_plan(report: dict[str, Any]) -> str:
         lines.append("# Installation is clean and complete. No remediation required.")
         return "\n".join(lines) + "\n"
     if flatpak_needed:
-        lines.append("# Flatpak theme access remediation:")
-        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro || true")
+        lines.append("# Flatpak theme & Libadwaita access remediation:")
+        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro --filesystem=xdg-config/gtk-3.0:ro --filesystem=xdg-config/gtk-4.0:ro || true")
         lines.append("")
     if palette_needed:
         targets = palette_sync.get("targets", {})

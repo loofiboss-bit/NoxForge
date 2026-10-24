@@ -1,19 +1,24 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v17 release contract is
-[`NOXFORGE_V17_PLAN.md`](NOXFORGE_V17_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v18 release contract is
+[`NOXFORGE_V18_PLAN.md`](NOXFORGE_V18_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 17.0.0 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable
-Integrity completes full single-source QML generation across all 6 component pairs
-(12 variants), dynamic C++ Qt 6 & GTK accent harmonization, SDDM/Lock Screen UX
-polish, portable bundle packaging parity, an expanded 5-tab Control Center,
-and Doctor Schema 10. Host installation and active desktop mutation remain
-non-applying by default.
+NoxForge 18.0.0 Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control
+Core delivers dynamic `@accent_color`-bound GTK 3/4 CSS and managed `@import`
+chaining for GTK 4 / Libadwaita applications, opt-in Flatpak theme overrides,
+reversible `.noxforge.bak` ecosystem backups with `ecosystem restore` and automatic
+profile/accent propagation across deployed developer tools and Konsole, a shared
+`tools/noxforge_core.py` library, Control Center v3 with live self-theming,
+Tokens Schema 14, and Doctor Schema 11. Host installation and active desktop
+mutation remain non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V17_PLAN.md`](NOXFORGE_V17_PLAN.md) records the completed 17.0.0 and
+  17.0.1 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity scope.
 
 - [`NOXFORGE_V16_PLAN.md`](NOXFORGE_V16_PLAN.md) records the completed 16.0.0
   Single Source, Kinetic Accessibility & Verified Truth scope.

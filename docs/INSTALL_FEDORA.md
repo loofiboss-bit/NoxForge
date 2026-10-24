@@ -1,6 +1,6 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 17.0.1 is a scriptlet-free Fedora 44 package for the complete-system
+NoxForge 18.0.0 is a scriptlet-free Fedora 44 package for the complete-system
 journey. It provides the palette-adaptive native Qt style with dynamic accent engine,
 the unified Control Center suite (`noxforge-ctl` and PySide6 GUI), system doctor,
 GTK 3/4 themes, syntax/editor/terminal assets (including Zed, btop, Starship, Fastfetch,
@@ -47,8 +47,8 @@ To get the clean, modern look featured in the showcase:
 ## Build from the distributed source archive
 
 ```bash
-tar -xJf noxforge-17.0.1-source.tar.xz
-cd NoxForge-17.0.1
+tar -xJf noxforge-18.0.0-source.tar.xz
+cd NoxForge-18.0.0
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 DESTDIR="$PWD/stage" cmake --install build

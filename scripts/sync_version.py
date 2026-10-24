@@ -34,6 +34,7 @@ BASE_VERSION_FILES = {
     "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/manifest.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "tools/noxforge_core.py": ((r'(?m)^DEFAULT_VERSION = ".*?"$', 'DEFAULT_VERSION = "{version}"'),),
     "tools/noxforge-opacity": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),
     "tools/noxforge-ctl": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),
     "tools/control_center.py": ((r'(?m)^(\s*return\s*)"\d+\.\d+\.\d+"$', r'\g<1>"{version}"'),),
@@ -103,10 +104,13 @@ def load_manifest() -> dict:
 
 
 def get_version_files(manifest: dict) -> dict[str, tuple]:
-    active_root = manifest.get("evidence", {}).get("activeRoot", "docs/evidence/v17")
+    active_root = manifest.get("evidence", {}).get("activeRoot", "docs/evidence/v18")
     consumers = dict(BASE_VERSION_FILES)
     consumers[f"{active_root}/artwork/artwork-contact-sheets.json"] = (
         (r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
+    )
+    consumers[f"{active_root}/plasma-shell/atlas-manifest.json"] = (
+        (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
     )
     consumers[f"{active_root}/qualification.json"] = (
         (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),

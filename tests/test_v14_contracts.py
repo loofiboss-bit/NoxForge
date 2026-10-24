@@ -41,7 +41,7 @@ class NoxForgeV14ContractsTests(unittest.TestCase):
 
     def test_tokens_schema_10_and_accents_matrix(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (10, 11, 12, 13))
+        self.assertIn(tokens["schemaVersion"], (10, 11, 12, 13, 14))
         self.assertTrue(tokens["version"] >= "14.0.0")
 
         self.assertIn("accents", tokens)
@@ -184,7 +184,7 @@ class NoxForgeV14ContractsTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 1)
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (7, 8, 9, 10))
+        self.assertIn(report["schemaVersion"], (7, 8, 9, 10, 11))
 
         missing = set(report["missing"])
         v14_required = {

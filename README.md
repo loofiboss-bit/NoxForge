@@ -1,16 +1,16 @@
-# NoxForge 17.0.0 — Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity
+# NoxForge 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 17.0.0 targets Fedora 44 and Arch
+detail, and a compact Forge Notch. Version 18.0.0 targets Fedora 44 and Arch
 Plasma/KWin 6.7+ with Qt 6.11 on Wayland. It elevates the visual system with
-single-source QML generation (Schema 2) covering Lock Screen, SDDM, TabBox, Splash,
-and Logout greeters across both Graphite and Obsidian surfaces, dynamic accent
-harmonization across the native Qt 6 C++ style plugin, CLI, and developer tools,
-password reveal security policies, a 5-tab Control Center GUI with dedicated
-Ecosystem & Apps management, configurable diurnal schedule transitions, and
-Doctor Schema 10 diagnostics.
-See the [v17 release plan](docs/NOXFORGE_V17_PLAN.md).
+dynamic `@accent_color` GTK 3/4 CSS and managed `@import` chaining for GTK 4 /
+Libadwaita parity, opt-in Flatpak theme overrides, a reversible Ecosystem Engine v2
+(`.noxforge.bak` backups, `ecosystem restore`, and automatic profile/accent
+propagation across deployed developer tools and Konsole), a shared
+`tools/noxforge_core.py` architecture, Control Center v3 with live self-theming,
+Tokens Schema 14, and Doctor Schema 11 diagnostics.
+See the [v18 release plan](docs/NOXFORGE_V18_PLAN.md).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -96,8 +96,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v17 release scope is recorded in
-[NOXFORGE_V17_PLAN.md](docs/NOXFORGE_V17_PLAN.md), indexed by
+The v18 release scope is recorded in
+[NOXFORGE_V18_PLAN.md](docs/NOXFORGE_V18_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

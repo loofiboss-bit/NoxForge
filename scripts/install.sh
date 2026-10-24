@@ -220,6 +220,17 @@ elif [[ -f "${source_root}/tools/control_center.py" ]]; then
     install -m 0755 "${source_root}/tools/control_center.py" "${stage}/noxforge/bin/control_center.py"
 fi
 owned+=("noxforge/bin/control_center.py")
+if [[ -f "${portable_root}/bin/noxforge_core.py" ]]; then
+    install -m 0644 "${portable_root}/bin/noxforge_core.py" "${stage}/noxforge/bin/noxforge_core.py"
+    install -m 0644 "${portable_root}/bin/noxforge_core.py" "${stage}/noxforge/noxforge_core.py"
+    owned+=("noxforge/bin/noxforge_core.py")
+    owned+=("noxforge/noxforge_core.py")
+elif [[ -f "${source_root}/tools/noxforge_core.py" ]]; then
+    install -m 0644 "${source_root}/tools/noxforge_core.py" "${stage}/noxforge/bin/noxforge_core.py"
+    install -m 0644 "${source_root}/tools/noxforge_core.py" "${stage}/noxforge/noxforge_core.py"
+    owned+=("noxforge/bin/noxforge_core.py")
+    owned+=("noxforge/noxforge_core.py")
+fi
 printf '%s\n' "${owned[@]}" "noxforge/.owned-files" | LC_ALL=C sort -u > "${stage}/noxforge/.owned-files"
 
 if [[ "${dry_run}" == true ]]; then

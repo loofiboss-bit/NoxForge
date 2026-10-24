@@ -47,6 +47,36 @@ void usage(const char *program)
                  program, program, program, program, program, program);
 }
 
+void handleDeviceAdded(ei_event *event, Devices *devices)
+{
+    ei_device *device = ei_event_get_device(event);
+    if (!devices->keyboard && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
+        devices->keyboard = ei_device_ref(device);
+    }
+    if (!devices->pointer &&
+        (ei_device_has_capability(device, EI_DEVICE_CAP_POINTER) ||
+         ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE))) {
+        devices->pointer = ei_device_ref(device);
+    }
+    if (!devices->button && ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON)) {
+        devices->button = ei_device_ref(device);
+    }
+}
+
+void handleDeviceResumed(ei_event *event, Devices *devices)
+{
+    ei_device *device = ei_event_get_device(event);
+    if (devices->keyboard == device) {
+        devices->keyboardResumed = true;
+    }
+    if (devices->pointer == device) {
+        devices->pointerResumed = true;
+    }
+    if (devices->button == device) {
+        devices->buttonResumed = true;
+    }
+}
+
 bool parseInteger(const char *text, int *value)
 {
     char *end = nullptr;
@@ -72,12 +102,12 @@ bool waitForDevices(ei *context, int capabilities, Devices *devices)
         ei_dispatch(context);
         while (ei_event *event = ei_get_event(context)) {
             const auto type = ei_event_get_type(event);
-            if (type == EI_EVENT_DISCONNECT) {
+            switch (type) {
+            case EI_EVENT_DISCONNECT:
                 std::fprintf(stderr, "KWin disconnected the libei client\n");
                 ei_event_unref(event);
                 return false;
-            }
-            if (type == EI_EVENT_SEAT_ADDED) {
+            case EI_EVENT_SEAT_ADDED: {
                 ei_seat *seat = ei_event_get_seat(event);
                 ei_seat_bind_capabilities(
                     seat,
@@ -87,30 +117,16 @@ bool waitForDevices(ei *context, int capabilities, Devices *devices)
                     EI_DEVICE_CAP_SCROLL,
                     EI_DEVICE_CAP_KEYBOARD,
                     nullptr);
-            } else if (type == EI_EVENT_DEVICE_ADDED) {
-                ei_device *device = ei_event_get_device(event);
-                if (!devices->keyboard && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
-                    devices->keyboard = ei_device_ref(device);
-                }
-                if (!devices->pointer &&
-                    (ei_device_has_capability(device, EI_DEVICE_CAP_POINTER) ||
-                     ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE))) {
-                    devices->pointer = ei_device_ref(device);
-                }
-                if (!devices->button && ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON)) {
-                    devices->button = ei_device_ref(device);
-                }
-            } else if (type == EI_EVENT_DEVICE_RESUMED) {
-                ei_device *device = ei_event_get_device(event);
-                if (devices->keyboard == device) {
-                    devices->keyboardResumed = true;
-                }
-                if (devices->pointer == device) {
-                    devices->pointerResumed = true;
-                }
-                if (devices->button == device) {
-                    devices->buttonResumed = true;
-                }
+                break;
+            }
+            case EI_EVENT_DEVICE_ADDED:
+                handleDeviceAdded(event, devices);
+                break;
+            case EI_EVENT_DEVICE_RESUMED:
+                handleDeviceResumed(event, devices);
+                break;
+            default:
+                break;
             }
             ei_event_unref(event);
         }

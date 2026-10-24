@@ -167,8 +167,15 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 14:
+        gtk_cfg = tokens.get("gtk", {})
+        eco_cfg = tokens.get("ecosystem", {})
+        if not gtk_cfg.get("dynamicCssVariables") or not gtk_cfg.get("managedUserImport"):
+            raise ValidationError("gtk token contract (Schema 14) is missing dynamicCssVariables or managedUserImport")
+        if eco_cfg.get("syncPolicy") != "stateful-reversible" or eco_cfg.get("backupSuffix") != ".noxforge.bak":
+            raise ValidationError("ecosystem token contract (Schema 14) is invalid")
     if tokens.get("schemaVersion") >= 13:
         accents = tokens.get("accents", {})
         for key in ("lime", "cyan", "violet", "amber"):

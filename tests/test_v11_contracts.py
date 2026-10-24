@@ -136,7 +136,7 @@ class NoxForgeV11ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (4, 5, 6, 7, 8, 9, 10))
+        self.assertIn(report["schemaVersion"], (4, 5, 6, 7, 8, 9, 10, 11))
         self.assertIn("terminal-theme", report["missing"])
         self.assertIn("terminal-theme-obsidian", report["missing"])
 

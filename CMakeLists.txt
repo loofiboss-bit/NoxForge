@@ -486,6 +486,11 @@ install(
 )
 install(
     FILES
+        tools/noxforge_core.py
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge"
+)
+install(
+    FILES
         distribution/io.github.loofiboss.noxforge.opacity.desktop
         distribution/io.github.loofiboss.noxforge.controlcenter.desktop
     DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"

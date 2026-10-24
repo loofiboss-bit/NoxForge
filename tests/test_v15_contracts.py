@@ -165,7 +165,7 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 0)  # Component edition with standalone icons is valid
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (8, 9, 10))
+        self.assertIn(report["schemaVersion"], (8, 9, 10, 11))
         self.assertIn("iconAdaptation", report)
 
         adaptation = report["iconAdaptation"]
