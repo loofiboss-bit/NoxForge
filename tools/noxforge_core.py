@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """NoxForge Shared Core Library (noxforge_core).
 
 Provides single-source version resolution, XDG directory discovery, KDE KConfig
