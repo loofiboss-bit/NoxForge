@@ -55,7 +55,7 @@ class PhaseOneTests(unittest.TestCase):
             raise
 
     def test_schema_v6_preserves_identity_and_grid(self) -> None:
-        self.assertIn(self.tokens["schemaVersion"], (7, 8, 9, 10, 11, 12, 13))
+        self.assertIn(self.tokens["schemaVersion"], (7, 8, 9, 10, 11, 12, 13, 14))
         self.assertEqual(self.tokens["colors"]["background"], "#0D1419")
         self.assertEqual(self.tokens["colors"]["accent"], "#A3FF47")
         self.assertEqual(self.tokens["colors"]["surfaceSelected"], "#223429")

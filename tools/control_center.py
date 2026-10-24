@@ -39,7 +39,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "17.0.1"
+    return "18.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -267,6 +267,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         day_lbl = QtWidgets.QLabel("Day (Graphite):")
         day_lbl.setStyleSheet("color: #A6B4B9;")
         self.day_time = QtWidgets.QTimeEdit()
+        self.day_time.setAccessibleName("Day time")
         self.day_time.setDisplayFormat("HH:mm")
         self.day_time.setTime(QtCore.QTime(7, 0))
         self.day_time.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; color: #E8F0F2; padding: 4px;")
@@ -275,6 +276,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         night_lbl = QtWidgets.QLabel("Night (Obsidian):")
         night_lbl.setStyleSheet("color: #A6B4B9;")
         self.night_time = QtWidgets.QTimeEdit()
+        self.night_time.setAccessibleName("Night time")
         self.night_time.setDisplayFormat("HH:mm")
         self.night_time.setTime(QtCore.QTime(20, 0))
         self.night_time.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; color: #E8F0F2; padding: 4px;")

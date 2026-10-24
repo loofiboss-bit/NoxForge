@@ -111,7 +111,7 @@ class RollingReleaseContractTests(unittest.TestCase):
         )
         self.assertEqual(res.returncode, 0, f"doctor failed: {res.stderr}")
         report = json.loads(res.stdout)
-        self.assertIn(report["schemaVersion"], (9, 10))
+        self.assertIn(report["schemaVersion"], (9, 10, 11))
         self.assertIn("qmlVariantDrift", report)
         self.assertIn("reducedMotion", report)
         self.assertIn("customAccentContrast", report)

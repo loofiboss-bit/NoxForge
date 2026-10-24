@@ -118,7 +118,7 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (6, 7, 8, 9, 10))
+        self.assertIn(report["schemaVersion"], (6, 7, 8, 9, 10, 11))
         self.assertIn("paletteSynchronization", report)
         self.assertIn("editor-neovim", report["missing"])
         self.assertIn("editor-neovim-obsidian", report["missing"])

@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 17
+# Troubleshooting NoxForge 18
 
 ## Collect a read-only report
 

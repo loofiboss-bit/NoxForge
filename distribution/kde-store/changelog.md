@@ -1,3 +1,11 @@
+# NoxForge 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
+
+- upgraded GTK 3.0 and 4.0 themes with dynamic `@accent_color` CSS variable bindings and managed `~/.config/gtk-{3,4}.0/gtk.css` `@import` chaining for full Libadwaita surface and accent parity;
+- added opt-in Flatpak theme override orchestration (`noxforge-ctl flatpak --enable|--disable|--status`) and Control Center toggle card;
+- upgraded Ecosystem Engine to v2 with automatic `.noxforge.bak` backups, `noxforge-ctl ecosystem restore`, stateful tracking (`ecosystem-state.json`), and live profile/accent propagation across deployed developer tools and Konsole;
+- extracted shared `tools/noxforge_core.py` library and upgraded Control Center v3 (`tools/control_center.py` and `tools/opacity_gui.py`) with real-time self-theming reflecting active Graphite/Obsidian surfaces and accent colors;
+- upgraded `design/tokens.json` to Schema 14 and `tools/noxforge-doctor` to Schema 11 (`noxforgeCoreStatus`, `gtkChainStatus`, `ecosystemState`).
+
 # NoxForge 17.0.1 — Authentic Dolphin Grid & Quick Onboarding
 
 - aligned Dolphin store screenshot showcase with authentic KDE Plasma 6 icon grid view and standard navigation;

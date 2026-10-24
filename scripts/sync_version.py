@@ -103,10 +103,13 @@ def load_manifest() -> dict:
 
 
 def get_version_files(manifest: dict) -> dict[str, tuple]:
-    active_root = manifest.get("evidence", {}).get("activeRoot", "docs/evidence/v17")
+    active_root = manifest.get("evidence", {}).get("activeRoot", "docs/evidence/v18")
     consumers = dict(BASE_VERSION_FILES)
     consumers[f"{active_root}/artwork/artwork-contact-sheets.json"] = (
         (r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
+    )
+    consumers[f"{active_root}/plasma-shell/atlas-manifest.json"] = (
+        (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),
     )
     consumers[f"{active_root}/qualification.json"] = (
         (r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),

@@ -1,4 +1,4 @@
-%global upstream_version 17.0.1
+%global upstream_version 18.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        17.0.1
+Version:        18.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -103,6 +103,14 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sat Oct 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 18.0.0-1
+- Release v18.0.0 Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
+- Dynamic @accent_color GTK 3/4 CSS and managed @import chaining for Libadwaita parity
+- Opt-in Flatpak theme override management in noxforge-ctl and Control Center
+- Reversible Ecosystem Engine v2 with .noxforge.bak backups, restore command, and reactive profile/accent sync
+- Shared tools/noxforge_core.py library and Control Center v3 real-time self-theming
+- Tokens Schema 14 and Doctor Schema 11 diagnostics
+
 * Sun Oct 18 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 17.0.1-1
 - Release v17.0.1 Authentic Dolphin Grid & Quick Onboarding
 - Genuine KDE Plasma 6 Dolphin icon grid view showcase in store screenshots
