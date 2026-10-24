@@ -10,12 +10,12 @@
       "commit": "3848febde3337ef0d9f25a6418c5fb3d919fb18d",
       "tag": "v17.0.1",
       "tagCommit": "40f4d1c0241df858f4f57cc78f67f3fac9539d14",
-      "rpmBytes": 1800674,
-      "srpmBytes": 14967302,
-      "githubSourceBytes": 14935140,
+      "rpmBytes": 1809354,
+      "srpmBytes": 14761642,
+      "githubSourceBytes": 14728248,
       "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v17.0.1",
       "rpmFilename": "noxforge-17.0.1-1.fc44.x86_64.rpm",
-      "rpmSha256": "d6bb3494d805e70f60ddec066f884244185fca4ac02dec5752a6e6081255e7c0",
+      "rpmSha256": "3746a9784ccec386c4c46e416f5eab795b7a25264514b9aca4ffed9a636b9e43",
       "kdeStoreProduct": "2367662"
     }
   },
