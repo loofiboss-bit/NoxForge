@@ -607,6 +607,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             lbl = QtWidgets.QLabel(label_text)
             lbl.setFixedWidth(130)
             slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
+            lbl.setBuddy(slider)
             slider.setAccessibleName(label_text.replace(":", "").strip())
             slider.setRange(10, 100)
             slider.setValue(default_val)
@@ -827,7 +828,9 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
 
     def _highlight_active_preset(self, active_key: str | None = None) -> None:
         current_panel = self.slider_panel.value()
-        pal = noxforge_core.resolve_accent_palette(self.active_accent_hex, is_obsidian=(self.active_profile == "obsidian"))
+        pal = noxforge_core.resolve_accent_palette(
+            self.active_accent_hex, is_obsidian=(self.active_profile == "obsidian")
+        )
         acc = pal["accent"]
         surf_sel = pal["surfaceSelected"]
         for key, btn in self.preset_buttons.items():

@@ -133,6 +133,7 @@ int main(int argc, char **argv)
     precision->addRow(QStringLiteral("Tabs"), tabs);
 
     auto *slider = new QSlider(Qt::Horizontal);
+    slider->setAccessibleName(QStringLiteral("Motion Horizontal Slider"));
     slider->setValue(62);
     slider->setAttribute(Qt::WA_UnderMouse, true);
     forceProgress(slider, progress);
