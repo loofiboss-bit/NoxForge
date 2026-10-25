@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -20,8 +21,12 @@ class ReleaseWorkflowTests(unittest.TestCase):
         combined = self.ci_workflow + self.workflow
         self.assertNotIn("actions/checkout@v4", combined)
         self.assertNotIn("actions/setup-python@v5", combined)
-        self.assertEqual(combined.count("actions/checkout@v7"), 5)
-        self.assertEqual(combined.count("actions/setup-python@v7"), 2)
+        checkout_refs = re.findall(r"uses: actions/checkout@([0-9a-f]{40}) # v7", combined)
+        python_refs = re.findall(r"uses: actions/setup-python@([0-9a-f]{40}) # v7", combined)
+        self.assertEqual(len(checkout_refs), 5)
+        self.assertEqual(len(python_refs), 2)
+        self.assertEqual(len(set(checkout_refs)), 1)
+        self.assertEqual(len(set(python_refs)), 1)
 
     def test_release_metadata_is_selected_from_the_manifest_and_tag(self) -> None:
         self.assertNotIn("docs/evidence/v3/", self.workflow)
@@ -74,8 +79,8 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("sha256sum --check SHA256SUMS", self.workflow)
 
     def test_release_bundle_remains_available_to_the_publish_job(self) -> None:
-        self.assertIn("uses: actions/upload-artifact@v4", self.workflow)
-        self.assertIn("uses: actions/download-artifact@v4", self.workflow)
+        self.assertRegex(self.workflow, r"uses: actions/upload-artifact@[0-9a-f]{40} # v4")
+        self.assertRegex(self.workflow, r"uses: actions/download-artifact@[0-9a-f]{40} # v4")
         self.assertIn("retention-days: 3", self.workflow)
 
 
