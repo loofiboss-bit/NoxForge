@@ -39,7 +39,15 @@ PACKAGE_ROOTS = (
 )
 POSITIONS = {"top", "topright", "right", "bottomright", "bottom", "bottomleft", "left", "topleft", "center"}
 PLASMA_STATES = {
-    "widgets/button.svg": {"normal", "hover", "focus", "pressed", "toolbutton-hover", "toolbutton-focus", "toolbutton-pressed"},
+    "widgets/button.svg": {
+        "normal",
+        "hover",
+        "focus",
+        "pressed",
+        "toolbutton-hover",
+        "toolbutton-focus",
+        "toolbutton-pressed",
+    },
     "widgets/tasks.svg": {"normal", "hover", "focus", "attention", "minimized", "progress"},
     "widgets/viewitem.svg": {"normal", "hover", "selected", "selected+hover"},
     "widgets/lineedit.svg": {"base", "hover", "focus"},
@@ -109,10 +117,7 @@ def validate_version() -> str:
 
 def relative_luminance(hex_color: str) -> float:
     channels = [int(hex_color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
-    linear = [
-        value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
-        for value in channels
-    ]
+    linear = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
     return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
 
 
@@ -239,7 +244,14 @@ def validate_tokens(version: str) -> dict[str, object]:
         if not isinstance(values, dict) or set(values) != {"background", "faint", "intense"}:
             raise ValidationError(f"terminal {variant} backgrounds are incomplete")
     if set(foreground) != {"normal", "faint", "intense"} or set(ansi) != {
-        "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"
+        "black",
+        "red",
+        "green",
+        "yellow",
+        "blue",
+        "magenta",
+        "cyan",
+        "white",
     }:
         raise ValidationError("terminal ANSI token contract is incomplete")
     for name, values in [("foreground", foreground), *ansi.items()]:
@@ -345,10 +357,7 @@ def validate_tokens(version: str) -> dict[str, object]:
             raise ValidationError(f"shadow role {name} is invalid")
         if set(recipe) != {"color", "opacity", "offsetX", "offsetY", "blurRadius", "spreadRadius"}:
             raise ValidationError(f"shadow role {name} is incomplete")
-        if (
-            not isinstance(recipe["opacity"], (int, float))
-            or not 0 <= recipe["opacity"] <= 1
-        ):
+        if not isinstance(recipe["opacity"], (int, float)) or not 0 <= recipe["opacity"] <= 1:
             raise ValidationError(f"shadow role {name} has invalid opacity")
         dimensions = [recipe[key] for key in ("offsetX", "offsetY", "blurRadius", "spreadRadius")]
         if any(not isinstance(value, int) or value % 4 for value in dimensions):
@@ -513,13 +522,8 @@ def validate_tokens(version: str) -> dict[str, object]:
         covered_pairs.add((foreground, background))
         actual = contrast_ratio(required_colors[foreground], required_colors[background])
         if actual < minimum:
-            raise ValidationError(
-                f"contrast pair {pair['name']} is {actual:.2f}:1, below {minimum:.2f}:1"
-            )
-    required_pairs = {
-        (role["foreground"], role["background"])
-        for role in semantic_roles.values()
-    }
+            raise ValidationError(f"contrast pair {pair['name']} is {actual:.2f}:1, below {minimum:.2f}:1")
+    required_pairs = {(role["foreground"], role["background"]) for role in semantic_roles.values()}
     if not required_pairs.issubset(covered_pairs):
         raise ValidationError("contrast coverage does not include every semantic role")
 
@@ -532,8 +536,7 @@ def validate_tokens(version: str) -> dict[str, object]:
         "variety",
     }
     if set(hallmark) != score_names or any(
-        not isinstance(score, int) or not 4 <= score <= 5
-        for score in hallmark.values()
+        not isinstance(score, int) or not 4 <= score <= 5 for score in hallmark.values()
     ):
         raise ValidationError("Hallmark scores must be complete and at least 4/5")
     return tokens
@@ -553,10 +556,7 @@ def validate_motion_contract(tokens: dict[str, object], version: str) -> None:
     surfaces = contract.get("surfaces")
     transitions = contract.get("transitions")
     reduced = contract.get("reducedMotion")
-    if not all(
-        isinstance(value, dict)
-        for value in (policy, performance, surfaces, transitions, reduced)
-    ):
+    if not all(isinstance(value, dict) for value in (policy, performance, surfaces, transitions, reduced)):
         raise ValidationError("motion contract sections are incomplete")
     if (
         policy.get("idleAnimationAllowed") is not False
@@ -579,11 +579,7 @@ def validate_motion_contract(tokens: dict[str, object], version: str) -> None:
     if not isinstance(reduced_outcomes, dict) or set(reduced_outcomes) != state_names:
         raise ValidationError("every semantic state must define reduced-motion behavior")
     motion = tokens["motion"]
-    duration_names = {
-        name
-        for name, value in motion.items()
-        if name.endswith("Ms") and isinstance(value, int)
-    }
+    duration_names = {name for name, value in motion.items() if name.endswith("Ms") and isinstance(value, int)}
     curve_names = set(motion["curves"])
     allowed_properties = {"opacity", "color", "transform"}
     for name, transition in transitions.items():
@@ -711,7 +707,11 @@ def validate_plasma_style() -> None:
         raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 4")
     material_policy = contract.get("materialPolicy")
     if not isinstance(material_policy, dict) or material_policy.get("hierarchy") != [
-        "canvas", "sunken", "surface", "raised", "overlay"
+        "canvas",
+        "sunken",
+        "surface",
+        "raised",
+        "overlay",
     ]:
         raise ValidationError("Plasma material hierarchy is incomplete")
     if (
@@ -734,9 +734,7 @@ def validate_plasma_style() -> None:
         raise ValidationError("Plasma semantic recipe maps are missing")
     if set(family_recipes) != set(widget_families):
         raise ValidationError("Plasma semantic recipes must cover exactly all 43 widget families")
-    invalid_recipes = sorted(
-        family for family, recipe_name in family_recipes.items() if recipe_name not in recipes
-    )
+    invalid_recipes = sorted(family for family, recipe_name in family_recipes.items() if recipe_name not in recipes)
     if invalid_recipes:
         raise ValidationError(f"Plasma families reference unknown semantic recipes: {invalid_recipes}")
     qualified_surfaces = contract.get("qualifiedSurfaces")
@@ -819,12 +817,21 @@ def validate_plasma_style() -> None:
         if not set(hints).issubset(found):
             raise ValidationError(f"widgets/{family}.svg lacks required hints: {sorted(set(hints) - found)}")
     required_shell_assets = {
-        "widgets/calendar.svg", "widgets/clock.svg", "widgets/busywidget.svg",
-        "widgets/configuration-icons.svg", "widgets/containment-controls.svg",
-        "widgets/pager.svg", "widgets/media-delegate.svg", "widgets/action-overlays.svg",
-        "widgets/analog_meter.svg", "widgets/bar_meter_horizontal.svg",
-        "widgets/bar_meter_vertical.svg", "widgets/notes.svg", "widgets/timer.svg",
-        "solid/widgets/background.svg", "translucent/widgets/background.svg",
+        "widgets/calendar.svg",
+        "widgets/clock.svg",
+        "widgets/busywidget.svg",
+        "widgets/configuration-icons.svg",
+        "widgets/containment-controls.svg",
+        "widgets/pager.svg",
+        "widgets/media-delegate.svg",
+        "widgets/action-overlays.svg",
+        "widgets/analog_meter.svg",
+        "widgets/bar_meter_horizontal.svg",
+        "widgets/bar_meter_vertical.svg",
+        "widgets/notes.svg",
+        "widgets/timer.svg",
+        "solid/widgets/background.svg",
+        "translucent/widgets/background.svg",
         "opaque/widgets/panel-background.svg",
     }
     missing_assets = sorted(relative for relative in required_shell_assets if not (theme / relative).is_file())
@@ -962,13 +969,10 @@ def validate_aurorae(version: str) -> None:
     else:
         raise ValidationError("Aurorae must explicitly configure Shadow=false or Shadow=true")
     unsupported_shadow_keys = sorted(
-        key for key in general
-        if key.startswith("activeshadow") or key.startswith("inactiveshadow")
+        key for key in general if key.startswith("activeshadow") or key.startswith("inactiveshadow")
     )
     if unsupported_shadow_keys:
-        raise ValidationError(
-            "Aurorae uses unsupported shadow keys: " + ", ".join(unsupported_shadow_keys)
-        )
+        raise ValidationError("Aurorae uses unsupported shadow keys: " + ", ".join(unsupported_shadow_keys))
     decoration_ids = svg_ids(theme / "decoration.svg")
     for prefix in ("decoration", "decoration-inactive"):
         if not {f"{prefix}-{position}" for position in POSITIONS}.issubset(decoration_ids):
@@ -1010,13 +1014,32 @@ def validate_icons() -> None:
     if inherited != ["breeze-dark", "breeze", "hicolor"]:
         raise ValidationError("icon theme must use the verified Fedora KDE overlay fallback chain")
     valid_contexts = {
-        "Actions", "Animations", "Applications", "Categories", "Devices", "Emblems",
-        "Emotes", "International", "MimeTypes", "Places", "Status",
+        "Actions",
+        "Animations",
+        "Applications",
+        "Categories",
+        "Devices",
+        "Emblems",
+        "Emotes",
+        "International",
+        "MimeTypes",
+        "Places",
+        "Status",
     }
     for directory in index["Icon Theme"].get("directories", "").split(","):
         if index[directory].get("context") not in valid_contexts:
             raise ValidationError(f"icon directory {directory} has an invalid Context")
-    expected_categories = {"actions", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
+    expected_categories = {
+        "actions",
+        "applets",
+        "categories",
+        "devices",
+        "emblems",
+        "mimetypes",
+        "places",
+        "preferences",
+        "status",
+    }
     icons = list((theme / "scalable").glob("*/*.svg"))
     if len(icons) < 120:
         raise ValidationError(f"system icon coverage requires at least 120 SVGs, found {len(icons)}")
@@ -1176,11 +1199,7 @@ def validate_sounds() -> None:
         details = coverage["sources"].get(name)
         if not isinstance(details, dict):
             raise ValidationError(f"sound source metrics are missing: {name}")
-        target = (
-            normalization["alarmTargetRmsDbfs"]
-            if name == "alarm"
-            else normalization["targetRmsDbfs"]
-        )
+        target = normalization["alarmTargetRmsDbfs"] if name == "alarm" else normalization["targetRmsDbfs"]
         if abs(details.get("rmsDbfs", 999) - target) > tolerance:
             raise ValidationError(f"sound {name} is outside its RMS loudness target")
         if details.get("peakDbfs", 999) > normalization["peakCeilingDbfs"] + 0.01:
@@ -1207,7 +1226,16 @@ def validate_sddm(version: str) -> None:
     if entry.get("theme-id") != "NoxForge" or entry.get("version") != version or entry.get("qtversion") != "6":
         raise ValidationError("SDDM metadata identity, version, or Qt contract is invalid")
     qml = (theme / "Main.qml").read_text(encoding="utf-8")
-    for required in ("userModel", "sessionModel", "keyboard.layouts", "sddm.login", "onLoginFailed", 'qsTr("Username")', 'qsTr("Password")', "Accessible.name"):
+    for required in (
+        "userModel",
+        "sessionModel",
+        "keyboard.layouts",
+        "sddm.login",
+        "onLoginFailed",
+        'qsTr("Username")',
+        'qsTr("Password")',
+        "Accessible.name",
+    ):
         if required not in qml:
             raise ValidationError(f"SDDM theme lacks required flow: {required}")
     if re.search(r"breeze|plasma5", qml, re.IGNORECASE):
@@ -1283,15 +1311,12 @@ def validate_wallpaper(version: str) -> None:
         semantic.get("viewBox") != brand["viewBox"]
         or monochrome.get("viewBox") != brand["viewBox"]
         or lockup.get("viewBox") != brand["lockupViewBox"]
-        or semantic.find(f".//{namespace}path").get("d")
-        != monochrome.find(f".//{namespace}path").get("d")
+        or semantic.find(f".//{namespace}path").get("d") != monochrome.find(f".//{namespace}path").get("d")
         or lockup.findall(f".//{namespace}text")
     ):
         raise ValidationError("Kinetic Precision brand masters are inconsistent")
     for kind, paths in brand.get("physicalCopies", {}).items():
-        source_path = ROOT / (
-            brand["source"] if kind == "mark" else brand["lockupSource"]
-        )
+        source_path = ROOT / (brand["source"] if kind == "mark" else brand["lockupSource"])
         if any((ROOT / path).read_bytes() != source_path.read_bytes() for path in paths):
             raise ValidationError(f"physical {kind} copies differ from their master")
     derived = contract.get("derivedArtwork")
@@ -1299,19 +1324,19 @@ def validate_wallpaper(version: str) -> None:
         "sessionBackground": "sddm/NoxForge/background.png",
         "sddmPreview": "sddm/NoxForge/preview.png",
         "globalThemeTile": f"look-and-feel/{THEME_ID}/contents/previews/preview.png",
-        "globalThemePreview": (
-            f"look-and-feel/{THEME_ID}/contents/previews/fullscreenpreview.png"
-        ),
+        "globalThemePreview": (f"look-and-feel/{THEME_ID}/contents/previews/fullscreenpreview.png"),
         "readmeHero": "wallpapers/NoxForge/contents/images/2560x1440.png",
     }
-    if derived != expected_derived or any(
-        not (ROOT / relative).is_file() for relative in expected_derived.values()
-    ):
+    if derived != expected_derived or any(not (ROOT / relative).is_file() for relative in expected_derived.values()):
         raise ValidationError("Kinetic Precision derived artwork contract is invalid")
 
 
 def validate_artwork_evidence(version: str) -> None:
-    manifest_path = ROOT / json.loads((ROOT / "distribution/release-manifest.json").read_text())["evidence"]["activeRoot"] / "artwork/artwork-contact-sheets.json"
+    manifest_path = (
+        ROOT
+        / json.loads((ROOT / "distribution/release-manifest.json").read_text())["evidence"]["activeRoot"]
+        / "artwork/artwork-contact-sheets.json"
+    )
     manifest = load_json(manifest_path)
     if (
         not isinstance(manifest, dict)
@@ -1420,8 +1445,7 @@ def validate_v6_north_star(version: str) -> None:
     }
     if (
         not isinstance(comparisons, list)
-        or {entry.get("file") for entry in comparisons if isinstance(entry, dict)}
-        != expected_files
+        or {entry.get("file") for entry in comparisons if isinstance(entry, dict)} != expected_files
     ):
         raise ValidationError("v6 north-star comparison matrix is incomplete")
     for entry in comparisons:
@@ -1432,8 +1456,7 @@ def validate_v6_north_star(version: str) -> None:
             or not baseline.is_file()
             or entry.get("status") != "passed"
             or entry.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
-            or entry.get("baselineSha256")
-            != hashlib.sha256(baseline.read_bytes()).hexdigest()
+            or entry.get("baselineSha256") != hashlib.sha256(baseline.read_bytes()).hexdigest()
             or png_dimensions(path) != png_dimensions(baseline)
             or entry.get("rootMeanSquareDifference", 0) <= 0
         ):
@@ -1441,12 +1464,8 @@ def validate_v6_north_star(version: str) -> None:
     sources = manifest.get("sources")
     if not isinstance(sources, dict) or sources != {
         "tokensSha256": hashlib.sha256((ROOT / "design/tokens.json").read_bytes()).hexdigest(),
-        "motionContractSha256": hashlib.sha256(
-            (ROOT / "design/motion-contract.json").read_bytes()
-        ).hexdigest(),
-        "rendererSha256": hashlib.sha256(
-            (ROOT / "tools/north_star_renderer.cpp").read_bytes()
-        ).hexdigest(),
+        "motionContractSha256": hashlib.sha256((ROOT / "design/motion-contract.json").read_bytes()).hexdigest(),
+        "rendererSha256": hashlib.sha256((ROOT / "tools/north_star_renderer.cpp").read_bytes()).hexdigest(),
     }:
         raise ValidationError("v6 north-star source lineage is stale")
     scorecard = manifest.get("scorecard")
@@ -1458,9 +1477,7 @@ def validate_v6_north_star(version: str) -> None:
     ):
         raise ValidationError("v6 north-star scorecard does not meet the phase-one floor")
     public_scorecard = load_json(ROOT / "docs/evidence/v6/visual-scorecard.json")
-    categories = (
-        public_scorecard.get("categories") if isinstance(public_scorecard, dict) else None
-    )
+    categories = public_scorecard.get("categories") if isinstance(public_scorecard, dict) else None
     if (
         not isinstance(categories, dict)
         or set(categories) != set(scores)
@@ -1488,10 +1505,7 @@ def validate_v6_motion_evidence(version: str) -> None:
     ):
         raise ValidationError("v6 native Qt motion evidence identity is invalid")
     renders = manifest.get("renders")
-    if (
-        not isinstance(renders, list)
-        or [render.get("progressPercent") for render in renders] != [0, 50, 100]
-    ):
+    if not isinstance(renders, list) or [render.get("progressPercent") for render in renders] != [0, 50, 100]:
         raise ValidationError("v6 native Qt motion evidence is incomplete")
     hashes = set()
     for render in renders:
@@ -1519,8 +1533,7 @@ def validate_v6_motion_evidence(version: str) -> None:
         or performance.get("schemaVersion") != 1
         or performance.get("phase") != 3
         or performance.get("result") != "passed"
-        or performance.get("baselineCommit")
-        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("baselineCommit") != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
         or performance.get("maximumRatio") != 1.1
         or performance.get("idleTimerExpected") is not False
     ):
@@ -1562,10 +1575,7 @@ def validate_v6_session_evidence(version: str) -> None:
     captures = manifest.get("captures")
     if not isinstance(captures, list) or len(captures) != 46:
         raise ValidationError("v6 session evidence capture matrix is incomplete")
-    expected_resolutions = {
-        (size["width"], size["height"])
-        for size in contract.get("v6ResolutionMatrix", [])
-    }
+    expected_resolutions = {(size["width"], size["height"]) for size in contract.get("v6ResolutionMatrix", [])}
     expected_scenarios = {
         (surface, scenario)
         for surface, scenarios in contract.get("v6ScenarioMatrix", {}).items()
@@ -1610,9 +1620,7 @@ def validate_v6_session_evidence(version: str) -> None:
 
     surfaces = set(contract.get("surfaces", {}))
     if resolution_captures != {
-        (surface, width, height)
-        for surface in surfaces
-        for width, height in expected_resolutions
+        (surface, width, height) for surface in surfaces for width, height in expected_resolutions
     }:
         raise ValidationError("v6 session four-resolution matrix is incomplete")
     if scenario_captures != expected_scenarios:
@@ -1638,8 +1646,7 @@ def validate_v6_session_evidence(version: str) -> None:
         or performance.get("schemaVersion") != 1
         or performance.get("phase") != 5
         or performance.get("result") != "passed"
-        or performance.get("baselineCommit")
-        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("baselineCommit") != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
         or performance.get("maximumRatio") != 1.1
         or not isinstance(metric, dict)
         or metric.get("result") != "passed"
@@ -1687,13 +1694,16 @@ def validate_v6_edge_evidence(version: str) -> None:
     if (
         layout.get("titleheight") != "26"
         or layout.get("buttonheight") != "26"
-        or any(layout.get(key) != "26" for key in (
-            "buttonwidth",
-            "buttonwidthmenu",
-            "buttonwidthminimize",
-            "buttonwidthmaximizerestore",
-            "buttonwidthclose",
-        ))
+        or any(
+            layout.get(key) != "26"
+            for key in (
+                "buttonwidth",
+                "buttonwidthmenu",
+                "buttonwidthminimize",
+                "buttonwidthmaximizerestore",
+                "buttonwidthclose",
+            )
+        )
     ):
         raise ValidationError("v6 Aurorae title or button geometry drifted")
     decoration = (theme / "decoration.svg").read_text(encoding="utf-8")
@@ -1742,10 +1752,8 @@ def validate_v6_edge_evidence(version: str) -> None:
         or cursor_contract.get("outlineWidth") != 1.75
         or cursor_contract.get("hotspotsFrozen") is not True
         or cursor_coverage.get("sizes") != cursor_contract.get("physicalSizes")
-        or cursor_coverage.get("animations", {}).get("wait")
-        != cursor_contract.get("animation")
-        or cursor_coverage.get("animations", {}).get("progress")
-        != cursor_contract.get("animation")
+        or cursor_coverage.get("animations", {}).get("wait") != cursor_contract.get("animation")
+        or cursor_coverage.get("animations", {}).get("progress") != cursor_contract.get("animation")
     ):
         raise ValidationError("v6 cursor optical contract drifted")
 
@@ -1805,8 +1813,7 @@ def validate_v6_phase7_evidence(version: str) -> None:
         not isinstance(preference, dict)
         or preference.get("preference") not in {"NoPreference", "HighContrast"}
         or preference.get("result") not in {"passed", "not-exposed"}
-        or (preference.get("preference") == "NoPreference"
-            and preference.get("result") != "not-exposed")
+        or (preference.get("preference") == "NoPreference" and preference.get("result") != "not-exposed")
     ):
         raise ValidationError("v6 Phase 7 high-contrast observation is not truthful")
     for pair in accessibility.get("contrastPairs", {}).values():
@@ -1820,16 +1827,12 @@ def validate_v6_phase7_evidence(version: str) -> None:
         or performance.get("version") != version
         or performance.get("phase") != 7
         or performance.get("result") != "passed"
-        or performance.get("baselineCommit")
-        != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
+        or performance.get("baselineCommit") != "6a113e71980d106c38a2bbdece6df171c0ae9ed3"
         or performance.get("maximumRatio") != 1.1
     ):
         raise ValidationError("v6 Phase 7 performance evidence identity is invalid")
     metrics = performance.get("metrics")
-    if (
-        not isinstance(metrics, dict)
-        or set(metrics) != {"galleryStartup", "controlRendering", "qmlFirstFrame"}
-    ):
+    if not isinstance(metrics, dict) or set(metrics) != {"galleryStartup", "controlRendering", "qmlFirstFrame"}:
         raise ValidationError("v6 Phase 7 performance metrics are incomplete")
     for metric in metrics.values():
         if metric.get("result") != "passed" or metric.get("ratio", 99) > 1.1:
@@ -1843,8 +1846,7 @@ def validate_v6_phase7_evidence(version: str) -> None:
         or stress.get("idleTimerActive") is not False
         or stress.get("trackedWidgetsAfterCleanup") != 0
         or stress.get("heapGrowthBytes", -1) < 0
-        or stress.get("heapGrowthBytes", 999999999)
-        > stress.get("heapGrowthLimitBytes", -1)
+        or stress.get("heapGrowthBytes", 999999999) > stress.get("heapGrowthLimitBytes", -1)
     ):
         raise ValidationError("v6 Phase 7 motion stress evidence failed")
 
@@ -1926,10 +1928,7 @@ def validate_historical_v7_tooling(version: str) -> None:
         if command in system_install or command in system_uninstall:
             raise ValidationError(f"system tooling must not execute live-setting command {command!r}")
     checklist = (ROOT / "docs/MANUAL_TESTING.md").read_text(encoding="utf-8")
-    if (
-        "docs/evidence/v7/qualification.json" not in checklist
-        or "pending" not in checklist.lower()
-    ):
+    if "docs/evidence/v7/qualification.json" not in checklist or "pending" not in checklist.lower():
         raise ValidationError("manual graphical checks must use the active structured v7 evidence manifest")
     evidence_root = ROOT / "docs/evidence/v5"
     evidence = load_json(evidence_root / "qualification.json")
@@ -1988,9 +1987,7 @@ def validate_historical_v7_tooling(version: str) -> None:
             raise ValidationError("blocked live evidence must record its blocker")
         if case.get("result") == "passed":
             linked = case.get("evidence")
-            if not isinstance(linked, str) or not (
-                evidence_root / linked
-            ).is_file():
+            if not isinstance(linked, str) or not (evidence_root / linked).is_file():
                 raise ValidationError("passed live evidence must link a real evidence file")
     automated = evidence.get("automatedEvidence")
     if not isinstance(automated, dict) or automated.get("result") not in allowed_results:
@@ -2062,9 +2059,7 @@ def validate_historical_v7_tooling(version: str) -> None:
         not isinstance(v6_automated, dict)
         or v6_automated.get("result") != "passed"
         or not isinstance(v6_automated.get("evidence"), str)
-        or not (
-            ROOT / "docs/evidence/v6" / v6_automated["evidence"]
-        ).is_file()
+        or not (ROOT / "docs/evidence/v6" / v6_automated["evidence"]).is_file()
     ):
         raise ValidationError("v6 automated candidate evidence is invalid")
     automated_cases = v6.get("automatedCases")
@@ -2079,9 +2074,7 @@ def validate_historical_v7_tooling(version: str) -> None:
             raise ValidationError("v6 automatedCases contain an invalid result")
         if case.get("status") == "passed":
             linked = case.get("evidence")
-            if not isinstance(linked, str) or not (
-                ROOT / "docs/evidence/v6" / linked
-            ).is_file():
+            if not isinstance(linked, str) or not (ROOT / "docs/evidence/v6" / linked).is_file():
                 raise ValidationError("passed v6 automated evidence must link a real file")
     live_cases = v6.get("liveCases")
     if not isinstance(live_cases, list) or not live_cases:
@@ -2095,9 +2088,7 @@ def validate_historical_v7_tooling(version: str) -> None:
             raise ValidationError("v6 liveCases contain an invalid result")
         if case.get("status") == "passed":
             linked = case.get("evidence")
-            if not isinstance(linked, str) or not (
-                ROOT / "docs/evidence/v6" / linked
-            ).is_file():
+            if not isinstance(linked, str) or not (ROOT / "docs/evidence/v6" / linked).is_file():
                 raise ValidationError("passed v6 live evidence must link a real file")
 
     v7 = load_json(ROOT / "docs/evidence/v7/qualification.json")
@@ -2135,11 +2126,7 @@ def validate_historical_v7_tooling(version: str) -> None:
         raise ValidationError("v7 live matrix is missing")
     allowed_v7 = {"pending", "blocked", "failed", "passed", "not-applicable"}
     for case in v7_live:
-        if (
-            not isinstance(case, dict)
-            or case.get("status") not in allowed_v7
-            or not case.get("reason")
-        ):
+        if not isinstance(case, dict) or case.get("status") not in allowed_v7 or not case.get("reason"):
             raise ValidationError("v7 live matrix contains an invalid result")
     required_live = {
         "aurorae-maximized-scaling",
@@ -2347,27 +2334,82 @@ def validate_qml_variants() -> None:
 
 VALIDATION_STEPS = (
     ("version", "Validate root VERSION semver", lambda ctx: ctx.setdefault("version", validate_version())),
-    ("tokens", "Validate design/tokens.json schema and structure", lambda ctx: ctx.setdefault("tokens", validate_tokens(str(ctx.get("version") or validate_version())))),
-    ("motion_contract", "Validate motion contracts and reduced-motion spec", lambda ctx: validate_motion_contract(dict(ctx.get("tokens") or validate_tokens(str(ctx.get("version") or validate_version()))), str(ctx.get("version") or validate_version()))),
+    (
+        "tokens",
+        "Validate design/tokens.json schema and structure",
+        lambda ctx: ctx.setdefault("tokens", validate_tokens(str(ctx.get("version") or validate_version()))),
+    ),
+    (
+        "motion_contract",
+        "Validate motion contracts and reduced-motion spec",
+        lambda ctx: validate_motion_contract(
+            dict(ctx.get("tokens") or validate_tokens(str(ctx.get("version") or validate_version()))),
+            str(ctx.get("version") or validate_version()),
+        ),
+    ),
     ("color_schemes", "Validate color schemes and parity", lambda _ctx: validate_color_schemes()),
     ("konsole", "Validate Konsole color schemes", lambda _ctx: validate_konsole()),
-    ("metadata", "Validate desktop metadata and versions", lambda ctx: validate_metadata(str(ctx.get("version") or validate_version()))),
+    (
+        "metadata",
+        "Validate desktop metadata and versions",
+        lambda ctx: validate_metadata(str(ctx.get("version") or validate_version())),
+    ),
     ("repository_urls", "Validate repository URLs across manifests", lambda _ctx: validate_repository_urls()),
     ("plasma_style", "Validate plasma desktoptheme SVGs and states", lambda _ctx: validate_plasma_style()),
-    ("look_and_feel", "Validate look-and-feel package structure", lambda ctx: validate_look_and_feel(str(ctx.get("version") or validate_version()))),
-    ("qml_variants", "Validate QML variants against canonical qml/shared sources", lambda _ctx: validate_qml_variants()),
-    ("tabbox", "Validate KWin TabBox switcher packages", lambda ctx: validate_tabbox(str(ctx.get("version") or validate_version()))),
-    ("aurorae", "Validate Aurorae window decoration packages", lambda ctx: validate_aurorae(str(ctx.get("version") or validate_version()))),
+    (
+        "look_and_feel",
+        "Validate look-and-feel package structure",
+        lambda ctx: validate_look_and_feel(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "qml_variants",
+        "Validate QML variants against canonical qml/shared sources",
+        lambda _ctx: validate_qml_variants(),
+    ),
+    (
+        "tabbox",
+        "Validate KWin TabBox switcher packages",
+        lambda ctx: validate_tabbox(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "aurorae",
+        "Validate Aurorae window decoration packages",
+        lambda ctx: validate_aurorae(str(ctx.get("version") or validate_version())),
+    ),
     ("icons", "Validate icon themes and symlinks", lambda _ctx: validate_icons()),
     ("cursors", "Validate cursor theme definitions", lambda _ctx: validate_cursors()),
     ("sounds", "Validate sound theme index and audio formats", lambda _ctx: validate_sounds()),
-    ("sddm", "Validate SDDM themes and metadata", lambda ctx: validate_sddm(str(ctx.get("version") or validate_version()))),
-    ("wallpaper", "Validate wallpaper packages and resolutions", lambda ctx: validate_wallpaper(str(ctx.get("version") or validate_version()))),
-    ("artwork_evidence", "Validate artwork evidence and render hashes", lambda ctx: validate_artwork_evidence(str(ctx.get("version") or validate_version()))),
-    ("tooling", "Validate CLI tools and scripts", lambda ctx: validate_tooling(str(ctx.get("version") or validate_version()))),
-    ("generated_sources", "Validate generated sources and build artifacts", lambda ctx: validate_generated_sources(str(ctx.get("version") or validate_version()))),
+    (
+        "sddm",
+        "Validate SDDM themes and metadata",
+        lambda ctx: validate_sddm(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "wallpaper",
+        "Validate wallpaper packages and resolutions",
+        lambda ctx: validate_wallpaper(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "artwork_evidence",
+        "Validate artwork evidence and render hashes",
+        lambda ctx: validate_artwork_evidence(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "tooling",
+        "Validate CLI tools and scripts",
+        lambda ctx: validate_tooling(str(ctx.get("version") or validate_version())),
+    ),
+    (
+        "generated_sources",
+        "Validate generated sources and build artifacts",
+        lambda ctx: validate_generated_sources(str(ctx.get("version") or validate_version())),
+    ),
     ("json_and_xml", "Validate JSON and XML syntax across repository", lambda _ctx: validate_json_and_xml()),
-    ("no_package_symlinks", "Validate absence of forbidden package symlinks", lambda _ctx: validate_no_package_symlinks()),
+    (
+        "no_package_symlinks",
+        "Validate absence of forbidden package symlinks",
+        lambda _ctx: validate_no_package_symlinks(),
+    ),
 )
 
 
