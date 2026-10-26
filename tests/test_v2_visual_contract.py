@@ -32,8 +32,10 @@ class VisualContractTests(unittest.TestCase):
         )
         for filename in ("Tokens.qml", "NoxForgeMark.svg"):
             paths = [root / filename for root in roots]
-            self.assertFalse(any(path.is_symlink() for path in paths))
-            self.assertEqual(len({path.read_bytes() for path in paths}), 1)
+            first_bytes = paths[0].read_bytes()
+            for path in paths:
+                self.assertFalse(path.is_symlink())
+                self.assertEqual(path.read_bytes(), first_bytes)
 
     def test_plasma_contract_has_exact_target_family_count(self) -> None:
         contract = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
