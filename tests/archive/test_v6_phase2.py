@@ -18,14 +18,8 @@ SVG = "{http://www.w3.org/2000/svg}"
 class V6PhaseTwoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.contract = json.loads(
-            (ROOT / "design/artwork-contract.json").read_text(encoding="utf-8")
-        )
-        cls.evidence = json.loads(
-            (ROOT / "docs/evidence/artwork-contact-sheets.json").read_text(
-                encoding="utf-8"
-            )
-        )
+        cls.contract = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
+        cls.evidence = json.loads((ROOT / "docs/evidence/artwork-contact-sheets.json").read_text(encoding="utf-8"))
 
     def test_brand_masters_and_physical_copies_are_consistent(self) -> None:
         brand = self.contract["brand"]
@@ -43,9 +37,7 @@ class V6PhaseTwoTests(unittest.TestCase):
         )
         self.assertFalse(lockup.findall(f".//{SVG}text"))
         for kind, copies in brand["physicalCopies"].items():
-            master = ROOT / (
-                brand["source"] if kind == "mark" else brand["lockupSource"]
-            )
+            master = ROOT / (brand["source"] if kind == "mark" else brand["lockupSource"])
             for relative in copies:
                 self.assertEqual((ROOT / relative).read_bytes(), master.read_bytes())
 
@@ -53,7 +45,10 @@ class V6PhaseTwoTests(unittest.TestCase):
         wallpapers = self.contract["wallpapers"]
         self.assertEqual(set(wallpapers), {"16:9", "ultrawide"})
         sources = [ROOT / details["source"] for details in wallpapers.values()]
-        self.assertEqual(len({source.read_bytes() for source in sources}), 2)
+        wallpaper_bytes = []
+        for source in sources:
+            wallpaper_bytes.append(source.read_bytes())
+        self.assertEqual(len(set(wallpaper_bytes)), 2)
         for details in wallpapers.values():
             self.assertTrue(details["original"])
             self.assertTrue(details["editable"])
@@ -61,13 +56,7 @@ class V6PhaseTwoTests(unittest.TestCase):
             self.assertGreaterEqual(quiet["x"], 1000)
             self.assertGreaterEqual(quiet["width"], 1200)
             for output in details["outputs"]:
-                self.assertTrue(
-                    (
-                        ROOT
-                        / "wallpapers/NoxForge/contents/images"
-                        / f"{output}.png"
-                    ).is_file()
-                )
+                self.assertTrue((ROOT / "wallpapers/NoxForge/contents/images" / f"{output}.png").is_file())
 
     def test_optical_and_contact_sheet_evidence_is_source_bound(self) -> None:
         self.assertEqual(self.evidence["schemaVersion"], 2)
@@ -109,10 +98,9 @@ class V6PhaseTwoTests(unittest.TestCase):
 
     def test_readme_and_session_brand_surfaces_use_v6_artwork(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        splash = (
-            ROOT
-            / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml"
-        ).read_text(encoding="utf-8")
+        splash = (ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml").read_text(
+            encoding="utf-8"
+        )
         sddm = (ROOT / "sddm/NoxForge/Main.qml").read_text(encoding="utf-8")
         self.assertIn("Kinetic Precision", readme)
         self.assertIn(
@@ -122,11 +110,7 @@ class V6PhaseTwoTests(unittest.TestCase):
         self.assertIn('source: "NoxForgeMark.svg"', splash)
         self.assertIn('text: "NOXFORGE"', splash)
         self.assertIn('source: "NoxForgeLockup.svg"', sddm)
-        preview = json.loads(
-            (ROOT / "docs/evidence/v6/brand/preview-manifest.json").read_text(
-                encoding="utf-8"
-            )
-        )
+        preview = json.loads((ROOT / "docs/evidence/v6/brand/preview-manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(preview["kind"], "authentic-offscreen-preview")
         self.assertFalse(preview["liveEvidence"])
         for details in preview["outputs"].values():
