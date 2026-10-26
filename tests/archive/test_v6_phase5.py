@@ -13,21 +13,19 @@ CONTRACT_PATH = ROOT / "design/session-surface-contract.json"
 EVIDENCE_ROOT = ROOT / "docs/evidence/v6/session"
 SURFACES = {
     "sddm": ROOT / "sddm/NoxForge/Main.qml",
-    "splash": ROOT
-    / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
-    "logout": ROOT
-    / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
-    "tabbox": ROOT
-    / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml",
+    "splash": ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
+    "logout": ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
+    "tabbox": ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml",
 }
 MOTION_POLICIES = (
-    ROOT
-    / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/MotionPolicy.qml",
-    ROOT
-    / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/MotionPolicy.qml",
-    ROOT
-    / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/MotionPolicy.qml",
+    ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/MotionPolicy.qml",
+    ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/MotionPolicy.qml",
+    ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/MotionPolicy.qml",
 )
+
+HEX_COLOR_RE = re.compile(r"#[0-9A-Fa-f]{3,8}\b")
+DURATION_RE = re.compile(r"\bduration:\s*\d+")
+EASING_BEZIER_RE = re.compile(r"easing\.bezierCurve:\s*([^\n]+)")
 
 
 class V6PhaseFiveTests(unittest.TestCase):
@@ -39,18 +37,13 @@ class V6PhaseFiveTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
-        cls.manifest = json.loads(
-            (EVIDENCE_ROOT / "manifest.json").read_text(encoding="utf-8")
-        )
+        cls.manifest = json.loads((EVIDENCE_ROOT / "manifest.json").read_text(encoding="utf-8"))
 
     def test_session_contract_has_complete_v6_matrices(self) -> None:
         self.assertEqual(self.contract["schemaVersion"], 2)
         self.assertEqual(set(self.contract["surfaces"]), set(SURFACES))
         self.assertEqual(
-            {
-                (size["width"], size["height"])
-                for size in self.contract["v6ResolutionMatrix"]
-            },
+            {(size["width"], size["height"]) for size in self.contract["v6ResolutionMatrix"]},
             {(1280, 720), (1920, 1080), (2560, 1440), (3440, 1440)},
         )
         scenarios = {
@@ -58,10 +51,7 @@ class V6PhaseFiveTests(unittest.TestCase):
             for surface_scenarios in self.contract["v6ScenarioMatrix"].values()
             for scenario in surface_scenarios
         }
-        self.assertTrue(
-            {"standard", "long-rtl", "keyboard", "empty", "error", "busy", "reduced"}
-            <= scenarios
-        )
+        self.assertTrue({"standard", "long-rtl", "keyboard", "empty", "error", "busy", "reduced"} <= scenarios)
         self.assertEqual(
             self.contract["choreographyFrames"],
             [
@@ -98,9 +88,9 @@ class V6PhaseFiveTests(unittest.TestCase):
             combined += text
             with self.subTest(surface=surface):
                 self.assertIn("property real testProgress: -1", text)
-                self.assertIsNone(re.search(r"#[0-9A-Fa-f]{3,8}\b", text))
-                self.assertIsNone(re.search(r"\bduration:\s*\d+", text))
-                for curve in re.findall(r"easing\.bezierCurve:\s*([^\n]+)", text):
+                self.assertIsNone(HEX_COLOR_RE.search(text))
+                self.assertIsNone(DURATION_RE.search(text))
+                for curve in EASING_BEZIER_RE.findall(text):
                     self.assertTrue(curve.strip().startswith("tokens."))
         self.assertIn("Behavior on", combined)
         self.assertIn("transitions: Transition", combined)
@@ -142,7 +132,10 @@ class V6PhaseFiveTests(unittest.TestCase):
 
         tabbox = SURFACES["tabbox"].read_text(encoding="utf-8")
         for role in ("caption", "icon", "minimized"):
-            self.assertIn(f"required property {'var' if role == 'icon' else 'bool' if role == 'minimized' else 'string'} {role}", tabbox)
+            self.assertIn(
+                f"required property {'var' if role == 'icon' else 'bool' if role == 'minimized' else 'string'} {role}",
+                tabbox,
+            )
         for unsupported in ("thumbnail", "windowGeometry", "desktopName"):
             self.assertNotIn(unsupported, tabbox)
         self.assertIn("windowList.contentHeight", tabbox)
@@ -177,9 +170,7 @@ class V6PhaseFiveTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), digest)
 
     def test_first_frame_gate_passes_against_v5(self) -> None:
-        report = json.loads(
-            (EVIDENCE_ROOT / "performance.json").read_text(encoding="utf-8")
-        )
+        report = json.loads((EVIDENCE_ROOT / "performance.json").read_text(encoding="utf-8"))
         self.assertEqual(report["phase"], 5)
         self.assertEqual(report["result"], "passed")
         self.assertEqual(report["maximumRatio"], 1.1)
@@ -188,9 +179,7 @@ class V6PhaseFiveTests(unittest.TestCase):
         self.assertEqual(len(report["metric"]["currentSamplesMs"]), 11)
 
     def test_live_session_cases_remain_blocked(self) -> None:
-        qualification = json.loads(
-            (ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8")
-        )
+        qualification = json.loads((ROOT / "docs/evidence/v6/qualification.json").read_text(encoding="utf-8"))
         live = {case["id"]: case for case in qualification["liveCases"]}
         for case_id in (
             "sddm-authentication-and-power",
