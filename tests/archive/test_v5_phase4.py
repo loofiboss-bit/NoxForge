@@ -11,7 +11,7 @@ import wave
 import defusedxml.ElementTree as ET
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = json.loads((ROOT / "design/artwork-contract.json").read_text(encoding="utf-8"))
 
 
@@ -26,14 +26,16 @@ class V5PhaseFourTests(unittest.TestCase):
         )
         self.assertEqual(CONTRACT["brand"]["opticalSizes"], [16, 24, 48, 128, 512])
         self.assertEqual(CONTRACT["brand"]["minimumClearSpace"], 12)
-        self.assertEqual(len({path.read_bytes() for path in paths}), 1)
+        first_mark = paths[0].read_bytes()
+        self.assertTrue(all(path.read_bytes() == first_mark for path in paths[1:]))
         self.assertEqual(ET.parse(paths[0]).getroot().get("viewBox"), CONTRACT["brand"]["viewBox"])
         lockups = (
             ROOT / CONTRACT["brand"]["lockupSource"],
             ROOT / "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/NoxForgeLockup.svg",
             ROOT / "sddm/NoxForge/NoxForgeLockup.svg",
         )
-        self.assertEqual(len({path.read_bytes() for path in lockups}), 1)
+        first_lockup = lockups[0].read_bytes()
+        self.assertTrue(all(path.read_bytes() == first_lockup for path in lockups[1:]))
         self.assertFalse(ET.parse(lockups[0]).getroot().findall(".//{http://www.w3.org/2000/svg}text"))
 
     def test_wallpaper_compositions_are_separate_and_deterministic(self) -> None:
