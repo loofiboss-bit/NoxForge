@@ -39,7 +39,10 @@ def main() -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text('[UserChoice]\nvalue=preserve-byte-for-byte\n')
     def hashes():
-        return {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in config}
+        result = {}
+        for path in config:
+            result[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+        return result
     before = hashes()
     phases = []
     steps = [(f'{baseline_version}-install', args.baseline_rpm, baseline_version, []),
@@ -58,10 +61,12 @@ def main() -> int:
     assert not any(Path(path).is_file() for path in owned), 'owned file remains after removal'
     assert hashes() == before, 'configuration changed on removal'
     phases.append({'phase': 'uninstall', 'status': 'passed', 'configurationHashes': hashes()})
+    package_hashes = {}
+    for p in (args.baseline_rpm, args.candidate_rpm):
+        package_hashes[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
     report = {'version': candidate_version, 'baselineVersion': baseline_version, 'status': 'passed', 'scope': 'real RPM transactions in isolated Fedora container',
               'hostMutated': False, 'phases': phases,
-              'packageHashes': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                                for p in (args.baseline_rpm, args.candidate_rpm)}}
+              'packageHashes': package_hashes}
     args.report.write_text(json.dumps(report, indent=2) + '\n')
     print('RPM upgrade, reinstall, rollback and removal passed; configuration preserved')
     return 0
