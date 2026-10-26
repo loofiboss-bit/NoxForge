@@ -237,10 +237,7 @@ def blend_hex(fg_hex: str, bg_hex: str, alpha: float) -> str:
 
 def relative_luminance(hex_color: str) -> float:
     channels = [int(hex_color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
-    linear = [
-        value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
-        for value in channels
-    ]
+    linear = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
     return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
 
 
@@ -274,9 +271,13 @@ def validate_custom_accent_contrast(hex_code: str) -> tuple[float, float]:
 def resolve_accent_palette(accent_key_or_hex: str, is_obsidian: bool = False) -> dict[str, str]:
     """Return harmonized accent tokens (accent, accentPressed, accentInk, surfaceSelected)."""
     key = (accent_key_or_hex or "lime").strip().lower()
-    matched_matrix_key = key if key in ACCENT_COLORS else next(
-        (k for k, v in ACCENT_COLORS.items() if v.lower() == key),
-        None,
+    matched_matrix_key = (
+        key
+        if key in ACCENT_COLORS
+        else next(
+            (k for k, v in ACCENT_COLORS.items() if v.lower() == key),
+            None,
+        )
     )
     if matched_matrix_key:
         accent_hex = ACCENT_COLORS[matched_matrix_key]
