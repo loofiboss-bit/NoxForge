@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 
 RUNTIME_ROOTS = ('src', 'tools', 'design', 'plasma', 'aurorae', 'kwin', 'sddm',
@@ -51,9 +52,14 @@ def validate(root: Path) -> list[str]:
         path = (root / name).resolve()
         if not path.is_relative_to(root) or not path.is_file():
             errors.append(f'Missing or escaped runtime source: {name}')
-        elif hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+        elif _hash_file(path) != digest:
             errors.append(f'Stale runtime evidence: {name}; recapture or requalify before publication')
     return errors
+
+
+def _hash_file(path: Path | str) -> str:
+    with open(path, 'rb') as file:
+        return hashlib.sha256(file.read()).hexdigest()
 
 
 def update(root: Path) -> Path:
@@ -64,7 +70,8 @@ def update(root: Path) -> Path:
     if not hashes_path.is_relative_to(evidence):
         raise ValueError('Runtime hash manifest escapes evidence directory')
     paths = sorted(runtime_paths(root))
-    hashes = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
+    root_str = str(root)
+    hashes = {path: _hash_file(os.path.join(root_str, path)) for path in paths}
     hashes_path.write_text(json.dumps(hashes, indent=2) + '\n')
     return hashes_path
 
