@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Exercise isolated lifecycle; an actual upgrade requires an explicit baseline."""
+
 from __future__ import annotations
 
 import argparse
@@ -42,7 +43,8 @@ def metadata_version(data: Path, expected: str) -> None:
         path = data / relative
         if not path.is_file():
             raise AssertionError(f"Missing installed version metadata: {relative}")
-        actual = json.loads(path.read_text())["KPlugin"]["Version"] if path.suffix == ".json" else path.read_text().strip()
+        content = path.read_text()
+        actual = json.loads(content)["KPlugin"]["Version"] if path.suffix == ".json" else content.strip()
         if actual != expected:
             raise AssertionError(f"{relative}: expected {expected}, got {actual}")
 
@@ -60,9 +62,15 @@ def lifecycle(
         home, stage = root / "home", root / "stage"
         config, data = home / ".config", home / ".local/share"
         environment = os.environ.copy()
-        environment.update(HOME=str(home), XDG_CONFIG_HOME=str(config), XDG_DATA_HOME=str(data),
-                           XDG_CACHE_HOME=str(home / ".cache"), XDG_STATE_HOME=str(home / ".local/state"),
-                           NOXFORGE_SYSTEM_ROOT=str(stage), NOXFORGE_BUILD_ROOT=str(current))
+        environment.update(
+            HOME=str(home),
+            XDG_CONFIG_HOME=str(config),
+            XDG_DATA_HOME=str(data),
+            XDG_CACHE_HOME=str(home / ".cache"),
+            XDG_STATE_HOME=str(home / ".local/state"),
+            NOXFORGE_SYSTEM_ROOT=str(stage),
+            NOXFORGE_BUILD_ROOT=str(current),
+        )
         for relative in ("kdeglobals", "plasma-org.kde.plasma.desktop-appletsrc", "plasmawallpaperrc"):
             write(config / relative, f"[UserChoice]\nvalue={relative}\n")
         for relative in ("plasmalogin.conf", "sddm.conf.d/user.conf"):
@@ -108,13 +116,19 @@ def lifecycle(
         install(ROOT, current, f"{current_version}-upgrade" if baseline else f"{current_version}-install")
         install(ROOT, current, f"{current_version}-reinstall")
         remove(ROOT, current, f"{current_version}-uninstall")
-        remove(ROOT, current, f"{current_version}-repeat-uninstall") if mode == "system" else check(f"{current_version}-removed")
+        remove(ROOT, current, f"{current_version}-repeat-uninstall") if mode == "system" else check(
+            f"{current_version}-removed"
+        )
         if baseline:
             install(baseline, baseline_build, f"{baseline_version}-rollback-install")
             remove(ROOT, baseline_build, f"{baseline_version}-rollback-uninstall-current-tool")
-        return {"mode": mode, "status": "passed", "phases": phases,
-                "baselineVersion": baseline_version if baseline else None,
-                "currentVersion": current_version}
+        return {
+            "mode": mode,
+            "status": "passed",
+            "phases": phases,
+            "baselineVersion": baseline_version if baseline else None,
+            "currentVersion": current_version,
+        }
 
 
 def main() -> int:
@@ -127,8 +141,14 @@ def main() -> int:
     current = args.build_root.resolve()
     baseline = args.baseline_source.resolve() if args.baseline_source else None
     baseline_version, current_version = release_versions()
-    report = {"schemaVersion": 1, "version": current_version,
-              "status": "failed", "actualUpgradeRollback": "pending", "hostMutated": False, "cycles": []}
+    report = {
+        "schemaVersion": 1,
+        "version": current_version,
+        "status": "failed",
+        "actualUpgradeRollback": "pending",
+        "hostMutated": False,
+        "cycles": [],
+    }
     try:
         validate_build(current, ROOT)
         if args.baseline_build and not baseline:
@@ -140,14 +160,21 @@ def main() -> int:
                     raise ValueError(f"Actual baseline must be {baseline_version}")
                 if not args.baseline_build:
                     environment = os.environ.copy()
-                    environment.update(HOME=temporary, XDG_CONFIG_HOME=temporary + "/config", XDG_DATA_HOME=temporary + "/data")
-                    run(["cmake", "-S", str(baseline), "-B", str(baseline_build), "-DCMAKE_INSTALL_PREFIX=/usr"], environment, baseline)
+                    environment.update(
+                        HOME=temporary, XDG_CONFIG_HOME=temporary + "/config", XDG_DATA_HOME=temporary + "/data"
+                    )
+                    run(
+                        ["cmake", "-S", str(baseline), "-B", str(baseline_build), "-DCMAKE_INSTALL_PREFIX=/usr"],
+                        environment,
+                        baseline,
+                    )
                     run(["cmake", "--build", str(baseline_build), "-j2"], environment, baseline)
                 validate_build(baseline_build, baseline)
             for mode in ("user", "system"):
                 report["cycles"].append(
-                    lifecycle(mode, current, baseline, baseline_build if baseline else None,
-                              baseline_version, current_version)
+                    lifecycle(
+                        mode, current, baseline, baseline_build if baseline else None, baseline_version, current_version
+                    )
                 )
         report["status"] = "passed"
         if baseline:
