@@ -367,6 +367,45 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                     else:
                         os.environ[key] = val
 
+    def test_parse_hm_minutes(self) -> None:
+        # Happy paths & edge cases
+        self.assertEqual(noxforge_core.parse_hm_minutes("00:00"), 0)
+        self.assertEqual(noxforge_core.parse_hm_minutes("23:59"), 23 * 60 + 59)
+        self.assertEqual(noxforge_core.parse_hm_minutes("07:30"), 7 * 60 + 30)
+        self.assertEqual(noxforge_core.parse_hm_minutes("12:00"), 12 * 60)
+        self.assertEqual(noxforge_core.parse_hm_minutes("20:15"), 20 * 60 + 15)
+        self.assertEqual(noxforge_core.parse_hm_minutes("  08:45 \n "), 8 * 60 + 45)
+
+        # Invalid formats or non-digit parts
+        invalid_format_inputs = [
+            "",
+            "   ",
+            "07",
+            "07:30:00",
+            "ab:cd",
+            "07:xx",
+            "yy:30",
+            "12.30",
+            "12: 30",
+        ]
+        for invalid_str in invalid_format_inputs:
+            with self.subTest(invalid_str=invalid_str):
+                with self.assertRaises(ValueError):
+                    noxforge_core.parse_hm_minutes(invalid_str)
+
+        # Out-of-range times
+        out_of_range_inputs = [
+            "24:00",
+            "25:30",
+            "-1:00",
+            "12:60",
+            "12:-5",
+        ]
+        for oor_str in out_of_range_inputs:
+            with self.subTest(oor_str=oor_str):
+                with self.assertRaises(ValueError):
+                    noxforge_core.parse_hm_minutes(oor_str)
+
     def test_schedule_midnight_wraparound_and_safe_quoting(self) -> None:
         self.assertEqual(noxforge_core.evaluate_schedule_profile("12:00", "07:00", "20:00"), "graphite")
         self.assertEqual(noxforge_core.evaluate_schedule_profile("22:00", "07:00", "20:00"), "obsidian")
