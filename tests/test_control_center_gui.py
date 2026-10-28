@@ -18,7 +18,7 @@ import importlib.util
 
 HAVE_PYSIDE6 = bool(importlib.util.find_spec("PySide6"))
 if HAVE_PYSIDE6:
-    from PySide6 import QtWidgets  # noqa: E402
+    from PySide6 import QtGui, QtWidgets  # noqa: E402
     from tools import control_center, opacity_gui  # noqa: E402
 
 
@@ -71,7 +71,35 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(tab.btn_graphite.isEnabled())
         self.assertTrue(tab.btn_obsidian.isEnabled())
         self.assertEqual(tab.test_box.accessibleName(), "Kinetic Motion Test Input")
-        self.assertEqual(tab.sched_check.accessibleName(), "Enable automatic profile switching")
+
+    def test_accessible_names_and_label_buddies(self) -> None:
+        profile = control_center.ProfileAccentTab()
+        accessibility = control_center.AccessibilityTab()
+        opacity = opacity_gui.OpacityConfiguratorWindow()
+
+        pairs = [
+            (profile, "Wallpaper Variant:", profile.wallpaper_combo),
+            (profile, "Day (Graphite):", profile.day_time),
+            (profile, "Night (Obsidian):", profile.night_time),
+            (opacity, "Panel:", opacity.slider_panel),
+            (opacity, "Dialogs & Menus:", opacity.slider_dialog),
+            (opacity, "Widgets & Popups:", opacity.slider_widget),
+            (opacity, "Tooltips:", opacity.slider_tooltip),
+            (opacity, "Active Titlebar:", opacity.slider_aurorae_act),
+            (opacity, "Inactive Titlebar:", opacity.slider_aurorae_inact),
+        ]
+        for parent, text, widget in pairs:
+            with self.subTest(label=text):
+                labels = [label for label in parent.findChildren(QtWidgets.QLabel) if label.text() == text]
+                self.assertEqual(len(labels), 1)
+                self.assertIs(labels[0].buddy(), widget)
+                interface = QtGui.QAccessible.queryAccessibleInterface(widget)
+                self.assertTrue(interface.text(QtGui.QAccessible.Text.Name))
+
+        for checkbox in (profile.sched_check, accessibility.chk_reduced_motion):
+            with self.subTest(checkbox=checkbox.text()):
+                interface = QtGui.QAccessible.queryAccessibleInterface(checkbox)
+                self.assertEqual(interface.text(QtGui.QAccessible.Text.Name), checkbox.text())
 
     def test_ecosystem_tab_instantiation(self) -> None:
         """EcosystemTab instantiates with application table and action buttons."""

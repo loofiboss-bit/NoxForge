@@ -63,6 +63,7 @@ QWidget *controlsPage(QPushButton **focusTarget)
     radio->setChecked(true);
     layout->addRow(QStringLiteral("Radio"), radio);
     auto *slider = new QSlider(Qt::Horizontal);
+    slider->setAccessibleName(QStringLiteral("Horizontal Control Slider"));
     slider->setValue(62);
     layout->addRow(QStringLiteral("Slider"), slider);
     auto *progress = new QProgressBar;
@@ -132,6 +133,7 @@ QWidget *dataPage()
     layout->addWidget(notes);
     auto *row = new QHBoxLayout;
     auto *verticalSlider = new QSlider(Qt::Vertical);
+    verticalSlider->setAccessibleName(QStringLiteral("Vertical Progress Slider"));
     verticalSlider->setValue(64);
     verticalSlider->setMaximumHeight(100);
     row->addWidget(verticalSlider);
@@ -270,6 +272,7 @@ QWidget *stressPage()
     dial->setMaximumSize(92, 92);
     dense->addWidget(dial);
     auto *vertical = new QSlider(Qt::Vertical);
+    vertical->setAccessibleName(QStringLiteral("Vertical Dial Companion Slider"));
     vertical->setInvertedAppearance(true);
     vertical->setValue(85);
     vertical->setMaximumHeight(110);
