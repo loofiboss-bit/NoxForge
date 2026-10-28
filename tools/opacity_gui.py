@@ -607,6 +607,7 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
             lbl = QtWidgets.QLabel(label_text)
             lbl.setFixedWidth(130)
             slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
+            lbl.setBuddy(slider)
             slider.setAccessibleName(label_text.replace(":", "").strip())
             slider.setRange(10, 100)
             slider.setValue(default_val)
