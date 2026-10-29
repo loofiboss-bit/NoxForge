@@ -110,7 +110,9 @@ class ProfileAccentTab(QtWidgets.QWidget):
         profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita & Terminals)")
         p_layout = QtWidgets.QVBoxLayout(profile_group)
 
-        desc = QtWidgets.QLabel("Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:")
+        desc = QtWidgets.QLabel(
+            "Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:"
+        )
         desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
         p_layout.addWidget(desc)
 
@@ -131,7 +133,9 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # 1-Click Full Setup Action
         setup_row = QtWidgets.QHBoxLayout()
-        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors & Wallpaper)")
+        self.setup_full_btn = QtWidgets.QPushButton(
+            "  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors & Wallpaper)"
+        )
         self.setup_full_btn.setMinimumHeight(34)
         self.setup_full_btn.setStyleSheet(
             "background-color: #142218; border: 1px solid #A3FF47; border-radius: 5px; "
@@ -147,7 +151,9 @@ class ProfileAccentTab(QtWidgets.QWidget):
         accent_group = QtWidgets.QGroupBox("Forge Accent Matrix")
         a_layout = QtWidgets.QVBoxLayout(accent_group)
 
-        a_desc = QtWidgets.QLabel("Select signature accent color for controls, focus rings, GTK/Libadwaita, and notch indicators:")
+        a_desc = QtWidgets.QLabel(
+            "Select signature accent color for controls, focus rings, GTK/Libadwaita, and notch indicators:"
+        )
         a_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 8px;")
         a_layout.addWidget(a_desc)
 
@@ -180,6 +186,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         wp_lbl = QtWidgets.QLabel("Wallpaper Variant:")
         wp_lbl.setStyleSheet("color: #A6B4B9;")
         self.wallpaper_combo = QtWidgets.QComboBox()
+        wp_lbl.setBuddy(self.wallpaper_combo)
         self.wallpaper_combo.setAccessibleName("Wallpaper Variant Selector")
         for var_key, var_info in noxforge_core.WALLPAPER_VARIANTS.items():
             self.wallpaper_combo.addItem(f"{var_info['label']} ({var_info['id']})", var_key)
@@ -192,10 +199,14 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(wp_group)
 
         # Live Icon & Kinetic Motion Preview Section
-        preview_group = QtWidgets.QGroupBox(f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
+        preview_group = QtWidgets.QGroupBox(
+            f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)"
+        )
         prev_layout = QtWidgets.QVBoxLayout(preview_group)
 
-        prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
+        prev_desc = QtWidgets.QLabel(
+            "Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:"
+        )
         prev_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
         prev_layout.addWidget(prev_desc)
 
@@ -261,6 +272,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         day_lbl = QtWidgets.QLabel("Day (Graphite):")
         day_lbl.setStyleSheet("color: #A6B4B9;")
         self.day_time = QtWidgets.QTimeEdit()
+        day_lbl.setBuddy(self.day_time)
         self.day_time.setAccessibleName("Day time")
         self.day_time.setDisplayFormat("HH:mm")
         self.day_time.setTime(QtCore.QTime(7, 0))
@@ -269,6 +281,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         night_lbl = QtWidgets.QLabel("Night (Obsidian):")
         night_lbl.setStyleSheet("color: #A6B4B9;")
         self.night_time = QtWidgets.QTimeEdit()
+        night_lbl.setBuddy(self.night_time)
         self.night_time.setAccessibleName("Night time")
         self.night_time.setDisplayFormat("HH:mm")
         self.night_time.setTime(QtCore.QTime(20, 0))
@@ -287,7 +300,9 @@ class ProfileAccentTab(QtWidgets.QWidget):
     def play_test_shake(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
-        pal = noxforge_core.resolve_accent_palette(status.get("accentHex", "#A3FF47"), is_obsidian=(profile == "obsidian"))
+        pal = noxforge_core.resolve_accent_palette(
+            status.get("accentHex", "#A3FF47"), is_obsidian=(profile == "obsidian")
+        )
         acc = pal["accent"]
         surf_sel = pal["surfaceSelected"]
 
@@ -304,9 +319,11 @@ class ProfileAccentTab(QtWidgets.QWidget):
             f"background-color: {surf_sel}; border: 2px solid {acc}; border-radius: 5px; "
             f"color: {acc}; padding: 6px 12px; font-size: 12px; font-weight: bold;"
         )
+
         def restore():
             self.test_box.setStyleSheet("")
             self.test_box.setGeometry(orig_rect)
+
         anim.finished.connect(restore)
         self._shake_anim = anim
         anim.start()
@@ -500,7 +517,9 @@ class HealthTab(QtWidgets.QWidget):
             self.info_text.setPlainText("Could not find noxforge-doctor utility.")
             return
         try:
-            res = subprocess.run([sys.executable, str(tool_doctor), "--json"], capture_output=True, text=True, check=False)
+            res = subprocess.run(
+                [sys.executable, str(tool_doctor), "--json"], capture_output=True, text=True, check=False
+            )
             data = json.loads(res.stdout)
             status = data.get("status", "ok")
             missing = data.get("missing", [])
@@ -513,9 +532,13 @@ class HealthTab(QtWidgets.QWidget):
             eco_state = data.get("ecosystemState", {})
 
             self._style_health_badge(self.badge_core, f"● Core: {core_status.upper()}", core_status == "ok")
-            self._style_health_badge(self.badge_palette, f"● Palette: {palette_sync.upper()}", palette_sync != "desynchronized")
+            self._style_health_badge(
+                self.badge_palette, f"● Palette: {palette_sync.upper()}", palette_sync != "desynchronized"
+            )
             self._style_health_badge(self.badge_gtk, f"● GTK/Adw: {gtk_chain.upper()}", gtk_chain == "ok")
-            self._style_health_badge(self.badge_flatpak, f"● Flatpak: {flatpak.upper()}", flatpak in ("ok", "configured"))
+            self._style_health_badge(
+                self.badge_flatpak, f"● Flatpak: {flatpak.upper()}", flatpak in ("ok", "configured")
+            )
             self._style_health_badge(self.badge_eco, "● Ecosystem: REVERSIBLE", bool(eco_state.get("reversible", True)))
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
@@ -569,7 +592,9 @@ class AccessibilityTab(QtWidgets.QWidget):
 
         # System-Wide Reduced Motion Live Toggle
         toggle_row = QtWidgets.QHBoxLayout()
-        self.chk_reduced_motion = QtWidgets.QCheckBox("Enable System-Wide Reduced Motion (0ms animations, static focus rings)")
+        self.chk_reduced_motion = QtWidgets.QCheckBox(
+            "Enable System-Wide Reduced Motion (0ms animations, static focus rings)"
+        )
         self.chk_reduced_motion.setAccessibleName("Enable System-Wide Reduced Motion")
         self.chk_reduced_motion.setStyleSheet("font-weight: 600;")
         self.chk_reduced_motion.toggled.connect(self.toggle_reduced_motion)
@@ -596,7 +621,9 @@ class AccessibilityTab(QtWidgets.QWidget):
         self.btn_sim_kinetic = QtWidgets.QPushButton("Test Kinetic Shake (Standard)")
         self.btn_sim_kinetic.clicked.connect(self.play_kinetic_shake)
         self.btn_sim_edge = QtWidgets.QPushButton("Test Static Edge-Flash (Reduced Motion)")
-        self.btn_sim_edge.setStyleSheet("background-color: #1A2832; border: 1px solid #A3FF47; color: #A3FF47; font-weight: bold;")
+        self.btn_sim_edge.setStyleSheet(
+            "background-color: #1A2832; border: 1px solid #A3FF47; color: #A3FF47; font-weight: bold;"
+        )
         self.btn_sim_edge.clicked.connect(self.play_edge_flash)
 
         sim_row.addWidget(self.sim_input, stretch=1)
@@ -630,12 +657,16 @@ class AccessibilityTab(QtWidgets.QWidget):
 
         self.color_swatch = QtWidgets.QLabel("  PREVIEW  ")
         self.color_swatch.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.color_swatch.setStyleSheet("background-color: #A3FF47; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;")
+        self.color_swatch.setStyleSheet(
+            "background-color: #A3FF47; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;"
+        )
 
         self.btn_apply_custom = QtWidgets.QPushButton("Apply Custom Accent")
         self.btn_apply_custom.clicked.connect(self.apply_custom_accent)
 
-        input_row.addWidget(QtWidgets.QLabel("Custom Hex:"))
+        hex_lbl = QtWidgets.QLabel("Custom Hex:")
+        hex_lbl.setBuddy(self.hex_input)
+        input_row.addWidget(hex_lbl)
         input_row.addWidget(self.hex_input)
         input_row.addWidget(self.btn_pick_color)
         input_row.addWidget(self.color_swatch)
@@ -699,12 +730,14 @@ class AccessibilityTab(QtWidgets.QWidget):
             "background-color: #2D1418; border: 2px solid #FF5555; border-radius: 5px; "
             "color: #FF7777; padding: 8px 12px; font-size: 13px; font-weight: bold;"
         )
+
         def restore():
             self.sim_input.setStyleSheet(
                 "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
                 "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
             )
             self.sim_input.setGeometry(orig)
+
         anim.finished.connect(restore)
         anim.start()
         self.statusChanged.emit("Simulating kinetic spring shake (220ms)...")
@@ -714,11 +747,13 @@ class AccessibilityTab(QtWidgets.QWidget):
             "background-color: #10191F; border: 2px solid #FF5555; border-radius: 5px; "
             "color: #FF5555; padding: 8px 12px; font-size: 13px; font-weight: bold;"
         )
+
         def restore():
             self.sim_input.setStyleSheet(
                 "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
                 "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
             )
+
         QtCore.QTimer.singleShot(220, restore)
         self.statusChanged.emit("Simulating static edge-flash indicator (220ms, 0px translation)...")
 
@@ -727,7 +762,9 @@ class AccessibilityTab(QtWidgets.QWidget):
         if len(clean) == 7 and clean.startswith("#"):
             try:
                 cg, co = noxforge_ctl.validate_custom_accent_contrast(clean)
-                self.color_swatch.setStyleSheet(f"background-color: {clean}; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;")
+                self.color_swatch.setStyleSheet(
+                    f"background-color: {clean}; color: #0D1419; font-weight: bold; border-radius: 4px; padding: 6px 12px;"
+                )
                 self.contrast_label.setText(f"Contrast: Graphite {cg:.2f}:1 (PASS) | Obsidian {co:.2f}:1 (PASS)")
                 self.contrast_label.setStyleSheet("color: #A3FF47; font-weight: 600; margin-top: 6px;")
                 self.btn_apply_custom.setEnabled(True)
@@ -832,7 +869,11 @@ class EcosystemTab(QtWidgets.QWidget):
         self.statusChanged.emit(f"Flatpak override {action}: {res.get('status')}")
 
     def refresh_table(self) -> None:
-        fp_info = noxforge_ctl.manage_flatpak("status") if hasattr(noxforge_ctl, "manage_flatpak") else {"status": "unknown", "enabled": False}
+        fp_info = (
+            noxforge_ctl.manage_flatpak("status")
+            if hasattr(noxforge_ctl, "manage_flatpak")
+            else {"status": "unknown", "enabled": False}
+        )
         fp_enabled = bool(fp_info.get("enabled"))
         self.flatpak_status_lbl.setText(
             f"Flatpak GTK/Libadwaita Override: {'● ENABLED (xdg-data/themes + gtk-3.0/4.0)' if fp_enabled else '○ NOT CONFIGURED'}"
@@ -1031,7 +1072,9 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
     def refresh_theme(self, profile: str = "graphite", accent_hex: str = "#A3FF47") -> None:
         """Dynamically re-skin the Control Center GUI to match the active profile and accent."""
         self.active_profile = profile.lower() if profile.lower() in ("graphite", "obsidian") else "graphite"
-        pal = noxforge_core.resolve_accent_palette(accent_hex or "#A3FF47", is_obsidian=(self.active_profile == "obsidian"))
+        pal = noxforge_core.resolve_accent_palette(
+            accent_hex or "#A3FF47", is_obsidian=(self.active_profile == "obsidian")
+        )
         self.active_accent_hex = pal["accent"]
         surf_sel = pal["surfaceSelected"]
         qss = noxforge_core.build_qt_stylesheet(profile=self.active_profile, accent_hex=self.active_accent_hex)
@@ -1092,7 +1135,20 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="NoxForge Control Center")
     parser.add_argument(
         "--tab",
-        choices=["profile", "accent", "opacity", "transparency", "depth", "a11y", "accessibility", "motion", "health", "doctor", "ecosystem", "apps"],
+        choices=[
+            "profile",
+            "accent",
+            "opacity",
+            "transparency",
+            "depth",
+            "a11y",
+            "accessibility",
+            "motion",
+            "health",
+            "doctor",
+            "ecosystem",
+            "apps",
+        ],
         default=None,
         help="Initial tab to display",
     )
