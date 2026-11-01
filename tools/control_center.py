@@ -102,12 +102,23 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(16)
 
         # Profile Switcher Section
-        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita & Terminals)")
+        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita && Terminals)")
         p_layout = QtWidgets.QVBoxLayout(profile_group)
 
         desc = QtWidgets.QLabel("Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:")
@@ -131,10 +142,10 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # 1-Click Full Setup Action
         setup_row = QtWidgets.QHBoxLayout()
-        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors & Wallpaper)")
+        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors && Wallpaper)")
         self.setup_full_btn.setMinimumHeight(34)
         self.setup_full_btn.setStyleSheet(
-            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 5px; "
+            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 6px; "
             "color: #A3FF47; font-weight: bold; font-size: 11px; padding: 4px 12px;"
         )
         self.setup_full_btn.clicked.connect(self.apply_full_active_setup)
@@ -165,17 +176,20 @@ class ProfileAccentTab(QtWidgets.QWidget):
         for idx, (key, label, color) in enumerate(accents):
             btn = QtWidgets.QPushButton(f"  ●  {label}")
             btn.setMinimumHeight(36)
-            btn.setStyleSheet(f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color};")
+            btn.setStyleSheet(f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color};")
             btn.clicked.connect(lambda _, k=key: self.apply_accent(k))
             self.accent_buttons[key] = btn
             self.accent_meta[key] = (label, color)
-            accent_grid.addWidget(btn, idx // 2, idx % 2)
+            if key == "system":
+                accent_grid.addWidget(btn, 2, 0, 1, 2)
+            else:
+                accent_grid.addWidget(btn, idx // 2, idx % 2)
 
         a_layout.addLayout(accent_grid)
         layout.addWidget(accent_group)
 
         # Wallpaper Suite Selector Section
-        wp_group = QtWidgets.QGroupBox("Wallpaper Suite (Standard, Obsidian, Quiet & Ultrawide)")
+        wp_group = QtWidgets.QGroupBox("Wallpaper Suite (Standard, Obsidian, Quiet && Ultrawide)")
         wp_layout = QtWidgets.QHBoxLayout(wp_group)
         wp_lbl = QtWidgets.QLabel("Wallpaper Variant:")
         wp_lbl.setStyleSheet("color: #A6B4B9;")
@@ -192,7 +206,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(wp_group)
 
         # Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer Section
-        self.union_group = QtWidgets.QGroupBox("Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer")
+        self.union_group = QtWidgets.QGroupBox("Plasma 6.8 Union Style Engine && KWin 6.8 CSD Harmonizer")
         u_layout = QtWidgets.QVBoxLayout(self.union_group)
         u_top = QtWidgets.QHBoxLayout()
         self.union_status_lbl = QtWidgets.QLabel("Union Mode: HYBRID (NoxForge C++ + Union CSS)")
@@ -218,7 +232,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(self.union_group)
 
         # Live Icon & Kinetic Motion Preview Section
-        preview_group = QtWidgets.QGroupBox(f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
+        preview_group = QtWidgets.QGroupBox(f"Live Icon && Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
         prev_layout = QtWidgets.QVBoxLayout(preview_group)
 
         prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
@@ -243,10 +257,11 @@ class ProfileAccentTab(QtWidgets.QWidget):
         for title, svg_path in icon_samples:
             col = QtWidgets.QVBoxLayout()
             col.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            col.setSpacing(4)
             img_lbl = QtWidgets.QLabel()
             img_lbl.setFixedSize(36, 36)
             img_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-            img_lbl.setStyleSheet("border: 1px solid #2F414B; border-radius: 6px; padding: 4px;")
+            img_lbl.setStyleSheet("border: 1px solid #2F414B; border-radius: 6px; padding: 4px; background-color: #10191F;")
             if svg_path.is_file():
                 img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
 
@@ -262,6 +277,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # Kinetic Motion Test Row
         motion_row = QtWidgets.QHBoxLayout()
+        motion_row.setContentsMargins(0, 10, 0, 0)
         self.test_box = QtWidgets.QLineEdit(f"NoxForge Kinetic Motion v{APP_VERSION}")
         self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
         self.test_box.setAccessibleName("Kinetic Motion Test Input")
@@ -308,6 +324,8 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(sched_group)
 
         layout.addStretch()
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
         self.refresh_state()
 
     def play_test_shake(self) -> None:
@@ -345,29 +363,40 @@ class ProfileAccentTab(QtWidgets.QWidget):
         pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile == "obsidian"))
         acc = pal["accent"]
         surf_sel = pal["surfaceSelected"]
+        bg_raised = "#121B21" if (profile == "obsidian") else "#1B2831"
 
-        active_btn_style = f"background-color: {surf_sel}; border: 2px solid {acc}; color: #FFFFFF; font-weight: bold;"
+        active_btn_style = (
+            f"background-color: {surf_sel}; border: 2px solid {acc}; "
+            f"border-radius: 6px; color: #FFFFFF; font-weight: bold; padding: 7px 14px;"
+        )
+        inactive_btn_style = (
+            f"background-color: {bg_raised}; border: 1px solid #2F414B; "
+            f"border-radius: 6px; color: #E8F0F2; font-weight: 500; padding: 7px 14px;"
+        )
         if profile == "obsidian":
             self.btn_obsidian.setStyleSheet(active_btn_style)
-            self.btn_graphite.setStyleSheet("")
+            self.btn_graphite.setStyleSheet(inactive_btn_style)
         else:
             self.btn_graphite.setStyleSheet(active_btn_style)
-            self.btn_obsidian.setStyleSheet("")
+            self.btn_obsidian.setStyleSheet(inactive_btn_style)
 
         for key, btn in self.accent_buttons.items():
             _, color = self.accent_meta[key]
             is_selected = (key == accent_name) or (key == "lime" and accent_name == "default")
             if is_selected:
                 btn.setStyleSheet(
-                    f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color}; "
+                    f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color}; "
                     f"background-color: {surf_sel}; border: 2px solid {color};"
                 )
             else:
-                btn.setStyleSheet(f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color};")
+                btn.setStyleSheet(
+                    f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color}; "
+                    f"background-color: {bg_raised}; border: 1px solid #2F414B;"
+                )
 
         self.setup_full_btn.setStyleSheet(
-            f"background-color: {surf_sel}; border: 1px solid {acc}; border-radius: 5px; "
-            f"color: {acc}; font-weight: bold; font-size: 11px; padding: 4px 12px;"
+            f"background-color: {surf_sel}; border: 1px solid {acc}; border-radius: 6px; "
+            f"color: {acc}; font-weight: bold; font-size: 11px; padding: 6px 14px;"
         )
 
         if hasattr(noxforge_ctl, "manage_wallpaper") and hasattr(self, "wallpaper_combo"):
@@ -537,7 +566,7 @@ class HealthTab(QtWidgets.QWidget):
         btn_row = QtWidgets.QHBoxLayout()
         self.btn_refresh = QtWidgets.QPushButton("Run Health Check (Doctor)")
         self.btn_refresh.clicked.connect(self.run_doctor)
-        self.btn_sync = QtWidgets.QPushButton("Synchronize & Remediate Desktop")
+        self.btn_sync = QtWidgets.QPushButton("Synchronize && Remediate Desktop")
         self.btn_sync.setObjectName("applyButton")
         self.btn_sync.clicked.connect(self.align_desktop)
 
@@ -634,7 +663,7 @@ class AccessibilityTab(QtWidgets.QWidget):
         layout.setSpacing(16)
 
         # Reduced Motion Section
-        motion_group = QtWidgets.QGroupBox("Reduced Motion & Focus Indicators (WCAG 2.2.2 / 2.3.3)")
+        motion_group = QtWidgets.QGroupBox("Reduced Motion && Focus Indicators (WCAG 2.2.2 / 2.3.3)")
         m_layout = QtWidgets.QVBoxLayout(motion_group)
 
         m_desc = QtWidgets.QLabel(
@@ -852,7 +881,7 @@ class EcosystemTab(QtWidgets.QWidget):
         layout.addWidget(desc)
 
         # Flatpak Theme & Libadwaita Override Card
-        self.flatpak_group = QtWidgets.QGroupBox("Flatpak & Libadwaita Sandbox Theme Access")
+        self.flatpak_group = QtWidgets.QGroupBox("Flatpak && Libadwaita Sandbox Theme Access")
         fp_layout = QtWidgets.QHBoxLayout(self.flatpak_group)
         self.flatpak_status_lbl = QtWidgets.QLabel("Status: Checking...")
         self.flatpak_status_lbl.setStyleSheet("color: #A6B4B9; font-weight: 600;")
@@ -996,7 +1025,8 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
     def __init__(self, initial_tab: str | None = None) -> None:
         super().__init__()
         self.setWindowTitle("NoxForge Control Center")
-        self.setMinimumSize(900, 720)
+        self.resize(1020, 780)
+        self.setMinimumSize(880, 640)
         self.active_profile = "graphite"
         self.active_accent_hex = "#A3FF47"
 

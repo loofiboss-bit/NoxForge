@@ -520,6 +520,15 @@ QCheckBox::indicator:checked, QRadioButton::indicator:checked {{
     border-color: {acc};
 }}
 
+QScrollArea {{
+    background-color: transparent;
+    border: none;
+}}
+
+QScrollArea > QWidget > QWidget {{
+    background-color: transparent;
+}}
+
 QScrollBar:vertical {{
     background: {bg_sunken};
     width: 8px;
