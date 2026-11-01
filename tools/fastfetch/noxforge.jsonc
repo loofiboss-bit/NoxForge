@@ -1,191 +1,55 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "file",
-    "source": "~/.config/fastfetch/logo.txt",
-    "padding": {
-      "top": 1,
-      "left": 1,
-      "right": 3
+    "type": "small",
+    "color": {
+      "1": "38;2;163;255;71",
+      "2": "38;2;34;211;238"
     }
   },
   "display": {
-    "separator": "  \u001b[38;2;53;72;82m\u276f\u001b[0m  ",
+    "separator": " \u276f ",
     "color": {
-      "keys": "38;2;34;211;238",
-      "title": "38;2;163;255;71"
-    },
-    "percent": {
-      "type": 3,
-      "color": {
-        "green": "38;2;163;255;71",
-        "yellow": "38;2;251;191;36",
-        "red": "38;2;255;107;122"
-      }
-    },
-    "bar": {
-      "char": {
-        "elapsed": "\u2588",
-        "total": "\u2591"
-      },
-      "border": {
-        "left": " \u001b[38;2;53;72;82m[\u001b[0m",
-        "right": "\u001b[38;2;53;72;82m]\u001b[0m"
-      },
-      "width": 10
+      "keys": "38;2;163;255;71",
+      "title": "38;2;232;240;242"
     }
   },
   "modules": [
-    {
-      "type": "title",
-      "format": "\u001b[1;38;2;163;255;71m{user-name}\u001b[0m\u001b[38;2;53;72;82m@\u001b[0m\u001b[1;38;2;34;211;238m{host-name}\u001b[0m  \u001b[38;2;53;72;82m//\u001b[0m  \u001b[38;2;166;180;185mNOXFORGE KINETIC STUDIO\u001b[0m"
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500 \u001b[1;38;2;163;255;71m\u2726 SYSTEM IDENTITY \u2726 \u001b[0m\u001b[38;2;53;72;82m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
+    "title",
+    "separator",
     {
       "type": "os",
-      "key": "\udb82\udcdb OS",
-      "format": "{pretty-name} {arch}"
-    },
-    {
-      "type": "host",
-      "key": "\udb80\udf22 Machine",
-      "format": "{name}"
+      "key": "OS"
     },
     {
       "type": "kernel",
-      "key": "\udb81\udc8b Kernel",
-      "format": "{release}"
-    },
-    {
-      "type": "uptime",
-      "key": "\udb85\udc42 Uptime"
-    },
-    {
-      "type": "packages",
-      "key": "\udb80\udfd6 Packages"
-    },
-    {
-      "type": "locale",
-      "key": "\uf1ab Locale"
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500 \u001b[1;38;2;163;255;71m\u2726 WORKSPACE SUITE \u2726 \u001b[0m\u001b[38;2;53;72;82m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
-    {
-      "type": "de",
-      "key": "\udb82\udde8 Desktop",
-      "format": "{pretty-name} {version}"
+      "key": "Kernel"
     },
     {
       "type": "wm",
-      "key": "\udb84\udcac Window Mgr",
-      "format": "{pretty-name} ({protocol-name})"
+      "key": "WM"
+    },
+    {
+      "type": "de",
+      "key": "Desktop"
     },
     {
       "type": "theme",
-      "key": "\udb81\udd0e Theme",
-      "format": "{theme1}"
+      "key": "Theme"
     },
     {
       "type": "icons",
-      "key": "\uefa8 Icons",
-      "format": "{icons1}"
-    },
-    {
-      "type": "cursor",
-      "key": "\udb80\uddbf Cursor",
-      "format": "{theme} ({size}px)"
+      "key": "Icons"
     },
     {
       "type": "terminal",
-      "key": "\ue795 Terminal"
+      "key": "Terminal"
     },
     {
       "type": "shell",
-      "key": "\udb81\udfb7 Shell"
+      "key": "Shell"
     },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500 \u001b[1;38;2;163;255;71m\u2726 HARDWARE ENGINE \u2726 \u001b[0m\u001b[38;2;53;72;82m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
-    {
-      "type": "cpu",
-      "key": "\udb80\udf5b CPU",
-      "format": "{name} ({cores-logical}) @ {freq-max}"
-    },
-    {
-      "type": "cpuusage",
-      "key": "\udb81\udcc5 CPU Load"
-    },
-    {
-      "type": "gpu",
-      "key": "\udb82\udcae GPU",
-      "format": "{name} [{type}]"
-    },
-    {
-      "type": "display",
-      "key": "\udb80\udf79 Display",
-      "format": "{width}x{height} @ {refresh-rate}Hz ({inch}\")"
-    },
-    {
-      "type": "sound",
-      "key": "\uf028 Audio"
-    },
-    {
-      "type": "bluetooth",
-      "key": "\uf293 Bluetooth"
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500 \u001b[1;38;2;163;255;71m\u2726 TELEMETRY & RESOURCES \u2726 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
-    {
-      "type": "memory",
-      "key": "\udb81\ude1a RAM"
-    },
-    {
-      "type": "swap",
-      "key": "\udb81\udce1 Swap"
-    },
-    {
-      "type": "disk",
-      "key": "\udb80\udeca Disk (/)",
-      "folders": "/"
-    },
-    {
-      "type": "battery",
-      "key": "\udb80\udc82 Battery"
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500 \u001b[1;38;2;163;255;71m\u2726 CONNECTIVITY & MEDIA \u2726 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
-    {
-      "type": "wifi",
-      "key": "\udb82\udd28 Wi-Fi",
-      "format": "{ssid} ({protocol}, {band} GHz)"
-    },
-    {
-      "type": "localip",
-      "key": "\udb82\ude5f Local IP",
-      "showIpv6": false,
-      "showLoop": false
-    },
-    {
-      "type": "media",
-      "key": "\udb81\udf5a Media"
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[38;2;53;72;82m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[0m"
-    },
-    {
-      "type": "custom",
-      "format": "  \u001b[38;2;163;255;71m\u25cf\u001b[0m \u001b[38;2;34;211;238m\u25cf\u001b[0m \u001b[38;2;167;139;250m\u25cf\u001b[0m \u001b[38;2;251;191;36m\u25cf\u001b[0m \u001b[38;2;255;107;122m\u25cf\u001b[0m \u001b[38;2;166;180;185m\u25cf\u001b[0m \u001b[38;2;53;72;82m\u25cf\u001b[0m \u001b[38;2;232;240;242m\u25cf\u001b[0m"
-    }
+    "break",
+    "colors"
   ]
 }

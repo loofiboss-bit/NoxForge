@@ -868,24 +868,6 @@ class EcosystemTab(QtWidgets.QWidget):
         fp_layout.addWidget(self.btn_flatpak_disable)
         layout.addWidget(self.flatpak_group)
 
-        # Fastfetch Kinetic Studio v2 Preset Selector Card
-        self.fastfetch_group = QtWidgets.QGroupBox("Fastfetch Kinetic Studio v2 Preset Suite")
-        ff_layout = QtWidgets.QHBoxLayout(self.fastfetch_group)
-        self.fastfetch_status_lbl = QtWidgets.QLabel("Active Preset: MAIN")
-        self.fastfetch_status_lbl.setStyleSheet("color: #22D3EE; font-weight: 600;")
-        self.fastfetch_combo = QtWidgets.QComboBox()
-        self.fastfetch_combo.setAccessibleName("Fastfetch Preset Selector")
-        self.fastfetch_combo.addItem("Kinetic Studio Main (Forge Block + 22 Modules)", "main")
-        self.fastfetch_combo.addItem("Kinetic Studio Cyber (Slant Banner + Compact Tree)", "cyber")
-        self.fastfetch_combo.addItem("Kinetic Studio Minimal (Diamond Glyph + 8 Essentials)", "minimal")
-        self.btn_fastfetch_apply = QtWidgets.QPushButton("Deploy Fastfetch Preset")
-        self.btn_fastfetch_apply.setAccessibleName("Deploy Fastfetch Preset")
-        self.btn_fastfetch_apply.clicked.connect(self.apply_fastfetch_preset)
-        ff_layout.addWidget(self.fastfetch_status_lbl)
-        ff_layout.addWidget(self.fastfetch_combo, stretch=1)
-        ff_layout.addWidget(self.btn_fastfetch_apply)
-        layout.addWidget(self.fastfetch_group)
-
         # Table for ecosystem apps
         self.table = QtWidgets.QTableWidget()
         self.table.setColumnCount(5)
@@ -928,15 +910,6 @@ class EcosystemTab(QtWidgets.QWidget):
         self.refresh_table()
         self.statusChanged.emit(f"Flatpak override {action}: {res.get('status')}")
 
-    def apply_fastfetch_preset(self) -> None:
-        preset = str(self.fastfetch_combo.currentData() or "main")
-        if hasattr(noxforge_ctl, "manage_fastfetch"):
-            res = noxforge_ctl.manage_fastfetch(action="apply", preset=preset)
-            self.refresh_table()
-            self.statusChanged.emit(
-                f"Fastfetch Kinetic Studio preset deployed: {res.get('preset', preset).upper()}"
-            )
-
     def refresh_table(self) -> None:
         fp_info = noxforge_ctl.manage_flatpak("status") if hasattr(noxforge_ctl, "manage_flatpak") else {"status": "unknown", "enabled": False}
         fp_enabled = bool(fp_info.get("enabled"))
@@ -944,19 +917,6 @@ class EcosystemTab(QtWidgets.QWidget):
             f"Flatpak GTK/Libadwaita Override: {'● ENABLED (xdg-data/themes + gtk-3.0/4.0)' if fp_enabled else '○ NOT CONFIGURED'}"
         )
         self.flatpak_status_lbl.setStyleSheet(f"color: {'#A3FF47' if fp_enabled else '#A6B4B9'}; font-weight: 600;")
-
-        if hasattr(noxforge_ctl, "manage_fastfetch") and hasattr(self, "fastfetch_combo"):
-            ff_info = noxforge_ctl.manage_fastfetch("status")
-            active_ff = ff_info.get("preset", "main")
-            ff_inst = bool(ff_info.get("installed", False))
-            self.fastfetch_status_lbl.setText(
-                f"Active Preset: {active_ff.upper()} ({'Deployed' if ff_inst else 'Ready'})"
-            )
-            idx = self.fastfetch_combo.findData(active_ff)
-            if idx >= 0:
-                self.fastfetch_combo.blockSignals(True)
-                self.fastfetch_combo.setCurrentIndex(idx)
-                self.fastfetch_combo.blockSignals(False)
 
         status = noxforge_ctl.ecosystem_status()
         self.table.setRowCount(len(status))

@@ -1,4 +1,4 @@
-# NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine, Fastfetch Kinetic Studio v2 & Wayland Precision
+# NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine & Wayland Precision
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
@@ -6,11 +6,9 @@ detail, and a compact Forge Notch. Version 19.0.0 targets Fedora 44 and Arch
 Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It elevates the visual system with
 native KDE Plasma 6.8 Union Style Engine CSS/QQuick styles (`union/styles/noxforge`
 and `union/styles/noxforge-obsidian` bound to `custom-color("kcolorscheme", ...)`),
-the Fastfetch "Kinetic Studio" v2 preset suite (`main`, `cyber`, `minimal` with
-3 ANSI art logos and live RGB accent re-coloring), reversible KWin 6.8 CSD window
-rule harmonization (`noxforge-ctl kwin-csd`), a Plasma 6.8 System Monitor
-telemetry preset (`apps/systemmonitor/noxforge-telemetry.page` with VRAM % tracking),
-Control Center v4, Tokens Schema 15, and Doctor Schema 12 diagnostics.
+reversible KWin 6.8 CSD window rule harmonization (`noxforge-ctl kwin-csd`), a
+Plasma 6.8 System Monitor telemetry preset (`apps/systemmonitor/noxforge-telemetry.page`
+with VRAM % tracking), Control Center v4, Tokens Schema 15, and Doctor Schema 12 diagnostics.
 See the [v19 release plan](docs/NOXFORGE_V19_PLAN.md).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
@@ -69,9 +67,8 @@ cursor, audio, PAM/login, power, and live-session gates.
 - KDE Plasma 6.8 Union Style Engine packages (`union/styles/noxforge` and
   `union/styles/noxforge-obsidian`) with hybrid `unionStyle` orchestration and
   optional full Union widget style toggling (`noxforge-ctl union`);
-- Zed editor themes, btop monitors, Starship prompt, Fastfetch Kinetic Studio v2
-  preset suite (`main`, `cyber`, `minimal`), Plasma 6.8 System Monitor telemetry
-  page (`noxforge-telemetry.page`), Discord / Vesktop CSS, and Firefox browser
+- Zed editor themes, btop monitors, Starship prompt, Plasma 6.8 System Monitor
+  telemetry page (`noxforge-telemetry.page`), Discord / Vesktop CSS, and Firefox browser
   theming (`userChrome.css` and extension manifest);
 - Ghostty, Alacritty, Kitty, and Foot configurations for both terminal palettes;
 - five selectable wallpapers: **NoxForge Forge** (`NoxForge`), **NoxForge

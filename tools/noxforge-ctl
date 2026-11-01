@@ -1164,14 +1164,6 @@ SUPPORTED_ECOSYSTEM_APPS: dict[str, dict[str, Any]] = {
         "source_subpath": "terminals/starship",
         "check": lambda: (Path.home() / ".config/starship.toml").is_file(),
     },
-    "fastfetch": {
-        "name": "Fastfetch Kinetic Studio",
-        "description": "Kinetic Studio v2 suite (Main, Cyber, Minimal) + ANSI logos",
-        "detect": lambda: shutil.which("fastfetch") is not None or (get_kde_config_dir() / "fastfetch").is_dir() or (Path.home() / ".config/fastfetch").is_dir(),
-        "target_dir": lambda: get_kde_config_dir() / "fastfetch",
-        "source_subpath": "tools/fastfetch",
-        "check": lambda: (get_kde_config_dir() / "fastfetch/config.jsonc").is_file() or (Path.home() / ".config/fastfetch/config.jsonc").is_file(),
-    },
     "systemmonitor": {
         "name": "Plasma System Monitor",
         "description": "Plasma 6.8 telemetry page with GPU VRAM % & CPU/RAM sensors",
@@ -1380,44 +1372,6 @@ def ecosystem_apply(
                             existing_meta,
                         )
                     )
-                elif app_id == "fastfetch":
-                    prefs = _load_preferences()
-                    ff_preset = str(prefs.get("fastfetchPreset") or "main").strip().lower()
-                    preset_file_map = {
-                        "main": "noxforge.jsonc",
-                        "cyber": "noxforge-cyber.jsonc",
-                        "minimal": "noxforge-minimal.jsonc",
-                    }
-                    src_jsonc = src / preset_file_map.get(ff_preset, "noxforge.jsonc")
-                    if not src_jsonc.is_file():
-                        src_jsonc = src / "noxforge.jsonc"
-                    deployed_files.append(
-                        _deploy_tracked_file(
-                            src_jsonc,
-                            target_dir / "config.jsonc",
-                            active_profile,
-                            active_accent,
-                            existing_meta,
-                        )
-                    )
-                    for asset_name in (
-                        "logo.txt",
-                        "logo_cyber.txt",
-                        "logo_minimal.txt",
-                        "noxforge-cyber.jsonc",
-                        "noxforge-minimal.jsonc",
-                    ):
-                        asset_src = src / asset_name
-                        if asset_src.is_file():
-                            deployed_files.append(
-                                _deploy_tracked_file(
-                                    asset_src,
-                                    target_dir / asset_name,
-                                    active_profile,
-                                    active_accent,
-                                    existing_meta,
-                                )
-                            )
                 elif app_id == "firefox":
                     src_css = src / ("userChrome_obsidian.css" if is_obsidian and (src / "userChrome_obsidian.css").is_file() else "userChrome.css")
                     deployed_files.append(
@@ -1576,69 +1530,6 @@ def sync_tracked_ecosystem(
     return list(res.get("applied", []))
 
 
-def manage_fastfetch(
-    action: str = "status",
-    preset: str | None = None,
-    dry_run: bool = False,
-    accent_hex: str | None = None,
-    status_only: bool = False,
-) -> dict[str, Any]:
-    """Configure or inspect Fastfetch Kinetic Studio v2 presets (main, cyber, minimal)."""
-    preset_file_map = {
-        "main": ("noxforge.jsonc", "logo.txt"),
-        "cyber": ("noxforge-cyber.jsonc", "logo_cyber.txt"),
-        "minimal": ("noxforge-minimal.jsonc", "logo_minimal.txt"),
-    }
-    prefs = _load_preferences()
-    active_preset = str(prefs.get("fastfetchPreset") or "main").strip().lower()
-    if active_preset not in preset_file_map:
-        active_preset = "main"
-
-    eff_preset = (preset or "").strip().lower() if preset else None
-    act = "status" if status_only else (action or "status").strip().lower()
-    if not status_only:
-        if act in preset_file_map and not eff_preset:
-            eff_preset = act
-            act = "apply"
-        elif eff_preset:
-            act = "apply"
-
-    target_dir = get_kde_config_dir() / "fastfetch"
-    if act == "status":
-        cfg_file, logo_file = preset_file_map[active_preset]
-        is_inst = (target_dir / "config.jsonc").is_file()
-        return {
-            "status": "ok",
-            "preset": active_preset,
-            "availablePresets": list(preset_file_map.keys()),
-            "installed": is_inst,
-            "configured": is_inst,
-            "configPath": str(target_dir / "config.jsonc"),
-            "logoPath": str(target_dir / logo_file),
-            "sourceTemplate": cfg_file,
-        }
-
-    if not eff_preset or eff_preset not in preset_file_map:
-        raise ValueError(
-            f"Unknown fastfetch preset: {eff_preset or action!r}. Choose from: main, cyber, minimal."
-        )
-
-    cfg_file, logo_file = preset_file_map[eff_preset]
-    if not dry_run:
-        prefs["fastfetchPreset"] = eff_preset
-        _save_preferences(prefs)
-    eco_res = ecosystem_apply(app_names=["fastfetch"], dry_run=dry_run, accent_hex=accent_hex)
-    return {
-        "status": "applied" if not dry_run else "dry-run",
-        "preset": eff_preset,
-        "availablePresets": list(preset_file_map.keys()),
-        "configPath": str(target_dir / "config.jsonc"),
-        "logoPath": str(target_dir / logo_file),
-        "sourceTemplate": cfg_file,
-        "ecosystemResult": eco_res,
-    }
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="noxforge-ctl",
@@ -1789,27 +1680,6 @@ def main() -> int:
     union_parser.add_argument("--profile", choices=["graphite", "obsidian"], default=None, help="Target profile for unionStyle")
     union_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     union_parser.add_argument("--json", action="store_true", help="Output result as JSON")
-
-    # fastfetch (Kinetic Studio v2)
-    ff_parser = subparsers.add_parser(
-        "fastfetch",
-        help="Configure Fastfetch Kinetic Studio v2 presets (main, cyber, minimal)",
-    )
-    ff_parser.add_argument(
-        "action_or_preset",
-        nargs="?",
-        default=None,
-        help="Preset (main, cyber, minimal) or 'status'",
-    )
-    ff_parser.add_argument(
-        "--preset",
-        choices=["main", "cyber", "minimal"],
-        default=None,
-        help="Fastfetch Kinetic Studio preset to deploy",
-    )
-    ff_parser.add_argument("--status", action="store_true", help="Inspect active Fastfetch preset and deployment status")
-    ff_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
-    ff_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
     # kwin-csd (KWin 6.8 CSD Harmonizer)
     csd_parser = subparsers.add_parser(
@@ -2065,25 +1935,6 @@ def main() -> int:
                 f"[NoxForge Union] Mode: {res.get('mode', 'hybrid').upper()} "
                 f"(widgetStyle={res.get('widgetStyle')}, unionStyle={res.get('unionStyle')})"
             )
-        return 0
-
-    if args.command == "fastfetch":
-        preset_arg = args.preset or (args.action_or_preset if args.action_or_preset != "status" else None)
-        action = "status" if (args.status or not preset_arg) else "apply"
-        try:
-            res = manage_fastfetch(action=action, preset=preset_arg, dry_run=args.dry_run)
-        except ValueError as err:
-            if args.json:
-                print(json.dumps({"status": "error", "message": str(err)}, indent=2), file=sys.stderr)
-            else:
-                print(f"[NoxForge Error] {err}", file=sys.stderr)
-            return 1
-        if args.json:
-            print(json.dumps(res, indent=2))
-        else:
-            print(f"[NoxForge Fastfetch] Preset: {res['preset'].upper()} ({res['status']})")
-            print(f"  Config: {res['configPath']}")
-            print(f"  Logo:   {res['logoPath']}")
         return 0
 
     if args.command == "kwin-csd":

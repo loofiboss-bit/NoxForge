@@ -1892,338 +1892,42 @@ symbol = " "
 
 def fastfetch_theme(tokens: dict[str, object]) -> str:
     colors = tokens["colors"]
-    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
-    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
-    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
-    c_primary = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
-    c_secondary = f"38;2;{rgb(colors['textSecondary']).replace(',', ';')}"
-    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
-    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
-    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
+    c1 = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
+    c2 = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
+    ck = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
+    ct = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
     data = {
         "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
         "logo": {
-            "type": "file",
-            "source": "~/.config/fastfetch/logo.txt",
-            "padding": {
-                "top": 1,
-                "left": 1,
-                "right": 3,
+            "type": "small",
+            "color": {
+                "1": c1,
+                "2": c2,
             },
         },
         "display": {
-            "separator": f"  \u001b[{c_dim}m❯\u001b[0m  ",
+            "separator": " ❯ ",
             "color": {
-                "keys": c_cyan,
-                "title": c_accent,
-            },
-            "percent": {
-                "type": 3,
-                "color": {
-                    "green": c_accent,
-                    "yellow": c_yellow,
-                    "red": c_red,
-                },
-            },
-            "bar": {
-                "char": {
-                    "elapsed": "█",
-                    "total": "░",
-                },
-                "border": {
-                    "left": f" \u001b[{c_dim}m[\u001b[0m",
-                    "right": f"\u001b[{c_dim}m]\u001b[0m",
-                },
-                "width": 10,
+                "keys": ck,
+                "title": ct,
             },
         },
         "modules": [
-            {
-                "type": "title",
-                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[{c_secondary}mNOXFORGE KINETIC STUDIO\u001b[0m",
-            },
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ SYSTEM IDENTITY ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
-            },
-            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
-            {"type": "host", "key": "󰌢 Machine", "format": "{name}"},
-            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
-            {"type": "uptime", "key": "󱑂 Uptime"},
-            {"type": "packages", "key": "󰏖 Packages"},
-            {"type": "locale", "key": " Locale"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ WORKSPACE SUITE ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
-            },
-            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
-            {"type": "wm", "key": "󱂬 Window Mgr", "format": "{pretty-name} ({protocol-name})"},
-            {"type": "theme", "key": "󰔎 Theme", "format": "{theme1}"},
-            {"type": "icons", "key": " Icons", "format": "{icons1}"},
-            {"type": "cursor", "key": "󰆿 Cursor", "format": "{theme} ({size}px)"},
-            {"type": "terminal", "key": " Terminal"},
-            {"type": "shell", "key": "󰞷 Shell"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ HARDWARE ENGINE ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
-            },
-            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical}) @ {freq-max}"},
-            {"type": "cpuusage", "key": "󰓅 CPU Load"},
-            {"type": "gpu", "key": "󰢮 GPU", "format": "{name} [{type}]"},
-            {"type": "display", "key": "󰍹 Display", "format": '{width}x{height} @ {refresh-rate}Hz ({inch}")'},
-            {"type": "sound", "key": " Audio"},
-            {"type": "bluetooth", "key": " Bluetooth"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ TELEMETRY & RESOURCES ✦ ─────────────────────────────────\u001b[0m",
-            },
-            {"type": "memory", "key": "󰘚 RAM"},
-            {"type": "swap", "key": "󰓡 Swap"},
-            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
-            {"type": "battery", "key": "󰂂 Battery"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ CONNECTIVITY & MEDIA ✦ ──────────────────────────────────\u001b[0m",
-            },
-            {"type": "wifi", "key": "󰤨 Wi-Fi", "format": "{ssid} ({protocol}, {band} GHz)"},
-            {"type": "localip", "key": "󰩟 Local IP", "showIpv6": False, "showLoop": False},
-            {"type": "media", "key": "󰝚 Media"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_dim}m───────────────────────────────────────────────────────────\u001b[0m",
-            },
-            {
-                "type": "custom",
-                "format": f"  \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m \u001b[{c_secondary}m●\u001b[0m \u001b[{c_dim}m●\u001b[0m \u001b[{c_primary}m●\u001b[0m",
-            },
+            "title",
+            "separator",
+            {"type": "os", "key": "OS"},
+            {"type": "kernel", "key": "Kernel"},
+            {"type": "wm", "key": "WM"},
+            {"type": "de", "key": "Desktop"},
+            {"type": "theme", "key": "Theme"},
+            {"type": "icons", "key": "Icons"},
+            {"type": "terminal", "key": "Terminal"},
+            {"type": "shell", "key": "Shell"},
+            "break",
+            "colors",
         ],
     }
     return json.dumps(data, indent=2) + "\n"
-
-
-def fastfetch_cyber_theme(tokens: dict[str, object]) -> str:
-    colors = tokens["colors"]
-    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
-    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
-    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
-    c_primary = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
-    c_secondary = f"38;2;{rgb(colors['textSecondary']).replace(',', ';')}"
-    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
-    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
-    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
-    data = {
-        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-        "logo": {
-            "type": "file",
-            "source": "~/.config/fastfetch/logo_cyber.txt",
-            "padding": {
-                "top": 1,
-                "left": 1,
-                "right": 3,
-            },
-        },
-        "display": {
-            "separator": f"  \u001b[{c_violet}m❯\u001b[0m  ",
-            "color": {
-                "keys": c_cyan,
-                "title": c_accent,
-            },
-            "percent": {
-                "type": 3,
-                "color": {
-                    "green": c_accent,
-                    "yellow": c_yellow,
-                    "red": c_red,
-                },
-            },
-            "bar": {
-                "char": {
-                    "elapsed": "█",
-                    "total": "░",
-                },
-                "border": {
-                    "left": f" \u001b[{c_violet}m[\u001b[0m",
-                    "right": f"\u001b[{c_violet}m]\u001b[0m",
-                },
-                "width": 10,
-            },
-        },
-        "modules": [
-            {
-                "type": "title",
-                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[1;{c_violet}mNOXFORGE 2.0\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[{c_secondary}mCYBER MATRIX\u001b[0m",
-            },
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ SYSTEM CORE ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────────────\u001b[0m",
-            },
-            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
-            {"type": "host", "key": "󰌢 Machine", "format": "{name}"},
-            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
-            {"type": "uptime", "key": "󱑂 Uptime"},
-            {"type": "packages", "key": "󰏖 Packages"},
-            {"type": "locale", "key": " Locale"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ WORKSPACE & DESKTOP ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────\u001b[0m",
-            },
-            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
-            {"type": "wm", "key": "󱂬 Window Mgr", "format": "{pretty-name} ({protocol-name})"},
-            {"type": "theme", "key": "󰔎 Theme", "format": "{theme1}"},
-            {"type": "icons", "key": " Icons", "format": "{icons1}"},
-            {"type": "cursor", "key": "󰆿 Cursor", "format": "{theme} ({size}px)"},
-            {"type": "terminal", "key": " Terminal"},
-            {"type": "shell", "key": "󰞷 Shell"},
-            {
-                "type": "custom",
-                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ HARDWARE MATRIX ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────────\u001b[0m",
-            },
-            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical}) @ {freq-max}"},
-            {"type": "cpuusage", "key": "󰓅 CPU Load"},
-            {"type": "gpu", "key": "󰢮 GPU", "format": "{name} [{type}]"},
-            {"type": "display", "key": "󰍹 Display", "format": '{width}x{height} @ {refresh-rate}Hz ({inch}")'},
-            {"type": "memory", "key": "󰘚 RAM"},
-            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
-            {"type": "battery", "key": "󰂂 Battery"},
-            {
-                "type": "custom",
-                "format": f"  \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m \u001b[{c_secondary}m●\u001b[0m \u001b[{c_dim}m●\u001b[0m \u001b[{c_primary}m●\u001b[0m",
-            },
-        ],
-    }
-    return json.dumps(data, indent=2) + "\n"
-
-
-def fastfetch_minimal_theme(tokens: dict[str, object]) -> str:
-    colors = tokens["colors"]
-    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
-    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
-    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
-    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
-    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
-    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
-    data = {
-        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-        "logo": {
-            "type": "file",
-            "source": "~/.config/fastfetch/logo_minimal.txt",
-            "padding": {
-                "top": 1,
-                "left": 1,
-                "right": 3,
-            },
-        },
-        "display": {
-            "separator": f"  \u001b[{c_dim}m❯\u001b[0m  ",
-            "color": {
-                "keys": c_cyan,
-                "title": c_accent,
-            },
-            "percent": {
-                "type": 3,
-                "color": {
-                    "green": c_accent,
-                    "yellow": c_yellow,
-                    "red": c_red,
-                },
-            },
-            "bar": {
-                "char": {
-                    "elapsed": "█",
-                    "total": "░",
-                },
-                "border": {
-                    "left": " [",
-                    "right": "]",
-                },
-                "width": 8,
-            },
-        },
-        "modules": [
-            {
-                "type": "title",
-                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[1;{c_violet}mNOXFORGE MINI HUD\u001b[0m",
-            },
-            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
-            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
-            {"type": "uptime", "key": "󱑂 Uptime"},
-            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
-            {"type": "wm", "key": "󱂬 WM", "format": "{pretty-name} ({protocol-name})"},
-            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical})"},
-            {"type": "memory", "key": "󰘚 RAM"},
-            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
-            {"type": "battery", "key": "󰂂 Battery"},
-            {
-                "type": "custom",
-                "format": f" \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m",
-            },
-        ],
-    }
-    return json.dumps(data, indent=2) + "\n"
-
-
-def fastfetch_logo(tokens: dict[str, object], preset: str = "main") -> str:
-    colors = tokens["colors"]
-    version = str(tokens.get("version", "19.0.0"))
-    esc = "\u001b"
-    c_accent = f"{esc}[38;2;{rgb(colors['accent']).replace(',', ';')}m"
-    c_cyan = f"{esc}[38;2;{rgb(colors['detailCyan']).replace(',', ';')}m"
-    c_violet = f"{esc}[38;2;{rgb(colors['detailViolet']).replace(',', ';')}m"
-    c_primary = f"{esc}[38;2;{rgb(colors['textPrimary']).replace(',', ';')}m"
-    c_secondary = f"{esc}[38;2;{rgb(colors['textSecondary']).replace(',', ';')}m"
-    c_dim = f"{esc}[38;2;{rgb(colors['edgeHighlight']).replace(',', ';')}m"
-    rst = f"{esc}[0m"
-
-    if preset == "minimal":
-        return (
-            f" {c_accent}┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐{rst}\n"
-            f" {c_cyan}│ │ │ │ │ │ ├─┤ │ │{rst}\n"
-            f" {c_violet}└───└───└───┴─┴─└───{rst}\n"
-            f" {c_dim}── {c_accent}✦ {c_primary}NOXFORGE {c_accent}✦ {c_dim}──{rst}\n"
-        )
-    if preset == "cyber":
-        return (
-            f"            {c_cyan}▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{rst}         \n"
-            f"          {c_cyan}▄{c_accent}████████████████████{c_cyan}▄{rst}       \n"
-            f"         {c_cyan}███▀  {c_accent}▄█▄      ▄█▄  {c_cyan}▀███{rst}      \n"
-            f"        {c_cyan}███   {c_accent}█████    █████   {c_cyan}███{rst}     \n"
-            f"        {c_cyan}███   {c_cyan}▀███▀    ▀███▀   {c_cyan}███{rst}     \n"
-            f"         {c_cyan}███▄  {c_accent}▀█▀      ▀█▀  {c_cyan}▄███{rst}      \n"
-            f"          {c_cyan}▀{c_accent}████████████████████{c_cyan}▀{rst}       \n"
-            f"            {c_cyan}▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{rst}         \n"
-            f"   {c_cyan}███╗   ██╗ ██████╗ ██╗  ██╗{rst}\n"
-            f"   {c_cyan}████╗  ██║██╔═══██╗╚██╗██╔╝{rst}\n"
-            f"   {c_violet}██╔██╗ ██║██║   ██║ ╚███╔╝ {rst}\n"
-            f"   {c_violet}██║╚██╗██║██║   ██║ ██╔██╗ {rst}\n"
-            f"   {c_accent}██║ ╚████║╚██████╔╝██╔╝ ██╗{rst}\n"
-            f"   {c_dim}╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝{rst}\n"
-            f"   {c_dim}──────── {c_accent}✦ {c_primary}N O X F O R G E   {c_violet}C Y B E R {c_accent}✦ {c_dim}────────{rst}\n"
-            f"        {c_dim}┌────────────────────────┐{rst}\n"
-            f"        {c_dim}│  {c_cyan}✦ {c_primary}CYBER FORGE MATRIX {c_cyan}✦  {c_dim}│{rst}\n"
-            f"        {c_dim}│  {c_secondary}SYSTEM REV {c_dim}// {c_violet}{version:<7} {c_dim}│{rst}\n"
-            f"        {c_dim}└────────────────────────┘{rst}\n"
-        )
-    return (
-        f"                 {c_dim}.{c_accent}▄▄▄▄▄{c_dim}.{rst}                \n"
-        f"                {c_cyan}██{c_accent}▀▀▀▀▀{c_cyan}██{rst}               \n"
-        f"               {c_cyan}██   {c_primary}█   {c_cyan}██{rst}              \n"
-        f"               {c_cyan}██  {c_primary}███  {c_cyan}██{rst}              \n"
-        f"               {c_cyan}██   {c_primary}█   {c_cyan}██{rst}              \n"
-        f"                {c_cyan}██{c_cyan}▄▄▄▄▄{c_cyan}██{rst}               \n"
-        f"                 {c_dim}'{c_cyan}▀▀▀▀▀{c_dim}'{rst}                \n"
-        f"   {c_accent}███╗   ██╗{c_cyan} ██████╗ {c_violet}██╗  ██╗{rst}\n"
-        f"   {c_accent}████╗  ██║{c_cyan}██╔═══██╗{c_violet}╚██╗██╔╝{rst}\n"
-        f"   {c_accent}██╔██╗ ██║{c_cyan}██║   ██║{c_violet} ╚███╔╝ {rst}\n"
-        f"   {c_accent}██║╚██╗██║{c_cyan}██║   ██║{c_violet} ██╔██╗ {rst}\n"
-        f"   {c_accent}██║ ╚████║{c_cyan}╚██████╔╝{c_violet}██╔╝ ██╗{rst}\n"
-        f"   {c_dim}╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝{rst}\n"
-        f"     {c_dim}─── {c_accent}✦ {c_primary}NOXFORGE {c_cyan}KINETIC {c_violet}STUDIO {c_accent}✦ {c_dim}───{rst}\n"
-        f"        {c_dim}┌────────────────────────┐{rst}\n"
-        f"        {c_dim}│   {c_accent}✦ {c_primary}KINETIC MATRIX {c_accent}✦   {c_dim}│{rst}\n"
-        f"        {c_dim}│   {c_secondary}SYSTEM REV {c_dim}// {c_cyan}{version:<7}{c_dim}│{rst}\n"
-        f"        {c_dim}└────────────────────────┘{rst}\n"
-    )
-
 
 def union_metadata_json(tokens: dict[str, object], variant: str = "standard") -> str:
     obsidian = variant == "obsidian"
@@ -2711,11 +2415,6 @@ def outputs(tokens: dict[str, object]) -> dict[Path, str]:
         ROOT / "browsers/firefox/userChrome_obsidian.css": firefox_userchrome(tokens, "obsidian"),
         ROOT / "terminals/starship/starship.toml": starship_theme(tokens),
         ROOT / "tools/fastfetch/noxforge.jsonc": fastfetch_theme(tokens),
-        ROOT / "tools/fastfetch/noxforge-cyber.jsonc": fastfetch_cyber_theme(tokens),
-        ROOT / "tools/fastfetch/noxforge-minimal.jsonc": fastfetch_minimal_theme(tokens),
-        ROOT / "tools/fastfetch/logo.txt": fastfetch_logo(tokens, "main"),
-        ROOT / "tools/fastfetch/logo_cyber.txt": fastfetch_logo(tokens, "cyber"),
-        ROOT / "tools/fastfetch/logo_minimal.txt": fastfetch_logo(tokens, "minimal"),
         ROOT / "union/styles/noxforge/metadata.json": union_metadata_json(tokens, "standard"),
         ROOT / "union/styles/noxforge/contents/css/variables.css": union_variables_css(tokens, "standard"),
         ROOT / "union/styles/noxforge/contents/css/style.css": union_style_css(tokens, "standard"),

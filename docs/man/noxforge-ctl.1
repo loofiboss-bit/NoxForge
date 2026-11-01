@@ -61,18 +61,7 @@ returns to Hybrid mode (\fBwidgetStyle=NoxForge\fR + \fBunionStyle=noxforge\fR).
 .BR kwin\-csd " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
 Manage KWin 6.8 client-side window titlebar color scheme rules in \fB~/.config/kwinrulesrc\fR
 with automatic \fB.noxforge.bak\fR backup and restoration.
-.TP
-.BR fastfetch " [" \-\-preset " " main | cyber | minimal " | " \-\-status "]"
-Switch between the 3 official Fastfetch Kinetic Studio v2 presets (\fBmain\fR, \fBcyber\fR, \fBminimal\fR)
-with dynamic RGB accent re-coloring and \fB.noxforge.bak\fR backup.
-.TP
-.BR flatpak " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
-Manage user Flatpak overrides (\fBxdg-data/themes:ro\fR, \fBxdg-config/gtk-3.0:ro\fR, \fBxdg-config/gtk-4.0:ro\fR)
-so sandboxed GTK 3, GTK 4, and Libadwaita applications adopt the active NoxForge theme and accent.
-.TP
-.BR ecosystem " [" status " | " apply " [" \fIapp\fR | all "] | " restore " [" \fIapp\fR | all "] ]"
-Audit, deploy, or restore NoxForge theme configurations for user application directories
-(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship, Fastfetch).
+(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship).
 \fBapply\fR creates automatic \fB.noxforge.bak\fR backups and tracks deployed apps in
 \fB~/.config/noxforge/ecosystem-state.json\fR for reactive profile and accent synchronization;
 \fBrestore\fR restores original user configurations.

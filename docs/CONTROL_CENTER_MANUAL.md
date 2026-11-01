@@ -22,7 +22,7 @@ Key capabilities:
 ### Synopsis
 
 ```bash
-noxforge-ctl {switch,apply,sync,accent,union,kwin-csd,fastfetch,flatpak,ecosystem,preset,status,opacity,doctor,schedule,gui} [options]
+noxforge-ctl {switch,apply,sync,accent,union,kwin-csd,flatpak,ecosystem,preset,status,opacity,doctor,schedule,gui} [options]
 ```
 
 ### Subcommands
@@ -48,16 +48,6 @@ Synchronize KWin 6.8 client-side window titlebar color scheme rules (`~/.config/
 noxforge-ctl kwin-csd --enable
 noxforge-ctl kwin-csd --disable
 noxforge-ctl kwin-csd --status
-```
-
-#### `fastfetch` (v19.0.0 — Fastfetch Kinetic Studio v2)
-Switch between the 3 official Fastfetch Kinetic Studio v2 presets (`main`, `cyber`, `minimal`) with live RGB accent tinting:
-
-```bash
-noxforge-ctl fastfetch --preset main
-noxforge-ctl fastfetch --preset cyber
-noxforge-ctl fastfetch --preset minimal
-noxforge-ctl fastfetch --status
 ```
 
 #### `switch`

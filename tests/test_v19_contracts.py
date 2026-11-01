@@ -56,11 +56,6 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
         self.assertIn("kwin68", tokens)
         self.assertEqual(tokens["kwin68"]["displayProtocol"], "wayland-only")
         self.assertTrue(tokens["kwin68"]["csdRuleSync"])
-        self.assertIn("fastfetch", tokens)
-        self.assertEqual(
-            set(tokens["fastfetch"]["presets"]),
-            {"main", "cyber", "minimal"},
-        )
 
     def test_union_68_generated_styles_and_kcolorscheme_bindings(self) -> None:
         for style_id, expected_bg in (("noxforge", "#0D1419"), ("noxforge-obsidian", "#000000")):
@@ -86,68 +81,6 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             self.assertIn("toolbutton,", style_css)
             self.assertIn("tabbutton {", style_css)
             self.assertIn("abstractcard {", style_css)
-
-    def test_fastfetch_kinetic_studio_v2_presets_and_ctl_switching(self) -> None:
-        ff_dir = ROOT / "tools/fastfetch"
-        for filename in (
-            "noxforge.jsonc",
-            "noxforge-cyber.jsonc",
-            "noxforge-minimal.jsonc",
-            "logo.txt",
-            "logo_cyber.txt",
-            "logo_minimal.txt",
-        ):
-            path = ff_dir / filename
-            self.assertTrue(path.is_file(), f"Missing Fastfetch asset: {path}")
-            self.assertGreater(path.stat().st_size, 50)
-
-        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_ff")
-        with tempfile.TemporaryDirectory(prefix="noxforge-v19-ff-") as temp:
-            temp_path = Path(temp)
-            cfg_home = temp_path / ".config"
-            old_cfg = os.environ.get("XDG_CONFIG_HOME")
-            try:
-                os.environ["XDG_CONFIG_HOME"] = str(cfg_home)
-                user_ff = cfg_home / "fastfetch/config.jsonc"
-                user_ff.parent.mkdir(parents=True, exist_ok=True)
-                user_ff.write_text("// pre-existing user fastfetch\n", encoding="utf-8")
-
-                # Switch to cyber preset with cyan accent (#22D3EE -> 34;211;238)
-                res = ctl_ns["manage_fastfetch"](
-                    preset="cyber",
-                    dry_run=False,
-                    accent_hex="#22D3EE",
-                )
-                self.assertEqual(res["status"], "applied")
-                self.assertEqual(res["preset"], "cyber")
-                self.assertTrue((cfg_home / "fastfetch/config.jsonc.noxforge.bak").is_file())
-                self.assertTrue((cfg_home / "fastfetch/logo_cyber.txt").is_file())
-
-                deployed_text = user_ff.read_text(encoding="utf-8")
-                self.assertIn("logo_cyber.txt", deployed_text)
-                self.assertIn("34;211;238", deployed_text)
-
-                status = ctl_ns["manage_fastfetch"](status_only=True)
-                self.assertEqual(status["preset"], "cyber")
-                self.assertTrue(status["configured"])
-
-                # Switch to minimal preset
-                res_min = ctl_ns["manage_fastfetch"](
-                    preset="minimal",
-                    dry_run=False,
-                    accent_hex="#A78BFA",
-                )
-                self.assertEqual(res_min["preset"], "minimal")
-                self.assertIn("logo_minimal.txt", user_ff.read_text(encoding="utf-8"))
-
-                # Restore original config via ecosystem_restore
-                ctl_ns["ecosystem_restore"](app_names=["fastfetch"], dry_run=False)
-                self.assertEqual(user_ff.read_text(encoding="utf-8"), "// pre-existing user fastfetch\n")
-            finally:
-                if old_cfg is None:
-                    os.environ.pop("XDG_CONFIG_HOME", None)
-                else:
-                    os.environ["XDG_CONFIG_HOME"] = old_cfg
 
     def test_union_and_kwin_csd_cli_lifecycle(self) -> None:
         ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_union")

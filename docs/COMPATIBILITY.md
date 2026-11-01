@@ -24,7 +24,7 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Zed themes | `/usr/share/noxforge/editors/zed/` |
 | btop themes | `/usr/share/noxforge/terminals/btop/` |
 | Starship prompts | `/usr/share/noxforge/terminals/starship/` |
-| Fastfetch Kinetic Studio suite | `/usr/share/noxforge/fastfetch/` |
+| Fastfetch configuration template | `/usr/share/noxforge/fastfetch/` |
 | System Monitor page preset | `/usr/share/noxforge/apps/systemmonitor/noxforge-telemetry.page` |
 | Union CSS styles (Plasma 6.8) | `/usr/share/union/styles/noxforge{,-obsidian}/` |
 | Firefox CSS | `/usr/share/noxforge/browsers/firefox/` |
