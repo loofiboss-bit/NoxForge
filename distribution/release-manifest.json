@@ -10,18 +10,19 @@
       "commit": "69a0fb452331497bc471cb330b414164fa52629c",
       "tag": "v18.0.0",
       "tagCommit": "a0d21176ff4f0503f597329022122e6c816580a4",
-      "rpmBytes": 1820000,
-      "srpmBytes": 14783324,
-      "githubSourceBytes": 14748392,
+      "rpmBytes": 1821825,
+      "srpmBytes": 14783063,
+      "githubSourceBytes": 14748192,
       "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v18.0.0",
       "rpmFilename": "noxforge-18.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "3746a9784ccec386c4c46e416f5eab795b7a25264514b9aca4ffed9a636b9e43",
+      "rpmSha256": "4aa53dd4ec064644da693483aa1f97aa87a39afa2255e5a464a6401d38c44728",
       "kdeStoreProduct": "2367662"
     }
   },
   "compatibility": {
     "fedora": [
-      "44"
+      "44",
+      "45"
     ],
     "arch": {
       "plasma": ">=6.8",
@@ -32,6 +33,17 @@
     ],
     "loginManagers": {
       "fedora44": {
+        "default": "plasmalogin",
+        "supported": [
+          "plasmalogin",
+          "sddm"
+        ],
+        "integrations": {
+          "plasmalogin": "wallpaper",
+          "sddm": "custom-theme"
+        }
+      },
+      "fedora45": {
         "default": "plasmalogin",
         "supported": [
           "plasmalogin",

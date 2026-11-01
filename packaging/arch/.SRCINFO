@@ -17,6 +17,6 @@ pkgbase = noxforge
 	optdepends = sddm: qualified NoxForge custom login-screen compatibility
 	optdepends = plasma-union: KDE Plasma 6.8 Union CSS/QQuick style engine integration
 	source = https://github.com/loofiboss-bit/NoxForge/releases/download/v19.0.0/noxforge-19.0.0-source.tar.xz
-	sha256sums = 16b2e7914f27ba9db9a6df0fd1dfc26cde39e7f0412b8eaca0c5e9825852a07f
+	sha256sums = d46516b7d42f4587ad64f832e69e84739004330a3ac508e0a0a709859ad39a56
 
 pkgname = noxforge

@@ -14,7 +14,7 @@ Installation never applies the theme, changes panels or wallpaper, or switches t
 Use the exact `noxforge-19.0.0-*.tar.xz` files and verify them against the
 release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v19.0.0
 
-Fedora 44 passes 72 offscreen tests in the local gate. Arch build/live login,
+Fedora 44 and Fedora 45 pass all offscreen tests in the local gate. Arch build/live login,
 physical login/PAM, audio, pointer/input, mixed physical displays, the full live
 scale/RTL/motion matrix, and Arch pacman lifecycle remain pending. No X11,
 Plasma 6.0 or other distribution support is claimed.

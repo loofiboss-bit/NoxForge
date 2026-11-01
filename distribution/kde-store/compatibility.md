@@ -1,8 +1,7 @@
 # Compatibility and dependencies
 
-- Fedora 44 KDE Plasma, Wayland, Plasma/KWin 6.7+, Qt 6.11.
-- Arch Linux with Plasma/KWin 6.7+ and Qt 6.11: V13 build/live login and
-  pacman lifecycle qualification remain pending.
+- Fedora 44 and Fedora 45 KDE Plasma, Wayland, Plasma/KWin 6.8+, Qt 6.11.
+- Arch Linux with Plasma/KWin 6.8+ and Qt 6.11.
 - GTK 3/4, KSyntaxHighlighting, VS Code/Cursor, Ghostty, Alacritty, Kitty, and
   Foot assets are included in the complete-system and portable bundles. V13
   also includes Neovim and Helix themes in Graphite and Obsidian variants.

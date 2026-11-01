@@ -1,16 +1,16 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 19.0.0 is a scriptlet-free Fedora 44 package for the complete-system
+NoxForge 19.0.0 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
 journey. It provides the palette-adaptive native Qt style with dynamic accent engine,
 the unified Control Center suite (`noxforge-ctl` and PySide6 GUI), system doctor,
 GTK 3/4 themes, syntax/editor/terminal assets (including Zed, btop, Starship, Fastfetch,
 Firefox, Discord), both Obsidian and Graphite Plasma components, native Lock Screens,
 both KWin switchers, the `noxforge-opacity` configurator, and both SDDM theme variants.
-Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
+Fedora 44 and 45 use Plasma Login Manager (PLM) by default. NoxForge Quiet is the
 recommended standard PLM wallpaper; NoxForge does not ship a custom PLM greeter
 or write PLM configuration.
 
-Use the Fedora 44 COPR repository `loofitheboss/noxforge`. Verify the installed
+Use the Fedora 44/45 COPR repository `loofitheboss/noxforge`. Verify the installed
 version with `rpm -q noxforge`; repository metadata may need refreshing after
 an upgrade is published.
 

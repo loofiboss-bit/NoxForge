@@ -32,7 +32,7 @@ NoxForge Ecosystem & App Parity is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
 Look-and-Feel package, Plasma Style, color scheme, Aurorae decoration, KWin
 switcher, icons, cursors, sounds, three wallpaper variants, the native Qt 6
-style plugin, and an SDDM compatibility theme. Fedora 44 Plasma Login Manager
+style plugin, and an SDDM compatibility theme. Fedora 44 and 45 Plasma Login Manager
 uses its standard wallpaper integration and does not support third-party greeter
 QML. Store and portable editions use Breeze app controls; this system package
 provides the optional native style integration. Package installation does not
@@ -113,6 +113,7 @@ apply a theme, configure a login surface, or switch display managers.
 - Add noxforge-ctl union, fastfetch, and kwin-csd subcommands plus System Monitor telemetry preset
 - Upgrade Doctor to Schema 12 with Union/Wayland diagnostics and zero metadata-unknown warnings
 - Upgrade Control Center to v4 with Plasma 6.8 Union, KWin CSD, and Fastfetch Kinetic Studio controls
+- Qualify Fedora 45 and Fedora 44 with KDE Plasma 6.8+ and Qt 6.11+ Wayland baseline
 
 * Sat Oct 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 18.0.0-1
 - Release v18.0.0 Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core

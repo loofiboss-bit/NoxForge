@@ -2,7 +2,7 @@
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 19.0.0 targets Fedora 44 and Arch
+detail, and a compact Forge Notch. Version 19.0.0 targets Fedora 44, Fedora 45, and Arch
 Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It elevates the visual system with
 native KDE Plasma 6.8 Union Style Engine CSS/QQuick styles (`union/styles/noxforge`
 and `union/styles/noxforge-obsidian` bound to `custom-color("kcolorscheme", ...)`),
@@ -39,7 +39,7 @@ theme, resets a panel, edits KDE configuration, or restarts Plasma.
 ![Original Vector Iconography and File Hierarchy](media/store/06_original_iconography_2560x1440.png)
 ![Recommended NoxForge Quiet login wallpaper](wallpapers/NoxForge-Quiet/contents/images/1920x1080.png)
 
-Fedora 44 uses Plasma Login Manager (PLM) by default. NoxForge Quiet is the
+Fedora 44 and Fedora 45 use Plasma Login Manager (PLM) by default. NoxForge Quiet is the
 recommended PLM wallpaper; NoxForge does not ship or claim a custom PLM QML
 greeter and never writes the active PLM configuration. Graphite and Obsidian
 SDDM themes are optional compatibility components and are never selected
