@@ -7,7 +7,6 @@ import importlib.util
 import json
 import os
 import runpy
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -249,6 +248,45 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
 
         pkgbuild = (ROOT / "packaging/arch/PKGBUILD").read_text(encoding="utf-8")
         self.assertIn("plasma-union", pkgbuild)
+
+    def test_completion_generator_and_shell_scripts(self) -> None:
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_comp")
+        gen_comp = ctl_ns["generate_completion"]
+        for shell in ("bash", "zsh", "fish"):
+            script = gen_comp(shell)
+            self.assertTrue(len(script) > 100, f"Empty completion for {shell}")
+            self.assertIn("noxforge-ctl", script)
+            self.assertIn("switch", script)
+            self.assertIn("union", script)
+            self.assertIn("kwin-csd", script)
+            self.assertIn("completion", script)
+            self.assertIn("obsidian", script)
+            self.assertIn("rofi", script)
+
+    def test_obsidian_and_rofi_ecosystem_themes(self) -> None:
+        for rel_file in (
+            "apps/obsidian/noxforge.css",
+            "apps/obsidian/noxforge_obsidian.css",
+            "apps/rofi/noxforge.rasi",
+            "apps/rofi/noxforge_obsidian.rasi",
+        ):
+            path = ROOT / rel_file
+            self.assertTrue(path.is_file(), f"Missing ecosystem file: {rel_file}")
+            text = path.read_text(encoding="utf-8")
+            self.assertIn("@noxforge-version: 19.0.0", text)
+
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_eco_new")
+        self.assertIn("obsidian", ctl_ns["SUPPORTED_ECOSYSTEM_APPS"])
+        self.assertIn("rofi", ctl_ns["SUPPORTED_ECOSYSTEM_APPS"])
+
+    def test_union_css_transitions_and_forge_notch(self) -> None:
+        for style_id in ("noxforge", "noxforge-obsidian"):
+            css = (ROOT / f"union/styles/{style_id}/contents/css/style.css").read_text(encoding="utf-8")
+            self.assertIn("border-bottom: var(--forge-notch-size) solid var(--highlight-color);", css)
+            self.assertIn("transition: background-color 140ms ease", css)
+            self.assertIn("scrollbar {", css)
+            self.assertIn("scrollbar-slider {", css)
+            self.assertIn("tooltip {", css)
 
 
 if __name__ == "__main__":

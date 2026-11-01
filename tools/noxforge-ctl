@@ -1228,6 +1228,22 @@ SUPPORTED_ECOSYSTEM_APPS: dict[str, dict[str, Any]] = {
         "source_subpath": "terminals/foot",
         "check": lambda: (Path.home() / ".config/foot/themes/noxforge.ini").is_file(),
     },
+    "obsidian": {
+        "name": "Obsidian Note-Taking App",
+        "description": "NoxForge & Obsidian OLED CSS snippet themes",
+        "detect": lambda: (Path.home() / ".config/obsidian").is_dir() or (Path.home() / "Obsidian").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/obsidian/snippets",
+        "source_subpath": "apps/obsidian",
+        "check": lambda: (Path.home() / ".config/obsidian/snippets/noxforge.css").is_file(),
+    },
+    "rofi": {
+        "name": "Rofi / Wofi Launcher",
+        "description": "Precision dark .rasi configuration with Forge Notch geometry",
+        "detect": lambda: shutil.which("rofi") is not None or (Path.home() / ".config/rofi").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/rofi",
+        "source_subpath": "apps/rofi",
+        "check": lambda: (Path.home() / ".config/rofi/noxforge.rasi").is_file(),
+    },
 }
 
 
@@ -1337,6 +1353,8 @@ def ecosystem_apply(
         "kitty": ("noxforge.conf", "noxforge-obsidian.conf"),
         "alacritty": ("noxforge.toml", "noxforge-obsidian.toml"),
         "foot": ("noxforge.ini", "noxforge-obsidian.ini"),
+        "obsidian": ("noxforge.css", "noxforge_obsidian.css"),
+        "rofi": ("noxforge.rasi", "noxforge_obsidian.rasi"),
     }
 
     for app_id in targets:
@@ -1530,6 +1548,161 @@ def sync_tracked_ecosystem(
     return list(res.get("applied", []))
 
 
+def generate_completion(shell: str) -> str:
+    """Generate shell autocompletion script for bash, zsh, or fish."""
+    subcommands = [
+        "switch", "apply", "setup", "sync", "accent", "status", "flatpak",
+        "motion", "wallpaper", "export", "import", "opacity", "doctor",
+        "schedule", "ecosystem", "gui", "union", "kwin-csd", "completion",
+    ]
+    subcmds_str = " ".join(subcommands)
+    accents_str = "lime cyan amber violet coral emerald system"
+    profiles_str = "graphite obsidian"
+    wallpapers_str = "standard obsidian quiet ultrawide obsidian-ultrawide"
+    eco_apps_str = " ".join(SUPPORTED_ECOSYSTEM_APPS.keys())
+
+    if shell == "bash":
+        return f"""# bash completion for noxforge-ctl
+_noxforge_ctl() {{
+    local cur prev words cword
+    _init_completion || return
+
+    local commands="{subcmds_str}"
+    local profiles="{profiles_str}"
+    local accents="{accents_str}"
+    local wallpapers="{wallpapers_str}"
+    local eco_apps="{eco_apps_str}"
+
+    if [[ $cword -eq 1 ]]; then
+        COMPREPLY=($(compgen -W "$commands --help --version" -- "$cur"))
+        return 0
+    fi
+
+    case "${{words[1]}}" in
+        switch|apply|setup|sync)
+            COMPREPLY=($(compgen -W "$profiles --dry-run --json" -- "$cur"))
+            ;;
+        accent)
+            COMPREPLY=($(compgen -W "$accents --hex --dry-run --json" -- "$cur"))
+            ;;
+        wallpaper)
+            COMPREPLY=($(compgen -W "--list --apply $wallpapers" -- "$cur"))
+            ;;
+        flatpak)
+            COMPREPLY=($(compgen -W "status enable disable" -- "$cur"))
+            ;;
+        motion)
+            COMPREPLY=($(compgen -W "status standard reduced" -- "$cur"))
+            ;;
+        union)
+            COMPREPLY=($(compgen -W "--enable --disable --status --profile $profiles --dry-run --json" -- "$cur"))
+            ;;
+        kwin-csd)
+            COMPREPLY=($(compgen -W "--enable --disable --status --profile $profiles --dry-run --json" -- "$cur"))
+            ;;
+        ecosystem)
+            if [[ $cword -eq 2 ]]; then
+                COMPREPLY=($(compgen -W "status list apply restore" -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "$eco_apps --all --profile $profiles --accent --dry-run --json" -- "$cur"))
+            fi
+            ;;
+        completion)
+            COMPREPLY=($(compgen -W "bash zsh fish" -- "$cur"))
+            ;;
+        *)
+            ;;
+    esac
+}}
+complete -F _noxforge_ctl noxforge-ctl
+"""
+    elif shell == "zsh":
+        return f"""#compdef noxforge-ctl
+
+_noxforge_ctl() {{
+    local -a commands
+    commands=(
+        'switch:Switch between Graphite and Obsidian profiles'
+        'apply:Apply complete NoxForge setup'
+        'setup:Apply complete NoxForge setup'
+        'sync:Synchronize entire desktop'
+        'accent:Select active Forge accent color or custom WCAG AA hex'
+        'status:Display current NoxForge desktop status'
+        'flatpak:Manage Flatpak GTK/Libadwaita theme overrides'
+        'motion:Manage system-wide Reduced Motion policy'
+        'wallpaper:List or apply NoxForge wallpaper variants'
+        'export:Export current NoxForge configuration state as a JSON preset'
+        'import:Import and apply a NoxForge JSON preset file'
+        'opacity:Configure transparency and depth'
+        'doctor:Inspect installation health and diagnostics'
+        'schedule:Manage automated Day/Night profile switching'
+        'ecosystem:Opt-in reversible theme synchronization'
+        'gui:Launch the NoxForge Control Center GUI'
+        'union:Manage KDE Plasma 6.8 Union Style Engine'
+        'kwin-csd:Manage reversible KWin 6.8 CSD window rules'
+        'completion:Generate shell autocompletion script'
+    )
+
+    if (( CURRENT == 2 )); then
+        _describe -t commands 'noxforge-ctl command' commands
+    else
+        case "$words[2]" in
+            switch|apply|setup|sync)
+                _values 'profiles' graphite obsidian
+                ;;
+            accent)
+                _values 'accents' {accents_str}
+                ;;
+            wallpaper)
+                _values 'wallpapers' {wallpapers_str}
+                ;;
+            flatpak)
+                _values 'actions' status enable disable
+                ;;
+            motion)
+                _values 'actions' status standard reduced
+                ;;
+            union|kwin-csd)
+                _arguments '--enable' '--disable' '--status' '--profile[profile]:profile:(graphite obsidian)'
+                ;;
+            ecosystem)
+                if (( CURRENT == 3 )); then
+                    _values 'subcommands' status list apply restore
+                else
+                    _values 'apps' {eco_apps_str}
+                fi
+                ;;
+            completion)
+                _values 'shells' bash zsh fish
+                ;;
+        esac
+    fi
+}}
+
+_noxforge_ctl "$@"
+"""
+    elif shell == "fish":
+        lines = [
+            "# fish completion for noxforge-ctl",
+            "complete -c noxforge-ctl -f",
+        ]
+        for cmd in subcommands:
+            lines.append(f'complete -c noxforge-ctl -n "__fish_use_subcommand" -a "{cmd}"')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from switch apply setup sync" -a "graphite obsidian"')
+        lines.append(f'complete -c noxforge-ctl -n "__fish_seen_subcommand_from accent" -a "{accents_str}"')
+        lines.append(f'complete -c noxforge-ctl -n "__fish_seen_subcommand_from wallpaper" -a "{wallpapers_str} --list --apply"')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from flatpak" -a "status enable disable"')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from motion" -a "status standard reduced"')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from union" -l enable -l disable -l status')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from kwin-csd" -l enable -l disable -l status')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from ecosystem" -a "status list apply restore"')
+        for app in SUPPORTED_ECOSYSTEM_APPS.keys():
+            lines.append(f'complete -c noxforge-ctl -n "__fish_seen_subcommand_from ecosystem" -a "{app}"')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from completion" -a "bash zsh fish"')
+        return "\n".join(lines) + "\n"
+    return ""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="noxforge-ctl",
@@ -1693,6 +1866,13 @@ def main() -> int:
     csd_parser.add_argument("--profile", choices=["graphite", "obsidian"], default=None, help="Target profile")
     csd_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     csd_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # completion (Shell autocompletion generator)
+    comp_parser = subparsers.add_parser(
+        "completion",
+        help="Generate shell autocompletion script (bash, zsh, fish)",
+    )
+    comp_parser.add_argument("shell", choices=["bash", "zsh", "fish"], help="Target shell")
 
     args = parser.parse_args()
 
@@ -1947,6 +2127,10 @@ def main() -> int:
                 f"[NoxForge KWin CSD] {res['status'].upper()} "
                 f"(enabled={res['enabled']}, decocolor={res.get('decoColor')})"
             )
+        return 0
+
+    if args.command == "completion":
+        print(generate_completion(args.shell), end="")
         return 0
 
     if args.command == "gui":

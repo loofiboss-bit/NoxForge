@@ -186,23 +186,82 @@ class ProfileAccentTab(QtWidgets.QWidget):
                 accent_grid.addWidget(btn, idx // 2, idx % 2)
 
         a_layout.addLayout(accent_grid)
+
+        # Live Palette Swatch & Contrast Bar
+        self.palette_swatch_card = QtWidgets.QWidget()
+        self.palette_swatch_card.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px;")
+        swatch_layout = QtWidgets.QHBoxLayout(self.palette_swatch_card)
+        swatch_layout.setContentsMargins(10, 8, 10, 8)
+        swatch_layout.setSpacing(8)
+
+        self.swatch_bg = QtWidgets.QLabel("BG #0D1419")
+        self.swatch_surf = QtWidgets.QLabel("SURF #141E25")
+        self.swatch_border = QtWidgets.QLabel("BORDER #2F414B")
+        self.swatch_text = QtWidgets.QLabel("TEXT #E8F0F2")
+        self.swatch_accent = QtWidgets.QLabel("ACCENT #A3FF47")
+        self.contrast_badge = QtWidgets.QLabel("● 13.65:1 (WCAG AAA)")
+
+        for sw in (self.swatch_bg, self.swatch_surf, self.swatch_border, self.swatch_text, self.swatch_accent):
+            sw.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            sw.setFixedHeight(26)
+            sw.setStyleSheet("border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+            swatch_layout.addWidget(sw, stretch=1)
+
+        self.contrast_badge.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.contrast_badge.setFixedHeight(26)
+        self.contrast_badge.setStyleSheet(
+            "background-color: #192D1E; border: 1px solid #A3FF47; border-radius: 4px; "
+            "color: #A3FF47; font-size: 10px; font-weight: 800; padding: 2px 8px;"
+        )
+        swatch_layout.addWidget(self.contrast_badge, stretch=1)
+        a_layout.addWidget(self.palette_swatch_card)
+
         layout.addWidget(accent_group)
 
         # Wallpaper Suite Selector Section
         wp_group = QtWidgets.QGroupBox("Wallpaper Suite (Standard, Obsidian, Quiet && Ultrawide)")
-        wp_layout = QtWidgets.QHBoxLayout(wp_group)
+        wp_layout = QtWidgets.QVBoxLayout(wp_group)
+        wp_top = QtWidgets.QHBoxLayout()
         wp_lbl = QtWidgets.QLabel("Wallpaper Variant:")
         wp_lbl.setStyleSheet("color: #A6B4B9;")
         self.wallpaper_combo = QtWidgets.QComboBox()
         self.wallpaper_combo.setAccessibleName("Wallpaper Variant Selector")
         for var_key, var_info in noxforge_core.WALLPAPER_VARIANTS.items():
             self.wallpaper_combo.addItem(f"{var_info['label']} ({var_info['id']})", var_key)
+        self.wallpaper_combo.currentIndexChanged.connect(self.update_wallpaper_preview)
         self.btn_apply_wallpaper = QtWidgets.QPushButton("Apply Wallpaper")
         self.btn_apply_wallpaper.setAccessibleName("Apply Wallpaper")
         self.btn_apply_wallpaper.clicked.connect(self.apply_selected_wallpaper)
-        wp_layout.addWidget(wp_lbl)
-        wp_layout.addWidget(self.wallpaper_combo, stretch=1)
-        wp_layout.addWidget(self.btn_apply_wallpaper)
+        wp_top.addWidget(wp_lbl)
+        wp_top.addWidget(self.wallpaper_combo, stretch=1)
+        wp_top.addWidget(self.btn_apply_wallpaper)
+        wp_layout.addLayout(wp_top)
+
+        # Wallpaper Live Thumbnail & Details Card
+        wp_card = QtWidgets.QHBoxLayout()
+        wp_card.setSpacing(14)
+        self.wp_preview_lbl = QtWidgets.QLabel()
+        self.wp_preview_lbl.setFixedSize(220, 124)
+        self.wp_preview_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.wp_preview_lbl.setStyleSheet(
+            "background-color: #0D1419; border: 1px solid #2F414B; border-radius: 6px; color: #748289;"
+        )
+        wp_card.addWidget(self.wp_preview_lbl)
+
+        wp_meta_layout = QtWidgets.QVBoxLayout()
+        self.wp_title_lbl = QtWidgets.QLabel("NoxForge Standard")
+        self.wp_title_lbl.setStyleSheet("font-size: 13px; font-weight: 700; color: #E8F0F2;")
+        self.wp_desc_lbl = QtWidgets.QLabel("Precision dark graphite wallpaper with Forge Notch geometric cues.")
+        self.wp_desc_lbl.setWordWrap(True)
+        self.wp_desc_lbl.setStyleSheet("color: #A6B4B9; font-size: 11px;")
+        self.wp_res_lbl = QtWidgets.QLabel("● Native UHD 3840×2160, 2560×1440, 1920×1080 (16:9)")
+        self.wp_res_lbl.setStyleSheet("color: #22D3EE; font-size: 11px; font-weight: 600;")
+        wp_meta_layout.addWidget(self.wp_title_lbl)
+        wp_meta_layout.addWidget(self.wp_desc_lbl)
+        wp_meta_layout.addWidget(self.wp_res_lbl)
+        wp_meta_layout.addStretch()
+        wp_card.addLayout(wp_meta_layout, stretch=1)
+        wp_layout.addLayout(wp_card)
         layout.addWidget(wp_group)
 
         # Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer Section
@@ -450,6 +509,94 @@ class ProfileAccentTab(QtWidgets.QWidget):
             except Exception:
                 pass
 
+        self.update_palette_swatches(profile, accent_hex)
+        self.update_wallpaper_preview()
+
+    def update_palette_swatches(self, profile: str, accent_hex: str) -> None:
+        if not hasattr(self, "palette_swatch_card"):
+            return
+        is_obs = profile == "obsidian"
+        bg_hex = "#000000" if is_obs else "#0D1419"
+        surf_hex = "#080808" if is_obs else "#141E25"
+        border_hex = "#2F414B"
+        text_hex = "#E8F0F2"
+        acc = accent_hex or "#A3FF47"
+
+        self.swatch_bg.setText(f"BG {bg_hex}")
+        self.swatch_bg.setStyleSheet(f"background-color: {bg_hex}; color: #A6B4B9; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_surf.setText(f"SURF {surf_hex}")
+        self.swatch_surf.setStyleSheet(f"background-color: {surf_hex}; color: #E8F0F2; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_border.setText(f"BORDER {border_hex}")
+        self.swatch_border.setStyleSheet(f"background-color: #1A2832; color: {border_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_text.setText(f"TEXT {text_hex}")
+        self.swatch_text.setStyleSheet(f"background-color: #1A2832; color: {text_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_accent.setText(f"ACCENT {acc}")
+        self.swatch_accent.setStyleSheet(f"background-color: {acc}; color: #0D1419; border: 1px solid {acc}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        try:
+            cg, co = noxforge_ctl.validate_custom_accent_contrast(acc)
+            ratio = co if is_obs else cg
+            wcag_tier = "WCAG AAA" if ratio >= 7.0 else ("WCAG AA" if ratio >= 4.5 else "LOW")
+            self.contrast_badge.setText(f"● {ratio:.2f}:1 ({wcag_tier})")
+            badge_color = "#A3FF47" if ratio >= 4.5 else "#FF5555"
+            bg_badge = "#192D1E" if ratio >= 4.5 else "#2D1919"
+            self.contrast_badge.setStyleSheet(
+                f"background-color: {bg_badge}; border: 1px solid {badge_color}; border-radius: 4px; "
+                f"color: {badge_color}; font-size: 10px; font-weight: 800; padding: 2px 8px;"
+            )
+        except Exception:
+            self.contrast_badge.setText(f"● {acc}")
+
+    def update_wallpaper_preview(self) -> None:
+        if not hasattr(self, "wallpaper_combo") or not hasattr(self, "wp_preview_lbl"):
+            return
+        var_key = self.wallpaper_combo.currentData()
+        if not var_key:
+            return
+        var_info = noxforge_core.WALLPAPER_VARIANTS.get(var_key, {})
+        wp_id = var_info.get("id", "NoxForge")
+        label = var_info.get("label", wp_id)
+        is_uw = "Ultrawide" in wp_id
+        is_obs = "Obsidian" in wp_id
+
+        self.wp_title_lbl.setText(label)
+        if is_obs:
+            self.wp_desc_lbl.setText("True pitch-black OLED background with precision Forge Notch accent geometry.")
+        elif "Quiet" in wp_id:
+            self.wp_desc_lbl.setText("Minimalist dark canvas without central insignia for distraction-free focus.")
+        else:
+            self.wp_desc_lbl.setText("Signature dark graphite wallpaper with Forge Notch geometric cues.")
+
+        if is_uw:
+            self.wp_res_lbl.setText("● Native Ultrawide 3440×1440, 2560×1080 (21:9 / 32:9)")
+        else:
+            self.wp_res_lbl.setText("● Native UHD 3840×2160, 2560×1440, 1920×1080 (16:9)")
+
+        img_path = ROOT / f"wallpapers/{wp_id}/contents/images/1920x1080.png"
+        if not img_path.is_file():
+            for p in [
+                Path.home() / f".local/share/wallpapers/{wp_id}/contents/images/1920x1080.png",
+                Path(f"/usr/share/wallpapers/{wp_id}/contents/images/1920x1080.png"),
+            ]:
+                if p.is_file():
+                    img_path = p
+                    break
+        if img_path.is_file():
+            pix = QtGui.QPixmap(str(img_path))
+            if not pix.isNull():
+                scaled = pix.scaled(
+                    self.wp_preview_lbl.size(),
+                    QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                    QtCore.Qt.TransformationMode.SmoothTransformation,
+                )
+                self.wp_preview_lbl.setPixmap(scaled)
+        else:
+            self.wp_preview_lbl.setText(f"{wp_id}\n(Image preview)")
+
     def apply_selected_wallpaper(self) -> None:
         variant = self.wallpaper_combo.currentData() or "standard"
         if hasattr(noxforge_ctl, "manage_wallpaper"):
@@ -524,11 +671,22 @@ class HealthTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(14)
 
-        header = QtWidgets.QLabel("NoxForge System Health & Ecosystem Status")
+        header = QtWidgets.QLabel("NoxForge System Health && Ecosystem Status")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
@@ -561,6 +719,7 @@ class HealthTab(QtWidgets.QWidget):
 
         self.info_text = QtWidgets.QTextEdit()
         self.info_text.setReadOnly(True)
+        self.info_text.setMinimumHeight(240)
         layout.addWidget(self.info_text)
 
         btn_row = QtWidgets.QHBoxLayout()
@@ -573,6 +732,9 @@ class HealthTab(QtWidgets.QWidget):
         btn_row.addWidget(self.btn_refresh)
         btn_row.addWidget(self.btn_sync)
         layout.addLayout(btn_row)
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
 
         self.run_doctor()
 
@@ -658,7 +820,18 @@ class AccessibilityTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(16)
 
@@ -756,6 +929,10 @@ class AccessibilityTab(QtWidgets.QWidget):
 
         layout.addWidget(accent_group)
         layout.addStretch()
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
+
         self.refresh_state()
 
     def refresh_state(self) -> None:
@@ -864,11 +1041,22 @@ class EcosystemTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(12)
 
-        header = QtWidgets.QLabel("Developer Tools, Reversible Ecosystem & Flatpak")
+        header = QtWidgets.QLabel("Developer Tools, Reversible Ecosystem && Flatpak")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
@@ -931,6 +1119,9 @@ class EcosystemTab(QtWidgets.QWidget):
         btn_row.addWidget(self.btn_refresh)
         btn_row.addStretch()
         layout.addLayout(btn_row)
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
 
         self.refresh_table()
 

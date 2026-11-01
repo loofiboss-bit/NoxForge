@@ -42,6 +42,7 @@ delaybutton {
     background-color: var(--button-active-background-color);
     color: var(--button-active-text-color);
     border: var(--button-border);
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 
     &:hovered {
         background-color: var(--button-active-highlight-color);
@@ -72,11 +73,12 @@ tabbutton {
     background-color: var(--view-background-color);
     color: var(--view-text-color);
     border-radius: var(--corner-radius);
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 
     &:checked {
         background-color: var(--window-background-color);
         color: var(--window-text-color);
-        border-bottom: 3px solid var(--highlight-color);
+        border-bottom: var(--forge-notch-size) solid var(--highlight-color);
     }
 
     &:hovered {
@@ -95,6 +97,7 @@ searchfield {
     background-color: var(--view-background-color);
     color: var(--view-text-color);
     border: 1px solid var(--view-border-color);
+    transition: border-color 140ms ease, outline 140ms ease;
 
     &:hovered,
     &:active-focus {
@@ -111,11 +114,37 @@ radiobutton,
 switch {
     spacing: var(--medium-spacing);
     color: var(--window-text-color);
+    transition: color 140ms ease;
 }
 
 progressbar,
 slider {
     height: var(--medium-element-size);
+}
+
+scrollbar {
+    width: var(--medium-spacing);
+    height: var(--medium-spacing);
+    background-color: transparent;
+}
+
+scrollbar-slider {
+    background-color: var(--card-border-color);
+    border-radius: var(--corner-radius);
+    transition: background-color 140ms ease;
+
+    &:hovered {
+        background-color: var(--highlight-color);
+    }
+}
+
+tooltip {
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+    padding: var(--small-spacing) var(--medium-spacing);
+    box-shadow: var(--dialog-shadow);
 }
 
 popup,
@@ -135,6 +164,7 @@ switchdelegate {
     padding: var(--medium-spacing);
     border-radius: var(--corner-radius);
     color: var(--view-text-color);
+    transition: background-color 140ms ease, border-color 140ms ease;
 
     &:hovered,
     &:highlighted {

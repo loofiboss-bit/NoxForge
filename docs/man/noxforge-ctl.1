@@ -61,7 +61,7 @@ returns to Hybrid mode (\fBwidgetStyle=NoxForge\fR + \fBunionStyle=noxforge\fR).
 .BR kwin\-csd " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
 Manage KWin 6.8 client-side window titlebar color scheme rules in \fB~/.config/kwinrulesrc\fR
 with automatic \fB.noxforge.bak\fR backup and restoration.
-(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship).
+(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship, Obsidian, Rofi).
 \fBapply\fR creates automatic \fB.noxforge.bak\fR backups and tracks deployed apps in
 \fB~/.config/noxforge/ecosystem-state.json\fR for reactive profile and accent synchronization;
 \fBrestore\fR restores original user configurations.
@@ -71,6 +71,9 @@ Configure panel, popup, and window decoration transparency levels via \fBnoxforg
 .TP
 .BR doctor " [" \fIargs\fR... "]"
 Run the read-only NoxForge system diagnostics and verification via \fBnoxforge-doctor\fR.
+.TP
+.BR completion " [" bash | zsh | fish "]"
+Generate shell autocompletion script for the specified shell.
 .TP
 .BR gui
 Launch the interactive PySide6 / Qt 6 NoxForge Control Center GUI.
