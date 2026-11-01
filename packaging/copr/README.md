@@ -11,6 +11,10 @@ copr-cli modify noxforge \
   --chroot fedora-45-x86_64 \
   --description "NoxForge Forge Identity components for Fedora KDE" \
   --instructions "Enable the repository, install noxforge, then select NoxForge explicitly in System Settings."
+
+# Configure buildroot packages required for CTest execution during %check
+copr-cli edit-chroot --packages "breeze-icon-theme plasma-workspace" loofitheboss/noxforge/fedora-44-x86_64
+copr-cli edit-chroot --packages "breeze-icon-theme plasma-workspace" loofitheboss/noxforge/fedora-45-x86_64
 ```
 
 Submit only the SRPM built from an exact stable, qualified tag. Refuse
