@@ -1,16 +1,17 @@
-# NoxForge 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
+# NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine, Fastfetch Kinetic Studio v2 & Wayland Precision
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 18.0.0 targets Fedora 44 and Arch
-Plasma/KWin 6.7+ with Qt 6.11 on Wayland. It elevates the visual system with
-dynamic `@accent_color` GTK 3/4 CSS and managed `@import` chaining for GTK 4 /
-Libadwaita parity, opt-in Flatpak theme overrides, a reversible Ecosystem Engine v2
-(`.noxforge.bak` backups, `ecosystem restore`, and automatic profile/accent
-propagation across deployed developer tools and Konsole), a shared
-`tools/noxforge_core.py` architecture, Control Center v3 with live self-theming,
-Tokens Schema 14, and Doctor Schema 11 diagnostics.
-See the [v18 release plan](docs/NOXFORGE_V18_PLAN.md).
+detail, and a compact Forge Notch. Version 19.0.0 targets Fedora 44 and Arch
+Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It elevates the visual system with
+native KDE Plasma 6.8 Union Style Engine CSS/QQuick styles (`union/styles/noxforge`
+and `union/styles/noxforge-obsidian` bound to `custom-color("kcolorscheme", ...)`),
+the Fastfetch "Kinetic Studio" v2 preset suite (`main`, `cyber`, `minimal` with
+3 ANSI art logos and live RGB accent re-coloring), reversible KWin 6.8 CSD window
+rule harmonization (`noxforge-ctl kwin-csd`), a Plasma 6.8 System Monitor
+telemetry preset (`apps/systemmonitor/noxforge-telemetry.page` with VRAM % tracking),
+Control Center v4, Tokens Schema 15, and Doctor Schema 12 diagnostics.
+See the [v19 release plan](docs/NOXFORGE_V19_PLAN.md).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -65,8 +66,13 @@ cursor, audio, PAM/login, power, and live-session gates.
   Graphite and Obsidian look-and-feel packages;
 - GTK 3 and GTK 4 themes, Kate/KWrite syntax themes, and VS Code/Cursor editor
   themes in standard and Obsidian palettes;
-- Zed editor themes, btop monitors, Starship prompt, Fastfetch preset, Discord / Vesktop
-  CSS, and Firefox browser theming (userChrome.css and extension manifest);
+- KDE Plasma 6.8 Union Style Engine packages (`union/styles/noxforge` and
+  `union/styles/noxforge-obsidian`) with hybrid `unionStyle` orchestration and
+  optional full Union widget style toggling (`noxforge-ctl union`);
+- Zed editor themes, btop monitors, Starship prompt, Fastfetch Kinetic Studio v2
+  preset suite (`main`, `cyber`, `minimal`), Plasma 6.8 System Monitor telemetry
+  page (`noxforge-telemetry.page`), Discord / Vesktop CSS, and Firefox browser
+  theming (`userChrome.css` and extension manifest);
 - Ghostty, Alacritty, Kitty, and Foot configurations for both terminal palettes;
 - five selectable wallpapers: **NoxForge Forge** (`NoxForge`), **NoxForge
   Quiet** (`NoxForge-Quiet`), **NoxForge Ultrawide** (`NoxForge-Ultrawide`),
@@ -96,8 +102,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v18 release scope is recorded in
-[NOXFORGE_V18_PLAN.md](docs/NOXFORGE_V18_PLAN.md), indexed by
+The v19 release scope is recorded in
+[NOXFORGE_V19_PLAN.md](docs/NOXFORGE_V19_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

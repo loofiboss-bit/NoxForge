@@ -31,7 +31,15 @@ The doctor never applies a theme by default, writes KDE or login-manager configu
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
-## Schema 9 diagnostics
+## Schema 12 diagnostics (v19.0.0)
+
+Schema 12 introduces KDE Plasma 6.8 Union Style Engine and Wayland compositor diagnostics alongside deterministic version propagation across all packaged components:
+- `unionStyleStatus`: Reports installed Union style packages (`noxforge`, `noxforge-obsidian`), active `kdeglobals` `widgetStyle` and `unionStyle`, whether `plasma-union` is available, and whether the session is in `hybrid` (`widgetStyle=NoxForge` + `unionStyle=noxforge*`) or `full-union` (`widgetStyle=Union`) mode.
+- `waylandCompositor`: Reports session type (`wayland`), KWin version (`>= 6.8`), and KWin 6.8 CSD rule synchronization status (`kwinCsdRuleConfigured`).
+- Zero false-positive `metadata-unknown` warnings on real installations by inheriting package version authority from `noxforge/VERSION` when individual asset formats (`.colors`, `.theme`, `.toml`, `.lua`) do not embed version headers.
+- Full recognition of all 5 NoxForge wallpapers (`NoxForge`, `NoxForge-Quiet`, `NoxForge-Ultrawide`, `NoxForge-Obsidian`, `NoxForge-Obsidian-Ultrawide`) across both desktop `plasma-org.kde.plasma.desktop-appletsrc` and Plasma 6.8 `plasmalogin` (`plasma-login-manager`).
+
+## Schema 9–11 diagnostics
 
 Schema 9 introduces comprehensive checks for QML variant synchronization,
 kinetic reduced-motion policies, custom accent contrast, experimental face authentication,

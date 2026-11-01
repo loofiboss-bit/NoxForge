@@ -1,4 +1,4 @@
-%global upstream_version 18.0.0
+%global upstream_version 19.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        18.0.0
+Version:        19.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -21,11 +21,12 @@ BuildRequires:  ninja-build
 BuildRequires:  qt6-qtbase-devel >= 6.7
 BuildRequires:  qt6-qtdeclarative-devel >= 6.7
 
-Requires:       kwin >= 6.7
-Requires:       plasma-workspace >= 6.7
+Requires:       kwin >= 6.8
+Requires:       plasma-workspace >= 6.8
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
 Recommends:     python3-pyside6
+Recommends:     plasma-union
 %description
 NoxForge Ecosystem & App Parity is an MIT-licensed collection of separately
 installable KDE Plasma components for Fedora KDE. The package contains a Plasma
@@ -84,6 +85,8 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/noxforge/browsers/
 %{_datadir}/noxforge/apps/
 %{_datadir}/noxforge/fastfetch/
+%{_datadir}/union/styles/noxforge/
+%{_datadir}/union/styles/noxforge-obsidian/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/
 %{_datadir}/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/
 %{_datadir}/aurorae/themes/io.github.loofiboss.noxforge.desktop/
@@ -104,6 +107,13 @@ apply a theme, configure a login surface, or switch display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sun Nov 01 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 19.0.0-1
+- Release v19.0.0 KDE Plasma 6.8 Union Style Engine, Fastfetch Kinetic Studio v2 & Wayland Precision
+- Generate native Union CSS/QQuick styles (union/styles/noxforge and union/styles/noxforge-obsidian)
+- Add noxforge-ctl union, fastfetch, and kwin-csd subcommands plus System Monitor telemetry preset
+- Upgrade Doctor to Schema 12 with Union/Wayland diagnostics and zero metadata-unknown warnings
+- Upgrade Control Center to v4 with Plasma 6.8 Union, KWin CSD, and Fastfetch Kinetic Studio controls
+
 * Sat Oct 24 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 18.0.0-1
 - Release v18.0.0 Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
 - Dynamic @accent_color GTK 3/4 CSS and managed @import chaining for Libadwaita parity

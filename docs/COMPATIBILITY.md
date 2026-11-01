@@ -1,7 +1,7 @@
-# NoxForge 18 compatibility
+# NoxForge 19 compatibility
 
 The intended compatibility target is Fedora 44 KDE and the target Arch
-Plasma/KWin 6.7+ and Qt 6.11 family on Wayland. The project makes no X11,
+Plasma/KWin 6.8+ and Qt 6.11 family on Wayland. The project makes no X11,
 Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 
 ## System package roots
@@ -24,6 +24,9 @@ Plasma 6.0, Debian, Ubuntu, openSUSE, Nix, Flatpak, or AppImage claim.
 | Zed themes | `/usr/share/noxforge/editors/zed/` |
 | btop themes | `/usr/share/noxforge/terminals/btop/` |
 | Starship prompts | `/usr/share/noxforge/terminals/starship/` |
+| Fastfetch Kinetic Studio suite | `/usr/share/noxforge/fastfetch/` |
+| System Monitor page preset | `/usr/share/noxforge/apps/systemmonitor/noxforge-telemetry.page` |
+| Union CSS styles (Plasma 6.8) | `/usr/share/union/styles/noxforge{,-obsidian}/` |
 | Firefox CSS | `/usr/share/noxforge/browsers/firefox/` |
 | Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/` |
 | Obsidian Aurorae | `/usr/share/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop/` |

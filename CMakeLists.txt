@@ -400,6 +400,14 @@ install(
     DESTINATION "${CMAKE_INSTALL_DATADIR}/noxforge/fastfetch"
 )
 install(
+    DIRECTORY union/styles/noxforge/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/union/styles/noxforge"
+)
+install(
+    DIRECTORY union/styles/noxforge-obsidian/
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/union/styles/noxforge-obsidian"
+)
+install(
     DIRECTORY "plasma/desktoptheme/${NOXFORGE_THEME_ID}/"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/plasma/desktoptheme/${NOXFORGE_THEME_ID}"
 )

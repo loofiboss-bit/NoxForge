@@ -36,6 +36,7 @@ PACKAGE_ROOTS = (
     ROOT / "cursors",
     ROOT / "sounds",
     ROOT / "sddm",
+    ROOT / "union",
 )
 POSITIONS = {"top", "topright", "right", "bottomright", "bottom", "bottomleft", "left", "topleft", "center"}
 PLASMA_STATES = {
@@ -167,8 +168,22 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14, 15) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 15:
+        union_cfg = tokens.get("union", {})
+        kwin68_cfg = tokens.get("kwin68", {})
+        ff_cfg = tokens.get("fastfetch", {})
+        if (
+            union_cfg.get("engineVersion") != "6.8"
+            or union_cfg.get("inputType") != "css"
+            or union_cfg.get("styles") != ["noxforge", "noxforge-obsidian"]
+        ):
+            raise ValidationError("union token contract (Schema 15) is invalid")
+        if kwin68_cfg.get("displayProtocol") != "wayland-only" or not kwin68_cfg.get("csdRuleSync"):
+            raise ValidationError("kwin68 token contract (Schema 15) is invalid")
+        if ff_cfg.get("suite") != "kinetic-studio-v2" or ff_cfg.get("presets") != ["main", "cyber", "minimal"]:
+            raise ValidationError("fastfetch token contract (Schema 15) is invalid")
     if tokens.get("schemaVersion") >= 14:
         gtk_cfg = tokens.get("gtk", {})
         eco_cfg = tokens.get("ecosystem", {})

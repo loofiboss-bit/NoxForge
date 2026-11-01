@@ -34,6 +34,8 @@ BASE_VERSION_FILES = {
     "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/manifest.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "union/styles/noxforge/metadata.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "union/styles/noxforge-obsidian/metadata.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "tools/noxforge_core.py": ((r'(?m)^DEFAULT_VERSION = ".*?"$', 'DEFAULT_VERSION = "{version}"'),),
     "tools/noxforge-opacity": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),
     "tools/noxforge-ctl": ((r'(?m)^VERSION = ".*?"$', 'VERSION = "{version}"'),),

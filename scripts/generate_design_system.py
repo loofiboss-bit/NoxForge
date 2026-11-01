@@ -1892,42 +1892,779 @@ symbol = " "
 
 def fastfetch_theme(tokens: dict[str, object]) -> str:
     colors = tokens["colors"]
-    c1 = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
-    c2 = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
-    ck = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
-    ct = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
+    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
+    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
+    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
+    c_primary = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
+    c_secondary = f"38;2;{rgb(colors['textSecondary']).replace(',', ';')}"
+    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
+    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
+    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
     data = {
         "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
         "logo": {
-            "type": "small",
-            "color": {
-                "1": c1,
-                "2": c2,
+            "type": "file",
+            "source": "~/.config/fastfetch/logo.txt",
+            "padding": {
+                "top": 1,
+                "left": 1,
+                "right": 3,
             },
         },
         "display": {
-            "separator": " ❯ ",
+            "separator": f"  \u001b[{c_dim}m❯\u001b[0m  ",
             "color": {
-                "keys": ck,
-                "title": ct,
+                "keys": c_cyan,
+                "title": c_accent,
+            },
+            "percent": {
+                "type": 3,
+                "color": {
+                    "green": c_accent,
+                    "yellow": c_yellow,
+                    "red": c_red,
+                },
+            },
+            "bar": {
+                "char": {
+                    "elapsed": "█",
+                    "total": "░",
+                },
+                "border": {
+                    "left": f" \u001b[{c_dim}m[\u001b[0m",
+                    "right": f"\u001b[{c_dim}m]\u001b[0m",
+                },
+                "width": 10,
             },
         },
         "modules": [
-            "title",
-            "separator",
-            {"type": "os", "key": "OS"},
-            {"type": "kernel", "key": "Kernel"},
-            {"type": "wm", "key": "WM"},
-            {"type": "de", "key": "Desktop"},
-            {"type": "theme", "key": "Theme"},
-            {"type": "icons", "key": "Icons"},
-            {"type": "terminal", "key": "Terminal"},
-            {"type": "shell", "key": "Shell"},
-            "break",
-            "colors",
+            {
+                "type": "title",
+                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[{c_secondary}mNOXFORGE KINETIC STUDIO\u001b[0m",
+            },
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ SYSTEM IDENTITY ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
+            },
+            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
+            {"type": "host", "key": "󰌢 Machine", "format": "{name}"},
+            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
+            {"type": "uptime", "key": "󱑂 Uptime"},
+            {"type": "packages", "key": "󰏖 Packages"},
+            {"type": "locale", "key": " Locale"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ WORKSPACE SUITE ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
+            },
+            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
+            {"type": "wm", "key": "󱂬 Window Mgr", "format": "{pretty-name} ({protocol-name})"},
+            {"type": "theme", "key": "󰔎 Theme", "format": "{theme1}"},
+            {"type": "icons", "key": " Icons", "format": "{icons1}"},
+            {"type": "cursor", "key": "󰆿 Cursor", "format": "{theme} ({size}px)"},
+            {"type": "terminal", "key": " Terminal"},
+            {"type": "shell", "key": "󰞷 Shell"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ HARDWARE ENGINE ✦ \u001b[0m\u001b[{c_dim}m───────────────────────────────────────\u001b[0m",
+            },
+            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical}) @ {freq-max}"},
+            {"type": "cpuusage", "key": "󰓅 CPU Load"},
+            {"type": "gpu", "key": "󰢮 GPU", "format": "{name} [{type}]"},
+            {"type": "display", "key": "󰍹 Display", "format": '{width}x{height} @ {refresh-rate}Hz ({inch}")'},
+            {"type": "sound", "key": " Audio"},
+            {"type": "bluetooth", "key": " Bluetooth"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ TELEMETRY & RESOURCES ✦ ─────────────────────────────────\u001b[0m",
+            },
+            {"type": "memory", "key": "󰘚 RAM"},
+            {"type": "swap", "key": "󰓡 Swap"},
+            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
+            {"type": "battery", "key": "󰂂 Battery"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m─── \u001b[1;{c_accent}m✦ CONNECTIVITY & MEDIA ✦ ──────────────────────────────────\u001b[0m",
+            },
+            {"type": "wifi", "key": "󰤨 Wi-Fi", "format": "{ssid} ({protocol}, {band} GHz)"},
+            {"type": "localip", "key": "󰩟 Local IP", "showIpv6": False, "showLoop": False},
+            {"type": "media", "key": "󰝚 Media"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_dim}m───────────────────────────────────────────────────────────\u001b[0m",
+            },
+            {
+                "type": "custom",
+                "format": f"  \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m \u001b[{c_secondary}m●\u001b[0m \u001b[{c_dim}m●\u001b[0m \u001b[{c_primary}m●\u001b[0m",
+            },
         ],
     }
     return json.dumps(data, indent=2) + "\n"
+
+
+def fastfetch_cyber_theme(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
+    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
+    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
+    c_primary = f"38;2;{rgb(colors['textPrimary']).replace(',', ';')}"
+    c_secondary = f"38;2;{rgb(colors['textSecondary']).replace(',', ';')}"
+    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
+    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
+    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
+    data = {
+        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+        "logo": {
+            "type": "file",
+            "source": "~/.config/fastfetch/logo_cyber.txt",
+            "padding": {
+                "top": 1,
+                "left": 1,
+                "right": 3,
+            },
+        },
+        "display": {
+            "separator": f"  \u001b[{c_violet}m❯\u001b[0m  ",
+            "color": {
+                "keys": c_cyan,
+                "title": c_accent,
+            },
+            "percent": {
+                "type": 3,
+                "color": {
+                    "green": c_accent,
+                    "yellow": c_yellow,
+                    "red": c_red,
+                },
+            },
+            "bar": {
+                "char": {
+                    "elapsed": "█",
+                    "total": "░",
+                },
+                "border": {
+                    "left": f" \u001b[{c_violet}m[\u001b[0m",
+                    "right": f"\u001b[{c_violet}m]\u001b[0m",
+                },
+                "width": 10,
+            },
+        },
+        "modules": [
+            {
+                "type": "title",
+                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[1;{c_violet}mNOXFORGE 2.0\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[{c_secondary}mCYBER MATRIX\u001b[0m",
+            },
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ SYSTEM CORE ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────────────\u001b[0m",
+            },
+            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
+            {"type": "host", "key": "󰌢 Machine", "format": "{name}"},
+            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
+            {"type": "uptime", "key": "󱑂 Uptime"},
+            {"type": "packages", "key": "󰏖 Packages"},
+            {"type": "locale", "key": " Locale"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ WORKSPACE & DESKTOP ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────\u001b[0m",
+            },
+            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
+            {"type": "wm", "key": "󱂬 Window Mgr", "format": "{pretty-name} ({protocol-name})"},
+            {"type": "theme", "key": "󰔎 Theme", "format": "{theme1}"},
+            {"type": "icons", "key": " Icons", "format": "{icons1}"},
+            {"type": "cursor", "key": "󰆿 Cursor", "format": "{theme} ({size}px)"},
+            {"type": "terminal", "key": " Terminal"},
+            {"type": "shell", "key": "󰞷 Shell"},
+            {
+                "type": "custom",
+                "format": f"\u001b[{c_violet}m─── \u001b[1;{c_accent}m✦ HARDWARE MATRIX ✦ \u001b[0m\u001b[{c_violet}m───────────────────────────────────────\u001b[0m",
+            },
+            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical}) @ {freq-max}"},
+            {"type": "cpuusage", "key": "󰓅 CPU Load"},
+            {"type": "gpu", "key": "󰢮 GPU", "format": "{name} [{type}]"},
+            {"type": "display", "key": "󰍹 Display", "format": '{width}x{height} @ {refresh-rate}Hz ({inch}")'},
+            {"type": "memory", "key": "󰘚 RAM"},
+            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
+            {"type": "battery", "key": "󰂂 Battery"},
+            {
+                "type": "custom",
+                "format": f"  \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m \u001b[{c_secondary}m●\u001b[0m \u001b[{c_dim}m●\u001b[0m \u001b[{c_primary}m●\u001b[0m",
+            },
+        ],
+    }
+    return json.dumps(data, indent=2) + "\n"
+
+
+def fastfetch_minimal_theme(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    c_accent = f"38;2;{rgb(colors['accent']).replace(',', ';')}"
+    c_cyan = f"38;2;{rgb(colors['detailCyan']).replace(',', ';')}"
+    c_violet = f"38;2;{rgb(colors['detailViolet']).replace(',', ';')}"
+    c_dim = f"38;2;{rgb(colors['outlineMuted']).replace(',', ';')}"
+    c_yellow = f"38;2;{rgb(colors['neutral']).replace(',', ';')}"
+    c_red = f"38;2;{rgb(colors['negative']).replace(',', ';')}"
+    data = {
+        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+        "logo": {
+            "type": "file",
+            "source": "~/.config/fastfetch/logo_minimal.txt",
+            "padding": {
+                "top": 1,
+                "left": 1,
+                "right": 3,
+            },
+        },
+        "display": {
+            "separator": f"  \u001b[{c_dim}m❯\u001b[0m  ",
+            "color": {
+                "keys": c_cyan,
+                "title": c_accent,
+            },
+            "percent": {
+                "type": 3,
+                "color": {
+                    "green": c_accent,
+                    "yellow": c_yellow,
+                    "red": c_red,
+                },
+            },
+            "bar": {
+                "char": {
+                    "elapsed": "█",
+                    "total": "░",
+                },
+                "border": {
+                    "left": " [",
+                    "right": "]",
+                },
+                "width": 8,
+            },
+        },
+        "modules": [
+            {
+                "type": "title",
+                "format": f"\u001b[1;{c_accent}m{{user-name}}\u001b[0m\u001b[{c_dim}m@\u001b[0m\u001b[1;{c_cyan}m{{host-name}}\u001b[0m  \u001b[{c_dim}m//\u001b[0m  \u001b[1;{c_violet}mNOXFORGE MINI HUD\u001b[0m",
+            },
+            {"type": "os", "key": "󰣛 OS", "format": "{pretty-name} {arch}"},
+            {"type": "kernel", "key": "󰒋 Kernel", "format": "{release}"},
+            {"type": "uptime", "key": "󱑂 Uptime"},
+            {"type": "de", "key": "󰧨 Desktop", "format": "{pretty-name} {version}"},
+            {"type": "wm", "key": "󱂬 WM", "format": "{pretty-name} ({protocol-name})"},
+            {"type": "cpu", "key": "󰍛 CPU", "format": "{name} ({cores-logical})"},
+            {"type": "memory", "key": "󰘚 RAM"},
+            {"type": "disk", "key": "󰋊 Disk (/)", "folders": "/"},
+            {"type": "battery", "key": "󰂂 Battery"},
+            {
+                "type": "custom",
+                "format": f" \u001b[{c_accent}m●\u001b[0m \u001b[{c_cyan}m●\u001b[0m \u001b[{c_violet}m●\u001b[0m \u001b[{c_yellow}m●\u001b[0m \u001b[{c_red}m●\u001b[0m",
+            },
+        ],
+    }
+    return json.dumps(data, indent=2) + "\n"
+
+
+def fastfetch_logo(tokens: dict[str, object], preset: str = "main") -> str:
+    colors = tokens["colors"]
+    version = str(tokens.get("version", "19.0.0"))
+    esc = "\u001b"
+    c_accent = f"{esc}[38;2;{rgb(colors['accent']).replace(',', ';')}m"
+    c_cyan = f"{esc}[38;2;{rgb(colors['detailCyan']).replace(',', ';')}m"
+    c_violet = f"{esc}[38;2;{rgb(colors['detailViolet']).replace(',', ';')}m"
+    c_primary = f"{esc}[38;2;{rgb(colors['textPrimary']).replace(',', ';')}m"
+    c_secondary = f"{esc}[38;2;{rgb(colors['textSecondary']).replace(',', ';')}m"
+    c_dim = f"{esc}[38;2;{rgb(colors['edgeHighlight']).replace(',', ';')}m"
+    rst = f"{esc}[0m"
+
+    if preset == "minimal":
+        return (
+            f" {c_accent}┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐{rst}\n"
+            f" {c_cyan}│ │ │ │ │ │ ├─┤ │ │{rst}\n"
+            f" {c_violet}└───└───└───┴─┴─└───{rst}\n"
+            f" {c_dim}── {c_accent}✦ {c_primary}NOXFORGE {c_accent}✦ {c_dim}──{rst}\n"
+        )
+    if preset == "cyber":
+        return (
+            f"            {c_cyan}▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{rst}         \n"
+            f"          {c_cyan}▄{c_accent}████████████████████{c_cyan}▄{rst}       \n"
+            f"         {c_cyan}███▀  {c_accent}▄█▄      ▄█▄  {c_cyan}▀███{rst}      \n"
+            f"        {c_cyan}███   {c_accent}█████    █████   {c_cyan}███{rst}     \n"
+            f"        {c_cyan}███   {c_cyan}▀███▀    ▀███▀   {c_cyan}███{rst}     \n"
+            f"         {c_cyan}███▄  {c_accent}▀█▀      ▀█▀  {c_cyan}▄███{rst}      \n"
+            f"          {c_cyan}▀{c_accent}████████████████████{c_cyan}▀{rst}       \n"
+            f"            {c_cyan}▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{rst}         \n"
+            f"   {c_cyan}███╗   ██╗ ██████╗ ██╗  ██╗{rst}\n"
+            f"   {c_cyan}████╗  ██║██╔═══██╗╚██╗██╔╝{rst}\n"
+            f"   {c_violet}██╔██╗ ██║██║   ██║ ╚███╔╝ {rst}\n"
+            f"   {c_violet}██║╚██╗██║██║   ██║ ██╔██╗ {rst}\n"
+            f"   {c_accent}██║ ╚████║╚██████╔╝██╔╝ ██╗{rst}\n"
+            f"   {c_dim}╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝{rst}\n"
+            f"   {c_dim}──────── {c_accent}✦ {c_primary}N O X F O R G E   {c_violet}C Y B E R {c_accent}✦ {c_dim}────────{rst}\n"
+            f"        {c_dim}┌────────────────────────┐{rst}\n"
+            f"        {c_dim}│  {c_cyan}✦ {c_primary}CYBER FORGE MATRIX {c_cyan}✦  {c_dim}│{rst}\n"
+            f"        {c_dim}│  {c_secondary}SYSTEM REV {c_dim}// {c_violet}{version:<7} {c_dim}│{rst}\n"
+            f"        {c_dim}└────────────────────────┘{rst}\n"
+        )
+    return (
+        f"                 {c_dim}.{c_accent}▄▄▄▄▄{c_dim}.{rst}                \n"
+        f"                {c_cyan}██{c_accent}▀▀▀▀▀{c_cyan}██{rst}               \n"
+        f"               {c_cyan}██   {c_primary}█   {c_cyan}██{rst}              \n"
+        f"               {c_cyan}██  {c_primary}███  {c_cyan}██{rst}              \n"
+        f"               {c_cyan}██   {c_primary}█   {c_cyan}██{rst}              \n"
+        f"                {c_cyan}██{c_cyan}▄▄▄▄▄{c_cyan}██{rst}               \n"
+        f"                 {c_dim}'{c_cyan}▀▀▀▀▀{c_dim}'{rst}                \n"
+        f"   {c_accent}███╗   ██╗{c_cyan} ██████╗ {c_violet}██╗  ██╗{rst}\n"
+        f"   {c_accent}████╗  ██║{c_cyan}██╔═══██╗{c_violet}╚██╗██╔╝{rst}\n"
+        f"   {c_accent}██╔██╗ ██║{c_cyan}██║   ██║{c_violet} ╚███╔╝ {rst}\n"
+        f"   {c_accent}██║╚██╗██║{c_cyan}██║   ██║{c_violet} ██╔██╗ {rst}\n"
+        f"   {c_accent}██║ ╚████║{c_cyan}╚██████╔╝{c_violet}██╔╝ ██╗{rst}\n"
+        f"   {c_dim}╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝{rst}\n"
+        f"     {c_dim}─── {c_accent}✦ {c_primary}NOXFORGE {c_cyan}KINETIC {c_violet}STUDIO {c_accent}✦ {c_dim}───{rst}\n"
+        f"        {c_dim}┌────────────────────────┐{rst}\n"
+        f"        {c_dim}│   {c_accent}✦ {c_primary}KINETIC MATRIX {c_accent}✦   {c_dim}│{rst}\n"
+        f"        {c_dim}│   {c_secondary}SYSTEM REV {c_dim}// {c_cyan}{version:<7}{c_dim}│{rst}\n"
+        f"        {c_dim}└────────────────────────┘{rst}\n"
+    )
+
+
+def union_metadata_json(tokens: dict[str, object], variant: str = "standard") -> str:
+    obsidian = variant == "obsidian"
+    version = str(tokens.get("version", "19.0.0"))
+    data = {
+        "input-type": "css",
+        "input-version": 1,
+        "name": "NoxForge Obsidian (Union)" if obsidian else "NoxForge (Union)",
+        "description": (
+            "True-black OLED KDE Plasma 6.8 Union style with Forge Notch geometry."
+            if obsidian
+            else "Precision graphite KDE Plasma 6.8 Union style with Forge Notch geometry."
+        ),
+        "version": version,
+        "license": "MIT",
+        "url": "https://github.com/loofiboss-bit/NoxForge",
+        "authors": [
+            "Loofi",
+        ],
+    }
+    return json.dumps(data, indent=4) + "\n"
+
+
+def union_variables_css(tokens: dict[str, object], variant: str = "standard") -> str:
+    obsidian = variant == "obsidian"
+    colors = (
+        tokens["colorsObsidian"]
+        if obsidian and "colorsObsidian" in tokens
+        else tokens["colors"]
+    )
+    geometry = tokens["geometry"]
+    version = str(tokens.get("version", "19.0.0"))
+    variant_label = "Obsidian OLED" if obsidian else "Graphite"
+    shadow_alpha = "0.45" if obsidian else "0.25"
+    return f"""/*
+ * SPDX-License-Identifier: MIT
+ * @noxforge-version: {version}
+ * Generated by scripts/generate_design_system.py for NoxForge {variant_label} KDE Union Style.
+ */
+
+:root {{
+    /* NoxForge Precision Geometry & Forge Notch Tokens */
+    --minimal-spacing: 2px;
+    --small-spacing: {geometry['forgeNotch']}px;
+    --medium-spacing: 6px;
+    --large-spacing: 8px;
+    --grid-unit: 18px;
+    --corner-radius: {geometry['cornerRadius']}px;
+    --forge-notch-size: {geometry['forgeNotch']}px;
+
+    /* Static Palette Fallback & Reference Tokens */
+    --noxforge-canvas-fallback: {colors['background']};
+    --noxforge-surface-fallback: {colors['surface']};
+    --noxforge-surface-raised-fallback: {colors['surfaceRaised']};
+    --noxforge-border-fallback: {colors['border']};
+    --noxforge-accent-fallback: {colors['accent']};
+
+    /* Standard Icon & Element Metrics */
+    --icon-size-small: 16px;
+    --icon-size-smallmedium: 22px;
+    --icon-size-medium: 32px;
+    --icon-size-large: 48px;
+
+    --small-element-size: 16px;
+    --medium-element-size: 24px;
+    --large-element-size: 32px;
+    --scrollbar-size: 20px;
+    --non-interactive-scrollbar-size: 10px;
+    --menu-item-width: 156px;
+    --text-field-width: 200px;
+
+    /* Dynamic KColorScheme Bindings (KDE Plasma 6.8 Union) */
+    --highlight-color: custom-color("kcolorscheme", "active", "selection", "background", "normal");
+    --highlight-text-color: custom-color("kcolorscheme", "active", "selection", "foreground", "text");
+    --highlight-hover-color: modify-color(var(--highlight-color) set-alpha 0.32);
+
+    --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
+    --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
+    --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
+    --window-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
+    --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
+    --window-border-highlight-color: var(--highlight-color);
+
+    --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
+    --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
+    --view-background-alternate-color: custom-color("kcolorscheme", "active", "view", "background", "alternate");
+    --view-border-color: custom-color("kcolorscheme", "active", "view", "decoration", "frame");
+    --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
+
+    --header-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
+    --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
+    --header-background-inactive-color: custom-color("kcolorscheme", "inactive", "header", "background", "normal");
+    --header-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
+
+    --complementary-text-color: custom-color("kcolorscheme", "active", "complementary", "foreground", "text");
+    --complementary-background-color: custom-color("kcolorscheme", "active", "complementary", "background", "normal");
+
+    --positive-text: custom-color("kcolorscheme", "active", "view", "foreground", "positive");
+    --neutral-text: custom-color("kcolorscheme", "active", "view", "foreground", "neutral");
+    --negative-text: custom-color("kcolorscheme", "active", "view", "foreground", "negative");
+    --positive-background: custom-color("kcolorscheme", "active", "view", "background", "positive");
+    --neutral-background: custom-color("kcolorscheme", "active", "view", "background", "neutral");
+    --negative-background: custom-color("kcolorscheme", "active", "view", "background", "negative");
+
+    --card-background-color: var(--view-background-color);
+    --card-text-color: var(--view-text-color);
+    --card-border-color: var(--view-border-color);
+    --card-hover-color: mix(var(--card-background-color), var(--highlight-color), 0.14);
+    --card-pressed-color: mix(var(--card-background-color), var(--highlight-color), 0.32);
+
+    --focus-outline-alpha: 0.45;
+    --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha var(--focus-outline-alpha));
+
+    --shadow-color: rgba(0, 0, 0, {shadow_alpha});
+
+    /* Disabled State Tokens */
+    --window-disabled-text-color: custom-color("kcolorscheme", "disabled", "window", "foreground", "text");
+    --window-disabled-background-color: custom-color("kcolorscheme", "disabled", "window", "background", "normal");
+    --window-disabled-border-color: custom-color("kcolorscheme", "disabled", "window", "decoration", "frame");
+
+    --view-disabled-text-color: custom-color("kcolorscheme", "disabled", "view", "foreground", "text");
+    --view-disabled-background-color: custom-color("kcolorscheme", "disabled", "view", "background", "normal");
+    --view-disabled-border-color: custom-color("kcolorscheme", "disabled", "view", "decoration", "frame");
+
+    --button-active-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
+    --button-active-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");
+    --button-active-border-color: custom-color("kcolorscheme", "active", "button", "decoration", "frame");
+    --button-active-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.35);
+    --button-active-border-highlight-color: var(--highlight-color);
+    --button-active-checked-color: mix(var(--button-active-background-color), var(--highlight-color), 0.22);
+    --button-active-focus-color: modify-color(custom-color("kcolorscheme", "active", "button", "decoration", "focus") set-alpha var(--focus-outline-alpha));
+
+    --button-disabled-text-color: custom-color("kcolorscheme", "disabled", "button", "foreground", "text");
+    --button-disabled-background-color: custom-color("kcolorscheme", "disabled", "button", "background", "normal");
+    --button-disabled-border-color: custom-color("kcolorscheme", "disabled", "button", "decoration", "frame");
+
+    --button-border: 1px solid var(--button-active-border-color);
+    --button-border-highlight: 1px solid var(--button-active-border-highlight-color);
+    --button-focus: 2px solid var(--button-active-focus-color);
+    --button-default-size: 32px;
+    --button-padding: 8px;
+    --button-spacing: 4px;
+
+    --focus-outline: 2px solid var(--focus-color);
+    --dialog-shadow: 0px 2px 32px 0px rgba(0, 0, 0, {shadow_alpha});
+}}
+"""
+
+
+def union_style_css(tokens: dict[str, object], variant: str = "standard") -> str:
+    obsidian = variant == "obsidian"
+    version = str(tokens.get("version", "19.0.0"))
+    variant_label = "Obsidian OLED" if obsidian else "Graphite"
+    return f"""/*
+ * SPDX-License-Identifier: MIT
+ * @noxforge-version: {version}
+ * Generated by scripts/generate_design_system.py for NoxForge {variant_label} KDE Union Style.
+ */
+
+@import "variables.css";
+
+* {{
+    icon-size: var(--icon-size-small);
+}}
+
+applicationwindow {{
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
+}}
+
+page {{
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
+}}
+
+toolbar {{
+    height: 46px;
+    padding: var(--medium-spacing);
+    spacing: var(--medium-spacing);
+    background-color: var(--header-background-color);
+    color: var(--header-text-color);
+    border-bottom: 1px solid var(--header-border-color);
+}}
+
+button,
+toolbutton,
+combobox,
+roundbutton,
+delaybutton {{
+    width: var(--button-default-size);
+    height: var(--button-default-size);
+    spacing: var(--button-spacing);
+    padding: var(--button-padding);
+    border-radius: var(--corner-radius);
+    background-color: var(--button-active-background-color);
+    color: var(--button-active-text-color);
+    border: var(--button-border);
+
+    &:hovered {{
+        background-color: var(--button-active-highlight-color);
+        border: var(--button-border-highlight);
+    }}
+
+    &:pressed,
+    &:checked {{
+        background-color: var(--button-active-checked-color);
+        border: var(--button-border-highlight);
+    }}
+
+    &:visual-focus {{
+        outline: var(--button-focus);
+    }}
+
+    &:disabled {{
+        background-color: var(--button-disabled-background-color);
+        color: var(--button-disabled-text-color);
+        border: 1px solid var(--button-disabled-border-color);
+    }}
+}}
+
+tabbutton {{
+    width: 100px;
+    height: 28px;
+    padding: var(--medium-spacing);
+    background-color: var(--view-background-color);
+    color: var(--view-text-color);
+    border-radius: var(--corner-radius);
+
+    &:checked {{
+        background-color: var(--window-background-color);
+        color: var(--window-text-color);
+        border-bottom: 3px solid var(--highlight-color);
+    }}
+
+    &:hovered {{
+        background-color: var(--card-hover-color);
+    }}
+}}
+
+textfield,
+textarea,
+spinbox,
+searchfield {{
+    width: var(--text-field-width);
+    height: var(--large-element-size);
+    padding: var(--medium-spacing);
+    border-radius: var(--corner-radius);
+    background-color: var(--view-background-color);
+    color: var(--view-text-color);
+    border: 1px solid var(--view-border-color);
+
+    &:hovered,
+    &:active-focus {{
+        border: 1px solid var(--highlight-color);
+    }}
+
+    &:visual-focus {{
+        outline: var(--focus-outline);
+    }}
+}}
+
+checkbox,
+radiobutton,
+switch {{
+    spacing: var(--medium-spacing);
+    color: var(--window-text-color);
+}}
+
+progressbar,
+slider {{
+    height: var(--medium-element-size);
+}}
+
+popup,
+menu,
+dialog {{
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+}}
+
+menuitem,
+itemdelegate,
+checkdelegate,
+radiodelegate,
+switchdelegate {{
+    padding: var(--medium-spacing);
+    border-radius: var(--corner-radius);
+    color: var(--view-text-color);
+
+    &:hovered,
+    &:highlighted {{
+        background-color: var(--highlight-hover-color);
+        border: 1px solid var(--highlight-color);
+    }}
+}}
+
+abstractcard {{
+    padding: var(--large-spacing);
+    border-radius: var(--corner-radius);
+    background-color: var(--card-background-color);
+    color: var(--card-text-color);
+    border: 1px solid var(--card-border-color);
+}}
+
+widget {{
+    background-color: var(--window-background-color);
+}}
+
+statusbar {{
+    background-color: var(--window-background-color);
+    border-top: 1px solid var(--window-border-color);
+}}
+"""
+
+
+def systemmonitor_page(tokens: dict[str, object]) -> str:
+    colors = tokens["colors"]
+    version = str(tokens.get("version", "19.0.0"))
+    c_accent = rgb(colors["accent"])
+    c_cyan = rgb(colors["detailCyan"])
+    c_violet = rgb(colors["detailViolet"])
+    c_amber = rgb(colors["neutral"])
+    return f"""# SPDX-License-Identifier: MIT
+# @noxforge-version: {version}
+# Generated by scripts/generate_design_system.py for KDE Plasma 6.8 System Monitor.
+
+[Face-noxforge-cpu][Appearance]
+chartFace=org.kde.ksysguard.linechart
+Title=CPU & Core Affinity Telemetry
+
+[Face-noxforge-cpu][Sensors]
+highPrioritySensorIds=["cpu/all/usage"]
+
+[Face-noxforge-cpu][SensorColors]
+cpu/all/usage={c_accent}
+
+[Face-noxforge-gpu-vram][Appearance]
+chartFace=org.kde.ksysguard.piechart
+Title=GPU & VRAM % (Plasma 6.8)
+
+[Face-noxforge-gpu-vram][Sensors]
+highPrioritySensorIds=["gpu/all/usage","gpu/all/usedVram"]
+
+[Face-noxforge-gpu-vram][SensorColors]
+gpu/all/usage={c_cyan}
+gpu/all/usedVram={c_violet}
+
+[Face-noxforge-memory][Appearance]
+chartFace=org.kde.ksysguard.horizontalbars
+Title=Memory & Swap Allocation
+
+[Face-noxforge-memory][Sensors]
+highPrioritySensorIds=["memory/physical/used","memory/swap/used"]
+
+[Face-noxforge-memory][SensorColors]
+memory/physical/used={c_accent}
+memory/swap/used={c_amber}
+
+[Face-noxforge-network][Appearance]
+chartFace=org.kde.ksysguard.linechart
+Title=Network Throughput
+
+[Face-noxforge-network][Sensors]
+highPrioritySensorIds=["network/all/download","network/all/upload"]
+
+[Face-noxforge-network][SensorColors]
+network/all/download={c_cyan}
+network/all/upload={c_violet}
+
+[Face-noxforge-processes][Appearance]
+chartFace=org.kde.ksysguard.processtable
+Title=Active Processes & CPU Affinity
+
+[page]
+actionsFace=
+icon=speedometer
+loadType=onemand
+margin=2
+version=1
+Title=NoxForge Kinetic Telemetry
+
+[page][row-0]
+Title=Hardware & VRAM Telemetry
+heightMode=balanced
+isTitle=false
+name=row-0
+
+[page][row-0][column-0]
+name=column-0
+noMargins=false
+showBackground=true
+
+[page][row-0][column-0][section-0]
+face=Face-noxforge-cpu
+isSeparator=false
+name=section-0
+
+[page][row-0][column-1]
+name=column-1
+noMargins=false
+showBackground=true
+
+[page][row-0][column-1][section-0]
+face=Face-noxforge-gpu-vram
+isSeparator=false
+name=section-0
+
+[page][row-0][column-2]
+name=column-2
+noMargins=false
+showBackground=true
+
+[page][row-0][column-2][section-0]
+face=Face-noxforge-memory
+isSeparator=false
+name=section-0
+
+[page][row-1]
+Title=Network & Processes
+heightMode=balanced
+isTitle=false
+name=row-1
+
+[page][row-1][column-0]
+name=column-0
+noMargins=false
+showBackground=true
+
+[page][row-1][column-0][section-0]
+face=Face-noxforge-network
+isSeparator=false
+name=section-0
+
+[page][row-1][column-0][section-1]
+face=Face-noxforge-processes
+isSeparator=false
+name=section-1
+"""
+
 
 
 def outputs(tokens: dict[str, object]) -> dict[Path, str]:
@@ -1974,6 +2711,18 @@ def outputs(tokens: dict[str, object]) -> dict[Path, str]:
         ROOT / "browsers/firefox/userChrome_obsidian.css": firefox_userchrome(tokens, "obsidian"),
         ROOT / "terminals/starship/starship.toml": starship_theme(tokens),
         ROOT / "tools/fastfetch/noxforge.jsonc": fastfetch_theme(tokens),
+        ROOT / "tools/fastfetch/noxforge-cyber.jsonc": fastfetch_cyber_theme(tokens),
+        ROOT / "tools/fastfetch/noxforge-minimal.jsonc": fastfetch_minimal_theme(tokens),
+        ROOT / "tools/fastfetch/logo.txt": fastfetch_logo(tokens, "main"),
+        ROOT / "tools/fastfetch/logo_cyber.txt": fastfetch_logo(tokens, "cyber"),
+        ROOT / "tools/fastfetch/logo_minimal.txt": fastfetch_logo(tokens, "minimal"),
+        ROOT / "union/styles/noxforge/metadata.json": union_metadata_json(tokens, "standard"),
+        ROOT / "union/styles/noxforge/contents/css/variables.css": union_variables_css(tokens, "standard"),
+        ROOT / "union/styles/noxforge/contents/css/style.css": union_style_css(tokens, "standard"),
+        ROOT / "union/styles/noxforge-obsidian/metadata.json": union_metadata_json(tokens, "obsidian"),
+        ROOT / "union/styles/noxforge-obsidian/contents/css/variables.css": union_variables_css(tokens, "obsidian"),
+        ROOT / "union/styles/noxforge-obsidian/contents/css/style.css": union_style_css(tokens, "obsidian"),
+        ROOT / "apps/systemmonitor/noxforge-telemetry.page": systemmonitor_page(tokens),
     }
     generated.update({path: qml_tokens(tokens, variant) for path, variant in QML_TARGETS})
     motion_policy = qml_motion_policy()

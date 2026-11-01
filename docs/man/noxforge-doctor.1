@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "October 2026" "NoxForge 18.0.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "October 2026" "NoxForge 19.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -18,11 +18,15 @@ In default inspection mode, it does not write files, clear caches, restart servi
 display managers, or request privileges. When \-\-apply\-sync is invoked, it writes user
 desktop configuration entries to align the active palette.
 .PP
-JSON schema 7 retains stable
+JSON schema 12 retains stable
 .B edition
 and
 .B loginSurface
-objects. The latter reports the manager, service state, integration type,
+objects alongside
+.B unionStyleStatus
+and
+.B waylandCompositor
+diagnostics for KDE Plasma 6.8. The latter reports the manager, service state, integration type,
 asset availability, selection, and status. An installed SDDM theme is not
 reported as active when Plasma Login Manager is active. Unselected optional
 login assets do not make the installation incomplete. Schema 7 also discovers

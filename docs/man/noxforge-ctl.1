@@ -1,4 +1,4 @@
-.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 18.0.0" "User Commands"
+.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 19.0.0" "User Commands"
 .SH NAME
 noxforge-ctl \- NoxForge Unified Control Hub and Orchestration Suite
 .SH SYNOPSIS
@@ -52,6 +52,19 @@ Flatpak, and ecosystem state.
 .TP
 .BR import " " \fIFILE\fR
 Import and apply a portable JSON preset snapshot created by \fBnoxforge-ctl export\fR.
+.TP
+.BR union " [" \-\-enable " | " \-\-disable " | " \-\-status " | " \-\-profile " " graphite | obsidian "]"
+Manage KDE Plasma 6.8 Union Style Engine (\fBplasma-union\fR) integration. \fB--enable\fR sets
+\fBwidgetStyle=Union\fR and \fBunionStyle=noxforge\fR (or \fBnoxforge-obsidian\fR); \fB--disable\fR
+returns to Hybrid mode (\fBwidgetStyle=NoxForge\fR + \fBunionStyle=noxforge\fR).
+.TP
+.BR kwin\-csd " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
+Manage KWin 6.8 client-side window titlebar color scheme rules in \fB~/.config/kwinrulesrc\fR
+with automatic \fB.noxforge.bak\fR backup and restoration.
+.TP
+.BR fastfetch " [" \-\-preset " " main | cyber | minimal " | " \-\-status "]"
+Switch between the 3 official Fastfetch Kinetic Studio v2 presets (\fBmain\fR, \fBcyber\fR, \fBminimal\fR)
+with dynamic RGB accent re-coloring and \fB.noxforge.bak\fR backup.
 .TP
 .BR flatpak " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
 Manage user Flatpak overrides (\fBxdg-data/themes:ro\fR, \fBxdg-config/gtk-3.0:ro\fR, \fBxdg-config/gtk-4.0:ro\fR)

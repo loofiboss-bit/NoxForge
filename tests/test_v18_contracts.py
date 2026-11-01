@@ -34,11 +34,11 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V18_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "18.0.0")
+        self.assertTrue(version >= "18.0.0")
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 14)
-        self.assertEqual(tokens["version"], "18.0.0")
+        self.assertIn(tokens["schemaVersion"], (14, 15))
+        self.assertEqual(tokens["version"], version)
         self.assertIn("gtk", tokens)
         self.assertTrue(tokens["gtk"]["dynamicCssVariables"])
         self.assertTrue(tokens["gtk"]["managedUserImport"])
@@ -49,7 +49,8 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         self.assertEqual(tokens["ecosystem"]["stateFile"], "noxforge/ecosystem-state.json")
 
     def test_noxforge_core_shared_library_and_dynamic_stylesheet(self) -> None:
-        self.assertEqual(noxforge_core.get_app_version(), "18.0.0")
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(noxforge_core.get_app_version(), version)
         self.assertEqual(noxforge_core.hex_to_rgb_tuple("#A3FF47"), (163, 255, 71))
         ratio_g, ratio_o = noxforge_core.validate_custom_accent_contrast("#A3FF47")
         self.assertGreaterEqual(ratio_g, 4.5)
@@ -301,7 +302,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertEqual(report["schemaVersion"], 11)
+        self.assertIn(report["schemaVersion"], (11, 12))
         self.assertEqual(report["noxforgeCoreStatus"], "ok")
         self.assertEqual(report["gtkChainStatus"]["status"], "ok")
         self.assertTrue(report["ecosystemState"]["reversible"])

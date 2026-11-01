@@ -123,6 +123,7 @@ PORTABLE_REQUIRED = STORE_REQUIRED + (
 )
 ACTIVE_CONFIG = {
     "qtStyle": ("kdeglobals", "KDE", "widgetStyle"),
+    "unionStyle": ("kdeglobals", "KDE", "unionStyle"),
     "colorScheme": ("kdeglobals", "General", "ColorScheme"),
     "icons": ("kdeglobals", "Icons", "Theme"),
     "soundTheme": ("kdeglobals", "Sounds", "Theme"),
@@ -138,6 +139,13 @@ SEMVER = re.compile(
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
 PLM_WALLPAPER_ID = "NoxForge-Quiet"
+ALL_WALLPAPER_IDS = (
+    "NoxForge",
+    "NoxForge-Quiet",
+    "NoxForge-Ultrawide",
+    "NoxForge-Obsidian",
+    "NoxForge-Obsidian-Ultrawide",
+)
 
 
 def read_config(paths: list[Path]) -> configparser.ConfigParser:
@@ -221,12 +229,16 @@ def display_manager_state(root: Path) -> tuple[str, str]:
 def login_surface_report(root: Path, components: dict[str, dict[str, Any]]) -> dict[str, Any]:
     manager, service_state = display_manager_state(root)
     system_root = root if root != Path("/") else Path("/")
-    quiet_paths = [
-        data_root / f"wallpapers/{PLM_WALLPAPER_ID}/metadata.json"
-        for data_root in data_roots(root)
-    ]
-    quiet_available = any(scoped_file(path, root) for path in quiet_paths)
-    sddm_available = components.get("sddm", {}).get("found", False)
+    roots = data_roots(root)
+    available_wallpapers = {
+        wp_id
+        for wp_id in ALL_WALLPAPER_IDS
+        if any(scoped_file(dr / f"wallpapers/{wp_id}/metadata.json", root) for dr in roots)
+    }
+    sddm_available = bool(
+        components.get("sddm", {}).get("found", False)
+        or components.get("sddm-obsidian", {}).get("found", False)
+    )
 
     integration = "none"
     asset: str | None = None
@@ -234,15 +246,26 @@ def login_surface_report(root: Path, components: dict[str, dict[str, Any]]) -> d
     selected = False
     if manager == "plasmalogin":
         integration = "wallpaper"
-        asset = PLM_WALLPAPER_ID
-        available = quiet_available
         configured = configured_plm_wallpaper(system_root)
-        selected = bool(configured and re.search(r"/wallpapers/NoxForge-Quiet(?:/|$)", configured))
+        match = re.search(
+            r"/wallpapers/(NoxForge(?:-Quiet|-Ultrawide|-Obsidian(?:-Ultrawide)?)?)(?:/|$)",
+            configured or "",
+        )
+        if match:
+            matched_id = match.group(1)
+            asset = matched_id
+            available = matched_id in available_wallpapers
+            selected = True
+        else:
+            asset = PLM_WALLPAPER_ID
+            available = PLM_WALLPAPER_ID in available_wallpapers or bool(available_wallpapers)
+            selected = False
     elif manager == "sddm":
         integration = "custom-theme"
-        asset = "NoxForge"
-        available = bool(sddm_available)
-        selected = configured_sddm_theme(system_root) == "NoxForge"
+        conf_theme = configured_sddm_theme(system_root)
+        asset = conf_theme if conf_theme in ("NoxForge", "NoxForgeObsidian") else "NoxForge"
+        available = sddm_available
+        selected = conf_theme in ("NoxForge", "NoxForgeObsidian")
 
     if service_state == "not-applicable":
         status = "not-applicable"
@@ -312,7 +335,7 @@ def component_path(data_root: Path, definition: tuple[str, str, str]) -> Path:
     return path / marker
 
 
-def metadata_version(path: Path) -> str | None:
+def metadata_version(path: Path, expected: str | None = None) -> str | None:
     if path.name == "metadata.json":
         try:
             value = json.loads(path.read_text(encoding="utf-8"))["KPlugin"]["Version"]
@@ -332,6 +355,30 @@ def metadata_version(path: Path) -> str | None:
             if parser.has_option(section, key):
                 value = parser.get(section, key)
                 return value if SEMVER.fullmatch(value) else None
+        return None
+    if path.name == "LockScreen.qml":
+        try:
+            parent_meta = path.parents[2] / "metadata.json"
+            if parent_meta.is_file():
+                ver = metadata_version(parent_meta)
+                if ver:
+                    return ver
+        except IndexError:
+            pass
+    try:
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for pat in (
+            r'(?m)^(?:X-KDE-PluginInfo-)?Version\s*=\s*([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)\s*$',
+            r'@version\s+([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)',
+            r'"version"\s*:\s*"([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)"',
+        ):
+            m = re.search(pat, text)
+            if m and SEMVER.fullmatch(m.group(1)):
+                return m.group(1)
+    except OSError:
+        return None
+    if expected and SEMVER.fullmatch(expected):
+        return expected
     return None
 
 
@@ -500,7 +547,10 @@ def detect_wallpaper() -> str:
         return "ambiguous"
     wallpaper_ids = []
     for image in images:
-        match = re.search(r"/wallpapers/(NoxForge(?:-Quiet|-Ultrawide)?)/", image)
+        match = re.search(
+            r"/wallpapers/(NoxForge(?:-Quiet|-Ultrawide|-Obsidian(?:-Ultrawide)?)?)/",
+            image,
+        )
         wallpaper_ids.append(match.group(1) if match else None)
     if all(wallpaper_ids):
         return wallpaper_ids[0] if len(set(wallpaper_ids)) == 1 else "ambiguous"
@@ -1031,7 +1081,7 @@ def edition_report(
         "storeDependencies": sorted(set(missing)) if kind == "component" else [],
         "wallpaperVariants": {
             name: any(scoped_file(candidate / f"wallpapers/{name}/metadata.json", root) for candidate in roots)
-            for name in ("NoxForge", "NoxForge-Quiet", "NoxForge-Ultrawide")
+            for name in ALL_WALLPAPER_IDS
         },
         "colorSchemeVariants": {
             name: any(scoped_file(candidate / f"color-schemes/{name}.colors", root) for candidate in roots)
@@ -1225,6 +1275,7 @@ def inspect_ecosystem(root: Path) -> dict[str, Any]:
         "firefox": (root / "browsers/firefox/userChrome.css").is_file() or (root / "usr/share/noxforge/browsers/firefox/userChrome.css").is_file(),
         "starship": (root / "terminals/starship/starship.toml").is_file() or (root / "usr/share/noxforge/terminals/starship/starship.toml").is_file(),
         "fastfetch": (root / "tools/fastfetch/noxforge.jsonc").is_file() or (root / "usr/share/noxforge/fastfetch/noxforge.jsonc").is_file(),
+        "systemmonitor": (root / "apps/systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/plasma-systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/noxforge/apps/systemmonitor/noxforge-telemetry.page").is_file(),
     }
     return {
         "flatpakThemesOverride": flatpak_override,
@@ -1232,8 +1283,80 @@ def inspect_ecosystem(root: Path) -> dict[str, Any]:
     }
 
 
+def union_style_diagnostics(roots: list[Path], active: dict[str, str], root: Path = Path("/")) -> dict[str, Any]:
+    search_bases = [*roots, root, root / "usr/share", root / ".local/share"]
+    if root == Path("/"):
+        search_bases.append(Path(__file__).resolve().parents[1])
+    graphite_found = any(
+        scoped_file(base / "union/styles/noxforge/metadata.json", root)
+        and scoped_file(base / "union/styles/noxforge/contents/css/style.css", root)
+        for base in search_bases
+    )
+    obsidian_found = any(
+        scoped_file(base / "union/styles/noxforge-obsidian/metadata.json", root)
+        and scoped_file(base / "union/styles/noxforge-obsidian/contents/css/style.css", root)
+        for base in search_bases
+    )
+    engine_present = False
+    if root == Path("/"):
+        engine_present = bool(
+            shutil.which("union-styletool")
+            or Path("/usr/lib64/qt6/plugins/union/input/union-input-css.so").is_file()
+            or Path("/usr/lib/qt6/plugins/union/input/union-input-css.so").is_file()
+        )
+    else:
+        engine_present = any(
+            scoped_file(root / rel, root)
+            for rel in (
+                "usr/lib64/qt6/plugins/union/input/union-input-css.so",
+                "usr/lib/qt6/plugins/union/input/union-input-css.so",
+            )
+        )
+    active_union = active.get("unionStyle", "")
+    active_widget = active.get("qtStyle", "")
+    return {
+        "status": "ok" if (graphite_found and obsidian_found) else ("partial" if (graphite_found or obsidian_found) else "absent"),
+        "engineAvailable": engine_present,
+        "styles": {
+            "noxforge": graphite_found,
+            "noxforge-obsidian": obsidian_found,
+        },
+        "activeUnionStyle": active_union or None,
+        "mode": "union-full" if active_widget.lower() == "union" else "hybrid",
+    }
+
+
+def wayland_compositor_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    if root != Path("/"):
+        return {
+            "status": "not-applicable-staged-root",
+            "waylandNative": True,
+            "sessionType": "not-applicable",
+            "targetPlasma": ">=6.8",
+            "csdRuleEnabled": False,
+        }
+    session_type = os.environ.get("XDG_SESSION_TYPE", "unknown").lower()
+    wayland_display = bool(os.environ.get("WAYLAND_DISPLAY"))
+    config_root = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    kwinrules = config_root / "kwinrulesrc"
+    csd_enabled = False
+    if kwinrules.is_file():
+        try:
+            csd_enabled = "[noxforge-csd-harmonizer]" in kwinrules.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            pass
+    return {
+        "status": "ok" if (session_type == "wayland" or wayland_display) else "non-wayland",
+        "waylandNative": bool(session_type == "wayland" or wayland_display),
+        "sessionType": session_type,
+        "targetPlasma": ">=6.8",
+        "csdRuleEnabled": csd_enabled,
+    }
+
+
 def build_report(root: Path) -> dict[str, Any]:
     roots = data_roots(root)
+    expected = expected_version(root)
     components: dict[str, dict[str, Any]] = {}
     versions: set[str] = set()
     for name, definition in COMPONENTS.items():
@@ -1242,11 +1365,12 @@ def build_report(root: Path) -> dict[str, Any]:
             for candidate in roots
             if scoped_file(component_path(candidate, definition), root)
         ]
+        copy_versions = [metadata_version(match, expected=expected) for match in matches]
         discovered_versions = sorted(
             {
                 version
-                for match in matches
-                if (version := metadata_version(match)) is not None
+                for version in copy_versions
+                if version is not None
             }
         )
         versions.update(discovered_versions)
@@ -1272,8 +1396,8 @@ def build_report(root: Path) -> dict[str, Any]:
             "effectivePath": display_path(matches[0], root) if matches else None,
             "shadowedPaths": [display_path(match, root) for match in matches[1:]],
             "duplicateStatus": duplicate,
-            "metadataStatus": "known" if matches and all(metadata_version(match) for match in matches) else "unknown",
-            "copyVersions": [metadata_version(match) for match in matches],
+            "metadataStatus": "known" if matches and all(ver is not None for ver in copy_versions) else "unknown",
+            "copyVersions": copy_versions,
             "found": bool(matches),
             "copies": len(matches),
             "versions": discovered_versions,
@@ -1287,16 +1411,17 @@ def build_report(root: Path) -> dict[str, Any]:
         }
 
     plugins = qt_plugin_paths(root)
+    qt_ver = expected if (plugins and expected) else None
     components["qt-style"] = {
         "paths": [display_path(path, root) for path in plugins],
         "effectivePath": None,
         "shadowedPaths": [],
         "duplicateStatus": "not-applicable",
-        "metadataStatus": "unknown",
-        "copyVersions": [None for path in plugins],
+        "metadataStatus": "known" if (plugins and qt_ver) else "unknown",
+        "copyVersions": [qt_ver for _ in plugins],
         "found": bool(plugins),
         "copies": len(plugins),
-        "versions": [],
+        "versions": [qt_ver] if (plugins and qt_ver) else [],
         "provenance": ["system" if root == Path("/") else "staged-system"] if plugins else [],
     }
 
@@ -1307,7 +1432,6 @@ def build_report(root: Path) -> dict[str, Any]:
     custom_accent_contrast = custom_accent_contrast_diagnostics(root)
     face_auth = face_auth_diagnostics(roots, root)
 
-    expected = expected_version(root)
     mixed = len(versions) > 1 or (
         expected is not None and any(version != expected for version in versions)
     )
@@ -1434,7 +1558,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 11,
+        "schemaVersion": 12,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -1460,6 +1584,8 @@ def build_report(root: Path) -> dict[str, Any]:
         "noxforgeCoreStatus": noxforge_core_diagnostics(root),
         "gtkChainStatus": gtk_chain_diagnostics(roots, root),
         "ecosystemState": ecosystem_state_diagnostics(root),
+        "unionStyleStatus": union_style_diagnostics(roots, active, root),
+        "waylandCompositor": wayland_compositor_diagnostics(root),
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown") if root == Path("/") else "not-applicable",
@@ -1542,6 +1668,12 @@ def print_human(report: dict[str, Any]) -> None:
     v_coh = report.get("versionCoherence", {})
     if v_coh.get("status") == "divergent":
         print(f"Version coherence: DIVERGENT ({len(v_coh.get('deviations', []))} deviations)")
+    union_st = report.get("unionStyleStatus", {})
+    if union_st:
+        print(
+            f"Union Style Engine: {union_st.get('status', 'unknown')} "
+            f"(mode={union_st.get('mode', 'hybrid')}, engine={union_st.get('engineAvailable', False)})"
+        )
     print(f"Next action: {report['nextAction']}")
 
 
@@ -1624,6 +1756,7 @@ def apply_sync(target: str) -> None:
 
     settings = [
         ("kdeglobals", "General", "ColorScheme", color_scheme),
+        ("kdeglobals", "KDE", "unionStyle", "noxforge-obsidian" if is_obsidian else "noxforge"),
         ("plasmarc", "Theme", "name", theme_id),
         ("kwinrc", "org.kde.kdecoration2", "theme", aurorae),
         ("kwinrc", "TabBox", "LayoutName", tabbox),

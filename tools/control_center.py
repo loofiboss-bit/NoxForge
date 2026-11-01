@@ -48,7 +48,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "18.0.0"
+    return "19.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -190,6 +190,32 @@ class ProfileAccentTab(QtWidgets.QWidget):
         wp_layout.addWidget(self.wallpaper_combo, stretch=1)
         wp_layout.addWidget(self.btn_apply_wallpaper)
         layout.addWidget(wp_group)
+
+        # Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer Section
+        self.union_group = QtWidgets.QGroupBox("Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer")
+        u_layout = QtWidgets.QVBoxLayout(self.union_group)
+        u_top = QtWidgets.QHBoxLayout()
+        self.union_status_lbl = QtWidgets.QLabel("Union Mode: HYBRID (NoxForge C++ + Union CSS)")
+        self.union_status_lbl.setStyleSheet("color: #22D3EE; font-weight: 600;")
+        self.btn_union_enable = QtWidgets.QPushButton("Enable Full Union Mode")
+        self.btn_union_enable.setAccessibleName("Enable Full Union Mode")
+        self.btn_union_enable.clicked.connect(lambda: self.toggle_union("enable"))
+        self.btn_union_disable = QtWidgets.QPushButton("Hybrid C++ Mode (Default)")
+        self.btn_union_disable.setAccessibleName("Hybrid C++ Mode")
+        self.btn_union_disable.clicked.connect(lambda: self.toggle_union("disable"))
+        u_top.addWidget(self.union_status_lbl, stretch=1)
+        u_top.addWidget(self.btn_union_enable)
+        u_top.addWidget(self.btn_union_disable)
+        u_layout.addLayout(u_top)
+
+        u_bot = QtWidgets.QHBoxLayout()
+        self.chk_kwin_csd = QtWidgets.QCheckBox("Harmonize KWin 6.8 Client-Side Decorations (CSD Window Rule)")
+        self.chk_kwin_csd.setAccessibleName("Harmonize KWin 6.8 CSD")
+        self.chk_kwin_csd.toggled.connect(self.toggle_kwin_csd)
+        u_bot.addWidget(self.chk_kwin_csd)
+        u_bot.addStretch()
+        u_layout.addLayout(u_bot)
+        layout.addWidget(self.union_group)
 
         # Live Icon & Kinetic Motion Preview Section
         preview_group = QtWidgets.QGroupBox(f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
@@ -353,6 +379,23 @@ class ProfileAccentTab(QtWidgets.QWidget):
                 self.wallpaper_combo.setCurrentIndex(idx)
                 self.wallpaper_combo.blockSignals(False)
 
+        if hasattr(noxforge_ctl, "manage_union") and hasattr(self, "union_status_lbl"):
+            u_info = noxforge_ctl.manage_union("status", profile=profile)
+            is_full = bool(u_info.get("enabled", False))
+            u_style = u_info.get("unionStyle", "noxforge")
+            self.union_status_lbl.setText(
+                f"Union 6.8: {'● FULL UNION MODE' if is_full else '● HYBRID (C++ + Union CSS)'} ({u_style})"
+            )
+            self.union_status_lbl.setStyleSheet(
+                f"color: {'#A3FF47' if is_full else '#22D3EE'}; font-weight: 600;"
+            )
+
+        if hasattr(noxforge_ctl, "manage_kwin_csd") and hasattr(self, "chk_kwin_csd"):
+            csd_info = noxforge_ctl.manage_kwin_csd("status", profile=profile)
+            self.chk_kwin_csd.blockSignals(True)
+            self.chk_kwin_csd.setChecked(bool(csd_info.get("enabled", False)))
+            self.chk_kwin_csd.blockSignals(False)
+
         if hasattr(self, "preview_badges"):
             for img_lbl, _, svg_path in self.preview_badges:
                 if svg_path.is_file():
@@ -383,6 +426,23 @@ class ProfileAccentTab(QtWidgets.QWidget):
         if hasattr(noxforge_ctl, "manage_wallpaper"):
             res = noxforge_ctl.manage_wallpaper(str(variant))
             self.statusChanged.emit(f"Wallpaper applied: {res.get('label')} ({res.get('wallpaperId')})")
+
+    def toggle_union(self, action: str) -> None:
+        if hasattr(noxforge_ctl, "manage_union"):
+            res = noxforge_ctl.manage_union(action)
+            self.refresh_state()
+            mode_str = res.get("mode", "hybrid").upper()
+            self.statusChanged.emit(
+                f"Plasma 6.8 Union Engine: {mode_str} (widgetStyle={res.get('widgetStyle')}, unionStyle={res.get('unionStyle')})"
+            )
+
+    def toggle_kwin_csd(self, checked: bool) -> None:
+        if hasattr(noxforge_ctl, "manage_kwin_csd"):
+            action = "enable" if checked else "disable"
+            res = noxforge_ctl.manage_kwin_csd(action)
+            self.statusChanged.emit(
+                f"KWin 6.8 CSD Harmonizer: {action.upper()} (decocolor={res.get('decoColor')})"
+            )
 
     def apply_profile(self, profile: str) -> None:
         if hasattr(noxforge_ctl, "apply_setup"):
@@ -451,7 +511,17 @@ class HealthTab(QtWidgets.QWidget):
         self.badge_gtk = QtWidgets.QLabel("GTK/Libadwaita: Checking")
         self.badge_flatpak = QtWidgets.QLabel("Flatpak: Checking")
         self.badge_eco = QtWidgets.QLabel("Ecosystem: Checking")
-        for b in (self.badge_core, self.badge_palette, self.badge_gtk, self.badge_flatpak, self.badge_eco):
+        self.badge_union = QtWidgets.QLabel("Union 6.8: Checking")
+        self.badge_wayland = QtWidgets.QLabel("Wayland 6.8: Checking")
+        for b in (
+            self.badge_core,
+            self.badge_palette,
+            self.badge_gtk,
+            self.badge_flatpak,
+            self.badge_eco,
+            self.badge_union,
+            self.badge_wayland,
+        ):
             b.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             b.setStyleSheet(
                 "background-color: #141E25; border: 1px solid #2F414B; border-radius: 5px; "
@@ -517,14 +587,23 @@ class HealthTab(QtWidgets.QWidget):
             self._style_health_badge(self.badge_gtk, f"● GTK/Adw: {gtk_chain.upper()}", gtk_chain == "ok")
             self._style_health_badge(self.badge_flatpak, f"● Flatpak: {flatpak.upper()}", flatpak in ("ok", "configured"))
             self._style_health_badge(self.badge_eco, "● Ecosystem: REVERSIBLE", bool(eco_state.get("reversible", True)))
+            union_info = data.get("unionStyleStatus", {})
+            union_ok = union_info.get("status") == "ok"
+            union_mode = union_info.get("mode", "hybrid").upper()
+            self._style_health_badge(self.badge_union, f"● Union 6.8: {union_mode}", union_ok)
+            wayland_info = data.get("waylandCompositor", {})
+            wayland_ok = bool(wayland_info.get("waylandNative", True))
+            self._style_health_badge(self.badge_wayland, f"● Wayland 6.8: {'OK' if wayland_ok else 'CHECK'}", wayland_ok)
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
-            text += f"Schema Version: {data.get('schemaVersion', 11)}\n"
+            text += f"Schema Version: {data.get('schemaVersion', 12)}\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
             text += f"Core Library (noxforge_core.py): {core_status.upper()}\n"
             text += f"Palette Synchronization: {palette_sync.upper()}\n"
+            text += f"Union Style Engine (Plasma 6.8): {union_info.get('status', 'ok').upper()} ({union_mode})\n"
+            text += f"Wayland Compositor Target: {wayland_info.get('targetPlasma', '>=6.8')} ({wayland_info.get('sessionType', 'wayland')})\n"
             text += f"GTK 3/4 & Libadwaita Chain: {gtk_chain.upper()}\n"
             text += f"Flatpak Themes Override: {flatpak}\n"
             text += f"Missing Components: {len(missing)}\n"
@@ -789,6 +868,24 @@ class EcosystemTab(QtWidgets.QWidget):
         fp_layout.addWidget(self.btn_flatpak_disable)
         layout.addWidget(self.flatpak_group)
 
+        # Fastfetch Kinetic Studio v2 Preset Selector Card
+        self.fastfetch_group = QtWidgets.QGroupBox("Fastfetch Kinetic Studio v2 Preset Suite")
+        ff_layout = QtWidgets.QHBoxLayout(self.fastfetch_group)
+        self.fastfetch_status_lbl = QtWidgets.QLabel("Active Preset: MAIN")
+        self.fastfetch_status_lbl.setStyleSheet("color: #22D3EE; font-weight: 600;")
+        self.fastfetch_combo = QtWidgets.QComboBox()
+        self.fastfetch_combo.setAccessibleName("Fastfetch Preset Selector")
+        self.fastfetch_combo.addItem("Kinetic Studio Main (Forge Block + 22 Modules)", "main")
+        self.fastfetch_combo.addItem("Kinetic Studio Cyber (Slant Banner + Compact Tree)", "cyber")
+        self.fastfetch_combo.addItem("Kinetic Studio Minimal (Diamond Glyph + 8 Essentials)", "minimal")
+        self.btn_fastfetch_apply = QtWidgets.QPushButton("Deploy Fastfetch Preset")
+        self.btn_fastfetch_apply.setAccessibleName("Deploy Fastfetch Preset")
+        self.btn_fastfetch_apply.clicked.connect(self.apply_fastfetch_preset)
+        ff_layout.addWidget(self.fastfetch_status_lbl)
+        ff_layout.addWidget(self.fastfetch_combo, stretch=1)
+        ff_layout.addWidget(self.btn_fastfetch_apply)
+        layout.addWidget(self.fastfetch_group)
+
         # Table for ecosystem apps
         self.table = QtWidgets.QTableWidget()
         self.table.setColumnCount(5)
@@ -831,6 +928,15 @@ class EcosystemTab(QtWidgets.QWidget):
         self.refresh_table()
         self.statusChanged.emit(f"Flatpak override {action}: {res.get('status')}")
 
+    def apply_fastfetch_preset(self) -> None:
+        preset = str(self.fastfetch_combo.currentData() or "main")
+        if hasattr(noxforge_ctl, "manage_fastfetch"):
+            res = noxforge_ctl.manage_fastfetch(action="apply", preset=preset)
+            self.refresh_table()
+            self.statusChanged.emit(
+                f"Fastfetch Kinetic Studio preset deployed: {res.get('preset', preset).upper()}"
+            )
+
     def refresh_table(self) -> None:
         fp_info = noxforge_ctl.manage_flatpak("status") if hasattr(noxforge_ctl, "manage_flatpak") else {"status": "unknown", "enabled": False}
         fp_enabled = bool(fp_info.get("enabled"))
@@ -838,6 +944,19 @@ class EcosystemTab(QtWidgets.QWidget):
             f"Flatpak GTK/Libadwaita Override: {'● ENABLED (xdg-data/themes + gtk-3.0/4.0)' if fp_enabled else '○ NOT CONFIGURED'}"
         )
         self.flatpak_status_lbl.setStyleSheet(f"color: {'#A3FF47' if fp_enabled else '#A6B4B9'}; font-weight: 600;")
+
+        if hasattr(noxforge_ctl, "manage_fastfetch") and hasattr(self, "fastfetch_combo"):
+            ff_info = noxforge_ctl.manage_fastfetch("status")
+            active_ff = ff_info.get("preset", "main")
+            ff_inst = bool(ff_info.get("installed", False))
+            self.fastfetch_status_lbl.setText(
+                f"Active Preset: {active_ff.upper()} ({'Deployed' if ff_inst else 'Ready'})"
+            )
+            idx = self.fastfetch_combo.findData(active_ff)
+            if idx >= 0:
+                self.fastfetch_combo.blockSignals(True)
+                self.fastfetch_combo.setCurrentIndex(idx)
+                self.fastfetch_combo.blockSignals(False)
 
         status = noxforge_ctl.ecosystem_status()
         self.table.setRowCount(len(status))

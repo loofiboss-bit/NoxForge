@@ -144,6 +144,17 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(hasattr(win.tab_health, "badge_flatpak"))
         self.assertTrue(hasattr(win.tab_health, "badge_gtk"))
         self.assertTrue(hasattr(win.tab_health, "badge_eco"))
+        self.assertTrue(hasattr(win.tab_health, "badge_union"))
+        self.assertTrue(hasattr(win.tab_health, "badge_wayland"))
+
+        # v19 Control Center v4 Plasma 6.8 Union, KWin CSD, and Fastfetch Kinetic Studio controls
+        self.assertTrue(hasattr(win.tab_profile, "union_group"))
+        self.assertTrue(hasattr(win.tab_profile, "btn_union_enable"))
+        self.assertTrue(hasattr(win.tab_profile, "btn_union_disable"))
+        self.assertTrue(hasattr(win.tab_profile, "chk_kwin_csd"))
+        self.assertTrue(hasattr(win.tab_eco, "fastfetch_combo"))
+        self.assertEqual(win.tab_eco.fastfetch_combo.count(), 3)
+        self.assertTrue(hasattr(win.tab_eco, "btn_fastfetch_apply"))
 
         # Dynamic accent & profile propagation into OpacityConfiguratorWindow & PreviewCanvasWidget
         win.refresh_theme(profile="obsidian", accent_hex="#22D3EE")
