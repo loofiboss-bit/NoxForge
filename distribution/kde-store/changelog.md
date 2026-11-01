@@ -1,3 +1,13 @@
+# NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine, KWin CSD & Wayland Precision
+
+- introduced KDE Plasma 6.8 Union Style Engine (`plasma-union`) with deterministic generation of `union/styles/noxforge` (Graphite) and `union/styles/noxforge-obsidian` (Obsidian) via `design/tokens.json` (Schema 15) and dynamic `custom-color("kcolorscheme", ...)` CSS variable bindings;
+- added hybrid Union orchestration in `noxforge-ctl union [--enable|--disable|--status|--profile]` and automated `unionStyle` synchronization in `kdeglobals`;
+- added reversible KWin 6.8 client-side decoration window rules (`noxforge-ctl kwin-csd [--enable|--disable|--status]`) and Plasma 6.8 System Monitor telemetry preset (`apps/systemmonitor/noxforge-telemetry.page`);
+- upgraded Control Center v4 (`tools/control_center.py`) with wallpaper live thumbnail preview, real-time WCAG AAA/AA palette and contrast swatch bar, and scrollable responsive layout;
+- expanded supported ecosystem apps with native themes for Obsidian.md (`apps/obsidian/`) and Rofi/Wofi (`apps/rofi/`) plus shell tab completion (`noxforge-ctl completion`);
+- upgraded `tools/noxforge-doctor` to Schema 12 (`unionStyleStatus`, `waylandCompositor`) and eliminated all `metadata-unknown` warnings on real installations;
+- expanded verified Linux distribution compatibility to include Fedora 44 and Fedora 45 alongside Arch Linux.
+
 # NoxForge 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
 
 - upgraded GTK 3.0 and 4.0 themes with dynamic `@accent_color` CSS variable bindings and managed `~/.config/gtk-{3,4}.0/gtk.css` `@import` chaining for full Libadwaita surface and accent parity;

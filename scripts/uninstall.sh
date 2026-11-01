@@ -60,6 +60,8 @@ else
         "${data_home}/noxforge/browsers"
         "${data_home}/noxforge/apps"
         "${data_home}/noxforge/fastfetch"
+        "${data_home}/union/styles/noxforge"
+        "${data_home}/union/styles/noxforge-obsidian"
         "${data_home}/noxforge/bin/noxforge-doctor"
         "${data_home}/noxforge/bin/noxforge-ctl"
         "${data_home}/noxforge/bin/control_center.py"
@@ -101,6 +103,8 @@ else
     # non-empty directories remain untouched.
     cleanup_roots=(
         "${data_home}/noxforge"
+        "${data_home}/union/styles/noxforge"
+        "${data_home}/union/styles/noxforge-obsidian"
         "${data_home}/color-schemes"
         "${data_home}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
         "${data_home}/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop"

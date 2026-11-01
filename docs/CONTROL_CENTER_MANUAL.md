@@ -22,10 +22,33 @@ Key capabilities:
 ### Synopsis
 
 ```bash
-noxforge-ctl {switch,sync,accent,status,opacity,doctor,schedule,gui} [options]
+noxforge-ctl {switch,apply,sync,accent,union,kwin-csd,flatpak,ecosystem,preset,status,opacity,doctor,schedule,gui} [options]
 ```
 
 ### Subcommands
+
+#### `union` (v19.0.0 — KDE Plasma 6.8)
+Manage KDE Plasma 6.8 Union Style Engine (`plasma-union`) integration:
+
+```bash
+# Inspect Union style status
+noxforge-ctl union --status
+
+# Enable full Union widgetStyle mode (widgetStyle=Union + unionStyle=noxforge)
+noxforge-ctl union --enable
+
+# Return to Hybrid mode (widgetStyle=NoxForge + unionStyle=noxforge)
+noxforge-ctl union --disable
+```
+
+#### `kwin-csd` (v19.0.0 — KWin 6.8)
+Synchronize KWin 6.8 client-side window titlebar color scheme rules (`~/.config/kwinrulesrc` with `.noxforge.bak` backup):
+
+```bash
+noxforge-ctl kwin-csd --enable
+noxforge-ctl kwin-csd --disable
+noxforge-ctl kwin-csd --status
+```
 
 #### `switch`
 Switch between Graphite and Obsidian profiles across desktop surfaces (color scheme, Plasma style, window decorations, TabBox task switcher, splash screen, and GTK theme).

@@ -1,0 +1,12 @@
+{
+    "input-type": "css",
+    "input-version": 1,
+    "name": "NoxForge Obsidian (Union)",
+    "description": "True-black OLED KDE Plasma 6.8 Union style with Forge Notch geometry.",
+    "version": "19.0.0",
+    "license": "MIT",
+    "url": "https://github.com/loofiboss-bit/NoxForge",
+    "authors": [
+        "Loofi"
+    ]
+}

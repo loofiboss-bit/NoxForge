@@ -272,6 +272,7 @@ def build_all(output_dir: Path, manifest: dict) -> list[tuple[Path, str]]:
         _copy_tree(ROOT / "browsers", component_root / "browsers")
         _copy_tree(ROOT / "apps", component_root / "apps")
         _copy_tree(ROOT / "tools/fastfetch", component_root / "fastfetch")
+        _copy_tree(ROOT / "union/styles", component_root / "union/styles")
         _copy_tree(ROOT / "kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop", component_root / "kwin-switcher-obsidian")
         _assert_safe_tree(root)
         checksum = create_archive(root, portable, root_name="noxforge")

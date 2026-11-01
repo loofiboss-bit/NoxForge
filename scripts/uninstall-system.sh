@@ -78,6 +78,8 @@ while IFS= read -r installed_path || [[ -n "${installed_path}" ]]; do
         /usr/share/noxforge/browsers/*|\
         /usr/share/noxforge/apps/*|\
         /usr/share/noxforge/fastfetch/*|\
+        /usr/share/union/styles/noxforge/*|\
+        /usr/share/union/styles/noxforge-obsidian/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/*|\
         /usr/share/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/*|\
         /usr/share/aurorae/themes/io.github.loofiboss.noxforge.desktop/*|\

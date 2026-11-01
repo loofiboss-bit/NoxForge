@@ -34,11 +34,11 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V18_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "18.0.0")
+        self.assertTrue(version >= "18.0.0")
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 14)
-        self.assertEqual(tokens["version"], "18.0.0")
+        self.assertIn(tokens["schemaVersion"], (14, 15))
+        self.assertEqual(tokens["version"], version)
         self.assertIn("gtk", tokens)
         self.assertTrue(tokens["gtk"]["dynamicCssVariables"])
         self.assertTrue(tokens["gtk"]["managedUserImport"])
@@ -49,7 +49,8 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         self.assertEqual(tokens["ecosystem"]["stateFile"], "noxforge/ecosystem-state.json")
 
     def test_noxforge_core_shared_library_and_dynamic_stylesheet(self) -> None:
-        self.assertEqual(noxforge_core.get_app_version(), "18.0.0")
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(noxforge_core.get_app_version(), version)
         self.assertEqual(noxforge_core.hex_to_rgb_tuple("#A3FF47"), (163, 255, 71))
         ratio_g, ratio_o = noxforge_core.validate_custom_accent_contrast("#A3FF47")
         self.assertGreaterEqual(ratio_g, 4.5)
@@ -199,9 +200,11 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 starship_file.parent.mkdir(parents=True, exist_ok=True)
                 starship_file.write_text("# original user starship\n", encoding="utf-8")
 
-                fastfetch_file = cfg_home / "fastfetch/config.jsonc"
-                fastfetch_file.parent.mkdir(parents=True, exist_ok=True)
-                fastfetch_file.write_text("// original user fastfetch\n", encoding="utf-8")
+                zed_file = cfg_home / "zed/themes/noxforge.json"
+                zed_file.parent.mkdir(parents=True, exist_ok=True)
+                zed_file.write_text('{"name": "original user zed"}\n', encoding="utf-8")
+                zed_obsidian_file = cfg_home / "zed/themes/noxforge_obsidian.json"
+                zed_obsidian_file.write_text('{"name": "original user zed obsidian"}\n', encoding="utf-8")
 
                 discord_file = cfg_home / "Vencord/themes/noxforge.theme.css"
                 discord_file.parent.mkdir(parents=True, exist_ok=True)
@@ -213,7 +216,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 ff_chrome.write_text("/* original user firefox */\n", encoding="utf-8")
 
                 res_apply = ctl_ns["ecosystem_apply"](
-                    app_names=["starship", "fastfetch", "discord", "firefox"],
+                    app_names=["starship", "zed", "discord", "firefox"],
                     dry_run=False,
                     profile="obsidian",
                     accent_hex="#22D3EE",
@@ -221,18 +224,18 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 self.assertEqual(res_apply["status"], "applied")
                 self.assertEqual(
                     sorted(res_apply["applied"]),
-                    ["discord", "fastfetch", "firefox", "starship"],
+                    ["discord", "firefox", "starship", "zed"],
                 )
 
                 # Verify .noxforge.bak backups exist
                 self.assertTrue((cfg_home / "starship.toml.noxforge.bak").is_file())
-                self.assertTrue((cfg_home / "fastfetch/config.jsonc.noxforge.bak").is_file())
+                self.assertTrue((cfg_home / "zed/themes/noxforge.json.noxforge.bak").is_file())
                 self.assertTrue((cfg_home / "Vencord/themes/noxforge.theme.css.noxforge.bak").is_file())
                 self.assertTrue((ff_profile / "chrome/userChrome.css.noxforge.bak").is_file())
 
                 # Verify active profile (obsidian #000000) and accent (#22D3EE / 34;211;238) injection
                 self.assertIn("#22D3EE", starship_file.read_text(encoding="utf-8"))
-                self.assertIn("34;211;238", fastfetch_file.read_text(encoding="utf-8"))
+                self.assertIn("#22D3EE", zed_file.read_text(encoding="utf-8"))
                 discord_deployed = discord_file.read_text(encoding="utf-8")
                 self.assertIn("#000000", discord_deployed)
                 self.assertIn("#22D3EE", discord_deployed)
@@ -246,7 +249,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 state = json.loads(state_path.read_text(encoding="utf-8"))
                 self.assertEqual(
                     sorted(state["apps"].keys()),
-                    ["discord", "fastfetch", "firefox", "starship"],
+                    ["discord", "firefox", "starship", "zed"],
                 )
                 self.assertEqual(state["apps"]["discord"]["profile"], "obsidian")
                 self.assertEqual(state["apps"]["discord"]["accent"], "#22D3EE")
@@ -258,7 +261,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 )
                 self.assertEqual(res_restore["status"], "restored")
                 self.assertEqual(starship_file.read_text(encoding="utf-8"), "# original user starship\n")
-                self.assertEqual(fastfetch_file.read_text(encoding="utf-8"), "// original user fastfetch\n")
+                self.assertEqual(zed_file.read_text(encoding="utf-8"), '{"name": "original user zed"}\n')
                 self.assertEqual(discord_file.read_text(encoding="utf-8"), "/* original user discord */\n")
                 self.assertEqual(ff_chrome.read_text(encoding="utf-8"), "/* original user firefox */\n")
                 self.assertFalse((cfg_home / "starship.toml.noxforge.bak").exists())
@@ -301,7 +304,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertEqual(report["schemaVersion"], 11)
+        self.assertIn(report["schemaVersion"], (11, 12))
         self.assertEqual(report["noxforgeCoreStatus"], "ok")
         self.assertEqual(report["gtkChainStatus"]["status"], "ok")
         self.assertTrue(report["ecosystemState"]["reversible"])
@@ -335,7 +338,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
 
                 # Apply when NO files exist beforehand
                 res1 = ctl_ns["ecosystem_apply"](
-                    app_names=["starship", "fastfetch", "discord"],
+                    app_names=["starship", "zed", "discord"],
                     dry_run=False,
                     profile="graphite",
                     accent_hex="#A3FF47",
@@ -358,7 +361,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 res_restore = ctl_ns["ecosystem_restore"](app_names=["all"], dry_run=False)
                 self.assertEqual(res_restore["status"], "restored")
                 self.assertFalse((cfg_home / "starship.toml").exists())
-                self.assertFalse((cfg_home / "fastfetch/config.jsonc").exists())
+                self.assertFalse((cfg_home / "zed/themes/noxforge.json").exists())
                 self.assertFalse((cfg_home / "Vencord/themes/noxforge.theme.css").exists())
             finally:
                 for key, val in (("HOME", old_home), ("XDG_CONFIG_HOME", old_cfg), ("XDG_DATA_HOME", old_data)):

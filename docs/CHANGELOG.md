@@ -1,5 +1,20 @@
 # Changelog
 
+## 19.0.0 — KDE Plasma 6.8 Union Style Engine & Wayland Precision
+
+- KDE Plasma 6.8 Union Style Engine (`plasma-union`):
+  - Added deterministic generation of `union/styles/noxforge` (Graphite) and `union/styles/noxforge-obsidian` (Obsidian OLED) in `scripts/generate_design_system.py` using Union CSS (`custom-color("kcolorscheme", ...)` and `:is(button, toolbutton, menubaritem, tabbutton)`).
+  - Implemented hybrid Union orchestration in `noxforge-ctl`: `switch`, `apply`, and `sync` always synchronize `unionStyle` in `kdeglobals` (`[KDE]`), while `noxforge-ctl union [--enable|--disable|--status|--profile <graphite|obsidian>]` toggles full `widgetStyle=Union` mode vs native `libnoxforge6.so`.
+- Plasma 6.8 Wayland Precision, KWin 6.8 CSD & System Monitor:
+  - Raised platform baseline to Plasma/KWin 6.8+ on Wayland across `packaging/noxforge.spec`, `packaging/arch/PKGBUILD`, and `distribution/release-manifest.json`.
+  - Added reversible KWin 6.8 CSD window rule synchronization (`noxforge-ctl kwin-csd [--enable|--disable|--status]`) in `~/.config/kwinrulesrc`.
+  - Generated Plasma 6.8 System Monitor telemetry preset (`apps/systemmonitor/noxforge-telemetry.page`) with `gpu/all/usedVramPercentage` sensor and `noxforge-ctl ecosystem apply systemmonitor`.
+- User Fastfetch Preservation:
+  - Fastfetch configuration is strictly preserved and never modified automatically by NoxForge, respecting user-defined ASCII logos and fetch modules.
+- Control Center v4, Tokens Schema 15 & Doctor Schema 12:
+  - Upgraded `tools/control_center.py` to v4 with Plasma 6.8 Union & KWin CSD controls and `Union 6.8` / `Wayland 6.8` health badges.
+  - Upgraded `design/tokens.json` to Schema 15 and `tools/noxforge-doctor` to Schema 12 (`unionStyleStatus`, `waylandCompositor`, zero `metadata-unknown` warnings on real installations, and full `NoxForge-Obsidian` wallpaper recognition in desktop and `plasmalogin`).
+
 ## 18.0.0 — Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core
 
 - GTK 3/4, Libadwaita & Flatpak Parity:

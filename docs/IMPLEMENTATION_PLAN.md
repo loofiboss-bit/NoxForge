@@ -1,21 +1,25 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v18 release contract is
-[`NOXFORGE_V18_PLAN.md`](NOXFORGE_V18_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v19 release contract is
+[`NOXFORGE_V19_PLAN.md`](NOXFORGE_V19_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 18.0.0 Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control
-Core delivers dynamic `@accent_color`-bound GTK 3/4 CSS and managed `@import`
-chaining for GTK 4 / Libadwaita applications, opt-in Flatpak theme overrides,
-reversible `.noxforge.bak` ecosystem backups with `ecosystem restore` and automatic
-profile/accent propagation across deployed developer tools and Konsole, a shared
-`tools/noxforge_core.py` library, Control Center v3 with live self-theming,
-Tokens Schema 14, and Doctor Schema 11. Host installation and active desktop
-mutation remain non-applying by default.
+NoxForge 19.0.0 Plasma 6.8 Union Engine, Wayland-Native KWin & Kinetic Studio
+Suite delivers first-class KDE Plasma 6.8 Union CSS styles (`union/styles/noxforge`
+and `union/styles/noxforge-obsidian`), Wayland-only KWin 6.8 compositor & CSD
+window-rule orchestration (`noxforge-ctl kwin-csd`), the Fastfetch Kinetic Studio v2
+telemetry and ANSI logo suite (`main`, `cyber`, `minimal`), Plasma 6.8 System Monitor
+telemetry page presets (`noxforge-telemetry.page`), full 5-wallpaper PLM/Desktop
+detection parity, Control Center v4, Tokens Schema 15, and Doctor Schema 12 with
+zero `metadata-unknown` warnings. Host installation and active desktop mutation
+remain non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V18_PLAN.md`](NOXFORGE_V18_PLAN.md) records the completed 18.0.0
+  Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core scope.
 
 - [`NOXFORGE_V17_PLAN.md`](NOXFORGE_V17_PLAN.md) records the completed 17.0.0 and
   17.0.1 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity scope.

@@ -48,7 +48,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "18.0.0"
+    return "19.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -102,12 +102,23 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(16)
 
         # Profile Switcher Section
-        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita & Terminals)")
+        profile_group = QtWidgets.QGroupBox("Desktop Profile (KDE, GTK, Libadwaita && Terminals)")
         p_layout = QtWidgets.QVBoxLayout(profile_group)
 
         desc = QtWidgets.QLabel("Switch between standard Graphite gray surfaces and true pitch-black Obsidian OLED with one click:")
@@ -131,10 +142,10 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # 1-Click Full Setup Action
         setup_row = QtWidgets.QHBoxLayout()
-        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors & Wallpaper)")
+        self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors && Wallpaper)")
         self.setup_full_btn.setMinimumHeight(34)
         self.setup_full_btn.setStyleSheet(
-            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 5px; "
+            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 6px; "
             "color: #A3FF47; font-weight: bold; font-size: 11px; padding: 4px 12px;"
         )
         self.setup_full_btn.clicked.connect(self.apply_full_active_setup)
@@ -165,34 +176,122 @@ class ProfileAccentTab(QtWidgets.QWidget):
         for idx, (key, label, color) in enumerate(accents):
             btn = QtWidgets.QPushButton(f"  ●  {label}")
             btn.setMinimumHeight(36)
-            btn.setStyleSheet(f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color};")
+            btn.setStyleSheet(f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color};")
             btn.clicked.connect(lambda _, k=key: self.apply_accent(k))
             self.accent_buttons[key] = btn
             self.accent_meta[key] = (label, color)
-            accent_grid.addWidget(btn, idx // 2, idx % 2)
+            if key == "system":
+                accent_grid.addWidget(btn, 2, 0, 1, 2)
+            else:
+                accent_grid.addWidget(btn, idx // 2, idx % 2)
 
         a_layout.addLayout(accent_grid)
+
+        # Live Palette Swatch & Contrast Bar
+        self.palette_swatch_card = QtWidgets.QWidget()
+        self.palette_swatch_card.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px;")
+        swatch_layout = QtWidgets.QHBoxLayout(self.palette_swatch_card)
+        swatch_layout.setContentsMargins(10, 8, 10, 8)
+        swatch_layout.setSpacing(8)
+
+        self.swatch_bg = QtWidgets.QLabel("BG #0D1419")
+        self.swatch_surf = QtWidgets.QLabel("SURF #141E25")
+        self.swatch_border = QtWidgets.QLabel("BORDER #2F414B")
+        self.swatch_text = QtWidgets.QLabel("TEXT #E8F0F2")
+        self.swatch_accent = QtWidgets.QLabel("ACCENT #A3FF47")
+        self.contrast_badge = QtWidgets.QLabel("● 13.65:1 (WCAG AAA)")
+
+        for sw in (self.swatch_bg, self.swatch_surf, self.swatch_border, self.swatch_text, self.swatch_accent):
+            sw.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            sw.setFixedHeight(26)
+            sw.setStyleSheet("border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+            swatch_layout.addWidget(sw, stretch=1)
+
+        self.contrast_badge.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.contrast_badge.setFixedHeight(26)
+        self.contrast_badge.setStyleSheet(
+            "background-color: #192D1E; border: 1px solid #A3FF47; border-radius: 4px; "
+            "color: #A3FF47; font-size: 10px; font-weight: 800; padding: 2px 8px;"
+        )
+        swatch_layout.addWidget(self.contrast_badge, stretch=1)
+        a_layout.addWidget(self.palette_swatch_card)
+
         layout.addWidget(accent_group)
 
         # Wallpaper Suite Selector Section
-        wp_group = QtWidgets.QGroupBox("Wallpaper Suite (Standard, Obsidian, Quiet & Ultrawide)")
-        wp_layout = QtWidgets.QHBoxLayout(wp_group)
+        wp_group = QtWidgets.QGroupBox("Wallpaper Suite (Standard, Obsidian, Quiet && Ultrawide)")
+        wp_layout = QtWidgets.QVBoxLayout(wp_group)
+        wp_top = QtWidgets.QHBoxLayout()
         wp_lbl = QtWidgets.QLabel("Wallpaper Variant:")
         wp_lbl.setStyleSheet("color: #A6B4B9;")
         self.wallpaper_combo = QtWidgets.QComboBox()
         self.wallpaper_combo.setAccessibleName("Wallpaper Variant Selector")
         for var_key, var_info in noxforge_core.WALLPAPER_VARIANTS.items():
             self.wallpaper_combo.addItem(f"{var_info['label']} ({var_info['id']})", var_key)
+        self.wallpaper_combo.currentIndexChanged.connect(self.update_wallpaper_preview)
         self.btn_apply_wallpaper = QtWidgets.QPushButton("Apply Wallpaper")
         self.btn_apply_wallpaper.setAccessibleName("Apply Wallpaper")
         self.btn_apply_wallpaper.clicked.connect(self.apply_selected_wallpaper)
-        wp_layout.addWidget(wp_lbl)
-        wp_layout.addWidget(self.wallpaper_combo, stretch=1)
-        wp_layout.addWidget(self.btn_apply_wallpaper)
+        wp_top.addWidget(wp_lbl)
+        wp_top.addWidget(self.wallpaper_combo, stretch=1)
+        wp_top.addWidget(self.btn_apply_wallpaper)
+        wp_layout.addLayout(wp_top)
+
+        # Wallpaper Live Thumbnail & Details Card
+        wp_card = QtWidgets.QHBoxLayout()
+        wp_card.setSpacing(14)
+        self.wp_preview_lbl = QtWidgets.QLabel()
+        self.wp_preview_lbl.setFixedSize(220, 124)
+        self.wp_preview_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.wp_preview_lbl.setStyleSheet(
+            "background-color: #0D1419; border: 1px solid #2F414B; border-radius: 6px; color: #748289;"
+        )
+        wp_card.addWidget(self.wp_preview_lbl)
+
+        wp_meta_layout = QtWidgets.QVBoxLayout()
+        self.wp_title_lbl = QtWidgets.QLabel("NoxForge Standard")
+        self.wp_title_lbl.setStyleSheet("font-size: 13px; font-weight: 700; color: #E8F0F2;")
+        self.wp_desc_lbl = QtWidgets.QLabel("Precision dark graphite wallpaper with Forge Notch geometric cues.")
+        self.wp_desc_lbl.setWordWrap(True)
+        self.wp_desc_lbl.setStyleSheet("color: #A6B4B9; font-size: 11px;")
+        self.wp_res_lbl = QtWidgets.QLabel("● Native UHD 3840×2160, 2560×1440, 1920×1080 (16:9)")
+        self.wp_res_lbl.setStyleSheet("color: #22D3EE; font-size: 11px; font-weight: 600;")
+        wp_meta_layout.addWidget(self.wp_title_lbl)
+        wp_meta_layout.addWidget(self.wp_desc_lbl)
+        wp_meta_layout.addWidget(self.wp_res_lbl)
+        wp_meta_layout.addStretch()
+        wp_card.addLayout(wp_meta_layout, stretch=1)
+        wp_layout.addLayout(wp_card)
         layout.addWidget(wp_group)
 
+        # Plasma 6.8 Union Style Engine & KWin 6.8 CSD Harmonizer Section
+        self.union_group = QtWidgets.QGroupBox("Plasma 6.8 Union Style Engine && KWin 6.8 CSD Harmonizer")
+        u_layout = QtWidgets.QVBoxLayout(self.union_group)
+        u_top = QtWidgets.QHBoxLayout()
+        self.union_status_lbl = QtWidgets.QLabel("Union Mode: HYBRID (NoxForge C++ + Union CSS)")
+        self.union_status_lbl.setStyleSheet("color: #22D3EE; font-weight: 600;")
+        self.btn_union_enable = QtWidgets.QPushButton("Enable Full Union Mode")
+        self.btn_union_enable.setAccessibleName("Enable Full Union Mode")
+        self.btn_union_enable.clicked.connect(lambda: self.toggle_union("enable"))
+        self.btn_union_disable = QtWidgets.QPushButton("Hybrid C++ Mode (Default)")
+        self.btn_union_disable.setAccessibleName("Hybrid C++ Mode")
+        self.btn_union_disable.clicked.connect(lambda: self.toggle_union("disable"))
+        u_top.addWidget(self.union_status_lbl, stretch=1)
+        u_top.addWidget(self.btn_union_enable)
+        u_top.addWidget(self.btn_union_disable)
+        u_layout.addLayout(u_top)
+
+        u_bot = QtWidgets.QHBoxLayout()
+        self.chk_kwin_csd = QtWidgets.QCheckBox("Harmonize KWin 6.8 Client-Side Decorations (CSD Window Rule)")
+        self.chk_kwin_csd.setAccessibleName("Harmonize KWin 6.8 CSD")
+        self.chk_kwin_csd.toggled.connect(self.toggle_kwin_csd)
+        u_bot.addWidget(self.chk_kwin_csd)
+        u_bot.addStretch()
+        u_layout.addLayout(u_bot)
+        layout.addWidget(self.union_group)
+
         # Live Icon & Kinetic Motion Preview Section
-        preview_group = QtWidgets.QGroupBox(f"Live Icon & Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
+        preview_group = QtWidgets.QGroupBox(f"Live Icon && Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
         prev_layout = QtWidgets.QVBoxLayout(preview_group)
 
         prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
@@ -217,10 +316,11 @@ class ProfileAccentTab(QtWidgets.QWidget):
         for title, svg_path in icon_samples:
             col = QtWidgets.QVBoxLayout()
             col.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            col.setSpacing(4)
             img_lbl = QtWidgets.QLabel()
             img_lbl.setFixedSize(36, 36)
             img_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-            img_lbl.setStyleSheet("border: 1px solid #2F414B; border-radius: 6px; padding: 4px;")
+            img_lbl.setStyleSheet("border: 1px solid #2F414B; border-radius: 6px; padding: 4px; background-color: #10191F;")
             if svg_path.is_file():
                 img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
 
@@ -236,6 +336,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         # Kinetic Motion Test Row
         motion_row = QtWidgets.QHBoxLayout()
+        motion_row.setContentsMargins(0, 10, 0, 0)
         self.test_box = QtWidgets.QLineEdit(f"NoxForge Kinetic Motion v{APP_VERSION}")
         self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
         self.test_box.setAccessibleName("Kinetic Motion Test Input")
@@ -282,6 +383,8 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(sched_group)
 
         layout.addStretch()
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
         self.refresh_state()
 
     def play_test_shake(self) -> None:
@@ -319,29 +422,40 @@ class ProfileAccentTab(QtWidgets.QWidget):
         pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile == "obsidian"))
         acc = pal["accent"]
         surf_sel = pal["surfaceSelected"]
+        bg_raised = "#121B21" if (profile == "obsidian") else "#1B2831"
 
-        active_btn_style = f"background-color: {surf_sel}; border: 2px solid {acc}; color: #FFFFFF; font-weight: bold;"
+        active_btn_style = (
+            f"background-color: {surf_sel}; border: 2px solid {acc}; "
+            f"border-radius: 6px; color: #FFFFFF; font-weight: bold; padding: 7px 14px;"
+        )
+        inactive_btn_style = (
+            f"background-color: {bg_raised}; border: 1px solid #2F414B; "
+            f"border-radius: 6px; color: #E8F0F2; font-weight: 500; padding: 7px 14px;"
+        )
         if profile == "obsidian":
             self.btn_obsidian.setStyleSheet(active_btn_style)
-            self.btn_graphite.setStyleSheet("")
+            self.btn_graphite.setStyleSheet(inactive_btn_style)
         else:
             self.btn_graphite.setStyleSheet(active_btn_style)
-            self.btn_obsidian.setStyleSheet("")
+            self.btn_obsidian.setStyleSheet(inactive_btn_style)
 
         for key, btn in self.accent_buttons.items():
             _, color = self.accent_meta[key]
             is_selected = (key == accent_name) or (key == "lime" and accent_name == "default")
             if is_selected:
                 btn.setStyleSheet(
-                    f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color}; "
+                    f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color}; "
                     f"background-color: {surf_sel}; border: 2px solid {color};"
                 )
             else:
-                btn.setStyleSheet(f"text-align: left; padding: 6px 12px; font-weight: bold; color: {color};")
+                btn.setStyleSheet(
+                    f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color}; "
+                    f"background-color: {bg_raised}; border: 1px solid #2F414B;"
+                )
 
         self.setup_full_btn.setStyleSheet(
-            f"background-color: {surf_sel}; border: 1px solid {acc}; border-radius: 5px; "
-            f"color: {acc}; font-weight: bold; font-size: 11px; padding: 4px 12px;"
+            f"background-color: {surf_sel}; border: 1px solid {acc}; border-radius: 6px; "
+            f"color: {acc}; font-weight: bold; font-size: 11px; padding: 6px 14px;"
         )
 
         if hasattr(noxforge_ctl, "manage_wallpaper") and hasattr(self, "wallpaper_combo"):
@@ -352,6 +466,23 @@ class ProfileAccentTab(QtWidgets.QWidget):
                 self.wallpaper_combo.blockSignals(True)
                 self.wallpaper_combo.setCurrentIndex(idx)
                 self.wallpaper_combo.blockSignals(False)
+
+        if hasattr(noxforge_ctl, "manage_union") and hasattr(self, "union_status_lbl"):
+            u_info = noxforge_ctl.manage_union("status", profile=profile)
+            is_full = bool(u_info.get("enabled", False))
+            u_style = u_info.get("unionStyle", "noxforge")
+            self.union_status_lbl.setText(
+                f"Union 6.8: {'● FULL UNION MODE' if is_full else '● HYBRID (C++ + Union CSS)'} ({u_style})"
+            )
+            self.union_status_lbl.setStyleSheet(
+                f"color: {'#A3FF47' if is_full else '#22D3EE'}; font-weight: 600;"
+            )
+
+        if hasattr(noxforge_ctl, "manage_kwin_csd") and hasattr(self, "chk_kwin_csd"):
+            csd_info = noxforge_ctl.manage_kwin_csd("status", profile=profile)
+            self.chk_kwin_csd.blockSignals(True)
+            self.chk_kwin_csd.setChecked(bool(csd_info.get("enabled", False)))
+            self.chk_kwin_csd.blockSignals(False)
 
         if hasattr(self, "preview_badges"):
             for img_lbl, _, svg_path in self.preview_badges:
@@ -378,11 +509,116 @@ class ProfileAccentTab(QtWidgets.QWidget):
             except Exception:
                 pass
 
+        self.update_palette_swatches(profile, accent_hex)
+        self.update_wallpaper_preview()
+
+    def update_palette_swatches(self, profile: str, accent_hex: str) -> None:
+        if not hasattr(self, "palette_swatch_card"):
+            return
+        is_obs = profile == "obsidian"
+        bg_hex = "#000000" if is_obs else "#0D1419"
+        surf_hex = "#080808" if is_obs else "#141E25"
+        border_hex = "#2F414B"
+        text_hex = "#E8F0F2"
+        acc = accent_hex or "#A3FF47"
+
+        self.swatch_bg.setText(f"BG {bg_hex}")
+        self.swatch_bg.setStyleSheet(f"background-color: {bg_hex}; color: #A6B4B9; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_surf.setText(f"SURF {surf_hex}")
+        self.swatch_surf.setStyleSheet(f"background-color: {surf_hex}; color: #E8F0F2; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_border.setText(f"BORDER {border_hex}")
+        self.swatch_border.setStyleSheet(f"background-color: #1A2832; color: {border_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_text.setText(f"TEXT {text_hex}")
+        self.swatch_text.setStyleSheet(f"background-color: #1A2832; color: {text_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        self.swatch_accent.setText(f"ACCENT {acc}")
+        self.swatch_accent.setStyleSheet(f"background-color: {acc}; color: #0D1419; border: 1px solid {acc}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+
+        try:
+            cg, co = noxforge_ctl.validate_custom_accent_contrast(acc)
+            ratio = co if is_obs else cg
+            wcag_tier = "WCAG AAA" if ratio >= 7.0 else ("WCAG AA" if ratio >= 4.5 else "LOW")
+            self.contrast_badge.setText(f"● {ratio:.2f}:1 ({wcag_tier})")
+            badge_color = "#A3FF47" if ratio >= 4.5 else "#FF5555"
+            bg_badge = "#192D1E" if ratio >= 4.5 else "#2D1919"
+            self.contrast_badge.setStyleSheet(
+                f"background-color: {bg_badge}; border: 1px solid {badge_color}; border-radius: 4px; "
+                f"color: {badge_color}; font-size: 10px; font-weight: 800; padding: 2px 8px;"
+            )
+        except Exception:
+            self.contrast_badge.setText(f"● {acc}")
+
+    def update_wallpaper_preview(self) -> None:
+        if not hasattr(self, "wallpaper_combo") or not hasattr(self, "wp_preview_lbl"):
+            return
+        var_key = self.wallpaper_combo.currentData()
+        if not var_key:
+            return
+        var_info = noxforge_core.WALLPAPER_VARIANTS.get(var_key, {})
+        wp_id = var_info.get("id", "NoxForge")
+        label = var_info.get("label", wp_id)
+        is_uw = "Ultrawide" in wp_id
+        is_obs = "Obsidian" in wp_id
+
+        self.wp_title_lbl.setText(label)
+        if is_obs:
+            self.wp_desc_lbl.setText("True pitch-black OLED background with precision Forge Notch accent geometry.")
+        elif "Quiet" in wp_id:
+            self.wp_desc_lbl.setText("Minimalist dark canvas without central insignia for distraction-free focus.")
+        else:
+            self.wp_desc_lbl.setText("Signature dark graphite wallpaper with Forge Notch geometric cues.")
+
+        if is_uw:
+            self.wp_res_lbl.setText("● Native Ultrawide 3440×1440, 2560×1080 (21:9 / 32:9)")
+        else:
+            self.wp_res_lbl.setText("● Native UHD 3840×2160, 2560×1440, 1920×1080 (16:9)")
+
+        img_path = ROOT / f"wallpapers/{wp_id}/contents/images/1920x1080.png"
+        if not img_path.is_file():
+            for p in [
+                Path.home() / f".local/share/wallpapers/{wp_id}/contents/images/1920x1080.png",
+                Path(f"/usr/share/wallpapers/{wp_id}/contents/images/1920x1080.png"),
+            ]:
+                if p.is_file():
+                    img_path = p
+                    break
+        if img_path.is_file():
+            pix = QtGui.QPixmap(str(img_path))
+            if not pix.isNull():
+                scaled = pix.scaled(
+                    self.wp_preview_lbl.size(),
+                    QtCore.Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                    QtCore.Qt.TransformationMode.SmoothTransformation,
+                )
+                self.wp_preview_lbl.setPixmap(scaled)
+        else:
+            self.wp_preview_lbl.setText(f"{wp_id}\n(Image preview)")
+
     def apply_selected_wallpaper(self) -> None:
         variant = self.wallpaper_combo.currentData() or "standard"
         if hasattr(noxforge_ctl, "manage_wallpaper"):
             res = noxforge_ctl.manage_wallpaper(str(variant))
             self.statusChanged.emit(f"Wallpaper applied: {res.get('label')} ({res.get('wallpaperId')})")
+
+    def toggle_union(self, action: str) -> None:
+        if hasattr(noxforge_ctl, "manage_union"):
+            res = noxforge_ctl.manage_union(action)
+            self.refresh_state()
+            mode_str = res.get("mode", "hybrid").upper()
+            self.statusChanged.emit(
+                f"Plasma 6.8 Union Engine: {mode_str} (widgetStyle={res.get('widgetStyle')}, unionStyle={res.get('unionStyle')})"
+            )
+
+    def toggle_kwin_csd(self, checked: bool) -> None:
+        if hasattr(noxforge_ctl, "manage_kwin_csd"):
+            action = "enable" if checked else "disable"
+            res = noxforge_ctl.manage_kwin_csd(action)
+            self.statusChanged.emit(
+                f"KWin 6.8 CSD Harmonizer: {action.upper()} (decocolor={res.get('decoColor')})"
+            )
 
     def apply_profile(self, profile: str) -> None:
         if hasattr(noxforge_ctl, "apply_setup"):
@@ -435,11 +671,22 @@ class HealthTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(14)
 
-        header = QtWidgets.QLabel("NoxForge System Health & Ecosystem Status")
+        header = QtWidgets.QLabel("NoxForge System Health && Ecosystem Status")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
@@ -451,7 +698,17 @@ class HealthTab(QtWidgets.QWidget):
         self.badge_gtk = QtWidgets.QLabel("GTK/Libadwaita: Checking")
         self.badge_flatpak = QtWidgets.QLabel("Flatpak: Checking")
         self.badge_eco = QtWidgets.QLabel("Ecosystem: Checking")
-        for b in (self.badge_core, self.badge_palette, self.badge_gtk, self.badge_flatpak, self.badge_eco):
+        self.badge_union = QtWidgets.QLabel("Union 6.8: Checking")
+        self.badge_wayland = QtWidgets.QLabel("Wayland 6.8: Checking")
+        for b in (
+            self.badge_core,
+            self.badge_palette,
+            self.badge_gtk,
+            self.badge_flatpak,
+            self.badge_eco,
+            self.badge_union,
+            self.badge_wayland,
+        ):
             b.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             b.setStyleSheet(
                 "background-color: #141E25; border: 1px solid #2F414B; border-radius: 5px; "
@@ -462,18 +719,22 @@ class HealthTab(QtWidgets.QWidget):
 
         self.info_text = QtWidgets.QTextEdit()
         self.info_text.setReadOnly(True)
+        self.info_text.setMinimumHeight(240)
         layout.addWidget(self.info_text)
 
         btn_row = QtWidgets.QHBoxLayout()
         self.btn_refresh = QtWidgets.QPushButton("Run Health Check (Doctor)")
         self.btn_refresh.clicked.connect(self.run_doctor)
-        self.btn_sync = QtWidgets.QPushButton("Synchronize & Remediate Desktop")
+        self.btn_sync = QtWidgets.QPushButton("Synchronize && Remediate Desktop")
         self.btn_sync.setObjectName("applyButton")
         self.btn_sync.clicked.connect(self.align_desktop)
 
         btn_row.addWidget(self.btn_refresh)
         btn_row.addWidget(self.btn_sync)
         layout.addLayout(btn_row)
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
 
         self.run_doctor()
 
@@ -517,14 +778,23 @@ class HealthTab(QtWidgets.QWidget):
             self._style_health_badge(self.badge_gtk, f"● GTK/Adw: {gtk_chain.upper()}", gtk_chain == "ok")
             self._style_health_badge(self.badge_flatpak, f"● Flatpak: {flatpak.upper()}", flatpak in ("ok", "configured"))
             self._style_health_badge(self.badge_eco, "● Ecosystem: REVERSIBLE", bool(eco_state.get("reversible", True)))
+            union_info = data.get("unionStyleStatus", {})
+            union_ok = union_info.get("status") == "ok"
+            union_mode = union_info.get("mode", "hybrid").upper()
+            self._style_health_badge(self.badge_union, f"● Union 6.8: {union_mode}", union_ok)
+            wayland_info = data.get("waylandCompositor", {})
+            wayland_ok = bool(wayland_info.get("waylandNative", True))
+            self._style_health_badge(self.badge_wayland, f"● Wayland 6.8: {'OK' if wayland_ok else 'CHECK'}", wayland_ok)
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
-            text += f"Schema Version: {data.get('schemaVersion', 11)}\n"
+            text += f"Schema Version: {data.get('schemaVersion', 12)}\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
             text += f"Core Library (noxforge_core.py): {core_status.upper()}\n"
             text += f"Palette Synchronization: {palette_sync.upper()}\n"
+            text += f"Union Style Engine (Plasma 6.8): {union_info.get('status', 'ok').upper()} ({union_mode})\n"
+            text += f"Wayland Compositor Target: {wayland_info.get('targetPlasma', '>=6.8')} ({wayland_info.get('sessionType', 'wayland')})\n"
             text += f"GTK 3/4 & Libadwaita Chain: {gtk_chain.upper()}\n"
             text += f"Flatpak Themes Override: {flatpak}\n"
             text += f"Missing Components: {len(missing)}\n"
@@ -550,12 +820,23 @@ class AccessibilityTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(16)
 
         # Reduced Motion Section
-        motion_group = QtWidgets.QGroupBox("Reduced Motion & Focus Indicators (WCAG 2.2.2 / 2.3.3)")
+        motion_group = QtWidgets.QGroupBox("Reduced Motion && Focus Indicators (WCAG 2.2.2 / 2.3.3)")
         m_layout = QtWidgets.QVBoxLayout(motion_group)
 
         m_desc = QtWidgets.QLabel(
@@ -648,6 +929,10 @@ class AccessibilityTab(QtWidgets.QWidget):
 
         layout.addWidget(accent_group)
         layout.addStretch()
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
+
         self.refresh_state()
 
     def refresh_state(self) -> None:
@@ -756,11 +1041,22 @@ class EcosystemTab(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        root_layout = QtWidgets.QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        scroll = QtWidgets.QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(12)
 
-        header = QtWidgets.QLabel("Developer Tools, Reversible Ecosystem & Flatpak")
+        header = QtWidgets.QLabel("Developer Tools, Reversible Ecosystem && Flatpak")
         header.setStyleSheet("font-size: 15px; font-weight: bold; color: #E8F0F2;")
         layout.addWidget(header)
 
@@ -773,7 +1069,7 @@ class EcosystemTab(QtWidgets.QWidget):
         layout.addWidget(desc)
 
         # Flatpak Theme & Libadwaita Override Card
-        self.flatpak_group = QtWidgets.QGroupBox("Flatpak & Libadwaita Sandbox Theme Access")
+        self.flatpak_group = QtWidgets.QGroupBox("Flatpak && Libadwaita Sandbox Theme Access")
         fp_layout = QtWidgets.QHBoxLayout(self.flatpak_group)
         self.flatpak_status_lbl = QtWidgets.QLabel("Status: Checking...")
         self.flatpak_status_lbl.setStyleSheet("color: #A6B4B9; font-weight: 600;")
@@ -823,6 +1119,9 @@ class EcosystemTab(QtWidgets.QWidget):
         btn_row.addWidget(self.btn_refresh)
         btn_row.addStretch()
         layout.addLayout(btn_row)
+
+        scroll.setWidget(container)
+        root_layout.addWidget(scroll)
 
         self.refresh_table()
 
@@ -917,7 +1216,8 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
     def __init__(self, initial_tab: str | None = None) -> None:
         super().__init__()
         self.setWindowTitle("NoxForge Control Center")
-        self.setMinimumSize(900, 720)
+        self.resize(1020, 780)
+        self.setMinimumSize(880, 640)
         self.active_profile = "graphite"
         self.active_accent_hex = "#A3FF47"
 

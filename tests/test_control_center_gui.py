@@ -132,6 +132,15 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(hasattr(win.tab_profile, "wallpaper_combo"))
         self.assertEqual(win.tab_profile.wallpaper_combo.count(), 5)
         self.assertTrue(hasattr(win.tab_profile, "btn_apply_wallpaper"))
+        self.assertTrue(hasattr(win.tab_profile, "wp_preview_lbl"))
+        self.assertTrue(hasattr(win.tab_profile, "palette_swatch_card"))
+        self.assertTrue(hasattr(win.tab_profile, "contrast_badge"))
+
+        # ScrollArea responsivity checks across all tabs
+        self.assertIsNotNone(win.tab_profile.findChild(QtWidgets.QScrollArea))
+        self.assertIsNotNone(win.tab_a11y.findChild(QtWidgets.QScrollArea))
+        self.assertIsNotNone(win.tab_health.findChild(QtWidgets.QScrollArea))
+        self.assertIsNotNone(win.tab_eco.findChild(QtWidgets.QScrollArea))
 
         # AccessibilityTab reduced motion checkbox and color picker button
         self.assertTrue(hasattr(win.tab_a11y, "chk_reduced_motion"))
@@ -144,6 +153,14 @@ class TestControlCenterGUI(unittest.TestCase):
         self.assertTrue(hasattr(win.tab_health, "badge_flatpak"))
         self.assertTrue(hasattr(win.tab_health, "badge_gtk"))
         self.assertTrue(hasattr(win.tab_health, "badge_eco"))
+        self.assertTrue(hasattr(win.tab_health, "badge_union"))
+        self.assertTrue(hasattr(win.tab_health, "badge_wayland"))
+
+        # v19 Control Center v4 Plasma 6.8 Union and KWin CSD controls
+        self.assertTrue(hasattr(win.tab_profile, "union_group"))
+        self.assertTrue(hasattr(win.tab_profile, "btn_union_enable"))
+        self.assertTrue(hasattr(win.tab_profile, "btn_union_disable"))
+        self.assertTrue(hasattr(win.tab_profile, "chk_kwin_csd"))
 
         # Dynamic accent & profile propagation into OpacityConfiguratorWindow & PreviewCanvasWidget
         win.refresh_theme(profile="obsidian", accent_hex="#22D3EE")
