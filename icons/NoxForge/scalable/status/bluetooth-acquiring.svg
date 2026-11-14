@@ -6,14 +6,19 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
+      .glass-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.10; stroke: none; }
       .accent { color: #A3FF47; stroke: currentColor; }
       .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .accent-soft { color: #A3FF47; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
+      .dimmed-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.14; stroke: none; }
       .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
       .warning { color: #FBBF24; stroke: currentColor; }
       .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .warning-soft { color: #FBBF24; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .negative { color: #FF6B7A; stroke: currentColor; }
       .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+      .negative-soft { color: #FF6B7A; fill: currentColor; fill-opacity: 0.18; stroke: none; }
     </style>
   <style id="noxforge-motion" type="text/css">
     @media (prefers-reduced-motion: no-preference) {
@@ -29,6 +34,6 @@
   </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8 6l8 11-4 3V4l4 3-8 11"/><circle class="ColorScheme-Highlight accent nf-pulse" cx="12" cy="12" r="9.5" stroke-dasharray="4 3"><animate attributeName="opacity" values="0.25;1;0.25" dur="1.4s" repeatCount="indefinite"/></circle>
+    <path class="glass-fill" d="M12 4L16.5 8L12 12L16.5 16L12 20z"/><path d="M7.5 8L16.5 16L12 20V4L16.5 8L7.5 16"/><circle class="ColorScheme-Highlight accent nf-pulse" cx="12" cy="12" r="9.4" stroke-dasharray="3.5 2.5"><animate attributeName="opacity" values="0.25;1;0.25" dur="1.4s" repeatCount="indefinite"/></circle>
   </g>
 </svg>

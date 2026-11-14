@@ -6,17 +6,22 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
+      .glass-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.10; stroke: none; }
       .accent { color: #A3FF47; stroke: currentColor; }
       .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .accent-soft { color: #A3FF47; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
+      .dimmed-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.14; stroke: none; }
       .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
       .warning { color: #FBBF24; stroke: currentColor; }
       .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .warning-soft { color: #FBBF24; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .negative { color: #FF6B7A; stroke: currentColor; }
       .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+      .negative-soft { color: #FF6B7A; fill: currentColor; fill-opacity: 0.18; stroke: none; }
     </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="1"/><path class="accent" d="M12 11v3"/><path class="accent" d="M10 20h3M18 10v3"/>
+    <circle class="accent-soft" cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9"/><path class="accent" d="M12 11v5.5"/><circle class="accent-fill" cx="12" cy="7.5" r="1.15"/><circle class="ColorScheme-Highlight accent-soft" cx="21.094" cy="3.469" r="1.627"/><circle class="ColorScheme-Highlight accent-fill" cx="21.094" cy="3.469" r="0.877" fill-opacity="0.757"/>
   </g>
 </svg>

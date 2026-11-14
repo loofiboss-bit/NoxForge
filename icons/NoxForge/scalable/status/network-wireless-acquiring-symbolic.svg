@@ -6,14 +6,19 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
+      .glass-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.10; stroke: none; }
       .accent { color: #A3FF47; stroke: currentColor; }
       .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .accent-soft { color: #A3FF47; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
+      .dimmed-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.14; stroke: none; }
       .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
       .warning { color: #FBBF24; stroke: currentColor; }
       .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .warning-soft { color: #FBBF24; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .negative { color: #FF6B7A; stroke: currentColor; }
       .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+      .negative-soft { color: #FF6B7A; fill: currentColor; fill-opacity: 0.18; stroke: none; }
     </style>
   <style id="noxforge-motion" type="text/css">
     @media (prefers-reduced-motion: no-preference) {
@@ -29,6 +34,6 @@
   </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <path class="dimmed nf-wave-3" d="M3 8.5a13 13 0 0 1 18 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0.4s" dur="1.8s" repeatCount="indefinite"/></path><path class="ColorScheme-Highlight accent nf-wave-2" d="M6 12a9 9 0 0 1 12 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0.2s" dur="1.8s" repeatCount="indefinite"/></path><path class="ColorScheme-Highlight accent nf-wave-1" d="M9 15.5a5 5 0 0 1 6 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0s" dur="1.8s" repeatCount="indefinite"/></path><circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="12" cy="19" r="1.5"/><path class="symbolic-ring" d="M8 21.5h8"/>
+    <circle class="accent-soft nf-pulse" cx="12" cy="19" r="3.1"/><path class="dimmed nf-wave-3" d="M2.17 9.17a13.9 13.9 0 0 1 19.66 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0.4s" dur="1.8s" repeatCount="indefinite"/></path><path class="ColorScheme-Highlight accent nf-wave-2" d="M6.84 13.84a7.3 7.3 0 0 1 10.32 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0.2s" dur="1.8s" repeatCount="indefinite"/></path><path class="ColorScheme-Highlight accent nf-wave-1" d="M9.17 16.17a4 4 0 0 1 5.66 0"><animate attributeName="opacity" values="0.2;1;0.2" begin="0s" dur="1.8s" repeatCount="indefinite"/></path><circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="12" cy="19" r="1.55"/><path class="symbolic-ring" d="M8 21.8h8"/>
   </g>
 </svg>

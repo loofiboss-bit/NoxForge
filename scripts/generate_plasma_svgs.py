@@ -661,75 +661,99 @@ def generate_plasma_icon_sheets() -> None:
     t_s = f'class="ColorScheme-Text" {s}'
     w_s = f'class="ColorScheme-NeutralText" {s}'
     n_s = f'class="ColorScheme-NegativeText" {s}'
-    h_f = 'class="ColorScheme-Highlight" fill="currentColor"'
-    w_f = 'class="ColorScheme-NeutralText" fill="currentColor"'
-    n_f = 'class="ColorScheme-NegativeText" fill="currentColor"'
+    d_s = f'class="ColorScheme-Text" opacity="0.28" {s}'
+    h_f = 'class="ColorScheme-Highlight" fill="currentColor" stroke="none"'
+    w_f = 'class="ColorScheme-NeutralText" fill="currentColor" stroke="none"'
+    n_f = 'class="ColorScheme-NegativeText" fill="currentColor" stroke="none"'
+    t_soft = 'class="ColorScheme-Text" fill="currentColor" fill-opacity="0.10" stroke="none"'
+    h_soft = 'class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.16" stroke="none"'
+    w_soft = 'class="ColorScheme-NeutralText" fill="currentColor" fill-opacity="0.16" stroke="none"'
+    n_soft = 'class="ColorScheme-NegativeText" fill="currentColor" fill-opacity="0.16" stroke="none"'
 
-    spk = f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/>'
-    mic = f'<rect {t_s} x="9" y="3" width="6" height="10" rx="3"/><path {t_s} d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/>'
+    spk_d = "M3.5 9.5A1.5 1.5 0 0 1 5 8h2l4.2-3.4a.8.8 0 0 1 1.3.6v13.6a.8.8 0 0 1-1.3.6L7 16H5a1.5 1.5 0 0 1-1.5-1.5z"
+    spk = f'<path {t_soft} d="{spk_d}"/><path {t_s} d="{spk_d}"/>'
+    w1 = "M14.3 9.5a3.8 3.8 0 0 1 0 5"
+    w2 = "M16.6 7.5a6.8 6.8 0 0 1 0 9"
+    w3 = "M18.8 5.4a9.8 9.8 0 0 1 0 13.2"
+    mic = (
+        f'<rect {t_soft} x="9" y="3" width="6" height="10.5" rx="3"/>'
+        f'<rect {t_s} x="9" y="3" width="6" height="10.5" rx="3"/>'
+        f'<path {t_s} d="M5.8 10.5a6.2 6.2 0 0 0 12.4 0M12 16.7v3.8M8.5 20.5h7"/>'
+    )
+    wifi_a1 = "M9.5 16.5a3.5 3.5 0 0 1 5 0"
+    wifi_a2 = "M7 14a7.1 7.1 0 0 1 10 0"
+    wifi_a3 = "M4.5 11.5a10.6 10.6 0 0 1 15 0"
+    wifi_a4 = "M2 9a14.1 14.1 0 0 1 20 0"
     sheets: dict[str, list[tuple[str, str]]] = {
         "audio": [
-            ("audio-volume-high", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10M20 4.5a11 11 0 0 1 0 15"/>'),
-            ("audio-volume-medium", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10"/>'),
-            ("audio-volume-low", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5"/>'),
-            ("audio-volume-muted", f'{spk}<path {n_s} d="M16 9l5 6M21 9l-5 6"/>'),
-            ("microphone-sensitivity-high", f'{mic}<rect {h_f} x="10.2" y="5" width="3.6" height="6" rx="1.8"/>'),
-            ("microphone-sensitivity-medium", f'{mic}<path {h_s} d="M11 6v5M13 8v3"/>'),
-            ("microphone-sensitivity-low", f'{mic}<path {h_s} d="M11 8v3"/>'),
-            ("microphone-sensitivity-muted", f'{mic}<path {n_s} d="M4 4l16 16"/>'),
+            ("audio-volume-high", f'{spk}<path {h_s} d="{w1}"/><path {h_s} d="{w2}"/><path {h_s} d="{w3}"/>'),
+            ("audio-volume-medium", f'{spk}<path {h_s} d="{w1}"/><path {h_s} d="{w2}"/><path {d_s} d="{w3}"/>'),
+            ("audio-volume-low", f'{spk}<path {h_s} d="{w1}"/><path {d_s} d="{w2}"/><path {d_s} d="{w3}"/>'),
+            ("audio-volume-muted", f'{spk}<circle {n_soft} cx="18" cy="12" r="3.4"/><path {n_s} d="M16.2 10.2l3.6 3.6M19.8 10.2l-3.6 3.6"/>'),
+            ("microphone-sensitivity-high", f'{mic}<rect {h_f} x="10.3" y="4.5" width="3.4" height="7.5" rx="1.7"/>'),
+            ("microphone-sensitivity-medium", f'{mic}<rect {h_soft} x="10.4" y="5.5" width="3.2" height="6.5" rx="1.6"/><path {h_s} d="M12 6.6v4.4"/>'),
+            ("microphone-sensitivity-low", f'{mic}<rect {h_soft} x="10.4" y="8.2" width="3.2" height="3.8" rx="1.6"/><path {h_s} d="M11.2 10.1h1.6"/>'),
+            ("microphone-sensitivity-muted", f'{mic}<path {n_s} d="M4.5 4.5l15 15"/>'),
         ],
         "battery": [
-            ("Battery", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {t_s} d="M19 10h2v4h-2"/>'),
-            ("battery-charging", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {h_s} d="M12.5 8l-3 4h3l-1 4 3.5-4.5h-3z"/>'),
-            ("AcAdapter", f'<rect {t_s} x="7" y="7" width="10" height="8" rx="2"/><path {h_s} d="M9 3v4M15 3v4M12 15v6"/>'),
-            ("Unavailable", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {n_s} d="M9 10l4 4M13 10l-4 4"/>'),
+            ("Battery", f'<rect {t_soft} x="2.5" y="6" width="16.5" height="12" rx="3"/><rect {t_s} x="2.5" y="6" width="16.5" height="12" rx="3"/><rect {t_s} x="19.5" y="9.5" width="2" height="5" rx="0.9"/>'),
+            ("battery-charging", f'<rect {h_soft} x="2.5" y="6" width="16.5" height="12" rx="3"/><rect {t_s} x="2.5" y="6" width="16.5" height="12" rx="3"/><rect {t_s} x="19.5" y="9.5" width="2" height="5" rx="0.9"/><path {h_s} d="M12.2 8.2l-2.8 3.8h2.8l-1 3.8 3.4-4.2h-2.8z"/>'),
+            ("AcAdapter", f'<rect {t_soft} x="6.5" y="7" width="11" height="8" rx="2.5"/><rect {t_s} x="6.5" y="7" width="11" height="8" rx="2.5"/><path {h_s} d="M9.5 3v4M14.5 3v4M12 15v5.5"/>'),
+            ("Unavailable", f'<rect {t_soft} x="2.5" y="6" width="16.5" height="12" rx="3"/><rect {t_s} x="2.5" y="6" width="16.5" height="12" rx="3"/><path {n_s} d="M8.8 10l4 4M12.8 10l-4 4"/>'),
         ] + [
-            (f"Fill{pct}", f'<rect {h_f if pct > 20 else (w_f if pct == 20 else n_f)} x="5" y="8" width="{round(pct * 12 / 100, 1)}" height="8" rx="1"/>' if pct > 0 else f'<circle {n_f} cx="11" cy="12" r="1.5"/>')
+            (
+                f"Fill{pct}",
+                (
+                    f'<rect {h_f if pct > 20 else (w_f if pct == 20 else n_f)} x="4.5" y="8" width="{round(pct * 12.5 / 100, 2)}" height="8" rx="1.6"/>'
+                    if pct > 0
+                    else f'<circle {n_soft} cx="10.8" cy="12" r="2.8"/><circle {n_f} cx="10.8" cy="12" r="1.4"/>'
+                ),
+            )
             for pct in range(0, 101, 10)
         ],
         "kdeconnect": [
-            ("kdeconnect", f'<rect {t_s} x="6" y="2" width="12" height="20" rx="2.5"/><path {h_s} d="M10 5h4M9 12l6-4M9 12l6 4"/>'),
-            ("kdeconnect-tray", f'<rect {t_s} x="6" y="3" width="12" height="18" rx="2.5"/><circle {h_f} cx="12" cy="17" r="1.2"/>'),
+            ("kdeconnect", f'<rect {t_soft} x="6" y="2.5" width="12" height="19" rx="3"/><rect {t_s} x="6" y="2.5" width="12" height="19" rx="3"/><path {h_s} d="M10 5.5h4M9.5 12l5-3.2M9.5 12l5 3.2"/><circle {h_f} cx="9.5" cy="12" r="1.1"/>'),
+            ("kdeconnect-tray", f'<rect {t_soft} x="6" y="3" width="12" height="18" rx="3"/><rect {t_s} x="6" y="3" width="12" height="18" rx="3"/><circle {h_soft} cx="12" cy="16.5" r="2.1"/><circle {h_f} cx="12" cy="16.5" r="1.1"/>'),
         ],
         "media": [
-            ("media-playback-start", f'<path {h_s} d="M7 5l11 7-11 7z"/>'),
-            ("media-playback-pause", f'<path {h_s} d="M7 5v14M17 5v14"/>'),
-            ("media-playback-stop", f'<rect {t_s} x="6" y="6" width="12" height="12" rx="1.5"/>'),
-            ("media-skip-forward", f'<path {h_s} d="M5 5l9 7-9 7zM18 5v14"/>'),
-            ("media-skip-backward", f'<path {h_s} d="M19 5l-9 7 9 7zM6 5v14"/>'),
+            ("media-playback-start", f'<circle {t_soft} cx="12" cy="12" r="9"/><path {h_s} d="M8.5 6.5l9 5.5-9 5.5z"/>'),
+            ("media-playback-pause", f'<circle {t_soft} cx="12" cy="12" r="9"/><path {h_s} d="M8.5 6.5v11M15.5 6.5v11"/>'),
+            ("media-playback-stop", f'<rect {t_soft} x="6" y="6" width="12" height="12" rx="2.5"/><rect {t_s} x="6" y="6" width="12" height="12" rx="2.5"/>'),
+            ("media-skip-forward", f'<path {h_soft} d="M5 6.5l8 5.5-8 5.5z"/><path {h_s} d="M5 6.5l8 5.5-8 5.5zM18 6.5v11"/>'),
+            ("media-skip-backward", f'<path {h_soft} d="M19 6.5l-8 5.5 8 5.5z"/><path {h_s} d="M19 6.5l-8 5.5 8 5.5zM6 6.5v11"/>'),
         ],
         "network": [
-            ("network-wireless-100", f'<path {h_s} d="M2 8.5a14.5 14.5 0 0 1 20 0M4.5 11a11 11 0 0 1 15 0M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-80", f'<path {h_s} d="M4.5 11a11 11 0 0 1 15 0M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-60", f'<path {h_s} d="M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-40", f'<path {h_s} d="M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-20", f'<path {w_s} d="M9.5 16a4 4 0 0 1 5 0"/><circle class="ColorScheme-NeutralText" fill="currentColor" cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-0", f'<circle {n_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-acquiring", f'<path {w_s} d="M6 12a9 9 0 0 1 12 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wireless-disconnected", f'<path {n_s} d="M4 4l16 16"/><circle {n_f} cx="12" cy="19" r="1.5"/>'),
-            ("network-wired-activated", f'<rect {t_s} x="4" y="4" width="16" height="10" rx="1"/><path {h_s} d="M8 9h8M12 14v5M8 19h8"/>'),
-            ("network-vpn", f'<path {t_s} d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><rect {h_s} x="9" y="11" width="6" height="5" rx="1"/>'),
+            ("network-wireless-100", f'<path {h_s} d="{wifi_a4}"/><path {h_s} d="{wifi_a3}"/><path {h_s} d="{wifi_a2}"/><path {h_s} d="{wifi_a1}"/><circle {h_soft} cx="12" cy="19" r="2.6"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-80", f'<path {d_s} d="{wifi_a4}"/><path {h_s} d="{wifi_a3}"/><path {h_s} d="{wifi_a2}"/><path {h_s} d="{wifi_a1}"/><circle {h_soft} cx="12" cy="19" r="2.6"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-60", f'<path {d_s} d="{wifi_a4}"/><path {d_s} d="{wifi_a3}"/><path {h_s} d="{wifi_a2}"/><path {h_s} d="{wifi_a1}"/><circle {h_soft} cx="12" cy="19" r="2.6"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-40", f'<path {d_s} d="{wifi_a4}"/><path {d_s} d="{wifi_a3}"/><path {d_s} d="{wifi_a2}"/><path {h_s} d="{wifi_a1}"/><circle {h_soft} cx="12" cy="19" r="2.6"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-20", f'<path {d_s} d="{wifi_a4}"/><path {d_s} d="{wifi_a3}"/><path {d_s} d="{wifi_a2}"/><path {w_s} d="{wifi_a1}"/><circle {w_soft} cx="12" cy="19" r="2.6"/><circle {w_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-0", f'<path {d_s} d="{wifi_a4}"/><path {d_s} d="{wifi_a3}"/><path {d_s} d="{wifi_a2}"/><path {d_s} d="{wifi_a1}"/><circle {n_soft} cx="12" cy="19" r="2.6"/><circle {n_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-acquiring", f'<path {w_s} d="{wifi_a3}"/><path {w_s} d="{wifi_a2}"/><circle {h_soft} cx="12" cy="19" r="2.6"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-disconnected", f'<path {d_s} d="{wifi_a3}"/><path {d_s} d="{wifi_a2}"/><path {n_s} d="M4.5 4.5l15 15"/><circle {n_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wired-activated", f'<rect {t_soft} x="4" y="4" width="16" height="10.5" rx="2"/><rect {t_s} x="4" y="4" width="16" height="10.5" rx="2"/><path {h_s} d="M8.5 9.2h7M12 14.5V19M8 19h8"/>'),
+            ("network-vpn", f'<path {h_soft} d="M12 3l7.5 2.8v5.8c0 4.8-3.2 7.8-7.5 9.4-4.3-1.6-7.5-4.6-7.5-9.4V5.8z"/><path {t_s} d="M12 3l7.5 2.8v5.8c0 4.8-3.2 7.8-7.5 9.4-4.3-1.6-7.5-4.6-7.5-9.4V5.8z"/><rect {h_s} x="9.2" y="10.8" width="5.6" height="4.8" rx="1.2"/>'),
         ],
         "notification": [
-            ("notification-active", f'<path {h_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/>'),
-            ("notification-inactive", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/>'),
-            ("notification-disabled", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4z"/><path {n_s} d="M4 4l16 16"/>'),
-            ("notification-progress-active", f'<circle {h_s} cx="12" cy="12" r="8"/><path {h_s} d="M12 4a8 8 0 0 1 8 8"/>'),
-            ("notification-progress-inactive", f'<circle {t_s} cx="12" cy="12" r="8"/>'),
+            ("notification-active", f'<path {h_soft} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13z"/><path {h_s} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13zM10 18.8a2 2 0 0 0 4 0"/>'),
+            ("notification-inactive", f'<path {t_soft} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13z"/><path {t_s} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13zM10 18.8a2 2 0 0 0 4 0"/>'),
+            ("notification-disabled", f'<path {t_soft} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13z"/><path {t_s} d="M6.2 15.8h11.6l-1.8-2.8V9.5a4 4 0 0 0-8 0V13z"/><path {n_s} d="M4.5 4.5l15 15"/>'),
+            ("notification-progress-active", f'<circle {h_soft} cx="12" cy="12" r="2.2"/><circle {d_s} cx="12" cy="12" r="8"/><path {h_s} d="M12 4a8 8 0 0 1 8 8"/>'),
+            ("notification-progress-inactive", f'<circle {t_soft} cx="12" cy="12" r="8"/><circle {t_s} cx="12" cy="12" r="8"/>'),
         ],
         "osd": [
-            ("osd-rotate-cw", f'<path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
-            ("osd-rotate-ccw", f'<path {h_s} d="M5 8V4l3 3a8 8 0 1 1-2 9"/>'),
-            ("osd-shutd-screen", f'<rect {t_s} x="3" y="4" width="18" height="12" rx="2"/><path {h_s} d="M8 20h8"/>'),
-            ("osd-shutd-laptop", f'<rect {t_s} x="4" y="5" width="16" height="10" rx="1.5"/><path {h_s} d="M2 18h20"/>'),
-            ("osd-duplicate", f'<rect {t_s} x="2" y="6" width="11" height="10" rx="1.5"/><rect {h_s} x="11" y="8" width="11" height="10" rx="1.5"/>'),
+            ("osd-rotate-cw", f'<circle {t_soft} cx="12" cy="12" r="8"/><path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
+            ("osd-rotate-ccw", f'<circle {t_soft} cx="12" cy="12" r="8"/><path {h_s} d="M5 8V4l3 3a8 8 0 1 1-2 9"/>'),
+            ("osd-shutd-screen", f'<rect {t_soft} x="3" y="4" width="18" height="12" rx="2.5"/><rect {t_s} x="3" y="4" width="18" height="12" rx="2.5"/><path {h_s} d="M8 20h8"/>'),
+            ("osd-shutd-laptop", f'<rect {t_soft} x="4" y="5" width="16" height="10" rx="2"/><rect {t_s} x="4" y="5" width="16" height="10" rx="2"/><path {h_s} d="M2.5 18.5h19"/>'),
+            ("osd-duplicate", f'<rect {t_soft} x="2.5" y="5.5" width="11" height="10" rx="2"/><rect {t_s} x="2.5" y="5.5" width="11" height="10" rx="2"/><rect {h_soft} x="10.5" y="8.5" width="11" height="10" rx="2"/><rect {t_s} x="10.5" y="8.5" width="11" height="10" rx="2"/>'),
         ],
         "system": [
-            ("system-shutdown", f'<path {n_s} d="M12 3v9"/><path {t_s} d="M7 6a8 8 0 1 0 10 0"/>'),
-            ("system-reboot", f'<path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
-            ("system-suspend", f'<path {h_s} d="M7 5a8 8 0 1 0 12 10A7 7 0 0 1 7 5z"/>'),
-            ("system-lock-screen", f'<rect {t_s} x="5" y="10" width="14" height="11" rx="2"/><path {h_s} d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
-            ("system-log-out", f'<path {t_s} d="M10 4H5v16h5"/><path {h_s} d="M14 8l4 4-4 4M8 12h10"/>'),
+            ("system-shutdown", f'<circle {n_soft} cx="12" cy="12" r="8"/><path {n_s} d="M12 3.5V11"/><path {t_s} d="M7.2 6.5a8 8 0 1 0 9.6 0"/>'),
+            ("system-reboot", f'<circle {h_soft} cx="12" cy="12" r="8"/><path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
+            ("system-suspend", f'<path {h_soft} d="M7.5 5.2a8 8 0 1 0 11.3 10.6A7 7 0 0 1 7.5 5.2z"/><path {h_s} d="M7.5 5.2a8 8 0 1 0 11.3 10.6A7 7 0 0 1 7.5 5.2z"/>'),
+            ("system-lock-screen", f'<rect {t_soft} x="5" y="10" width="14" height="10.5" rx="2.5"/><rect {t_s} x="5" y="10" width="14" height="10.5" rx="2.5"/><path {h_s} d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+            ("system-log-out", f'<path {t_soft} d="M10 4.5H6a1.5 1.5 0 0 0-1.5 1.5v12A1.5 1.5 0 0 0 6 19.5h4z"/><path {t_s} d="M10 4.5H6a1.5 1.5 0 0 0-1.5 1.5v12A1.5 1.5 0 0 0 6 19.5h4"/><path {h_s} d="M14.5 8.5l4 3.5-4 3.5M8.5 12h10"/>'),
         ],
     }
     for name in CONTRACT["iconSheetFamilies"]:
