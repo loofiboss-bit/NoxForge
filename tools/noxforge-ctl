@@ -1595,11 +1595,22 @@ def _find_icon_theme_dir() -> Path | None:
     return None
 
 
+def _find_plasma_icons_dir(theme_id: str) -> Path | None:
+    for candidate in (
+        ROOT / "plasma/desktoptheme" / theme_id / "icons",
+        get_xdg_data_home() / "plasma/desktoptheme" / theme_id / "icons",
+        Path("/usr/share/plasma/desktoptheme") / theme_id / "icons",
+    ):
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
 def manage_icons(action: str = "status", dry_run: bool = False) -> dict[str, Any]:
     """Inspect, verify, or refresh Kinetic Iconography & Plasma DesktopTheme icon sheets."""
     theme_dir = _find_icon_theme_dir()
-    plasma_std = find_asset(f"plasma/desktoptheme/{THEME_GRAPHITE_ID}/icons")
-    plasma_obs = find_asset(f"plasma/desktoptheme/{THEME_OBSIDIAN_ID}/icons")
+    plasma_std = _find_plasma_icons_dir(THEME_GRAPHITE_ID)
+    plasma_obs = _find_plasma_icons_dir(THEME_OBSIDIAN_ID)
 
     sheet_names = ("audio", "battery", "kdeconnect", "media", "network", "notification", "osd", "system")
     std_sheets = sum(1 for name in sheet_names if plasma_std and (plasma_std / f"{name}.svg").is_file())
@@ -1658,8 +1669,8 @@ def manage_icons(action: str = "status", dry_run: bool = False) -> dict[str, Any
     cache_refreshed = False
     active_accent = get_active_accent_hex()
     if action == "sync-accent" and not dry_run:
-        sync_kde_color_scheme_accent(active_accent, dry_run=False)
-        local_icons = Path.home() / ".local/share/icons/NoxForge"
+        set_accent(active_accent, dry_run=False)
+        local_icons = get_xdg_data_home() / "icons/NoxForge"
         if local_icons.is_dir() and shutil.which("gtk-update-icon-cache"):
             subprocess.run(["gtk-update-icon-cache", "-f", "-t", str(local_icons)], capture_output=True)
             cache_refreshed = True

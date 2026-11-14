@@ -1189,6 +1189,8 @@ def content_digest(marker: Path, *, single_file: bool = False) -> str | None:
     try:
         paths = [marker] if single_file else sorted(base.rglob("*"))
         for path in paths:
+            if path.name == "icon-theme.cache":
+                continue
             if path.is_symlink():
                 digest.update(path.relative_to(base).as_posix().encode())
                 digest.update(b"link:" + os.readlink(path).encode())
