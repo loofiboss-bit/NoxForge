@@ -6,22 +6,17 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
-      .glass-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.10; stroke: none; }
       .accent { color: #A3FF47; stroke: currentColor; }
       .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
-      .accent-soft { color: #A3FF47; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
-      .dimmed-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.14; stroke: none; }
       .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
       .warning { color: #FBBF24; stroke: currentColor; }
       .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
-      .warning-soft { color: #FBBF24; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .negative { color: #FF6B7A; stroke: currentColor; }
       .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
-      .negative-soft { color: #FF6B7A; fill: currentColor; fill-opacity: 0.18; stroke: none; }
     </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <rect class="dimmed-fill" x="3" y="16.8" width="2.5" height="3.2" rx="1.1"/><rect class="dimmed-fill" x="7" y="13.4" width="2.5" height="6.6" rx="1.1"/><rect class="dimmed-fill" x="11" y="10.0" width="2.5" height="10.0" rx="1.1"/><rect class="dimmed-fill" x="15" y="6.600000000000001" width="2.5" height="13.399999999999999" rx="1.1"/><rect class="dimmed-fill" x="19" y="3.1999999999999993" width="2.5" height="16.8" rx="1.1"/><path class="ColorScheme-NegativeText negative" d="M4 4l16 16"/>
+    <rect class="dimmed" x="3" y="17.0" width="2.4" height="3.0" rx="0.6"/><rect class="dimmed" x="7" y="13.5" width="2.4" height="6.5" rx="0.6"/><rect class="dimmed" x="11" y="10.0" width="2.4" height="10.0" rx="0.6"/><rect class="dimmed" x="15" y="6.5" width="2.4" height="13.5" rx="0.6"/><rect class="dimmed" x="19" y="3.0" width="2.4" height="17.0" rx="0.6"/><path class="ColorScheme-NegativeText negative" d="M4 4l16 16"/>
   </g>
 </svg>

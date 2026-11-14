@@ -6,22 +6,17 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
-      .glass-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.10; stroke: none; }
       .accent { color: #A3FF47; stroke: currentColor; }
       .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
-      .accent-soft { color: #A3FF47; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
-      .dimmed-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.14; stroke: none; }
       .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
       .warning { color: #FBBF24; stroke: currentColor; }
       .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
-      .warning-soft { color: #FBBF24; fill: currentColor; fill-opacity: 0.18; stroke: none; }
       .negative { color: #FF6B7A; stroke: currentColor; }
       .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
-      .negative-soft { color: #FF6B7A; fill: currentColor; fill-opacity: 0.18; stroke: none; }
     </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <path class="accent-soft" d="M12 3l7.5 2.8v5.8c0 4.8-3.2 7.8-7.5 9.6-4.3-1.8-7.5-4.8-7.5-9.6V5.8z"/><path d="M12 3l7.5 2.8v5.8c0 4.8-3.2 7.8-7.5 9.6-4.3-1.8-7.5-4.8-7.5-9.6V5.8z"/><path class="accent" d="M8.8 12l2.2 2.2 4.4-4.6"/>
+    <path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6zM8.5 12l2.5 2.5 5-5"/><path class="accent" d="M8.5 12l2.5 2.5"/>
   </g>
 </svg>
