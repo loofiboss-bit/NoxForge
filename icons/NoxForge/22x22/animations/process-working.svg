@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="352" viewBox="0 0 22 352">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+      .accent { stroke: currentColor; }
+      .dimmed { opacity: 0.25; stroke: #748289; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="2.1" stroke-linecap="round">
+  <g transform="translate(0 0)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(0.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 22)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(22.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 44)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(45.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 66)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(67.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 88)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(90.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 110)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(112.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 132)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(135.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 154)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(157.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 176)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(180.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 198)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(202.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 220)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(225.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 242)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(247.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 264)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(270.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 286)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(292.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 308)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(315.0 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  <g transform="translate(0 330)"><circle class="dimmed" cx="11.0" cy="11.0" r="7.48"/><g transform="rotate(337.5 11.0 11.0)"><path class="ColorScheme-Highlight accent" d="M11.0 3.5199999999999996a7.48 7.48 0 0 1 7.48 7.48"/></g></g>
+  </g>
+</svg>

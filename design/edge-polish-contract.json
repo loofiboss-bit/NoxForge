@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "19.0.0",
+  "version": "20.0.0",
   "phase": 6,
   "aurorae": {
     "titleHeight": 26,
@@ -27,9 +27,9 @@
   },
   "icons": {
     "coverageFrozen": {
-      "scalable": 193,
-      "optical": 272,
-      "runtimeFixture": 85
+      "scalable": 404,
+      "optical": 684,
+      "runtimeFixture": 86
     },
     "reviewSizes": [16, 22, 24, 32, 48],
     "priority": {

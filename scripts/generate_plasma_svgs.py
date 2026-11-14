@@ -36,6 +36,9 @@ def make_svg_header(colors: dict[str, str]) -> str:
       .ColorScheme-ViewHover {{ color: {colors['detailCyan']}; }}
       .ColorScheme-ButtonHover {{ color: {colors['detailCyan']}; }}
       .ColorScheme-ButtonFocus {{ color: {colors['accent']}; }}
+      .ColorScheme-PositiveText {{ color: {colors['accent']}; }}
+      .ColorScheme-NeutralText {{ color: {colors['neutral']}; }}
+      .ColorScheme-NegativeText {{ color: {colors['negative']}; }}
       .NoxForge-Sunken {{ color: {colors['surfaceSunken']}; }}
       .NoxForge-Overlay {{ color: {colors['surfaceOverlay']}; }}
       .NoxForge-Hover {{ color: {colors['surfaceHover']}; }}
@@ -625,6 +628,112 @@ def generate_plasma_assets() -> None:
             ("bar-inactive", recipe("disabled")),
             ("bar-active", family_paint(relative)),
         ]))
+    generate_plasma_icon_sheets()
+
+
+def _plasma_icon_sheet(entries: list[tuple[str, str]]) -> str:
+    """Build a Plasma DesktopTheme multi-element icons/*.svg sheet on a 24px cell grid."""
+    cols = 4
+    rows = max(1, (len(entries) + cols - 1) // cols)
+    width = cols * 32
+    height = rows * 32
+    groups: list[str] = []
+    for idx, (element_id_name, markup) in enumerate(entries):
+        x = (idx % cols) * 32 + 4
+        y = (idx // cols) * 32 + 4
+        groups.append(
+            f'  <g id="{element_id_name}" transform="translate({x} {y})">'
+            f'<rect width="24" height="24" fill="none" stroke="none"/>'
+            f'{markup}</g>'
+        )
+    header = make_svg_header(CURRENT_COLORS).replace(
+        'width="640" height="480" viewBox="0 0 640 480"',
+        f'width="{width}" height="{height}" viewBox="0 0 {width} {height}"',
+        1,
+    )
+    return header + "\n".join(groups) + "\n</svg>\n"
+
+
+def generate_plasma_icon_sheets() -> None:
+    """Generate the 8 Plasma DesktopTheme icons/*.svg multi-element sheets."""
+    s = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'
+    h_s = f'class="ColorScheme-Highlight" {s}'
+    t_s = f'class="ColorScheme-Text" {s}'
+    w_s = f'class="ColorScheme-NeutralText" {s}'
+    n_s = f'class="ColorScheme-NegativeText" {s}'
+    h_f = 'class="ColorScheme-Highlight" fill="currentColor"'
+    w_f = 'class="ColorScheme-NeutralText" fill="currentColor"'
+    n_f = 'class="ColorScheme-NegativeText" fill="currentColor"'
+
+    spk = f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/>'
+    mic = f'<rect {t_s} x="9" y="3" width="6" height="10" rx="3"/><path {t_s} d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/>'
+    sheets: dict[str, list[tuple[str, str]]] = {
+        "audio": [
+            ("audio-volume-high", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10M20 4.5a11 11 0 0 1 0 15"/>'),
+            ("audio-volume-medium", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10"/>'),
+            ("audio-volume-low", f'{spk}<path {h_s} d="M15 9.5a4 4 0 0 1 0 5"/>'),
+            ("audio-volume-muted", f'{spk}<path {n_s} d="M16 9l5 6M21 9l-5 6"/>'),
+            ("microphone-sensitivity-high", f'{mic}<rect {h_f} x="10.2" y="5" width="3.6" height="6" rx="1.8"/>'),
+            ("microphone-sensitivity-medium", f'{mic}<path {h_s} d="M11 6v5M13 8v3"/>'),
+            ("microphone-sensitivity-low", f'{mic}<path {h_s} d="M11 8v3"/>'),
+            ("microphone-sensitivity-muted", f'{mic}<path {n_s} d="M4 4l16 16"/>'),
+        ],
+        "battery": [
+            ("Battery", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {t_s} d="M19 10h2v4h-2"/>'),
+            ("battery-charging", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {h_s} d="M12.5 8l-3 4h3l-1 4 3.5-4.5h-3z"/>'),
+            ("AcAdapter", f'<rect {t_s} x="7" y="7" width="10" height="8" rx="2"/><path {h_s} d="M9 3v4M15 3v4M12 15v6"/>'),
+            ("Unavailable", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {n_s} d="M9 10l4 4M13 10l-4 4"/>'),
+        ] + [
+            (f"Fill{pct}", f'<rect {h_f if pct > 20 else (w_f if pct == 20 else n_f)} x="5" y="8" width="{round(pct * 12 / 100, 1)}" height="8" rx="1"/>' if pct > 0 else f'<circle {n_f} cx="11" cy="12" r="1.5"/>')
+            for pct in range(0, 101, 10)
+        ],
+        "kdeconnect": [
+            ("kdeconnect", f'<rect {t_s} x="6" y="2" width="12" height="20" rx="2.5"/><path {h_s} d="M10 5h4M9 12l6-4M9 12l6 4"/>'),
+            ("kdeconnect-tray", f'<rect {t_s} x="6" y="3" width="12" height="18" rx="2.5"/><circle {h_f} cx="12" cy="17" r="1.2"/>'),
+        ],
+        "media": [
+            ("media-playback-start", f'<path {h_s} d="M7 5l11 7-11 7z"/>'),
+            ("media-playback-pause", f'<path {h_s} d="M7 5v14M17 5v14"/>'),
+            ("media-playback-stop", f'<rect {t_s} x="6" y="6" width="12" height="12" rx="1.5"/>'),
+            ("media-skip-forward", f'<path {h_s} d="M5 5l9 7-9 7zM18 5v14"/>'),
+            ("media-skip-backward", f'<path {h_s} d="M19 5l-9 7 9 7zM6 5v14"/>'),
+        ],
+        "network": [
+            ("network-wireless-100", f'<path {h_s} d="M2 8.5a14.5 14.5 0 0 1 20 0M4.5 11a11 11 0 0 1 15 0M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-80", f'<path {h_s} d="M4.5 11a11 11 0 0 1 15 0M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-60", f'<path {h_s} d="M7 13.5a7.5 7.5 0 0 1 10 0M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-40", f'<path {h_s} d="M9.5 16a4 4 0 0 1 5 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-20", f'<path {w_s} d="M9.5 16a4 4 0 0 1 5 0"/><circle class="ColorScheme-NeutralText" fill="currentColor" cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-0", f'<circle {n_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-acquiring", f'<path {w_s} d="M6 12a9 9 0 0 1 12 0"/><circle {h_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-disconnected", f'<path {n_s} d="M4 4l16 16"/><circle {n_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wired-activated", f'<rect {t_s} x="4" y="4" width="16" height="10" rx="1"/><path {h_s} d="M8 9h8M12 14v5M8 19h8"/>'),
+            ("network-vpn", f'<path {t_s} d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><rect {h_s} x="9" y="11" width="6" height="5" rx="1"/>'),
+        ],
+        "notification": [
+            ("notification-active", f'<path {h_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/>'),
+            ("notification-inactive", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/>'),
+            ("notification-disabled", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4z"/><path {n_s} d="M4 4l16 16"/>'),
+            ("notification-progress-active", f'<circle {h_s} cx="12" cy="12" r="8"/><path {h_s} d="M12 4a8 8 0 0 1 8 8"/>'),
+            ("notification-progress-inactive", f'<circle {t_s} cx="12" cy="12" r="8"/>'),
+        ],
+        "osd": [
+            ("osd-rotate-cw", f'<path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
+            ("osd-rotate-ccw", f'<path {h_s} d="M5 8V4l3 3a8 8 0 1 1-2 9"/>'),
+            ("osd-shutd-screen", f'<rect {t_s} x="3" y="4" width="18" height="12" rx="2"/><path {h_s} d="M8 20h8"/>'),
+            ("osd-shutd-laptop", f'<rect {t_s} x="4" y="5" width="16" height="10" rx="1.5"/><path {h_s} d="M2 18h20"/>'),
+            ("osd-duplicate", f'<rect {t_s} x="2" y="6" width="11" height="10" rx="1.5"/><rect {h_s} x="11" y="8" width="11" height="10" rx="1.5"/>'),
+        ],
+        "system": [
+            ("system-shutdown", f'<path {n_s} d="M12 3v9"/><path {t_s} d="M7 6a8 8 0 1 0 10 0"/>'),
+            ("system-reboot", f'<path {h_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9"/>'),
+            ("system-suspend", f'<path {h_s} d="M7 5a8 8 0 1 0 12 10A7 7 0 0 1 7 5z"/>'),
+            ("system-lock-screen", f'<rect {t_s} x="5" y="10" width="14" height="11" rx="2"/><path {h_s} d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+            ("system-log-out", f'<path {t_s} d="M10 4H5v16h5"/><path {h_s} d="M14 8l4 4-4 4M8 12h10"/>'),
+        ],
+    }
+    for name in CONTRACT["iconSheetFamilies"]:
+        write(f"icons/{name}.svg", _plasma_icon_sheet(sheets[name]))
 
 
 def main() -> None:

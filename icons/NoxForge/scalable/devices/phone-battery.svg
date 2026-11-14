@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+      .accent { color: #A3FF47; stroke: currentColor; }
+      .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.25; stroke: currentColor; }
+      .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; }
+      .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="10" height="18" rx="2"/><path d="M6.5 6h3"/><rect x="15.5" y="7" width="6" height="11" rx="1.5"/><rect class="ColorScheme-Highlight accent-fill" x="17" y="10" width="3" height="6"/><path d="M17.5 5h2"/>
+  </g>
+</svg>

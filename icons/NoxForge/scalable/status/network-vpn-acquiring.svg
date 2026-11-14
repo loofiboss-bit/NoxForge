@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+      .accent { color: #A3FF47; stroke: currentColor; }
+      .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.25; stroke: currentColor; }
+      .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; }
+      .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+    </style>
+  <style id="noxforge-motion" type="text/css">
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes nf-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      @keyframes nf-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      @keyframes nf-wave { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+      .nf-pulse { animation: nf-pulse 1.4s ease-in-out infinite; }
+      .nf-spin { transform-origin: 12px 12px; animation: nf-spin 1.2s linear infinite; }
+      .nf-wave-1 { animation: nf-wave 1.8s ease-in-out 0s infinite; }
+      .nf-wave-2 { animation: nf-wave 1.8s ease-in-out 0.2s infinite; }
+      .nf-wave-3 { animation: nf-wave 1.8s ease-in-out 0.4s infinite; }
+    }
+  </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="9" cy="12" r="1.2"/><circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="12" cy="12" r="1.2"/><circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="15" cy="12" r="1.2"/><animate attributeName="opacity" values="1;0.55;1" dur="1.4s" repeatCount="indefinite"/>
+  </g>
+</svg>

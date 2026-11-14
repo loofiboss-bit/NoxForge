@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="64" viewBox="0 0 128 64">
+  <defs>
+    <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Background { color: #0A0F13; }
+      .ColorScheme-ViewBackground { color: #000000; }
+      .ColorScheme-ButtonBackground { color: #121B21; }
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-ViewHover { color: #22D3EE; }
+      .ColorScheme-ButtonHover { color: #22D3EE; }
+      .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+      .NoxForge-Sunken { color: #05080A; }
+      .NoxForge-Overlay { color: #1A252C; }
+      .NoxForge-Hover { color: #202E38; }
+      .NoxForge-Selected { color: #192D1E; }
+      .NoxForge-AccentSoft { color: #243528; }
+      .NoxForge-Attention { color: #FBBF24; }
+      .NoxForge-Progress { color: #A3FF47; }
+      .NoxForge-Border { color: #2F414B; }
+      .NoxForge-EdgeHighlight { color: #4B606A; }
+      .NoxForge-OverlayShadow { color: #000000; }
+    ]]></style>
+  </defs>
+  <g id="audio-volume-high" transform="translate(4 4)"><rect width="24" height="24" fill="none" stroke="none"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10M20 4.5a11 11 0 0 1 0 15"/></g>
+  <g id="audio-volume-medium" transform="translate(36 4)"><rect width="24" height="24" fill="none" stroke="none"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10"/></g>
+  <g id="audio-volume-low" transform="translate(68 4)"><rect width="24" height="24" fill="none" stroke="none"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 9.5a4 4 0 0 1 0 5"/></g>
+  <g id="audio-volume-muted" transform="translate(100 4)"><rect width="24" height="24" fill="none" stroke="none"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="ColorScheme-NegativeText" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M16 9l5 6M21 9l-5 6"/></g>
+  <g id="microphone-sensitivity-high" transform="translate(4 36)"><rect width="24" height="24" fill="none" stroke="none"/><rect class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" x="9" y="3" width="6" height="10" rx="3"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/><rect class="ColorScheme-Highlight" fill="currentColor" x="10.2" y="5" width="3.6" height="6" rx="1.8"/></g>
+  <g id="microphone-sensitivity-medium" transform="translate(36 36)"><rect width="24" height="24" fill="none" stroke="none"/><rect class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" x="9" y="3" width="6" height="10" rx="3"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/><path class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M11 6v5M13 8v3"/></g>
+  <g id="microphone-sensitivity-low" transform="translate(68 36)"><rect width="24" height="24" fill="none" stroke="none"/><rect class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" x="9" y="3" width="6" height="10" rx="3"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/><path class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M11 8v3"/></g>
+  <g id="microphone-sensitivity-muted" transform="translate(100 36)"><rect width="24" height="24" fill="none" stroke="none"/><rect class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" x="9" y="3" width="6" height="10" rx="3"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/><path class="ColorScheme-NegativeText" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 4l16 16"/></g>
+</svg>

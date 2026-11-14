@@ -370,6 +370,7 @@ def metadata_version(path: Path, expected: str | None = None) -> str | None:
         for pat in (
             r'(?m)^(?:X-KDE-PluginInfo-)?Version\s*=\s*([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)\s*$',
             r'@version\s+([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)',
+            r'@noxforge-version:\s*([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)',
             r'"version"\s*:\s*"([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)"',
         ):
             m = re.search(pat, text)
@@ -682,6 +683,93 @@ def icon_adaptation_diagnostics(roots: list[Path], root: Path = Path("/")) -> di
             "checked": len(V15_SIGNAL_SUITE),
             "missing": sorted(missing_v15),
         },
+    }
+
+
+def icon_level_matrix_diagnostics(roots: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    """Verify multi-level status icons, 16-frame sprite sheets, and Plasma icon sheets (Schema 13)."""
+    theme_roots = [candidate / "icons/NoxForge" for candidate in roots]
+    if root == Path("/"):
+        theme_roots.append(Path(__file__).resolve().parents[1] / "icons/NoxForge")
+    installed = next((candidate for candidate in theme_roots if scoped_file(candidate / "index.theme", root)), None)
+    sheet_names = ("audio", "battery", "kdeconnect", "media", "network", "notification", "osd", "system")
+
+    plasma_bases = [*roots]
+    if root == Path("/"):
+        plasma_bases.append(Path(__file__).resolve().parents[1])
+
+    def count_plasma_sheets(theme_id: str) -> int:
+        best = 0
+        for base in plasma_bases:
+            candidates = (
+                base / f"plasma/desktoptheme/{theme_id}/icons",
+                base / f"desktoptheme/{theme_id}/icons",
+            )
+            for icons_dir in candidates:
+                count = sum(1 for name in sheet_names if scoped_file(icons_dir / f"{name}.svg", root))
+                if count > best:
+                    best = count
+        return best
+
+    std_sheets = count_plasma_sheets(THEME_ID)
+    obs_sheets = count_plasma_sheets(THEME_OBSIDIAN_ID)
+
+    if installed is None:
+        return {
+            "status": "theme-missing",
+            "scalableCount": 0,
+            "opticalCount": 0,
+            "animationsPresent": False,
+            "batteryLevels": 0,
+            "wifiLevels": 0,
+            "audioLevels": 0,
+            "brightnessLevels": 0,
+            "plasmaIconSheets": {"standard": std_sheets, "obsidian": obs_sheets},
+        }
+
+    scalable = installed / "scalable"
+    scalable_count = len([p for p in scalable.glob("*/*.svg") if scoped_file(p, root)]) if scalable.is_dir() else 0
+    optical_count = sum(
+        len([p for p in (installed / f"{sz}x{sz}").glob("*/*.svg") if scoped_file(p, root)])
+        for sz in (16, 22)
+        if (installed / f"{sz}x{sz}").is_dir()
+    )
+    anim_ok = (
+        scoped_file(scalable / "animations/process-working.svg", root)
+        and scoped_file(installed / "16x16/animations/process-working.svg", root)
+        and scoped_file(installed / "22x22/animations/process-working.svg", root)
+    )
+    battery_levels = sum(1 for pct in range(0, 101, 10) if scoped_file(scalable / f"status/battery-{pct:03d}.svg", root))
+    wifi_levels = sum(1 for pct in (0, 20, 40, 60, 80, 100) if scoped_file(scalable / f"status/network-wireless-{pct}.svg", root))
+    audio_levels = sum(
+        1
+        for suf in ("muted", "low", "medium", "high", "high-warning", "high-danger")
+        if scoped_file(scalable / f"status/audio-volume-{suf}.svg", root)
+    )
+    brightness_levels = sum(
+        1
+        for suf in ("off", "low", "medium", "high")
+        if scoped_file(scalable / f"status/display-brightness-{suf}.svg", root)
+    )
+    complete = (
+        anim_ok
+        and battery_levels == 11
+        and wifi_levels == 6
+        and audio_levels == 6
+        and brightness_levels == 4
+        and std_sheets == 8
+        and obs_sheets == 8
+    )
+    return {
+        "status": "ok" if complete else "incomplete",
+        "scalableCount": scalable_count,
+        "opticalCount": optical_count,
+        "animationsPresent": anim_ok,
+        "batteryLevels": battery_levels,
+        "wifiLevels": wifi_levels,
+        "audioLevels": audio_levels,
+        "brightnessLevels": brightness_levels,
+        "plasmaIconSheets": {"standard": std_sheets, "obsidian": obs_sheets},
     }
 
 
@@ -1276,6 +1364,12 @@ def inspect_ecosystem(root: Path) -> dict[str, Any]:
         "starship": (root / "terminals/starship/starship.toml").is_file() or (root / "usr/share/noxforge/terminals/starship/starship.toml").is_file(),
         "fastfetch": (root / "tools/fastfetch/noxforge.jsonc").is_file() or (root / "usr/share/noxforge/fastfetch/noxforge.jsonc").is_file(),
         "systemmonitor": (root / "apps/systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/plasma-systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/noxforge/apps/systemmonitor/noxforge-telemetry.page").is_file(),
+        "obsidian": (root / "apps/obsidian/noxforge.css").is_file() or (root / "usr/share/noxforge/apps/obsidian/noxforge.css").is_file(),
+        "rofi": (root / "apps/rofi/noxforge.rasi").is_file() or (root / "usr/share/noxforge/apps/rofi/noxforge.rasi").is_file(),
+        "yazi": (root / "apps/yazi/theme.toml").is_file() or (root / "usr/share/noxforge/apps/yazi/theme.toml").is_file(),
+        "lazygit": (root / "apps/lazygit/config.yml").is_file() or (root / "usr/share/noxforge/apps/lazygit/config.yml").is_file(),
+        "zellij": (root / "terminals/zellij/noxforge.kdl").is_file() or (root / "usr/share/noxforge/terminals/zellij/noxforge.kdl").is_file(),
+        "tmux": (root / "terminals/tmux/noxforge.conf").is_file() or (root / "usr/share/noxforge/terminals/tmux/noxforge.conf").is_file(),
     }
     return {
         "flatpakThemesOverride": flatpak_override,
@@ -1558,7 +1652,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 12,
+        "schemaVersion": 13,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -1570,6 +1664,7 @@ def build_report(root: Path) -> dict[str, Any]:
         "components": components,
         "criticalIcons": icons,
         "iconAdaptation": icon_adaptation,
+        "iconLevelMatrix": icon_level_matrix_diagnostics(roots, root),
         "edition": edition,
         "loginSurface": login_surface_report(root, components),
         "paletteSynchronization": {

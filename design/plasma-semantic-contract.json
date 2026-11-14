@@ -152,6 +152,16 @@
   "weatherFamilies": [
     "wind-arrows"
   ],
+  "iconSheetFamilies": [
+    "audio",
+    "battery",
+    "kdeconnect",
+    "media",
+    "network",
+    "notification",
+    "osd",
+    "system"
+  ],
   "backgroundVariants": [
     "opaque/dialogs/background.svg",
     "opaque/widgets/panel-background.svg",

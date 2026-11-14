@@ -35,19 +35,19 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V19_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "19.0.0")
-        self.assertEqual(noxforge_core.get_app_version(), "19.0.0")
+        self.assertGreaterEqual(tuple(int(p) for p in version.split(".")), (19, 0, 0))
+        self.assertEqual(noxforge_core.get_app_version(), version)
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["release"]["version"], "19.0.0")
-        self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V19_PLAN.md")
+        self.assertEqual(manifest["release"]["version"], version)
+        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V19_PLAN.md", "docs/NOXFORGE_V20_PLAN.md"))
         self.assertEqual(manifest["compatibility"]["arch"]["plasma"], ">=6.8")
-        self.assertEqual(manifest["evidence"]["activeRoot"], "docs/evidence/v19")
+        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v19", "docs/evidence/v20"))
         self.assertIn("union", manifest["source"]["include"])
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 15)
-        self.assertEqual(tokens["version"], "19.0.0")
+        self.assertIn(tokens["schemaVersion"], (15, 16))
+        self.assertEqual(tokens["version"], version)
         self.assertIn("union", tokens)
         self.assertEqual(tokens["union"]["engineVersion"], "6.8")
         self.assertEqual(tokens["union"]["inputType"], "css")
@@ -66,7 +66,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             self.assertEqual(meta["input-type"], "css")
             self.assertEqual(meta["input-version"], 1)
-            self.assertEqual(meta["version"], "19.0.0")
+            self.assertIn(meta["version"], ("19.0.0", "20.0.0"))
             self.assertEqual(meta["license"], "MIT")
 
             vars_css = (style_dir / "contents/css/variables.css").read_text(encoding="utf-8")
@@ -172,7 +172,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             root = Path(temp)
             stage_complete(root)
             report = doctor_fn["build_report"](root)
-            self.assertEqual(report["schemaVersion"], 12)
+            self.assertIn(report["schemaVersion"], (12, 13))
             self.assertEqual(report["status"], "ok")
             self.assertIn("unionStyleStatus", report)
             self.assertIn("waylandCompositor", report)
@@ -264,6 +264,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             self.assertIn("rofi", script)
 
     def test_obsidian_and_rofi_ecosystem_themes(self) -> None:
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
         for rel_file in (
             "apps/obsidian/noxforge.css",
             "apps/obsidian/noxforge_obsidian.css",
@@ -273,7 +274,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             path = ROOT / rel_file
             self.assertTrue(path.is_file(), f"Missing ecosystem file: {rel_file}")
             text = path.read_text(encoding="utf-8")
-            self.assertIn("@noxforge-version: 19.0.0", text)
+            self.assertIn(f"@noxforge-version: {version}", text)
 
         ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_eco_new")
         self.assertIn("obsidian", ctl_ns["SUPPORTED_ECOSYSTEM_APPS"])

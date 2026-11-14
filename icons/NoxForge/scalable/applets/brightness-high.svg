@@ -3,17 +3,20 @@
     <style id="current-color-scheme" type="text/css">
       .ColorScheme-Text { color: #E8F0F2; }
       .ColorScheme-Highlight { color: #A3FF47; }
-      .ColorScheme-NeutralText { color: #748289; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
-      .accent { stroke: #A3FF47; }
-      .accent-fill { fill: #A3FF47; stroke: none; }
+      .accent { color: #A3FF47; stroke: currentColor; }
+      .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
-      .negative { stroke: #FF6B7A; }
-      .negative-fill { fill: #FF6B7A; stroke: none; }
+      .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; }
+      .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
     </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path class="accent" d="M4 5h5"/><path class="accent" d="M16 19h4M19 11v4"/>
+    <circle cx="12" cy="12" r="4"/><path class="ColorScheme-Highlight accent" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/><circle class="ColorScheme-Highlight accent" cx="12" cy="12" r="6.5" stroke-dasharray="2 3"/>
   </g>
 </svg>

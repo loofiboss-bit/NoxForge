@@ -20,7 +20,7 @@
       "name": "draw-highlight",
       "relativePath": "actions/draw-highlight.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "c9468e952eb80e9dd9e9fe303496258c2c269126949ae6444dd9cdccb1fe74b9",
+      "sha256": "3e9dc9f20fb4b5d36a566503c19131a61bc6f68999401aacb3a7b71f86b0a336",
       "provenance": [
         "System Settings reported runtime miss"
       ]
@@ -29,7 +29,7 @@
       "name": "view-hidden",
       "relativePath": "actions/view-hidden.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "eebd9dd5e0ad342d706a8fa203df20efe3515cfa0e62be8f329c567d14fca692",
+      "sha256": "0b66c2cd8d5ce51401bf38fb2232ad51cde2ee5214a65421b53b555e45532846",
       "provenance": [
         "System Settings reported runtime miss"
       ]
@@ -38,7 +38,7 @@
       "name": "tools-report-bug",
       "relativePath": "actions/tools-report-bug.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "55f4366a185aba18bc3f2f50582491c11a8c922f4c96d534b6702114649c9405",
+      "sha256": "28cd0d8c0cc7f5871f2274eb1f6bcaecfcb444c59251ac0e6f16d2c46b379e52",
       "provenance": [
         "System Settings reported runtime miss"
       ]
@@ -47,7 +47,7 @@
       "name": "system-suspend",
       "relativePath": "actions/system-suspend.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "27e0a1965ea5984bc1562fc8515b8ceb7feed9dee13f830619c032772e169a05",
+      "sha256": "3968f76b34d7e0ecc5450e811b484b38194880d3f800e26bb6e65a6439268ebc",
       "provenance": [
         "Logout.qml Sleep action",
         "KDE session action"
@@ -57,7 +57,7 @@
       "name": "system-reboot",
       "relativePath": "actions/system-reboot.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "315308987e4124502b29d956bc7bb6f93c3c82a14d9a8ddfab6eb6cac969ee73",
+      "sha256": "5b0adea7caafe79d69712ab4ab2d4879b0c338c3c2efec296c54deff916efbfc",
       "provenance": [
         "Logout.qml Restart action",
         "KDE session action"
@@ -67,7 +67,7 @@
       "name": "system-shutdown",
       "relativePath": "actions/system-shutdown.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "915f094375bc81d4b0de639001340d054cdce42fa37e325c3b33c7837364c132",
+      "sha256": "bc99fe498b8f80f8ad0a846d9d45d9889d47be3dc518a7f4f127829422c3bca6",
       "provenance": [
         "Logout.qml Shut down action",
         "KDE session action"
@@ -77,7 +77,7 @@
       "name": "system-lock-screen",
       "relativePath": "actions/system-lock-screen.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "0643e41bf4f78255ccc6561167582f5b467d2ef0a98432362d5a3897c8a43f9f",
+      "sha256": "f98b5b307804a32de4831046430fbb732385135c1bba29015f64376c60986ff4",
       "provenance": [
         "Logout.qml Lock action",
         "KDE session action"
@@ -87,7 +87,7 @@
       "name": "system-log-out",
       "relativePath": "actions/system-log-out.svg",
       "resolution": "NoxForge overlay",
-      "sha256": "d56c70c4963fcb702b1aff8ec83ac8a2c85737ac694c75bbf1750376d4cdc842",
+      "sha256": "214f3cfe9b2d06fce3020c6101b9e3ec9449623b9fc988372e96759e197e6032",
       "provenance": [
         "Logout.qml Log out action",
         "KDE session action"
@@ -135,7 +135,7 @@
   },
   "sourceHashes": {
     "contract": "80b5abc95cb8ddafd1a282cea35008da9f670147bdd0591393c64b9764994ebb",
-    "indexTheme": "b3656345000cd7aab551a8367870ec877e3718a338b9f3ce213a5e540bd1a0c7",
-    "logoutQml": "927537e1a0564be65fc5360e6ed7643a978550e47ffcf4874c947f46d4799c9c"
+    "indexTheme": "2626079f9c02755e0b104a1bf2e932805734536de461c3d816a98d0bb1ebaeba",
+    "logoutQml": "d06b9378f8a00a408fe969c04603a2e632820c036c2991d26234ccc51b773771"
   }
 }

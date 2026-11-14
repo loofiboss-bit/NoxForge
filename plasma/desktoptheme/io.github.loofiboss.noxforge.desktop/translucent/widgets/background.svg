@@ -9,6 +9,9 @@
       .ColorScheme-ViewHover { color: #22D3EE; }
       .ColorScheme-ButtonHover { color: #22D3EE; }
       .ColorScheme-ButtonFocus { color: #A3FF47; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
       .NoxForge-Sunken { color: #10191F; }
       .NoxForge-Overlay { color: #22323B; }
       .NoxForge-Hover { color: #283942; }

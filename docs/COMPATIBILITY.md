@@ -1,4 +1,4 @@
-# NoxForge 19 compatibility
+# NoxForge 20 compatibility
 
 The intended compatibility target is Fedora 44 and Fedora 45 KDE and the target Arch
 Plasma/KWin 6.8+ and Qt 6.11 family on Wayland. The project makes no X11,
