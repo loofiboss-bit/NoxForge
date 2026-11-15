@@ -10,12 +10,12 @@
       "commit": "69b94f23a85d4c8ad42e6df2b89be58c9bcc50e0",
       "tag": "v19.0.0",
       "tagCommit": "f788a1d0f9900a3ce9cd322ef5b10b35cc7267ea",
-      "rpmBytes": 1821825,
-      "srpmBytes": 14783063,
+      "rpmBytes": 1833750,
+      "srpmBytes": 14802008,
       "githubSourceBytes": 14765536,
       "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v19.0.0",
       "rpmFilename": "noxforge-19.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "4aa53dd4ec064644da693483aa1f97aa87a39afa2255e5a464a6401d38c44728",
+      "rpmSha256": "5d24500a33e99358187e27db221fddc7c59f8dcd155b4e4cb9fd8db03053f997",
       "kdeStoreProduct": "2367662"
     }
   },
