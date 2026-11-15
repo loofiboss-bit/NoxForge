@@ -657,17 +657,18 @@ def _plasma_icon_sheet(entries: list[tuple[str, str]]) -> str:
 def generate_plasma_icon_sheets() -> None:
     """Generate the 8 Plasma DesktopTheme icons/*.svg multi-element sheets."""
     s = 'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'
-    h_s = f'class="ColorScheme-Highlight" opacity="0.62" {s}'
+    c_s = f'class="ColorScheme-ViewHover" {s}'
+    c_f = 'class="ColorScheme-ViewHover" fill="currentColor" opacity="0.92"'
+    h_s = f'class="ColorScheme-Highlight" {s}'
+    h_f = 'class="ColorScheme-Highlight" fill="currentColor" opacity="0.9"'
     t_s = f'class="ColorScheme-Text" {s}'
-    t_f = 'class="ColorScheme-Text" fill="currentColor" opacity="0.86"'
-    w_s = f'class="ColorScheme-NeutralText" opacity="0.8" {s}'
-    n_s = f'class="ColorScheme-NegativeText" opacity="0.8" {s}'
-    d_s = f'class="ColorScheme-Text" opacity="0.24" {s}'
-    h_f = 'class="ColorScheme-Highlight" fill="currentColor" opacity="0.62"'
-    w_f = 'class="ColorScheme-NeutralText" fill="currentColor" opacity="0.8"'
-    n_f = 'class="ColorScheme-NegativeText" fill="currentColor" opacity="0.8"'
+    w_s = f'class="ColorScheme-NeutralText" opacity="0.9" {s}'
+    w_f = 'class="ColorScheme-NeutralText" fill="currentColor" opacity="0.9"'
+    n_s = f'class="ColorScheme-NegativeText" opacity="0.92" {s}'
+    n_f = 'class="ColorScheme-NegativeText" fill="currentColor" opacity="0.92"'
+    d_s = f'class="ColorScheme-Text" opacity="0.28" {s}'
 
-    spk = f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/><path {h_s} d="M12 7.5v3"/>'
+    spk = f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/><path {c_s} d="M12 7.5v3"/>'
     mic = f'<rect {t_s} x="9" y="3" width="6" height="10" rx="3"/><path {t_s} d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/>'
     wa1 = "M9.5 16.5a3.5 3.5 0 0 1 5 0"
     wa2 = "M7 14a7.1 7.1 0 0 1 10 0"
@@ -679,7 +680,7 @@ def generate_plasma_icon_sheets() -> None:
             ("audio-volume-medium", f'{spk}<path {t_s} d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7.5 7.5 0 0 1 0 10"/><path {d_s} d="M20 4.5a11 11 0 0 1 0 15"/>'),
             ("audio-volume-low", f'{spk}<path {t_s} d="M15 9.5a4 4 0 0 1 0 5"/><path {d_s} d="M17.5 7a7.5 7.5 0 0 1 0 10M20 4.5a11 11 0 0 1 0 15"/>'),
             ("audio-volume-muted", f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/><path {n_s} d="M16 9l5 6M21 9l-5 6"/>'),
-            ("microphone-sensitivity-high", f'{mic}<path {t_s} d="M12 6v4"/><circle {h_f} cx="12" cy="18.5" r="1"/>'),
+            ("microphone-sensitivity-high", f'{mic}<path {c_s} d="M12 6v4"/><circle {h_f} cx="12" cy="18.5" r="1"/>'),
             ("microphone-sensitivity-medium", f'{mic}<path {t_s} d="M12 7v3"/>'),
             ("microphone-sensitivity-low", f'{mic}<path {d_s} d="M12 8v2"/>'),
             ("microphone-sensitivity-muted", f'{mic}<path {n_s} d="M5 5l14 14"/>'),
@@ -687,60 +688,60 @@ def generate_plasma_icon_sheets() -> None:
         "battery": [
             ("Battery", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {t_s} d="M19 10h2v4h-2"/>'),
             ("battery-charging", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {t_s} d="M19 10h2v4h-2"/><path {h_s} d="M12 8.5L9.5 12h3L10 15.5"/>'),
-            ("AcAdapter", f'<rect {t_s} x="7" y="7" width="10" height="8" rx="2"/><path {t_s} d="M9 3v4M15 3v4M12 15v6"/><path {h_s} d="M10 11h4"/>'),
+            ("AcAdapter", f'<rect {t_s} x="7" y="7" width="10" height="8" rx="2"/><path {t_s} d="M9 3v4M15 3v4M12 15v6"/><path {c_s} d="M10 11h4"/>'),
             ("Unavailable", f'<rect {t_s} x="3" y="6" width="16" height="12" rx="2.5"/><path {n_s} d="M9 10l4 4M13 10l-4 4"/>'),
         ] + [
             (
                 f"Fill{pct}",
-                f'<rect {t_f if pct > 20 else (w_f if pct == 20 else n_f)} x="5.5" y="9" width="{round(pct * 11 / 100, 1)}" height="6" rx="1"/>'
+                f'<rect {h_f if pct > 20 else (w_f if pct == 20 else n_f)} x="5.5" y="9" width="{round(pct * 11 / 100, 1)}" height="6" rx="1"/>'
                 if pct > 0
                 else f'<circle {n_f} cx="11" cy="12" r="1.3"/>',
             )
             for pct in range(0, 101, 10)
         ],
         "kdeconnect": [
-            ("kdeconnect", f'<rect {t_s} x="6" y="2" width="12" height="20" rx="2.5"/><path {t_s} d="M10 5h4"/><circle {h_f} cx="12" cy="18" r="1.1"/>'),
-            ("kdeconnect-tray", f'<rect {t_s} x="6" y="3" width="12" height="18" rx="2.5"/><path {t_s} d="M10 6h4"/><circle {h_f} cx="12" cy="17" r="1.1"/>'),
+            ("kdeconnect", f'<rect {t_s} x="6" y="2" width="12" height="20" rx="2.5"/><path {c_s} d="M10 5h4"/><circle {h_f} cx="12" cy="18" r="1.1"/>'),
+            ("kdeconnect-tray", f'<rect {t_s} x="6" y="3" width="12" height="18" rx="2.5"/><path {c_s} d="M10 6h4"/><circle {h_f} cx="12" cy="17" r="1.1"/>'),
         ],
         "media": [
             ("media-playback-start", f'<path {t_s} d="M7 5l11 7-11 7z"/><path {h_s} d="M7 8.5v7"/>'),
-            ("media-playback-pause", f'<rect {t_s} x="6.5" y="5" width="3.5" height="14" rx="1"/><rect {t_s} x="14" y="5" width="3.5" height="14" rx="1"/><path {h_s} d="M15.75 9v6"/>'),
-            ("media-playback-stop", f'<rect {t_s} x="6" y="6" width="12" height="12" rx="1.5"/><path {h_s} d="M9.5 12h5"/>'),
-            ("media-skip-forward", f'<path {t_s} d="M5 5l9 7-9 7zM18 5v14"/><path {h_s} d="M18 8.5v7"/>'),
-            ("media-skip-backward", f'<path {t_s} d="M19 5l-9 7 9 7zM6 5v14"/><path {h_s} d="M6 8.5v7"/>'),
+            ("media-playback-pause", f'<rect {t_s} x="6.5" y="5" width="3.5" height="14" rx="1"/><rect {t_s} x="14" y="5" width="3.5" height="14" rx="1"/><path {c_s} d="M15.75 9v6"/>'),
+            ("media-playback-stop", f'<rect {t_s} x="6" y="6" width="12" height="12" rx="1.5"/><path {c_s} d="M9.5 12h5"/>'),
+            ("media-skip-forward", f'<path {t_s} d="M5 5l9 7-9 7zM18 5v14"/><path {c_s} d="M18 8.5v7"/>'),
+            ("media-skip-backward", f'<path {t_s} d="M19 5l-9 7 9 7zM6 5v14"/><path {c_s} d="M6 8.5v7"/>'),
         ],
         "network": [
-            ("network-wireless-100", f'<path {t_s} d="{wa4}"/><path {t_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-80", f'<path {d_s} d="{wa4}"/><path {t_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-60", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-40", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-20", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {w_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-0", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {d_s} d="{wa1}"/><circle {n_f} cx="12" cy="19" r="1.4"/>'),
-            ("network-wireless-acquiring", f'<path {d_s} d="{wa4}"/><path {h_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {d_s} d="{wa1}"/><circle {h_f} cx="12" cy="19" r="1.4"/>'),
+            ("network-wireless-100", f'<path {t_s} d="{wa4}"/><path {t_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {c_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-80", f'<path {d_s} d="{wa4}"/><path {t_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {c_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-60", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {c_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-40", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {c_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-20", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {t_s} d="{wa1}"/><circle {w_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-0", f'<path {d_s} d="{wa4}"/><path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {d_s} d="{wa1}"/><circle {n_f} cx="12" cy="19" r="1.5"/>'),
+            ("network-wireless-acquiring", f'<path {d_s} d="{wa4}"/><path {h_s} d="{wa3}"/><path {t_s} d="{wa2}"/><path {d_s} d="{wa1}"/><circle {c_f} cx="12" cy="19" r="1.5"/>'),
             ("network-wireless-disconnected", f'<path {d_s} d="{wa3}"/><path {d_s} d="{wa2}"/><path {d_s} d="{wa1}"/><path {n_s} d="M5 5l14 14"/>'),
-            ("network-wired-activated", f'<rect {t_s} x="4" y="4" width="16" height="10" rx="1"/><path {t_s} d="M12 14v5M8 19h8"/><path {h_s} d="M9 9h6"/>'),
-            ("network-vpn", f'<path {t_s} d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><rect {t_s} x="9.5" y="11" width="5" height="4.5" rx="1"/><circle {h_f} cx="12" cy="13.2" r="0.9"/>'),
+            ("network-wired-activated", f'<rect {t_s} x="4" y="4" width="16" height="10" rx="1"/><path {t_s} d="M12 14v5M8 19h8"/><path {c_s} d="M9 9h6"/>'),
+            ("network-vpn", f'<path {t_s} d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path {c_s} d="M6.5 7.5l5.5-2 5.5 2"/><rect {h_s} x="9.5" y="11" width="5" height="4.5" rx="1"/><circle {h_f} cx="12" cy="13.2" r="0.9"/>'),
         ],
         "notification": [
             ("notification-active", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/><circle {h_f} cx="16.5" cy="6.5" r="1.6"/>'),
             ("notification-inactive", f'<path {t_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/>'),
             ("notification-disabled", f'<path {d_s} d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4zM10 19h4"/><path {n_s} d="M5 5l14 14"/>'),
-            ("notification-progress-active", f'<circle {d_s} cx="12" cy="12" r="8"/><path {t_s} d="M12 4a8 8 0 0 1 8 8"/><circle {h_f} cx="12" cy="12" r="1.3"/>'),
+            ("notification-progress-active", f'<circle {d_s} cx="12" cy="12" r="8"/><path {c_s} d="M12 4a8 8 0 0 1 8 8"/><circle {h_f} cx="12" cy="12" r="1.3"/>'),
             ("notification-progress-inactive", f'<circle {t_s} cx="12" cy="12" r="8"/>'),
         ],
         "osd": [
-            ("osd-rotate-cw", f'<path {t_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-4"/><path {h_s} d="M16 7l3-3"/>'),
-            ("osd-rotate-ccw", f'<path {t_s} d="M5 8V4l3 3a8 8 0 1 1-2 9M5 4h4"/><path {h_s} d="M8 7L5 4"/>'),
-            ("osd-shutd-screen", f'<rect {t_s} x="3" y="4" width="18" height="12" rx="2"/><path {t_s} d="M8 20h8M12 16v4"/><path {h_s} d="M9 10h6"/>'),
-            ("osd-shutd-laptop", f'<rect {t_s} x="4" y="5" width="16" height="10" rx="1.5"/><path {t_s} d="M2 18h20"/><path {h_s} d="M9 18h6"/>'),
+            ("osd-rotate-cw", f'<path {t_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-4"/><path {c_s} d="M16 7l3-3"/>'),
+            ("osd-rotate-ccw", f'<path {t_s} d="M5 8V4l3 3a8 8 0 1 1-2 9M5 4h4"/><path {c_s} d="M8 7L5 4"/>'),
+            ("osd-shutd-screen", f'<rect {t_s} x="3" y="4" width="18" height="12" rx="2"/><path {t_s} d="M8 20h8M12 16v4"/><path {c_s} d="M9 10h6"/>'),
+            ("osd-shutd-laptop", f'<rect {t_s} x="4" y="5" width="16" height="10" rx="1.5"/><path {t_s} d="M2 18h20"/><path {c_s} d="M9 18h6"/>'),
             ("osd-duplicate", f'<rect {t_s} x="3" y="5" width="11" height="9" rx="1.5"/><rect {t_s} x="10" y="10" width="11" height="9" rx="1.5"/><path {h_s} d="M13 14.5h5"/>'),
         ],
         "system": [
             ("system-shutdown", f'<path {t_s} d="M7 6a8 8 0 1 0 10 0"/><path {n_s} d="M12 3v8"/>'),
             ("system-reboot", f'<path {t_s} d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-4"/><path {h_s} d="M16 7l3-3"/>'),
-            ("system-suspend", f'<path {t_s} d="M7 5a8 8 0 1 0 12 10A7 7 0 0 1 7 5z"/><circle {h_f} cx="16" cy="7" r="1.2"/>'),
+            ("system-suspend", f'<path {t_s} d="M7 5a8 8 0 1 0 12 10A7 7 0 0 1 7 5z"/><circle {c_f} cx="16" cy="7" r="1.2"/>'),
             ("system-lock-screen", f'<rect {t_s} x="5" y="10" width="14" height="11" rx="2"/><path {t_s} d="M8 10V7a4 4 0 0 1 8 0v3"/><path {h_s} d="M12 14v3"/>'),
-            ("system-log-out", f'<path {t_s} d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path {h_s} d="M15 9l3 3-3 3"/>'),
+            ("system-log-out", f'<path {t_s} d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path {c_s} d="M15 9l3 3-3 3"/>'),
         ],
     }
     for name in CONTRACT["iconSheetFamilies"]:
