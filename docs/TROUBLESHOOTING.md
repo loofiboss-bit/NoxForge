@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 19
+# Troubleshooting NoxForge 20
 
 ## Collect a read-only report
 
@@ -16,7 +16,7 @@ requests privileges.
 
 ## Edition is mixed or incomplete
 
-Read schema 9 `issues`, `edition.missingMandatory`, and each component's
+Read schema 13 `issues`, `edition.missingMandatory`, and each component's
 `effectivePath` and `shadowedPaths`. Text output uses the same findings.
 
 | Finding | Interpretation and next action |
@@ -34,7 +34,9 @@ Read schema 9 `issues`, `edition.missingMandatory`, and each component's
 A standalone component does not require the full suite. A Global Theme has
 its declared component dependencies; portable and system editions require their
 respective component sets, including GTK, syntax, editor, terminal, Obsidian,
-and Konsole assets. V16 also audits QML variant synchronization (`qmlVariantDrift`),
+and Konsole assets. Schema 13 also audits Kinetic multi-level SVG ladders
+(`iconLevelMatrix`), 16-frame sprite animations (`animations`), Plasma 6.8
+Union integration (`unionStyleStatus`), QML variant synchronization (`qmlVariantDrift`),
 motion policies (`reducedMotion`), and experimental face authentication (`faceAuthApi`).
 Doctor also reports selected palette variants through
 `paletteSynchronization`; a `palette-desynchronization` issue means detected

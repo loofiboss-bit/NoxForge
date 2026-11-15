@@ -93,6 +93,7 @@
       "actions/view-grid.svg",
       "actions/view-hidden.svg",
       "actions/view-list-tree.svg",
+      "animations/process-working.svg",
       "applets/battery.svg",
       "applets/bluetooth-active.svg",
       "applets/clock.svg",
@@ -151,7 +152,7 @@
       "status/user-available.svg",
       "status/user-away.svg"
     ],
-    "opticalContexts": ["actions", "applets", "places", "preferences", "status"],
+    "opticalContexts": ["actions", "animations", "applets", "places", "preferences", "status"],
     "opticalSizes": [16, 22]
   },
   "cursors": {

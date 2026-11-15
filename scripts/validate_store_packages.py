@@ -52,7 +52,7 @@ def _prefixes(package: str) -> tuple[str, ...]:
             return ("metadata.json", "manifest.json", "contents/")
         if package == "kwin-switcher":
             return ("metadata.json", "contents/")
-        return ("metadata.json", "colors", "plasmarc", "dialogs/", "weather/", "widgets/", "opaque/", "solid/", "translucent/")
+        return ("metadata.json", "colors", "plasmarc", "dialogs/", "icons/", "weather/", "widgets/", "opaque/", "solid/", "translucent/")
     if package == "colors":
         return ("NoxForgeDark.colors", "NoxForgeObsidian.colors")
     if package == "aurorae":
@@ -195,9 +195,14 @@ def validate_archive(archive: Path, package: str, manifest: dict) -> dict:
             "components/colors/NoxForgeObsidian.colors",
             "components/konsole/NoxForge.colorscheme",
             "components/konsole/NoxForgeObsidian.colorscheme",
+            "components/apps/yazi/theme.toml",
+            "components/apps/lazygit/config.yml",
+            "components/terminals/zellij/noxforge.kdl",
+            "components/terminals/tmux/noxforge.conf",
+            "components/icons/NoxForge/scalable/animations/process-working.svg",
         }
         if not required <= set(relative_names):
-            raise ValueError(f"portable archive is missing v11 assets: {sorted(required - set(relative_names))}")
+            raise ValueError(f"portable archive is missing required v20 assets: {sorted(required - set(relative_names))}")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     return {"package": package, "path": archive.name, "bytes": archive.stat().st_size, "sha256": digest, "budgetBytes": artifact["budgetBytes"]}
 

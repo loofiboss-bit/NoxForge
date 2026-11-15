@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .accent { color: #22D3EE; stroke: currentColor; }
+      .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
+      .lime { color: #A3FF47; stroke: currentColor; }
+      .lime-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.28; stroke: currentColor; }
+      .dimmed-fill { opacity: 0.24; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; opacity: 0.9; }
+      .warning-fill { color: #FBBF24; fill: currentColor; opacity: 0.9; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
+    </style>
+  <style id="noxforge-motion" type="text/css">
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes nf-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      @keyframes nf-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      @keyframes nf-wave { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+      .nf-pulse { animation: nf-pulse 1.4s ease-in-out infinite; }
+      .nf-spin { transform-origin: 12px 12px; animation: nf-spin 1.2s linear infinite; }
+      .nf-wave-1 { animation: nf-wave 1.8s ease-in-out 0s infinite; }
+      .nf-wave-2 { animation: nf-wave 1.8s ease-in-out 0.2s infinite; }
+      .nf-wave-3 { animation: nf-wave 1.8s ease-in-out 0.4s infinite; }
+    }
+  </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <g class="nf-spin"><circle class="dimmed" cx="12" cy="12" r="8"/><path class="lime" d="M12 4a8 8 0 0 1 8 8"/><path class="accent" stroke-width="1.4" d="M12 20A8 8 0 0 1 5.07 16"/><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1.2s" repeatCount="indefinite"/></g>
+  </g>
+</svg>

@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "19.0.0"
+VERSION = "20.0.0"
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -1244,6 +1244,38 @@ SUPPORTED_ECOSYSTEM_APPS: dict[str, dict[str, Any]] = {
         "source_subpath": "apps/rofi",
         "check": lambda: (Path.home() / ".config/rofi/noxforge.rasi").is_file(),
     },
+    "yazi": {
+        "name": "Yazi File Manager",
+        "description": "Kinetic accent & Obsidian/Graphite theme.toml rules",
+        "detect": lambda: shutil.which("yazi") is not None or (Path.home() / ".config/yazi").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/yazi",
+        "source_subpath": "apps/yazi",
+        "check": lambda: (Path.home() / ".config/yazi/theme.toml").is_file(),
+    },
+    "lazygit": {
+        "name": "Lazygit TUI",
+        "description": "Forge border & diff status colors (config.yml)",
+        "detect": lambda: shutil.which("lazygit") is not None or (Path.home() / ".config/lazygit").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/lazygit",
+        "source_subpath": "apps/lazygit",
+        "check": lambda: (Path.home() / ".config/lazygit/config.yml").is_file(),
+    },
+    "zellij": {
+        "name": "Zellij Multiplexer",
+        "description": "KDL terminal palette theme definitions",
+        "detect": lambda: shutil.which("zellij") is not None or (Path.home() / ".config/zellij").is_dir(),
+        "target_dir": lambda: Path.home() / ".config/zellij/themes",
+        "source_subpath": "terminals/zellij",
+        "check": lambda: (Path.home() / ".config/zellij/themes/noxforge.kdl").is_file(),
+    },
+    "tmux": {
+        "name": "tmux Multiplexer",
+        "description": "Forge statusline and pane border conf",
+        "detect": lambda: shutil.which("tmux") is not None or (Path.home() / ".config/tmux").is_dir() or (Path.home() / ".tmux.conf").is_file(),
+        "target_dir": lambda: Path.home() / ".config/tmux",
+        "source_subpath": "terminals/tmux",
+        "check": lambda: (Path.home() / ".config/tmux/noxforge.conf").is_file(),
+    },
 }
 
 
@@ -1355,6 +1387,10 @@ def ecosystem_apply(
         "foot": ("noxforge.ini", "noxforge-obsidian.ini"),
         "obsidian": ("noxforge.css", "noxforge_obsidian.css"),
         "rofi": ("noxforge.rasi", "noxforge_obsidian.rasi"),
+        "yazi": ("theme.toml", "theme_obsidian.toml"),
+        "lazygit": ("config.yml", "config_obsidian.yml"),
+        "zellij": ("noxforge.kdl", "noxforge_obsidian.kdl"),
+        "tmux": ("noxforge.conf", "noxforge_obsidian.conf"),
     }
 
     for app_id in targets:
@@ -1548,12 +1584,122 @@ def sync_tracked_ecosystem(
     return list(res.get("applied", []))
 
 
+def _find_icon_theme_dir() -> Path | None:
+    for candidate in (
+        ROOT / "icons/NoxForge",
+        get_xdg_data_home() / "icons/NoxForge",
+        Path("/usr/share/icons/NoxForge"),
+    ):
+        if (candidate / "index.theme").is_file():
+            return candidate
+    return None
+
+
+def _find_plasma_icons_dir(theme_id: str) -> Path | None:
+    for candidate in (
+        ROOT / "plasma/desktoptheme" / theme_id / "icons",
+        get_xdg_data_home() / "plasma/desktoptheme" / theme_id / "icons",
+        Path("/usr/share/plasma/desktoptheme") / theme_id / "icons",
+    ):
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
+def manage_icons(action: str = "status", dry_run: bool = False) -> dict[str, Any]:
+    """Inspect, verify, or refresh Kinetic Iconography & Plasma DesktopTheme icon sheets."""
+    theme_dir = _find_icon_theme_dir()
+    plasma_std = _find_plasma_icons_dir(THEME_GRAPHITE_ID)
+    plasma_obs = _find_plasma_icons_dir(THEME_OBSIDIAN_ID)
+
+    sheet_names = ("audio", "battery", "kdeconnect", "media", "network", "notification", "osd", "system")
+    std_sheets = sum(1 for name in sheet_names if plasma_std and (plasma_std / f"{name}.svg").is_file())
+    obs_sheets = sum(1 for name in sheet_names if plasma_obs and (plasma_obs / f"{name}.svg").is_file())
+
+    if not theme_dir:
+        return {
+            "action": action,
+            "status": "missing",
+            "verified": False,
+            "themeDir": None,
+            "scalableCount": 0,
+            "opticalCount": 0,
+            "animationsPresent": False,
+            "batteryLevels": 0,
+            "wifiLevels": 0,
+            "plasmaIconSheets": {"standard": std_sheets, "obsidian": obs_sheets},
+            "activeAccent": get_active_accent_hex(),
+            "dryRun": dry_run,
+        }
+
+    scalable_dir = theme_dir / "scalable"
+    scalable_count = len(list(scalable_dir.glob("*/*.svg"))) if scalable_dir.is_dir() else 0
+    optical_count = sum(
+        len(list((theme_dir / f"{sz}x{sz}").glob("*/*.svg")))
+        for sz in (16, 22)
+        if (theme_dir / f"{sz}x{sz}").is_dir()
+    )
+
+    battery_expected = [f"status/battery-{pct:03d}.svg" for pct in range(0, 101, 10)]
+    wifi_expected = [f"status/network-wireless-{pct}.svg" for pct in (0, 20, 40, 60, 80, 100)] + [
+        "status/network-wireless-acquiring.svg",
+        "status/network-wireless-locked.svg",
+    ]
+    extra_expected = [
+        "status/audio-volume-high-warning.svg",
+        "status/audio-volume-high-danger.svg",
+        "status/display-brightness-high.svg",
+        "applets/brightness-high.svg",
+        "animations/process-working.svg",
+    ]
+
+    battery_present = sum(1 for rel in battery_expected if (scalable_dir / rel).is_file())
+    wifi_present = sum(1 for rel in wifi_expected if (scalable_dir / rel).is_file())
+    anim_ok = (
+        (scalable_dir / "animations/process-working.svg").is_file()
+        and (theme_dir / "16x16/animations/process-working.svg").is_file()
+        and (theme_dir / "22x22/animations/process-working.svg").is_file()
+    )
+    missing_items = [
+        rel
+        for rel in (battery_expected + wifi_expected + extra_expected)
+        if not (scalable_dir / rel).is_file()
+    ]
+
+    cache_refreshed = False
+    active_accent = get_active_accent_hex()
+    if action == "sync-accent" and not dry_run:
+        set_accent(active_accent, dry_run=False)
+        local_icons = get_xdg_data_home() / "icons/NoxForge"
+        if local_icons.is_dir() and shutil.which("gtk-update-icon-cache"):
+            subprocess.run(["gtk-update-icon-cache", "-f", "-t", str(local_icons)], capture_output=True)
+            cache_refreshed = True
+
+    verified = not missing_items and anim_ok and std_sheets == 8 and obs_sheets == 8
+    return {
+        "action": action,
+        "status": "ok" if verified else "incomplete",
+        "verified": verified,
+        "themeDir": str(theme_dir),
+        "scalableCount": scalable_count,
+        "opticalCount": optical_count,
+        "animationsPresent": anim_ok,
+        "batteryLevels": battery_present,
+        "wifiLevels": wifi_present,
+        "plasmaIconSheets": {"standard": std_sheets, "obsidian": obs_sheets},
+        "missing": missing_items,
+        "activeAccent": active_accent,
+        "cacheRefreshed": cache_refreshed,
+        "dryRun": dry_run,
+    }
+
+
 def generate_completion(shell: str) -> str:
     """Generate shell autocompletion script for bash, zsh, or fish."""
     subcommands = [
         "switch", "apply", "setup", "sync", "accent", "status", "flatpak",
         "motion", "wallpaper", "export", "import", "opacity", "doctor",
-        "schedule", "ecosystem", "gui", "union", "kwin-csd", "completion",
+        "schedule", "ecosystem", "gui", "union", "kwin-csd", "icons", "completion",
     ]
     subcmds_str = " ".join(subcommands)
     accents_str = "lime cyan amber violet coral emerald system"
@@ -1600,6 +1746,9 @@ _noxforge_ctl() {{
         kwin-csd)
             COMPREPLY=($(compgen -W "--enable --disable --status --profile $profiles --dry-run --json" -- "$cur"))
             ;;
+        icons)
+            COMPREPLY=($(compgen -W "--status --sync-accent --verify --dry-run --json" -- "$cur"))
+            ;;
         ecosystem)
             if [[ $cword -eq 2 ]]; then
                 COMPREPLY=($(compgen -W "status list apply restore" -- "$cur"))
@@ -1640,6 +1789,7 @@ _noxforge_ctl() {{
         'gui:Launch the NoxForge Control Center GUI'
         'union:Manage KDE Plasma 6.8 Union Style Engine'
         'kwin-csd:Manage reversible KWin 6.8 CSD window rules'
+        'icons:Inspect, verify, or sync Kinetic Iconography'
         'completion:Generate shell autocompletion script'
     )
 
@@ -1664,6 +1814,9 @@ _noxforge_ctl() {{
                 ;;
             union|kwin-csd)
                 _arguments '--enable' '--disable' '--status' '--profile[profile]:profile:(graphite obsidian)'
+                ;;
+            icons)
+                _arguments '--status' '--sync-accent' '--verify' '--dry-run' '--json'
                 ;;
             ecosystem)
                 if (( CURRENT == 3 )); then
@@ -1695,6 +1848,7 @@ _noxforge_ctl "$@"
         lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from motion" -a "status standard reduced"')
         lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from union" -l enable -l disable -l status')
         lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from kwin-csd" -l enable -l disable -l status')
+        lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from icons" -l status -l sync-accent -l verify')
         lines.append('complete -c noxforge-ctl -n "__fish_seen_subcommand_from ecosystem" -a "status list apply restore"')
         for app in SUPPORTED_ECOSYSTEM_APPS.keys():
             lines.append(f'complete -c noxforge-ctl -n "__fish_seen_subcommand_from ecosystem" -a "{app}"')
@@ -1866,6 +2020,18 @@ def main() -> int:
     csd_parser.add_argument("--profile", choices=["graphite", "obsidian"], default=None, help="Target profile")
     csd_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without applying")
     csd_parser.add_argument("--json", action="store_true", help="Output result as JSON")
+
+    # icons (Kinetic Iconography status & sync)
+    icons_parser = subparsers.add_parser(
+        "icons",
+        help="Inspect, verify, or accent-sync Kinetic Iconography and Plasma icon sheets",
+    )
+    icons_group = icons_parser.add_mutually_exclusive_group(required=False)
+    icons_group.add_argument("--status", action="store_true", help="Show icon level & Plasma sheet summary")
+    icons_group.add_argument("--sync-accent", action="store_true", help="Sync active Forge accent metadata and refresh icon cache")
+    icons_group.add_argument("--verify", action="store_true", help="Verify battery, Wi-Fi, audio, brightness, and sprite coverage")
+    icons_parser.add_argument("-n", "--dry-run", action="store_true", help="Simulate without mutating icon cache or files")
+    icons_parser.add_argument("--json", action="store_true", help="Output result as JSON")
 
     # completion (Shell autocompletion generator)
     comp_parser = subparsers.add_parser(
@@ -2128,6 +2294,20 @@ def main() -> int:
                 f"(enabled={res['enabled']}, decocolor={res.get('decoColor')})"
             )
         return 0
+
+    if args.command == "icons":
+        action = "sync-accent" if args.sync_accent else ("verify" if args.verify else "status")
+        res = manage_icons(action, dry_run=args.dry_run)
+        if args.json:
+            print(json.dumps(res, indent=2))
+        else:
+            print(
+                f"[NoxForge Icons] {res['status'].upper()} "
+                f"(scalable={res['scalableCount']}, optical={res['opticalCount']}, "
+                f"animations={'yes' if res['animationsPresent'] else 'no'}, "
+                f"sheets={res['plasmaIconSheets']['standard']}/{res['plasmaIconSheets']['obsidian']})"
+            )
+        return 0 if (action != "verify" or res["verified"]) else 1
 
     if args.command == "completion":
         print(generate_completion(args.shell), end="")

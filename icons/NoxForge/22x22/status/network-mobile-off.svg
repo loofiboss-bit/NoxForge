@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .accent { color: #22D3EE; stroke: currentColor; }
+      .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
+      .lime { color: #A3FF47; stroke: currentColor; }
+      .lime-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.28; stroke: currentColor; }
+      .dimmed-fill { opacity: 0.24; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; opacity: 0.9; }
+      .warning-fill { color: #FBBF24; fill: currentColor; opacity: 0.9; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path class="accent" d="M3 5h5"/><rect class="dimmed-fill" x="3" y="17.0" width="2.4" height="3.0" rx="0.6"/><rect class="dimmed-fill" x="7" y="13.5" width="2.4" height="6.5" rx="0.6"/><rect class="dimmed-fill" x="11" y="10.0" width="2.4" height="10.0" rx="0.6"/><rect class="dimmed-fill" x="15" y="6.5" width="2.4" height="13.5" rx="0.6"/><rect class="dimmed-fill" x="19" y="3.0" width="2.4" height="17.0" rx="0.6"/><path d="M4 4l16 16"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>
+  </g>
+</svg>

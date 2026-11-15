@@ -1,22 +1,27 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v19 release contract is
-[`NOXFORGE_V19_PLAN.md`](NOXFORGE_V19_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v20 release contract is
+[`NOXFORGE_V20_PLAN.md`](NOXFORGE_V20_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 19.0.0 Plasma 6.8 Union Engine, Wayland-Native KWin & Kinetic Studio
-Suite delivers first-class KDE Plasma 6.8 Union CSS styles (`union/styles/noxforge`
-and `union/styles/noxforge-obsidian`), Wayland-only KWin 6.8 compositor & CSD
-window-rule orchestration (`noxforge-ctl kwin-csd`), the Fastfetch Kinetic Studio v2
-telemetry and ANSI logo suite (`main`, `cyber`, `minimal`), Plasma 6.8 System Monitor
-telemetry page presets (`noxforge-telemetry.page`), full 5-wallpaper PLM/Desktop
-detection parity, Control Center v4, Tokens Schema 15, and Doctor Schema 12 with
-zero `metadata-unknown` warnings. Host installation and active desktop mutation
+NoxForge 20.0.0 Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
+delivers a complete animated and multi-level Freedesktop/Plasma icon ladder
+(Battery 10% steps + charging + profiles + peripherals, Wi-Fi 20%/25% steps +
+locked/limited/acquiring, Audio/Mic including overdrive >100%, dedicated
+Brightness icons, Bluetooth/Mobile 5G/VPN, and 16-frame `animations/process-working.svg`
+sprite sheets), 8 Plasma Desktop Theme `icons/*.svg` sheets for Graphite and
+Obsidian, Ecosystem v3 (`yazi`, `lazygit`, `zellij`, `tmux`), Lock Screen Forge
+Status Pill, `noxforge-ctl icons`, Control Center v5 with interactive Kinetic
+Icon & Level Studio, Tokens Schema 16, and Doctor Schema 13 with zero
+`metadata-unknown` warnings. Host installation and active desktop mutation
 remain non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V19_PLAN.md`](NOXFORGE_V19_PLAN.md) records the completed 19.0.0
+  Plasma 6.8 Union Engine, Wayland-Native KWin & Kinetic Studio Suite scope.
 
 - [`NOXFORGE_V18_PLAN.md`](NOXFORGE_V18_PLAN.md) records the completed 18.0.0
   Libadwaita Parity, Reversible Ecosystem Engine v2 & Dynamic Control Core scope.

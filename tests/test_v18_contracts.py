@@ -37,7 +37,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
         self.assertTrue(version >= "18.0.0")
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (14, 15))
+        self.assertIn(tokens["schemaVersion"], (14, 15, 16))
         self.assertEqual(tokens["version"], version)
         self.assertIn("gtk", tokens)
         self.assertTrue(tokens["gtk"]["dynamicCssVariables"])
@@ -304,7 +304,7 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (11, 12))
+        self.assertIn(report["schemaVersion"], (11, 12, 13))
         self.assertEqual(report["noxforgeCoreStatus"], "ok")
         self.assertEqual(report["gtkChainStatus"]["status"], "ok")
         self.assertTrue(report["ecosystemState"]["reversible"])

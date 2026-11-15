@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .accent { color: #22D3EE; stroke: currentColor; }
+      .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
+      .lime { color: #A3FF47; stroke: currentColor; }
+      .lime-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.28; stroke: currentColor; }
+      .dimmed-fill { opacity: 0.24; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; opacity: 0.9; }
+      .warning-fill { color: #FBBF24; fill: currentColor; opacity: 0.9; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2"/><rect class="ColorScheme-PositiveText lime-fill" x="5.5" y="9" width="11.0" height="6" rx="1"/><path class="warning" d="M16 19l2-2.5 2 2.5"/>
+  </g>
+</svg>

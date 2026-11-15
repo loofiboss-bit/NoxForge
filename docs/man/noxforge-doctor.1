@@ -1,4 +1,4 @@
-.TH NOXFORGE-DOCTOR 1 "October 2026" "NoxForge 19.0.0" "User Commands"
+.TH NOXFORGE-DOCTOR 1 "October 2026" "NoxForge 20.0.0" "User Commands"
 .SH NAME
 noxforge-doctor \- inspect a NoxForge installation without changing it
 .SH SYNOPSIS
@@ -18,20 +18,23 @@ In default inspection mode, it does not write files, clear caches, restart servi
 display managers, or request privileges. When \-\-apply\-sync is invoked, it writes user
 desktop configuration entries to align the active palette.
 .PP
-JSON schema 12 retains stable
+JSON schema 13 extends
 .B edition
 and
 .B loginSurface
 objects alongside
-.B unionStyleStatus
+.B unionStyleStatus ,
+.B waylandCompositor ,
+.B iconLevelMatrix ,
 and
-.B waylandCompositor
-diagnostics for KDE Plasma 6.8. The latter reports the manager, service state, integration type,
-asset availability, selection, and status. An installed SDDM theme is not
+.B animations
+diagnostics for KDE Plasma 6.8. \fBiconLevelMatrix\fR audits the 10%/20%/25% multi-level SVG ladders
+(battery, Wi-Fi, signal, brightness, microphone, volume) and true 16x16/22x22 optical icon density, while
+\fBanimations\fR verifies 16-frame sprite animations. An installed SDDM theme is not
 reported as active when Plasma Login Manager is active. Unselected optional
-login assets do not make the installation incomplete. Schema 7 also discovers
-GTK 3/4 themes, KSyntaxHighlighting themes, terminal/editor assets (including
-Zed, btop, Starship, and Firefox), and the
+login assets do not make the installation incomplete. Doctor also discovers
+GTK 3/4 themes, KSyntaxHighlighting themes, Ecosystem v3 terminal/editor assets (including
+Yazi, Lazygit, Zellij, Tmux, Zed, btop, Starship, and Firefox), and the
 Flatpak theme-override readiness state, while reporting fractional display
 scales when available.
 .SH OPTIONS

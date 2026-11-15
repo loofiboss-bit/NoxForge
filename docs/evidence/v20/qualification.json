@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 4,
+  "releaseState": "release-candidate",
+  "releaseReady": false,
+  "candidate": {
+    "version": "20.0.0",
+    "sourceRef": "feat/v20-kinetic-iconography",
+    "sourceCommit": null,
+    "baselineCommit": "69b94f23a85d4c8ad42e6df2b89be58c9bcc50e0",
+    "worktreeDirty": true,
+    "package": "noxforge-20.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [],
+    "runtimeSourceHashes": "runtime-source-hashes.json"
+  },
+  "automatedCases": [
+    {
+      "id": "python",
+      "status": "passed",
+      "passed": 249,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "log": "/tmp/noxforge-py-report.json"
+    },
+    {
+      "id": "fedora-ctest",
+      "status": "passed",
+      "passed": 75,
+      "runtime": "Qt 6.11.2-3.fc45, Plasma/KWin 6.8.2.fc45",
+      "log": "build/Testing/Temporary/LastTest.log"
+    },
+    {
+      "id": "arch-build-ctest",
+      "status": "pending",
+      "reason": "No Arch container was available in the local gate; offscreen Fedora coverage does not qualify an Arch build."
+    },
+    {
+      "id": "asan-ubsan",
+      "status": "passed",
+      "passed": 4,
+      "evidence": "scripts/check_v6_phase3_sanitizers.py"
+    },
+    {
+      "id": "rpm-package-validation",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 1,
+      "badness": 0,
+      "evidence": "scripts/release-check.py"
+    },
+    {
+      "id": "rpm-transactions",
+      "status": "pending",
+      "reason": "Canonical release workflow must qualify Fedora RPM transactions."
+    },
+    {
+      "id": "final-release-gate",
+      "status": "passed",
+      "evidence": "local scripts/release-check.py",
+      "scope": "Full uninterrupted local v20.0.0 gate against the exact public 19.0.0 baseline."
+    },
+    {
+      "id": "source-archive-reproducibility",
+      "status": "passed",
+      "evidence": "scripts/release-check.py"
+    },
+    {
+      "id": "store-portable-packages",
+      "status": "passed",
+      "evidence": "scripts/validate_store_packages.py and scripts/check_store_kpackages.py"
+    },
+    {
+      "id": "qml-and-dry-run-boundary",
+      "status": "passed",
+      "evidence": "qmllint plus install.sh/uninstall.sh dry-runs"
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "physical-login-pam",
+      "status": "pending",
+      "reason": "No physical login/PAM session was performed for this candidate."
+    },
+    {
+      "id": "physical-input-cursor",
+      "status": "pending",
+      "reason": "No physical input or cursor session was performed for this candidate."
+    },
+    {
+      "id": "physical-audio-power",
+      "status": "pending",
+      "reason": "No physical audio or power-session check was performed for this candidate."
+    },
+    {
+      "id": "physical-mixed-displays",
+      "status": "pending",
+      "reason": "No physical mixed-display check was performed for this candidate."
+    },
+    {
+      "id": "arch-pacman-lifecycle",
+      "status": "pending",
+      "reason": "No live Arch pacman upgrade or rollback was performed for this candidate."
+    },
+    {
+      "id": "live-scale-rtl-motion",
+      "status": "pending",
+      "reason": "Automated coverage does not replace the full live scale, RTL, focus, and motion matrix."
+    },
+    {
+      "id": "loofifaceid-biometric-auth",
+      "status": "pending",
+      "reason": "Face authentication is experimental opt-in; physical camera authentication not qualified in offscreen test."
+    }
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "historicalEvidenceImmutable": true,
+    "unavailableCasesRemainPending": true
+  },
+  "releaseBlockers": [],
+  "review": {
+    "status": "review-findings-fixed-local-qualified",
+    "fixed": [
+      "Tokens Schema 16 with kineticIconography and ecosystemV3 contracts synced across 61 version fields and 48 consumers",
+      "404 scalable and 684 optical icons including multi-level battery, Wi-Fi, mobile, VPN, flightmode, audio, brightness, and 16-frame animated spinners",
+      "Plasma Standard and Obsidian SVG icon sheets (64 + 64 assets) and 56x6 raster atlas parity",
+      "LockScreen single-source kinetic status pill and pulse dot respecting reducedMotion with zero raw hex literals",
+      "Ecosystem v3 templates for Yazi, Lazygit, Zellij, and Tmux managed via noxforge-ctl",
+      "Control Center v5 Kinetic Icon & Level Studio with live QSvgRenderer previews and accessible controls",
+      "doctor Schema 13 checks including iconLevelMatrix, Ecosystem v3 templates, and version coherence"
+    ]
+  },
+  "publicationAuthorized": false,
+  "physicalQualificationComplete": false,
+  "qualificationLimitations": [
+    "Physical and full live matrix checks remain pending.",
+    "Arch pacman lifecycle remains pending.",
+    "Biometric face authentication remains pending."
+  ]
+}

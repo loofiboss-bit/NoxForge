@@ -17,7 +17,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtSvg, QtWidgets
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -48,7 +48,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "19.0.0"
+    return "20.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -291,12 +291,99 @@ class ProfileAccentTab(QtWidgets.QWidget):
         layout.addWidget(self.union_group)
 
         # Live Icon & Kinetic Motion Preview Section
-        preview_group = QtWidgets.QGroupBox(f"Live Icon && Kinetic Motion Preview (v{APP_VERSION} Adaptive Vector Suite)")
+        # Kinetic Icon & Level Studio + Motion Preview
+        preview_group = QtWidgets.QGroupBox(f"Kinetic Icon && Level Studio (v{APP_VERSION} Adaptive Vector Suite)")
+        self.kinetic_studio_group = preview_group
         prev_layout = QtWidgets.QVBoxLayout(preview_group)
 
-        prev_desc = QtWidgets.QLabel("Adaptive vector glyphs (Wi-Fi 0%–100%, Battery, Audio) and kinetic physics simulation:")
+        prev_desc = QtWidgets.QLabel(
+            "Interactive simulation across Battery, Wi-Fi, Audio, Brightness, and 16-frame Loader sprites "
+            "with live accent re-tinting and Reduced Motion awareness:"
+        )
+        prev_desc.setWordWrap(True)
         prev_desc.setStyleSheet("color: #A6B4B9; margin-bottom: 6px;")
         prev_layout.addWidget(prev_desc)
+
+        # Studio Control Row: 0-120% level slider & Live Animation toggle
+        studio_ctrl_row = QtWidgets.QHBoxLayout()
+        studio_ctrl_row.setSpacing(10)
+        level_lbl = QtWidgets.QLabel("Level:")
+        level_lbl.setStyleSheet("color: #E8F0F2; font-weight: 600;")
+        self.level_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.level_slider.setRange(0, 120)
+        self.level_slider.setValue(85)
+        self.level_slider.setAccessibleName("Kinetic Icon Level Slider")
+        self.level_slider.valueChanged.connect(self.update_kinetic_studio)
+
+        self.level_value_lbl = QtWidgets.QLabel("85% · NOMINAL")
+        self.level_value_lbl.setMinimumWidth(145)
+        self.level_value_lbl.setAccessibleName("Kinetic Icon Level Readout")
+        self.level_value_lbl.setStyleSheet("color: #A3FF47; font-weight: 700; font-size: 11px;")
+
+        self.anim_toggle = QtWidgets.QCheckBox("Animate Kinetic Loop")
+        self.anim_toggle.setAccessibleName("Kinetic Icon Animation Toggle")
+        self.anim_toggle.setChecked(True)
+        self.anim_toggle.toggled.connect(self.on_anim_toggled)
+
+        self.studio_motion_badge = QtWidgets.QLabel("● LOOP ACTIVE")
+        self.studio_motion_badge.setStyleSheet(
+            "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+            "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+        )
+
+        studio_ctrl_row.addWidget(level_lbl)
+        studio_ctrl_row.addWidget(self.level_slider, stretch=1)
+        studio_ctrl_row.addWidget(self.level_value_lbl)
+        studio_ctrl_row.addWidget(self.anim_toggle)
+        studio_ctrl_row.addWidget(self.studio_motion_badge)
+        prev_layout.addLayout(studio_ctrl_row)
+
+        # Interactive Multi-Category Studio Cards
+        studio_cards_row = QtWidgets.QHBoxLayout()
+        studio_cards_row.setSpacing(10)
+        self.studio_cards: dict[str, tuple[QtWidgets.QLabel, QtWidgets.QLabel, QtWidgets.QLabel]] = {}
+        for cat_key, cat_title in (
+            ("battery", "Battery"),
+            ("wifi", "Wi-Fi"),
+            ("audio", "Audio"),
+            ("brightness", "Brightness"),
+            ("spinner", "Spinner"),
+        ):
+            card_box = QtWidgets.QFrame()
+            card_box.setStyleSheet(
+                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px; padding: 6px;"
+            )
+            card_l = QtWidgets.QVBoxLayout(card_box)
+            card_l.setContentsMargins(6, 6, 6, 6)
+            card_l.setSpacing(3)
+            card_l.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+            s_img = QtWidgets.QLabel()
+            s_img.setFixedSize(40, 40)
+            s_img.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            s_img.setAccessibleName(f"Studio {cat_title} Icon Preview")
+
+            s_title = QtWidgets.QLabel(cat_title)
+            s_title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            s_title.setStyleSheet("color: #E8F0F2; font-size: 11px; font-weight: 700;")
+
+            s_state = QtWidgets.QLabel("Nominal")
+            s_state.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            s_state.setStyleSheet("color: #A6B4B9; font-size: 10px; font-weight: 600;")
+
+            card_l.addWidget(s_img)
+            card_l.addWidget(s_title)
+            card_l.addWidget(s_state)
+            studio_cards_row.addWidget(card_box, stretch=1)
+            self.studio_cards[cat_key] = (s_img, s_title, s_state)
+        prev_layout.addLayout(studio_cards_row)
+
+        self._studio_frame = 0
+        self.reduced_motion_active = False
+        self._studio_accent_hex = "#A3FF47"
+        self.kinetic_timer = QtCore.QTimer(self)
+        self.kinetic_timer.setInterval(120)
+        self.kinetic_timer.timeout.connect(self._advance_kinetic_frame)
 
         icons_row = QtWidgets.QHBoxLayout()
         icons_row.setSpacing(10)
@@ -341,6 +428,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.test_box.setPlaceholderText("Interactive input field (test kinetic spring physics)")
         self.test_box.setAccessibleName("Kinetic Motion Test Input")
         self.btn_test_shake = QtWidgets.QPushButton("Test Kinetic Spring Motion (220ms)")
+        self.btn_test_shake.setAccessibleName("Test Kinetic Spring Motion")
         self.btn_test_shake.setMinimumHeight(32)
         self.btn_test_shake.clicked.connect(self.play_test_shake)
 
@@ -414,6 +502,170 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self._shake_anim = anim
         anim.start()
 
+    def _studio_icon_path(self, rel_path: str) -> Path:
+        root_dir = ROOT / "icons/NoxForge"
+        if (root_dir / rel_path).is_file():
+            return root_dir / rel_path
+        if hasattr(noxforge_ctl, "_find_icon_theme_dir"):
+            theme_dir = noxforge_ctl._find_icon_theme_dir()
+            if theme_dir and (theme_dir / rel_path).is_file():
+                return theme_dir / rel_path
+        return root_dir / rel_path
+
+    def _render_tinted_svg(
+        self,
+        svg_path: Path,
+        size: int,
+        accent_hex: str,
+        sprite_frame: int | None = None,
+    ) -> QtGui.QPixmap:
+        pix = QtGui.QPixmap(size, size)
+        pix.fill(QtCore.Qt.GlobalColor.transparent)
+        if not svg_path.is_file():
+            return pix
+        svg_text = svg_path.read_text(encoding="utf-8")
+        svg_text = svg_text.replace("#A3FF47", accent_hex).replace("#a3ff47", accent_hex)
+        renderer = QtSvg.QSvgRenderer(QtCore.QByteArray(svg_text.encode("utf-8")))
+        if not renderer.isValid():
+            return pix
+        if sprite_frame is not None:
+            default_sz = renderer.defaultSize()
+            frame_count = max(1, round(default_sz.height() / max(1, default_sz.width())))
+            sheet = QtGui.QPixmap(size, size * frame_count)
+            sheet.fill(QtCore.Qt.GlobalColor.transparent)
+            painter = QtGui.QPainter(sheet)
+            renderer.render(painter)
+            painter.end()
+            return sheet.copy(0, (sprite_frame % frame_count) * size, size, size)
+        painter = QtGui.QPainter(pix)
+        renderer.render(painter)
+        painter.end()
+        return pix
+
+    def _sync_anim_timer(self) -> None:
+        if not hasattr(self, "kinetic_timer"):
+            return
+        anim_on = bool(self.anim_toggle.isChecked())
+        if anim_on and not self.reduced_motion_active:
+            if not self.kinetic_timer.isActive():
+                self.kinetic_timer.start()
+            self.studio_motion_badge.setText("● LOOP ACTIVE")
+            self.studio_motion_badge.setStyleSheet(
+                "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+                "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+            )
+        else:
+            if self.kinetic_timer.isActive():
+                self.kinetic_timer.stop()
+            self._studio_frame = 0
+            if self.reduced_motion_active:
+                self.studio_motion_badge.setText("● PAUSED (REDUCED MOTION)")
+                self.studio_motion_badge.setStyleSheet(
+                    "background-color: #192D1E; color: #A3FF47; border: 1px solid #A3FF47; "
+                    "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                )
+            else:
+                self.studio_motion_badge.setText("○ STATIC")
+                self.studio_motion_badge.setStyleSheet(
+                    "background-color: #10191F; color: #748289; border: 1px solid #2F414B; "
+                    "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                )
+
+    def on_anim_toggled(self, _checked: bool) -> None:
+        self._sync_anim_timer()
+        self.update_kinetic_studio()
+
+    def set_reduced_motion(self, enabled: bool) -> None:
+        self.reduced_motion_active = bool(enabled)
+        self._sync_anim_timer()
+        self.update_kinetic_studio()
+
+    def _advance_kinetic_frame(self) -> None:
+        self._studio_frame = (self._studio_frame + 1) % 16
+        self.update_kinetic_studio()
+
+    def resolve_studio_icons(self, level: int, anim_phase: int, reduced_motion: bool) -> dict[str, tuple[str, str, str, int | None]]:
+        clamped = max(0, min(100, level))
+        bat_bucket = min(100, max(0, round(clamped / 10) * 10))
+        charging_pulse = (not reduced_motion) and self.anim_toggle.isChecked() and ((anim_phase % 8) >= 4)
+        bat_icon = (
+            f"scalable/status/battery-{bat_bucket:03d}-charging.svg"
+            if charging_pulse and bat_bucket in range(0, 101, 10)
+            else f"scalable/status/battery-{bat_bucket:03d}.svg"
+        )
+        bat_color = "#FF6B7A" if clamped <= 10 else ("#FBBF24" if clamped <= 20 else self._studio_accent_hex)
+        bat_state = f"{clamped}% ⚡" if charging_pulse else ("Critical" if clamped <= 10 else ("Low" if clamped <= 20 else f"{clamped}%"))
+
+        if level == 0:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-disconnected.svg", "Offline", "#FF6B7A"
+        elif (not reduced_motion) and self.anim_toggle.isChecked() and (anim_phase % 16 in (14, 15)):
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-acquiring.svg", "Acquiring", self._studio_accent_hex
+        elif clamped <= 15:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-connected-00.svg", f"{clamped}% Weak", "#FBBF24"
+        elif clamped <= 37:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-connected-25.svg", f"{clamped}% Fair", self._studio_accent_hex
+        elif clamped <= 62:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-connected-50.svg", f"{clamped}% Good", self._studio_accent_hex
+        elif clamped <= 87:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless-connected-75.svg", f"{clamped}% Strong", self._studio_accent_hex
+        else:
+            wifi_icon, wifi_state, wifi_color = "scalable/status/network-wireless.svg", f"{clamped}% Full", self._studio_accent_hex
+
+        if level == 0:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-muted.svg", "Muted", "#FF6B7A"
+        elif level <= 33:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-low.svg", f"{level}%", self._studio_accent_hex
+        elif level <= 66:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-medium.svg", f"{level}%", self._studio_accent_hex
+        elif level <= 100:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-high.svg", f"{level}%", self._studio_accent_hex
+        elif level <= 115:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-high-warning.svg", f"{level}% Warn", "#FBBF24"
+        else:
+            aud_icon, aud_state, aud_color = "scalable/status/audio-volume-high-danger.svg", f"{level}% Danger", "#FF6B7A"
+
+        if clamped <= 33:
+            bri_icon, bri_state = "scalable/status/display-brightness-low.svg", f"{clamped}% Dim"
+        elif clamped <= 66:
+            bri_icon, bri_state = "scalable/status/display-brightness-medium.svg", f"{clamped}% Mid"
+        else:
+            bri_icon, bri_state = "scalable/status/display-brightness-high.svg", f"{clamped}% Peak"
+
+        frame = 0 if (reduced_motion or not self.anim_toggle.isChecked()) else (anim_phase % 16)
+        spin_state = "Static (0ms)" if reduced_motion else f"Frame {frame + 1}/16"
+        return {
+            "battery": (bat_icon, bat_state, bat_color, None),
+            "wifi": (wifi_icon, wifi_state, wifi_color, None),
+            "audio": (aud_icon, aud_state, aud_color, None),
+            "brightness": (bri_icon, bri_state, self._studio_accent_hex, None),
+            "spinner": ("22x22/animations/process-working.svg", spin_state, self._studio_accent_hex, frame),
+        }
+
+    def update_kinetic_studio(self) -> None:
+        if not hasattr(self, "studio_cards") or not hasattr(self, "level_slider"):
+            return
+        level = self.level_slider.value()
+        if level > 115:
+            band, band_color = "DANGER", "#FF6B7A"
+        elif level > 100:
+            band, band_color = "OVERDRIVE", "#FBBF24"
+        elif level == 0:
+            band, band_color = "MUTED / 0%", "#FF6B7A"
+        elif level <= 20:
+            band, band_color = "LOW", "#FBBF24"
+        else:
+            band, band_color = "NOMINAL", self._studio_accent_hex
+        self.level_value_lbl.setText(f"{level}% · {band}")
+        self.level_value_lbl.setStyleSheet(f"color: {band_color}; font-weight: 700; font-size: 11px;")
+
+        mapping = self.resolve_studio_icons(level, self._studio_frame, self.reduced_motion_active)
+        for cat_key, (s_img, _s_title, s_state) in self.studio_cards.items():
+            rel_svg, state_txt, state_color, frame = mapping[cat_key]
+            pix = self._render_tinted_svg(self._studio_icon_path(rel_svg), 28, self._studio_accent_hex, sprite_frame=frame)
+            s_img.setPixmap(pix)
+            s_state.setText(state_txt)
+            s_state.setStyleSheet(f"color: {state_color}; font-size: 10px; font-weight: 600;")
+
     def refresh_state(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
@@ -421,6 +673,10 @@ class ProfileAccentTab(QtWidgets.QWidget):
         accent_hex = status.get("accentHex", "#A3FF47")
         pal = noxforge_core.resolve_accent_palette(accent_hex, is_obsidian=(profile == "obsidian"))
         acc = pal["accent"]
+        self._studio_accent_hex = acc
+        if hasattr(noxforge_ctl, "manage_motion"):
+            mot = noxforge_ctl.manage_motion("status")
+            self.reduced_motion_active = bool(mot.get("reducedMotion", False))
         surf_sel = pal["surfaceSelected"]
         bg_raised = "#121B21" if (profile == "obsidian") else "#1B2831"
 
@@ -487,7 +743,10 @@ class ProfileAccentTab(QtWidgets.QWidget):
         if hasattr(self, "preview_badges"):
             for img_lbl, _, svg_path in self.preview_badges:
                 if svg_path.is_file():
-                    img_lbl.setPixmap(QtGui.QIcon(str(svg_path)).pixmap(24, 24))
+                    img_lbl.setPixmap(self._render_tinted_svg(svg_path, 24, acc))
+
+        self._sync_anim_timer()
+        self.update_kinetic_studio()
 
         sched = noxforge_ctl.manage_schedule("status")
         is_sched = sched.get("scheduled", False)
@@ -700,6 +959,7 @@ class HealthTab(QtWidgets.QWidget):
         self.badge_eco = QtWidgets.QLabel("Ecosystem: Checking")
         self.badge_union = QtWidgets.QLabel("Union 6.8: Checking")
         self.badge_wayland = QtWidgets.QLabel("Wayland 6.8: Checking")
+        self.badge_icons = QtWidgets.QLabel("Icons: Checking")
         for b in (
             self.badge_core,
             self.badge_palette,
@@ -708,6 +968,7 @@ class HealthTab(QtWidgets.QWidget):
             self.badge_eco,
             self.badge_union,
             self.badge_wayland,
+            self.badge_icons,
         ):
             b.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             b.setStyleSheet(
@@ -785,14 +1046,25 @@ class HealthTab(QtWidgets.QWidget):
             wayland_info = data.get("waylandCompositor", {})
             wayland_ok = bool(wayland_info.get("waylandNative", True))
             self._style_health_badge(self.badge_wayland, f"● Wayland 6.8: {'OK' if wayland_ok else 'CHECK'}", wayland_ok)
+            icon_matrix = data.get("iconLevelMatrix", {})
+            icons_ok = icon_matrix.get("status") == "ok"
+            self._style_health_badge(self.badge_icons, f"● Icons: {'Verified' if icons_ok else 'CHECK'}", icons_ok)
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
-            text += f"Schema Version: {data.get('schemaVersion', 12)}\n"
+            text += f"Schema Version: {data.get('schemaVersion', 13)}\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
             text += f"Core Library (noxforge_core.py): {core_status.upper()}\n"
             text += f"Palette Synchronization: {palette_sync.upper()}\n"
+            sheets_info = icon_matrix.get("plasmaIconSheets", {})
+            sheets_count = sheets_info.get("standard", 0) if isinstance(sheets_info, dict) else sheets_info
+            text += (
+                f"Kinetic Icon Matrix: {icon_matrix.get('status', 'unknown').upper()} "
+                f"(Battery {icon_matrix.get('batteryLevels', 0)}, "
+                f"Wi-Fi {icon_matrix.get('wifiLevels', 0)}, "
+                f"Sheets {sheets_count})\n"
+            )
             text += f"Union Style Engine (Plasma 6.8): {union_info.get('status', 'ok').upper()} ({union_mode})\n"
             text += f"Wayland Compositor Target: {wayland_info.get('targetPlasma', '>=6.8')} ({wayland_info.get('sessionType', 'wayland')})\n"
             text += f"GTK 3/4 & Libadwaita Chain: {gtk_chain.upper()}\n"
@@ -817,6 +1089,7 @@ class HealthTab(QtWidgets.QWidget):
 class AccessibilityTab(QtWidgets.QWidget):
     statusChanged = QtCore.Signal(str)
     themeChanged = QtCore.Signal(str, str)
+    motionChanged = QtCore.Signal(bool)
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -963,6 +1236,7 @@ class AccessibilityTab(QtWidgets.QWidget):
             action = "reduced" if checked else "standard"
             noxforge_ctl.manage_motion(action)
             self._update_motion_badge(checked)
+            self.motionChanged.emit(checked)
             self.statusChanged.emit(f"Motion policy set to: {action.upper()}")
 
     def open_color_picker(self) -> None:
@@ -1166,12 +1440,14 @@ class EcosystemTab(QtWidgets.QWidget):
 
             # Col 3: Deploy Action button
             action_btn = QtWidgets.QPushButton(f"Deploy Theme to {info['name']}")
+            action_btn.setAccessibleName(f"Deploy Theme to {info['name']}")
             action_btn.setStyleSheet("padding: 4px 10px; font-size: 11px;")
             action_btn.clicked.connect(lambda _, a=app_id: self.apply_app(a))
             self.table.setCellWidget(row, 3, action_btn)
 
             # Col 4: Restore Backup button
             restore_btn = QtWidgets.QPushButton("Restore Backup")
+            restore_btn.setAccessibleName(f"Restore Backup for {info['name']}")
             restore_btn.setStyleSheet("padding: 4px 10px; font-size: 11px;")
             restore_btn.setEnabled(bool(info.get("hasBackup") or info.get("installed")))
             restore_btn.clicked.connect(lambda _, a=app_id: self.restore_app(a))
@@ -1286,6 +1562,7 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.tab_a11y = AccessibilityTab()
         self.tab_a11y.statusChanged.connect(self.show_status)
         self.tab_a11y.themeChanged.connect(self.refresh_theme)
+        self.tab_a11y.motionChanged.connect(self.tab_profile.set_reduced_motion)
         self.tabs.addTab(self.tab_a11y, "Accessibility && Motion")
 
         # Tab 4: Health & Diagnostics
@@ -1355,8 +1632,15 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         if hasattr(self.opacity_window, "refresh_theme"):
             self.opacity_window.refresh_theme(self.active_profile, self.active_accent_hex)
         self.tab_profile.refresh_state()
+        self.tab_profile._studio_accent_hex = self.active_accent_hex
+        self.tab_profile.update_kinetic_studio()
         self.tab_a11y.refresh_state()
         self.tab_eco.refresh_table()
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        if hasattr(self.tab_profile, "kinetic_timer") and self.tab_profile.kinetic_timer.isActive():
+            self.tab_profile.kinetic_timer.stop()
+        super().closeEvent(event)
 
     def export_preset_dialog(self) -> None:
         path, _ = QtWidgets.QFileDialog.getSaveFileName(

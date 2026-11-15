@@ -1,4 +1,4 @@
-%global upstream_version 19.0.0
+%global upstream_version 20.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        19.0.0
+Version:        20.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -108,6 +108,13 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sat Nov 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 20.0.0-1
+- Release v20.0.0 Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
+- Expand icons/NoxForge with continuous 0-100% battery/Wi-Fi/audio/brightness levels and 16-frame loader sprites
+- Generate 8 semantic Plasma DesktopTheme icons/*.svg sheets across Graphite and Obsidian variants
+- Add Lock Screen Kinetic Status Pill with zero-literal token bindings and Reduced Motion suppression
+- Upgrade Ecosystem Engine to v3 (Yazi, Lazygit, Zellij, Tmux), Doctor Schema 13, noxforge-ctl icons, and Control Center v5 Studio
+
 * Sun Nov 01 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 19.0.0-1
 - Release v19.0.0 KDE Plasma 6.8 Union Style Engine, Fastfetch Kinetic Studio v2 & Wayland Precision
 - Generate native Union CSS/QQuick styles (union/styles/noxforge and union/styles/noxforge-obsidian)

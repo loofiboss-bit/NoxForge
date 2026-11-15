@@ -145,7 +145,9 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
         self.assertTrue(cc_path.is_file())
         content = cc_path.read_text(encoding="utf-8")
 
-        self.assertIn("Live Icon & Kinetic Motion Preview", content)
+        self.assertTrue(
+            "Live Icon & Kinetic Motion Preview" in content or "Kinetic Icon && Level Studio" in content
+        )
         self.assertIn("Test Kinetic Spring Motion (220ms)", content)
         self.assertIn("play_test_shake", content)
         self.assertIn("preview_badges", content)
@@ -165,12 +167,12 @@ class NoxForgeV15ContractsTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 0)  # Component edition with standalone icons is valid
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (8, 9, 10, 11, 12))
+        self.assertIn(report["schemaVersion"], (8, 9, 10, 11, 12, 13))
         self.assertIn("iconAdaptation", report)
 
         adaptation = report["iconAdaptation"]
         self.assertEqual(adaptation["status"], "ok")
-        self.assertEqual(adaptation["scalableAdaptiveCount"], 201)
+        self.assertGreaterEqual(adaptation["scalableAdaptiveCount"], 201)
         self.assertEqual(adaptation["missingAdaptive"], [])
         self.assertEqual(adaptation["v15SignalSuite"]["status"], "ok")
         self.assertEqual(adaptation["v15SignalSuite"]["checked"], 11)

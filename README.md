@@ -1,15 +1,16 @@
-# NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine & Wayland Precision
+# NoxForge 20.0.0 — Kinetic Iconography, Multi-Level Status Engine & Plasma 6.8 Union Precision
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
 surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 19.0.0 targets Fedora 44, Fedora 45, and Arch
-Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It elevates the visual system with
-native KDE Plasma 6.8 Union Style Engine CSS/QQuick styles (`union/styles/noxforge`
-and `union/styles/noxforge-obsidian` bound to `custom-color("kcolorscheme", ...)`),
-reversible KWin 6.8 CSD window rule harmonization (`noxforge-ctl kwin-csd`), a
-Plasma 6.8 System Monitor telemetry preset (`apps/systemmonitor/noxforge-telemetry.page`
-with VRAM % tracking), Control Center v4, Tokens Schema 15, and Doctor Schema 12 diagnostics.
-See the [v19 release plan](docs/NOXFORGE_V19_PLAN.md).
+detail, and a compact Forge Notch. Version 20.0.0 targets Fedora 44, Fedora 45, and Arch
+Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It delivers animated, multi-level
+Freedesktop/Plasma status iconography (10% battery steps, 20%/25% Wi-Fi steps,
+overdrive audio, dedicated brightness icons, and 16-frame `animations/process-working.svg`
+sprite sheets), 8 Plasma Desktop Theme `icons/*.svg` sheets, native KDE Plasma 6.8
+Union Style Engine styles, Ecosystem v3 (`yazi`, `lazygit`, `zellij`, `tmux`),
+Lock Screen Forge Status Pill, `noxforge-ctl icons`, Control Center v5 (with Kinetic
+Icon & Level Studio), Tokens Schema 16, and Doctor Schema 13 diagnostics.
+See the [v20 release plan](docs/NOXFORGE_V20_PLAN.md).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -76,13 +77,19 @@ cursor, audio, PAM/login, power, and live-session gates.
   **NoxForge Obsidian** (`NoxForge-Obsidian`), and **NoxForge Obsidian
   Ultrawide** (`NoxForge-Obsidian-Ultrawide`);
 - a native Qt 6 style that dynamically adapts to the active NoxForge palette and
-  Forge Accent Matrix (Lime, Cyan, Violet, Amber) via `NOXFORGE_ACCENT` and `kdeglobals`;
+  Forge Accent Matrix (Lime, Cyan, Violet, Amber, or custom hex) via `NOXFORGE_ACCENT` and `kdeglobals`,
+  paired with Plasma 6.8 `plasma-union` CSS integration (`union/styles/noxforge*`);
+- kinetic iconography engine featuring 10%/20%/25% multi-level status SVG ladders,
+  684 true optical icons (`16x16` & `22x22`), 404 scalable icons, 16-frame sprite animations,
+  and 8 Plasma Desktop Theme icon sheets per palette;
 - dynamic QMenu and menubar layout preventing text truncation across fractional display scales;
-- unified orchestration suite: `noxforge-ctl` CLI and 5-tab PySide6 Control Center GUI
-  (`io.github.loofiboss.noxforge.controlcenter.desktop`);
+- unified orchestration suite: `noxforge-ctl` CLI and 5-tab PySide6 Control Center v5 Studio
+  (`io.github.loofiboss.noxforge.controlcenter.desktop`) with live Kinetic Icon Studio & Flatpak support;
 - `noxforge-opacity` CLI utility and Qt 6 GUI configurator (with seamless Control Center integration)
   for adjusting panel, popup, and Aurorae window decoration transparency levels;
-- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 10),
+- Developer Ecosystem v3 supporting 18 tools (including Yazi, Lazygit, Zellij, Tmux, Zed, Neovim,
+  Helix, Ghostty, Alacritty, Kitty, Foot, btop, Starship, Obsidian, Rofi, Discord, Firefox);
+- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 13),
   and deterministic checksums.
 
 Store descriptions state that components install separately and that the Global
@@ -99,8 +106,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v19 release scope is recorded in
-[NOXFORGE_V19_PLAN.md](docs/NOXFORGE_V19_PLAN.md), indexed by
+The v20 release scope is recorded in
+[NOXFORGE_V20_PLAN.md](docs/NOXFORGE_V20_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

@@ -121,42 +121,68 @@ Rectangle {
         }
     }
 
-    // Top status row (caps lock, network, battery, indicators)
-    RowLayout {
+    // Top status pill (network, battery, pulse dot, caps lock)
+    Rectangle {
+        id: forgeStatusPill
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.margins: tokens.largeSpacing ?? 24
-        spacing: tokens.standardSpacing
+        anchors.margins: tokens.standardSpacing * 3
+        implicitHeight: 34
+        implicitWidth: statusPillRow.implicitWidth + 20
+        radius: tokens.radius
+        color: tokens.surfaceRaised
+        border.color: passwordInput.capsLockActive ? tokens.neutral : tokens.border
+        border.width: tokens.borderWidth
+        Accessible.role: Accessible.Indicator
+        Accessible.name: qsTr("System status pill")
 
-        Kirigami.Icon {
-            source: "network-wireless"
-            implicitWidth: 18
-            implicitHeight: 18
-            opacity: 0.85
-        }
+        RowLayout {
+            id: statusPillRow
+            anchors.centerIn: parent
+            spacing: tokens.standardSpacing
 
-        Kirigami.Icon {
-            source: "battery-good"
-            implicitWidth: 18
-            implicitHeight: 18
-            opacity: 0.85
-        }
+            Rectangle {
+                id: kineticPulseDot
+                implicitWidth: 8
+                implicitHeight: 8
+                radius: 4
+                color: tokens.accent
 
-        Rectangle {
-            id: capsWarning
-            visible: passwordInput.capsLockActive
-            implicitHeight: 26
-            implicitWidth: capsLabel.implicitWidth + 16
-            radius: tokens.compactRadius
-            color: tokens.surfaceRaised
-            border.color: tokens.neutral
-            border.width: tokens.borderWidth
+                SequentialAnimation on opacity {
+                    running: root.viewVisible && !root.reducedMotion
+                    loops: Animation.Infinite
+                    NumberAnimation { to: 0.45; duration: tokens.busyCycleDuration; easing.type: Easing.InOutSine }
+                    NumberAnimation { to: 1.0; duration: tokens.busyCycleDuration; easing.type: Easing.InOutSine }
+                }
+            }
 
-            RowLayout {
-                anchors.centerIn: parent
-                spacing: 4
+            Kirigami.Icon {
+                source: "network-wireless-100"
+                implicitWidth: 18
+                implicitHeight: 18
+                opacity: 0.9
+            }
+
+            Kirigami.Icon {
+                source: "battery-100"
+                implicitWidth: 18
+                implicitHeight: 18
+                opacity: 0.9
+            }
+
+            Rectangle {
+                id: capsWarning
+                visible: passwordInput.capsLockActive
+                implicitHeight: 24
+                implicitWidth: capsLabel.implicitWidth + 14
+                radius: tokens.compactRadius
+                color: tokens.surface
+                border.color: tokens.neutral
+                border.width: tokens.borderWidth
+
                 Text {
                     id: capsLabel
+                    anchors.centerIn: parent
                     text: qsTr("CAPS LOCK")
                     color: tokens.neutral
                     font.pixelSize: 11

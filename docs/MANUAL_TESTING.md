@@ -1,15 +1,15 @@
 # Manual qualification
 
 Capture evidence for each release candidate. The current visual and versioned
-record is under `docs/evidence/v16/`, with its compact visual index at
-`media/manifest.json`. The canonical v16 automated gate passed; see the
-[qualification summary](evidence/v16/automated-gate.md) for its results.
+record is under `docs/evidence/v20/`, with its compact visual index at
+`media/manifest.json`. The canonical v20 automated gate is documented in
+[qualification summary](evidence/v20/automated-gate.md).
 Offscreen, generated, and composited material is never
 reported as live evidence.
 
 ## Required isolated session
 
-Use a disposable Fedora 44 or version-pinned Arch Plasma/KWin 6.7+ Wayland session,
+Use a disposable Fedora 44/45 or version-pinned Arch Plasma/KWin 6.8+ Wayland session,
 2560x1440 at 100%, a neutral test user, the same wallpaper/panel/app set, and
 no personal data. Exercise both Graphite and Obsidian palettes across the
 Global Theme, Plasma Style, color scheme, Aurorae, Qt style, wallpapers, and

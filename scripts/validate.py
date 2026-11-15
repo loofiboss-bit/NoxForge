@@ -168,8 +168,19 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14, 15) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 16:
+        kinetic_cfg = tokens.get("kineticIconography", {})
+        eco3_cfg = tokens.get("ecosystemV3", {})
+        if (
+            kinetic_cfg.get("levels") != [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+            or kinetic_cfg.get("spriteFrames") != 16
+            or kinetic_cfg.get("respectsReducedMotion") is not True
+        ):
+            raise ValidationError("kineticIconography token contract (Schema 16) is invalid")
+        if eco3_cfg.get("apps") != ["yazi", "lazygit", "zellij", "tmux"]:
+            raise ValidationError("ecosystemV3 token contract (Schema 16) is invalid")
     if tokens.get("schemaVersion") >= 15:
         union_cfg = tokens.get("union", {})
         kwin68_cfg = tokens.get("kwin68", {})
@@ -842,7 +853,19 @@ def validate_plasma_style() -> None:
     missing_assets = sorted(relative for relative in required_shell_assets if not (theme / relative).is_file())
     if missing_assets:
         raise ValidationError(f"Plasma shell asset coverage is incomplete: {missing_assets}")
-    if len(list(theme.rglob("*.svg"))) < 56:
+    icon_sheet_families = contract.get("iconSheetFamilies")
+    if not isinstance(icon_sheet_families, list) or len(icon_sheet_families) != 8:
+        raise ValidationError("Plasma icon sheet contract must declare all 8 icons/*.svg sheets")
+    obsidian_theme = ROOT / "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"
+    missing_icon_sheets = [
+        f"{variant}/{name}"
+        for variant, root_dir in (("standard", theme), ("obsidian", obsidian_theme))
+        for name in icon_sheet_families
+        if not (root_dir / f"icons/{name}.svg").is_file()
+    ]
+    if missing_icon_sheets:
+        raise ValidationError(f"Plasma desktoptheme icon sheets missing: {missing_icon_sheets}")
+    if len(list(theme.rglob("*.svg"))) < 64:
         raise ValidationError("Plasma Style requires the complete generated SVG asset set")
     for path in sorted(theme.rglob("*.svg")):
         text = path.read_text(encoding="utf-8")
@@ -1028,7 +1051,7 @@ def validate_icons() -> None:
     for directory in index["Icon Theme"].get("directories", "").split(","):
         if index[directory].get("context") not in valid_contexts:
             raise ValidationError(f"icon directory {directory} has an invalid Context")
-    expected_categories = {"actions", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
+    expected_categories = {"actions", "animations", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
     icons = list((theme / "scalable").glob("*/*.svg"))
     if len(icons) < 120:
         raise ValidationError(f"system icon coverage requires at least 120 SVGs, found {len(icons)}")
@@ -1054,6 +1077,12 @@ def validate_icons() -> None:
         optical = list((theme / f"{size}x{size}").glob("*/*.svg"))
         if any(path.is_symlink() for path in optical):
             raise ValidationError("small optical icons must be physical files")
+        sprite = theme / f"{size}x{size}/animations/process-working.svg"
+        if not sprite.is_file():
+            raise ValidationError(f"missing animation sprite sheet: {sprite.relative_to(ROOT)}")
+        sprite_root = ET.parse(sprite).getroot()
+        if sprite_root.get("viewBox") != f"0 0 {size} {size * 16}":
+            raise ValidationError(f"animation sprite {sprite.name} has invalid viewBox")
         optical_count += len(optical)
     if optical_count != coverage.get("opticalCount"):
         raise ValidationError("icon optical manifest does not match generated files")
