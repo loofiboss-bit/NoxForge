@@ -58,7 +58,7 @@ CORE_ICON_SPECS = {
     "actions/view-refresh.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5"/><path class="accent" d="M16 7l3-3"/>',
     "categories/applications-system.svg": '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><circle class="accent-fill" cx="17" cy="7" r="1.1"/>',
     "categories/applications-development.svg": '<path d="M9 5l-6 7 6 7M15 5l6 7-6 7M13 3l-2 18"/><path class="accent" d="M12.5 7.5l-1 9"/>',
-    "categories/applications-graphics.svg": '<path d="M4 20l4-12 8-4 4 4-4 8zM8 8l8 8"/><circle cx="16" cy="8" r="1.5"/><path class="accent" d="M4 20l3.5-1"/>',
+    "categories/applications-graphics.svg": '<path d="M4 20l3-9 9-7 4 4-7 9zM11 11l2 2"/><path class="accent" d="M4 20l4.5-4.5"/>',
     "categories/applications-internet.svg": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 4 6 4 9s-1 6-4 9M12 3c-3 3-4 6-4 9s1 6 4 9"/><path class="accent" d="M9 12h6"/>',
     "categories/applications-multimedia.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5.5 3-5.5 3z"/><path class="accent" d="M10 9.5v5"/>',
     "devices/camera-photo.svg": '<path d="M3 8a1 1 0 0 1 1-1h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="12" cy="13" r="4"/><circle class="accent-fill" cx="17.5" cy="10" r="1"/>',
@@ -119,20 +119,20 @@ STATE_ICON_SPECS = {
 V5_RUNTIME_ICON_SPECS = {
     "actions/application-exit.svg": '<path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/><path class="accent" d="M15 9l3 3"/>',
     "actions/help-about.svg": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle class="accent-fill" cx="12" cy="7.5" r="1"/>',
-    "actions/help-contents.svg": '<path d="M5 4h6c2 0 3 1 3 3v13c0-2-1-3-3-3H5zM19 4h-5v16c0-2 1-3 3-3h2z"/><path class="accent" d="M12 7v5"/>',
+    "actions/help-contents.svg": '<path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/><path class="accent" d="M12 7v5"/>',
     "actions/system-run.svg": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/><path class="accent" d="M12 15h4"/>',
     "actions/view-filter.svg": '<path d="M4 5h16l-6 7v6l-4 2v-8z"/><path class="accent" d="M8 5h8"/>',
     "actions/view-grid.svg": '<rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/><circle class="accent-fill" cx="17.5" cy="6.5" r="1"/>',
     "actions/view-list-tree.svg": '<path d="M5 5v14M5 8h5M5 16h5M10 6h10v4H10zM10 14h10v4H10z"/><path class="accent" d="M5 8h4"/>',
     "applets/keyboard-layout.svg": '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M5 10h2M9 10h2M13 10h2M17 10h2M6 14h12"/><path class="accent" d="M9 14h6"/>',
     "categories/applications-accessories.svg": '<rect x="6" y="4" width="12" height="16" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h4"/><path class="accent" d="M9 8h4"/>',
-    "categories/applications-education.svg": '<path d="M3 9l9-5 9 5-9 5zM6 11v5c4 3 8 3 12 0v-5"/><path class="accent" d="M18 11v5"/>',
+    "categories/applications-education.svg": '<path d="M3 9l9-5 9 5-9 5zM6 11.5v4.5c4 3 8 3 12 0v-4.5"/><path class="accent" d="M21 9v6"/>',
     "devices/drive-optical.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/><path class="accent" d="M12 7a5 5 0 0 1 3.5 1.5"/>',
-    "devices/scanner.svg": '<path d="M5 4h14l2 8H3zM3 12h18v8H3zM7 16h10"/><path class="accent" d="M9 16h6"/>',
+    "devices/scanner.svg": '<rect x="3" y="12" width="18" height="7" rx="1.5"/><path d="M5 5l14 5M7 15.5h10"/><path class="accent" d="M7 15.5h4"/>',
     "devices/tablet.svg": '<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="18" r="1"/><path d="M8 5h8v10H8z"/><path class="accent" d="M10.5 18h3"/>',
     "preferences/preferences-desktop-accessibility.svg": '<circle cx="12" cy="5" r="2"/><path d="M4 9h16M12 7v13M7 20l5-7 5 7"/><path class="accent" d="M9 9h6"/>',
     "preferences/preferences-desktop-display-randr.svg": '<rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M9 21h6M12 17v4M7 8h10M7 12h6"/><path class="accent" d="M7 8h5"/>',
-    "status/printer-error.svg": '<path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/><path class="negative" d="M16 10l4 4M20 10l-4 4"/>',
+    "status/printer-error.svg": '<path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/><path class="negative" d="M10.5 16l3 3M13.5 16l-3 3"/>',
     "status/software-update-none.svg": '<path d="M19 8V4l-3 3a8 8 0 1 0 2 9M19 4h-5M9 12l2 2 4-4"/><path class="accent" d="M11 14l4-4"/>',
     "status/user-available.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="accent" d="M16.5 17l1 1 2-2"/>',
     "status/user-away.svg": '<circle cx="10" cy="8" r="4"/><path d="M3 21c0-5 3-7 7-7s7 2 7 7"/><circle cx="18" cy="17" r="3"/><path class="warning" d="M18 15.5v2l1.3 1"/>',
@@ -149,7 +149,7 @@ PHASE6_PRIORITY_ICON_SPECS = {
     "places/folder-download.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6M9.5 13.5l2.5 2.5 2.5-2.5"/><path class="accent" d="M12 10v3"/>',
     "places/folder-pictures.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="9" cy="11.5" r="1.4"/><path d="M6 17l4-3 3 2 3-4 3 5"/><circle class="accent-fill" cx="9" cy="11.5" r="0.8"/>',
     "places/folder-videos.svg": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M10 10.5l5 2.5-5 2.5z"/><path class="accent" d="M10 11v4"/>',
-    "preferences/preferences-desktop-color.svg": '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="8" r="1"/><circle cx="15" cy="8" r="1"/><circle cx="8" cy="14" r="1"/><path d="M12 21c-2-3 1-5 4-4"/><circle class="accent-fill" cx="15" cy="14" r="1.3"/>',
+    "preferences/preferences-desktop-color.svg": '<path d="M12 3a9 9 0 0 0 0 18c1.5 0 2.5-1 2.5-2.2 0-.8-.5-1.5-.5-2.3 0-1.2 1-2 2.2-2H18a3 3 0 0 0 3-3c0-4.7-4-8.5-9-8.5z"/><circle cx="8.5" cy="9.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="15.5" cy="9.5" r="1"/><circle class="accent-fill" cx="8.5" cy="13.5" r="1.2"/>',
     "preferences/preferences-desktop-icons.svg": '<rect x="3" y="4" width="18" height="16" rx="2"/><rect x="6" y="7" width="4" height="4" rx="1"/><rect x="14" y="7" width="4" height="4" rx="1"/><rect x="6" y="14" width="4" height="3" rx="1"/><rect x="14" y="14" width="4" height="3" rx="1"/><circle class="accent-fill" cx="16" cy="9" r="0.9"/>',
     "preferences/preferences-desktop-mouse.svg": '<rect x="7" y="2" width="10" height="20" rx="5"/><path d="M12 2v7M7 9h10M19 7v10"/><circle cx="19" cy="12" r="1.5"/><path class="accent" d="M12 4.5v2.5"/>',
     "preferences/preferences-system-bluetooth.svg": '<circle cx="12" cy="12" r="9"/><path d="M8.5 8.5l7 7L12 19V5l3.5 3.5-7 7"/><circle class="accent-fill" cx="16" cy="12" r="1"/>',
@@ -226,7 +226,7 @@ def _build_v20_battery_specs() -> dict[str, str]:
     specs: dict[str, str] = {}
     shell = '<rect x="3" y="6" width="16" height="12" rx="2.5"/><path d="M19 10h2v4h-2"/>'
     bolt_anim = (
-        '<path class="ColorScheme-Highlight accent nf-pulse" d="M12 8.5L9.5 12h3L10 15.5">'
+        '<path class="accent nf-pulse" d="M12 8.5L9.5 12h3L10 15.5">'
         '<animate attributeName="opacity" values="0.9;0.35;0.9" dur="1.4s" repeatCount="indefinite"/></path>'
     )
     sym_mark = '<path class="symbolic-ring" d="M5 19.5h12"/>'
@@ -244,9 +244,9 @@ def _build_v20_battery_specs() -> dict[str, str]:
         chg_level = f'<path class="{cls_stroke}" d="M5.5 15.8h{max(1.0, bar_w)}"/>'
         specs[f"status/battery-{tag}-charging.svg"] = f"{shell}{bolt_anim}{chg_level}"
         specs[f"status/battery-{tag}-charging-symbolic.svg"] = f"{shell}{bolt_anim}{sym_mark}{chg_level}"
-        specs[f"status/battery-{tag}-profile-powersave.svg"] = f'{shell}{bar}<path class="ColorScheme-PositiveText accent" d="M16.5 17.5c1-2 2.5-2.5 4-2.5-0.4 1.6-1.2 2.8-4 2.5z"/>'
-        specs[f"status/battery-{tag}-profile-balanced.svg"] = f'{shell}{bar}<circle class="ColorScheme-Highlight accent-fill" cx="18.5" cy="17.5" r="1.4"/>'
-        specs[f"status/battery-{tag}-profile-performance.svg"] = f'{shell}{bar}<path class="ColorScheme-Highlight accent" d="M16 19l2-2.5 2 2.5"/>'
+        specs[f"status/battery-{tag}-profile-powersave.svg"] = f'{shell}{bar}<path class="accent" d="M16.5 17.5c1-2 2.5-2.5 4-2.5-0.4 1.6-1.2 2.8-4 2.5z"/>'
+        specs[f"status/battery-{tag}-profile-balanced.svg"] = f'{shell}{bar}<circle class="accent-fill" cx="18.5" cy="17.5" r="1.4"/>'
+        specs[f"status/battery-{tag}-profile-performance.svg"] = f'{shell}{bar}<path class="accent" d="M16 19l2-2.5 2 2.5"/>'
     specs["status/battery-charging.svg"] = f"{shell}{bolt_anim}"
     specs["status/battery-charging-symbolic.svg"] = specs["status/battery-charging.svg"] + sym_mark
     specs["status/battery-caution-charging.svg"] = f'{shell}{bolt_anim}<path class="ColorScheme-NegativeText negative" d="M5.5 15.8h2.2"/>'
@@ -264,12 +264,12 @@ def _build_v20_battery_specs() -> dict[str, str]:
     specs["status/battery-full-symbolic.svg"] = specs["status/battery-full.svg"] + sym_mark
     specs["status/battery-missing.svg"] = shell + '<path class="ColorScheme-NegativeText negative" d="M9 10l4 4M13 10l-4 4"/>'
     specs["status/battery-missing-symbolic.svg"] = specs["status/battery-missing.svg"] + sym_mark
-    specs["status/battery-ups.svg"] = '<rect x="5" y="3" width="14" height="18" rx="2"/><rect class="ColorScheme-Text text-fill" x="8" y="7" width="8" height="3" rx="1"/><path class="ColorScheme-Highlight accent" d="M12 12.5l-2 2.5h4l-2 2.5"/>'
-    specs["devices/input-mouse-battery.svg"] = '<rect x="3" y="4" width="8" height="16" rx="4"/><path d="M7 4v5M3 9h8"/><rect x="14" y="6" width="7" height="12" rx="1.5"/><rect class="ColorScheme-Text text-fill" x="15.5" y="9" width="4" height="7" rx="0.5"/><path class="ColorScheme-Highlight accent" d="M16 4h3"/>'
-    specs["devices/input-keyboard-battery.svg"] = '<rect x="2" y="10" width="14" height="10" rx="2"/><path d="M5 14h2M9 14h4M5 17h8"/><rect x="17.5" y="4" width="4.5" height="10" rx="1"/><rect class="ColorScheme-Text text-fill" x="18.7" y="7" width="2" height="5"/><path class="ColorScheme-Highlight accent" d="M19 2.5h1.5"/>'
-    specs["devices/phone-battery.svg"] = '<rect x="3" y="3" width="10" height="18" rx="2"/><path d="M6.5 6h3"/><rect x="15.5" y="7" width="6" height="11" rx="1.5"/><rect class="ColorScheme-Text text-fill" x="17" y="10" width="3" height="6"/><path class="ColorScheme-Highlight accent" d="M17.5 5h2"/>'
-    specs["devices/input-gaming-battery.svg"] = '<path d="M4 13a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4l1 5-3-1h-8l-3 1z"/><path d="M6.5 13h3M8 11.5v3"/><rect x="18" y="6" width="4" height="10" rx="1"/><rect class="ColorScheme-Text text-fill" x="19" y="9" width="2" height="5"/><circle class="ColorScheme-Highlight accent-fill" cx="12.5" cy="12.5" r="0.9"/>'
-    specs["devices/preferences-system-bluetooth-battery.svg"] = '<path d="M5 8l6 6-3 3V7l3 3-6 6"/><rect x="15" y="6" width="6" height="12" rx="1.2"/><rect class="ColorScheme-Text text-fill" x="16.5" y="9" width="3" height="7"/><path class="ColorScheme-Highlight accent" d="M17 4h2"/>'
+    specs["status/battery-ups.svg"] = '<rect x="5" y="3" width="14" height="18" rx="2"/><rect class="ColorScheme-Text text-fill" x="8" y="7" width="8" height="3" rx="1"/><path class="accent" d="M12 12.5l-2 2.5h4l-2 2.5"/>'
+    specs["devices/input-mouse-battery.svg"] = '<rect x="3" y="4" width="8" height="16" rx="4"/><path d="M7 4v5M3 9h8"/><rect x="14" y="6" width="7" height="12" rx="1.5"/><rect class="ColorScheme-Text text-fill" x="15.5" y="9" width="4" height="7" rx="0.5"/><path class="accent" d="M16 4h3"/>'
+    specs["devices/input-keyboard-battery.svg"] = '<rect x="2" y="10" width="14" height="10" rx="2"/><path d="M5 14h2M9 14h4M5 17h8"/><rect x="17.5" y="4" width="4.5" height="10" rx="1"/><rect class="ColorScheme-Text text-fill" x="18.7" y="7" width="2" height="5"/><path class="accent" d="M19 2.5h1.5"/>'
+    specs["devices/phone-battery.svg"] = '<rect x="3" y="3" width="10" height="18" rx="2"/><path d="M6.5 6h3"/><rect x="15.5" y="7" width="6" height="11" rx="1.5"/><rect class="ColorScheme-Text text-fill" x="17" y="10" width="3" height="6"/><path class="accent" d="M17.5 5h2"/>'
+    specs["devices/input-gaming-battery.svg"] = '<path d="M4 13a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4l1 5-3-1h-8l-3 1z"/><path d="M6.5 13h3M8 11.5v3"/><rect x="18" y="6" width="4" height="10" rx="1"/><rect class="ColorScheme-Text text-fill" x="19" y="9" width="2" height="5"/><circle class="accent-fill" cx="12.5" cy="12.5" r="0.9"/>'
+    specs["devices/preferences-system-bluetooth-battery.svg"] = '<path d="M5 8l6 6-3 3V7l3 3-6 6"/><rect x="15" y="6" width="6" height="12" rx="1.2"/><rect class="ColorScheme-Text text-fill" x="16.5" y="9" width="3" height="7"/><path class="accent" d="M17 4h2"/>'
     return specs
 
 
@@ -296,10 +296,10 @@ def _build_v20_wireless_specs() -> dict[str, str]:
     level_map = (
         ("0", 0, "ColorScheme-NegativeText negative", "ColorScheme-NegativeText negative-fill"),
         ("20", 1, "ColorScheme-NeutralText warning", "ColorScheme-NeutralText warning-fill"),
-        ("40", 2, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
-        ("60", 2, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
-        ("80", 3, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
-        ("100", 4, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
+        ("40", 2, "ColorScheme-Text", "accent-fill"),
+        ("60", 2, "ColorScheme-Text", "accent-fill"),
+        ("80", 3, "ColorScheme-Text", "accent-fill"),
+        ("100", 4, "ColorScheme-Text", "accent-fill"),
     )
     lock_badge = '<rect x="16.5" y="15.5" width="5" height="4" rx="1"/><path d="M17.5 15.5v-1.5a1.5 1.5 0 0 1 3 0v1.5"/>'
     limit_badge = '<path class="ColorScheme-NeutralText warning" stroke-width="1.8" d="M19 13v3.8"/><circle class="ColorScheme-NeutralText warning-fill" cx="19" cy="19.2" r="0.9"/>'
@@ -328,18 +328,18 @@ def _build_v20_wireless_specs() -> dict[str, str]:
             specs[f"status/network-wireless-connected-{conn_tag}-limited.svg"] = base_body + conn_ring + limit_badge
 
     for conn_pct, arcs_lit in (("25", 1), ("50", 2), ("75", 3)):
-        b25 = _wifi_arcs_markup(arcs_lit, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill")
+        b25 = _wifi_arcs_markup(arcs_lit, "ColorScheme-Text", dot_cls="accent-fill")
         specs[f"status/network-wireless-connected-{conn_pct}-symbolic.svg"] = b25 + conn_ring + '<path class="symbolic-ring" d="M6 21.5h12"/>'
-    specs["status/network-wireless-connected-100-symbolic.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + conn_ring + sym_ring
-    specs["status/network-wireless-connected-100-locked.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + conn_ring + lock_badge
-    specs["status/network-wireless-connected-100-limited.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + conn_ring + limit_badge
+    specs["status/network-wireless-connected-100-symbolic.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="accent-fill") + conn_ring + sym_ring
+    specs["status/network-wireless-connected-100-locked.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="accent-fill") + conn_ring + lock_badge
+    specs["status/network-wireless-connected-100-limited.svg"] = _wifi_arcs_markup(4, "ColorScheme-Text", dot_cls="accent-fill") + conn_ring + limit_badge
 
     sig_levels = (
         ("none", 0, "ColorScheme-NegativeText negative", "ColorScheme-NegativeText negative-fill"),
         ("weak", 1, "ColorScheme-NeutralText warning", "ColorScheme-NeutralText warning-fill"),
-        ("ok", 2, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
-        ("good", 3, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
-        ("excellent", 4, "ColorScheme-Text", "ColorScheme-Highlight accent-fill"),
+        ("ok", 2, "ColorScheme-Text", "accent-fill"),
+        ("good", 3, "ColorScheme-Text", "accent-fill"),
+        ("excellent", 4, "ColorScheme-Text", "accent-fill"),
     )
     for sig_name, arcs_lit, sc, dc in sig_levels:
         sb = _wifi_arcs_markup(arcs_lit, sc, dot_cls=dc) + '<path class="dimmed" d="M10 21h4"/>'
@@ -354,13 +354,13 @@ def _build_v20_wireless_specs() -> dict[str, str]:
         '<path class="nf-wave-1" d="M9.5 16.5a3.5 3.5 0 0 1 5 0">'
         '<animate attributeName="opacity" values="0.2;0.85;0.2" begin="0s" dur="1.8s" repeatCount="indefinite"/></path>'
         '<path class="dimmed" d="M7 14a7.1 7.1 0 0 1 10 0"/>'
-        '<circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="12" cy="19" r="1.4"/>'
+        '<circle class="accent-fill nf-pulse" cx="12" cy="19" r="1.4"/>'
     )
     specs["status/network-wireless-acquiring-symbolic.svg"] = specs["status/network-wireless-acquiring.svg"] + sym_ring
-    specs["status/network-wireless-limited.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + limit_badge
+    specs["status/network-wireless-limited.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="accent-fill") + limit_badge
     specs["status/network-wireless-off.svg"] = _wifi_arcs_markup(0, "dimmed", dot_cls="dimmed") + '<path d="M4 4l16 16"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
-    specs["status/network-wireless-on.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + '<path class="ColorScheme-PositiveText accent" d="M16.5 17.5l1.5 1.5 3-3"/>'
-    specs["status/network-wireless-available.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="ColorScheme-Highlight accent-fill") + '<circle class="ColorScheme-Highlight accent-fill" cx="18.5" cy="18" r="1.4"/>'
+    specs["status/network-wireless-on.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="accent-fill") + '<path class="accent" d="M16.5 17.5l1.5 1.5 3-3"/>'
+    specs["status/network-wireless-available.svg"] = _wifi_arcs_markup(3, "ColorScheme-Text", dot_cls="accent-fill") + '<circle class="accent-fill" cx="18.5" cy="18" r="1.4"/>'
     specs["status/network-wireless-hotspot-symbolic.svg"] = V15_ICON_SPECS["status/network-wireless-hotspot.svg"] + sym_ring
     specs["status/network-wireless-disconnected-symbolic.svg"] = (
         '<path class="dimmed" d="M9.5 16.5a3.5 3.5 0 0 1 5 0M7 14a7.1 7.1 0 0 1 10 0M4.5 11.5a10.6 10.6 0 0 1 15 0M2 9a14.1 14.1 0 0 1 20 0"/>'
@@ -378,26 +378,26 @@ def _build_v20_wireless_specs() -> dict[str, str]:
             bars.append(f'<rect class="{c}" x="{x}" y="{y}" width="2.4" height="{h}" rx="0.6"/>')
         specs[f"status/network-mobile-{pct}.svg"] = "".join(bars)
     specs["status/network-mobile-off.svg"] = specs["status/network-mobile-0.svg"] + '<path d="M4 4l16 16"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
-    specs["status/network-mobile-acquiring.svg"] = specs["status/network-mobile-60.svg"] + '<circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="6" cy="6" r="1.6"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.4s" repeatCount="indefinite"/></circle>'
+    specs["status/network-mobile-acquiring.svg"] = specs["status/network-mobile-60.svg"] + '<circle class="accent-fill nf-pulse" cx="6" cy="6" r="1.6"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.4s" repeatCount="indefinite"/></circle>'
 
-    specs["status/network-vpn.svg"] = '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><rect x="9.5" y="11" width="5" height="4.5" rx="1"/><path d="M10.5 11V9.5a1.5 1.5 0 0 1 3 0V11"/><circle class="ColorScheme-Highlight accent-fill" cx="12" cy="13.2" r="0.8"/>'
+    specs["status/network-vpn.svg"] = '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><rect x="9.5" y="11" width="5" height="4.5" rx="1"/><path d="M10.5 11V9.5a1.5 1.5 0 0 1 3 0V11"/><circle class="accent-fill" cx="12" cy="13.2" r="0.8"/>'
     specs["status/network-vpn-symbolic.svg"] = specs["status/network-vpn.svg"] + sym_ring
     specs["status/network-vpn-acquiring.svg"] = (
         '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/>'
         '<circle class="ColorScheme-Text text-fill nf-pulse" cx="9" cy="12" r="1.1"/>'
-        '<circle class="ColorScheme-Highlight accent-fill nf-pulse" cx="12" cy="12" r="1.1"/>'
+        '<circle class="accent-fill nf-pulse" cx="12" cy="12" r="1.1"/>'
         '<circle class="ColorScheme-Text text-fill nf-pulse" cx="15" cy="12" r="1.1"/>'
         '<animate attributeName="opacity" values="0.9;0.45;0.9" dur="1.4s" repeatCount="indefinite"/>'
     )
     specs["status/network-vpn-disconnected.svg"] = '<path class="dimmed" d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M5 5l14 14"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
-    specs["status/network-flightmode-on.svg"] = '<path d="M12 2v7l8 4v2l-8-2v5l3 2v1l-3-1-3 1v-1l3-2v-5l-8 2v-2l8-4V2z"/><path class="ColorScheme-Highlight accent" d="M12 2v3.5"/>'
+    specs["status/network-flightmode-on.svg"] = '<path d="M12 2v7l8 4v2l-8-2v5l3 2v1l-3-1-3 1v-1l3-2v-5l-8 2v-2l8-4V2z"/><path class="accent" d="M12 2v3.5"/>'
     specs["status/network-flightmode-off.svg"] = '<path class="dimmed" d="M12 2v7l8 4v2l-8-2v5l3 2v1l-3-1-3 1v-1l3-2v-5l-8 2v-2l8-4V2z"/><path d="M4 4l16 16"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
     return specs
 
 
 def _build_v20_audio_brightness_specs() -> dict[str, str]:
     specs: dict[str, str] = {}
-    speaker = '<path d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="ColorScheme-Highlight accent" d="M12 7.5v3"/>'
+    speaker = '<path d="M3 9.5h4l5-4v13l-5-4H3z"/><path class="accent" d="M12 7.5v3"/>'
     w1 = "M15 9.5a4 4 0 0 1 0 5"
     w2 = "M17.5 7a7.5 7.5 0 0 1 0 10"
     w3 = "M20 4.5a11 11 0 0 1 0 15"
@@ -417,14 +417,14 @@ def _build_v20_audio_brightness_specs() -> dict[str, str]:
     specs["status/microphone-sensitivity-muted.svg"] = f'{mic_shell}<path d="M5 5l14 14"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
     specs["status/microphone-sensitivity-low.svg"] = f'{mic_shell}<path class="dimmed" d="M12 7.5v2.5"/>'
     specs["status/microphone-sensitivity-medium.svg"] = f'{mic_shell}<path d="M12 6.5v3.5"/>'
-    specs["status/microphone-sensitivity-high.svg"] = f'{mic_shell}<path d="M12 6v4"/><circle class="ColorScheme-Highlight accent-fill" cx="12" cy="18.5" r="1"/>'
+    specs["status/microphone-sensitivity-high.svg"] = f'{mic_shell}<path d="M12 6v4"/><circle class="accent-fill" cx="12" cy="18.5" r="1"/>'
     for suffix in ("muted", "low", "medium", "high"):
         specs[f"status/microphone-sensitivity-{suffix}-symbolic.svg"] = specs[f"status/microphone-sensitivity-{suffix}.svg"] + sym_ring
 
     sun_core = '<circle cx="12" cy="12" r="4"/>'
     rays_low = '<path class="dimmed" d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2"/>'
-    rays_med = '<path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle class="ColorScheme-Highlight accent-fill" cx="12" cy="12" r="0.9"/>'
-    rays_high = '<path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/><circle class="ColorScheme-Highlight accent-fill" cx="12" cy="12" r="1.1"/>'
+    rays_med = '<path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle class="accent-fill" cx="12" cy="12" r="0.9"/>'
+    rays_high = '<path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/><circle class="accent-fill" cx="12" cy="12" r="1.1"/>'
     specs["status/display-brightness-off.svg"] = '<circle class="dimmed" cx="12" cy="12" r="4"/><path d="M5 5l14 14"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
     specs["status/display-brightness-low.svg"] = sun_core + rays_low
     specs["status/display-brightness-medium.svg"] = sun_core + rays_med
@@ -440,8 +440,8 @@ def _build_v20_audio_brightness_specs() -> dict[str, str]:
     kbd_base = '<path class="dimmed" d="M4 17h16"/>'
     specs["status/keyboard-brightness-off.svg"] = f'{kbd_base}<path class="dimmed" d="M12 9v3M7 11l2 2M17 11l-2 2"/><path d="M5 5l14 14"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>'
     specs["status/keyboard-brightness-low.svg"] = '<path d="M5 17h14"/><path class="dimmed" d="M12 8v3M7 10l2 2M17 10l-2 2"/>'
-    specs["status/keyboard-brightness-medium.svg"] = '<path d="M4 17h16M12 7v4M6.5 10l2.5 2.5M17.5 10L15 12.5"/><path class="ColorScheme-Highlight accent" d="M10 17h4"/>'
-    specs["status/keyboard-brightness-high.svg"] = '<path d="M3 17h18M12 6v5M6 9l3 3M18 9l-3 3M3 13l3 1.5M21 13l-3 1.5"/><path class="ColorScheme-Highlight accent" d="M9 17h6"/>'
+    specs["status/keyboard-brightness-medium.svg"] = '<path d="M4 17h16M12 7v4M6.5 10l2.5 2.5M17.5 10L15 12.5"/><path class="accent" d="M10 17h4"/>'
+    specs["status/keyboard-brightness-high.svg"] = '<path d="M3 17h18M12 6v5M6 9l3 3M18 9l-3 3M3 13l3 1.5M21 13l-3 1.5"/><path class="accent" d="M9 17h6"/>'
     return specs
 
 
@@ -449,22 +449,22 @@ def _build_v20_misc_kinetic_specs() -> dict[str, str]:
     bt_glyph = '<path d="M7.5 8L16.5 16L12 20V4L16.5 8L7.5 16"/>'
     bt_dim = '<path class="dimmed" d="M7.5 8L16.5 16L12 20V4L16.5 8L7.5 16"/>'
     return {
-        "status/network-bluetooth.svg": bt_glyph + '<circle class="ColorScheme-Highlight accent-fill" cx="17" cy="12" r="1.1"/>',
-        "status/network-bluetooth-activated.svg": bt_glyph + '<path class="ColorScheme-Highlight accent" d="M18 9a4.5 4.5 0 0 1 0 6"/>',
+        "status/network-bluetooth.svg": bt_glyph + '<circle class="accent-fill" cx="17" cy="12" r="1.1"/>',
+        "status/network-bluetooth-activated.svg": bt_glyph + '<path class="accent" d="M18 9a4.5 4.5 0 0 1 0 6"/>',
         "status/network-bluetooth-inactive.svg": bt_dim + '<path d="M4 4l16 16"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>',
-        "status/bluetooth-active.svg": bt_glyph + '<circle class="ColorScheme-Highlight accent-fill" cx="5.5" cy="12" r="1.1"/>',
+        "status/bluetooth-active.svg": bt_glyph + '<circle class="accent-fill" cx="5.5" cy="12" r="1.1"/>',
         "status/bluetooth-disabled.svg": bt_dim + '<path d="M5 5l14 14"/><path class="ColorScheme-NegativeText negative" d="M9 9l6 6"/>',
         "status/bluetooth-acquiring.svg": (
             bt_glyph
-            + '<circle class="ColorScheme-Highlight accent nf-pulse" cx="12" cy="12" r="9.5" stroke-dasharray="3 4">'
+            + '<circle class="accent nf-pulse" cx="12" cy="12" r="9.5" stroke-dasharray="3 4">'
             '<animate attributeName="opacity" values="0.2;0.8;0.2" dur="1.4s" repeatCount="indefinite"/></circle>'
         ),
         "status/media-playback-playing.svg": (
-            '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l6.5 3.5-6.5 3.5z"/><path class="ColorScheme-Highlight accent" d="M10 9.5v5"/>'
+            '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l6.5 3.5-6.5 3.5z"/><path class="accent" d="M10 9.5v5"/>'
         ),
         "status/software-update-available.svg": (
             '<path class="nf-pulse" d="M12 3v11M7 10l5 5 5-5"><animateTransform attributeName="transform" type="translate" values="0 -1;0 1;0 -1" dur="1.4s" repeatCount="indefinite"/></path>'
-            '<path d="M5 19h14"/><path class="ColorScheme-Highlight accent" d="M9 19h6"/>'
+            '<path d="M5 19h14"/><path class="accent" d="M9 19h6"/>'
         ),
         "status/software-update-urgent.svg": (
             '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/>'
@@ -473,7 +473,7 @@ def _build_v20_misc_kinetic_specs() -> dict[str, str]:
         "animations/process-working.svg": (
             '<g class="nf-spin"><circle class="dimmed" cx="12" cy="12" r="8"/>'
             '<path d="M12 4a8 8 0 0 1 7.5 5.2"/>'
-            '<circle class="ColorScheme-Highlight accent-fill" cx="12" cy="4" r="1"/>'
+            '<circle class="accent-fill" cx="12" cy="4" r="1"/>'
             '<animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1.2s" repeatCount="indefinite"/></g>'
         ),
     }
@@ -503,7 +503,7 @@ def process_working_sprite_svg(optical_size: int, frames: int = 16) -> str:
             f'<circle class="dimmed" cx="{cx}" cy="{cx}" r="{r}"/>'
             f'<g transform="rotate({angle} {cx} {cx})">'
             f'<path d="M{cx} {cx - r}a{r} {r} 0 0 1 {r} {r}"/>'
-            f'<circle class="ColorScheme-Highlight accent-fill" cx="{cx}" cy="{cx - r}" r="0.9"/>'
+            f'<circle class="accent-fill" cx="{cx}" cy="{cx - r}" r="0.9"/>'
             f'</g></g>'
         )
     body = "\n".join(frame_groups)
@@ -515,8 +515,10 @@ def process_working_sprite_svg(optical_size: int, frames: int = 16) -> str:
       .ColorScheme-NeutralText {{ color: {COLORS["neutral"]}; }}
       .ColorScheme-PositiveText {{ color: {COLORS["accent"]}; }}
       .ColorScheme-NegativeText {{ color: {COLORS["negative"]}; }}
-      .accent {{ stroke: currentColor; stroke-opacity: 0.68; }}
-      .accent-fill {{ fill: currentColor; fill-opacity: 0.75; stroke: none; }}
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .accent {{ color: {COLORS["accentMuted"]}; stroke: currentColor; opacity: 0.72; }}
+      .accent-fill {{ color: {COLORS["accentMuted"]}; fill: currentColor; opacity: 0.78; stroke: none; }}
       .dimmed {{ opacity: 0.25; stroke: {COLORS["textDisabled"]}; }}
     </style>
   </defs>
@@ -692,16 +694,18 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
       .ColorScheme-NeutralText {{ color: {COLORS["neutral"]}; }}
       .ColorScheme-PositiveText {{ color: {COLORS["accent"]}; }}
       .ColorScheme-NegativeText {{ color: {COLORS["negative"]}; }}
-      .text-fill {{ color: {COLORS["textPrimary"]}; fill: currentColor; fill-opacity: 0.86; stroke: none; }}
-      .accent {{ color: {COLORS["accent"]}; stroke: currentColor; stroke-opacity: 0.68; }}
-      .accent-fill {{ color: {COLORS["accent"]}; fill: currentColor; fill-opacity: 0.75; stroke: none; }}
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill {{ color: {COLORS["textPrimary"]}; fill: currentColor; opacity: 0.86; stroke: none; }}
+      .accent {{ color: {COLORS["accentMuted"]}; stroke: currentColor; opacity: 0.72; }}
+      .accent-fill {{ color: {COLORS["accentMuted"]}; fill: currentColor; opacity: 0.78; stroke: none; }}
       .dimmed {{ opacity: 0.25; stroke: currentColor; }}
       .dimmed-fill {{ opacity: 0.22; fill: currentColor; stroke: none; }}
       .symbolic-ring {{ opacity: 0.35; stroke: currentColor; stroke-width: 1; }}
-      .warning {{ color: {COLORS["neutral"]}; stroke: currentColor; stroke-opacity: 0.8; }}
-      .warning-fill {{ color: {COLORS["neutral"]}; fill: currentColor; fill-opacity: 0.8; stroke: none; }}
-      .negative {{ color: {COLORS["negative"]}; stroke: currentColor; stroke-opacity: 0.8; }}
-      .negative-fill {{ color: {COLORS["negative"]}; fill: currentColor; fill-opacity: 0.8; stroke: none; }}
+      .warning {{ color: {COLORS["neutral"]}; stroke: currentColor; opacity: 0.8; }}
+      .warning-fill {{ color: {COLORS["neutral"]}; fill: currentColor; opacity: 0.8; stroke: none; }}
+      .negative {{ color: {COLORS["negative"]}; stroke: currentColor; opacity: 0.8; }}
+      .negative-fill {{ color: {COLORS["negative"]}; fill: currentColor; opacity: 0.8; stroke: none; }}
     </style>{motion_block}
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round">

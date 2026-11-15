@@ -657,15 +657,15 @@ def _plasma_icon_sheet(entries: list[tuple[str, str]]) -> str:
 def generate_plasma_icon_sheets() -> None:
     """Generate the 8 Plasma DesktopTheme icons/*.svg multi-element sheets."""
     s = 'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'
-    h_s = f'class="ColorScheme-Highlight" stroke-opacity="0.72" {s}'
+    h_s = f'class="ColorScheme-Highlight" opacity="0.62" {s}'
     t_s = f'class="ColorScheme-Text" {s}'
-    t_f = 'class="ColorScheme-Text" fill="currentColor" fill-opacity="0.86"'
-    w_s = f'class="ColorScheme-NeutralText" stroke-opacity="0.82" {s}'
-    n_s = f'class="ColorScheme-NegativeText" stroke-opacity="0.82" {s}'
+    t_f = 'class="ColorScheme-Text" fill="currentColor" opacity="0.86"'
+    w_s = f'class="ColorScheme-NeutralText" opacity="0.8" {s}'
+    n_s = f'class="ColorScheme-NegativeText" opacity="0.8" {s}'
     d_s = f'class="ColorScheme-Text" opacity="0.24" {s}'
-    h_f = 'class="ColorScheme-Highlight" fill="currentColor" fill-opacity="0.78"'
-    w_f = 'class="ColorScheme-NeutralText" fill="currentColor" fill-opacity="0.82"'
-    n_f = 'class="ColorScheme-NegativeText" fill="currentColor" fill-opacity="0.82"'
+    h_f = 'class="ColorScheme-Highlight" fill="currentColor" opacity="0.62"'
+    w_f = 'class="ColorScheme-NeutralText" fill="currentColor" opacity="0.8"'
+    n_f = 'class="ColorScheme-NegativeText" fill="currentColor" opacity="0.8"'
 
     spk = f'<path {t_s} d="M3 9.5h4l5-4v13l-5-4H3z"/><path {h_s} d="M12 7.5v3"/>'
     mic = f'<rect {t_s} x="9" y="3" width="6" height="10" rx="3"/><path {t_s} d="M6 10a6 6 0 0 0 12 0M12 16v5M8 21h8"/>'
