@@ -6,14 +6,16 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
-      .accent { color: #A3FF47; stroke: currentColor; }
-      .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .text-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.86; stroke: none; }
+      .accent { color: #A3FF47; stroke: currentColor; stroke-opacity: 0.68; }
+      .accent-fill { color: #A3FF47; fill: currentColor; fill-opacity: 0.75; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
-      .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
-      .warning { color: #FBBF24; stroke: currentColor; }
-      .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
-      .negative { color: #FF6B7A; stroke: currentColor; }
-      .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+      .dimmed-fill { opacity: 0.22; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; stroke-opacity: 0.8; }
+      .warning-fill { color: #FBBF24; fill: currentColor; fill-opacity: 0.8; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; stroke-opacity: 0.8; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; fill-opacity: 0.8; stroke: none; }
     </style>
   <style id="noxforge-motion" type="text/css">
     @media (prefers-reduced-motion: no-preference) {
@@ -29,6 +31,6 @@
   </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <g class="nf-spin"><circle class="dimmed" cx="12" cy="12" r="8"/><path class="ColorScheme-Highlight accent" stroke-width="2.2" d="M12 4a8 8 0 0 1 7.5 5.2"/><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1.2s" repeatCount="indefinite"/></g>
+    <g class="nf-spin"><circle class="dimmed" cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 7.5 5.2"/><circle class="ColorScheme-Highlight accent-fill" cx="12" cy="4" r="1"/><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1.2s" repeatCount="indefinite"/></g>
   </g>
 </svg>

@@ -6,17 +6,19 @@
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
-      .accent { color: #A3FF47; stroke: currentColor; }
-      .accent-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .text-fill { color: #E8F0F2; fill: currentColor; fill-opacity: 0.86; stroke: none; }
+      .accent { color: #A3FF47; stroke: currentColor; stroke-opacity: 0.68; }
+      .accent-fill { color: #A3FF47; fill: currentColor; fill-opacity: 0.75; stroke: none; }
       .dimmed { opacity: 0.25; stroke: currentColor; }
-      .symbolic-ring { opacity: 0.45; stroke: currentColor; stroke-width: 1; }
-      .warning { color: #FBBF24; stroke: currentColor; }
-      .warning-fill { color: #FBBF24; fill: currentColor; stroke: none; }
-      .negative { color: #FF6B7A; stroke: currentColor; }
-      .negative-fill { color: #FF6B7A; fill: currentColor; stroke: none; }
+      .dimmed-fill { opacity: 0.22; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; stroke-opacity: 0.8; }
+      .warning-fill { color: #FBBF24; fill: currentColor; fill-opacity: 0.8; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; stroke-opacity: 0.8; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; fill-opacity: 0.8; stroke: none; }
     </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/><path class="accent" d="M16 6.5h3"/>
+    <rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/><circle class="accent-fill" cx="17.5" cy="6.5" r="1"/>
   </g>
 </svg>
