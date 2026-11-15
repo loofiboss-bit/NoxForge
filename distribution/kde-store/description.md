@@ -1,11 +1,11 @@
-# NoxForge Kinetic Signal & Adaptive Motion Suite
+# NoxForge Kinetic Iconography, Union & Adaptive Motion Suite
 
-NoxForge 20.0.0 Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity is an original MIT-licensed Linux
+NoxForge 20.0.0 Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3 is an original MIT-licensed Linux
 visual system with graphite and obsidian surfaces, electric lime and the Forge Notch. It
-extends the KDE Plasma system with GTK 3/4 themes, KSyntaxHighlighting themes,
-VS Code/Cursor themes, Neovim (Lua) and Helix (TOML) editor themes, and matching Ghostty, Alacritty, Kitty, and Foot
-terminal configurations while preserving the read-only, user-local
-installation boundary.
+extends the KDE Plasma 6.8 system with multi-level optical icons, Plasma 6.8 Union styles, GTK 3/4 themes,
+KSyntaxHighlighting themes, VS Code/Cursor/Zed themes, Neovim/Helix editor themes, Yazi/Lazygit/Zellij/Tmux
+integrations, and matching Ghostty, Alacritty, Kitty, and Foot terminal configurations while preserving the
+read-only, user-local installation boundary.
 
 The Global Theme is a coordinator, not a complete one-click installer. Install the matching Plasma Style, colors, Aurorae, icons, cursors, task switcher, sounds and wallpapers from the individual archives in the GitHub release using their matching KDE package managers. Store and portable editions use Breeze application controls. The complete Fedora COPR package additionally supplies the native Qt style.
 

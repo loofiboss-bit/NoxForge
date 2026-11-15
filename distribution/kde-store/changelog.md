@@ -1,3 +1,13 @@
+# NoxForge 20.0.0
+
+- Kinetic Iconography & Multi-Level Status Engine: deterministic 10%/20%/25% SVG ladders for battery (charging/discharging), Wi-Fi, signal, brightness, microphone, and volume (including mute & overdrive) bound to KDE Plasma `ColorScheme` CSS classes.
+- Optical Size Differentiation & 16-Frame Sprites: 684 dedicated `16x16` and `22x22` optical SVGs paired with 404 scalable icons, synchronized `index.theme`, 16-frame animated sprites (`process-working.svg`, `process-syncing.svg`), and 8 Plasma Desktop Theme icon sheets per palette (Graphite & Obsidian).
+- Control Center v5 Studio & Flatpak Isolation Support: live Kinetic Icon Studio preview (animated spinner, Battery/Wi-Fi/Volume slider, optical toggle), `noxforge-ctl icons` dynamic accent tinting, and `noxforge-ctl flatpak` sandbox override synchronization.
+- Plasma 6.8 Union Style Engine & Lock Screen Forge Status Pill: expanded `union/styles/noxforge` & `noxforge-obsidian` with multi-state SVG masks and focus rings, plus a token-bound Lock Screen Status Pill with `reducedMotion` compliance.
+- Developer Ecosystem v3: added reactive Graphite/Obsidian themes with `.noxforge.bak` rollback for Yazi, Lazygit, Zellij, and Tmux (18 supported ecosystem apps).
+- Diagnostics Schema 13: extended `noxforge-doctor --json` with `iconLevelMatrix` and animated/optical verification.
+- Updated `noxforge-ctl`, `noxforge-doctor`, and `noxforge-opacity` Control Center & manual documentation along with refreshed v20.0.0 Store screenshots.
+
 # NoxForge 19.0.0 — KDE Plasma 6.8 Union Style Engine, KWin CSD & Wayland Precision
 
 - introduced KDE Plasma 6.8 Union Style Engine (`plasma-union`) with deterministic generation of `union/styles/noxforge` (Graphite) and `union/styles/noxforge-obsidian` (Obsidian) via `design/tokens.json` (Schema 15) and dynamic `custom-color("kcolorscheme", ...)` CSS variable bindings;

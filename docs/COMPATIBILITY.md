@@ -70,10 +70,10 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v16 release candidate is documented in the
-[v16 release plan](NOXFORGE_V16_PLAN.md). Its automated gates and single-source
+The v20 release candidate is documented in the
+[v20 release plan](NOXFORGE_V20_PLAN.md). Its automated gates and single-source
 design system verification pass locally and in preflight CI. The machine-readable
-`qualification.json` contains verified candidate counters.
+`docs/evidence/v20/qualification.json` contains verified candidate counters.
 Arch build/live login, pacman lifecycle, and physical qualification
 remain pending. Offscreen and generated results do not establish those
 behaviors.

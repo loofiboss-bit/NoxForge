@@ -77,13 +77,19 @@ cursor, audio, PAM/login, power, and live-session gates.
   **NoxForge Obsidian** (`NoxForge-Obsidian`), and **NoxForge Obsidian
   Ultrawide** (`NoxForge-Obsidian-Ultrawide`);
 - a native Qt 6 style that dynamically adapts to the active NoxForge palette and
-  Forge Accent Matrix (Lime, Cyan, Violet, Amber) via `NOXFORGE_ACCENT` and `kdeglobals`;
+  Forge Accent Matrix (Lime, Cyan, Violet, Amber, or custom hex) via `NOXFORGE_ACCENT` and `kdeglobals`,
+  paired with Plasma 6.8 `plasma-union` CSS integration (`union/styles/noxforge*`);
+- kinetic iconography engine featuring 10%/20%/25% multi-level status SVG ladders,
+  684 true optical icons (`16x16` & `22x22`), 404 scalable icons, 16-frame sprite animations,
+  and 8 Plasma Desktop Theme icon sheets per palette;
 - dynamic QMenu and menubar layout preventing text truncation across fractional display scales;
-- unified orchestration suite: `noxforge-ctl` CLI and 5-tab PySide6 Control Center GUI
-  (`io.github.loofiboss.noxforge.controlcenter.desktop`);
+- unified orchestration suite: `noxforge-ctl` CLI and 5-tab PySide6 Control Center v5 Studio
+  (`io.github.loofiboss.noxforge.controlcenter.desktop`) with live Kinetic Icon Studio & Flatpak support;
 - `noxforge-opacity` CLI utility and Qt 6 GUI configurator (with seamless Control Center integration)
   for adjusting panel, popup, and Aurorae window decoration transparency levels;
-- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 10),
+- Developer Ecosystem v3 supporting 18 tools (including Yazi, Lazygit, Zellij, Tmux, Zed, Neovim,
+  Helix, Ghostty, Alacritty, Kitty, Foot, btop, Starship, Obsidian, Rofi, Discord, Firefox);
+- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 13),
   and deterministic checksums.
 
 Store descriptions state that components install separately and that the Global

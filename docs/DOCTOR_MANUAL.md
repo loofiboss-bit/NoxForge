@@ -31,6 +31,13 @@ The doctor never applies a theme by default, writes KDE or login-manager configu
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
+## Schema 13 diagnostics (v20.0.0)
+
+Schema 13 extends Schema 12 with Kinetic Iconography, optical size matrix, and animated sprite audits:
+- `iconLevelMatrix`: Audits the deployed `NoxForge` icon theme for multi-level SVG completeness across battery (charging/discharging 10% ladders), Wi-Fi, signal, brightness, microphone, and volume (20%/25% ladders + mute/overdrive), true `16x16` and `22x22` optical directories, and synchronized `index.theme` structure.
+- `animations`: Verifies presence and structure of 16-frame sprite animations (`process-working.svg`, `process-syncing.svg`) in `animations/22`.
+- Full recognition of Ecosystem v3 application states (`Yazi`, `Lazygit`, `Zellij`, `Tmux`, plus all prior integrations) in `ecosystemState` alongside `gtkChainStatus`, `unionStyleStatus`, and `waylandCompositor`.
+
 ## Schema 12 diagnostics (v19.0.0)
 
 Schema 12 introduces KDE Plasma 6.8 Union Style Engine and Wayland compositor diagnostics alongside deterministic version propagation across all packaged components:

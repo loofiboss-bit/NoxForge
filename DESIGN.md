@@ -228,7 +228,7 @@ comes from semantic state recipes, not decorative palettes or effects.
 
 ## Component and package contracts
 
-- Plasma Style owns the Plasma 6.7 widget families used by core shell flows.
+- Plasma Style owns the Plasma 6.8 widget families used by core shell flows.
 - The Qt style uses the same metrics and state hierarchy as Plasma Style.
 - Splash, logout, Alt+Tab, and SDDM consume generated physical token files.
 - Visible form labels, immediate keyboard focus, RTL, stable status regions,

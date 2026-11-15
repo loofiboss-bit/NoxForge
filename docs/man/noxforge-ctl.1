@@ -58,10 +58,20 @@ Manage KDE Plasma 6.8 Union Style Engine (\fBplasma-union\fR) integration. \fB--
 \fBwidgetStyle=Union\fR and \fBunionStyle=noxforge\fR (or \fBnoxforge-obsidian\fR); \fB--disable\fR
 returns to Hybrid mode (\fBwidgetStyle=NoxForge\fR + \fBunionStyle=noxforge\fR).
 .TP
+.TP
+.BR icons " [\fB\-\-accent\fR " \fI#RRGGBB\fR " | \fB\-\-optical\fR " "16|22|auto" " | \fB\-\-reset\fR]"
+Configure Kinetic Iconography dynamic WCAG AA accent overrides and optical icon stroke density (\fB16\fR, \fB22\fR, or \fBauto\fR).
+.TP
 .BR kwin\-csd " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
 Manage KWin 6.8 client-side window titlebar color scheme rules in \fB~/.config/kwinrulesrc\fR
 with automatic \fB.noxforge.bak\fR backup and restoration.
-(Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship, Obsidian, Rofi).
+.TP
+.BR flatpak " [" \-\-enable " | " \-\-disable " | " \-\-status "]"
+Manage read-only Flatpak GTK, Qt, and Kinetic icon filesystem overrides.
+.TP
+.BR ecosystem " [" list | apply | restore "] [" \fIapps...\fR | all "]"
+Deploy or restore NoxForge themes for supported ecosystem tools
+(Yazi, Lazygit, Zellij, Tmux, Alacritty, Kitty, Ghostty, Foot, btop, Neovim, Helix, Zed, VS Code, Discord, Firefox, Starship, Obsidian, Rofi).
 \fBapply\fR creates automatic \fB.noxforge.bak\fR backups and tracks deployed apps in
 \fB~/.config/noxforge/ecosystem-state.json\fR for reactive profile and accent synchronization;
 \fBrestore\fR restores original user configurations.

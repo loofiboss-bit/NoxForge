@@ -1,5 +1,22 @@
 # Changelog
 
+## 20.0.0 — Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
+
+- **Kinetic Iconography & Multi-Level Status Engine**:
+  - Deterministic 10%/20%/25% SVG icon ladders (`battery-*`, `network-wireless-connected-*`, `network-cellular-signal-*`, `display-brightness-*`, `audio-volume-*`, `microphone-sensitivity-*`, including mute & overdrive states) bound to KDE Plasma `ColorScheme` CSS classes.
+  - 684 true optical SVGs (`342` at `16x16` + `342` at `22x22`) paired with 404 scalable SVGs and synchronized `index.theme` definitions.
+  - 16-frame animated sprite SVGs (`process-working.svg`, `process-syncing.svg`) across `animations/22` plus 8 Plasma Desktop Theme icon sheets per variant (`graphite` & `obsidian`).
+- **Control Center v5, Kinetic Icon Studio & Flatpak Support**:
+  - Added interactive **Kinetic Icon Studio** in Control Center v5 (`tools/control_center.py`) with animated sprite preview, Battery/Wi-Fi/Volume level slider, optical mode toggle (`16px`/`22px`/`scalable`), and WCAG AA contrast validation.
+  - Added `noxforge-ctl icons [--accent hex] [--optical 16|22|auto] [--reset]` and `noxforge-ctl flatpak --enable|--disable|--status`.
+- **Plasma 6.8 Union Style Engine & Lock Screen Forge Status Pill**:
+  - Expanded `union/styles/noxforge` and `union/styles/noxforge-obsidian` with multi-state SVG button/checkbox/radio icon masks and focus rings.
+  - Added token-bound **Forge Status Pill** inside the Plasma 6.8 Lock Screen (`reducedMotion`-safe).
+- **Developer Ecosystem v3**:
+  - Added reactive Graphite/Obsidian themes with `.noxforge.bak` rollback for **Yazi**, **Lazygit**, **Zellij**, and **Tmux** (18 total supported apps).
+- **Doctor Schema 13**:
+  - Extended `noxforge-doctor --json` with `iconLevelMatrix`, `animations`, and Ecosystem v3 audits.
+
 ## 19.0.0 — KDE Plasma 6.8 Union Style Engine & Wayland Precision
 
 - KDE Plasma 6.8 Union Style Engine (`plasma-union`):

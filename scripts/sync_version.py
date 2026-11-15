@@ -52,7 +52,7 @@ BASE_VERSION_FILES = {
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "editors/vscode/package.json": ((r'(?m)^(\s*"version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "distribution/kde-store/description.md": (
-        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} Total Single-Source Authority, Dynamic Accent Ecosystem & Portable Integrity is an original"),
+        (r"(?m)^NoxForge .*? is an original", "NoxForge {version} Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3 is an original"),
         (r"(?m)^Use the exact `noxforge-.*?-\*\.tar\.xz` files and verify them against the", "Use the exact `noxforge-{version}-*.tar.xz` files and verify them against the"),
         (r"(?m)^release `SHA256SUMS`: https://github\.com/loofiboss-bit/NoxForge/releases/tag/v.*?$", "release `SHA256SUMS`: https://github.com/loofiboss-bit/NoxForge/releases/tag/v{version}"),
     ),

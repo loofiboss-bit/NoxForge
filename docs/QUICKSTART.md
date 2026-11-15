@@ -1,15 +1,15 @@
 # Quick start and rollback
 
-NoxForge 20.0.0 targets Fedora 44 KDE and Arch Plasma/KWin 6.7+ with Qt 6.11 on
+NoxForge 20.0.0 targets Fedora 44/45 KDE and Arch Plasma/KWin 6.8+ with Qt 6.11 on
 Wayland. Graphite and Obsidian variants cover the Plasma Style, Global Theme,
-Lock Screen, Aurorae decoration, KWin switcher, native Qt style, wallpapers,
-and editor/terminal themes. It includes the unified `noxforge-ctl` CLI and
-Control Center GUI alongside the `noxforge-opacity` transparency configurator.
+Lock Screen, Aurorae decoration, KWin switcher, Kinetic optical icons, native Qt & Plasma Union styles,
+wallpapers, and Ecosystem v3 editor/terminal themes. It includes the unified `noxforge-ctl` CLI and
+Control Center v5 GUI alongside the `noxforge-opacity` transparency configurator.
 Choose the edition that matches your installation boundary.
 
 ## Fedora complete-system edition
 
-Use the Fedora 44 COPR repository `loofitheboss/noxforge`. Verify the installed
+Use the Fedora 44/45 COPR repository `loofitheboss/noxforge`. Verify the installed
 version with `rpm -q noxforge`; repository metadata may need refreshing after
 an upgrade is published.
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Render professional, captivating marketing and gallery screenshots for NoxForge on KDE Store / OpenDesktop.
 
-Showcases NoxForge v17.0.0 features:
-- Total Single-Source Authority (Single-Source QML Schema 2 with Lockscreen, SDDM, TabBox, Splash, Logout)
-- Dynamic Accent Ecosystem (Electric Lime, Forge Cyan, Cyber Violet, Molten Amber harmonized across Qt6 C++, CLI, Apps)
+Showcases NoxForge v20.0.0 features:
+- Kinetic Iconography & Multi-Level Status Engine (10% battery, 20%/25% Wi-Fi, overdrive audio, brightness, 16-frame process-working sprites)
+- 8 Plasma Desktop Theme Multi-Element Icon Sheets (Graphite & Obsidian) + KDE Plasma 6.8 Union Style Engine
 - Architectural Window Craft (18px Chamfered Forge Notch Aurorae & KWin Switcher)
-- Unified Control Suite (5-Tab PySide6 Control Center & Depth/Opacity Configurator)
-- Native Plasma 6 / Wayland Shell & Kickoff Launcher & Lock Screen
-- 100% Original Scalable Vector Iconography & Ecosystem Integrations (Zed, btop, Fastfetch, Starship, Firefox, Discord)
+- Unified Control Center v5 (5-Tab PySide6 Hub with Kinetic Icon & Level Studio & Opacity Configurator)
+- Native Plasma 6.8 / Wayland Shell, Kickoff Launcher & Lock Screen with Forge Status Pill
+- Ecosystem v3 Integrations (Yazi, Lazygit, Zellij, Tmux, Zed, btop, Starship, Obsidian, Rofi, Firefox, Discord) & Doctor Schema 13
 """
 
 from __future__ import annotations
@@ -427,7 +427,7 @@ def create_konsole_window(
     accent: QColor = ACCENT_LIME,
     custom_title: str = "loofi@fedora: ~/Projects/NoxForge — Konsole",
 ) -> Image.Image:
-    """Konsole terminal window displaying authentic v14.0.0 fastfetch & noxforge-ctl output."""
+    """Konsole terminal window displaying authentic v20.0.0 fastfetch & noxforge-ctl output."""
     img = QImage(width, height, QImage.Format.Format_ARGB32_Premultiplied)
     img.fill(Qt.GlobalColor.transparent)
     p = QPainter(img)
@@ -461,7 +461,7 @@ def create_konsole_window(
     p.setPen(QPen(accent, 2.0))
     p.drawLine(QPointF(tab1.left(), tab1.top() + 1), QPointF(tab1.right(), tab1.top() + 1))
 
-    render_svg(p, ICONS / "actions/utilities-terminal.svg", QRectF(tab1.left() + 10, tab1.top() + 7, 15, 15))
+    render_svg(p, ICONS / "categories/applications-development.svg", QRectF(tab1.left() + 10, tab1.top() + 7, 15, 15))
     p.setFont(get_font("Inter", 8 if is_compact else 9, QFont.Weight.Medium))
     p.setPen(TEXT_PRIMARY)
     p.drawText(QRectF(tab1.left() + 30, tab1.top(), t1_w - 36, 29), Qt.AlignmentFlag.AlignVCenter, "loofi@fedora: NoxForge")
@@ -481,20 +481,26 @@ def create_konsole_window(
     mono_font = get_font("JetBrains Mono", 8 if is_compact else 10)
     mono_bold = get_font("JetBrains Mono", 8 if is_compact else 10, QFont.Weight.Bold)
 
+    def draw_prompt(py: float, cmd: str) -> None:
+        p.setFont(mono_bold)
+        fm = p.fontMetrics()
+        px = body.left()
+        parts = [
+            (accent, "loofi@fedora"),
+            (TEXT_SECONDARY, ":"),
+            (ACCENT_CYAN, "~/Projects/NoxForge"),
+            (ACCENT_VIOLET, " (main)"),
+            (TEXT_PRIMARY, f" $ {cmd}"),
+        ]
+        for col, txt in parts:
+            p.setPen(col)
+            p.drawText(QPointF(px, py), txt)
+            px += fm.horizontalAdvance(txt)
+
     y = body.top()
 
     # Prompt 1
-    p.setFont(mono_bold)
-    p.setPen(accent)
-    p.drawText(QPointF(body.left(), y), "loofi@fedora")
-    p.setPen(TEXT_SECONDARY)
-    p.drawText(QPointF(body.left() + (75 if is_compact else 100), y), ":")
-    p.setPen(ACCENT_CYAN)
-    p.drawText(QPointF(body.left() + (85 if is_compact else 110), y), "~/Projects/NoxForge")
-    p.setPen(ACCENT_VIOLET)
-    p.drawText(QPointF(body.left() + (220 if is_compact else 290), y), "(main)")
-    p.setPen(TEXT_PRIMARY)
-    p.drawText(QPointF(body.left() + (270 if is_compact else 350), y), "$ fastfetch")
+    draw_prompt(y, "fastfetch")
     y += 20 if is_compact else 24
 
     # Geometric NoxForge ASCII Art
@@ -514,18 +520,18 @@ def create_konsole_window(
     ]
 
     specs = [
-        ("OS", "Fedora Linux 44 (Plasma 6.7)" if is_compact else "Fedora Linux 44 (Plasma Desktop) x86_64"),
-        ("Kernel", "Linux 7.2.8-200.fc44.x86_64"),
+        ("OS", "Fedora Linux 45 (Plasma 6.8)" if is_compact else "Fedora Linux 45 (KDE Plasma) x86_64"),
+        ("Kernel", "Linux 6.18.4-200.fc45.x86_64"),
         ("Uptime", "5 hours, 14 mins"),
         ("Packages", "3592 (rpm), 24 (flatpak)"),
-        ("Shell", "zsh 5.9 (x86_64-linux-gnu)"),
+        ("Shell", "zsh 5.9 (x86_64-redhat-linux)"),
         ("Display", "2560x1440 @ 165Hz (Wayland Native)"),
-        ("DE", "KDE Plasma 6.7.5"),
+        ("DE", "KDE Plasma 6.8.2"),
         ("WM", "KWin (Wayland)"),
         ("WM Theme", "NoxForge Forge Notch (18px)"),
-        ("Theme", "NoxForge Obsidian OLED [v14.0.0]"),
-        ("Icons", "NoxForge Scalable [Vector]"),
-        ("Style", "NoxForge Qt6 Engine [Dynamic]"),
+        ("Theme", "NoxForge Obsidian OLED [v20.0.0]"),
+        ("Icons", "NoxForge Kinetic [Multi-Level]"),
+        ("Style", "NoxForge Qt6 + Union 6.8 [Dynamic]"),
         ("Terminal", "Konsole (Obsidian OLED)"),
         ("Memory", "7.85 GiB / 32.00 GiB (24%)"),
     ]
@@ -548,7 +554,7 @@ def create_konsole_window(
         p.setPen(TEXT_SECONDARY)
         p.drawText(QPointF(specs_x + (65 if is_compact else 85), sy), "❯")
         p.setFont(mono_font)
-        p.setPen(TEXT_PRIMARY if any(x in v for x in ["Obsidian", "Forge Notch", "Vector", "v14.0.0"]) else TEXT_SECONDARY)
+        p.setPen(TEXT_PRIMARY if any(x in v for x in ["Obsidian", "Forge Notch", "Kinetic", "v20.0.0"]) else TEXT_SECONDARY)
         p.drawText(QPointF(specs_x + (80 if is_compact else 105), sy), v)
 
     swatch_y = start_y + len(specs) * (14 if is_compact else 19) + 8
@@ -570,25 +576,15 @@ def create_konsole_window(
     y = swatch_y + (28 if is_compact else 36)
 
     # Prompt 2: noxforge-ctl status
-    p.setFont(mono_bold)
-    p.setPen(accent)
-    p.drawText(QPointF(body.left(), y), "loofi@fedora")
-    p.setPen(TEXT_SECONDARY)
-    p.drawText(QPointF(body.left() + (75 if is_compact else 100), y), ":")
-    p.setPen(ACCENT_CYAN)
-    p.drawText(QPointF(body.left() + (85 if is_compact else 110), y), "~/Projects/NoxForge")
-    p.setPen(ACCENT_VIOLET)
-    p.drawText(QPointF(body.left() + (220 if is_compact else 290), y), "(main)")
-    p.setPen(TEXT_PRIMARY)
-    p.drawText(QPointF(body.left() + (270 if is_compact else 350), y), "$ noxforge-ctl status")
+    draw_prompt(y, "noxforge-ctl status")
     y += 18 if is_compact else 22
 
     ctl_status = [
         ("● Profile", "Obsidian OLED (True Black #000000)", accent),
         ("● Accent", "Electric Lime (#A3FF47) [Forge Accent Matrix]", accent),
-        ("● Style Engine", "NoxForge Qt6 Native Engine v14.0.0 [Active]", ACCENT_CYAN),
-        ("● Opacity", "Panel 88% | Popups 92% | Blur 18px", ACCENT_AMBER),
-        ("● Diagnostics", "Schema 7 Doctor Qualified — 72/72 Checks PASS", accent),
+        ("● Style Engine", "Qt 6 Native + Plasma 6.8 Union v20.0.0 [Active]", ACCENT_CYAN),
+        ("● Ecosystem v3", "Yazi, Lazygit, Zellij, Tmux, Zed, Kitty [Synced]", ACCENT_AMBER),
+        ("● Diagnostics", "Schema 13 Doctor Qualified — 0 Warnings [PASS]", accent),
     ]
 
     p.setFont(mono_font)
@@ -603,18 +599,10 @@ def create_konsole_window(
 
     y += 8
     # Prompt 3 with cursor
+    draw_prompt(y, "")
     p.setFont(mono_bold)
-    p.setPen(accent)
-    p.drawText(QPointF(body.left(), y), "loofi@fedora")
-    p.setPen(TEXT_SECONDARY)
-    p.drawText(QPointF(body.left() + (75 if is_compact else 100), y), ":")
-    p.setPen(ACCENT_CYAN)
-    p.drawText(QPointF(body.left() + (85 if is_compact else 110), y), "~/Projects/NoxForge")
-    p.setPen(ACCENT_VIOLET)
-    p.drawText(QPointF(body.left() + (220 if is_compact else 290), y), "(main)")
-    p.setPen(TEXT_PRIMARY)
-    p.drawText(QPointF(body.left() + (270 if is_compact else 350), y), "$ ")
-    p.fillRect(QRectF(body.left() + (285 if is_compact else 368), y - (11 if is_compact else 13), 7 if is_compact else 8, 14 if is_compact else 16), accent)
+    cursor_x = body.left() + p.fontMetrics().horizontalAdvance("loofi@fedora:~/Projects/NoxForge (main) $ ")
+    p.fillRect(QRectF(cursor_x, y - (11 if is_compact else 13), 7 if is_compact else 8, 14 if is_compact else 16), accent)
 
     p.end()
     return qimage_to_pil(img)
@@ -634,7 +622,7 @@ def create_control_center_window(
     content = draw_window_frame(
         p,
         QRectF(0, 0, width, height),
-        "NoxForge Control Center — Unified Orchestration Hub",
+        "NoxForge Control Center v5 — Unified Orchestration Hub",
         is_active=is_active,
         is_obsidian=False,
         accent=ACCENT_LIME,
@@ -686,11 +674,11 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(lx + 16, ly + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "SKRIVBORDSPROFIL (KDE, GTK & TERMINALS)")
+    p.drawText(QRectF(lx + 16, ly + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "DESKTOP PROFILE (KDE, GTK & TERMINALS)")
 
     p.setFont(get_font("Inter", 9, QFont.Weight.Normal))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(lx + 16, ly + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Växla mellan grafitgrå ytor och sann pitch-black OLED-svärta:")
+    p.drawText(QRectF(lx + 16, ly + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Switch between refined Graphite surfaces and true pitch-black OLED:")
 
     # Profile Button 1: Graphite
     btn_g = QRectF(lx + 16, ly + 66, (col_w - 44) / 2, 80)
@@ -736,7 +724,7 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 9, QFont.Weight.Normal))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(lx + 16, a_box.top() + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Välj signaturaccentfärg för kontroller, fokusramar och notch-markeringar:")
+    p.drawText(QRectF(lx + 16, a_box.top() + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Select signature accent for controls, focus rings & Kinetic Icon Studio:")
 
     accents = [
         ("lime", "Electric Lime (#A3FF47)", ACCENT_LIME, True),
@@ -773,7 +761,7 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(lx + 16, sched_box.top() + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "DAG / NATT AUTOMATISERING")
+    p.drawText(QRectF(lx + 16, sched_box.top() + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "DAY / NIGHT AUTOMATION")
 
     chk_r = QRectF(lx + 16, sched_box.top() + 44, 18, 18)
     p.setPen(Qt.PenStyle.NoPen)
@@ -785,7 +773,7 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 9, QFont.Weight.Medium))
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QRectF(lx + 44, sched_box.top() + 42, col_w - 60, 22), Qt.AlignmentFlag.AlignVCenter, "Automatisk växling: Graphite (07:00) / Obsidian (20:00)")
+    p.drawText(QRectF(lx + 44, sched_box.top() + 42, col_w - 60, 22), Qt.AlignmentFlag.AlignVCenter, "Automatic switch: Graphite (07:00) / Obsidian (20:00)")
 
     # Right Column: Opacity Configurator (Live Preview Sliders)
     rx = body.left() + col_w + 24
@@ -798,11 +786,11 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(rx + 16, ry + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "OPACITET & DJUP (NOXFORGE-OPACITY)")
+    p.drawText(QRectF(rx + 16, ry + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "OPACITY & DEPTH (NOXFORGE-OPACITY)")
 
     p.setFont(get_font("Inter", 9, QFont.Weight.Normal))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(rx + 16, ry + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Justera transparens och oskärpedjup i realtid för paneler och fönster:")
+    p.drawText(QRectF(rx + 16, ry + 36, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "Tune real-time panel, popup, and Aurorae translucency:")
 
     sliders = [
         ("Plasma Panel Transparency", 0.88, "88% (Standard)"),
@@ -833,7 +821,7 @@ def create_control_center_window(
     # Presets Row
     p.setFont(get_font("Inter", 9, QFont.Weight.Medium))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(rx + 16, s_y, col_w - 32, 18), Qt.AlignmentFlag.AlignVCenter, "Förinställda profiler:")
+    p.drawText(QRectF(rx + 16, s_y, col_w - 32, 18), Qt.AlignmentFlag.AlignVCenter, "Presets:")
     s_y += 24
 
     presets = ["Solid (100%)", "Default (88%)", "Translucent (75%)", "Glass (60%)"]
@@ -856,13 +844,13 @@ def create_control_center_window(
 
     p.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(rx + 16, diag_box.top() + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "SYSTEMDIAGNOSTIK & DOKTOR (SCHEMA 7)")
+    p.drawText(QRectF(rx + 16, diag_box.top() + 14, col_w - 32, 20), Qt.AlignmentFlag.AlignVCenter, "SYSTEM DIAGNOSTICS & DOCTOR (SCHEMA 13)")
 
     checks = [
-        ("✔ Schema 7 Validering", "72 / 72 kontroller godkända (100% PASS)", ACCENT_LIME),
-        ("✔ Native Qt 6 Style", "noxforgestyle.so laddad i KWin/Plasma", ACCENT_CYAN),
-        ("✔ Forge Notch Aurorae", "18px chamfer aktiv på Wayland", ACCENT_LIME),
-        ("✔ KWin TabBox Switcher", "Obsidian kwin-switcher synkroniserad", ACCENT_AMBER),
+        ("✔ Schema 13 Doctor", "0 warnings • iconLevelMatrix & Ecosystem v3 PASS", ACCENT_LIME),
+        ("✔ Kinetic Icon Studio", "404 scalable + 684 optical + 16-frame sprites", ACCENT_CYAN),
+        ("✔ Plasma 6.8 Union", "Native Qt 6 + Union CSS/QQuick active on Wayland", ACCENT_LIME),
+        ("✔ Ecosystem v3 Sync", "Yazi, Lazygit, Zellij, Tmux, Zed & GTK 3/4", ACCENT_AMBER),
     ]
 
     dy = diag_box.top() + 42
@@ -896,7 +884,7 @@ def create_plasma_panel(width: int = 2240, height: int = 58) -> Image.Image:
 
     tasks = [
         ("Projects", "places/folder.svg", True),
-        ("Konsole", "actions/utilities-terminal.svg", True),
+        ("Konsole", "categories/applications-development.svg", True),
         ("Control Center", "preferences/preferences-system.svg", True),
         ("Kate", "actions/document-new.svg", False),
         ("Firefox", "categories/applications-internet.svg", False),
@@ -939,12 +927,12 @@ def create_plasma_panel(width: int = 2240, height: int = 58) -> Image.Image:
     p.drawText(QRectF(rx, 9, 100, 20), Qt.AlignmentFlag.AlignCenter, "14:28")
     p.setFont(get_font("Inter", 8, QFont.Weight.Normal))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(rx, 29, 100, 18), Qt.AlignmentFlag.AlignCenter, "Ons, 1 Okt")
+    p.drawText(QRectF(rx, 29, 100, 18), Qt.AlignmentFlag.AlignCenter, "Sun, 15 Nov")
 
     tray_icons = [
-        "status/battery-good.svg",
+        "status/battery-080-charging.svg",
         "status/audio-volume-high.svg",
-        "status/network-wireless.svg",
+        "status/network-wireless-connected-80.svg",
         "status/security-high.svg",
     ]
     rx -= 30
@@ -1001,13 +989,13 @@ def create_launcher_window(width: int = 760, height: int = 600) -> Image.Image:
     p.drawLine(QPointF(cat_rect.right(), cat_rect.top()), QPointF(cat_rect.right(), cat_rect.bottom()))
 
     categories = [
-        ("Favoriter", "status/task-complete.svg", True),
-        ("Utveckling", "categories/applications-development.svg", False),
+        ("Favorites", "status/task-complete.svg", True),
+        ("Development", "categories/applications-development.svg", False),
         ("System", "categories/applications-system.svg", False),
-        ("Grafik", "categories/applications-graphics.svg", False),
+        ("Graphics", "categories/applications-graphics.svg", False),
         ("Internet", "categories/applications-internet.svg", False),
         ("Multimedia", "categories/applications-multimedia.svg", False),
-        ("Verktyg", "categories/applications-utilities.svg", False),
+        ("Utilities", "categories/applications-utilities.svg", False),
     ]
 
     cy = 72
@@ -1027,9 +1015,9 @@ def create_launcher_window(width: int = 760, height: int = 600) -> Image.Image:
         cy += 40
 
     apps = [
-        ("NoxForge Control Center", "Unified orchestration suite", "preferences/preferences-system.svg"),
+        ("NoxForge Control Center", "Unified orchestration & Icon Studio", "preferences/preferences-system.svg"),
         ("NoxForge Opacity", "Depth & transparency configurator", "categories/applications-graphics.svg"),
-        ("Konsole", "Everyday command-line precision", "actions/utilities-terminal.svg"),
+        ("Konsole", "Everyday command-line precision", "categories/applications-development.svg"),
         ("Dolphin", "Vector file management", "places/folder.svg"),
         ("System Settings", "KDE Plasma appearance & hardware", "preferences/preferences-system.svg"),
         ("Kate", "Advanced code and text editor", "actions/document-new.svg"),
@@ -1069,7 +1057,7 @@ def create_launcher_window(width: int = 760, height: int = 600) -> Image.Image:
     p.setPen(TEXT_SECONDARY)
     p.drawText(QRectF(20, height - 46, 200, 46), Qt.AlignmentFlag.AlignVCenter, "Session Controls")
 
-    actions = ["Lås", "Viloläge", "Starta om", "Stäng av"]
+    actions = ["Lock", "Sleep", "Restart", "Shut Down"]
     rx = width - 20
     for act in reversed(actions):
         rx -= 84
@@ -1080,7 +1068,7 @@ def create_launcher_window(width: int = 760, height: int = 600) -> Image.Image:
 
 
 def create_lockscreen_card(width: int = 700, height: int = 440) -> Image.Image:
-    """Card previewing the native Plasma 6 / Wayland Lock Screen with kinetic password focus."""
+    """Card previewing the native Plasma 6.8 / Wayland Lock Screen with Forge Status Pill."""
     img = QImage(width, height, QImage.Format.Format_ARGB32_Premultiplied)
     img.fill(Qt.GlobalColor.transparent)
     p = QPainter(img)
@@ -1101,28 +1089,44 @@ def create_lockscreen_card(width: int = 700, height: int = 440) -> Image.Image:
     # Header title
     p.setFont(get_font("Inter", 9, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(24, 20, width - 48, 20), Qt.AlignmentFlag.AlignCenter, "PLASMA 6 / WAYLAND NATIVE LOCK SCREEN")
+    p.drawText(QRectF(24, 16, width - 48, 20), Qt.AlignmentFlag.AlignCenter, "PLASMA 6.8 / WAYLAND NATIVE LOCK SCREEN")
+
+    # Forge Status Pill (v20)
+    pill_w = 186
+    pill_r = QRectF((width - pill_w) / 2, 40, pill_w, 24)
+    p.setPen(QPen(BORDER_STRONG, 1.0))
+    p.setBrush(SURFACE_RAISED)
+    p.drawRoundedRect(pill_r, 12, 12)
+    p.setPen(Qt.PenStyle.NoPen)
+    p.setBrush(ACCENT_LIME)
+    p.drawEllipse(QPointF(pill_r.left() + 14, pill_r.center().y()), 4, 4)
+    render_svg(p, ICONS / "status/network-wireless-connected-80.svg", QRectF(pill_r.left() + 26, pill_r.top() + 5, 14, 14))
+    render_svg(p, ICONS / "status/battery-080-charging.svg", QRectF(pill_r.left() + 104, pill_r.top() + 5, 14, 14))
+    p.setFont(get_font("Inter", 8, QFont.Weight.DemiBold))
+    p.setPen(TEXT_PRIMARY)
+    p.drawText(QRectF(pill_r.left() + 44, pill_r.top(), 56, 24), Qt.AlignmentFlag.AlignVCenter, "Online")
+    p.drawText(QRectF(pill_r.left() + 122, pill_r.top(), 56, 24), Qt.AlignmentFlag.AlignVCenter, "85% AC")
 
     # Large Clock
-    p.setFont(get_font("Inter", 44, QFont.Weight.Bold))
+    p.setFont(get_font("Inter", 42, QFont.Weight.Bold))
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QRectF(0, 56, width, 54), Qt.AlignmentFlag.AlignCenter, "14:28")
+    p.drawText(QRectF(0, 72, width, 52), Qt.AlignmentFlag.AlignCenter, "14:28")
 
     # Date
-    p.setFont(get_font("Inter", 12, QFont.Weight.Medium))
+    p.setFont(get_font("Inter", 11, QFont.Weight.Medium))
     p.setPen(TEXT_SECONDARY)
-    p.drawText(QRectF(0, 116, width, 24), Qt.AlignmentFlag.AlignCenter, "Onsdag, 1 Oktober")
+    p.drawText(QRectF(0, 128, width, 22), Qt.AlignmentFlag.AlignCenter, "Sunday, November 15")
 
     # Avatar
-    av_rect = QRectF((width - 64) / 2, 156, 64, 64)
+    av_rect = QRectF((width - 60) / 2, 162, 60, 60)
     p.setPen(QPen(ACCENT_LIME, 2.5))
     p.setBrush(SURFACE_RAISED)
     p.drawEllipse(av_rect)
-    p.setFont(get_font("Inter", 18, QFont.Weight.Bold))
+    p.setFont(get_font("Inter", 17, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
     p.drawText(av_rect, Qt.AlignmentFlag.AlignCenter, "DU")
 
-    p.setFont(get_font("Inter", 12, QFont.Weight.DemiBold))
+    p.setFont(get_font("Inter", 11, QFont.Weight.DemiBold))
     p.setPen(TEXT_PRIMARY)
     p.drawText(QRectF(0, 230, width, 24), Qt.AlignmentFlag.AlignCenter, "Demo User")
 
@@ -1148,10 +1152,10 @@ def create_lockscreen_card(width: int = 700, height: int = 440) -> Image.Image:
     # Prompt tag
     p.setFont(get_font("Inter", 8, QFont.Weight.Normal))
     p.setPen(TEXT_DISABLED)
-    p.drawText(QRectF(0, 320, width, 20), Qt.AlignmentFlag.AlignCenter, "Kinetic focus ring • PAM & biometric ready")
+    p.drawText(QRectF(0, 320, width, 20), Qt.AlignmentFlag.AlignCenter, "Token-bound Forge Status Pill • Reduced-motion safe")
 
     # Session Buttons
-    s_actions = ["Viloläge", "Starta om", "Stäng av"]
+    s_actions = ["Sleep", "Restart", "Shut Down"]
     sx = (width - len(s_actions) * 100) / 2
     for sa in s_actions:
         sr = QRectF(sx, 370, 90, 30)
@@ -1181,7 +1185,7 @@ def create_alt_tab_switcher(width: int = 940, height: int = 280) -> Image.Image:
 
     cards = [
         ("NoxForge Control Center", "preferences/preferences-system.svg", True),
-        ("Konsole — fastfetch", "actions/utilities-terminal.svg", False),
+        ("Konsole — fastfetch", "categories/applications-development.svg", False),
         ("Dolphin — Projects", "places/folder.svg", False),
         ("Kate — main.cpp", "actions/document-new.svg", False),
     ]
@@ -1237,11 +1241,11 @@ def create_icon_palette_card(width: int = 1180, height: int = 420) -> Image.Imag
 
     p.setFont(get_font("Inter", 11, QFont.Weight.Bold))
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QRectF(20, 0, 450, 46), Qt.AlignmentFlag.AlignVCenter, "ORIGINAL SCALABLE VECTOR ICON SET • 16 / 22 / 32 / 48 / 64px")
+    p.drawText(QRectF(20, 0, 680, 46), Qt.AlignmentFlag.AlignVCenter, "KINETIC VECTOR ICONOGRAPHY • 16 / 22 / 32 / 48 / 64px")
 
     p.setFont(get_font("Inter", 9, QFont.Weight.DemiBold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(width - 360, 0, 340, 46), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "Geometric Line Art & Electric Lime / Cyan Accents")
+    p.drawText(QRectF(width - 470, 0, 450, 46), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "Multi-Level Status Ladders & ColorScheme Bindings")
 
     icon_groups = [
         ("PLACES", [
@@ -1266,11 +1270,11 @@ def create_icon_palette_card(width: int = 1180, height: int = 420) -> Image.Imag
             ("configure.svg", "Configure"),
         ]),
         ("STATUS", [
-            ("network-wireless.svg", "Wireless"),
-            ("audio-volume-high.svg", "Volume"),
-            ("battery-good.svg", "Battery"),
-            ("security-high.svg", "Security"),
-            ("task-complete.svg", "Qualified"),
+            ("network-wireless-connected-80.svg", "Wi-Fi 80%"),
+            ("audio-volume-high-warning.svg", "Overdrive"),
+            ("battery-080-charging.svg", "Battery 80%"),
+            ("display-brightness-high.svg", "Brightness"),
+            ("network-vpn.svg", "VPN Tunnel"),
         ]),
     ]
 
@@ -1333,13 +1337,13 @@ def create_header_banner(title: str, subtitle: str, width: int = 2560) -> Image.
     p.drawLine(QPointF(360, 92), QPointF(520, 92))
 
     # Version Badge Pill on Right
-    badge_rect = QRectF(width - 280, 32, 200, 34)
+    badge_rect = QRectF(width - 300, 32, 220, 34)
     p.setPen(BORDER_STRONG)
     p.setBrush(SURFACE_RAISED)
     p.drawRoundedRect(badge_rect, 6, 6)
     p.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(badge_rect, Qt.AlignmentFlag.AlignCenter, "VERSION 14.0.0 • PLASMA 6")
+    p.drawText(badge_rect, Qt.AlignmentFlag.AlignCenter, "VERSION 20.0.0 • PLASMA 6.8")
 
     p.end()
     return qimage_to_pil(img)
@@ -1530,13 +1534,13 @@ def generate_screenshot_03_window_craft(out_path_1440: Path, out_path_1080: Path
 
 
 def generate_screenshot_04_qt6_controls(out_path_1440: Path, out_path_1080: Path) -> None:
-    print("Generating 04_system_completeness_qt6 (Control Center & Opacity Hub)...")
+    print("Generating 04_system_completeness_qt6 (Control Center v5 & Opacity Hub)...")
     wp_path = WALLPAPERS / "2560x1440.png"
     canvas = Image.open(wp_path).convert("RGBA")
 
     banner = create_header_banner(
-        "UNIFIED CONTROL CENTER & NATIVE QT 6 SUITE",
-        "3-Tab PySide6 Control Center, Depth & Opacity configurator, and adaptive Qt 6 style engine"
+        "UNIFIED CONTROL CENTER v5 & NATIVE QT 6 + UNION SUITE",
+        "5-Tab PySide6 Control Center, Kinetic Icon & Level Studio, Opacity & Plasma 6.8 Union Engine"
     )
     canvas.alpha_composite(banner, (0, 0))
 
@@ -1557,8 +1561,8 @@ def generate_screenshot_05_plasma_launcher(out_path_1440: Path, out_path_1080: P
     canvas = Image.open(wp_path).convert("RGBA")
 
     banner = create_header_banner(
-        "PLASMA 6 SHELL, KICKOFF LAUNCHER & LOCK SCREEN",
-        "Tactile kickoff categories, floating panel geometry, and kinetic Plasma 6 Wayland Lock Screen"
+        "PLASMA 6.8 SHELL, KICKOFF LAUNCHER & LOCK SCREEN",
+        "Tactile kickoff categories, floating panel geometry, and v20 Lock Screen with Forge Status Pill"
     )
     canvas.alpha_composite(banner, (0, 0))
 
@@ -1585,16 +1589,16 @@ def generate_screenshot_06_iconography(out_path_1440: Path, out_path_1080: Path)
     canvas = Image.open(wp_path).convert("RGBA")
 
     banner = create_header_banner(
-        "ORIGINAL SCALABLE VECTOR ICONOGRAPHY",
-        "Clean geometric line artwork with electric-lime and cyan detail accents across all system surfaces"
+        "KINETIC ICONOGRAPHY & MULTI-LEVEL STATUS ENGINE",
+        "10%/20%/25% Battery & Wi-Fi ladders, 16-frame animations & 8 Plasma Desktop Theme icon sheets"
     )
     canvas.alpha_composite(banner, (0, 0))
 
-    dolphin = create_dolphin_window(width=1200, height=640, is_active=True, is_obsidian=False)
-    add_drop_shadow(canvas, dolphin, (90, 220), radius=34, offset=(0, 18), opacity=0.60)
+    dolphin = create_dolphin_window(width=1140, height=640, is_active=True, is_obsidian=False)
+    add_drop_shadow(canvas, dolphin, (80, 220), radius=34, offset=(0, 18), opacity=0.60)
 
-    icon_card = create_icon_palette_card(width=1200, height=440)
-    add_drop_shadow(canvas, icon_card, (1270, 220), radius=38, offset=(0, 20), opacity=0.68)
+    icon_card = create_icon_palette_card(width=1210, height=440)
+    add_drop_shadow(canvas, icon_card, (1260, 220), radius=38, offset=(0, 20), opacity=0.68)
 
     panel = create_plasma_panel(width=2240, height=58)
     add_drop_shadow(canvas, panel, (160, 1354), radius=22, offset=(0, 10), opacity=0.48)
@@ -1623,40 +1627,40 @@ def generate_store_hero_banner(out_path_1280: Path, out_path_1920: Path) -> None
 
     render_svg(p, BRAND / "noxforge-lockup.svg", QRectF(60, 46, 360, 86))
 
-    p.setFont(get_font("Inter", 32, QFont.Weight.ExtraBold))
+    p.setFont(get_font("Inter", 28, QFont.Weight.ExtraBold))
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QRectF(64, 144, 600, 48), Qt.AlignmentFlag.AlignVCenter, "DEEP FOCUS")
+    p.drawText(QRectF(64, 144, 560, 48), Qt.AlignmentFlag.AlignVCenter, "KINETIC ICONOGRAPHY")
 
-    p.setFont(get_font("Inter", 12, QFont.Weight.Bold))
+    p.setFont(get_font("Inter", 11, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(64, 196, 600, 26), Qt.AlignmentFlag.AlignVCenter, "KDE PLASMA 6 • EVERYDAY PRECISION VISUAL SYSTEM • v14.0.0")
+    p.drawText(QRectF(64, 196, 560, 26), Qt.AlignmentFlag.AlignVCenter, "KDE PLASMA 6.8 • MULTI-LEVEL STATUS & UNION • v20.0.0")
 
     features = [
-        "✦ Dual Palettes: Refined Graphite (#0D1419) & True Obsidian OLED (#000000)",
-        "✦ Forge Accent Matrix: Electric Lime, Forge Cyan, Cyber Violet & Amber",
-        "✦ Unified Control Center & Opacity Configurator (PySide6 Hub)",
+        "✦ Dual Palettes: Graphite (#0D1419) & True Obsidian OLED (#000000)",
+        "✦ Kinetic Iconography: 10%/20%/25% Ladders & 16-Frame Sprites",
+        "✦ Control Center v5 Studio, Plasma 6.8 Union & Doctor Schema 13",
         "✦ Signature Forge Notch 18px Chamfer Aurorae Window Decorations",
-        "✦ 100% Original Scalable Vector Icon Theme & Terminal Ecosystems",
+        "✦ Ecosystem v3: Yazi, Lazygit, Zellij, Tmux, Zed & GTK 3/4",
     ]
 
-    p.setFont(get_font("Inter", 11, QFont.Weight.Medium))
+    p.setFont(get_font("Inter", 10, QFont.Weight.Medium))
     fy = 240
     for feat in features:
-        p.setPen(ACCENT_LIME if any(x in feat for x in ["Obsidian", "Forge Accent", "Control Center"]) else TEXT_SECONDARY)
-        p.drawText(QRectF(64, fy, 600, 24), Qt.AlignmentFlag.AlignVCenter, feat)
+        p.setPen(ACCENT_LIME if any(x in feat for x in ["Obsidian", "Kinetic", "Control Center"]) else TEXT_SECONDARY)
+        p.drawText(QRectF(64, fy, 550, 24), Qt.AlignmentFlag.AlignVCenter, feat)
         fy += 28
 
     # Clean, non-overlapping badges
-    badges = ["Plasma 6.7+", "Qt 6.11+", "Wayland", "Fedora 44 / Arch", "MIT License"]
+    badges = ["Plasma 6.8+", "Qt 6.11+", "Wayland", "Fedora 44/45", "MIT License"]
     bx = 64
     for btext in badges:
-        bw = 96
+        bw = 100
         br = QRectF(bx, 420, bw, 28)
         p.setPen(BORDER_STRONG)
         p.setBrush(SURFACE_RAISED)
         p.drawRoundedRect(br, 5, 5)
         p.setFont(get_font("Inter", 8, QFont.Weight.DemiBold))
-        p.setPen(ACCENT_LIME if "Plasma" in btext or "v14" in btext else TEXT_PRIMARY)
+        p.setPen(ACCENT_LIME if "Plasma" in btext or "v20" in btext else TEXT_PRIMARY)
         p.drawText(br, Qt.AlignmentFlag.AlignCenter, btext)
         bx += bw + 8
 
@@ -1676,11 +1680,12 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
     print("Generating store thumbnail (s1.png / 480x380) and store-icon (400x400)...")
     w, h = 480, 380
     img = QImage(w, h, QImage.Format.Format_ARGB32_Premultiplied)
+    img.fill(BG_GRAPHITE)
     p = QPainter(img)
     p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
 
     wp = QPixmap(str(WALLPAPERS / "1920x1080.png"))
-    p.drawPixmap(QRect(0, 0, w, h), wp, QRect(200, 100, 1500, 1180))
+    p.drawPixmap(QRect(0, 0, w, h), wp, QRect(180, 60, 1320, 1000))
 
     # Top brand bar
     grad = QLinearGradient(0, 0, 0, 80)
@@ -1692,7 +1697,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
 
     p.setFont(get_font("Inter", 8, QFont.Weight.Bold))
     p.setPen(ACCENT_LIME)
-    p.drawText(QRectF(190, 20, 270, 24), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "DEEP FOCUS • v14.0.0")
+    p.drawText(QRectF(190, 20, 270, 24), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, "KINETIC SUITE • v20.0.0")
 
     # Center floating card showcase
     card = QRectF(24, 76, w - 48, h - 130)
@@ -1704,7 +1709,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
     p.fillRect(QRectF(card.left(), card.top(), card.width(), 28), SURFACE_OBSIDIAN_RAISED)
     p.setFont(get_font("Inter", 8, QFont.Weight.Medium))
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QRectF(card.left() + 20, card.top(), 220, 28), Qt.AlignmentFlag.AlignVCenter, "NoxForge v14.0.0 — Unified Suite")
+    p.drawText(QRectF(card.left() + 20, card.top(), 260, 28), Qt.AlignmentFlag.AlignVCenter, "NoxForge v20.0.0 — Unified Suite")
 
     # Mini Fastfetch inside card
     mono = get_font("JetBrains Mono", 8)
@@ -1722,7 +1727,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
     p.drawText(QPointF(tx, cy + 14), "OS      ❯")
     p.setFont(mono)
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QPointF(tx + 68, cy + 14), "Fedora 44 (Plasma 6.7)")
+    p.drawText(QPointF(tx + 68, cy + 14), "Fedora 45 (Plasma 6.8)")
 
     p.setFont(mono_b)
     p.setPen(ACCENT_LIME)
@@ -1733,10 +1738,10 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
 
     p.setFont(mono_b)
     p.setPen(ACCENT_LIME)
-    p.drawText(QPointF(tx, cy + 46), "DECOR   ❯")
+    p.drawText(QPointF(tx, cy + 46), "ICONS   ❯")
     p.setFont(mono)
     p.setPen(TEXT_PRIMARY)
-    p.drawText(QPointF(tx + 68, cy + 46), "Forge Notch 18px")
+    p.drawText(QPointF(tx + 68, cy + 46), "Kinetic Multi-Level")
 
     # Color dots
     ansi = [ACCENT_LIME, ACCENT_CYAN, ACCENT_VIOLET, ACCENT_AMBER, ALERT_RED]
@@ -1747,7 +1752,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
 
     # Feature badges
     by = card.bottom() - 36
-    feats = ["Graphite", "Obsidian OLED", "Control Hub", "Vector Icons"]
+    feats = ["Graphite", "Obsidian OLED", "Icon Studio", "Union 6.8"]
     fx = card.left() + 14
     for f in feats:
         fw = (card.width() - 40) / 4
@@ -1756,7 +1761,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
         p.setBrush(SURFACE_RAISED)
         p.drawRoundedRect(fr, 4, 4)
         p.setFont(get_font("Inter", 7, QFont.Weight.DemiBold))
-        p.setPen(ACCENT_LIME if "OLED" in f or "Hub" in f else TEXT_PRIMARY)
+        p.setPen(ACCENT_LIME if "OLED" in f or "Studio" in f else TEXT_PRIMARY)
         p.drawText(fr, Qt.AlignmentFlag.AlignCenter, f)
         fx += fw + 4
 
@@ -1767,7 +1772,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
     p.drawRoundedRect(dock_r, 6, 6)
     render_svg(p, BRAND / "noxforge-mark.svg", QRectF(dock_r.left() + 8, dock_r.top() + 4, 18, 18))
     render_svg(p, ICONS / "places/folder.svg", QRectF(dock_r.left() + 36, dock_r.top() + 4, 18, 18))
-    render_svg(p, ICONS / "actions/utilities-terminal.svg", QRectF(dock_r.left() + 64, dock_r.top() + 4, 18, 18))
+    render_svg(p, ICONS / "categories/applications-development.svg", QRectF(dock_r.left() + 64, dock_r.top() + 4, 18, 18))
     render_svg(p, ICONS / "preferences/preferences-system.svg", QRectF(dock_r.left() + 92, dock_r.top() + 4, 18, 18))
     p.setFont(get_font("Inter", 7, QFont.Weight.DemiBold))
     p.setPen(TEXT_SECONDARY)
@@ -1796,7 +1801,7 @@ def generate_store_thumbnail_and_icon(out_path_thumb: Path, out_path_icon: Path)
 
     ip.setFont(get_font("Inter", 10, QFont.Weight.Bold))
     ip.setPen(ACCENT_LIME)
-    ip.drawText(QRectF(0, 322, 400, 22), Qt.AlignmentFlag.AlignCenter, "v14.0.0 • PLASMA 6")
+    ip.drawText(QRectF(0, 322, 400, 22), Qt.AlignmentFlag.AlignCenter, "v20.0.0 • PLASMA 6.8")
 
     ip.end()
     qimage_to_pil(icon_img).save(out_path_icon, "PNG")
