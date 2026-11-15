@@ -12,7 +12,7 @@ optdepends=(
   'plasma-union: KDE Plasma 6.8 Union CSS/QQuick style engine integration'
 )
 source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v20.0.0/noxforge-20.0.0-source.tar.xz')
-sha256sums=('e173def5caa3a2edb47e5b3b527f72331cb4d8e4eab5d32c70a0098cf1745c5f')
+sha256sums=('34dc56f6d9abe555472a97e79703b653098245dd72c8e08e3f03e097410c4e7e')
 
 build() {
   cmake -S "NoxForge-${pkgver}" -B build -G Ninja \
