@@ -18,7 +18,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.0"
+VERSION = "21.0.1"
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _ROOT = _SCRIPT_DIR.parent
@@ -570,9 +570,15 @@ def clear_cache_and_reload(dry_run: bool = False) -> list[str]:
         except (subprocess.SubprocessError, OSError):
             pass
 
-    # Clear Plasma SVG caches
+    # Clear Plasma, KSvg, and icon caches
     if cache_dir.is_dir():
-        for pattern in ("plasma_theme_*.kcache", "plasma-svgelements-*", "plasma_svgelements*"):
+        for pattern in (
+            "ksvg-elements",
+            "icon-cache.kcache",
+            "plasma_theme_*.kcache",
+            "plasma-svgelements-*",
+            "plasma_svgelements*",
+        ):
             for match in cache_dir.glob(pattern):
                 if dry_run:
                     actions.append(f"[dry-run] Would remove cache: {match}")

@@ -1,3 +1,9 @@
+# NoxForge 21.0.1
+
+- Preserve Original Third-Party & App Icons: removed all 52 external app icon overrides from `icons/NoxForge/*/apps/` (retaining only NoxForge's own 4 Control Center & Opacity icons) so Firefox, VLC, Steam, Discord, Telegram, Bitwarden, GIMP, Dolphin, VS Code, Spotify, and all other apps keep their authentic original icons via `Inherits=breeze-dark,breeze,hicolor` (430 scalable + 896 optical system/places/mimetypes icons).
+- Fix Maximized Aurorae v2 Titlebar Transparency & KF6Svg Custom CSS Stripping: split custom `.ColorScheme-Raised`, `.ColorScheme-Sunken`, `.ColorScheme-Hover`, `.ColorScheme-Pressed`, and `.NoxForge-*` classes into dedicated `<style id="noxforge-*-style">` blocks outside `<style id="current-color-scheme">` across Aurorae decorations, window buttons, and all Plasma Desktop Theme SVGs so `KF6Svg` preserves Graphite/Obsidian surfaces and edge highlights at runtime, and added dedicated `decoration-maximized-inactive` frames.
+- Automatic KF6Svg & Icon Cache Purge: `noxforge-ctl` live reload and `noxforge-opacity` now clear `~/.cache/ksvg-elements`, `~/.cache/icon-cache.kcache`, and orphaned user `icon-theme.cache` files and emit `KGlobalSettings` `IconChanged` (`notifyChange 4 0`) alongside `PaletteChanged` so upgrades render immediately without stale cached frames or icons.
+
 # NoxForge 21.0.0
 
 - Duotone Visual Craft: 482 scalable SVGs (`56` apps, `30` distinct mimetypes, `28` duotone & 6-accent places) and 1,052 optical variants (`16x16`/`22x22` crisp monoline + `32x32`/`48x48`/`64x64` Duotone Surface).

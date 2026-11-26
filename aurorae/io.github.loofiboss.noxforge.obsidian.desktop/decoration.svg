@@ -1,9 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="64" viewBox="0 0 200 64">
+<svg xmlns="http://www.w3.org/2000/svg" width="246" height="64" viewBox="0 0 246 64">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Highlight { color: #A3FF47; }
+    ]]></style>
+    <style id="noxforge-decoration-style" type="text/css"><![CDATA[
       .ColorScheme-Raised { color: #121B21; }
       .ColorScheme-Sunken { color: #05080A; }
-      .ColorScheme-Highlight { color: #A3FF47; }
       .NoxForge-EdgeHighlight { color: #4B606A; }
       .NoxForge-OutlineMuted { color: #2F414B; }
       .NoxForge-OverlayShadow { color: #000000; }
@@ -36,4 +38,13 @@
 <g id="decoration-maximized-bottomleft"><rect x="152" y="42" width="6" height="6" class="ColorScheme-Raised" fill="currentColor" fill-opacity="1"/><rect x="152" y="47" width="6" height="1" class="NoxForge-EdgeHighlight" fill="currentColor"/></g>
 <g id="decoration-maximized-bottom"><rect x="158" y="42" width="28" height="6" class="ColorScheme-Raised" fill="currentColor" fill-opacity="1"/><rect x="158" y="47" width="28" height="1" class="NoxForge-EdgeHighlight" fill="currentColor"/></g>
 <g id="decoration-maximized-bottomright"><rect x="186" y="42" width="6" height="6" class="ColorScheme-Raised" fill="currentColor" fill-opacity="1"/><rect x="186" y="47" width="6" height="1" class="NoxForge-EdgeHighlight" fill="currentColor"/></g>
+  <g id="decoration-maximized-inactive-topleft"><rect x="198" y="8" width="6" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="198" y="8" width="6" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-top"><rect x="204" y="8" width="28" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="204" y="8" width="28" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-topright"><rect x="232" y="8" width="6" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="232" y="8" width="6" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-left"><rect x="198" y="14" width="6" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="198" y="14" width="1" height="28" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<rect id="decoration-maximized-inactive-center" x="204" y="14" width="28" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/>
+<g id="decoration-maximized-inactive-right"><rect x="232" y="14" width="6" height="28" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="237" y="14" width="1" height="28" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-bottomleft"><rect x="198" y="42" width="6" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="198" y="47" width="6" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-bottom"><rect x="204" y="42" width="28" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="204" y="47" width="28" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
+<g id="decoration-maximized-inactive-bottomright"><rect x="232" y="42" width="6" height="6" class="ColorScheme-Sunken" fill="currentColor" fill-opacity="1"/><rect x="232" y="47" width="6" height="1" class="NoxForge-OutlineMuted" fill="currentColor"/></g>
 </svg>

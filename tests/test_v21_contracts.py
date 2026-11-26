@@ -40,19 +40,19 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V21_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "21.0.0")
-        self.assertEqual(noxforge_core.get_app_version(), "21.0.0")
+        self.assertRegex(version, r"^21\.0\.\d+$")
+        self.assertEqual(noxforge_core.get_app_version(), version)
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["release"]["version"], "21.0.0")
+        self.assertEqual(manifest["release"]["version"], version)
         self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V21_PLAN.md")
         self.assertEqual(manifest["evidence"]["activeRoot"], "docs/evidence/v21")
-        self.assertEqual(manifest["source"]["archiveRoot"], "NoxForge-21.0.0")
+        self.assertEqual(manifest["source"]["archiveRoot"], f"NoxForge-{version}")
         self.assertIn("docs/evidence/v21", manifest["source"]["include"])
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
         self.assertEqual(tokens["schemaVersion"], 17)
-        self.assertEqual(tokens["version"], "21.0.0")
+        self.assertEqual(tokens["version"], version)
 
         # 6 WCAG-verified accents
         expected_accents = {
@@ -85,14 +85,39 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
         icons_root = ROOT / "icons/NoxForge"
         coverage = json.loads((icons_root / "coverage.json").read_text(encoding="utf-8"))
         self.assertEqual(coverage["opticalSizes"], [16, 22, 32, 48, 64])
-        self.assertGreaterEqual(len(coverage["icons"]), 480)
-        self.assertGreaterEqual(coverage["opticalCount"], 1000)
+        self.assertGreaterEqual(len(coverage["icons"]), 430)
+        self.assertGreaterEqual(coverage["opticalCount"], 890)
 
-        # Category breadth
-        apps_svgs = list((icons_root / "scalable/apps").glob("*.svg"))
+        # Category breadth: NoxForge-owned apps only (third-party apps keep upstream icons)
+        apps_svgs = sorted(p.name for p in (icons_root / "scalable/apps").glob("*.svg"))
         mime_svgs = list((icons_root / "scalable/mimetypes").glob("*.svg"))
         places_svgs = list((icons_root / "scalable/places").glob("*.svg"))
-        self.assertGreaterEqual(len(apps_svgs), 50)
+        self.assertEqual(
+            apps_svgs,
+            [
+                "io.github.loofiboss.noxforge.controlcenter.svg",
+                "io.github.loofiboss.noxforge.opacity.svg",
+                "noxforge-controlcenter.svg",
+                "noxforge-opacity.svg",
+            ],
+        )
+        for forbidden_third_party in (
+            "firefox.svg",
+            "vlc.svg",
+            "steam.svg",
+            "discord.svg",
+            "gimp.svg",
+            "com.bitwarden.desktop.svg",
+            "org.telegram.desktop.svg",
+            "org.kde.dolphin.svg",
+            "code.svg",
+            "spotify.svg",
+        ):
+            for size_dir in ("scalable", "32x32", "48x48", "64x64"):
+                self.assertFalse(
+                    (icons_root / size_dir / "apps" / forbidden_third_party).exists(),
+                    f"Third-party app icon must not be overridden: {size_dir}/apps/{forbidden_third_party}",
+                )
         self.assertGreaterEqual(len(mime_svgs), 28)
         self.assertGreaterEqual(len(places_svgs), 24)
 
@@ -101,10 +126,10 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
             folder_svg = icons_root / f"scalable/places/folder-{accent}.svg"
             self.assertTrue(folder_svg.is_file(), f"Missing accent folder: {folder_svg}")
 
-        # Duotone styling on curated apps/places (surface plate + inner bevel + Forge Notch)
-        firefox_svg = (icons_root / "scalable/apps/firefox.svg").read_text(encoding="utf-8")
-        self.assertIn("surface-plate", firefox_svg)
-        self.assertIn("surface-bevel", firefox_svg)
+        # Duotone styling on NoxForge apps and places (surface plate + inner bevel + Forge Notch)
+        cc_svg = (icons_root / "scalable/apps/io.github.loofiboss.noxforge.controlcenter.svg").read_text(encoding="utf-8")
+        self.assertIn("surface-plate", cc_svg)
+        self.assertIn("surface-bevel", cc_svg)
 
         # Cursors: 5-size Xcursor + Plasma 6 scalable Wayland SVGs, zero symlinks
         cursors_root = ROOT / "cursors/NoxForge-Cursors"
@@ -162,18 +187,22 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
             meta_json = aur_dir / "metadata.json"
             self.assertTrue(meta_json.is_file(), f"Missing Aurorae v2 metadata.json: {meta_json}")
             meta = json.loads(meta_json.read_text(encoding="utf-8"))
-            self.assertEqual(meta["KPlugin"]["Version"], "21.0.0")
+            self.assertEqual(meta["KPlugin"]["Version"], (ROOT / "VERSION").read_text(encoding="utf-8").strip())
 
             dec_svg = (aur_dir / "decoration.svg").read_text(encoding="utf-8")
             self.assertIn('id="decoration-maximized-top"', dec_svg)
             self.assertIn('id="decoration-maximized-center"', dec_svg)
+            self.assertIn('id="decoration-maximized-inactive-center"', dec_svg)
+            self.assertIn('id="noxforge-decoration-style"', dec_svg)
             self.assertNotIn("<filter", dec_svg)
             self.assertNotIn("feGaussianBlur", dec_svg)
 
-            # Plasma desktoptheme overhauled widgets
+            # Plasma desktoptheme overhauled widgets & KF6Svg-safe custom style block
             plasma_dir = ROOT / "plasma/desktoptheme" / theme_id / "widgets"
             for widget_svg in ("notes.svg", "clock.svg", "calendar.svg", "analog_meter.svg", "glowbar.svg", "checkmarks.svg"):
-                self.assertTrue((plasma_dir / widget_svg).is_file(), f"Missing {theme_id}/widgets/{widget_svg}")
+                p = plasma_dir / widget_svg
+                self.assertTrue(p.is_file(), f"Missing {theme_id}/widgets/{widget_svg}")
+                self.assertIn('id="noxforge-plasma-style"', p.read_text(encoding="utf-8"))
 
             # Look-and-Feel OSD & SystemDialog canonical generated QML with zero raw hex
             lnf_dir = ROOT / "look-and-feel" / theme_id / "contents"
@@ -365,7 +394,8 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
             path = ROOT / rel
             self.assertTrue(path.is_file(), f"Missing Ecosystem v4 file: {rel}")
             if not rel.endswith(".jsonc"):
-                self.assertIn("21.0.0", path.read_text(encoding="utf-8"), f"Missing version marker in {rel}")
+                expected_version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+                self.assertIn(expected_version, path.read_text(encoding="utf-8"), f"Missing version marker in {rel}")
             else:
                 parsed = json.loads(path.read_text(encoding="utf-8"))
                 self.assertIn("modules", parsed)

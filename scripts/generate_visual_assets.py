@@ -662,7 +662,6 @@ ICON_ALIASES = {
     "status/task-complete.svg": "status/security-high.svg",
     "apps/noxforge-controlcenter.svg": "apps/io.github.loofiboss.noxforge.controlcenter.svg",
     "apps/noxforge-opacity.svg": "apps/io.github.loofiboss.noxforge.opacity.svg",
-    "apps/visual-studio-code.svg": "apps/code.svg",
 }
 
 # Only names that are actual semantic synonyms remain byte-identical. Every
@@ -676,7 +675,6 @@ TRUE_SYNONYM_ALIASES = {
     "applets/camera-on-symbolic.svg",
     "apps/noxforge-controlcenter.svg",
     "apps/noxforge-opacity.svg",
-    "apps/visual-studio-code.svg",
     "categories/preferences-system.svg",
     "devices/network-wired.svg",
     "devices/network-wireless.svg",
@@ -694,7 +692,6 @@ DUPLICATE_ALLOWLIST = (
     ("applets/battery-full-symbolic.svg", "applets/battery-full.svg", "status/battery-good.svg"),
     ("apps/io.github.loofiboss.noxforge.controlcenter.svg", "apps/noxforge-controlcenter.svg"),
     ("apps/io.github.loofiboss.noxforge.opacity.svg", "apps/noxforge-opacity.svg"),
-    ("apps/code.svg", "apps/visual-studio-code.svg"),
     ("categories/applications-internet.svg", "preferences/preferences-system-network.svg"),
     ("devices/network-wired.svg", "status/network-wired-activated.svg", "status/network-wired.svg"),
     ("devices/network-wireless.svg", "status/network-wireless-connected-100.svg", "status/network-wireless.svg"),
@@ -898,12 +895,15 @@ def decoration_svg(colors: dict[str, str] = COLORS) -> str:
     active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True, shadow=True, maximized=False)
     inactive = decoration_frame("decoration-inactive", 76, 0, "ColorScheme-Sunken", 0.9, active=False, shadow=True, maximized=False)
     maximized = decoration_frame("decoration-maximized", 152, 8, "ColorScheme-Raised", 1.0, active=True, shadow=False, maximized=True)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="200" height="64" viewBox="0 0 200 64">
+    maximized_inactive = decoration_frame("decoration-maximized-inactive", 198, 8, "ColorScheme-Sunken", 1.0, active=False, shadow=False, maximized=True)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="246" height="64" viewBox="0 0 246 64">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
+      .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
+    ]]></style>
+    <style id="noxforge-decoration-style" type="text/css"><![CDATA[
       .ColorScheme-Raised {{ color: {colors["surfaceRaised"]}; }}
       .ColorScheme-Sunken {{ color: {colors["surfaceSunken"]}; }}
-      .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
       .NoxForge-EdgeHighlight {{ color: {colors["edgeHighlight"]}; }}
       .NoxForge-OutlineMuted {{ color: {colors["border"]}; }}
       .NoxForge-OverlayShadow {{ color: {colors.get("shadowOverlay", "#050708")}; }}
@@ -912,6 +912,7 @@ def decoration_svg(colors: dict[str, str] = COLORS) -> str:
   {active}
   {inactive}
   {maximized}
+  {maximized_inactive}
 </svg>
 '''
 
@@ -965,6 +966,8 @@ def button_svg(kind: str, colors: dict[str, str] = COLORS) -> str:
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Text {{ color: {colors["textPrimary"]}; }}
+    ]]></style>
+    <style id="noxforge-button-style" type="text/css"><![CDATA[
       .ColorScheme-Hover {{ color: {colors["surfaceHover"]}; }}
       .ColorScheme-Pressed {{ color: {colors["surfaceSelected"]}; }}
     ]]></style>

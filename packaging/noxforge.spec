@@ -1,4 +1,4 @@
-%global upstream_version 21.0.0
+%global upstream_version 21.0.1
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        21.0.0
+Version:        21.0.1
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -108,6 +108,11 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Fri Nov 27 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.1-1
+- Preserve upstream icons for third-party and external KDE apps by restricting icons/NoxForge/*/apps/ to NoxForge's own 4 app icons (430 scalable + 896 optical system/places/mimetypes icons)
+- Fix maximized Aurorae v2 titlebar transparency and KF6Svg style stripping by moving custom classes out of <style id="current-color-scheme"> across Aurorae and Plasma SVGs and adding decoration-maximized-inactive frames
+- Purge ksvg-elements and icon-cache.kcache and broadcast KGlobalSettings IconChanged in noxforge-ctl and noxforge-opacity reloads
+
 * Thu Nov 26 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.0-1
 - Release v21.0.0 Duotone Visual Craft, Aurorae v2, Live Control Core & Ecosystem v4
 - Upgrade icons/NoxForge to Duotone Surface craft at 32px/48px/64px + 482 scalable icons (56 apps, 30 mimetypes, 28 places)

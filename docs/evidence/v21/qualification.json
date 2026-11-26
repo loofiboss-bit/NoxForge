@@ -3,12 +3,12 @@
   "releaseState": "release-candidate",
   "releaseReady": false,
   "candidate": {
-    "version": "21.0.0",
+    "version": "21.0.1",
     "sourceRef": "feat/v21-duotone-craft",
     "sourceCommit": null,
     "baselineCommit": "5be527cc3fae42dfadec2125819cc84afeb89977",
     "worktreeDirty": true,
-    "package": "noxforge-21.0.0-1.fc44.x86_64.rpm",
+    "package": "noxforge-21.0.1-1.fc44.x86_64.rpm",
     "artifacts": [],
     "runtimeSourceHashes": "runtime-source-hashes.json"
   },

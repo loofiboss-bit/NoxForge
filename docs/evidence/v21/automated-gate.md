@@ -1,6 +1,6 @@
 # NoxForge 21.0.0 candidate qualification status
 
-Version: 21.0.0
+Version: 21.0.1
 
 Release state: candidate
 

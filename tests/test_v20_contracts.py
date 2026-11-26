@@ -38,7 +38,7 @@ class NoxForgeV20ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V20_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertIn(version, ("20.0.0", "21.0.0"))
+        self.assertRegex(version, r"^(20\.0\.0|21\.0\.\d+)$")
         self.assertEqual(noxforge_core.get_app_version(), version)
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))

@@ -12,6 +12,8 @@
       .ColorScheme-PositiveText { color: #A3FF47; }
       .ColorScheme-NeutralText { color: #FBBF24; }
       .ColorScheme-NegativeText { color: #FF6B7A; }
+    ]]></style>
+    <style id="noxforge-plasma-style" type="text/css"><![CDATA[
       .NoxForge-Sunken { color: #10191F; }
       .NoxForge-Overlay { color: #22323B; }
       .NoxForge-Hover { color: #283942; }
