@@ -57,6 +57,8 @@ Colored shadows and ambient lime glow are forbidden.
 | `detailViolet` | `#A78BFA` | Rare identity counterpoint |
 | `negative` | `#FF6B7A` | Destructive and error states |
 | `neutral` | `#FBBF24` | Warning states |
+| `crimson` (accent) | `#FF8FA3` | Forge Crimson signature accent (v21, WCAG AA/AAA) |
+| `ice` (accent) | `#93C5FD` | Titanium Ice signature accent (v21, WCAG AA/AAA) |
 
 Lime may fill at most one primary action per decision group. A selected row uses
 a neutral surface and a three-pixel lime rail or short marker, never a broad

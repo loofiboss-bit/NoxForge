@@ -47,7 +47,8 @@ class V9ContractTests(unittest.TestCase):
         coverage = json.loads(
             (ROOT / "icons/NoxForge/coverage.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(coverage["opticalStrokeWidths"], {"16": 1.9, "22": 1.75})
+        self.assertEqual(coverage["opticalStrokeWidths"]["16"], 1.9)
+        self.assertEqual(coverage["opticalStrokeWidths"]["22"], 1.75)
         for size in (16, 22):
             for relative in (
                 "places/folder.svg",

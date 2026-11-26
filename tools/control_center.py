@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""NoxForge Control Center v3 - Qt 6 Graphical Hub.
+"""NoxForge Control Center v6 - Qt 6 Graphical Hub.
 
-Unifies profile switching (Graphite <-> Obsidian), accent color management,
-real-time self-theming, depth & opacity configuration, Flatpak overrides,
-reversible ecosystem deployment/restoration, and system diagnostics.
+Unifies profile switching (Graphite <-> Obsidian), 6-accent Forge matrix,
+wallpaper accent extraction, named presets, live surface preview, real-time
+self-theming, depth & opacity configuration, Flatpak overrides, Fastfetch
+Kinetic Studio v2, reversible ecosystem deployment/restoration, and diagnostics.
 """
 
 from __future__ import annotations
@@ -12,24 +13,24 @@ import argparse
 import importlib.machinery
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any, Callable
 
 from PySide6 import QtCore, QtGui, QtSvg, QtWidgets
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
-for _p in (
-    str(SCRIPT_DIR),
-    str(ROOT / "tools"),
-    str(ROOT),
-    "/usr/share/noxforge",
-    str(Path.home() / ".local/share/noxforge"),
-):
-    if _p not in sys.path:
-        sys.path.insert(0, _p)
+for _local in reversed((str(SCRIPT_DIR), str(ROOT / "tools"), str(ROOT))):
+    if _local in sys.path:
+        sys.path.remove(_local)
+    sys.path.insert(0, _local)
+for _fallback in ("/usr/share/noxforge", str(Path.home() / ".local/share/noxforge")):
+    if _fallback not in sys.path:
+        sys.path.append(_fallback)
 
 import noxforge_core  # noqa: E402
 
@@ -48,7 +49,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "20.0.0"
+    return "21.0.0"
 
 
 APP_VERSION = get_app_version()
@@ -94,6 +95,70 @@ except ImportError:
         spec_op.loader.exec_module(opacity_gui)
 
 STYLE_SHEET = noxforge_core.build_qt_stylesheet()
+
+
+class CommandWorker(QtCore.QThread):
+    """Non-blocking background worker for CLI/subprocess operations in Control Center v6."""
+
+    completed = QtCore.Signal(object)
+    failed = QtCore.Signal(str)
+
+    def __init__(
+        self,
+        fn: Callable[..., Any],
+        *args: Any,
+        parent: QtCore.QObject | None = None,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(parent)
+        self._fn = fn
+        self._args = args
+        self._kwargs = kwargs
+
+    def run(self) -> None:
+        try:
+            result = self._fn(*self._args, **self._kwargs)
+            self.completed.emit(result)
+        except Exception as err:
+            self.failed.emit(str(err))
+
+
+def _use_sync_execution() -> bool:
+    """Use deterministic synchronous execution under offscreen/headless test suites."""
+    return (
+        os.environ.get("QT_QPA_PLATFORM") == "offscreen"
+        or os.environ.get("NOXFORGE_SYNC_GUI_TESTS") == "1"
+    )
+
+
+def _run_async(
+    owner: QtWidgets.QWidget,
+    fn: Callable[..., Any],
+    on_done: Callable[[Any], None],
+    on_error: Callable[[str], None] | None = None,
+) -> None:
+    if _use_sync_execution():
+        try:
+            on_done(fn())
+        except Exception as err:
+            if on_error:
+                on_error(str(err))
+        return
+    worker = CommandWorker(fn, parent=owner)
+    workers: list[CommandWorker] = getattr(owner, "_active_workers", [])
+    workers.append(worker)
+    setattr(owner, "_active_workers", workers)
+
+    def _cleanup() -> None:
+        if worker in workers:
+            workers.remove(worker)
+        worker.deleteLater()
+
+    worker.completed.connect(on_done)
+    if on_error:
+        worker.failed.connect(on_error)
+    worker.finished.connect(_cleanup)
+    worker.start()
 
 
 class ProfileAccentTab(QtWidgets.QWidget):
@@ -144,10 +209,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         setup_row = QtWidgets.QHBoxLayout()
         self.setup_full_btn = QtWidgets.QPushButton("  ⚡  Apply Complete Setup (Global Theme, Icons, Cursors && Wallpaper)")
         self.setup_full_btn.setMinimumHeight(34)
-        self.setup_full_btn.setStyleSheet(
-            "background-color: #142218; border: 1px solid #A3FF47; border-radius: 6px; "
-            "color: #A3FF47; font-weight: bold; font-size: 11px; padding: 4px 12px;"
-        )
+        self.setup_full_btn.setAccessibleName("Apply Complete Setup")
         self.setup_full_btn.clicked.connect(self.apply_full_active_setup)
         setup_row.addWidget(self.setup_full_btn)
         p_layout.addLayout(setup_row)
@@ -170,26 +232,40 @@ class ProfileAccentTab(QtWidgets.QWidget):
             ("cyan", "Forge Cyan (#22D3EE)", "#22D3EE"),
             ("violet", "Cyber Violet (#A78BFA)", "#A78BFA"),
             ("amber", "Molten Amber (#FBBF24)", "#FBBF24"),
+            ("crimson", "Forge Crimson (#FF8FA3)", "#FF8FA3"),
+            ("ice", "Titanium Ice (#93C5FD)", "#93C5FD"),
             ("system", "System Accent (Plasma Dynamic)", "#FFFFFF"),
         ]
 
         for idx, (key, label, color) in enumerate(accents):
             btn = QtWidgets.QPushButton(f"  ●  {label}")
             btn.setMinimumHeight(36)
+            btn.setAccessibleName(f"Accent {label}")
             btn.setStyleSheet(f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color};")
             btn.clicked.connect(lambda _, k=key: self.apply_accent(k))
             self.accent_buttons[key] = btn
             self.accent_meta[key] = (label, color)
             if key == "system":
-                accent_grid.addWidget(btn, 2, 0, 1, 2)
+                accent_grid.addWidget(btn, 3, 0, 1, 2)
             else:
                 accent_grid.addWidget(btn, idx // 2, idx % 2)
 
         a_layout.addLayout(accent_grid)
 
+        # Wallpaper Accent Extractor & Sync Row
+        extract_row = QtWidgets.QHBoxLayout()
+        self.btn_extract_wallpaper = QtWidgets.QPushButton("Extract Accent from Wallpaper…")
+        self.btn_extract_wallpaper.setAccessibleName("Extract Accent from Wallpaper")
+        self.btn_extract_wallpaper.clicked.connect(self.extract_accent_from_wallpaper_dialog)
+        self.chk_sync_wallpaper = QtWidgets.QCheckBox("Sync active accent to NoxForge wallpaper")
+        self.chk_sync_wallpaper.setAccessibleName("Sync Accent to Wallpaper")
+        extract_row.addWidget(self.btn_extract_wallpaper)
+        extract_row.addWidget(self.chk_sync_wallpaper)
+        extract_row.addStretch()
+        a_layout.addLayout(extract_row)
+
         # Live Palette Swatch & Contrast Bar
         self.palette_swatch_card = QtWidgets.QWidget()
-        self.palette_swatch_card.setStyleSheet("background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px;")
         swatch_layout = QtWidgets.QHBoxLayout(self.palette_swatch_card)
         swatch_layout.setContentsMargins(10, 8, 10, 8)
         swatch_layout.setSpacing(8)
@@ -326,10 +402,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.anim_toggle.toggled.connect(self.on_anim_toggled)
 
         self.studio_motion_badge = QtWidgets.QLabel("● LOOP ACTIVE")
-        self.studio_motion_badge.setStyleSheet(
-            "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
-            "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
-        )
+        self.studio_motion_badge.setAccessibleName("Kinetic Motion Status Badge")
 
         studio_ctrl_row.addWidget(level_lbl)
         studio_ctrl_row.addWidget(self.level_slider, stretch=1)
@@ -342,6 +415,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         studio_cards_row = QtWidgets.QHBoxLayout()
         studio_cards_row.setSpacing(10)
         self.studio_cards: dict[str, tuple[QtWidgets.QLabel, QtWidgets.QLabel, QtWidgets.QLabel]] = {}
+        self.studio_card_frames: list[QtWidgets.QFrame] = []
         for cat_key, cat_title in (
             ("battery", "Battery"),
             ("wifi", "Wi-Fi"),
@@ -350,9 +424,8 @@ class ProfileAccentTab(QtWidgets.QWidget):
             ("spinner", "Spinner"),
         ):
             card_box = QtWidgets.QFrame()
-            card_box.setStyleSheet(
-                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 6px; padding: 6px;"
-            )
+            card_box.setObjectName("studioCard")
+            self.studio_card_frames.append(card_box)
             card_l = QtWidgets.QVBoxLayout(card_box)
             card_l.setContentsMargins(6, 6, 6, 6)
             card_l.setSpacing(3)
@@ -438,6 +511,54 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         layout.addWidget(preview_group)
 
+        # Live Surface & Control Preview Card (v21)
+        self.live_preview_group = QtWidgets.QGroupBox("Live Surface && Control Preview")
+        lp_layout = QtWidgets.QHBoxLayout(self.live_preview_group)
+        lp_layout.setSpacing(10)
+        self.preview_primary_btn = QtWidgets.QPushButton("Primary Action")
+        self.preview_primary_btn.setObjectName("applyButton")
+        self.preview_primary_btn.setAccessibleName("Preview Primary Action Button")
+        self.preview_secondary_btn = QtWidgets.QPushButton("Secondary")
+        self.preview_secondary_btn.setAccessibleName("Preview Secondary Button")
+        self.preview_check = QtWidgets.QCheckBox("Focus Ring")
+        self.preview_check.setChecked(True)
+        self.preview_check.setAccessibleName("Preview Focus Ring Toggle")
+        self.preview_progress = QtWidgets.QProgressBar()
+        self.preview_progress.setRange(0, 100)
+        self.preview_progress.setValue(72)
+        self.preview_progress.setTextVisible(False)
+        self.preview_progress.setFixedHeight(10)
+        self.preview_progress.setAccessibleName("Preview Progress Indicator")
+        lp_layout.addWidget(self.preview_primary_btn)
+        lp_layout.addWidget(self.preview_secondary_btn)
+        lp_layout.addWidget(self.preview_check)
+        lp_layout.addWidget(self.preview_progress, stretch=1)
+        layout.addWidget(self.live_preview_group)
+
+        # Named Presets Manager Section (v21)
+        self.presets_group = QtWidgets.QGroupBox("Named Presets Manager")
+        pr_layout = QtWidgets.QHBoxLayout(self.presets_group)
+        self.preset_combo = QtWidgets.QComboBox()
+        self.preset_combo.setAccessibleName("Saved Presets Selector")
+        self.preset_name_input = QtWidgets.QLineEdit()
+        self.preset_name_input.setPlaceholderText("New preset name (e.g. coding-night)")
+        self.preset_name_input.setAccessibleName("New Preset Name Input")
+        self.btn_preset_save = QtWidgets.QPushButton("Save Current")
+        self.btn_preset_save.setAccessibleName("Save Named Preset")
+        self.btn_preset_save.clicked.connect(self.save_named_preset)
+        self.btn_preset_apply = QtWidgets.QPushButton("Apply Preset")
+        self.btn_preset_apply.setAccessibleName("Apply Named Preset")
+        self.btn_preset_apply.clicked.connect(self.apply_named_preset)
+        self.btn_preset_delete = QtWidgets.QPushButton("Delete")
+        self.btn_preset_delete.setAccessibleName("Delete Named Preset")
+        self.btn_preset_delete.clicked.connect(self.delete_named_preset)
+        pr_layout.addWidget(self.preset_combo, stretch=1)
+        pr_layout.addWidget(self.preset_name_input, stretch=1)
+        pr_layout.addWidget(self.btn_preset_save)
+        pr_layout.addWidget(self.btn_preset_apply)
+        pr_layout.addWidget(self.btn_preset_delete)
+        layout.addWidget(self.presets_group)
+
         # Day/Night Automation Section
         sched_group = QtWidgets.QGroupBox("Day / Night Automation")
         s_layout = QtWidgets.QHBoxLayout(sched_group)
@@ -463,10 +584,14 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.night_time.setTime(QtCore.QTime(20, 0))
         self.night_time.timeChanged.connect(self.on_time_changed)
 
+        self.timer_status_badge = QtWidgets.QLabel("○ TIMER INACTIVE")
+        self.timer_status_badge.setAccessibleName("Systemd Timer Status")
+
         s_layout.addWidget(day_lbl)
         s_layout.addWidget(self.day_time)
         s_layout.addWidget(night_lbl)
         s_layout.addWidget(self.night_time)
+        s_layout.addWidget(self.timer_status_badge)
         s_layout.addStretch()
         layout.addWidget(sched_group)
 
@@ -545,13 +670,16 @@ class ProfileAccentTab(QtWidgets.QWidget):
     def _sync_anim_timer(self) -> None:
         if not hasattr(self, "kinetic_timer"):
             return
+        is_obs = getattr(self, "_active_profile", "graphite") == "obsidian"
+        badge_bg = "#05080A" if is_obs else "#10191F"
+        cyan_bg = "#08141A" if is_obs else "#16242C"
         anim_on = bool(self.anim_toggle.isChecked())
         if anim_on and not self.reduced_motion_active:
             if not self.kinetic_timer.isActive():
                 self.kinetic_timer.start()
             self.studio_motion_badge.setText("● LOOP ACTIVE")
             self.studio_motion_badge.setStyleSheet(
-                "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+                f"background-color: {cyan_bg}; color: #22D3EE; border: 1px solid #22D3EE; "
                 "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
             )
         else:
@@ -567,7 +695,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
             else:
                 self.studio_motion_badge.setText("○ STATIC")
                 self.studio_motion_badge.setStyleSheet(
-                    "background-color: #10191F; color: #748289; border: 1px solid #2F414B; "
+                    f"background-color: {badge_bg}; color: #748289; border: 1px solid #2F414B; "
                     "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
                 )
 
@@ -678,7 +806,34 @@ class ProfileAccentTab(QtWidgets.QWidget):
             mot = noxforge_ctl.manage_motion("status")
             self.reduced_motion_active = bool(mot.get("reducedMotion", False))
         surf_sel = pal["surfaceSelected"]
-        bg_raised = "#121B21" if (profile == "obsidian") else "#1B2831"
+        is_obs = profile == "obsidian"
+        sunken_bg = "#000000" if is_obs else "#10191F"
+        card_bg = "#05080A" if is_obs else "#10191F"
+        bg_raised = "#121B21" if is_obs else "#1B2831"
+        self._active_profile = profile
+
+        if hasattr(self, "palette_swatch_card"):
+            self.palette_swatch_card.setStyleSheet(
+                f"background-color: {card_bg}; border: 1px solid #2F414B; border-radius: 6px;"
+            )
+        for frame in getattr(self, "studio_card_frames", []):
+            frame.setStyleSheet(
+                f"background-color: {card_bg}; border: 1px solid #2F414B; border-radius: 6px; padding: 6px;"
+            )
+        if hasattr(self, "wp_preview_lbl"):
+            self.wp_preview_lbl.setStyleSheet(
+                f"background-color: {sunken_bg}; border: 1px solid #2F414B; border-radius: 6px; color: #748289;"
+            )
+        if hasattr(self, "preview_badges"):
+            for img_lbl, _, _svg in self.preview_badges:
+                img_lbl.setStyleSheet(
+                    f"border: 1px solid #2F414B; border-radius: 6px; padding: 4px; background-color: {card_bg};"
+                )
+        if hasattr(self, "preview_progress"):
+            self.preview_progress.setStyleSheet(
+                f"QProgressBar {{ background-color: {sunken_bg}; border: 1px solid #2F414B; border-radius: 4px; }} "
+                f"QProgressBar::chunk {{ background-color: {acc}; border-radius: 3px; }}"
+            )
 
         active_btn_style = (
             f"background-color: {surf_sel}; border: 2px solid {acc}; "
@@ -750,9 +905,30 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         sched = noxforge_ctl.manage_schedule("status")
         is_sched = sched.get("scheduled", False)
+        is_timer_active = bool(sched.get("active", False))
         self.sched_check.blockSignals(True)
         self.sched_check.setChecked(is_sched)
         self.sched_check.blockSignals(False)
+        if hasattr(self, "timer_status_badge"):
+            if is_timer_active:
+                self.timer_status_badge.setText("● TIMER ACTIVE")
+                self.timer_status_badge.setStyleSheet(
+                    f"background-color: {surf_sel}; color: {acc}; border: 1px solid {acc}; "
+                    "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                )
+            elif is_sched:
+                self.timer_status_badge.setText("◐ CONFIGURED")
+                self.timer_status_badge.setStyleSheet(
+                    f"background-color: {card_bg}; color: #22D3EE; border: 1px solid #22D3EE; "
+                    "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                )
+            else:
+                self.timer_status_badge.setText("○ TIMER INACTIVE")
+                self.timer_status_badge.setStyleSheet(
+                    f"background-color: {card_bg}; color: #748289; border: 1px solid #2F414B; "
+                    "border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                )
+        self.refresh_presets()
         sched_desc = sched.get("schedule", "")
         if " / " in sched_desc:
             parts = sched_desc.split(" / ")
@@ -880,35 +1056,120 @@ class ProfileAccentTab(QtWidgets.QWidget):
             )
 
     def apply_profile(self, profile: str) -> None:
-        if hasattr(noxforge_ctl, "apply_setup"):
-            noxforge_ctl.apply_setup(profile)
-        else:
-            noxforge_ctl.switch_profile(profile)
-        self.refresh_state()
-        status = noxforge_ctl.get_current_status()
-        self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
-        self.statusChanged.emit(f"Profile activated: {profile.upper()} (complete desktop synchronized)")
+        def _work() -> dict[str, Any]:
+            if hasattr(noxforge_ctl, "apply_setup"):
+                return noxforge_ctl.apply_setup(profile)
+            return noxforge_ctl.switch_profile(profile)
+
+        def _done(_res: Any) -> None:
+            self.refresh_state()
+            status = noxforge_ctl.get_current_status()
+            self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
+            self.statusChanged.emit(f"Profile activated: {profile.upper()} (complete desktop synchronized)")
+
+        _run_async(self, _work, _done, lambda err: self.statusChanged.emit(f"Profile error: {err}"))
 
     def apply_full_active_setup(self) -> None:
         status = noxforge_ctl.get_current_status()
         profile = status.get("profile", "graphite")
         if profile not in ("graphite", "obsidian"):
             profile = "graphite"
-        if hasattr(noxforge_ctl, "apply_setup"):
-            noxforge_ctl.apply_setup(profile)
-        else:
-            noxforge_ctl.sync_desktop(profile)
-        self.refresh_state()
-        self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
-        self.statusChanged.emit(f"Complete {profile.upper()} setup applied (Theme, Icons, Cursors, Wallpaper)")
+
+        def _work() -> dict[str, Any]:
+            if hasattr(noxforge_ctl, "apply_setup"):
+                return noxforge_ctl.apply_setup(profile)
+            return noxforge_ctl.sync_desktop(profile)
+
+        def _done(_res: Any) -> None:
+            self.refresh_state()
+            self.themeChanged.emit(profile, status.get("accentHex", "#A3FF47"))
+            self.statusChanged.emit(f"Complete {profile.upper()} setup applied (Theme, Icons, Cursors, Wallpaper)")
+
+        _run_async(self, _work, _done, lambda err: self.statusChanged.emit(f"Setup error: {err}"))
 
     def apply_accent(self, accent: str) -> None:
-        res = noxforge_ctl.set_accent(accent)
+        sync_wp = bool(hasattr(self, "chk_sync_wallpaper") and self.chk_sync_wallpaper.isChecked())
+        res = noxforge_ctl.set_accent(accent, sync_wallpaper=sync_wp)
         self.refresh_state()
         status = noxforge_ctl.get_current_status()
         hex_color = res.get("hex") or status.get("accentHex", "#A3FF47")
         self.themeChanged.emit(status.get("profile", "graphite"), hex_color)
         self.statusChanged.emit(f"Accent color activated: {accent.upper()}")
+
+    def extract_accent_from_wallpaper_dialog(self) -> None:
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self,
+            "Select Wallpaper to Extract WCAG-AA Accent",
+            str(Path.home()),
+            "Images (*.png *.jpg *.jpeg *.webp *.svg)",
+        )
+        if not path:
+            return
+        try:
+            sync_wp = bool(hasattr(self, "chk_sync_wallpaper") and self.chk_sync_wallpaper.isChecked())
+            res = noxforge_ctl.set_accent("", from_wallpaper=path, sync_wallpaper=sync_wp)
+            self.refresh_state()
+            status = noxforge_ctl.get_current_status()
+            hex_color = res.get("hex") or status.get("accentHex", "#A3FF47")
+            self.themeChanged.emit(status.get("profile", "graphite"), hex_color)
+            self.statusChanged.emit(f"Extracted WCAG-AA accent {hex_color} from {Path(path).name}")
+        except Exception as err:
+            self.statusChanged.emit(f"Wallpaper accent extraction failed: {err}")
+
+    def refresh_presets(self) -> None:
+        if not hasattr(self, "preset_combo"):
+            return
+        current = self.preset_combo.currentData()
+        self.preset_combo.blockSignals(True)
+        self.preset_combo.clear()
+        presets = noxforge_core.load_presets()
+        if not presets:
+            self.preset_combo.addItem("(No saved presets)", "")
+        else:
+            for name, meta in sorted(presets.items()):
+                prof = str(meta.get("profile", "graphite")).capitalize()
+                acc = str(meta.get("accent", "lime"))
+                self.preset_combo.addItem(f"{name} ({prof} · {acc})", name)
+        if current:
+            idx = self.preset_combo.findData(current)
+            if idx >= 0:
+                self.preset_combo.setCurrentIndex(idx)
+        self.preset_combo.blockSignals(False)
+
+    def save_named_preset(self) -> None:
+        name = self.preset_name_input.text().strip()
+        if not name:
+            self.statusChanged.emit("Enter a preset name before saving.")
+            return
+        try:
+            noxforge_ctl.manage_presets("save", name=name)
+            self.preset_name_input.clear()
+            self.refresh_presets()
+            self.statusChanged.emit(f"Saved named preset: {name}")
+        except Exception as err:
+            self.statusChanged.emit(f"Error saving preset: {err}")
+
+    def apply_named_preset(self) -> None:
+        name = str(self.preset_combo.currentData() or "").strip()
+        if not name:
+            self.statusChanged.emit("No saved preset selected.")
+            return
+        try:
+            res = noxforge_ctl.manage_presets("apply", name=name)
+            self.refresh_state()
+            status = noxforge_ctl.get_current_status()
+            self.themeChanged.emit(status.get("profile", "graphite"), status.get("accentHex", "#A3FF47"))
+            self.statusChanged.emit(f"Applied named preset: {res.get('name', name)}")
+        except Exception as err:
+            self.statusChanged.emit(f"Error applying preset: {err}")
+
+    def delete_named_preset(self) -> None:
+        name = str(self.preset_combo.currentData() or "").strip()
+        if not name:
+            return
+        noxforge_ctl.manage_presets("delete", name=name)
+        self.refresh_presets()
+        self.statusChanged.emit(f"Deleted named preset: {name}")
 
     def on_time_changed(self) -> None:
         if self.sched_check.isChecked():
@@ -927,6 +1188,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
 class HealthTab(QtWidgets.QWidget):
     statusChanged = QtCore.Signal(str)
+    themeChanged = QtCore.Signal(str, str)
 
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -1051,7 +1313,7 @@ class HealthTab(QtWidgets.QWidget):
             self._style_health_badge(self.badge_icons, f"● Icons: {'Verified' if icons_ok else 'CHECK'}", icons_ok)
 
             text = "=== NOXFORGE DOCTOR REPORT ===\n"
-            text += f"Schema Version: {data.get('schemaVersion', 13)}\n"
+            text += f"Schema Version: {data.get('schemaVersion', 14)}\n"
             text += f"Status: {status.upper()}\n"
             text += f"Edition: {edition}\n"
             text += f"Package Version: {data.get('packageVersion') or 'local / source'}\n"
@@ -1069,6 +1331,12 @@ class HealthTab(QtWidgets.QWidget):
             text += f"Wayland Compositor Target: {wayland_info.get('targetPlasma', '>=6.8')} ({wayland_info.get('sessionType', 'wayland')})\n"
             text += f"GTK 3/4 & Libadwaita Chain: {gtk_chain.upper()}\n"
             text += f"Flatpak Themes Override: {flatpak}\n"
+            if "qtStyleLoadable" in data:
+                text += f"Qt 6 Native Style Loadable: {data['qtStyleLoadable'].get('status', 'unknown').upper()}\n"
+            if "kwinBlurStatus" in data:
+                text += f"KWin Blur Status: {data['kwinBlurStatus'].get('status', 'unknown').upper()}\n"
+            if "dayNightTimerStatus" in data:
+                text += f"Day/Night Timer: {data['dayNightTimerStatus'].get('status', 'unknown').upper()}\n"
             text += f"Missing Components: {len(missing)}\n"
             if missing:
                 text += "  - " + "\n  - ".join(missing) + "\n"
@@ -1081,9 +1349,17 @@ class HealthTab(QtWidgets.QWidget):
         profile = status.get("profile", "graphite")
         if profile not in ("graphite", "obsidian"):
             profile = "graphite"
-        noxforge_ctl.sync_desktop(profile)
-        self.run_doctor()
-        self.statusChanged.emit(f"Desktop successfully synchronized to {profile.upper()}!")
+
+        def _work() -> dict[str, Any]:
+            return noxforge_ctl.sync_desktop(profile)
+
+        def _done(_res: Any) -> None:
+            self.run_doctor()
+            fresh = noxforge_ctl.get_current_status()
+            self.themeChanged.emit(profile, fresh.get("accentHex", "#A3FF47"))
+            self.statusChanged.emit(f"Desktop successfully synchronized to {profile.upper()}!")
+
+        _run_async(self, _work, _done, lambda err: self.statusChanged.emit(f"Remediation error: {err}"))
 
 
 class AccessibilityTab(QtWidgets.QWidget):
@@ -1208,7 +1484,17 @@ class AccessibilityTab(QtWidgets.QWidget):
 
         self.refresh_state()
 
-    def refresh_state(self) -> None:
+    def refresh_state(self, profile: str | None = None) -> None:
+        if profile is None:
+            status = noxforge_ctl.get_current_status()
+            profile = status.get("profile", "graphite")
+        self._active_profile = profile
+        is_obs = profile == "obsidian"
+        sunken_bg = "#05080A" if is_obs else "#10191F"
+        self.sim_input.setStyleSheet(
+            f"background-color: {sunken_bg}; border: 1px solid #2F414B; border-radius: 5px; "
+            "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
+        )
         if hasattr(noxforge_ctl, "manage_motion"):
             mot = noxforge_ctl.manage_motion("status")
             is_red = bool(mot.get("reducedMotion", False))
@@ -1218,6 +1504,8 @@ class AccessibilityTab(QtWidgets.QWidget):
             self._update_motion_badge(is_red)
 
     def _update_motion_badge(self, is_reduced: bool) -> None:
+        is_obs = getattr(self, "_active_profile", "graphite") == "obsidian"
+        cyan_bg = "#08141A" if is_obs else "#16242C"
         if is_reduced:
             self.motion_status_badge.setText("● Mode: REDUCED MOTION (0ms)")
             self.motion_status_badge.setStyleSheet(
@@ -1227,7 +1515,7 @@ class AccessibilityTab(QtWidgets.QWidget):
         else:
             self.motion_status_badge.setText("● Mode: STANDARD KINETIC")
             self.motion_status_badge.setStyleSheet(
-                "background-color: #16242C; color: #22D3EE; border: 1px solid #22D3EE; "
+                f"background-color: {cyan_bg}; color: #22D3EE; border: 1px solid #22D3EE; "
                 "border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 700;"
             )
 
@@ -1359,6 +1647,37 @@ class EcosystemTab(QtWidgets.QWidget):
         fp_layout.addWidget(self.btn_flatpak_disable)
         layout.addWidget(self.flatpak_group)
 
+        # Fastfetch Kinetic Studio v2 Preset Selector (v21)
+        self.fastfetch_group = QtWidgets.QGroupBox("Fastfetch Kinetic Studio v2")
+        ff_layout = QtWidgets.QHBoxLayout(self.fastfetch_group)
+        ff_lbl = QtWidgets.QLabel("Terminal Telemetry Preset:")
+        ff_lbl.setStyleSheet("color: #A6B4B9;")
+        self.fastfetch_combo = QtWidgets.QComboBox()
+        self.fastfetch_combo.setAccessibleName("Fastfetch Preset Selector")
+        self.fastfetch_combo.addItem("Main Studio (Balanced ANSI Logo + Telemetry)", "main")
+        self.fastfetch_combo.addItem("Cyber Telemetry (Full GPU/WM/Theme Matrix)", "cyber")
+        self.fastfetch_combo.addItem("Minimal Forge (Compact Clean Readout)", "minimal")
+        self.btn_fastfetch_apply = QtWidgets.QPushButton("Apply Fastfetch Preset")
+        self.btn_fastfetch_apply.setAccessibleName("Apply Fastfetch Preset")
+        self.btn_fastfetch_apply.clicked.connect(self.apply_fastfetch_preset)
+        ff_layout.addWidget(ff_lbl)
+        ff_layout.addWidget(self.fastfetch_combo, stretch=1)
+        ff_layout.addWidget(self.btn_fastfetch_apply)
+        layout.addWidget(self.fastfetch_group)
+
+        # Live Search Filter for Ecosystem v4 (25 tools)
+        search_row = QtWidgets.QHBoxLayout()
+        search_lbl = QtWidgets.QLabel("Filter:")
+        search_lbl.setStyleSheet("color: #A6B4B9;")
+        self.search_input = QtWidgets.QLineEdit()
+        self.search_input.setPlaceholderText("Search 25 ecosystem apps (e.g. neovim, firefox, bat, delta, wofi)…")
+        self.search_input.setAccessibleName("Filter Ecosystem Applications")
+        self.search_input.setClearButtonEnabled(True)
+        self.search_input.textChanged.connect(self.filter_ecosystem_table)
+        search_row.addWidget(search_lbl)
+        search_row.addWidget(self.search_input, stretch=1)
+        layout.addLayout(search_row)
+
         # Table for ecosystem apps
         self.table = QtWidgets.QTableWidget()
         self.table.setColumnCount(5)
@@ -1398,6 +1717,23 @@ class EcosystemTab(QtWidgets.QWidget):
         root_layout.addWidget(scroll)
 
         self.refresh_table()
+
+    def apply_fastfetch_preset(self) -> None:
+        preset = str(self.fastfetch_combo.currentData() or "main")
+        if hasattr(noxforge_ctl, "manage_fastfetch"):
+            try:
+                res = noxforge_ctl.manage_fastfetch(preset=preset, action="apply")
+                self.refresh_table()
+                self.statusChanged.emit(f"Fastfetch Kinetic Studio preset applied: {res.get('preset', preset).upper()}")
+            except Exception as err:
+                self.statusChanged.emit(f"Fastfetch preset error: {err}")
+
+    def filter_ecosystem_table(self, query: str) -> None:
+        needle = query.strip().lower()
+        for row in range(self.table.rowCount()):
+            item = self.table.item(row, 0)
+            haystack = ((item.text() if item else "") + " " + (item.toolTip() if item else "")).lower()
+            self.table.setRowHidden(row, bool(needle) and needle not in haystack)
 
     def toggle_flatpak(self, action: str) -> None:
         res = noxforge_ctl.manage_flatpak(action)
@@ -1568,6 +1904,7 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         # Tab 4: Health & Diagnostics
         self.tab_health = HealthTab()
         self.tab_health.statusChanged.connect(self.show_status)
+        self.tab_health.themeChanged.connect(self.refresh_theme)
         self.tabs.addTab(self.tab_health, "System Health && Doctor")
 
         # Tab 5: Ecosystem & Developer Tools
@@ -1634,7 +1971,7 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
         self.tab_profile.refresh_state()
         self.tab_profile._studio_accent_hex = self.active_accent_hex
         self.tab_profile.update_kinetic_studio()
-        self.tab_a11y.refresh_state()
+        self.tab_a11y.refresh_state(profile=self.active_profile)
         self.tab_eco.refresh_table()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
@@ -1684,7 +2021,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv if argv is not None else sys.argv[1:])
 
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
-    app.setStyle("Fusion")
+    available_styles = {key.lower(): key for key in QtWidgets.QStyleFactory.keys()}
+    app.setStyle(available_styles.get("noxforge", "Fusion"))
     win = ControlCenterWindow(initial_tab=args.tab)
     win.show()
     return app.exec()

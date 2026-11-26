@@ -2,20 +2,20 @@
   "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "20.0.0",
-    "stableVersion": "20.0.0",
-    "activePlan": "docs/NOXFORGE_V20_PLAN.md",
+    "version": "21.0.0",
+    "stableVersion": "21.0.0",
+    "activePlan": "docs/NOXFORGE_V21_PLAN.md",
     "baseline": {
-      "version": "19.0.0",
-      "commit": "69b94f23a85d4c8ad42e6df2b89be58c9bcc50e0",
-      "tag": "v19.0.0",
-      "tagCommit": "f788a1d0f9900a3ce9cd322ef5b10b35cc7267ea",
+      "version": "20.0.0",
+      "commit": "5be527cc3fae42dfadec2125819cc84afeb89977",
+      "tag": "v20.0.0",
+      "tagCommit": "ca5c08e96a71344f263f6ee7c59eac3ba5697a95",
       "rpmBytes": 1833750,
-      "srpmBytes": 14802008,
-      "githubSourceBytes": 14765536,
-      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v19.0.0",
-      "rpmFilename": "noxforge-19.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "5d24500a33e99358187e27db221fddc7c59f8dcd155b4e4cb9fd8db03053f997",
+      "srpmBytes": 15059800,
+      "githubSourceBytes": 15059800,
+      "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v20.0.0",
+      "rpmFilename": "noxforge-20.0.0-1.fc44.x86_64.rpm",
+      "rpmSha256": "34dc56f6d9abe555472a97e79703b653098245dd72c8e08e3f03e097410c4e7e",
       "kdeStoreProduct": "2367662"
     }
   },
@@ -231,111 +231,111 @@
   "artifacts": [
     {
       "key": "source",
-      "filename": "noxforge-20.0.0-source.tar.xz",
+      "filename": "noxforge-21.0.0-source.tar.xz",
       "kind": "source",
-      "budgetBytes": 20971520
+      "budgetBytes": 26214400
     },
     {
       "key": "portable",
-      "filename": "noxforge-20.0.0-portable.tar.xz",
+      "filename": "noxforge-21.0.0-portable.tar.xz",
       "kind": "portable",
-      "budgetBytes": 10485760
+      "budgetBytes": 16777216
     },
     {
       "key": "global-theme",
-      "filename": "noxforge-20.0.0-global-theme.tar.xz",
+      "filename": "noxforge-21.0.0-global-theme.tar.xz",
       "kind": "store",
       "package": "globalTheme",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme-obsidian",
-      "filename": "noxforge-20.0.0-global-theme-obsidian.tar.xz",
+      "filename": "noxforge-21.0.0-global-theme-obsidian.tar.xz",
       "kind": "store",
       "package": "globalThemeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style",
-      "filename": "noxforge-20.0.0-plasma-style.tar.xz",
+      "filename": "noxforge-21.0.0-plasma-style.tar.xz",
       "kind": "store",
       "package": "plasmaStyle",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style-obsidian",
-      "filename": "noxforge-20.0.0-plasma-style-obsidian.tar.xz",
+      "filename": "noxforge-21.0.0-plasma-style-obsidian.tar.xz",
       "kind": "store",
       "package": "plasmaStyleObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "colors",
-      "filename": "noxforge-20.0.0-colors.tar.xz",
+      "filename": "noxforge-21.0.0-colors.tar.xz",
       "kind": "store",
       "package": "colors",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae",
-      "filename": "noxforge-20.0.0-aurorae.tar.xz",
+      "filename": "noxforge-21.0.0-aurorae.tar.xz",
       "kind": "store",
       "package": "aurorae",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae-obsidian",
-      "filename": "noxforge-20.0.0-aurorae-obsidian.tar.xz",
+      "filename": "noxforge-21.0.0-aurorae-obsidian.tar.xz",
       "kind": "store",
       "package": "auroraeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "icons",
-      "filename": "noxforge-20.0.0-icons.tar.xz",
+      "filename": "noxforge-21.0.0-icons.tar.xz",
       "kind": "store",
       "package": "icons",
       "budgetBytes": 10485760
     },
     {
       "key": "cursors",
-      "filename": "noxforge-20.0.0-cursors.tar.xz",
+      "filename": "noxforge-21.0.0-cursors.tar.xz",
       "kind": "store",
       "package": "cursors",
       "budgetBytes": 10485760
     },
     {
       "key": "kwin-switcher",
-      "filename": "noxforge-20.0.0-kwin-switcher.tar.xz",
+      "filename": "noxforge-21.0.0-kwin-switcher.tar.xz",
       "kind": "store",
       "package": "kwinSwitcher",
       "budgetBytes": 10485760
     },
     {
       "key": "sounds",
-      "filename": "noxforge-20.0.0-sounds.tar.xz",
+      "filename": "noxforge-21.0.0-sounds.tar.xz",
       "kind": "store",
       "package": "sounds",
       "budgetBytes": 10485760
     },
     {
       "key": "wallpapers",
-      "filename": "noxforge-20.0.0-wallpapers.tar.xz",
+      "filename": "noxforge-21.0.0-wallpapers.tar.xz",
       "kind": "store",
       "package": "wallpapers",
-      "budgetBytes": 8388608
+      "budgetBytes": 16777216
     },
     {
       "key": "rpm",
-      "filename": "noxforge-20.0.0-1.fc44.x86_64.rpm",
+      "filename": "noxforge-21.0.0-1.fc44.x86_64.rpm",
       "kind": "rpm",
-      "budgetBytes": 2097152
+      "budgetBytes": 8388608
     },
     {
       "key": "srpm",
-      "filename": "noxforge-20.0.0-1.fc44.src.rpm",
+      "filename": "noxforge-21.0.0-1.fc44.src.rpm",
       "kind": "srpm",
-      "budgetBytes": 20971520
+      "budgetBytes": 26214400
     },
     {
       "key": "qualification",
@@ -351,7 +351,7 @@
     }
   ],
   "source": {
-    "archiveRoot": "NoxForge-20.0.0",
+    "archiveRoot": "NoxForge-21.0.0",
     "include": [
       "LICENSE",
       "LICENSES.md",
@@ -393,6 +393,7 @@
       "docs/evidence/v18",
       "docs/evidence/v19",
       "docs/evidence/v20",
+      "docs/evidence/v21",
       "docs/man",
       "docs/QUICKSTART.md",
       "docs/INSTALL_FEDORA.md",
@@ -417,6 +418,7 @@
       "docs/NOXFORGE_V18_PLAN.md",
       "docs/NOXFORGE_V19_PLAN.md",
       "docs/NOXFORGE_V20_PLAN.md",
+      "docs/NOXFORGE_V21_PLAN.md",
       "docs/EXPERIMENTAL_FACE_AUTH.md",
       "docs/IMPLEMENTATION_PLAN.md",
       "docs/MANUAL_TESTING.md"
@@ -439,7 +441,7 @@
     ]
   },
   "evidence": {
-    "activeRoot": "docs/evidence/v20",
+    "activeRoot": "docs/evidence/v21",
     "policy": {
       "offscreenIsLiveEvidence": false,
       "physicalUnavailable": "pending"

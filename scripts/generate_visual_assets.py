@@ -9,6 +9,25 @@ import json
 import sys
 from pathlib import Path
 
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+try:
+    from .duotone_icons import (
+        MONOLINE_PLACES_OVERRIDE,
+        build_duotone_apps_specs,
+        build_duotone_mimetype_specs,
+        build_duotone_places_specs,
+    )
+except ImportError:
+    from duotone_icons import (
+        MONOLINE_PLACES_OVERRIDE,
+        build_duotone_apps_specs,
+        build_duotone_mimetype_specs,
+        build_duotone_places_specs,
+    )
+
 ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
 AURORAE_OBSIDIAN = ROOT / "aurorae/io.github.loofiboss.noxforge.obsidian.desktop"
@@ -641,6 +660,9 @@ ICON_ALIASES = {
     "status/dialog-question.svg": "status/dialog-information.svg",
     "status/dialog-password.svg": "status/security-high.svg",
     "status/task-complete.svg": "status/security-high.svg",
+    "apps/noxforge-controlcenter.svg": "apps/io.github.loofiboss.noxforge.controlcenter.svg",
+    "apps/noxforge-opacity.svg": "apps/io.github.loofiboss.noxforge.opacity.svg",
+    "apps/visual-studio-code.svg": "apps/code.svg",
 }
 
 # Only names that are actual semantic synonyms remain byte-identical. Every
@@ -652,6 +674,9 @@ TRUE_SYNONYM_ALIASES = {
     "applets/battery-full.svg",
     "applets/battery-full-symbolic.svg",
     "applets/camera-on-symbolic.svg",
+    "apps/noxforge-controlcenter.svg",
+    "apps/noxforge-opacity.svg",
+    "apps/visual-studio-code.svg",
     "categories/preferences-system.svg",
     "devices/network-wired.svg",
     "devices/network-wireless.svg",
@@ -667,6 +692,9 @@ DUPLICATE_ALLOWLIST = (
     ("applets/camera-on-symbolic.svg", "devices/camera-photo.svg"),
     ("applets/audio-volume-high-symbolic.svg", "status/audio-volume-high.svg"),
     ("applets/battery-full-symbolic.svg", "applets/battery-full.svg", "status/battery-good.svg"),
+    ("apps/io.github.loofiboss.noxforge.controlcenter.svg", "apps/noxforge-controlcenter.svg"),
+    ("apps/io.github.loofiboss.noxforge.opacity.svg", "apps/noxforge-opacity.svg"),
+    ("apps/code.svg", "apps/visual-studio-code.svg"),
     ("categories/applications-internet.svg", "preferences/preferences-system-network.svg"),
     ("devices/network-wired.svg", "status/network-wired-activated.svg", "status/network-wired.svg"),
     ("devices/network-wireless.svg", "status/network-wireless-connected-100.svg", "status/network-wireless.svg"),
@@ -709,6 +737,9 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
     </style>
     <style id="noxforge-icon-style" type="text/css">
       .text-fill {{ color: {COLORS["textPrimary"]}; fill: currentColor; opacity: 0.92; stroke: none; }}
+      .surface-plate {{ fill: {COLORS["surfaceRaised"]}; fill-opacity: 0.90; stroke: none; }}
+      .surface-tab {{ fill: {COLORS["surface"]}; fill-opacity: 0.92; stroke: none; }}
+      .surface-bevel {{ stroke: {COLORS["edgeHighlight"]}; stroke-width: 1; opacity: 0.72; }}
       .accent {{ color: {COLORS["detailCyan"]}; stroke: currentColor; }}
       .accent-fill {{ color: {COLORS["detailCyan"]}; fill: currentColor; stroke: none; }}
       .lime {{ color: {COLORS["accent"]}; stroke: currentColor; }}
@@ -729,7 +760,18 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
 '''
 
 
-def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float, *, active: bool) -> str:
+def decoration_frame(
+    prefix: str,
+    x: int,
+    y: int,
+    css_class: str,
+    opacity: float,
+    *,
+    active: bool,
+    shadow: bool = True,
+    maximized: bool = False,
+) -> str:
+    """Build Aurorae v2 9-patch frame with optional stepped ambient shadow & flat maximized corners."""
     def name(position: str) -> str:
         return f"{prefix}-{position}"
 
@@ -737,74 +779,126 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
     border_class = "NoxForge-EdgeHighlight" if active else "NoxForge-OutlineMuted"
     b_fill = f'class="{border_class}" fill="currentColor"'
     b_attr = f'class="{border_class}" stroke="currentColor" fill="none" stroke-width="1"'
+    s_fill = 'class="NoxForge-OverlayShadow" fill="currentColor"'
 
-    top = (
-        f'<g id="{name("top")}">'
-        f'<rect x="{x + 6}" y="{y}" width="28" height="6" {attr}/>'
-        f'<rect x="{x + 6}" y="{y}" width="28" height="1" {b_fill}/>'
-    )
+    pl = 12 if shadow else 0
+    pr = 12 if shadow else 0
+    pt = 8 if shadow else 0
+    pb = 16 if shadow else 0
+    fx = x + pl
+    fy = y + pt
+
+    top = f'<g id="{name("top")}">'
+    if shadow:
+        top += f'<rect x="{fx + 6}" y="{y + 2}" width="28" height="6" {s_fill} fill-opacity="0.14"/>'
+        top += f'<rect x="{fx + 6}" y="{y + 5}" width="28" height="3" {s_fill} fill-opacity="0.28"/>'
+    top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="6" {attr}/>'
+    top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="1" {b_fill}/>'
     if active:
         rail = EDGE_POLISH["aurorae"]
         top += (
-            f'<path d="M{x + 8} {y + 1}h{rail["activeRailLength"]}" '
+            f'<path d="M{fx + 8} {fy + 1}h{rail["activeRailLength"]}" '
             'class="ColorScheme-Highlight" stroke="currentColor" '
             f'stroke-width="{rail["activeRailThickness"]}"/>'
         )
     top += "</g>"
 
-    topleft = (
-        f'<g id="{name("topleft")}">'
-        f'<path d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attr}/>'
-        f'<rect x="{x + 4}" y="{y}" width="2" height="1" {b_fill}/>'
-        f'<line x1="{x + 4}" y1="{y}" x2="{x}" y2="{y + 4}" {b_attr}/>'
-        f'<rect x="{x}" y="{y + 4}" width="1" height="2" {b_fill}/>'
-        f'</g>'
-    )
-    topright = (
-        f'<g id="{name("topright")}">'
-        f'<path d="M{x + 34} {y}A6 6 0 0 1 {x + 40} {y + 6}H{x + 34}Z" {attr}/>'
-        f'<path d="M{x + 34} {y + 0.5}A5.5 5.5 0 0 1 {x + 39.5} {y + 6}" {b_attr}/>'
-        f'</g>'
-    )
-    left = (
-        f'<g id="{name("left")}">'
-        f'<rect x="{x}" y="{y + 6}" width="6" height="28" {attr}/>'
-        f'<rect x="{x}" y="{y + 6}" width="1" height="28" {b_fill}/>'
-        f'</g>'
-    )
-    center = f'<rect id="{name("center")}" x="{x + 6}" y="{y + 6}" width="28" height="28" {attr}/>'
-    right = (
-        f'<g id="{name("right")}">'
-        f'<rect x="{x + 34}" y="{y + 6}" width="6" height="28" {attr}/>'
-        f'<rect x="{x + 39}" y="{y + 6}" width="1" height="28" {b_fill}/>'
-        f'</g>'
-    )
-    bottomleft = (
-        f'<g id="{name("bottomleft")}">'
-        f'<path d="M{x} {y + 34}H{x + 6}V{y + 40}A6 6 0 0 1 {x} {y + 34}Z" {attr}/>'
-        f'<path d="M{x + 6} {y + 39.5}A5.5 5.5 0 0 1 {x + 0.5} {y + 34}" {b_attr}/>'
-        f'</g>'
-    )
-    bottom = (
-        f'<g id="{name("bottom")}">'
-        f'<rect x="{x + 6}" y="{y + 34}" width="28" height="6" {attr}/>'
-        f'<rect x="{x + 6}" y="{y + 39}" width="28" height="1" {b_fill}/>'
-        f'</g>'
-    )
-    bottomright = (
-        f'<g id="{name("bottomright")}">'
-        f'<path d="M{x + 34} {y + 34}H{x + 40}A6 6 0 0 1 {x + 34} {y + 40}Z" {attr}/>'
-        f'<path d="M{x + 39.5} {y + 34}A5.5 5.5 0 0 1 {x + 34} {y + 39.5}" {b_attr}/>'
-        f'</g>'
-    )
+    if maximized:
+        topleft = (
+            f'<g id="{name("topleft")}">'
+            f'<rect x="{fx}" y="{fy}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx}" y="{fy}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        topright = (
+            f'<g id="{name("topright")}">'
+            f'<rect x="{fx + 34}" y="{fy}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx + 34}" y="{fy}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        bottomleft = (
+            f'<g id="{name("bottomleft")}">'
+            f'<rect x="{fx}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        bottomright = (
+            f'<g id="{name("bottomright")}">'
+            f'<rect x="{fx + 34}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx + 34}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+    else:
+        topleft = f'<g id="{name("topleft")}">'
+        if shadow:
+            topleft += f'<rect x="{x + 4}" y="{y + 2}" width="{pl + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
+            topleft += f'<rect x="{x + 8}" y="{y + 5}" width="{pl - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
+        topleft += (
+            f'<path d="M{fx + 4} {fy}H{fx + 6}V{fy + 6}H{fx}V{fy + 4}Z" {attr}/>'
+            f'<rect x="{fx + 4}" y="{fy}" width="2" height="1" {b_fill}/>'
+            f'<line x1="{fx + 4}" y1="{fy}" x2="{fx}" y2="{fy + 4}" {b_attr}/>'
+            f'<rect x="{fx}" y="{fy + 4}" width="1" height="2" {b_fill}/>'
+            f'</g>'
+        )
+        topright = f'<g id="{name("topright")}">'
+        if shadow:
+            topright += f'<rect x="{fx + 34}" y="{y + 2}" width="{pr + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
+            topright += f'<rect x="{fx + 34}" y="{y + 5}" width="{pr - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
+        topright += (
+            f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 34}Z" {attr}/>'
+            f'<path d="M{fx + 34} {fy + 0.5}A5.5 5.5 0 0 1 {fx + 39.5} {fy + 6}" {b_attr}/>'
+            f'</g>'
+        )
+        bottomleft = f'<g id="{name("bottomleft")}">'
+        if shadow:
+            bottomleft += f'<rect x="{x + 2}" y="{fy + 34}" width="{pl + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
+            bottomleft += f'<rect x="{x + 6}" y="{fy + 34}" width="{pl}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
+            bottomleft += f'<rect x="{x + 9}" y="{fy + 34}" width="{pl - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
+        bottomleft += (
+            f'<path d="M{fx} {fy + 34}H{fx + 6}V{fy + 40}A6 6 0 0 1 {fx} {fy + 34}Z" {attr}/>'
+            f'<path d="M{fx + 6} {fy + 39.5}A5.5 5.5 0 0 1 {fx + 0.5} {fy + 34}" {b_attr}/>'
+            f'</g>'
+        )
+        bottomright = f'<g id="{name("bottomright")}">'
+        if shadow:
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
+        bottomright += (
+            f'<path d="M{fx + 34} {fy + 34}H{fx + 40}A6 6 0 0 1 {fx + 34} {fy + 40}Z" {attr}/>'
+            f'<path d="M{fx + 39.5} {fy + 34}A5.5 5.5 0 0 1 {fx + 34} {fy + 39.5}" {b_attr}/>'
+            f'</g>'
+        )
+
+    left = f'<g id="{name("left")}">'
+    if shadow:
+        left += f'<rect x="{x + 2}" y="{fy + 6}" width="{pl - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
+        left += f'<rect x="{x + 6}" y="{fy + 6}" width="{pl - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+    left += f'<rect x="{fx}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
+
+    center = f'<rect id="{name("center")}" x="{fx + 6}" y="{fy + 6}" width="28" height="28" {attr}/>'
+
+    right = f'<g id="{name("right")}">'
+    if shadow:
+        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
+        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+    right += f'<rect x="{fx + 34}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx + 39}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
+
+    bottom = f'<g id="{name("bottom")}">'
+    if shadow:
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb}" {s_fill} fill-opacity="0.12"/>'
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 5}" {s_fill} fill-opacity="0.24"/>'
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 10}" {s_fill} fill-opacity="0.38"/>'
+    bottom += f'<rect x="{fx + 6}" y="{fy + 34}" width="28" height="6" {attr}/><rect x="{fx + 6}" y="{fy + 39}" width="28" height="1" {b_fill}/></g>'
 
     return "\n".join([topleft, top, topright, left, center, right, bottomleft, bottom, bottomright])
 
 
 def decoration_svg(colors: dict[str, str] = COLORS) -> str:
-    active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True)
-    inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-Sunken", 0.9, active=False)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="92" height="40" viewBox="0 0 92 40">
+    active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True, shadow=True, maximized=False)
+    inactive = decoration_frame("decoration-inactive", 76, 0, "ColorScheme-Sunken", 0.9, active=False, shadow=True, maximized=False)
+    maximized = decoration_frame("decoration-maximized", 152, 8, "ColorScheme-Raised", 1.0, active=True, shadow=False, maximized=True)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="200" height="64" viewBox="0 0 200 64">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Raised {{ color: {colors["surfaceRaised"]}; }}
@@ -812,10 +906,12 @@ def decoration_svg(colors: dict[str, str] = COLORS) -> str:
       .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
       .NoxForge-EdgeHighlight {{ color: {colors["edgeHighlight"]}; }}
       .NoxForge-OutlineMuted {{ color: {colors["border"]}; }}
+      .NoxForge-OverlayShadow {{ color: {colors.get("shadowOverlay", "#050708")}; }}
     ]]></style>
   </defs>
   {active}
   {inactive}
+  {maximized}
 </svg>
 '''
 
@@ -914,6 +1010,9 @@ def write_aurorae_svg(target_dir: Path, name: str, content: str) -> None:
 
 
 def main() -> None:
+    duotone_places = build_duotone_places_specs(TOKENS["accents"])
+    duotone_mimetypes = build_duotone_mimetype_specs()
+    duotone_apps = build_duotone_apps_specs()
     specs = {
         **ICON_SPECS,
         **CORE_ICON_SPECS,
@@ -923,6 +1022,9 @@ def main() -> None:
         **V7_CORE_ICON_SPECS,
         **V15_ICON_SPECS,
         **V20_KINETIC_ICON_SPECS,
+        **duotone_places,
+        **duotone_mimetypes,
+        **duotone_apps,
     }
     effective_aliases: dict[str, str] = {}
 
@@ -951,12 +1053,27 @@ def main() -> None:
         relative: body for relative, body in specs.items()
         if relative.startswith(optical_contexts)
     }
+    duotone_contexts = ("apps/", "places/", "mimetypes/")
+    duotone_optical = {
+        relative: body for relative, body in specs.items()
+        if relative.startswith(duotone_contexts)
+    }
+    small_optical_count = 0
     for size in fixture["opticalSizes"]:
         for relative, body in sorted(optical.items()):
+            small_body = MONOLINE_PLACES_OVERRIDE.get(relative, body)
             if relative == "animations/process-working.svg":
                 write(ICONS / f"{size}x{size}" / relative, process_working_sprite_svg(size, frames=16))
             else:
-                write(ICONS / f"{size}x{size}" / relative, icon_svg(body, size))
+                write(ICONS / f"{size}x{size}" / relative, icon_svg(small_body, size))
+            small_optical_count += 1
+    duotone_sizes = (32, 48, 64)
+    duotone_optical_count = 0
+    for size in duotone_sizes:
+        for relative, body in sorted(duotone_optical.items()):
+            write(ICONS / f"{size}x{size}" / relative, icon_svg(body, size))
+            duotone_optical_count += 1
+    total_optical_count = small_optical_count + duotone_optical_count
     categories: dict[str, int] = {}
     for relative in specs:
         category = relative.split("/", 1)[0]
@@ -967,9 +1084,11 @@ def main() -> None:
             {
                 "schemaVersion": 3,
                 "iconCount": len(specs),
-                "opticalCount": len(optical) * 2,
-                "opticalSizes": fixture["opticalSizes"],
-                "opticalStrokeWidths": {"16": 1.9, "22": 1.75},
+                "opticalCount": total_optical_count,
+                "opticalSizes": [16, 22, 32, 48, 64],
+                "smallOpticalCount": small_optical_count,
+                "duotoneOpticalCount": duotone_optical_count,
+                "opticalStrokeWidths": {"16": 1.9, "22": 1.75, "32": 1.7, "48": 1.7, "64": 1.7},
                 "runtimeFixture": sorted(required),
                 "runtimeFixtureSource": fixture["source"],
                 "phase6Priority": EDGE_POLISH["icons"]["priority"],
@@ -995,12 +1114,12 @@ def main() -> None:
         raise SystemExit(1)
     if CHECK:
         print(
-            f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+            f"Verified {len(specs)} scalable icons, {total_optical_count} optical variants "
             f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
         )
         return
     print(
-        f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+        f"Generated {len(specs)} scalable icons, {total_optical_count} optical variants "
         f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
     )
 

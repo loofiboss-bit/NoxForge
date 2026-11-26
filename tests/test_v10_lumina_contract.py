@@ -28,10 +28,12 @@ class LuminaContractTests(unittest.TestCase):
         )
         general = parser["General"]
         layout = parser["Layout"]
-        self.assertEqual(general["shadow"].lower(), "false")
+        self.assertEqual(general["shadow"].lower(), "true")
         self.assertEqual(general.get("rightbuttons"), "IAX")
-        for key in ("paddingtop", "paddingbottom", "paddingleft", "paddingright"):
-            self.assertTrue(key not in layout or int(layout[key]) == 0)
+        self.assertEqual(int(layout["paddingtop"]), 8)
+        self.assertEqual(int(layout["paddingbottom"]), 16)
+        self.assertEqual(int(layout["paddingleft"]), 12)
+        self.assertEqual(int(layout["paddingright"]), 12)
         self.assertFalse(
             any(key.startswith(("activeshadow", "inactiveshadow")) for key in general)
         )

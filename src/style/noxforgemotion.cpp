@@ -4,11 +4,14 @@
 #include "noxforgepalette.h"
 
 #include <QAbstractButton>
+#include <QAbstractItemView>
 #include <QAbstractSlider>
 #include <QAbstractSpinBox>
 #include <QComboBox>
 #include <QEvent>
+#include <QHoverEvent>
 #include <QKeyEvent>
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <QProgressBar>
 #include <QPushButton>
@@ -60,7 +63,9 @@ bool NoxForgeMotion::supports(const QWidget *widget)
         || qobject_cast<const QComboBox *>(widget)
         || qobject_cast<const QAbstractSpinBox *>(widget)
         || qobject_cast<const QAbstractSlider *>(widget)
-        || qobject_cast<const QProgressBar *>(widget);
+        || qobject_cast<const QProgressBar *>(widget)
+        || qobject_cast<const QLineEdit *>(widget)
+        || qobject_cast<const QAbstractItemView *>(widget);
 }
 
 bool NoxForgeMotion::checked(const QWidget *widget)
@@ -158,6 +163,16 @@ void NoxForgeMotion::setDurationScale(qreal scale)
             item.elapsedMs = 0;
             item.durationMs = 0;
         }
+        for (auto tabIt = state->tabHover.begin(); tabIt != state->tabHover.end(); ) {
+            tabIt->current = tabIt->target;
+            tabIt->start = tabIt->target;
+            tabIt->elapsedMs = 0;
+            tabIt->durationMs = 0;
+            if (qFuzzyIsNull(tabIt->current) && qFuzzyIsNull(tabIt->target))
+                tabIt = state->tabHover.erase(tabIt);
+            else
+                ++tabIt;
+        }
         state->busyVisible = state->busyRequested;
         state->busyPhase = 0.5;
         state->busyPendingMs = 0;
@@ -190,6 +205,46 @@ void NoxForgeMotion::setTarget(QWidget *widget, Channel channel, bool target)
     item.durationMs = duration(channel);
     if (item.durationMs == 0)
         item.current = item.target;
+    widget->update();
+    updateTimer();
+}
+
+void NoxForgeMotion::setHoveredTab(QWidget *widget, int tabIndex)
+{
+    auto found = m_states.find(widget);
+    if (found == m_states.end())
+        return;
+    if (!found->hoverEffectsEnabled)
+        tabIndex = -1;
+    if (found->hoveredTab == tabIndex)
+        return;
+    const int prev = found->hoveredTab;
+    found->hoveredTab = tabIndex;
+    const int dur = duration(Channel::Hover);
+    auto setTabTarget = [dur](QHash<int, Transition> &map, int idx, qreal target) {
+        if (idx < 0)
+            return;
+        Transition &tr = map[idx];
+        if (qFuzzyCompare(tr.target + 1.0, target + 1.0))
+            return;
+        tr.start = tr.current;
+        tr.target = target;
+        tr.elapsedMs = 0;
+        tr.durationMs = dur;
+        if (tr.durationMs == 0)
+            tr.current = tr.target;
+    };
+    if (prev >= 0)
+        setTabTarget(found->tabHover, prev, 0.0);
+    if (tabIndex >= 0)
+        setTabTarget(found->tabHover, tabIndex, 1.0);
+    // Prune zeroed transitions immediately when reduced motion snaps them
+    for (auto it = found->tabHover.begin(); it != found->tabHover.end(); ) {
+        if (qFuzzyIsNull(it->current) && qFuzzyIsNull(it->target))
+            it = found->tabHover.erase(it);
+        else
+            ++it;
+    }
     widget->update();
     updateTimer();
 }
@@ -232,9 +287,21 @@ bool NoxForgeMotion::eventFilter(QObject *watched, QEvent *event)
         if (m_states.value(widget).hoverEffectsEnabled)
             setTarget(widget, Channel::Hover, true);
         break;
+    case QEvent::HoverMove:
+    case QEvent::MouseMove:
+        if (auto *tabBar = qobject_cast<QTabBar *>(widget)) {
+            const QPoint pos = event->type() == QEvent::HoverMove
+                ? static_cast<QHoverEvent *>(event)->position().toPoint()
+                : static_cast<QMouseEvent *>(event)->position().toPoint();
+            setHoveredTab(widget, tabBar->isEnabled() ? tabBar->tabAt(pos) : -1);
+        }
+        break;
+    case QEvent::HoverLeave:
     case QEvent::Leave:
         setTarget(widget, Channel::Hover, false);
         setTarget(widget, Channel::Press, false);
+        if (qobject_cast<QTabBar *>(widget))
+            setHoveredTab(widget, -1);
         break;
     case QEvent::FocusIn:
         setTarget(widget, Channel::Focus, true);
@@ -272,6 +339,8 @@ bool NoxForgeMotion::eventFilter(QObject *watched, QEvent *event)
         if (!widget->isEnabled()) {
             setTarget(widget, Channel::Hover, false);
             setTarget(widget, Channel::Press, false);
+            if (qobject_cast<QTabBar *>(widget))
+                setHoveredTab(widget, -1);
         }
         break;
     case QEvent::Hide: {
@@ -281,6 +350,8 @@ bool NoxForgeMotion::eventFilter(QObject *watched, QEvent *event)
             found->busyVisible = false;
             found->busyPendingMs = 0;
             found->busyVisibleMs = 0;
+            found->hoveredTab = -1;
+            found->tabHover.clear();
             for (Channel channel : {Channel::Hover, Channel::Focus, Channel::Press,
                                     Channel::Checked}) {
                 Transition &item = transition(found.value(), channel);
@@ -315,6 +386,23 @@ qreal NoxForgeMotion::value(const QWidget *widget, Channel channel, bool target)
         const auto found = m_states.constFind(const_cast<QWidget *>(widget));
         if (found != m_states.cend())
             return transition(found.value(), channel).current;
+    }
+    return target ? 1.0 : 0.0;
+}
+
+qreal NoxForgeMotion::tabHoverValue(const QWidget *widget, int tabIndex, bool target) const
+{
+    if (widget && tabIndex >= 0) {
+        const QVariant forced = widget->property("_noxforgeMotionTestTabHover");
+        if (forced.isValid())
+            return target ? qBound(0.0, forced.toDouble(), 1.0) : 0.0;
+        const auto found = m_states.constFind(const_cast<QWidget *>(widget));
+        if (found != m_states.cend()) {
+            const auto tabIt = found->tabHover.constFind(tabIndex);
+            if (tabIt != found->tabHover.cend())
+                return tabIt->current;
+            return target ? 1.0 : 0.0;
+        }
     }
     return target ? 1.0 : 0.0;
 }
@@ -366,6 +454,26 @@ void NoxForgeMotion::advance(int elapsedMs)
             if (progress >= 1.0)
                 item.current = item.target;
             repaint = true;
+        }
+        for (auto tabIt = state->tabHover.begin(); tabIt != state->tabHover.end(); ) {
+            if (!transitionActive(*tabIt)) {
+                if (qFuzzyIsNull(tabIt->current) && qFuzzyIsNull(tabIt->target))
+                    tabIt = state->tabHover.erase(tabIt);
+                else
+                    ++tabIt;
+                continue;
+            }
+            tabIt->elapsedMs += elapsedMs;
+            const qreal progress = tabIt->durationMs > 0
+                ? qreal(tabIt->elapsedMs) / qreal(tabIt->durationMs) : 1.0;
+            tabIt->current = tabIt->start + (tabIt->target - tabIt->start) * eased(progress);
+            if (progress >= 1.0)
+                tabIt->current = tabIt->target;
+            repaint = true;
+            if (qFuzzyIsNull(tabIt->current) && qFuzzyIsNull(tabIt->target))
+                tabIt = state->tabHover.erase(tabIt);
+            else
+                ++tabIt;
         }
         if (state->busyRequested && !state->busyVisible && m_durationScale > 0.0) {
             state->busyPendingMs += elapsedMs;
@@ -420,6 +528,8 @@ void NoxForgeMotion::updateTimer()
         for (Channel channel : {Channel::Hover, Channel::Focus, Channel::Press,
                                 Channel::Checked})
             active = active || transitionActive(transition(state.value(), channel));
+        for (auto tabIt = state->tabHover.cbegin(); tabIt != state->tabHover.cend() && !active; ++tabIt)
+            active = active || transitionActive(*tabIt);
     }
     if (active && !m_timer.isActive()) {
         m_clock.start();

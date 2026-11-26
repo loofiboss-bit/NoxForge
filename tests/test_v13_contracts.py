@@ -78,8 +78,8 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
         self.assertTrue((aurorae_dir / "decoration.svg").is_file())
         rc = (aurorae_dir / "io.github.loofiboss.noxforge.obsidian.desktoprc").read_text(encoding="utf-8")
         self.assertIn("BorderLeft=6", rc)
-        self.assertIn("PaddingTop=0", rc)
-        self.assertIn("Shadow=false", rc)
+        self.assertIn("PaddingTop=8", rc)
+        self.assertIn("Shadow=true", rc)
 
     def test_wallpapers_and_sddm_obsidian_exist(self) -> None:
         self.assertTrue((ROOT / "wallpapers/NoxForge-Obsidian/metadata.json").is_file())
@@ -118,7 +118,7 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
                 cwd=ROOT,
             )
         report = json.loads(result.stdout)
-        self.assertIn(report["schemaVersion"], (6, 7, 8, 9, 10, 11, 12, 13))
+        self.assertIn(report["schemaVersion"], (6, 7, 8, 9, 10, 11, 12, 13, 14))
         self.assertIn("paletteSynchronization", report)
         self.assertIn("editor-neovim", report["missing"])
         self.assertIn("editor-neovim-obsidian", report["missing"])

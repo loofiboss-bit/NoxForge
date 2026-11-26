@@ -40,13 +40,13 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["release"]["version"], version)
-        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V19_PLAN.md", "docs/NOXFORGE_V20_PLAN.md"))
+        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V19_PLAN.md", "docs/NOXFORGE_V20_PLAN.md", "docs/NOXFORGE_V21_PLAN.md"))
         self.assertEqual(manifest["compatibility"]["arch"]["plasma"], ">=6.8")
-        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v19", "docs/evidence/v20"))
+        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v19", "docs/evidence/v20", "docs/evidence/v21"))
         self.assertIn("union", manifest["source"]["include"])
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (15, 16))
+        self.assertIn(tokens["schemaVersion"], (15, 16, 17))
         self.assertEqual(tokens["version"], version)
         self.assertIn("union", tokens)
         self.assertEqual(tokens["union"]["engineVersion"], "6.8")
@@ -66,7 +66,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             self.assertEqual(meta["input-type"], "css")
             self.assertEqual(meta["input-version"], 1)
-            self.assertIn(meta["version"], ("19.0.0", "20.0.0"))
+            self.assertIn(meta["version"], ("19.0.0", "20.0.0", "21.0.0"))
             self.assertEqual(meta["license"], "MIT")
 
             vars_css = (style_dir / "contents/css/variables.css").read_text(encoding="utf-8")
@@ -76,10 +76,13 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
 
             style_css = (style_dir / "contents/css/style.css").read_text(encoding="utf-8")
             self.assertIn('@import "variables.css";', style_css)
-            self.assertIn("applicationwindow {", style_css)
-            self.assertIn("toolbutton,", style_css)
-            self.assertIn("tabbutton {", style_css)
-            self.assertIn("abstractcard {", style_css)
+            combined_css = "\n".join(
+                p.read_text(encoding="utf-8") for p in sorted((style_dir / "contents/css").glob("*.css"))
+            )
+            self.assertIn("applicationwindow {", combined_css)
+            self.assertIn("toolbutton,", combined_css)
+            self.assertIn("tabbutton {", combined_css)
+            self.assertIn("abstractcard {", combined_css)
 
     def test_union_and_kwin_csd_cli_lifecycle(self) -> None:
         ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v19_union")
@@ -172,7 +175,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             root = Path(temp)
             stage_complete(root)
             report = doctor_fn["build_report"](root)
-            self.assertIn(report["schemaVersion"], (12, 13))
+            self.assertIn(report["schemaVersion"], (12, 13, 14))
             self.assertEqual(report["status"], "ok")
             self.assertIn("unionStyleStatus", report)
             self.assertIn("waylandCompositor", report)

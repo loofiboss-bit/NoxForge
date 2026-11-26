@@ -111,7 +111,7 @@ class RollingReleaseContractTests(unittest.TestCase):
         )
         self.assertEqual(res.returncode, 0, f"doctor failed: {res.stderr}")
         report = json.loads(res.stdout)
-        self.assertIn(report["schemaVersion"], (9, 10, 11, 12, 13))
+        self.assertIn(report["schemaVersion"], (9, 10, 11, 12, 13, 14))
         self.assertIn("qmlVariantDrift", report)
         self.assertIn("reducedMotion", report)
         self.assertIn("customAccentContrast", report)
@@ -120,7 +120,7 @@ class RollingReleaseContractTests(unittest.TestCase):
 
         qml = report["qmlVariantDrift"]
         self.assertEqual(qml["status"], "ok")
-        self.assertIn(qml["checked"], (6, 12))
+        self.assertIn(qml["checked"], (6, 12, 18))
         self.assertEqual(qml["drift"], [])
 
         motion = report["reducedMotion"]

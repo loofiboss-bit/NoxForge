@@ -43,6 +43,27 @@
         "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
         "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/logout/Logout.qml"
       ]
+    },
+    {
+      "source": "qml/shared/osd/Osd.qml",
+      "outputs": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/Osd.qml",
+        "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/osd/Osd.qml"
+      ]
+    },
+    {
+      "source": "qml/shared/osd/OsdItem.qml",
+      "outputs": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/OsdItem.qml",
+        "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/osd/OsdItem.qml"
+      ]
+    },
+    {
+      "source": "qml/shared/systemdialog/SystemDialog.qml",
+      "outputs": [
+        "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/systemdialog/SystemDialog.qml",
+        "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/systemdialog/SystemDialog.qml"
+      ]
     }
   ]
 }

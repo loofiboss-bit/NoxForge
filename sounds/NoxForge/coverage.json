@@ -1,37 +1,37 @@
 {
   "events": {
     "alarm-clock-elapsed": "alarm",
-    "audio-volume-change": "tick",
-    "battery-caution": "warning",
-    "battery-low": "warning",
-    "bell-window-system": "tick",
-    "button-pressed": "tick",
-    "button-pressed-modifier": "tick",
+    "audio-volume-change": "volume",
+    "battery-caution": "battery-warn",
+    "battery-low": "battery-warn",
+    "bell-window-system": "bell",
+    "button-pressed": "button",
+    "button-pressed-modifier": "modifier",
     "completion-fail": "error",
-    "completion-partial": "warning",
-    "completion-rotation": "tick",
+    "completion-partial": "completion-partial",
+    "completion-rotation": "completion-rotation",
     "completion-success": "success",
     "desktop-login": "login",
     "desktop-logout": "logout",
     "device-added": "device-added",
     "device-removed": "device-removed",
     "dialog-error": "error",
-    "dialog-error-serious": "error",
+    "dialog-error-serious": "outcome-failure",
     "dialog-information": "message",
-    "dialog-question": "message",
+    "dialog-question": "question",
     "dialog-warning": "warning",
     "dialog-warning-auth": "warning",
-    "message-new-email": "message",
+    "message-new-email": "email",
     "message-new-instant": "message",
-    "outcome-failure": "error",
-    "outcome-success": "success",
-    "phone-incoming-call": "alarm",
-    "power-plug": "device-added",
-    "power-unplug": "device-removed",
-    "service-login": "login",
-    "service-logout": "logout",
+    "outcome-failure": "outcome-failure",
+    "outcome-success": "outcome-success",
+    "phone-incoming-call": "incoming-call",
+    "power-plug": "power-plug",
+    "power-unplug": "power-unplug",
+    "service-login": "service-login",
+    "service-logout": "service-logout",
     "theme-demo": "login",
-    "trash-empty": "device-removed"
+    "trash-empty": "trash"
   },
   "normalization": {
     "alarmTargetRmsDbfs": -20.0,
@@ -49,25 +49,91 @@
         880.0,
         440.0
       ],
-      "peakDbfs": -7.511,
+      "peakDbfs": -7.215,
+      "profile": "chime",
       "rmsDbfs": -20.0
+    },
+    "battery-warn": {
+      "durationMs": 380,
+      "frequenciesHz": [
+        392.0,
+        293.66
+      ],
+      "peakDbfs": -11.164,
+      "profile": "warm",
+      "rmsDbfs": -23.0
+    },
+    "bell": {
+      "durationMs": 180,
+      "frequenciesHz": [
+        1046.5,
+        1567.98
+      ],
+      "peakDbfs": -11.462,
+      "profile": "chime",
+      "rmsDbfs": -23.0
+    },
+    "button": {
+      "durationMs": 82,
+      "frequenciesHz": [
+        830.6,
+        1244.5
+      ],
+      "peakDbfs": -11.08,
+      "profile": "anvil",
+      "rmsDbfs": -23.0
+    },
+    "completion-partial": {
+      "durationMs": 260,
+      "frequenciesHz": [
+        493.88,
+        392.0
+      ],
+      "peakDbfs": -11.573,
+      "profile": "warm",
+      "rmsDbfs": -23.0
+    },
+    "completion-rotation": {
+      "durationMs": 90,
+      "frequenciesHz": [
+        1174.66,
+        1760.0
+      ],
+      "peakDbfs": -11.93,
+      "profile": "marimba",
+      "rmsDbfs": -23.0
     },
     "device-added": {
       "durationMs": 240,
       "frequenciesHz": [
         349.23,
+        523.25,
         698.46
       ],
-      "peakDbfs": -13.404,
+      "peakDbfs": -13.73,
+      "profile": "marimba",
       "rmsDbfs": -23.0
     },
     "device-removed": {
       "durationMs": 240,
       "frequenciesHz": [
         698.46,
+        523.25,
         349.23
       ],
-      "peakDbfs": -13.382,
+      "peakDbfs": -14.257,
+      "profile": "marimba",
+      "rmsDbfs": -23.0
+    },
+    "email": {
+      "durationMs": 230,
+      "frequenciesHz": [
+        659.25,
+        987.77,
+        1318.51
+      ],
+      "peakDbfs": -12.391,
+      "profile": "chime",
       "rmsDbfs": -23.0
     },
     "error": {
@@ -76,17 +142,32 @@
         196.0,
         155.56
       ],
-      "peakDbfs": -12.861,
+      "peakDbfs": -12.115,
+      "profile": "muted",
       "rmsDbfs": -23.0
     },
+    "incoming-call": {
+      "durationMs": 640,
+      "frequenciesHz": [
+        523.25,
+        659.25,
+        523.25,
+        783.99
+      ],
+      "peakDbfs": -8.92,
+      "profile": "chime",
+      "rmsDbfs": -20.0
+    },
     "login": {
-      "durationMs": 520,
+      "durationMs": 540,
       "frequenciesHz": [
         261.63,
         392.0,
+        523.25,
         659.25
       ],
-      "peakDbfs": -12.414,
+      "peakDbfs": -13.541,
+      "profile": "chime",
       "rmsDbfs": -23.0
     },
     "logout": {
@@ -96,7 +177,8 @@
         329.63,
         220.0
       ],
-      "peakDbfs": -12.605,
+      "peakDbfs": -11.983,
+      "profile": "warm",
       "rmsDbfs": -23.0
     },
     "message": {
@@ -105,7 +187,93 @@
         740.0,
         987.77
       ],
-      "peakDbfs": -13.053,
+      "peakDbfs": -11.636,
+      "profile": "chime",
+      "rmsDbfs": -23.0
+    },
+    "modifier": {
+      "durationMs": 70,
+      "frequenciesHz": [
+        622.25,
+        932.33
+      ],
+      "peakDbfs": -11.223,
+      "profile": "anvil",
+      "rmsDbfs": -23.0
+    },
+    "outcome-failure": {
+      "durationMs": 350,
+      "frequenciesHz": [
+        220.0,
+        146.83
+      ],
+      "peakDbfs": -12.195,
+      "profile": "muted",
+      "rmsDbfs": -23.0
+    },
+    "outcome-success": {
+      "durationMs": 310,
+      "frequenciesHz": [
+        587.33,
+        880.0,
+        1174.66
+      ],
+      "peakDbfs": -12.606,
+      "profile": "chime",
+      "rmsDbfs": -23.0
+    },
+    "power-plug": {
+      "durationMs": 250,
+      "frequenciesHz": [
+        392.0,
+        587.33,
+        783.99
+      ],
+      "peakDbfs": -12.222,
+      "profile": "anvil",
+      "rmsDbfs": -23.0
+    },
+    "power-unplug": {
+      "durationMs": 250,
+      "frequenciesHz": [
+        587.33,
+        392.0,
+        261.63
+      ],
+      "peakDbfs": -12.302,
+      "profile": "warm",
+      "rmsDbfs": -23.0
+    },
+    "question": {
+      "durationMs": 220,
+      "frequenciesHz": [
+        587.33,
+        783.99
+      ],
+      "peakDbfs": -12.515,
+      "profile": "marimba",
+      "rmsDbfs": -23.0
+    },
+    "service-login": {
+      "durationMs": 460,
+      "frequenciesHz": [
+        293.66,
+        440.0,
+        659.25
+      ],
+      "peakDbfs": -12.51,
+      "profile": "chime",
+      "rmsDbfs": -23.0
+    },
+    "service-logout": {
+      "durationMs": 400,
+      "frequenciesHz": [
+        440.0,
+        293.66,
+        196.0
+      ],
+      "peakDbfs": -11.618,
+      "profile": "warm",
       "rmsDbfs": -23.0
     },
     "success": {
@@ -115,16 +283,39 @@
         783.99,
         1046.5
       ],
-      "peakDbfs": -13.709,
+      "peakDbfs": -12.734,
+      "profile": "chime",
       "rmsDbfs": -23.0
     },
     "tick": {
-      "durationMs": 80,
+      "durationMs": 65,
       "frequenciesHz": [
-        880.0,
-        1320.0
+        980.0,
+        1470.0
       ],
-      "peakDbfs": -14.174,
+      "peakDbfs": -10.976,
+      "profile": "anvil",
+      "rmsDbfs": -23.0
+    },
+    "trash": {
+      "durationMs": 210,
+      "frequenciesHz": [
+        415.3,
+        277.18,
+        185.0
+      ],
+      "peakDbfs": -11.952,
+      "profile": "anvil",
+      "rmsDbfs": -23.0
+    },
+    "volume": {
+      "durationMs": 75,
+      "frequenciesHz": [
+        740.0,
+        1108.7
+      ],
+      "peakDbfs": -12.199,
+      "profile": "marimba",
       "rmsDbfs": -23.0
     },
     "warning": {
@@ -133,7 +324,8 @@
         440.0,
         329.63
       ],
-      "peakDbfs": -12.194,
+      "peakDbfs": -10.864,
+      "profile": "warm",
       "rmsDbfs": -23.0
     }
   }

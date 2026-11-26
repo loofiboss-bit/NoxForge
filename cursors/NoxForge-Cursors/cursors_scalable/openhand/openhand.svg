@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <title>NoxForge grab scalable cursor</title>
+  <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
+  <g fill="none" stroke="#050708" stroke-opacity="0.45" stroke-width="2.95" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 19V9c0-2 3-2 3 0V6c0-2 3-2 3 0v3-2c0-2 3-2 3 0v3-1c0-2 3-2 3 0v7c0 4-3 6-7 6-2 0-4-1-5-3z"/>
+  </g>
+  <g fill="#0D1419" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 19V9c0-2 3-2 3 0V6c0-2 3-2 3 0v3-2c0-2 3-2 3 0v3-1c0-2 3-2 3 0v7c0 4-3 6-7 6-2 0-4-1-5-3z"/>
+  </g>
+</svg>

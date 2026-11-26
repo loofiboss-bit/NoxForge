@@ -1,3 +1,12 @@
+# NoxForge 21.0.0
+
+- Duotone Visual Craft: 482 scalable SVGs (`56` apps, `30` distinct mimetypes, `28` duotone & 6-accent places) and 1,052 optical variants (`16x16`/`22x22` crisp monoline + `32x32`/`48x48`/`64x64` Duotone Surface).
+- True PNG24 Wallpapers & Plasma 6 Dynamic Wallpaper: zero `PNG8` banding, new `16:10` (`2560x1600`, `3840x2400`) and `32:9` (`5120x1440`) aspect ratios, Plasma 6 `images_dark/` dynamic wallpaper, enriched Obsidian depth, and accent-adaptive rendering.
+- Aurorae v2 & Plasma Shell Surfaces: `Shadow=true` with filter-free stepped ambient shadows, flush maximized frames, Plasma 6 `metadata.json`, user-local live accent rail sync, overhauled `notes`/`clock`/`calendar`/`glowbar` SVGs, and Look-and-Feel `osd/` + `systemdialog/` QML.
+- Wayland Scalable Cursors & Tactile Forge Audio v2: 4× AA Xcursors with `1 px` contrast halo across `[24..64]px` + Plasma 6 `cursors_scalable/`, and 27 distinct DSP audio sources across 32 Freedesktop events.
+- Complete Native Qt 6 Style, Modular Union CSS & Deep GTK4/Libadwaita: added `CC_Dial`, `CC_TitleBar`, `CC_MdiControls`, slider ticks, spinbox states, reactive config caching, 6-accent matrix (`+Crimson`, `+Ice`), 10 modular Union CSS sheets per variant, and deep GTK4/Libadwaita styling.
+- Control Center v6, Live Hot-Reload CLI, Ecosystem v4 (25 Tools) & Doctor Schema 14: async `CommandWorker`, Wallpaper Accent Extractor, Named Presets Manager, live reload across Plasma/GTK/terminals/tmux/Neovim, Fastfetch Kinetic Studio v2, `bat`/`delta`/`fzf`/`eza`/`wofi`, and Schema 14 diagnostics.
+
 # NoxForge 20.0.0
 
 - Kinetic Iconography & Multi-Level Status Engine: deterministic 10%/20%/25% SVG ladders for battery (charging/discharging), Wi-Fi, signal, brightness, microphone, and volume (including mute & overdrive) bound to KDE Plasma `ColorScheme` CSS classes.

@@ -1,0 +1,84 @@
+# SPDX-License-Identifier: MIT
+# @noxforge-version: 21.0.0
+# NoxForge Obsidian OLED Starship Prompt Configuration
+
+palette = "noxforge_obsidian"
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$rust\
+$nodejs\
+$fill\
+$cmd_duration\
+$line_break\
+$character"""
+
+[palettes.noxforge_obsidian]
+bg = "#000000"
+surface = "#0A0F13"
+border = "#2F414B"
+fg = "#E8F0F2"
+fg_secondary = "#A6B4B9"
+accent = "#A3FF47"
+cyan = "#22D3EE"
+violet = "#A78BFA"
+warning = "#FBBF24"
+negative = "#FF6B7A"
+
+[character]
+success_symbol = "[⚡](bold #A3FF47) "
+error_symbol = "[✖](bold #FF6B7A) "
+vimcmd_symbol = "[❮](bold #22D3EE) "
+
+[directory]
+style = "bold #22D3EE"
+truncation_length = 4
+truncate_to_repo = true
+read_only = " 🔒"
+read_only_style = "bold #FF6B7A"
+
+[git_branch]
+style = "bold #A3FF47"
+symbol = "🌱 "
+
+[git_status]
+style = "bold #FBBF24"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+conflicted = "🏳 "
+modified = "*${count}"
+staged = "+${count}"
+untracked = "?${count}"
+
+[python]
+style = "bold #A78BFA"
+
+[rust]
+style = "bold #FBBF24"
+
+[nodejs]
+style = "bold #A3FF47"
+
+[cmd_duration]
+min_time = 2_000
+style = "bold #A6B4B9"
+format = "took [$duration]($style) "
+
+[username]
+style_user = "bold #E8F0F2"
+style_root = "bold #FF6B7A"
+format = "[$user]($style)@"
+
+[hostname]
+style = "bold #A6B4B9"
+format = "[$hostname]($style) in "
+trim_at = ".company"
+
+[fill]
+symbol = " "

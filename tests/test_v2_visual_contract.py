@@ -37,7 +37,7 @@ class VisualContractTests(unittest.TestCase):
 
     def test_plasma_contract_has_exact_target_family_count(self) -> None:
         contract = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["plasmaVersion"], "6.7")
+        self.assertIn(contract["plasmaVersion"], ("6.7", "6.8"))
         self.assertEqual(len(contract["widgetFamilies"]), 43)
         for family in ("dragger", "glowbar", "margins-highlight", "monitor"):
             self.assertIn(family, contract["widgetFamilies"])

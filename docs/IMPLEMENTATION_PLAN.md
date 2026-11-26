@@ -1,24 +1,30 @@
 # NoxForge Implementation Plan
 
-This file is the canonical scope and release-gate index. The v20 release contract is
-[`NOXFORGE_V20_PLAN.md`](NOXFORGE_V20_PLAN.md); the machine-readable companion is
+This file is the canonical scope and release-gate index. The v21 release contract is
+[`NOXFORGE_V21_PLAN.md`](NOXFORGE_V21_PLAN.md); the machine-readable companion is
 [`distribution/release-manifest.json`](../distribution/release-manifest.json).
 
 ## Current release scope
 
-NoxForge 20.0.0 Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
-delivers a complete animated and multi-level Freedesktop/Plasma icon ladder
-(Battery 10% steps + charging + profiles + peripherals, Wi-Fi 20%/25% steps +
-locked/limited/acquiring, Audio/Mic including overdrive >100%, dedicated
-Brightness icons, Bluetooth/Mobile 5G/VPN, and 16-frame `animations/process-working.svg`
-sprite sheets), 8 Plasma Desktop Theme `icons/*.svg` sheets for Graphite and
-Obsidian, Ecosystem v3 (`yazi`, `lazygit`, `zellij`, `tmux`), Lock Screen Forge
-Status Pill, `noxforge-ctl icons`, Control Center v5 with interactive Kinetic
-Icon & Level Studio, Tokens Schema 16, and Doctor Schema 13 with zero
-`metadata-unknown` warnings. Host installation and active desktop mutation
-remain non-applying by default.
+NoxForge 21.0.0 Duotone Visual Craft, Aurorae v2, Live Control Core & Ecosystem v4
+delivers optical `32x32`/`48x48`/`64x64` Duotone Surface iconography (`places/`,
+`mimetypes/`, ~52 curated `apps/` icons), 6-Accent Forge Matrix (`crimson` and
+`ice`), Plasma 6 Wayland `cursors_scalable/` + 4x anti-aliased Xcursors, PNG24
+accent-adaptive & KDE Dynamic wallpapers (`16:10`/`32:9`), Tactile Forge Audio v2,
+Aurorae v2 (`Shadow=true`, maximized frames, live accent-rail sync), Plasma SVG
+Forge Notch chamfer fix + rich `notes`/`clock`/`calendar`/`glowbar` widgets,
+Look-and-Feel `Osd.qml` & `SystemDialog.qml`, complete C++20 Qt 6 `libnoxforge6.so`
+with `QFileSystemWatcher` & expanded `NoxForgeMotion`, modular Union CSS,
+differentiated GTK3/GTK4/Libadwaita, async Control Center v6 (Named Presets,
+Wallpaper Accent Extractor, Live Surface Preview), live hot-reload `noxforge-ctl`,
+Ecosystem v4 (25 tools incl. Fastfetch v2, deep Neovim/VS Code/Zen/Vesktop,
+`bat`, `delta`, `fzf`, `eza`, `wofi`), Tokens Schema 17, and Doctor Schema 14.
+Host installation and active desktop mutation remain non-applying by default.
 
 ## Historical release evidence
+
+- [`NOXFORGE_V20_PLAN.md`](NOXFORGE_V20_PLAN.md) records the completed 20.0.0
+  Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3 scope.
 
 - [`NOXFORGE_V19_PLAN.md`](NOXFORGE_V19_PLAN.md) records the completed 19.0.0
   Plasma 6.8 Union Engine, Wayland-Native KWin & Kinetic Studio Suite scope.

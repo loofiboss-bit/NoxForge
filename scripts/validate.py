@@ -168,8 +168,24 @@ def validate_tokens(version: str) -> dict[str, object]:
         "shadowAmbient": "#090C0F",
         "shadowOverlay": "#050708",
     }
-    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16) or tokens.get("colors") != required_colors:
+    if tokens.get("schemaVersion") not in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17) or tokens.get("colors") != required_colors:
         raise ValidationError("design tokens do not match the locked NoxForge palette")
+    if tokens.get("schemaVersion") >= 17:
+        duotone_cfg = tokens.get("duotoneIconography", {})
+        aurorae_cfg = tokens.get("auroraeV2", {})
+        wall_cfg = tokens.get("wallpaperV2", {})
+        eco4_cfg = tokens.get("ecosystemV4", {})
+        accents_cfg = tokens.get("accents", {})
+        if not {"lime", "cyan", "violet", "amber", "crimson", "ice", "custom"}.issubset(set(accents_cfg)):
+            raise ValidationError("tokens Schema 17 requires 6-accent matrix + custom")
+        if duotone_cfg.get("opticalSizes") != [16, 22, 32, 48, 64]:
+            raise ValidationError("duotoneIconography token contract (Schema 17) is invalid")
+        if aurorae_cfg.get("shadowEnabled") is not True or aurorae_cfg.get("maximizedFlat") is not True:
+            raise ValidationError("auroraeV2 token contract (Schema 17) is invalid")
+        if wall_cfg.get("colorDepth") != "PNG24" or wall_cfg.get("dynamicDayNight") is not True:
+            raise ValidationError("wallpaperV2 token contract (Schema 17) is invalid")
+        if eco4_cfg.get("apps") != ["bat", "delta", "fzf", "eza", "wofi", "fastfetch"]:
+            raise ValidationError("ecosystemV4 token contract (Schema 17) is invalid")
     if tokens.get("schemaVersion") >= 16:
         kinetic_cfg = tokens.get("kineticIconography", {})
         eco3_cfg = tokens.get("ecosystemV3", {})
@@ -730,8 +746,8 @@ def frame_base_paint(element: ET.Element) -> tuple[str | None, str | None]:
 def validate_plasma_style() -> None:
     theme = ROOT / f"plasma/desktoptheme/{THEME_ID}"
     contract = load_json(ROOT / "design/plasma-semantic-contract.json")
-    if not isinstance(contract, dict) or contract.get("schemaVersion") != 4 or contract.get("plasmaVersion") != "6.7":
-        raise ValidationError("Plasma semantic contract must target Plasma 6.7 with schema version 4")
+    if not isinstance(contract, dict) or contract.get("schemaVersion") != 4 or contract.get("plasmaVersion") not in ("6.7", "6.8"):
+        raise ValidationError("Plasma semantic contract must target Plasma 6.7/6.8 with schema version 4")
     material_policy = contract.get("materialPolicy")
     if not isinstance(material_policy, dict) or material_policy.get("hierarchy") != [
         "canvas", "sunken", "surface", "raised", "overlay"
@@ -793,7 +809,7 @@ def validate_plasma_style() -> None:
         if not required.issubset(found):
             raise ValidationError(f"{relative} has an incomplete background or blur mask frame")
     background_variants = contract.get("backgroundVariants")
-    if not isinstance(background_variants, list) or len(background_variants) != 11:
+    if not isinstance(background_variants, list) or len(background_variants) != 12:
         raise ValidationError("Plasma Style requires all opaque, solid and translucent background variants")
     variant_recipes = contract.get("backgroundVariantRecipes")
     if not isinstance(variant_recipes, dict) or set(variant_recipes) != set(background_variants):
@@ -848,7 +864,7 @@ def validate_plasma_style() -> None:
         "widgets/analog_meter.svg", "widgets/bar_meter_horizontal.svg",
         "widgets/bar_meter_vertical.svg", "widgets/notes.svg", "widgets/timer.svg",
         "solid/widgets/background.svg", "translucent/widgets/background.svg",
-        "opaque/widgets/panel-background.svg",
+        "opaque/widgets/background.svg", "opaque/widgets/panel-background.svg",
     }
     missing_assets = sorted(relative for relative in required_shell_assets if not (theme / relative).is_file())
     if missing_assets:
@@ -905,6 +921,9 @@ def validate_look_and_feel(version: str) -> None:
         "contents/layouts/org.kde.plasma.desktop-layout.js",
         "contents/splash/Splash.qml",
         "contents/logout/Logout.qml",
+        "contents/osd/Osd.qml",
+        "contents/osd/OsdItem.qml",
+        "contents/systemdialog/SystemDialog.qml",
         "contents/previews/preview.png",
     )
     missing = [relative for relative in required if not (package / relative).is_file()]
@@ -923,6 +942,9 @@ def validate_qml_design_consumers() -> None:
     qml_files = (
         ROOT / f"look-and-feel/{THEME_ID}/contents/splash/Splash.qml",
         ROOT / f"look-and-feel/{THEME_ID}/contents/logout/Logout.qml",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/osd/Osd.qml",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/osd/OsdItem.qml",
+        ROOT / f"look-and-feel/{THEME_ID}/contents/systemdialog/SystemDialog.qml",
         ROOT / f"kwin/tabbox/{THEME_ID}/contents/ui/Switcher.qml",
         ROOT / "sddm/NoxForge/Main.qml",
     )
@@ -1005,7 +1027,7 @@ def validate_aurorae(version: str) -> None:
             "Aurorae uses unsupported shadow keys: " + ", ".join(unsupported_shadow_keys)
         )
     decoration_ids = svg_ids(theme / "decoration.svg")
-    for prefix in ("decoration", "decoration-inactive"):
+    for prefix in ("decoration", "decoration-inactive", "decoration-maximized"):
         if not {f"{prefix}-{position}" for position in POSITIONS}.issubset(decoration_ids):
             raise ValidationError(f"Aurorae has an incomplete {prefix} frame")
     states = {
@@ -1051,7 +1073,7 @@ def validate_icons() -> None:
     for directory in index["Icon Theme"].get("directories", "").split(","):
         if index[directory].get("context") not in valid_contexts:
             raise ValidationError(f"icon directory {directory} has an invalid Context")
-    expected_categories = {"actions", "animations", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
+    expected_categories = {"actions", "animations", "applets", "apps", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"}
     icons = list((theme / "scalable").glob("*/*.svg"))
     if len(icons) < 120:
         raise ValidationError(f"system icon coverage requires at least 120 SVGs, found {len(icons)}")
@@ -1060,7 +1082,7 @@ def validate_icons() -> None:
     coverage = load_json(theme / "coverage.json")
     if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 3 or coverage.get("iconCount") != len(icons):
         raise ValidationError("icon coverage manifest does not match generated files")
-    if coverage.get("opticalSizes") != [16, 22] or not isinstance(coverage.get("aliases"), dict):
+    if coverage.get("opticalSizes") != [16, 22, 32, 48, 64] or not isinstance(coverage.get("aliases"), dict):
         raise ValidationError("icon optical-size or alias coverage is incomplete")
     edge_polish = load_json(ROOT / "design/edge-polish-contract.json")
     if not isinstance(edge_polish, dict) or edge_polish.get("schemaVersion") != 1:
@@ -1073,16 +1095,17 @@ def validate_icons() -> None:
     if not isinstance(duplicate_allowlist, list):
         raise ValidationError("icon duplicate allowlist is missing")
     optical_count = 0
-    for size in (16, 22):
+    for size in (16, 22, 32, 48, 64):
         optical = list((theme / f"{size}x{size}").glob("*/*.svg"))
         if any(path.is_symlink() for path in optical):
-            raise ValidationError("small optical icons must be physical files")
-        sprite = theme / f"{size}x{size}/animations/process-working.svg"
-        if not sprite.is_file():
-            raise ValidationError(f"missing animation sprite sheet: {sprite.relative_to(ROOT)}")
-        sprite_root = ET.parse(sprite).getroot()
-        if sprite_root.get("viewBox") != f"0 0 {size} {size * 16}":
-            raise ValidationError(f"animation sprite {sprite.name} has invalid viewBox")
+            raise ValidationError("optical icons must be physical files")
+        if size in (16, 22):
+            sprite = theme / f"{size}x{size}/animations/process-working.svg"
+            if not sprite.is_file():
+                raise ValidationError(f"missing animation sprite sheet: {sprite.relative_to(ROOT)}")
+            sprite_root = ET.parse(sprite).getroot()
+            if sprite_root.get("viewBox") != f"0 0 {size} {size * 16}":
+                raise ValidationError(f"animation sprite {sprite.name} has invalid viewBox")
         optical_count += len(optical)
     if optical_count != coverage.get("opticalCount"):
         raise ValidationError("icon optical manifest does not match generated files")
@@ -1127,7 +1150,7 @@ def validate_cursors() -> None:
     cursors = sorted((theme / "cursors").iterdir())
     if len(cursors) < 90 or any(not path.is_file() or path.is_symlink() for path in cursors):
         raise ValidationError("cursor theme requires at least 90 physical cursor files")
-    expected_sizes = {24, 32, 48}
+    expected_sizes = {24, 32, 36, 48, 64}
     cursor_counts: dict[str, int] = {}
     for path in cursors:
         data = path.read_bytes()
@@ -1141,8 +1164,15 @@ def validate_cursors() -> None:
             raise ValidationError(f"cursor {path.name} lacks required sizes")
         cursor_counts[path.name] = count
     coverage = load_json(theme / "coverage.json")
-    if not isinstance(coverage, dict) or coverage.get("schemaVersion") != 3 or coverage.get("sizes") != [24, 32, 48]:
+    if not isinstance(coverage, dict) or coverage.get("schemaVersion") not in (3, 4) or coverage.get("sizes") != [24, 32, 36, 48, 64]:
         raise ValidationError("cursor coverage manifest is invalid")
+    scalable_dir = theme / "cursors_scalable"
+    if not scalable_dir.is_dir():
+        raise ValidationError("cursor theme is missing Plasma 6 cursors_scalable directory")
+    for path in cursors:
+        meta_path = scalable_dir / path.name / "metadata.json"
+        if not meta_path.is_file() or meta_path.is_symlink():
+            raise ValidationError(f"cursors_scalable/{path.name} missing metadata.json")
     hotspots = coverage.get("hotspots")
     if not isinstance(hotspots, dict):
         raise ValidationError("cursor hotspot manifest is missing")
@@ -1150,7 +1180,7 @@ def validate_cursors() -> None:
     if not isinstance(animations, dict):
         raise ValidationError("cursor animation manifest is missing")
     for name in ("wait", "progress"):
-        if cursor_counts.get(name) != 36 or animations.get(name) != {"delayMs": 80, "frames": 12}:
+        if cursor_counts.get(name) != 12 * len(expected_sizes) or animations.get(name) != {"delayMs": 80, "frames": 12}:
             raise ValidationError(f"cursor {name} must contain 12 frames at each size")
         data = (theme / "cursors" / name).read_bytes()
         _, _, _, count = struct.unpack("<4I", data[:16])
@@ -1219,7 +1249,7 @@ def validate_sounds() -> None:
             raise ValidationError(f"sound source metrics are missing: {name}")
         target = (
             normalization["alarmTargetRmsDbfs"]
-            if name == "alarm"
+            if name in {"alarm", "incoming-call"}
             else normalization["targetRmsDbfs"]
         )
         if abs(details.get("rmsDbfs", 999) - target) > tolerance:
@@ -1306,6 +1336,12 @@ def validate_wallpaper(version: str) -> None:
             path = package / f"contents/images/{output}.png"
             if png_dimensions(path) != (output_width, output_height):
                 raise ValidationError(f"wallpaper output must be exactly {output}")
+            ihdr = path.read_bytes()[16:29]
+            if ihdr[9] == 3:
+                raise ValidationError(f"wallpaper output must be PNG24 (not indexed PNG8): {output}")
+            dark_path = package / f"contents/images_dark/{output}.png"
+            if png_dimensions(dark_path) != (output_width, output_height):
+                raise ValidationError(f"wallpaper images_dark output missing or wrong size: {output}")
     brand = contract.get("brand")
     if (
         not isinstance(brand, dict)
@@ -2371,14 +2407,19 @@ def validate_qml_variants() -> None:
     if not manifest_path.exists():
         raise ValidationError("missing design/qml-variants.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    for source_rel, targets in manifest.get("variants", {}).items():
+    targets = manifest.get("targets", [])
+    if not targets:
+        raise ValidationError("design/qml-variants.json defines no targets")
+    for entry in targets:
+        source_rel = entry.get("source", "")
+        outputs = entry.get("outputs", [])
         source_path = ROOT / source_rel
         if not source_path.exists():
             raise ValidationError(f"missing canonical QML source: {source_rel}")
         content = source_path.read_text(encoding="utf-8")
-        header = f"// GENERATED from {source_rel} via scripts/generate_design_system.py. DO NOT EDIT DIRECTLY.\n"
-        expected = header + content
-        for target_rel in targets:
+        header = f"// GENERATED from {source_rel} — do not edit directly\n"
+        expected = content if content.startswith(header) else header + content
+        for target_rel in outputs:
             target_path = ROOT / target_rel
             if not target_path.exists():
                 raise ValidationError(f"missing variant target: {target_rel}")

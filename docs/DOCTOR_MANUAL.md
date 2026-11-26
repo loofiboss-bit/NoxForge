@@ -31,6 +31,16 @@ The doctor never applies a theme by default, writes KDE or login-manager configu
 asks for privileges, or claims unavailable physical evidence. System-service
 queries time out and degrade to `unknown` instead of blocking the report.
 
+## Schema 14 diagnostics (v21.0.0)
+
+Schema 14 hardens version metadata extraction (removing the blind `expected` fallback so `metadata-unknown` genuinely detects missing headers across all component formats) and adds six live/staged health checks:
+- `qtStyleLoadable`: Verifies `libnoxforge6.so` presence and read accessibility.
+- `kwinBlurStatus`: Audits `kwinrc` blur plugin enabled state, blur strength, and noise strength.
+- `gtkImportIntegrity`: Verifies every `@import url("file://...")` line in user `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css` points to an existing theme file.
+- `flatpakIconAccess`: Checks `~/.local/share/flatpak/overrides/global` for read-only access to `xdg-data/themes`, `xdg-data/icons`, `xdg-data/cursors`, and `xdg-config/gtk-{3,4}.0`.
+- `dayNightTimerStatus`: Reports whether `noxforge-daynight.{timer,service}` are installed and active.
+- `ecosystemState.configDrift` & 25-tool `ecosystem.themeTemplates`: Audits all 25 Ecosystem v4 templates (including `bat`, `delta`, `fzf`, `eza`, `wofi`, and Fastfetch Kinetic Studio v2) and flags missing deployed files.
+
 ## Schema 13 diagnostics (v20.0.0)
 
 Schema 13 extends Schema 12 with Kinetic Iconography, optical size matrix, and animated sprite audits:

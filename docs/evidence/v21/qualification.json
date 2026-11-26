@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 4,
+  "releaseState": "release-candidate",
+  "releaseReady": false,
+  "candidate": {
+    "version": "21.0.0",
+    "sourceRef": "feat/v21-duotone-craft",
+    "sourceCommit": null,
+    "baselineCommit": "5be527cc3fae42dfadec2125819cc84afeb89977",
+    "worktreeDirty": true,
+    "package": "noxforge-21.0.0-1.fc44.x86_64.rpm",
+    "artifacts": [],
+    "runtimeSourceHashes": "runtime-source-hashes.json"
+  },
+  "automatedCases": [
+    {
+      "id": "python",
+      "status": "passed",
+      "passed": 257,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "log": "/tmp/noxforge-py-report.json"
+    },
+    {
+      "id": "fedora-ctest",
+      "status": "passed",
+      "passed": 75,
+      "runtime": "Qt 6.11.2-3.fc45, Plasma/KWin 6.8.2.fc45",
+      "log": "build/Testing/Temporary/LastTest.log"
+    },
+    {
+      "id": "arch-build-ctest",
+      "status": "pending",
+      "reason": "No Arch container was available in the local gate; offscreen Fedora coverage does not qualify an Arch build."
+    },
+    {
+      "id": "asan-ubsan",
+      "status": "passed",
+      "passed": 4,
+      "evidence": "scripts/check_v6_phase3_sanitizers.py"
+    },
+    {
+      "id": "rpm-package-validation",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 1,
+      "badness": 0,
+      "evidence": "scripts/release-check.py"
+    },
+    {
+      "id": "rpm-transactions",
+      "status": "pending",
+      "reason": "Canonical release workflow must qualify Fedora RPM transactions."
+    },
+    {
+      "id": "final-release-gate",
+      "status": "passed",
+      "evidence": "local scripts/release-check.py",
+      "scope": "Full uninterrupted local v21.0.0 gate against the exact public 20.0.0 baseline."
+    },
+    {
+      "id": "source-archive-reproducibility",
+      "status": "passed",
+      "evidence": "scripts/release-check.py"
+    },
+    {
+      "id": "store-portable-packages",
+      "status": "passed",
+      "evidence": "scripts/validate_store_packages.py and scripts/check_store_kpackages.py"
+    },
+    {
+      "id": "qml-and-dry-run-boundary",
+      "status": "passed",
+      "evidence": "qmllint plus install.sh/uninstall.sh dry-runs"
+    }
+  ],
+  "liveCases": [
+    {
+      "id": "physical-login-pam",
+      "status": "pending",
+      "reason": "No physical login/PAM session was performed for this candidate."
+    },
+    {
+      "id": "physical-input-cursor",
+      "status": "pending",
+      "reason": "No physical input or cursor session was performed for this candidate."
+    },
+    {
+      "id": "physical-audio-power",
+      "status": "pending",
+      "reason": "No physical audio or power-session check was performed for this candidate."
+    },
+    {
+      "id": "physical-mixed-displays",
+      "status": "pending",
+      "reason": "No physical mixed-display check was performed for this candidate."
+    },
+    {
+      "id": "arch-pacman-lifecycle",
+      "status": "pending",
+      "reason": "No live Arch pacman upgrade or rollback was performed for this candidate."
+    },
+    {
+      "id": "live-scale-rtl-motion",
+      "status": "pending",
+      "reason": "Automated coverage does not replace the full live scale, RTL, focus, and motion matrix."
+    },
+    {
+      "id": "loofifaceid-biometric-auth",
+      "status": "pending",
+      "reason": "Face authentication is experimental opt-in; physical camera authentication not qualified in offscreen test."
+    }
+  ],
+  "evidencePolicy": {
+    "offscreenIsLiveEvidence": false,
+    "generatedIsLiveEvidence": false,
+    "historicalEvidenceImmutable": true,
+    "unavailableCasesRemainPending": true
+  },
+  "releaseBlockers": [],
+  "review": {
+    "status": "review-findings-fixed-local-qualified",
+    "fixed": [
+      "Tokens Schema 17 with 6 WCAG-AA accents (incl. Crimson & Ice), duotoneIconography, auroraeV2, wallpaperV2, and ecosystemV4 contracts",
+      "482 scalable and 1052 optical Duotone Surface icons (16..64px), 6 accent folder themes, 5-size 4x AA Xcursors + 96 Plasma 6 scalable Wayland cursor suites, Tactile Forge Audio v2 (27 WAV / 32 OGA), and true PNG24 wallpapers (16:10, 32:9, images_dark/)",
+      "Aurorae v2 (Shadow=true stepped ambient shadows, flush maximized frames, metadata.json, user-local live accent rail), overhauled Plasma widget SVGs, and canonical OSD & SystemDialog Look-and-Feel QML with zero raw hex literals",
+      "Event-driven native Qt 6 style (QFileSystemWatcher replacing 1000ms timer, 6 accents, custom QPalette::Accent, Dial/MDI/TitleBar/SpinBox/Dock/RubberBand controls), 10-module Plasma 6.8 Union CSS, and differentiated GTK 3/4 Libadwaita themes",
+      "Live Control Core: noxforge-ctl hot-reload engine, Wallpaper Accent Extractor, Named Presets, Fastfetch Kinetic Studio v2, Flatpak icon/cursor overrides, and async Control Center v6 with native QStyle dogfooding & Obsidian OLED surface",
+      "Ecosystem v4 covering 25 apps (incl. Bat, Delta, Fzf, Eza, Wofi, Fastfetch v2, 140+ Neovim groups, VS Code semantic highlighting, Firefox userContent, Discord/Vesktop/Equibop)",
+      "Doctor Schema 14 with honest metadata_version verification (no blind fallback), configDrift, qtStyleLoadable, kwinBlurStatus, gtkImportIntegrity, flatpakIconAccess, and dayNightTimerStatus"
+    ]
+  },
+  "publicationAuthorized": false,
+  "physicalQualificationComplete": false,
+  "qualificationLimitations": [
+    "Physical and full live matrix checks remain pending.",
+    "Arch pacman lifecycle remains pending.",
+    "Biometric face authentication remains pending."
+  ]
+}

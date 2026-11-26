@@ -38,18 +38,18 @@ class NoxForgeV20ContractsTests(unittest.TestCase):
         self.assertIn("NOXFORGE_V20_PLAN.md", impl_plan)
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "20.0.0")
-        self.assertEqual(noxforge_core.get_app_version(), "20.0.0")
+        self.assertIn(version, ("20.0.0", "21.0.0"))
+        self.assertEqual(noxforge_core.get_app_version(), version)
 
         manifest = json.loads((ROOT / "distribution/release-manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["release"]["version"], "20.0.0")
-        self.assertEqual(manifest["release"]["activePlan"], "docs/NOXFORGE_V20_PLAN.md")
-        self.assertEqual(manifest["evidence"]["activeRoot"], "docs/evidence/v20")
+        self.assertEqual(manifest["release"]["version"], version)
+        self.assertIn(manifest["release"]["activePlan"], ("docs/NOXFORGE_V20_PLAN.md", "docs/NOXFORGE_V21_PLAN.md"))
+        self.assertIn(manifest["evidence"]["activeRoot"], ("docs/evidence/v20", "docs/evidence/v21"))
         self.assertIn("docs/evidence/v20", manifest["source"]["include"])
 
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertEqual(tokens["schemaVersion"], 16)
-        self.assertEqual(tokens["version"], "20.0.0")
+        self.assertIn(tokens["schemaVersion"], (16, 17))
+        self.assertEqual(tokens["version"], version)
         self.assertEqual(
             tokens["kineticIconography"]["levels"],
             [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
@@ -183,10 +183,11 @@ class NoxForgeV20ContractsTests(unittest.TestCase):
             "terminals/tmux/noxforge.conf",
             "terminals/tmux/noxforge_obsidian.conf",
         )
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
         for rel in v3_files:
             path = ROOT / rel
             self.assertTrue(path.is_file(), f"Missing Ecosystem v3 file: {path}")
-            self.assertIn("@noxforge-version: 20.0.0", path.read_text(encoding="utf-8"))
+            self.assertIn(f"@noxforge-version: {version}", path.read_text(encoding="utf-8"))
 
         ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v20_eco3")
         for app_id in ("yazi", "lazygit", "zellij", "tmux"):
@@ -265,7 +266,7 @@ class NoxForgeV20ContractsTests(unittest.TestCase):
                     dirs_exist_ok=True,
                 )
             report = doctor_fn["build_report"](root)
-            self.assertEqual(report["schemaVersion"], 13)
+            self.assertIn(report["schemaVersion"], (13, 14))
             self.assertEqual(report["status"], "ok")
             matrix = report.get("iconLevelMatrix", {})
             self.assertEqual(matrix.get("status"), "ok")

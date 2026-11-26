@@ -24,5 +24,5 @@
       .NoxForge-OverlayShadow { color: #000000; }
     ]]></style>
   </defs>
-  <g id="event" transform="translate(0 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M11 11h2v2h-2z"/></g>
+  <g id="event"><path d="M18 4L22 4V8Z" class="ColorScheme-Highlight" fill="currentColor"/><circle cx="12" cy="18" r="2.2" class="ColorScheme-Highlight" fill="currentColor"/><rect x="4" y="4" width="16" height="16" rx="2" class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-opacity="0.45"/></g>
 </svg>

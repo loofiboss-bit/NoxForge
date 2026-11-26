@@ -1,8 +1,9 @@
 /**
  * @name NoxForge Obsidian
  * @author NoxForge Team
- * @version 20.0.0
- * @description Official NoxForge Obsidian OLED theme for Discord (Vencord / BetterDiscord). Pure black OLED surfaces and electric-lime accents.
+ * @version 21.0.0
+ * @noxforge-version: 21.0.0
+ * @description Official NoxForge Obsidian OLED theme for Discord (Vencord / Vesktop / Equibop / BetterDiscord). Pure black OLED surfaces and Forge accents.
  * @source https://github.com/loofiboss-bit/NoxForge
  */
 
@@ -11,11 +12,21 @@
   --background-secondary: #05080A;
   --background-secondary-alt: #0A0F13;
   --background-tertiary: #000000;
-  --background-floating: #0A0F13;
+  --background-floating: #1A252C;
+  --background-accent: #121B21;
+  --background-modifier-hover: #202E38;
+  --background-modifier-active: #192D1E;
+  --background-modifier-selected: #192D1E;
+  --background-modifier-accent: #2F414B;
+  --bg-base-primary: #000000;
+  --bg-base-secondary: #05080A;
+  --bg-base-tertiary: #0A0F13;
+  --bg-surface-overlay: #1A252C;
   --channeltextarea-background: #0A0F13;
-  
+
   --text-normal: #E8F0F2;
   --text-muted: #A6B4B9;
+  --text-link: #22D3EE;
   --header-primary: #E8F0F2;
   --header-secondary: #A6B4B9;
   --interactive-normal: #A6B4B9;
@@ -25,7 +36,16 @@
 
   --brand-experiment: #A3FF47;
   --brand-experiment-560: #82D936;
+  --brand-500: #A3FF47;
+  --brand-560: #82D936;
   --accent-color: #A3FF47;
+  --focus-primary: #A3FF47;
   --button-positive-background: #A3FF47;
   --button-positive-text: #000000;
+  --status-positive: #A3FF47;
+  --status-warning: #FBBF24;
+  --status-danger: #FF6B7A;
+  --scrollbar-auto-thumb: #455A64;
+  --scrollbar-auto-track: #05080A;
+  --scrollbar-thin-thumb: #2F414B;
 }

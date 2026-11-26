@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Description": "Pure pitch-black OLED Aurorae v2 decoration with ambient shadows and Forge Notch details",
+    "Id": "io.github.loofiboss.noxforge.obsidian.desktop",
+    "License": "MIT",
+    "Name": "NoxForge Obsidian",
+    "Version": "21.0.0",
+    "Website": "https://github.com/loofiboss-bit/NoxForge"
+  },
+  "KPackageStructure": "KWin/Decoration"
+}

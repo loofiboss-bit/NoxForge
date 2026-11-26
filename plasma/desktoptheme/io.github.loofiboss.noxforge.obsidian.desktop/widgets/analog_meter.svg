@@ -24,12 +24,12 @@
       .NoxForge-OverlayShadow { color: #000000; }
     ]]></style>
   </defs>
-  <g id="background" transform="translate(0 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12a8 8 0 0 1 16 0"/></g>
-  <g id="label1" transform="translate(32 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 12v-2"/></g>
-  <g id="label0" transform="translate(64 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M16 12v-2"/></g>
-  <g id="pointer" transform="translate(96 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12L8 6"/></g>
-  <g id="rotateminmax" transform="translate(128 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12"/></g>
-  <g id="rotatecenter" transform="translate(160 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12"/></g>
-  <g id="foreground" transform="translate(192 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></g>
-  <g id="pointer-shadow" transform="translate(224 0)" class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M12 12L8 6"/></g>
+  <g id="background" transform="translate(0 0)"><path d="M6 26A20 20 0 1 1 42 26" class="NoxForge-Sunken" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M10 26A16 16 0 1 1 38 26" class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-width="1" stroke-opacity="0.5"/></g>
+  <g id="label1" transform="translate(56 0)"><path d="M8 16v-4" class="ColorScheme-Text" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+  <g id="label0" transform="translate(88 0)"><path d="M16 16v-4" class="ColorScheme-Text" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+  <g id="pointer" transform="translate(120 0)"><line x1="24" y1="24" x2="14" y2="9" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></g>
+  <g id="rotateminmax" transform="translate(176 0)"><circle cx="12" cy="12" r="2" class="ColorScheme-Text" fill="currentColor"/></g>
+  <g id="rotatecenter" transform="translate(208 0)"><circle cx="12" cy="12" r="2" class="ColorScheme-Text" fill="currentColor"/></g>
+  <g id="foreground" transform="translate(240 0)"><circle cx="12" cy="12" r="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <g id="pointer-shadow" transform="translate(272 0)"><line x1="25" y1="25" x2="15" y2="10" class="NoxForge-OverlayShadow" stroke="currentColor" stroke-opacity="0.4" stroke-width="2.4" stroke-linecap="round"/></g>
 </svg>

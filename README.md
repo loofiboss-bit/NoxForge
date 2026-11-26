@@ -1,16 +1,18 @@
-# NoxForge 20.0.0 — Kinetic Iconography, Multi-Level Status Engine & Plasma 6.8 Union Precision
+# NoxForge 21.0.0 — Duotone Visual Craft, Aurorae v2, Live Control Core & Ecosystem v4
 
 NoxForge is an original MIT-licensed Plasma visual system: quiet graphite
-surfaces, true-black OLED variants, an adaptive accent engine, restrained
-detail, and a compact Forge Notch. Version 20.0.0 targets Fedora 44, Fedora 45, and Arch
-Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It delivers animated, multi-level
-Freedesktop/Plasma status iconography (10% battery steps, 20%/25% Wi-Fi steps,
-overdrive audio, dedicated brightness icons, and 16-frame `animations/process-working.svg`
-sprite sheets), 8 Plasma Desktop Theme `icons/*.svg` sheets, native KDE Plasma 6.8
-Union Style Engine styles, Ecosystem v3 (`yazi`, `lazygit`, `zellij`, `tmux`),
-Lock Screen Forge Status Pill, `noxforge-ctl icons`, Control Center v5 (with Kinetic
-Icon & Level Studio), Tokens Schema 16, and Doctor Schema 13 diagnostics.
-See the [v20 release plan](docs/NOXFORGE_V20_PLAN.md).
+surfaces, true-black OLED variants, an adaptive 6-accent engine, restrained
+detail, and a compact Forge Notch. Version 21.0.0 targets Fedora 44, Fedora 45, and Arch
+Plasma/KWin 6.8+ with Qt 6.11 on Wayland. It delivers Duotone Surface iconography
+(`482` scalable SVGs + `1,052` optical variants across `16px`–`64px`), Plasma 6
+Wayland `cursors_scalable/` + 4× AA Xcursors, Tactile Forge Audio v2, true PNG24
+wallpapers with `16:10`/`32:9` & Dynamic `images_dark/`, Aurorae v2 with ambient
+shadows & flush maximized frames, Look-and-Feel OSD & SystemDialog QML, a complete
+native Qt 6 C++ style + modular Plasma 6.8 Union CSS + deep GTK4/Libadwaita,
+Control Center v6 with live hot-reload CLI, Ecosystem v4 (`25` tools incl. Fastfetch
+Kinetic Studio v2, `bat`, `delta`, `fzf`, `eza`, `wofi`), Tokens Schema 17, and
+Doctor Schema 14 diagnostics.
+See the [v21 release plan](docs/NOXFORGE_V21_PLAN.md).
 
 ![NoxForge Hero Showcase](media/store/01_hero_desktop_showcase_2560x1440.png)
 
@@ -77,19 +79,22 @@ cursor, audio, PAM/login, power, and live-session gates.
   **NoxForge Obsidian** (`NoxForge-Obsidian`), and **NoxForge Obsidian
   Ultrawide** (`NoxForge-Obsidian-Ultrawide`);
 - a native Qt 6 style that dynamically adapts to the active NoxForge palette and
-  Forge Accent Matrix (Lime, Cyan, Violet, Amber, or custom hex) via `NOXFORGE_ACCENT` and `kdeglobals`,
-  paired with Plasma 6.8 `plasma-union` CSS integration (`union/styles/noxforge*`);
-- kinetic iconography engine featuring 10%/20%/25% multi-level status SVG ladders,
-  684 true optical icons (`16x16` & `22x22`), 404 scalable icons, 16-frame sprite animations,
-  and 8 Plasma Desktop Theme icon sheets per palette;
+  6-accent Forge Accent Matrix (Lime, Cyan, Violet, Amber, Crimson, Ice, or custom hex)
+  via `NOXFORGE_ACCENT` and reactive `kdeglobals` watching, paired with modular Plasma 6.8
+  `plasma-union` CSS (`union/styles/noxforge*`);
+- Duotone Surface & Kinetic iconography engine featuring `482` scalable SVGs (`56` apps,
+  `30` distinct mimetypes, `28` duotone & accent places), `1,052` optical icons (`16px`–`64px`),
+  16-frame sprite animations, and 8 Plasma Desktop Theme icon sheets per palette;
 - dynamic QMenu and menubar layout preventing text truncation across fractional display scales;
-- unified orchestration suite: `noxforge-ctl` CLI and 5-tab PySide6 Control Center v5 Studio
-  (`io.github.loofiboss.noxforge.controlcenter.desktop`) with live Kinetic Icon Studio & Flatpak support;
+- unified orchestration suite: live hot-reload `noxforge-ctl` CLI (with `preset`, `accent --from-wallpaper`,
+  and `fastfetch`) and 5-tab PySide6 Control Center v6 (`io.github.loofiboss.noxforge.controlcenter.desktop`);
 - `noxforge-opacity` CLI utility and Qt 6 GUI configurator (with seamless Control Center integration)
   for adjusting panel, popup, and Aurorae window decoration transparency levels;
-- Developer Ecosystem v3 supporting 18 tools (including Yazi, Lazygit, Zellij, Tmux, Zed, Neovim,
-  Helix, Ghostty, Alacritty, Kitty, Foot, btop, Starship, Obsidian, Rofi, Discord, Firefox);
-- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 13),
+- Developer Ecosystem v4 supporting 25 tools (`bat`, `delta`, `fzf`, `eza`, `wofi`, Fastfetch
+  Kinetic Studio v2, Yazi, Lazygit, Zellij, Tmux, Zed, Neovim, Helix, VS Code, Ghostty,
+  Alacritty, Kitty, Foot, btop, Starship, Obsidian, Rofi, Discord/Vesktop/Equibop, Firefox/Zen/LibreWolf,
+  and Plasma System Monitor);
+- read-only edition-aware diagnostics, automated `--apply-sync` alignment (Schema 14),
   and deterministic checksums.
 
 Store descriptions state that components install separately and that the Global
@@ -106,8 +111,8 @@ RPM/Arch removal touches only package-owned paths.
 
 ## Development and evidence
 
-The v20 release scope is recorded in
-[NOXFORGE_V20_PLAN.md](docs/NOXFORGE_V20_PLAN.md), indexed by
+The v21 release scope is recorded in
+[NOXFORGE_V21_PLAN.md](docs/NOXFORGE_V21_PLAN.md), indexed by
 [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). Run the release gate with:
 
 ```bash

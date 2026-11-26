@@ -112,9 +112,24 @@ def frame(
     extras = {position: [] for position in parts}
     if edge_highlight:
         highlight = paint_attrs(recipe("edgeHighlight"))
-        extras["topleft"].append(f'<path d="M{x + 1} {y + 5}A5 5 0 0 1 {x + 6} {y}" fill="none" stroke-width="1" stroke="currentColor" class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>')
+        if notch:
+            extras["topleft"].append(
+                f'<path d="M{x + 0.5} {y + 6}V{y + 4.2}L{x + 4.2} {y + 0.5}H{x + 6}" '
+                f'fill="none" stroke-width="1" stroke="currentColor" '
+                f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+            )
+        else:
+            extras["topleft"].append(
+                f'<path d="M{x + 1} {y + 5}A5 5 0 0 1 {x + 6} {y}" '
+                f'fill="none" stroke-width="1" stroke="currentColor" '
+                f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+            )
         extras["top"].append(f'<rect x="{x + 6}" y="{y}" width="12" height="1" {highlight}/>')
-        extras["topright"].append(f'<path d="M{x + 18} {y}A5 5 0 0 1 {x + 23} {y + 5}" fill="none" stroke-width="1" stroke="currentColor" class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>')
+        extras["topright"].append(
+            f'<path d="M{x + 18} {y}A5 5 0 0 1 {x + 23} {y + 5}" '
+            f'fill="none" stroke-width="1" stroke="currentColor" '
+            f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+        )
         extras["left"].append(f'<rect x="{x}" y="{y + 6}" width="1" height="12" {highlight}/>')
     if overlay_shadow:
         shadow = paint_attrs(recipe("overlayShadow"))
@@ -270,6 +285,128 @@ def semantic_symbols(names: list[str]) -> str:
             f'<path d="{path_d}"/></g>'
         )
     return svg("\n".join(body))
+
+
+def notes_svg() -> str:
+    """Render 9 genuinely distinct dark-tinted Forge-notched sticky note backgrounds."""
+    tints = (
+        ("yellow-notes", "#2B2514", "#FBBF24"),
+        ("green-notes", "#192A1E", "#A3FF47"),
+        ("red-notes", "#2D181C", "#FF6B7A"),
+        ("blue-notes", "#142731", "#22D3EE"),
+        ("white-notes", "#202A30", "#E8F0F2"),
+        ("pink-notes", "#2B1B28", "#FF8FA3"),
+        ("orange-notes", "#2E2115", "#FB923C"),
+        ("black-notes", "#0B1014", "#4B606A"),
+        ("transluscent-notes", "#141E25", "#93C5FD"),
+    )
+    body: list[str] = []
+    for idx, (name, bg_hex, stripe_hex) in enumerate(tints):
+        x = (idx % 5) * 40
+        y = (idx // 5) * 40
+        opacity = "0.78" if name == "transluscent-notes" else "0.96"
+        body.append(
+            f'<g id="{name}" transform="translate({x} {y})">'
+            f'<path d="M4 0H28A4 4 0 0 1 32 4V28A4 4 0 0 1 28 32H4A4 4 0 0 1 0 28V4Z" '
+            f'fill="{bg_hex}" fill-opacity="{opacity}" stroke="{stripe_hex}" stroke-opacity="0.45" stroke-width="1"/>'
+            f'<path d="M5 1H17" stroke="{stripe_hex}" stroke-width="2.2" stroke-linecap="round"/>'
+            f'<path d="M1 4L4 1" stroke="{stripe_hex}" stroke-width="1.4" stroke-linecap="round"/>'
+            f'</g>'
+        )
+    return svg("\n".join(body))
+
+
+def clock_svg() -> str:
+    """Render a precision analog clock widget with ticks, distinct hands, and highlight second hand."""
+    import math
+
+    cx, cy, r = 64.0, 64.0, 56.0
+    ticks: list[str] = []
+    for i in range(60):
+        ang = math.radians(i * 6.0 - 90.0)
+        is_major = i % 5 == 0
+        inner = r - (8.0 if is_major else 3.5)
+        outer = r - 1.5
+        x1 = cx + inner * math.cos(ang)
+        y1 = cy + inner * math.sin(ang)
+        x2 = cx + outer * math.cos(ang)
+        y2 = cy + outer * math.sin(ang)
+        sw = "2.2" if is_major else "1.0"
+        op = "0.88" if is_major else "0.38"
+        ticks.append(
+            f'<line x1="{x1:.2f}" y1="{y1:.2f}" x2="{x2:.2f}" y2="{y2:.2f}" '
+            f'class="ColorScheme-Text" stroke="currentColor" stroke-width="{sw}" stroke-opacity="{op}" stroke-linecap="round"/>'
+        )
+    clock_face = (
+        '<g id="ClockFace">'
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.92"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.72"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="42" class="NoxForge-Border" fill="none" stroke="currentColor" stroke-width="0.75" stroke-opacity="0.3"/>'
+        + "".join(ticks)
+        + '</g>'
+    )
+    hour_hand = (
+        f'<g id="HourHand"><path d="M{cx - 2.2} {cy + 6}L{cx - 1.6} {cy - 30}L{cx} {cy - 34}L{cx + 1.6} {cy - 30}L{cx + 2.2} {cy + 6}Z" '
+        'class="ColorScheme-Text" fill="currentColor"/></g>'
+    )
+    minute_hand = (
+        f'<g id="MinuteHand"><path d="M{cx - 1.5} {cy + 8}L{cx - 1.1} {cy - 44}L{cx} {cy - 48}L{cx + 1.1} {cy - 44}L{cx + 1.5} {cy + 8}Z" '
+        'class="ColorScheme-Text" fill="currentColor"/></g>'
+    )
+    second_hand = (
+        f'<g id="SecondHand"><line x1="{cx}" y1="{cy + 12}" x2="{cx}" y2="{cy - 50}" '
+        'class="ColorScheme-Highlight" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>'
+    )
+    center_screw = (
+        f'<g id="HandCenterScrew"><circle cx="{cx}" cy="{cy}" r="3.6" class="ColorScheme-Highlight" fill="currentColor"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="1.4" class="ColorScheme-ViewBackground" fill="currentColor"/></g>'
+    )
+    glass = (
+        f'<g id="Glass"><path d="M{cx - 38} {cy - 32}A48 48 0 0 1 {cx + 36} {cy - 34}" '
+        'class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.28" stroke-linecap="round"/></g>'
+    )
+    return svg("\n".join([clock_face, hour_hand, minute_hand, second_hand, center_screw, glass]))
+
+
+def glowbar_svg() -> str:
+    """Render stepped gradient-feathered glowbars without runtime SVG filters."""
+    parts: list[str] = []
+    edges = (
+        ("north", 0, 0, "top"),
+        ("south", 40, 0, "bottom"),
+        ("east", 80, 0, "right"),
+        ("west", 120, 0, "left"),
+    )
+    for prefix, x, y, edge in edges:
+        parts.append(frame(prefix, x, y, recipe("focus", opacity=0.22), notch=True, marker_edge=edge))
+        parts.append(margins(prefix, x, y + 32, 4))
+    return svg("\n".join(parts))
+
+
+def calendar_svg() -> str:
+    return svg(
+        '<g id="event">'
+        '<path d="M18 4L22 4V8Z" class="ColorScheme-Highlight" fill="currentColor"/>'
+        '<circle cx="12" cy="18" r="2.2" class="ColorScheme-Highlight" fill="currentColor"/>'
+        '<rect x="4" y="4" width="16" height="16" rx="2" class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-opacity="0.45"/>'
+        '</g>'
+    )
+
+
+def analog_meter_svg() -> str:
+    return svg(
+        '<g id="background" transform="translate(0 0)">'
+        '<path d="M6 26A20 20 0 1 1 42 26" class="NoxForge-Sunken" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>'
+        '<path d="M10 26A16 16 0 1 1 38 26" class="NoxForge-EdgeHighlight" fill="none" stroke="currentColor" stroke-width="1" stroke-opacity="0.5"/>'
+        '</g>\n'
+        '<g id="label1" transform="translate(56 0)"><path d="M8 16v-4" class="ColorScheme-Text" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>\n'
+        '<g id="label0" transform="translate(88 0)"><path d="M16 16v-4" class="ColorScheme-Text" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>\n'
+        '<g id="pointer" transform="translate(120 0)"><line x1="24" y1="24" x2="14" y2="9" class="ColorScheme-Highlight" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></g>\n'
+        '<g id="rotateminmax" transform="translate(176 0)"><circle cx="12" cy="12" r="2" class="ColorScheme-Text" fill="currentColor"/></g>\n'
+        '<g id="rotatecenter" transform="translate(208 0)"><circle cx="12" cy="12" r="2" class="ColorScheme-Text" fill="currentColor"/></g>\n'
+        '<g id="foreground" transform="translate(240 0)"><circle cx="12" cy="12" r="3" class="ColorScheme-Highlight" fill="currentColor"/></g>\n'
+        '<g id="pointer-shadow" transform="translate(272 0)"><line x1="25" y1="25" x2="15" y2="10" class="NoxForge-OverlayShadow" stroke="currentColor" stroke-opacity="0.4" stroke-width="2.4" stroke-linecap="round"/></g>'
+    )
 
 
 def write(relative: str, content: str) -> None:
@@ -501,11 +638,14 @@ def generate_plasma_assets() -> None:
     )
     write(
         "widgets/checkmarks.svg",
-        symbols(
-            [
-                ("checkbox", "M5 12l4 4L19 6", "ColorScheme-Highlight"),
-                ("radiobutton", "M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10", "ColorScheme-Highlight"),
-            ]
+        svg(
+            '<path id="checkbox" transform="translate(0 0)" d="M5 12l4 4L19 6" '
+            'class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2.2" '
+            'stroke-linecap="round" stroke-linejoin="round"/>\n'
+            '<g id="radiobutton" transform="translate(32 0)">'
+            '<circle cx="12" cy="12" r="5" class="ColorScheme-Highlight" fill="currentColor" stroke="none"/>'
+            '<circle cx="12" cy="12" r="2" class="ColorScheme-ViewBackground" fill="currentColor" stroke="none" opacity="0.25"/>'
+            '</g>'
         ),
     )
     write(
@@ -559,9 +699,7 @@ def generate_plasma_assets() -> None:
         )
 
     symbol_assets = {
-        "widgets/calendar.svg": ["event"],
         "widgets/busywidget.svg": ["stopped", "busywidget", "22-22-busywidget", "16-16-busywidget", "hint-rotation-angle"],
-        "widgets/clock.svg": ["ClockFace", "HourHand", "MinuteHand", "SecondHand", "HandCenterScrew", "Glass"],
         "widgets/configuration-icons.svg": [
             "menu", "configure", "rotate", "move", "size-vertical", "size-horizontal",
             "size-diagonal-tr2bl", "size-diagonal-tl2br", "maximize", "unmaximize", "status",
@@ -582,21 +720,20 @@ def generate_plasma_assets() -> None:
         ],
         "widgets/branding.svg": ["brilliant"],
         "widgets/line.svg": ["vertical-line", "horizontal-line"],
-        "widgets/analog_meter.svg": ["background", "label1", "label0", "pointer", "rotateminmax", "rotatecenter", "foreground", "pointer-shadow"],
-        "widgets/notes.svg": ["yellow-notes", "green-notes", "red-notes", "blue-notes", "white-notes", "pink-notes", "orange-notes", "black-notes", "transluscent-notes"],
         "widgets/timer.svg": [str(value) for value in range(10)] + ["separator", "separatorB", "separatorC"],
     }
     for relative, names in symbol_assets.items():
         write(relative, semantic_symbols(names))
+    write("widgets/notes.svg", notes_svg())
+    write("widgets/clock.svg", clock_svg())
+    write("widgets/calendar.svg", calendar_svg())
+    write("widgets/analog_meter.svg", analog_meter_svg())
 
     write("widgets/dragger.svg", state_sheet([
         ("vertical", family_paint("widgets/dragger.svg", opacity=0.4)),
         ("horizontal", family_paint("widgets/dragger.svg", opacity=0.4)),
     ]))
-    write("widgets/glowbar.svg", state_sheet([
-        (edge, family_paint("widgets/glowbar.svg", opacity=0.72))
-        for edge in ("north", "south", "east", "west")
-    ], notch_states={"north", "south", "east", "west"}))
+    write("widgets/glowbar.svg", glowbar_svg())
     write("widgets/margins-highlight.svg", state_sheet([
         (edge, family_paint("widgets/margins-highlight.svg"))
         for edge in ("north", "south", "east", "west")

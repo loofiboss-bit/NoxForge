@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <title>NoxForge up-arrow scalable cursor</title>
+  <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
+  <g fill="none" stroke="#050708" stroke-opacity="0.45" stroke-width="2.95" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l8 12h-6v6h-4v-6H4z"/>
+  </g>
+  <g fill="#0D1419" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l8 12h-6v6h-4v-6H4z"/>
+  </g>
+</svg>

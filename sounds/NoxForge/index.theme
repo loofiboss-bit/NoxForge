@@ -1,6 +1,7 @@
+# @noxforge-version: 21.0.0
 [Sound Theme]
 Name=NoxForge
-Comment=Original restrained forge tones for KDE Plasma
+Comment=Original Tactile Forge Audio v2 for KDE Plasma
 Directories=stereo
 Example=theme-demo
 

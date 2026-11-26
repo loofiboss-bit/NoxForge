@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: MIT */
+/* @noxforge-version: 21.0.0 */
+/* NoxForge Obsidian OLED userContent.css for Firefox, Zen Browser & LibreWolf internal pages */
+
+@-moz-document url("about:newtab"), url("about:home"), url("about:blank"), url("about:privatebrowsing"),
+               url-prefix("about:preferences"), url-prefix("about:addons"), url-prefix("about:config") {
+  :root {
+    --in-content-page-background: #000000 !important;
+    --in-content-box-background: #0A0F13 !important;
+    --in-content-box-background-hover: #202E38 !important;
+    --in-content-box-border-color: #2F414B !important;
+    --in-content-page-color: #E8F0F2 !important;
+    --in-content-deemphasized-text: #A6B4B9 !important;
+    --in-content-primary-button-background: #A3FF47 !important;
+    --in-content-primary-button-background-hover: #82D936 !important;
+    --in-content-primary-button-text-color: #000000 !important;
+    --in-content-accent-color: #A3FF47 !important;
+    --in-content-link-color: #22D3EE !important;
+    --newtab-background-color: #000000 !important;
+    --newtab-background-color-secondary: #0A0F13 !important;
+    --newtab-text-primary-color: #E8F0F2 !important;
+    --newtab-primary-action-background: #A3FF47 !important;
+    scrollbar-color: #455A64 #05080A !important;
+  }
+
+  body {
+    background-color: #000000 !important;
+    color: #E8F0F2 !important;
+  }
+
+  ::selection {
+    background-color: #192D1E !important;
+    color: #E8F0F2 !important;
+  }
+}

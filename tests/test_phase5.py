@@ -24,12 +24,12 @@ class PhaseFiveDesignTests(unittest.TestCase):
         self.assertIn("Kinetic Precision", design)
         self.assertIn("Hallmark", design)
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))
-        self.assertIn(tokens["schemaVersion"], (7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
+        self.assertIn(tokens["schemaVersion"], (7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17))
         self.assertEqual(tokens["colors"]["surfaceSelected"], "#223429")
         self.assertEqual(tokens["geometry"]["forgeNotch"], 4)
         self.assertEqual(tokens["states"]["focusStyle"], "single-2px-outline")
         self.assertFalse(tokens["states"]["normalNotch"])
-        self.assertEqual(tokens["iconography"]["opticalSizes"], [16, 22])
+        self.assertTrue({16, 22}.issubset(set(tokens["iconography"]["opticalSizes"])))
 
     def test_large_selection_is_dark_and_readable(self) -> None:
         tokens = json.loads((ROOT / "design/tokens.json").read_text(encoding="utf-8"))

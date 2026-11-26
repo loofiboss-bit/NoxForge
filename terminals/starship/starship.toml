@@ -1,5 +1,8 @@
 # SPDX-License-Identifier: MIT
-# NoxForge Starship Prompt Configuration
+# @noxforge-version: 21.0.0
+# NoxForge Graphite Starship Prompt Configuration
+
+palette = "noxforge_standard"
 
 format = """
 $username\
@@ -7,10 +10,25 @@ $hostname\
 $directory\
 $git_branch\
 $git_status\
+$python\
+$rust\
+$nodejs\
 $fill\
 $cmd_duration\
 $line_break\
 $character"""
+
+[palettes.noxforge_standard]
+bg = "#0D1419"
+surface = "#141E25"
+border = "#2F414B"
+fg = "#E8F0F2"
+fg_secondary = "#A6B4B9"
+accent = "#A3FF47"
+cyan = "#22D3EE"
+violet = "#A78BFA"
+warning = "#FBBF24"
+negative = "#FF6B7A"
 
 [character]
 success_symbol = "[⚡](bold #A3FF47) "
@@ -37,6 +55,15 @@ conflicted = "🏳 "
 modified = "*${count}"
 staged = "+${count}"
 untracked = "?${count}"
+
+[python]
+style = "bold #A78BFA"
+
+[rust]
+style = "bold #FBBF24"
+
+[nodejs]
+style = "bold #A3FF47"
 
 [cmd_duration]
 min_time = 2_000

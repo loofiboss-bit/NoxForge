@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render deterministic wallpaper, SDDM, and preview variants from the editable source."""
+"""Render deterministic PNG24 wallpaper, KDE Dynamic images_dark, SDDM, and preview variants."""
 
 from __future__ import annotations
 
@@ -42,8 +42,11 @@ VARIANT_SOURCES = {
 OUTPUTS = (
     ("16:9", 1920, 1080),
     ("16:9", 2560, 1440),
+    ("16:9", 2560, 1600),
     ("16:9", 3840, 2160),
+    ("16:9", 3840, 2400),
     ("ultrawide", 3440, 1440),
+    ("ultrawide", 5120, 1440),
 )
 WALLPAPER_VARIANTS = (
     ("NoxForge", False),
@@ -62,24 +65,25 @@ def render(
     height: int,
     *,
     dim: bool = False,
-    indexed: bool = False,
 ) -> None:
+    """Render true 24-bit PNG24 without PNG8 256-color quantization banding."""
     command = [
         magick,
         "-background", "none",
         str(source),
-        "-resize", f"{width}x{height}!",
+        "-resize", f"{width}x{height}^",
+        "-gravity", "center",
+        "-extent", f"{width}x{height}",
     ]
     if dim:
         command += ["-fill", TOKENS["colors"]["background"], "-colorize", "58"]
-    if indexed:
-        command += ["-dither", "None", "-colors", "256"]
     command += [
+        "-depth", "8",
         "-strip",
         "-define", "png:exclude-chunks=date,time",
         "-define", "png:compression-level=9",
         "-define", "png:compression-filter=5",
-        f"{'PNG8' if indexed else 'PNG24'}:{destination}",
+        f"PNG24:{destination}",
     ]
     subprocess.run(command, check=True)
 
@@ -106,9 +110,11 @@ def main() -> int:
                     width,
                     height,
                     dim=dim,
-                    indexed=True,
                 )
                 rendered.append((generated, ROOT / f"wallpapers/{variant}/contents/images/{width}x{height}.png"))
+                if variant == "NoxForge-Obsidian":
+                    # Populate Plasma 6 Dynamic Wallpaper images_dark/ inside primary NoxForge package
+                    rendered.append((generated, ROOT / f"wallpapers/NoxForge/contents/images_dark/{width}x{height}.png"))
         sddm_background = temp / "sddm-background.png"
         render(magick, SOURCES["16:9"], sddm_background, 2560, 1440, dim=True)
         rendered.append((sddm_background, ROOT / "sddm/NoxForge/background.png"))
@@ -125,14 +131,14 @@ def main() -> int:
         drift = [target for generated, target in rendered if not target.is_file() or target.read_bytes() != generated.read_bytes()]
         if args.check:
             if drift:
-                print("Wallpaper renderer drift: " + ", ".join(str(path.relative_to(ROOT)) for path in drift), file=sys.stderr)
+                print("Wallpaper renderer drift: " + ", ".join(str(path.relative_to(ROOT)) for path in drift[:12]), file=sys.stderr)
                 return 1
-            print(f"Verified {len(rendered)} deterministic wallpaper artifacts")
+            print(f"Verified {len(rendered)} deterministic PNG24 wallpaper artifacts")
             return 0
         for generated, target in rendered:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(generated, target)
-        print(f"Rendered {len(rendered)} wallpaper, SDDM, and preview artifacts")
+        print(f"Rendered {len(rendered)} PNG24 wallpaper, images_dark, SDDM, and preview artifacts")
     return 0
 
 

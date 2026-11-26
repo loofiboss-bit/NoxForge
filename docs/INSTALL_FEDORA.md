@@ -1,6 +1,6 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 20.0.0 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
+NoxForge 21.0.0 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
 journey. It provides the palette-adaptive native Qt style with dynamic accent engine,
 the unified Control Center suite (`noxforge-ctl` and PySide6 GUI), system doctor,
 GTK 3/4 themes, syntax/editor/terminal assets (including Zed, btop, Starship, Fastfetch,
@@ -47,8 +47,8 @@ To get the clean, modern look featured in the showcase:
 ## Build from the distributed source archive
 
 ```bash
-tar -xJf noxforge-20.0.0-source.tar.xz
-cd NoxForge-20.0.0
+tar -xJf noxforge-21.0.0-source.tar.xz
+cd NoxForge-21.0.0
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 DESTDIR="$PWD/stage" cmake --install build

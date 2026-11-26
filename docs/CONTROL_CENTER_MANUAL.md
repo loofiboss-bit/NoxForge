@@ -1,22 +1,21 @@
 # NoxForge Control Center & Unified CLI Manual
 
-`noxforge-ctl` and **NoxForge Control Center v5** provide a unified orchestration suite for switching palettes, customizing accent highlights, configuring Kinetic Iconography, tuning transparency, deploying ecosystem themes, managing diurnal schedules, and verifying system health across KDE Plasma 6.8+.
+`noxforge-ctl` and **NoxForge Control Center v6** provide a unified orchestration suite for switching palettes, customizing 6 signature Forge accents (plus WCAG-AA Wallpaper Accent Extraction), managing named presets, configuring Duotone & Kinetic Iconography, tuning transparency, deploying Ecosystem v4 (25 tools) and Fastfetch Kinetic Studio v2, managing diurnal schedules, and verifying system health across KDE Plasma 6.8+.
 
 ---
 
 ## 1. Overview
 
-In **v20.0.0**, NoxForge provides a full-featured command-line utility (`noxforge-ctl`) and a 5-tab interactive PySide6 graphical interface (**Control Center v5** / `noxforge-ctl gui` / application launcher).
+In **v21.0.0**, NoxForge provides a live hot-reload command-line utility (`noxforge-ctl`) and a 5-tab interactive PySide6 graphical interface (**Control Center v6** / `noxforge-ctl gui` / application launcher) using non-blocking `CommandWorker(QThread)` execution and native `NoxForge` QStyle dogfooding.
 
 Key capabilities:
-- **Profile Switching**: Instantly switch between the default deep slate **Graphite** palette and the pure **Obsidian OLED** true-black palette.
-- **Accent Matrix & Union Harmony**: Select between Forge accents (`lime`, `cyan`, `violet`, `amber`, `system`, or WCAG AA custom hexes) synchronized across Plasma, Qt 6, `plasma-union`, and GTK 3/4.
-- **Kinetic Icon Studio (`icons`)**: Configure custom icon accent tinting, optical sizing (`16`, `22`, or `auto`), and preview live 16-frame animated sprites and 10%/20%/25% multi-level status ladders.
-- **Transparency & Opacity (`opacity`)**: Integrated tuning of panel, dialog, tooltip, and Aurorae window decoration opacity via presets (`solid`, `default`, `frost`, `glass`, `ultra`) or fine-grained sliders.
-- **Ecosystem v3 & Flatpak (`ecosystem`, `flatpak`)**: Non-destructively deploy or restore themes across 18 developer tools (including Yazi, Lazygit, Zellij, Tmux, Zed, Neovim, Helix, Ghostty, Kitty, Alacritty, Starship, btop, Obsidian, Rofi) with `.noxforge.bak` backups and Flatpak GTK/Qt/icon overrides.
-- **Motion, Wallpapers & Presets (`motion`, `wallpaper`, `export`, `import`)**: Control kinetic animation curves/reduced motion, switch the 5-wallpaper suite, and export/import full system presets.
-- **Diurnal Automation (`schedule`)**: Optional systemd user timer to automatically switch between Graphite during the day and Obsidian at night.
-- **Diagnostics (`doctor`)**: Built-in integration with `noxforge-doctor` (Schema 13) to verify installation integrity, `iconLevelMatrix`, and palette synchronization.
+- **Profile Switching & Live Hot-Reload**: Instantly switch between deep slate **Graphite** and pure `#000000` **Obsidian OLED**, automatically hot-reloading Plasma (`KGlobalSettings`), KWin, GTK (`gsettings`), terminals (`SIGUSR1` to current-UID Kitty/Foot/Ghostty), `tmux`, and Neovim (opt out via `--no-reload` or `NOXFORGE_SKIP_LIVE_RELOAD=1`).
+- **6-Accent Matrix & Wallpaper Accent Extractor**: Choose from 6 WCAG-verified accents (`lime`, `cyan`, `violet`, `amber`, `crimson`, `ice`, `system`, or custom WCAG AA hex), extract a safe accent directly from any wallpaper (`accent --from-wallpaper`), and optionally render an accent-tinted wallpaper (`--sync-wallpaper`) with user-local Aurorae rail sync.
+- **Named Presets (`preset`)**: Save, list, apply, and delete named configuration snapshots (`profile`, `accent`, `opacity`, `wallpaper`, `reduced_motion`, `union_mode`) and bind them to Day/Night schedules (`--day-preset`/`--night-preset`).
+- **Kinetic & Duotone Icon Studio (`icons`)**: Preview live 16-frame animated sprites and 10%/20%/25% multi-level status ladders alongside 482 scalable Duotone Surface icons.
+- **Transparency & Opacity (`opacity`)**: Integrated tuning of panel, dialog, tooltip, and Aurorae v2 window decoration opacity via presets (`solid`, `default`, `frost`, `glass`, `ultra`) or fine-grained sliders.
+- **Ecosystem v4 & Flatpak (`ecosystem`, `fastfetch`, `flatpak`)**: Non-destructively deploy or restore themes across 25 developer tools (adding `bat`, `delta`, `fzf`, `eza`, `wofi`, and Fastfetch Kinetic Studio v2 `main`/`cyber`/`minimal` presets) with `.noxforge.bak` backups and Flatpak theme, icon, and cursor overrides.
+- **Diagnostics (`doctor`)**: Built-in integration with `noxforge-doctor` (Schema 14) to verify installation integrity, real version metadata, `qtStyleLoadable`, `kwinBlurStatus`, `gtkImportIntegrity`, `flatpakIconAccess`, `dayNightTimerStatus`, and `configDrift`.
 
 ---
 
@@ -25,7 +24,7 @@ Key capabilities:
 ### Synopsis
 
 ```bash
-noxforge-ctl {switch,apply,sync,accent,icons,union,kwin-csd,flatpak,ecosystem,motion,wallpaper,export,import,preset,status,opacity,doctor,schedule,completion,gui} [options]
+noxforge-ctl {switch,apply,sync,accent,preset,fastfetch,icons,union,kwin-csd,flatpak,ecosystem,motion,wallpaper,export,import,status,opacity,doctor,schedule,completion,gui} [options]
 ```
 
 ### Subcommands
@@ -118,14 +117,37 @@ noxforge-ctl sync --dry-run --json
 ```
 
 #### `accent`
-Select the active Forge accent highlight:
+Select any of the 6 signature Forge accents, extract a WCAG-AA safe accent from a wallpaper, or apply a custom hex:
 
 ```bash
 noxforge-ctl accent lime
 noxforge-ctl accent cyan
 noxforge-ctl accent violet
 noxforge-ctl accent amber
+noxforge-ctl accent crimson
+noxforge-ctl accent ice
+noxforge-ctl accent --from-wallpaper --sync-wallpaper
 noxforge-ctl accent system
+```
+
+#### `preset` (v21.0.0 — Named Presets)
+Manage saved named configuration snapshots in `~/.config/noxforge/presets.json`:
+
+```bash
+noxforge-ctl preset list
+noxforge-ctl preset save coding-night
+noxforge-ctl preset apply coding-night
+noxforge-ctl preset delete coding-night
+```
+
+#### `fastfetch` (v21.0.0 — Fastfetch Kinetic Studio v2)
+Deploy one of the three curated Fastfetch telemetry presets (`main`, `cyber`, `minimal`) with matching ANSI logos:
+
+```bash
+noxforge-ctl fastfetch --preset main
+noxforge-ctl fastfetch --preset cyber
+noxforge-ctl fastfetch --preset minimal
+noxforge-ctl fastfetch --status
 ```
 
 #### `status`

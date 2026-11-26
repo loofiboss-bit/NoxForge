@@ -1,0 +1,81 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "__NOXFORGE_FASTFETCH_LOGO__",
+    "type": "file",
+    "color": {
+      "1": "38;2;163;255;71",
+      "2": "38;2;34;211;238"
+    },
+    "padding": {
+      "top": 1,
+      "left": 1,
+      "right": 2
+    }
+  },
+  "display": {
+    "separator": " \u276f ",
+    "color": {
+      "keys": "38;2;163;255;71",
+      "title": "38;2;232;240;242"
+    }
+  },
+  "modules": [
+    "title",
+    "separator",
+    {
+      "type": "os",
+      "key": "OS      "
+    },
+    {
+      "type": "kernel",
+      "key": "Kernel  "
+    },
+    {
+      "type": "wm",
+      "key": "WM      "
+    },
+    {
+      "type": "de",
+      "key": "Desktop "
+    },
+    {
+      "type": "theme",
+      "key": "Theme   "
+    },
+    {
+      "type": "icons",
+      "key": "Icons   "
+    },
+    {
+      "type": "cursor",
+      "key": "Cursor  "
+    },
+    {
+      "type": "terminal",
+      "key": "Terminal"
+    },
+    {
+      "type": "shell",
+      "key": "Shell   "
+    },
+    {
+      "type": "cpu",
+      "key": "CPU     "
+    },
+    {
+      "type": "gpu",
+      "key": "GPU     "
+    },
+    {
+      "type": "memory",
+      "key": "Memory  "
+    },
+    {
+      "type": "display",
+      "key": "Display "
+    },
+    "break",
+    "colors"
+  ]
+}

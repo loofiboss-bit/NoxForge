@@ -9,6 +9,9 @@
     </style>
     <style id="noxforge-icon-style" type="text/css">
       .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .surface-plate { fill: #1B2831; fill-opacity: 0.90; stroke: none; }
+      .surface-tab { fill: #141E25; fill-opacity: 0.92; stroke: none; }
+      .surface-bevel { stroke: #4B606A; stroke-width: 1; opacity: 0.72; }
       .accent { color: #22D3EE; stroke: currentColor; }
       .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
       .lime { color: #A3FF47; stroke: currentColor; }
@@ -21,20 +24,8 @@
       .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
       .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
     </style>
-  <style id="noxforge-motion" type="text/css">
-    @media (prefers-reduced-motion: no-preference) {
-      @keyframes nf-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-      @keyframes nf-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      @keyframes nf-wave { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
-      .nf-pulse { animation: nf-pulse 1.4s ease-in-out infinite; }
-      .nf-spin { transform-origin: 12px 12px; animation: nf-spin 1.2s linear infinite; }
-      .nf-wave-1 { animation: nf-wave 1.8s ease-in-out 0s infinite; }
-      .nf-wave-2 { animation: nf-wave 1.8s ease-in-out 0.2s infinite; }
-      .nf-wave-3 { animation: nf-wave 1.8s ease-in-out 0.4s infinite; }
-    }
-  </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <g id="nf-mimetypes-text-markdown"><path d="M6 3h9l4 4v14H6zM15 3v5h4M9 12h7M9 16h7"/><path class="accent" d="M9 12h4"/></g>
+    <path class="surface-plate" d="M7.5 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5.5z"/><path class="surface-bevel" d="M8 3.6h9.5"/><path d="M7.5 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5.5z"/><path class="lime" d="M5 6L8 3"/><path d="M7.5 16.5v-5l2.2 2.4 2.2-2.4v5"/><path class="lime" d="M15.5 11.5v5M13.8 14.8l1.7 1.7 1.7-1.7"/>
   </g>
 </svg>

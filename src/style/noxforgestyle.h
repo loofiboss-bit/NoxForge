@@ -3,7 +3,11 @@
 
 #include "noxforgemotion.h"
 
+#include <QColor>
 #include <QCommonStyle>
+#include <QDateTime>
+#include <QFileSystemWatcher>
+#include <QString>
 
 class NoxForgeStyle final : public QCommonStyle
 {
@@ -11,6 +15,7 @@ class NoxForgeStyle final : public QCommonStyle
 
 public:
     explicit NoxForgeStyle();
+    ~NoxForgeStyle() override;
 
     QPalette standardPalette() const override;
     void polish(QPalette &palette) override;
@@ -40,10 +45,26 @@ public:
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
                             QPainter *painter, const QWidget *widget = nullptr) const override;
 
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
+    void refreshConfigCache() const;
+    bool isObsidianConfig() const;
+    bool isObsidianMode(const QStyleOption *option = nullptr,
+                        const QWidget *widget = nullptr) const;
+    QColor activeAccent(const QStyleOption *option = nullptr) const;
     qreal motionValue(const QWidget *widget, NoxForgeMotion::Channel channel,
                       bool target) const;
     qreal motionScale(const QWidget *widget = nullptr) const;
 
     NoxForgeMotion m_motion;
+    mutable QFileSystemWatcher m_configWatcher;
+    mutable bool m_configDirty = true;
+    mutable QString m_cachedConfigPath;
+    mutable QDateTime m_cachedConfigMtime;
+    mutable QDateTime m_cachedConfigCtime;
+    mutable qint64 m_cachedConfigSize = -1;
+    mutable QString m_cachedScheme;
+    mutable QColor m_cachedAccent;
 };

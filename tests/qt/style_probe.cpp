@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include <QApplication>
 #include <QCommonStyle>
+#include <QFrame>
 #include <QImage>
 #include <QPainter>
 #include <QSettings>
@@ -8,11 +9,15 @@
 #include <QStyleFactory>
 #include <QStyleOptionButton>
 #include <QStyleOptionComboBox>
+#include <QStyleOptionDockWidget>
+#include <QStyleOptionFrame>
 #include <QStyleOptionHeader>
 #include <QStyleOptionProgressBar>
 #include <QStyleOptionSlider>
 #include <QStyleOptionSpinBox>
+#include <QStyleOptionTitleBar>
 #include <QStyleOptionToolButton>
+#include <QStyleOptionViewItem>
 #include <QTextStream>
 #include <QTemporaryDir>
 #include <QtMath>
@@ -375,8 +380,109 @@ int main(int argc, char **argv)
     }
     qunsetenv("NOXFORGE_VARIANT");
 
+    // V21: verify 6 signature accents including crimson (#FF8FA3) and ice (#93C5FD)
+    for (const auto &entry : QList<QPair<QByteArray, QString>>{
+             {"lime", QStringLiteral("#a3ff47")},
+             {"cyan", QStringLiteral("#22d3ee")},
+             {"violet", QStringLiteral("#a78bfa")},
+             {"amber", QStringLiteral("#fbbf24")},
+             {"crimson", QStringLiteral("#ff8fa3")},
+             {"ice", QStringLiteral("#93c5fd")},
+         }) {
+        qputenv("NOXFORGE_ACCENT", entry.first);
+        QPalette accentPal;
+        style->polish(accentPal);
+        if (accentPal.color(QPalette::Accent).name().toLower() != entry.second) return 52;
+    }
+    qunsetenv("NOXFORGE_ACCENT");
+
+    // V21: verify newly implemented Qt6 primitives, controls, and complex controls
+    {
+        QStyleOptionSlider dialOpt;
+        dialOpt.rect = QRect(0, 0, 64, 64);
+        dialOpt.state = QStyle::State_Enabled | QStyle::State_HasFocus;
+        dialOpt.minimum = 0;
+        dialOpt.maximum = 100;
+        dialOpt.sliderPosition = 65;
+        dialOpt.subControls = QStyle::SC_DialGroove | QStyle::SC_DialHandle | QStyle::SC_DialTickmarks;
+        const QImage dialImg = renderComplex(style, QStyle::CC_Dial, dialOpt);
+        if (!containsColor(dialImg, QColor(QStringLiteral("#A3FF47")))) return 53;
+
+        QStyleOptionSlider tickSlider = slider;
+        tickSlider.state = QStyle::State_Enabled;
+        tickSlider.tickPosition = QSlider::TicksBothSides;
+        tickSlider.tickInterval = 25;
+        const QImage tickImg = renderComplex(style, QStyle::CC_Slider, tickSlider);
+        if (!containsColor(tickImg, QColor(QStringLiteral("#A3FF47")))) return 54;
+
+        QStyleOptionSpinBox spinActive = spin;
+        spinActive.direction = Qt::LeftToRight;
+        spinActive.state = QStyle::State_Enabled | QStyle::State_MouseOver | QStyle::State_Sunken;
+        spinActive.activeSubControls = QStyle::SC_SpinBoxUp;
+        spinActive.stepEnabled = QAbstractSpinBox::StepUpEnabled | QAbstractSpinBox::StepDownEnabled;
+        const QImage spinImg = renderComplex(style, QStyle::CC_SpinBox, spinActive);
+        if (!containsColor(spinImg, QColor(QStringLiteral("#A3FF47")))) return 55;
+
+        QStyleOptionComplex mdiOpt;
+        mdiOpt.rect = QRect(0, 0, 72, 24);
+        mdiOpt.state = QStyle::State_Enabled | QStyle::State_MouseOver;
+        mdiOpt.subControls = QStyle::SC_MdiMinButton | QStyle::SC_MdiNormalButton | QStyle::SC_MdiCloseButton;
+        mdiOpt.activeSubControls = QStyle::SC_MdiCloseButton;
+        const QImage mdiImg = renderComplex(style, QStyle::CC_MdiControls, mdiOpt);
+        if (!containsColor(mdiImg, QColor(QStringLiteral("#FF6B7A")))) return 56;
+
+        QStyleOptionTitleBar tbOpt;
+        tbOpt.rect = QRect(0, 0, 240, 28);
+        tbOpt.state = QStyle::State_Enabled;
+        tbOpt.titleBarState = Qt::WindowActive;
+        tbOpt.text = QStringLiteral("NoxForge");
+        tbOpt.subControls = QStyle::SC_TitleBarLabel | QStyle::SC_TitleBarMinButton
+                          | QStyle::SC_TitleBarMaxButton | QStyle::SC_TitleBarCloseButton;
+        const QImage tbImg = renderComplex(style, QStyle::CC_TitleBar, tbOpt);
+        if (!containsColor(tbImg, QColor(QStringLiteral("#A3FF47")))) return 57;
+
+        QStyleOptionDockWidget dockOpt;
+        dockOpt.rect = QRect(0, 0, 200, 26);
+        dockOpt.state = QStyle::State_Enabled;
+        dockOpt.title = QStringLiteral("Inspector");
+        const QImage dockImg = renderControl(style, QStyle::CE_DockWidgetTitle, dockOpt);
+        if (!containsColor(dockImg, QColor(QStringLiteral("#A3FF47")))) return 58;
+
+        QStyleOption rubberOpt;
+        rubberOpt.rect = QRect(0, 0, 80, 48);
+        rubberOpt.state = QStyle::State_Enabled;
+        const QImage rubberImg = renderControl(style, QStyle::CE_RubberBand, rubberOpt);
+        if (!containsColor(rubberImg, QColor(QStringLiteral("#A3FF47")))) return 59;
+
+        QStyleOptionFrame frameOpt;
+        frameOpt.rect = QRect(0, 0, 120, 4);
+        frameOpt.frameShape = QFrame::HLine;
+        const QImage frameImg = renderControl(style, QStyle::CE_ShapedFrame, frameOpt);
+        if (frameImg.isNull()) return 60;
+
+        QStyleOption gripOpt;
+        gripOpt.rect = QRect(0, 0, 18, 18);
+        gripOpt.state = QStyle::State_Enabled;
+        const QImage gripImg = renderControl(style, QStyle::CE_SizeGrip, gripOpt);
+        if (gripImg.isNull()) return 61;
+
+        QStyleOptionViewItem rowOpt;
+        rowOpt.rect = QRect(0, 0, 160, 28);
+        rowOpt.state = QStyle::State_Enabled | QStyle::State_Selected;
+        const QImage rowImg = renderPrimitive(style, QStyle::PE_PanelItemViewRow, rowOpt);
+        if (!containsColor(rowImg, QColor(QStringLiteral("#A3FF47")))) return 62;
+
+        QStyleOption tbHandleOpt;
+        tbHandleOpt.rect = QRect(0, 0, 12, 28);
+        tbHandleOpt.state = QStyle::State_Enabled | QStyle::State_Horizontal;
+        if (renderPrimitive(style, QStyle::PE_IndicatorToolBarHandle, tbHandleOpt).isNull()) return 63;
+        if (renderPrimitive(style, QStyle::PE_IndicatorToolBarSeparator, tbHandleOpt).isNull()) return 64;
+        if (renderPrimitive(style, QStyle::PE_PanelScrollAreaCorner, tbHandleOpt).isNull()) return 65;
+        if (renderPrimitive(style, QStyle::PE_FrameTabBarBase, tbHandleOpt).isNull()) return 66;
+    }
+
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"
                         << "Loaded style class: " << className << '\n'
-                        << "Geometry, hit testing, RTL, states, motion duration, indicators, busy, high-DPI, and dual-palette Obsidian probes passed\n";
+                        << "Geometry, hit testing, RTL, states, motion duration, indicators, busy, high-DPI, dual-palette Obsidian, 6-accent, and V21 full Qt6 control probes passed\n";
     return 0;
 }
