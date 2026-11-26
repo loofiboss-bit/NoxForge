@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "loofi@loofi.com",
+        "Name": "Loofi"
+      }
+    ],
+    "Description": "Compact graphite Aurorae v2 decoration with ambient shadows and Forge Notch details",
+    "Id": "io.github.loofiboss.noxforge.desktop",
+    "License": "MIT",
+    "Name": "NoxForge",
+    "Version": "21.0.0",
+    "Website": "https://github.com/loofiboss-bit/NoxForge"
+  },
+  "KPackageStructure": "KWin/Decoration"
+}

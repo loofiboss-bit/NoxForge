@@ -9,6 +9,9 @@
     </style>
     <style id="noxforge-icon-style" type="text/css">
       .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .surface-plate { fill: #1B2831; fill-opacity: 0.90; stroke: none; }
+      .surface-tab { fill: #141E25; fill-opacity: 0.92; stroke: none; }
+      .surface-bevel { stroke: #4B606A; stroke-width: 1; opacity: 0.72; }
       .accent { color: #22D3EE; stroke: currentColor; }
       .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
       .lime { color: #A3FF47; stroke: currentColor; }

@@ -27,6 +27,7 @@ public:
     void setDurationScale(qreal scale);
 
     qreal value(const QWidget *widget, Channel channel, bool target) const;
+    qreal tabHoverValue(const QWidget *widget, int tabIndex, bool target) const;
     bool showsBusyIndicator(const QWidget *widget, bool requested) const;
     qreal busyProgress(const QWidget *widget, bool busy) const;
 
@@ -54,6 +55,8 @@ private:
         Transition focus;
         Transition press;
         Transition checked;
+        QHash<int, Transition> tabHover;
+        int hoveredTab = -1;
         qreal busyPhase = 0.0;
         int busyPendingMs = 0;
         int busyVisibleMs = 0;
@@ -70,6 +73,7 @@ private:
 
     int duration(Channel channel) const;
     void setTarget(QWidget *widget, Channel channel, bool target);
+    void setHoveredTab(QWidget *widget, int tabIndex);
     void synchronizeBusy(QWidget *widget);
     void removeWidget(QWidget *widget);
     void advance(int elapsedMs);

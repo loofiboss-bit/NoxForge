@@ -1,5 +1,27 @@
 # Changelog
 
+## 21.0.0 — Duotone Visual Craft, Aurorae v2, Live Control Core & Ecosystem v4
+
+- **Duotone Visual Craft, Cursors, Audio & Wallpapers**:
+  - Upgraded `icons/NoxForge` to Duotone Surface craft across `32x32`, `48x48`, and `64x64` + `482` scalable SVGs (`56` original `apps/`, `30` distinct `mimetypes/`, `28` duotone & 6-accent `places/`), preserving crisp monoline `16x16`/`22x22` symbols and V20 kinetic ladders (`1,052` optical variants).
+  - Upgraded `cursors/NoxForge-Cursors` with `4x4` subpixel AA and `1 px` `#050708` contrast halo across `[24, 32, 36, 48, 64]` plus Plasma 6 Wayland `cursors_scalable/` (`368` scalable artifacts).
+  - Upgraded `wallpapers/` to true **PNG24** (zero `PNG8` banding), added `16:10` (`2560x1600`, `3840x2400`) & `32:9` (`5120x1440`), added KDE Plasma 6 Dynamic Wallpaper (`images_dark/`), enriched `NoxForge-Obsidian`, and added accent-adaptive `render_accent_wallpaper()`.
+  - Upgraded `sounds/NoxForge` to **Tactile Forge Audio v2** (`27` distinct DSP sources across `32` Freedesktop events).
+- **Aurorae v2, Plasma Shell SVGs & Look-and-Feel Surfaces**:
+  - Upgraded both Graphite and Obsidian Aurorae decorations to **Aurorae v2** (`Shadow=true`, filter-free stepped ambient shadows, flush `decoration-maximized-*` frames, Plasma 6 `metadata.json`, and user-local live accent rail sync).
+  - Fixed Plasma SVG chamfered Forge Notch `edge_highlight` and overhauled `notes.svg`, `clock.svg`, `calendar.svg`, `analog_meter.svg`, `glowbar.svg`, and `checkmarks.svg`.
+  - Added single-source `contents/osd/Osd.qml`, `contents/osd/OsdItem.qml`, and `contents/systemdialog/SystemDialog.qml` across Graphite and Obsidian Look-and-Feel packages.
+- **Complete Qt 6 C++ Style, Modular Union CSS & Deep GTK4/Libadwaita**:
+  - Added `CC_Dial`, `CC_MdiControls`, `CC_TitleBar`, `CC_Slider` tickmarks, `CC_SpinBox` per-button hover/press states, `CE_DockWidgetTitle`, `CE_RubberBand`, `CE_HeaderEmptyArea`, `CE_ComboBoxLabel`, `CE_ShapedFrame`, `CE_SizeGrip`, `PE_PanelItemViewRow`, `PE_PanelScrollAreaCorner`, `PE_IndicatorDockWidgetResizeHandle`, `PE_IndicatorToolBarHandle`, `PE_IndicatorToolBarSeparator`, and `PE_FrameTabBarBase` to `libnoxforge6.so`.
+  - Replaced `1000 ms` `QSettings` polling with reactive `QFileSystemWatcher` + `ApplicationPaletteChange` caching, added `QLineEdit` / `QAbstractItemView` / per-tab `QTabBar` motion, and expanded the Forge Accent Matrix to **6 WCAG-verified accents** by adding **Forge Crimson** (`#FF8FA3`) and **Titanium Ice** (`#93C5FD`).
+  - Expanded Plasma 6.8 Union CSS into 10 modular stylesheets per variant and differentiated GTK 3.0 vs deep GTK 4.0 / Libadwaita CSS (`windowcontrols`, `switch > slider`, `scale`, `viewswitcher`, `statuspage`, `:backdrop`).
+- **Control Center v6 & Live Hot-Reload CLI**:
+  - Added non-blocking `CommandWorker(QThread)`, native `NoxForge` QStyle dogfooding, true `#000000` Obsidian QSS, 6-accent matrix + WCAG-AA Wallpaper Accent Extractor, Named Presets Manager, Live Surface Preview, Ecosystem search filter, and Fastfetch Kinetic Studio v2 preset selector.
+  - Added `reload_running_apps()` (`KGlobalSettings`, `KWin`, `gsettings`, `SIGUSR1` Kitty/Foot/Ghostty, `tmux`, `nvim`), `preset [list|save|apply|delete]`, `accent --from-wallpaper [--sync-wallpaper]`, `fastfetch [--preset main|cyber|minimal]`, Flatpak icon/cursor overrides, and corrected shell completions in `noxforge-ctl`.
+- **Ecosystem v4 (25 Tools) & Doctor Schema 14**:
+  - Completed Fastfetch Kinetic Studio v2 (`main`, `cyber`, `minimal` + 3 ANSI logos), deepened `neovim` (140+ highlight groups), `vscode` (`semanticTokenColors` + 45+ workbench keys), `firefox`/`zen`/`librewolf` (`userContent*.css` + multi-profile), `discord`/`vesktop`/`equibop`/Flatpak, `starship` (Obsidian variant), and `kitty` (`tab_bar`), and added `bat`, `delta`, `fzf`, `eza`, and `wofi`.
+  - Upgraded `design/tokens.json` to **Schema 17** and `tools/noxforge-doctor` to **Schema 14** (removed blind `metadata_version()` fallback; added `qtStyleLoadable`, `kwinBlurStatus`, `gtkImportIntegrity`, `flatpakIconAccess`, `dayNightTimerStatus`, and `configDrift`).
+
 ## 20.0.0 — Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
 
 - **Kinetic Iconography & Multi-Level Status Engine**:

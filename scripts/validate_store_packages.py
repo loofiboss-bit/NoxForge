@@ -197,12 +197,23 @@ def validate_archive(archive: Path, package: str, manifest: dict) -> dict:
             "components/konsole/NoxForgeObsidian.colorscheme",
             "components/apps/yazi/theme.toml",
             "components/apps/lazygit/config.yml",
+            "components/apps/wofi/style.css",
             "components/terminals/zellij/noxforge.kdl",
             "components/terminals/tmux/noxforge.conf",
+            "components/terminals/bat/NoxForge.tmTheme",
+            "components/terminals/delta/noxforge.gitconfig",
+            "components/terminals/fzf/noxforge.sh",
+            "components/terminals/eza/theme.yml",
+            "components/fastfetch/noxforge-cyber.jsonc",
             "components/icons/NoxForge/scalable/animations/process-working.svg",
+            "components/cursors/NoxForge-Cursors/cursors_scalable/default/default.svg",
+            "components/cursors/NoxForge-Cursors/cursors_scalable/default/metadata.json",
+            "components/global-theme/contents/osd/Osd.qml",
+            "components/global-theme/contents/systemdialog/SystemDialog.qml",
+            "components/aurorae/io.github.loofiboss.noxforge.desktop/metadata.json",
         }
         if not required <= set(relative_names):
-            raise ValueError(f"portable archive is missing required v20 assets: {sorted(required - set(relative_names))}")
+            raise ValueError(f"portable archive is missing required v21 assets: {sorted(required - set(relative_names))}")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     return {"package": package, "path": archive.name, "bytes": archive.stat().st_size, "sha256": digest, "budgetBytes": artifact["budgetBytes"]}
 

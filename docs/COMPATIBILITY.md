@@ -1,4 +1,4 @@
-# NoxForge 20 compatibility
+# NoxForge 21 compatibility
 
 The intended compatibility target is Fedora 44 and Fedora 45 KDE and the target Arch
 Plasma/KWin 6.8+ and Qt 6.11 family on Wayland. The project makes no X11,
@@ -70,10 +70,10 @@ KPackage metadata is at the Global Theme and Plasma Style archive roots, and
 all packages reject symlinks. Installation, upgrade, and removal do not apply
 NoxForge, edit KDE/PLM/SDDM configuration, or switch display managers.
 
-The v20 release candidate is documented in the
-[v20 release plan](NOXFORGE_V20_PLAN.md). Its automated gates and single-source
+The v21 release candidate is documented in the
+[v21 release plan](NOXFORGE_V21_PLAN.md). Its automated gates and single-source
 design system verification pass locally and in preflight CI. The machine-readable
-`docs/evidence/v20/qualification.json` contains verified candidate counters.
+`docs/evidence/v21/qualification.json` contains verified candidate counters.
 Arch build/live login, pacman lifecycle, and physical qualification
 remain pending. Offscreen and generated results do not establish those
 behaviors.

@@ -336,10 +336,12 @@ def component_path(data_root: Path, definition: tuple[str, str, str]) -> Path:
 
 
 def metadata_version(path: Path, expected: str | None = None) -> str | None:
+    _ = expected
     if path.name == "metadata.json":
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))["KPlugin"]["Version"]
-        except (KeyError, TypeError, json.JSONDecodeError, OSError):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            value = payload.get("KPlugin", {}).get("Version") or payload.get("version")
+        except (KeyError, TypeError, AttributeError, json.JSONDecodeError, OSError):
             return None
         return value if isinstance(value, str) and SEMVER.fullmatch(value) else None
     if path.name == "metadata.desktop":
@@ -378,8 +380,6 @@ def metadata_version(path: Path, expected: str | None = None) -> str | None:
                 return m.group(1)
     except OSError:
         return None
-    if expected and SEMVER.fullmatch(expected):
-        return expected
     return None
 
 
@@ -835,6 +835,12 @@ def qml_variant_drift_diagnostics(roots: list[Path], root: Path = Path("/")) -> 
             ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/splash/Splash.qml", "qml/shared/splash/Splash.qml"),
             ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml", "qml/shared/logout/Logout.qml"),
             ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/logout/Logout.qml", "qml/shared/logout/Logout.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/Osd.qml", "qml/shared/osd/Osd.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/osd/Osd.qml", "qml/shared/osd/Osd.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/OsdItem.qml", "qml/shared/osd/OsdItem.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/osd/OsdItem.qml", "qml/shared/osd/OsdItem.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.desktop/contents/systemdialog/SystemDialog.qml", "qml/shared/systemdialog/SystemDialog.qml"),
+            ("plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/systemdialog/SystemDialog.qml", "qml/shared/systemdialog/SystemDialog.qml"),
             ("sddm/themes/NoxForge/Main.qml", "qml/shared/sddm/Main.qml"),
             ("sddm/themes/NoxForgeObsidian/Main.qml", "qml/shared/sddm/Main.qml"),
             ("kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml", "qml/shared/tabbox/main.qml"),
@@ -1324,19 +1330,30 @@ def ecosystem_state_diagnostics(root: Path) -> dict[str, Any]:
     )
     state_file = config_base / "noxforge/ecosystem-state.json"
     deployed_apps: list[str] = []
+    config_drift: list[dict[str, str]] = []
     if state_file.is_file():
         try:
             data = json.loads(state_file.read_text(encoding="utf-8"))
-            if isinstance(data.get("apps"), dict):
-                deployed_apps = sorted(data["apps"].keys())
+            apps_map = data.get("apps", {})
+            if isinstance(apps_map, dict):
+                deployed_apps = sorted(apps_map.keys())
+                for app_id, meta in sorted(apps_map.items()):
+                    if not isinstance(meta, dict):
+                        continue
+                    for fmeta in meta.get("files", []):
+                        if isinstance(fmeta, dict) and fmeta.get("target"):
+                            tpath = Path(str(fmeta["target"]))
+                            if root == Path("/") and not tpath.is_file():
+                                config_drift.append({"app": app_id, "target": str(tpath), "reason": "missing"})
         except (OSError, json.JSONDecodeError):
             pass
     return {
-        "status": "ok",
+        "status": "drift-detected" if config_drift else "ok",
         "reversible": True,
         "backupSuffix": ".noxforge.bak",
         "stateFilePresent": state_file.is_file(),
         "deployedApps": deployed_apps,
+        "configDrift": config_drift,
     }
 
 
@@ -1358,24 +1375,169 @@ def inspect_ecosystem(root: Path) -> dict[str, Any]:
     else:
         flatpak_override = "absent"
 
+    def _has_template(*rel_candidates: str) -> bool:
+        for rel in rel_candidates:
+            if (root / rel).is_file() or (root / "usr/share/noxforge" / rel).is_file():
+                return True
+            if root == Path("/"):
+                repo_cand = Path(__file__).resolve().parents[1] / rel
+                if repo_cand.is_file():
+                    return True
+        return False
+
     templates = {
-        "zed": (root / "editors/zed/themes/noxforge.json").is_file() or (root / "usr/share/noxforge/editors/zed/themes/noxforge.json").is_file(),
-        "btop": (root / "terminals/btop/themes/noxforge.theme").is_file() or (root / "usr/share/noxforge/terminals/btop/themes/noxforge.theme").is_file(),
-        "discord": (root / "apps/discord/noxforge.theme.css").is_file() or (root / "usr/share/noxforge/apps/discord/noxforge.theme.css").is_file(),
-        "firefox": (root / "browsers/firefox/userChrome.css").is_file() or (root / "usr/share/noxforge/browsers/firefox/userChrome.css").is_file(),
-        "starship": (root / "terminals/starship/starship.toml").is_file() or (root / "usr/share/noxforge/terminals/starship/starship.toml").is_file(),
-        "fastfetch": (root / "tools/fastfetch/noxforge.jsonc").is_file() or (root / "usr/share/noxforge/fastfetch/noxforge.jsonc").is_file(),
-        "systemmonitor": (root / "apps/systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/plasma-systemmonitor/noxforge-telemetry.page").is_file() or (root / "usr/share/noxforge/apps/systemmonitor/noxforge-telemetry.page").is_file(),
-        "obsidian": (root / "apps/obsidian/noxforge.css").is_file() or (root / "usr/share/noxforge/apps/obsidian/noxforge.css").is_file(),
-        "rofi": (root / "apps/rofi/noxforge.rasi").is_file() or (root / "usr/share/noxforge/apps/rofi/noxforge.rasi").is_file(),
-        "yazi": (root / "apps/yazi/theme.toml").is_file() or (root / "usr/share/noxforge/apps/yazi/theme.toml").is_file(),
-        "lazygit": (root / "apps/lazygit/config.yml").is_file() or (root / "usr/share/noxforge/apps/lazygit/config.yml").is_file(),
-        "zellij": (root / "terminals/zellij/noxforge.kdl").is_file() or (root / "usr/share/noxforge/terminals/zellij/noxforge.kdl").is_file(),
-        "tmux": (root / "terminals/tmux/noxforge.conf").is_file() or (root / "usr/share/noxforge/terminals/tmux/noxforge.conf").is_file(),
+        "zed": _has_template("editors/zed/themes/noxforge.json"),
+        "btop": _has_template("terminals/btop/themes/noxforge.theme"),
+        "discord": _has_template("apps/discord/noxforge.theme.css"),
+        "firefox": _has_template("browsers/firefox/userChrome.css"),
+        "starship": _has_template("terminals/starship/starship.toml"),
+        "fastfetch": _has_template("tools/fastfetch/noxforge.jsonc", "fastfetch/noxforge.jsonc"),
+        "systemmonitor": (
+            _has_template("apps/systemmonitor/noxforge-telemetry.page")
+            or (root / "usr/share/plasma-systemmonitor/noxforge-telemetry.page").is_file()
+        ),
+        "vscode": _has_template("editors/vscode/package.json"),
+        "helix": _has_template("editors/helix/themes/noxforge.toml"),
+        "neovim": _has_template("editors/neovim/colors/noxforge.lua"),
+        "ghostty": _has_template("terminals/ghostty/noxforge"),
+        "kitty": _has_template("terminals/kitty/noxforge.conf"),
+        "alacritty": _has_template("terminals/alacritty/noxforge.toml"),
+        "foot": _has_template("terminals/foot/noxforge.ini"),
+        "obsidian": _has_template("apps/obsidian/noxforge.css"),
+        "rofi": _has_template("apps/rofi/noxforge.rasi"),
+        "yazi": _has_template("apps/yazi/theme.toml"),
+        "lazygit": _has_template("apps/lazygit/config.yml"),
+        "zellij": _has_template("terminals/zellij/noxforge.kdl"),
+        "tmux": _has_template("terminals/tmux/noxforge.conf"),
+        "bat": _has_template("terminals/bat/NoxForge.tmTheme"),
+        "delta": _has_template("terminals/delta/noxforge.gitconfig"),
+        "fzf": _has_template("terminals/fzf/noxforge.sh"),
+        "eza": _has_template("terminals/eza/theme.yml"),
+        "wofi": _has_template("apps/wofi/style.css"),
     }
     return {
         "flatpakThemesOverride": flatpak_override,
         "themeTemplates": templates,
+    }
+
+
+def qt_style_loadable_diagnostics(plugins: list[Path], root: Path = Path("/")) -> dict[str, Any]:
+    if not plugins:
+        return {"status": "missing", "loadable": False, "pluginPaths": []}
+    readable = [str(p) for p in plugins if os.access(p, os.R_OK)]
+    return {
+        "status": "ok" if readable else "unreadable",
+        "loadable": bool(readable),
+        "pluginPaths": readable,
+        "staged": root != Path("/"),
+    }
+
+
+def kwin_blur_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    config_base = (
+        Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        if root == Path("/")
+        else root / ".config"
+    )
+    kwinrc = config_base / "kwinrc"
+    if not kwinrc.is_file():
+        return {"status": "default", "blurEnabled": True, "blurStrength": None, "noiseStrength": None}
+    parser = read_config([kwinrc])
+    raw_enabled = parser.get("Plugins", "blurEnabled", fallback="true").strip().lower()
+    blur_enabled = raw_enabled not in ("false", "0", "no")
+    strength = parser.get("Effect-blur", "BlurStrength", fallback="").strip() or None
+    noise = parser.get("Effect-blur", "NoiseStrength", fallback="").strip() or None
+    return {
+        "status": "ok" if blur_enabled else "disabled",
+        "blurEnabled": blur_enabled,
+        "blurStrength": strength,
+        "noiseStrength": noise,
+    }
+
+
+def gtk_import_integrity_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    config_base = (
+        Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        if root == Path("/")
+        else root / ".config"
+    )
+    checked = 0
+    broken: list[str] = []
+    for rel in ("gtk-3.0/gtk.css", "gtk-4.0/gtk.css"):
+        css = config_base / rel
+        if not css.is_file():
+            continue
+        try:
+            text = css.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for match in re.finditer(r'@import\s+url\(["\']?file://([^"\')\s]+)["\']?\)', text):
+            checked += 1
+            target = Path(match.group(1))
+            if not target.is_file():
+                broken.append(f"{rel} -> {target}")
+    status = "broken" if broken else ("ok" if checked > 0 else "not-configured")
+    return {
+        "status": status,
+        "checked": checked,
+        "brokenImports": broken,
+    }
+
+
+def flatpak_icon_access_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    override_file = (
+        data_roots(root)[0] / "flatpak/overrides/global"
+        if root == Path("/")
+        else root / ".local/share/flatpak/overrides/global"
+    )
+    if not override_file.is_file():
+        return {"status": "absent", "themes": False, "icons": False, "cursors": False, "gtk": False}
+    try:
+        text = override_file.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return {"status": "unreadable", "themes": False, "icons": False, "cursors": False, "gtk": False}
+    has_themes = "xdg-data/themes" in text
+    has_icons = "xdg-data/icons" in text
+    has_cursors = "xdg-data/cursors" in text
+    has_gtk = "xdg-config/gtk-3.0" in text and "xdg-config/gtk-4.0" in text
+    status = "ok" if (has_themes and has_icons and has_cursors and has_gtk) else ("partial" if (has_themes or has_icons) else "not-configured")
+    return {
+        "status": status,
+        "themes": has_themes,
+        "icons": has_icons,
+        "cursors": has_cursors,
+        "gtk": has_gtk,
+    }
+
+
+def day_night_timer_diagnostics(root: Path = Path("/")) -> dict[str, Any]:
+    config_base = (
+        Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        if root == Path("/")
+        else root / ".config"
+    )
+    systemd_dir = config_base / "systemd/user"
+    timer_installed = (systemd_dir / "noxforge-daynight.timer").is_file()
+    service_installed = (systemd_dir / "noxforge-daynight.service").is_file()
+    active = False
+    if root == Path("/") and timer_installed and shutil.which("systemctl"):
+        try:
+            res = subprocess.run(
+                ["systemctl", "--user", "is-active", "noxforge-daynight.timer"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=2,
+            )
+            active = res.returncode == 0 and res.stdout.strip() == "active"
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    status = "active" if active else ("configured" if (timer_installed and service_installed) else "inactive")
+    return {
+        "status": status,
+        "timerInstalled": timer_installed,
+        "serviceInstalled": service_installed,
+        "active": active,
     }
 
 
@@ -1654,7 +1816,7 @@ def build_report(root: Path) -> dict[str, Any]:
         next_action = "Installed edition is valid. Select NoxForge explicitly in System Settings if desired."
 
     report: dict[str, Any] = {
-        "schemaVersion": 13,
+        "schemaVersion": 14,
         "issues": issues,
         "status": "ok" if complete else "incomplete",
         "packageVersion": package_version(root),
@@ -1680,9 +1842,14 @@ def build_report(root: Path) -> dict[str, Any]:
         "ecosystem": inspect_ecosystem(root),
         "noxforgeCoreStatus": noxforge_core_diagnostics(root),
         "gtkChainStatus": gtk_chain_diagnostics(roots, root),
+        "gtkImportIntegrity": gtk_import_integrity_diagnostics(root),
         "ecosystemState": ecosystem_state_diagnostics(root),
         "unionStyleStatus": union_style_diagnostics(roots, active, root),
         "waylandCompositor": wayland_compositor_diagnostics(root),
+        "qtStyleLoadable": qt_style_loadable_diagnostics(plugins, root),
+        "kwinBlurStatus": kwin_blur_diagnostics(root),
+        "flatpakIconAccess": flatpak_icon_access_diagnostics(root),
+        "dayNightTimerStatus": day_night_timer_diagnostics(root),
         "nextAction": next_action,
         "session": {
             "type": os.environ.get("XDG_SESSION_TYPE", "unknown") if root == Path("/") else "not-applicable",
@@ -1794,8 +1961,8 @@ def remediation_plan(report: dict[str, Any]) -> str:
         lines.append("# Installation is clean and complete. No remediation required.")
         return "\n".join(lines) + "\n"
     if flatpak_needed:
-        lines.append("# Flatpak theme & Libadwaita access remediation:")
-        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro --filesystem=xdg-config/gtk-3.0:ro --filesystem=xdg-config/gtk-4.0:ro || true")
+        lines.append("# Flatpak theme, icon, cursor & Libadwaita access remediation:")
+        lines.append("flatpak override --user --filesystem=xdg-data/themes:ro --filesystem=xdg-data/icons:ro --filesystem=xdg-data/cursors:ro --filesystem=xdg-config/gtk-3.0:ro --filesystem=xdg-config/gtk-4.0:ro || true")
         lines.append("")
     if palette_needed:
         targets = palette_sync.get("targets", {})

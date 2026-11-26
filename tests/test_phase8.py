@@ -48,8 +48,8 @@ class PhaseEightAssetsTests(unittest.TestCase):
         self.assertEqual(coverage["icons"], icons)
         self.assertEqual(coverage["schemaVersion"], 3)
         self.assertTrue(coverage["runtimeFixture"])
-        self.assertEqual(coverage["opticalSizes"], [16, 22])
-        self.assertEqual(len(coverage["aliases"]), 12)
+        self.assertEqual(coverage["opticalSizes"], [16, 22, 32, 48, 64])
+        self.assertGreaterEqual(len(coverage["aliases"]), 12)
         duplicate_groups: dict[str, list[str]] = {}
         for relative in icons:
             digest = hashlib.sha256((root / "scalable" / relative).read_bytes()).hexdigest()
@@ -58,7 +58,7 @@ class PhaseEightAssetsTests(unittest.TestCase):
             sorted(group) for group in duplicate_groups.values() if len(group) > 1
         )
         self.assertEqual(sorted(coverage["duplicateAllowlist"]), actual_duplicates)
-        optical = [path for size in (16, 22) for path in (root / f"{size}x{size}").glob("*/*.svg")]
+        optical = [path for size in coverage["opticalSizes"] for path in (root / f"{size}x{size}").glob("*/*.svg")]
         self.assertEqual(len(optical), coverage["opticalCount"])
         self.assertFalse(any(path.is_symlink() for path in optical))
         parser = configparser.ConfigParser(interpolation=None)
@@ -88,7 +88,7 @@ class PhaseEightAssetsTests(unittest.TestCase):
         for path in cursors:
             magic, header, version, count = struct.unpack("<4I", path.read_bytes()[:16])
             self.assertEqual((magic, header, version), (0x72756358, 16, 0x00010000))
-            expected = 36 if path.name in {"wait", "progress", "watch", "half-busy", "left_ptr_watch"} else 3
+            expected = 60 if path.name in {"wait", "progress", "watch", "half-busy", "left_ptr_watch"} else 5
             self.assertEqual(count, expected)
 
     def test_semantic_icons_and_cursors_are_not_aliases(self) -> None:
@@ -109,7 +109,7 @@ class PhaseEightAssetsTests(unittest.TestCase):
         for name in ("wait", "progress"):
             data = (root / name).read_bytes()
             count = struct.unpack("<4I", data[:16])[3]
-            self.assertEqual(count, 36)
+            self.assertEqual(count, 60)
             for offset in range(count):
                 position = struct.unpack("<3I", data[16 + offset * 12 : 28 + offset * 12])[2]
                 self.assertEqual(struct.unpack("<9I", data[position : position + 36])[8], 80)

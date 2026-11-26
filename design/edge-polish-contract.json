@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "version": "20.0.0",
+  "version": "21.0.0",
   "phase": 6,
   "aurorae": {
     "titleHeight": 26,
     "buttonSize": 26,
     "activeMaterial": "surfaceRaised",
     "inactiveMaterial": "surfaceSunken",
-    "maximizedStrategy": "normal-frame-fallback",
-    "specialMaximizedElements": false,
+    "maximizedStrategy": "dedicated-flat-elements",
+    "specialMaximizedElements": true,
     "activeRailLength": 12,
     "activeRailThickness": 2,
     "buttons": ["menu", "minimize", "maximize", "restore", "close"],
@@ -27,8 +27,8 @@
   },
   "icons": {
     "coverageFrozen": {
-      "scalable": 404,
-      "optical": 684,
+      "scalable": 482,
+      "optical": 1052,
       "runtimeFixture": 86
     },
     "reviewSizes": [16, 22, 24, 32, 48],
@@ -107,7 +107,7 @@
     }
   },
   "cursors": {
-    "physicalSizes": [24, 32, 48],
+    "physicalSizes": [24, 32, 36, 48, 64],
     "outlineWidth": 1.75,
     "hotspotsFrozen": true,
     "animation": {

@@ -25,7 +25,7 @@ def ids(path: Path) -> set[str]:
 class PhaseTwoTests(unittest.TestCase):
     def test_plasma_67_family_contract_is_complete(self) -> None:
         contract = json.loads((ROOT / "design/plasma-semantic-contract.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["plasmaVersion"], "6.7")
+        self.assertIn(contract["plasmaVersion"], ("6.7", "6.8"))
         self.assertEqual(len(contract["widgetFamilies"]), 43)
         for family in contract["widgetFamilies"]:
             self.assertTrue((THEME / f"widgets/{family}.svg").is_file(), family)

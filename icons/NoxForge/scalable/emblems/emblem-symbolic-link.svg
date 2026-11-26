@@ -9,6 +9,9 @@
     </style>
     <style id="noxforge-icon-style" type="text/css">
       .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .surface-plate { fill: #1B2831; fill-opacity: 0.90; stroke: none; }
+      .surface-tab { fill: #141E25; fill-opacity: 0.92; stroke: none; }
+      .surface-bevel { stroke: #4B606A; stroke-width: 1; opacity: 0.72; }
       .accent { color: #22D3EE; stroke: currentColor; }
       .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
       .lime { color: #A3FF47; stroke: currentColor; }
@@ -35,6 +38,6 @@
   </style>
   </defs>
   <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <g id="nf-emblems-emblem-symbolic-link"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5L6 15.5M12 11.5l6 4"/><path class="accent" d="M9 12h6"/></g>
+    <g id="nf-emblems-emblem-symbolic-link"><circle class="surface-plate" cx="12" cy="5.5" r="2.5"/><circle class="surface-plate" cx="5.5" cy="18" r="2.5"/><circle class="surface-plate" cx="18.5" cy="18" r="2.5"/><circle cx="12" cy="5.5" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="18" r="2.5"/><path d="M12 8v3.5M12 11.5l-5.5 4.3M12 11.5l5.5 4.3"/><path class="accent" d="M9.5 11.5h5"/></g>
   </g>
 </svg>

@@ -7,14 +7,14 @@ InactiveTextColor=166,180,185,255
 UseTextShadow=false
 LeftButtons=M
 RightButtons=IAX
-Shadow=false
+Shadow=true
 
 
 [Layout]
-PaddingTop=0
-PaddingBottom=0
-PaddingLeft=0
-PaddingRight=0
+PaddingTop=8
+PaddingBottom=16
+PaddingLeft=12
+PaddingRight=12
 BorderLeft=6
 BorderRight=6
 BorderBottom=6

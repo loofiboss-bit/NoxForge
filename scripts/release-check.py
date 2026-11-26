@@ -49,6 +49,9 @@ QML_SURFACES = (
     "sddm/NoxForge/Main.qml",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/splash/Splash.qml",
     "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/logout/Logout.qml",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/Osd.qml",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/osd/OsdItem.qml",
+    "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/systemdialog/SystemDialog.qml",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/main.qml",
     "kwin/tabbox/io.github.loofiboss.noxforge.desktop/contents/ui/Switcher.qml",
 )

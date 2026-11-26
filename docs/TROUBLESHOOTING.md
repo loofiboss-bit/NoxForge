@@ -1,4 +1,4 @@
-# Troubleshooting NoxForge 20
+# Troubleshooting NoxForge 21
 
 ## Collect a read-only report
 

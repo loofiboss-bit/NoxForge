@@ -1,4 +1,4 @@
-%global upstream_version 20.0.0
+%global upstream_version 21.0.0
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        20.0.0
+Version:        21.0.0
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -108,6 +108,17 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Thu Nov 26 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.0-1
+- Release v21.0.0 Duotone Visual Craft, Aurorae v2, Live Control Core & Ecosystem v4
+- Upgrade icons/NoxForge to Duotone Surface craft at 32px/48px/64px + 482 scalable icons (56 apps, 30 mimetypes, 28 places)
+- Upgrade cursors to 4x4 AA + contrast halo across [24..64]px + Plasma 6 Wayland cursors_scalable/
+- Upgrade wallpapers to true PNG24 (zero PNG8 banding), 16:10 & 32:9 aspect ratios, and KDE Plasma 6 Dynamic Wallpaper (images_dark/)
+- Upgrade Tactile Forge Audio v2 (27 distinct DSP sources across 32 events)
+- Upgrade Aurorae v2 (Shadow=true, filter-free ambient shadows, flush maximized frames, metadata.json) and add Look-and-Feel OSD & SystemDialog QML
+- Expand C++ Qt 6 style (CC_Dial, CC_TitleBar, CC_MdiControls, slider ticks, spinbox states, reactive QFileSystemWatcher cache, 6 accents) + modular Plasma 6.8 Union CSS + deep GTK4/Libadwaita
+- Upgrade Control Center v6 (async CommandWorker, NoxForge QStyle dogfooding, 6-accent matrix, wallpaper accent extractor, named presets, live preview, Fastfetch selector) and live hot-reload CLI
+- Expand Ecosystem v4 to 25 tools (bat, delta, fzf, eza, wofi, Fastfetch Kinetic Studio v2, deepened Neovim/VS Code/Firefox/Zen/Discord/Starship/Kitty) and Doctor Schema 14
+
 * Sat Nov 14 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 20.0.0-1
 - Release v20.0.0 Kinetic Iconography, Multi-Level Status Engine & Ecosystem v3
 - Expand icons/NoxForge with continuous 0-100% battery/Wi-Fi/audio/brightness levels and 16-frame loader sprites

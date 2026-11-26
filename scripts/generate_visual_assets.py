@@ -3,11 +3,30 @@
 
 from __future__ import annotations
 
-import gzip
-import io
 import json
+import struct
 import sys
+import zlib
 from pathlib import Path
+
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+try:
+    from .duotone_icons import (
+        MONOLINE_PLACES_OVERRIDE,
+        build_duotone_apps_specs,
+        build_duotone_mimetype_specs,
+        build_duotone_places_specs,
+    )
+except ImportError:
+    from duotone_icons import (
+        MONOLINE_PLACES_OVERRIDE,
+        build_duotone_apps_specs,
+        build_duotone_mimetype_specs,
+        build_duotone_places_specs,
+    )
 
 ROOT = Path(__file__).resolve().parents[1]
 AURORAE = ROOT / "aurorae/io.github.loofiboss.noxforge.desktop"
@@ -641,6 +660,9 @@ ICON_ALIASES = {
     "status/dialog-question.svg": "status/dialog-information.svg",
     "status/dialog-password.svg": "status/security-high.svg",
     "status/task-complete.svg": "status/security-high.svg",
+    "apps/noxforge-controlcenter.svg": "apps/io.github.loofiboss.noxforge.controlcenter.svg",
+    "apps/noxforge-opacity.svg": "apps/io.github.loofiboss.noxforge.opacity.svg",
+    "apps/visual-studio-code.svg": "apps/code.svg",
 }
 
 # Only names that are actual semantic synonyms remain byte-identical. Every
@@ -652,6 +674,9 @@ TRUE_SYNONYM_ALIASES = {
     "applets/battery-full.svg",
     "applets/battery-full-symbolic.svg",
     "applets/camera-on-symbolic.svg",
+    "apps/noxforge-controlcenter.svg",
+    "apps/noxforge-opacity.svg",
+    "apps/visual-studio-code.svg",
     "categories/preferences-system.svg",
     "devices/network-wired.svg",
     "devices/network-wireless.svg",
@@ -667,6 +692,9 @@ DUPLICATE_ALLOWLIST = (
     ("applets/camera-on-symbolic.svg", "devices/camera-photo.svg"),
     ("applets/audio-volume-high-symbolic.svg", "status/audio-volume-high.svg"),
     ("applets/battery-full-symbolic.svg", "applets/battery-full.svg", "status/battery-good.svg"),
+    ("apps/io.github.loofiboss.noxforge.controlcenter.svg", "apps/noxforge-controlcenter.svg"),
+    ("apps/io.github.loofiboss.noxforge.opacity.svg", "apps/noxforge-opacity.svg"),
+    ("apps/code.svg", "apps/visual-studio-code.svg"),
     ("categories/applications-internet.svg", "preferences/preferences-system-network.svg"),
     ("devices/network-wired.svg", "status/network-wired-activated.svg", "status/network-wired.svg"),
     ("devices/network-wireless.svg", "status/network-wireless-connected-100.svg", "status/network-wireless.svg"),
@@ -709,6 +737,9 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
     </style>
     <style id="noxforge-icon-style" type="text/css">
       .text-fill {{ color: {COLORS["textPrimary"]}; fill: currentColor; opacity: 0.92; stroke: none; }}
+      .surface-plate {{ fill: {COLORS["surfaceRaised"]}; fill-opacity: 0.90; stroke: none; }}
+      .surface-tab {{ fill: {COLORS["surface"]}; fill-opacity: 0.92; stroke: none; }}
+      .surface-bevel {{ stroke: {COLORS["edgeHighlight"]}; stroke-width: 1; opacity: 0.72; }}
       .accent {{ color: {COLORS["detailCyan"]}; stroke: currentColor; }}
       .accent-fill {{ color: {COLORS["detailCyan"]}; fill: currentColor; stroke: none; }}
       .lime {{ color: {COLORS["accent"]}; stroke: currentColor; }}
@@ -729,7 +760,18 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
 '''
 
 
-def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float, *, active: bool) -> str:
+def decoration_frame(
+    prefix: str,
+    x: int,
+    y: int,
+    css_class: str,
+    opacity: float,
+    *,
+    active: bool,
+    shadow: bool = True,
+    maximized: bool = False,
+) -> str:
+    """Build Aurorae v2 9-patch frame with optional stepped ambient shadow & flat maximized corners."""
     def name(position: str) -> str:
         return f"{prefix}-{position}"
 
@@ -737,74 +779,126 @@ def decoration_frame(prefix: str, x: int, y: int, css_class: str, opacity: float
     border_class = "NoxForge-EdgeHighlight" if active else "NoxForge-OutlineMuted"
     b_fill = f'class="{border_class}" fill="currentColor"'
     b_attr = f'class="{border_class}" stroke="currentColor" fill="none" stroke-width="1"'
+    s_fill = 'class="NoxForge-OverlayShadow" fill="currentColor"'
 
-    top = (
-        f'<g id="{name("top")}">'
-        f'<rect x="{x + 6}" y="{y}" width="28" height="6" {attr}/>'
-        f'<rect x="{x + 6}" y="{y}" width="28" height="1" {b_fill}/>'
-    )
+    pl = 12 if shadow else 0
+    pr = 12 if shadow else 0
+    pt = 8 if shadow else 0
+    pb = 16 if shadow else 0
+    fx = x + pl
+    fy = y + pt
+
+    top = f'<g id="{name("top")}">'
+    if shadow:
+        top += f'<rect x="{fx + 6}" y="{y + 2}" width="28" height="6" {s_fill} fill-opacity="0.14"/>'
+        top += f'<rect x="{fx + 6}" y="{y + 5}" width="28" height="3" {s_fill} fill-opacity="0.28"/>'
+    top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="6" {attr}/>'
+    top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="1" {b_fill}/>'
     if active:
         rail = EDGE_POLISH["aurorae"]
         top += (
-            f'<path d="M{x + 8} {y + 1}h{rail["activeRailLength"]}" '
+            f'<path d="M{fx + 8} {fy + 1}h{rail["activeRailLength"]}" '
             'class="ColorScheme-Highlight" stroke="currentColor" '
             f'stroke-width="{rail["activeRailThickness"]}"/>'
         )
     top += "</g>"
 
-    topleft = (
-        f'<g id="{name("topleft")}">'
-        f'<path d="M{x + 4} {y}H{x + 6}V{y + 6}H{x}V{y + 4}Z" {attr}/>'
-        f'<rect x="{x + 4}" y="{y}" width="2" height="1" {b_fill}/>'
-        f'<line x1="{x + 4}" y1="{y}" x2="{x}" y2="{y + 4}" {b_attr}/>'
-        f'<rect x="{x}" y="{y + 4}" width="1" height="2" {b_fill}/>'
-        f'</g>'
-    )
-    topright = (
-        f'<g id="{name("topright")}">'
-        f'<path d="M{x + 34} {y}A6 6 0 0 1 {x + 40} {y + 6}H{x + 34}Z" {attr}/>'
-        f'<path d="M{x + 34} {y + 0.5}A5.5 5.5 0 0 1 {x + 39.5} {y + 6}" {b_attr}/>'
-        f'</g>'
-    )
-    left = (
-        f'<g id="{name("left")}">'
-        f'<rect x="{x}" y="{y + 6}" width="6" height="28" {attr}/>'
-        f'<rect x="{x}" y="{y + 6}" width="1" height="28" {b_fill}/>'
-        f'</g>'
-    )
-    center = f'<rect id="{name("center")}" x="{x + 6}" y="{y + 6}" width="28" height="28" {attr}/>'
-    right = (
-        f'<g id="{name("right")}">'
-        f'<rect x="{x + 34}" y="{y + 6}" width="6" height="28" {attr}/>'
-        f'<rect x="{x + 39}" y="{y + 6}" width="1" height="28" {b_fill}/>'
-        f'</g>'
-    )
-    bottomleft = (
-        f'<g id="{name("bottomleft")}">'
-        f'<path d="M{x} {y + 34}H{x + 6}V{y + 40}A6 6 0 0 1 {x} {y + 34}Z" {attr}/>'
-        f'<path d="M{x + 6} {y + 39.5}A5.5 5.5 0 0 1 {x + 0.5} {y + 34}" {b_attr}/>'
-        f'</g>'
-    )
-    bottom = (
-        f'<g id="{name("bottom")}">'
-        f'<rect x="{x + 6}" y="{y + 34}" width="28" height="6" {attr}/>'
-        f'<rect x="{x + 6}" y="{y + 39}" width="28" height="1" {b_fill}/>'
-        f'</g>'
-    )
-    bottomright = (
-        f'<g id="{name("bottomright")}">'
-        f'<path d="M{x + 34} {y + 34}H{x + 40}A6 6 0 0 1 {x + 34} {y + 40}Z" {attr}/>'
-        f'<path d="M{x + 39.5} {y + 34}A5.5 5.5 0 0 1 {x + 34} {y + 39.5}" {b_attr}/>'
-        f'</g>'
-    )
+    if maximized:
+        topleft = (
+            f'<g id="{name("topleft")}">'
+            f'<rect x="{fx}" y="{fy}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx}" y="{fy}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        topright = (
+            f'<g id="{name("topright")}">'
+            f'<rect x="{fx + 34}" y="{fy}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx + 34}" y="{fy}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        bottomleft = (
+            f'<g id="{name("bottomleft")}">'
+            f'<rect x="{fx}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+        bottomright = (
+            f'<g id="{name("bottomright")}">'
+            f'<rect x="{fx + 34}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            f'<rect x="{fx + 34}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            f'</g>'
+        )
+    else:
+        topleft = f'<g id="{name("topleft")}">'
+        if shadow:
+            topleft += f'<rect x="{x + 4}" y="{y + 2}" width="{pl + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
+            topleft += f'<rect x="{x + 8}" y="{y + 5}" width="{pl - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
+        topleft += (
+            f'<path d="M{fx + 4} {fy}H{fx + 6}V{fy + 6}H{fx}V{fy + 4}Z" {attr}/>'
+            f'<rect x="{fx + 4}" y="{fy}" width="2" height="1" {b_fill}/>'
+            f'<line x1="{fx + 4}" y1="{fy}" x2="{fx}" y2="{fy + 4}" {b_attr}/>'
+            f'<rect x="{fx}" y="{fy + 4}" width="1" height="2" {b_fill}/>'
+            f'</g>'
+        )
+        topright = f'<g id="{name("topright")}">'
+        if shadow:
+            topright += f'<rect x="{fx + 34}" y="{y + 2}" width="{pr + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
+            topright += f'<rect x="{fx + 34}" y="{y + 5}" width="{pr - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
+        topright += (
+            f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 34}Z" {attr}/>'
+            f'<path d="M{fx + 34} {fy + 0.5}A5.5 5.5 0 0 1 {fx + 39.5} {fy + 6}" {b_attr}/>'
+            f'</g>'
+        )
+        bottomleft = f'<g id="{name("bottomleft")}">'
+        if shadow:
+            bottomleft += f'<rect x="{x + 2}" y="{fy + 34}" width="{pl + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
+            bottomleft += f'<rect x="{x + 6}" y="{fy + 34}" width="{pl}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
+            bottomleft += f'<rect x="{x + 9}" y="{fy + 34}" width="{pl - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
+        bottomleft += (
+            f'<path d="M{fx} {fy + 34}H{fx + 6}V{fy + 40}A6 6 0 0 1 {fx} {fy + 34}Z" {attr}/>'
+            f'<path d="M{fx + 6} {fy + 39.5}A5.5 5.5 0 0 1 {fx + 0.5} {fy + 34}" {b_attr}/>'
+            f'</g>'
+        )
+        bottomright = f'<g id="{name("bottomright")}">'
+        if shadow:
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
+            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
+        bottomright += (
+            f'<path d="M{fx + 34} {fy + 34}H{fx + 40}A6 6 0 0 1 {fx + 34} {fy + 40}Z" {attr}/>'
+            f'<path d="M{fx + 39.5} {fy + 34}A5.5 5.5 0 0 1 {fx + 34} {fy + 39.5}" {b_attr}/>'
+            f'</g>'
+        )
+
+    left = f'<g id="{name("left")}">'
+    if shadow:
+        left += f'<rect x="{x + 2}" y="{fy + 6}" width="{pl - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
+        left += f'<rect x="{x + 6}" y="{fy + 6}" width="{pl - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+    left += f'<rect x="{fx}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
+
+    center = f'<rect id="{name("center")}" x="{fx + 6}" y="{fy + 6}" width="28" height="28" {attr}/>'
+
+    right = f'<g id="{name("right")}">'
+    if shadow:
+        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
+        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+    right += f'<rect x="{fx + 34}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx + 39}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
+
+    bottom = f'<g id="{name("bottom")}">'
+    if shadow:
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb}" {s_fill} fill-opacity="0.12"/>'
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 5}" {s_fill} fill-opacity="0.24"/>'
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 10}" {s_fill} fill-opacity="0.38"/>'
+    bottom += f'<rect x="{fx + 6}" y="{fy + 34}" width="28" height="6" {attr}/><rect x="{fx + 6}" y="{fy + 39}" width="28" height="1" {b_fill}/></g>'
 
     return "\n".join([topleft, top, topright, left, center, right, bottomleft, bottom, bottomright])
 
 
 def decoration_svg(colors: dict[str, str] = COLORS) -> str:
-    active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True)
-    inactive = decoration_frame("decoration-inactive", 52, 0, "ColorScheme-Sunken", 0.9, active=False)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="92" height="40" viewBox="0 0 92 40">
+    active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True, shadow=True, maximized=False)
+    inactive = decoration_frame("decoration-inactive", 76, 0, "ColorScheme-Sunken", 0.9, active=False, shadow=True, maximized=False)
+    maximized = decoration_frame("decoration-maximized", 152, 8, "ColorScheme-Raised", 1.0, active=True, shadow=False, maximized=True)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="200" height="64" viewBox="0 0 200 64">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Raised {{ color: {colors["surfaceRaised"]}; }}
@@ -812,10 +906,12 @@ def decoration_svg(colors: dict[str, str] = COLORS) -> str:
       .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
       .NoxForge-EdgeHighlight {{ color: {colors["edgeHighlight"]}; }}
       .NoxForge-OutlineMuted {{ color: {colors["border"]}; }}
+      .NoxForge-OverlayShadow {{ color: {colors.get("shadowOverlay", "#050708")}; }}
     ]]></style>
   </defs>
   {active}
   {inactive}
+  {maximized}
 </svg>
 '''
 
@@ -888,18 +984,131 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
+def _bitrev(value: int, width: int) -> int:
+    result = 0
+    for _ in range(width):
+        result = (result << 1) | (value & 1)
+        value >>= 1
+    return result
+
+
+_FIXED_LITLEN: tuple[tuple[int, int], ...] = tuple(
+    (_bitrev(0x30 + s, 8), 8)
+    if s <= 143
+    else (_bitrev(0x190 + (s - 144), 9), 9)
+    if s <= 255
+    else (_bitrev(s - 256, 7), 7)
+    if s <= 279
+    else (_bitrev(0xC0 + (s - 280), 8), 8)
+    for s in range(288)
+)
+_FIXED_DIST: tuple[tuple[int, int], ...] = tuple((_bitrev(d, 5), 5) for d in range(30))
+_LEN_TABLE: tuple[tuple[int, int, int], ...] = (
+    (257, 3, 0), (258, 4, 0), (259, 5, 0), (260, 6, 0), (261, 7, 0),
+    (262, 8, 0), (263, 9, 0), (264, 10, 0), (265, 11, 1), (266, 13, 1),
+    (267, 15, 1), (268, 17, 1), (269, 19, 2), (270, 23, 2), (271, 27, 2),
+    (272, 31, 2), (273, 35, 3), (274, 43, 3), (275, 51, 3), (276, 59, 3),
+    (277, 67, 4), (278, 83, 4), (279, 99, 4), (280, 115, 4), (281, 131, 5),
+    (282, 163, 5), (283, 195, 5), (284, 227, 5), (285, 258, 0),
+)
+_DIST_TABLE: tuple[tuple[int, int, int], ...] = (
+    (0, 1, 0), (1, 2, 0), (2, 3, 0), (3, 4, 0), (4, 5, 1), (5, 7, 1),
+    (6, 9, 2), (7, 13, 2), (8, 17, 3), (9, 25, 3), (10, 33, 4), (11, 49, 4),
+    (12, 65, 5), (13, 97, 5), (14, 129, 6), (15, 193, 6), (16, 257, 7),
+    (17, 385, 7), (18, 513, 8), (19, 769, 8), (20, 1025, 9), (21, 1537, 9),
+    (22, 2049, 10), (23, 3073, 10), (24, 4097, 11), (25, 6145, 11),
+    (26, 8193, 12), (27, 12289, 12), (28, 16385, 13), (29, 24577, 13),
+)
+
+
 def canonical_gzip(payload: bytes) -> bytes:
-    """Return a platform-independent gzip stream with a canonical header."""
-    stream = io.BytesIO()
-    with gzip.GzipFile(
-        filename="",
-        mode="wb",
-        compresslevel=9,
-        fileobj=stream,
-        mtime=0,
-    ) as archive:
-        archive.write(payload)
-    return stream.getvalue()
+    """Return a pure-Python deterministic RFC 1952 gzip stream independent of zlib vs zlib-ng."""
+    out = bytearray(b"\x1f\x8b\x08\x00\x00\x00\x00\x00\x02\xff")
+    bitbuf = 0
+    bitlen = 0
+
+    def emit(bits: int, count: int) -> None:
+        nonlocal bitbuf, bitlen
+        bitbuf |= bits << bitlen
+        bitlen += count
+        while bitlen >= 8:
+            out.append(bitbuf & 0xFF)
+            bitbuf >>= 8
+            bitlen -= 8
+
+    # BFINAL=1, BTYPE=01 (fixed Huffman)
+    emit(0b011, 3)
+
+    n = len(payload)
+    chains: dict[bytes, list[int]] = {}
+    i = 0
+    while i < n:
+        best_len = 0
+        best_dist = 0
+        if i + 3 <= n:
+            key = payload[i : i + 3]
+            candidates = chains.get(key)
+            if candidates:
+                max_len = min(258, n - i)
+                for pos in reversed(candidates[-32:]):
+                    dist = i - pos
+                    if dist > 32768:
+                        break
+                    mlen = 3
+                    while mlen < max_len and payload[pos + mlen] == payload[i + mlen]:
+                        mlen += 1
+                    if mlen > best_len:
+                        best_len = mlen
+                        best_dist = dist
+                        if best_len == max_len:
+                            break
+                candidates.append(i)
+                if len(candidates) > 64:
+                    del candidates[:-32]
+            else:
+                chains[key] = [i]
+
+        if best_len >= 3:
+            # Encode length
+            for idx, (sym, base, extra) in enumerate(_LEN_TABLE):
+                next_base = _LEN_TABLE[idx + 1][1] if idx + 1 < len(_LEN_TABLE) else 259
+                if best_len < next_base:
+                    code, clen = _FIXED_LITLEN[sym]
+                    emit(code, clen)
+                    if extra:
+                        emit(best_len - base, extra)
+                    break
+            # Encode distance
+            for idx, (sym, base, extra) in enumerate(_DIST_TABLE):
+                next_base = _DIST_TABLE[idx + 1][1] if idx + 1 < len(_DIST_TABLE) else 32769
+                if best_dist < next_base:
+                    code, clen = _FIXED_DIST[sym]
+                    emit(code, clen)
+                    if extra:
+                        emit(best_dist - base, extra)
+                    break
+            for j in range(i + 1, min(i + best_len, n - 2)):
+                k = payload[j : j + 3]
+                c = chains.get(k)
+                if c is None:
+                    chains[k] = [j]
+                else:
+                    c.append(j)
+                    if len(c) > 64:
+                        del c[:-32]
+            i += best_len
+        else:
+            code, clen = _FIXED_LITLEN[payload[i]]
+            emit(code, clen)
+            i += 1
+
+    # End-of-block symbol (256)
+    eob_code, eob_len = _FIXED_LITLEN[256]
+    emit(eob_code, eob_len)
+    if bitlen:
+        out.append(bitbuf & 0xFF)
+    out.extend(struct.pack("<II", zlib.crc32(payload) & 0xFFFFFFFF, n & 0xFFFFFFFF))
+    return bytes(out)
 
 
 def write_aurorae_svg(target_dir: Path, name: str, content: str) -> None:
@@ -914,6 +1123,9 @@ def write_aurorae_svg(target_dir: Path, name: str, content: str) -> None:
 
 
 def main() -> None:
+    duotone_places = build_duotone_places_specs(TOKENS["accents"])
+    duotone_mimetypes = build_duotone_mimetype_specs()
+    duotone_apps = build_duotone_apps_specs()
     specs = {
         **ICON_SPECS,
         **CORE_ICON_SPECS,
@@ -923,6 +1135,9 @@ def main() -> None:
         **V7_CORE_ICON_SPECS,
         **V15_ICON_SPECS,
         **V20_KINETIC_ICON_SPECS,
+        **duotone_places,
+        **duotone_mimetypes,
+        **duotone_apps,
     }
     effective_aliases: dict[str, str] = {}
 
@@ -951,12 +1166,27 @@ def main() -> None:
         relative: body for relative, body in specs.items()
         if relative.startswith(optical_contexts)
     }
+    duotone_contexts = ("apps/", "places/", "mimetypes/")
+    duotone_optical = {
+        relative: body for relative, body in specs.items()
+        if relative.startswith(duotone_contexts)
+    }
+    small_optical_count = 0
     for size in fixture["opticalSizes"]:
         for relative, body in sorted(optical.items()):
+            small_body = MONOLINE_PLACES_OVERRIDE.get(relative, body)
             if relative == "animations/process-working.svg":
                 write(ICONS / f"{size}x{size}" / relative, process_working_sprite_svg(size, frames=16))
             else:
-                write(ICONS / f"{size}x{size}" / relative, icon_svg(body, size))
+                write(ICONS / f"{size}x{size}" / relative, icon_svg(small_body, size))
+            small_optical_count += 1
+    duotone_sizes = (32, 48, 64)
+    duotone_optical_count = 0
+    for size in duotone_sizes:
+        for relative, body in sorted(duotone_optical.items()):
+            write(ICONS / f"{size}x{size}" / relative, icon_svg(body, size))
+            duotone_optical_count += 1
+    total_optical_count = small_optical_count + duotone_optical_count
     categories: dict[str, int] = {}
     for relative in specs:
         category = relative.split("/", 1)[0]
@@ -967,9 +1197,11 @@ def main() -> None:
             {
                 "schemaVersion": 3,
                 "iconCount": len(specs),
-                "opticalCount": len(optical) * 2,
-                "opticalSizes": fixture["opticalSizes"],
-                "opticalStrokeWidths": {"16": 1.9, "22": 1.75},
+                "opticalCount": total_optical_count,
+                "opticalSizes": [16, 22, 32, 48, 64],
+                "smallOpticalCount": small_optical_count,
+                "duotoneOpticalCount": duotone_optical_count,
+                "opticalStrokeWidths": {"16": 1.9, "22": 1.75, "32": 1.7, "48": 1.7, "64": 1.7},
                 "runtimeFixture": sorted(required),
                 "runtimeFixtureSource": fixture["source"],
                 "phase6Priority": EDGE_POLISH["icons"]["priority"],
@@ -995,12 +1227,12 @@ def main() -> None:
         raise SystemExit(1)
     if CHECK:
         print(
-            f"Verified {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+            f"Verified {len(specs)} scalable icons, {total_optical_count} optical variants "
             f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
         )
         return
     print(
-        f"Generated {len(specs)} scalable icons, {len(optical) * 2} optical variants "
+        f"Generated {len(specs)} scalable icons, {total_optical_count} optical variants "
         f"and {len(aurorae_targets) * (1 + len(GLYPHS))} Aurorae pairs"
     )
 

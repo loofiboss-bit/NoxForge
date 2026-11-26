@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "plasmaVersion": "6.7",
+  "plasmaVersion": "6.8",
   "themeId": "io.github.loofiboss.noxforge.desktop",
   "materialPolicy": {
     "hierarchy": ["canvas", "sunken", "surface", "raised", "overlay"],
@@ -164,6 +164,7 @@
   ],
   "backgroundVariants": [
     "opaque/dialogs/background.svg",
+    "opaque/widgets/background.svg",
     "opaque/widgets/panel-background.svg",
     "opaque/widgets/tooltip.svg",
     "solid/dialogs/background.svg",
@@ -177,6 +178,7 @@
   ],
   "backgroundVariantRecipes": {
     "opaque/dialogs/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
+    "opaque/widgets/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
     "opaque/widgets/panel-background.svg": {"recipe": "panel", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": false, "blur": "off"},
     "opaque/widgets/tooltip.svg": {"recipe": "tooltip", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},
     "solid/dialogs/background.svg": {"recipe": "overlay", "opacity": 1.0, "edgeHighlight": true, "overlayShadow": true, "blur": "off"},

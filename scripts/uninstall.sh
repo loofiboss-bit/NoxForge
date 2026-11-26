@@ -107,15 +107,21 @@ else
         "${data_home}/union/styles/noxforge-obsidian"
         "${data_home}/color-schemes"
         "${data_home}/plasma/desktoptheme/io.github.loofiboss.noxforge.desktop"
+        "${data_home}/plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop"
         "${data_home}/plasma/look-and-feel/io.github.loofiboss.noxforge.desktop"
+        "${data_home}/plasma/look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop"
         "${data_home}/aurorae/themes/io.github.loofiboss.noxforge.desktop"
+        "${data_home}/aurorae/themes/io.github.loofiboss.noxforge.obsidian.desktop"
         "${data_home}/icons/NoxForge"
         "${data_home}/icons/NoxForge-Cursors"
         "${data_home}/sounds/NoxForge"
         "${data_home}/kwin/tabbox/io.github.loofiboss.noxforge.desktop"
+        "${data_home}/kwin/tabbox/io.github.loofiboss.noxforge.obsidian.desktop"
         "${data_home}/wallpapers/NoxForge"
         "${data_home}/wallpapers/NoxForge-Quiet"
         "${data_home}/wallpapers/NoxForge-Ultrawide"
+        "${data_home}/wallpapers/NoxForge-Obsidian"
+        "${data_home}/wallpapers/NoxForge-Obsidian-Ultrawide"
     )
     for root in "${cleanup_roots[@]}"; do
         [[ -d "${root}" ]] || continue

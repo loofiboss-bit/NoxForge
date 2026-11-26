@@ -1,4 +1,4 @@
-.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 20.0.0" "User Commands"
+.TH NOXFORGE-CTL 1 "October 2026" "NoxForge 21.0.0" "User Commands"
 .SH NAME
 noxforge-ctl \- NoxForge Unified Control Hub and Orchestration Suite
 .SH SYNOPSIS
@@ -25,10 +25,16 @@ Supports \fB-n\fR (\fB--dry-run\fR) and \fB--json\fR.
 .BR sync " [\fB--profile\fR " graphite | obsidian "]"
 Synchronize all desktop layers (Plasma, GTK 3/4, icons, cursors, sounds, widget styles).
 .TP
-.BR accent " [" lime | cyan | violet | amber | system | custom | \fI#RRGGBB\fR "]"
-Set the active Forge accent color or a custom hex code. Custom accents enforce WCAG AA (4.5:1)
+.BR accent " [" lime | cyan | violet | amber | crimson | ice | system | custom | \fI#RRGGBB\fR "] [\fB--from-wallpaper\fR [\fIPATH\fR]] [\fB--sync-wallpaper\fR]"
+Set one of the 6 signature Forge accent colors, extract a WCAG-AA safe accent from a wallpaper, or apply a custom hex code. Custom accents enforce WCAG AA (4.5:1)
 minimum contrast against both dark graphite (#141E25) and OLED obsidian (#000000).
-Also non-destructively updates user GTK 3/4 accent overrides.
+Updates user GTK 3/4 accent overrides, user-local Aurorae v2 accent rails, tracked ecosystem apps, and optionally renders an accent-tinted wallpaper.
+.TP
+.BR preset " [" list | save | apply | delete "] [\fINAME\fR]"
+Manage named NoxForge configuration presets stored in \fB~/.config/noxforge/presets.json\fR.
+.TP
+.BR fastfetch " [\fB--preset\fR " main | cyber | minimal "] [\fB--status\fR]"
+Deploy or inspect Fastfetch Kinetic Studio v2 telemetry presets and custom ANSI logos.
 .TP
 .BR status
 Display the current NoxForge desktop profile and component state.

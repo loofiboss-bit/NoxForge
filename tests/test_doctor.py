@@ -34,14 +34,16 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
     write(share / f"plasma/look-and-feel/{THEME_OBSIDIAN_ID}/metadata.json", metadata)
     write(share / f"plasma/desktoptheme/{THEME_ID}/metadata.json", metadata)
     write(share / f"plasma/desktoptheme/{THEME_OBSIDIAN_ID}/metadata.json", metadata)
-    write(share / "color-schemes/NoxForgeDark.colors")
-    write(share / "color-schemes/NoxForgeObsidian.colors")
-    write(share / "konsole/NoxForge.colorscheme")
-    write(share / "konsole/NoxForgeObsidian.colorscheme")
-    write(share / "themes/NoxForge/index.theme")
-    write(share / "themes/NoxForgeObsidian/index.theme")
-    write(share / "org.kde.syntax-highlighting/themes/NoxForge.theme")
-    write(share / "org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme")
+    ver_comment = f"# @noxforge-version: {version}\n"
+    ver_json = json.dumps({"version": version}) + "\n"
+    write(share / "color-schemes/NoxForgeDark.colors", ver_comment)
+    write(share / "color-schemes/NoxForgeObsidian.colors", ver_comment)
+    write(share / "konsole/NoxForge.colorscheme", ver_comment)
+    write(share / "konsole/NoxForgeObsidian.colorscheme", ver_comment)
+    write(share / "themes/NoxForge/index.theme", ver_comment)
+    write(share / "themes/NoxForgeObsidian/index.theme", ver_comment)
+    write(share / "org.kde.syntax-highlighting/themes/NoxForge.theme", ver_json)
+    write(share / "org.kde.syntax-highlighting/themes/NoxForgeObsidian.theme", ver_json)
     for relative in (
         "noxforge/terminals/ghostty/noxforge",
         "noxforge/terminals/ghostty/noxforge-obsidian",
@@ -64,12 +66,13 @@ def stage_complete(root: Path, *, alternate_version: str | None = None) -> None:
         f"plasma/look-and-feel/{THEME_ID}/contents/lockscreen/LockScreen.qml",
         f"plasma/look-and-feel/{THEME_OBSIDIAN_ID}/contents/lockscreen/LockScreen.qml",
     ):
-        write(share / relative)
+        payload = ver_json if relative.endswith(".json") else ver_comment
+        write(share / relative, payload)
     write(share / f"aurorae/themes/{THEME_ID}/metadata.desktop", desktop)
     write(share / f"aurorae/themes/{THEME_OBSIDIAN_ID}/metadata.desktop", desktop)
-    write(share / "icons/NoxForge/index.theme")
-    write(share / "icons/NoxForge-Cursors/index.theme")
-    write(share / "sounds/NoxForge/index.theme")
+    write(share / "icons/NoxForge/index.theme", ver_comment)
+    write(share / "icons/NoxForge-Cursors/index.theme", ver_comment)
+    write(share / "sounds/NoxForge/index.theme", ver_comment)
     write(share / "wallpapers/NoxForge/metadata.json", metadata)
     write(share / "wallpapers/NoxForge-Obsidian/metadata.json", metadata)
     write(share / "wallpapers/NoxForge-Obsidian-Ultrawide/metadata.json", metadata)

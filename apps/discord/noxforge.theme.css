@@ -1,8 +1,9 @@
 /**
  * @name NoxForge
  * @author NoxForge Team
- * @version 20.0.0
- * @description Official NoxForge desktop theme for Discord (Vencord / BetterDiscord). Quiet graphite surfaces and electric-lime accents.
+ * @version 21.0.0
+ * @noxforge-version: 21.0.0
+ * @description Official NoxForge desktop theme for Discord (Vencord / Vesktop / Equibop / BetterDiscord). Quiet graphite surfaces and Forge accents.
  * @source https://github.com/loofiboss-bit/NoxForge
  */
 
@@ -11,11 +12,21 @@
   --background-secondary: #10191F;
   --background-secondary-alt: #141E25;
   --background-tertiary: #090C0F;
-  --background-floating: #141E25;
+  --background-floating: #22323B;
+  --background-accent: #1B2831;
+  --background-modifier-hover: #283942;
+  --background-modifier-active: #223429;
+  --background-modifier-selected: #223429;
+  --background-modifier-accent: #2F414B;
+  --bg-base-primary: #0D1419;
+  --bg-base-secondary: #10191F;
+  --bg-base-tertiary: #141E25;
+  --bg-surface-overlay: #22323B;
   --channeltextarea-background: #141E25;
-  
+
   --text-normal: #E8F0F2;
   --text-muted: #A6B4B9;
+  --text-link: #22D3EE;
   --header-primary: #E8F0F2;
   --header-secondary: #A6B4B9;
   --interactive-normal: #A6B4B9;
@@ -25,7 +36,16 @@
 
   --brand-experiment: #A3FF47;
   --brand-experiment-560: #82D936;
+  --brand-500: #A3FF47;
+  --brand-560: #82D936;
   --accent-color: #A3FF47;
+  --focus-primary: #A3FF47;
   --button-positive-background: #A3FF47;
   --button-positive-text: #0D1419;
+  --status-positive: #A3FF47;
+  --status-warning: #FBBF24;
+  --status-danger: #FF6B7A;
+  --scrollbar-auto-thumb: #455A64;
+  --scrollbar-auto-track: #10191F;
+  --scrollbar-thin-thumb: #2F414B;
 }

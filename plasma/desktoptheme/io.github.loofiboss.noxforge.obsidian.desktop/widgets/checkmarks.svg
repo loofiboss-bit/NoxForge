@@ -24,6 +24,6 @@
       .NoxForge-OverlayShadow { color: #000000; }
     ]]></style>
   </defs>
-  <path id="checkbox" d="M5 12l4 4L19 6" transform="translate(0 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
-  <path id="radiobutton" d="M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10" transform="translate(32 0)" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path id="checkbox" transform="translate(0 0)" d="M5 12l4 4L19 6" class="ColorScheme-Highlight" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <g id="radiobutton" transform="translate(32 0)"><circle cx="12" cy="12" r="5" class="ColorScheme-Highlight" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="2" class="ColorScheme-ViewBackground" fill="currentColor" stroke="none" opacity="0.25"/></g>
 </svg>

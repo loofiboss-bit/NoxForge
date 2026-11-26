@@ -8,12 +8,14 @@ and real-time Qt 6 stylesheet generation across NoxForge CLI and GUI tools.
 from __future__ import annotations
 
 import configparser
+import colorsys
+import json
 import os
 import shutil
 import subprocess
 from pathlib import Path
 
-DEFAULT_VERSION = "20.0.0"
+DEFAULT_VERSION = "21.0.0"
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -26,6 +28,8 @@ ACCENT_COLORS: dict[str, str] = {
     "cyan": "#22D3EE",
     "violet": "#A78BFA",
     "amber": "#FBBF24",
+    "crimson": "#FF8FA3",
+    "ice": "#93C5FD",
 }
 
 ACCENT_PRESSED: dict[str, str] = {
@@ -33,6 +37,8 @@ ACCENT_PRESSED: dict[str, str] = {
     "cyan": "#06B6D4",
     "violet": "#8B5CF6",
     "amber": "#F59E0B",
+    "crimson": "#FB758B",
+    "ice": "#60A5FA",
 }
 
 ACCENT_SURFACE_SELECTED: dict[str, tuple[str, str]] = {
@@ -40,6 +46,17 @@ ACCENT_SURFACE_SELECTED: dict[str, tuple[str, str]] = {
     "cyan": ("#15313B", "#0E242C"),
     "violet": ("#26203D", "#1B152E"),
     "amber": ("#332918", "#261D0E"),
+    "crimson": ("#331B22", "#241016"),
+    "ice": ("#18283D", "#101C2C"),
+}
+
+ACCENT_LABELS: dict[str, str] = {
+    "lime": "Electric Lime",
+    "cyan": "Forge Cyan",
+    "violet": "Cyber Violet",
+    "amber": "Molten Amber",
+    "crimson": "Forge Crimson",
+    "ice": "Titanium Ice",
 }
 
 GRAPHITE_SURFACE = "#141E25"
@@ -301,6 +318,159 @@ def resolve_accent_palette(accent_key_or_hex: str, is_obsidian: bool = False) ->
         "accentInk": ink_hex,
         "surfaceSelected": selected_hex,
     }
+
+
+def _clamp_wcag_accent(r: int, g: int, b: int) -> str:
+    """Boost lightness in HLS space until accent clears 4.5:1 on Graphite surfaceRaised & Obsidian."""
+    h, l_val, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
+    if s < 0.35:
+        s = min(0.88, max(0.45, s + 0.35))
+    for step in range(40):
+        trial_l = min(0.92, max(0.45, l_val + step * 0.015))
+        tr, tg, tb = colorsys.hls_to_rgb(h, trial_l, s)
+        candidate = f"#{round(tr * 255):02X}{round(tg * 255):02X}{round(tb * 255):02X}"
+        if (
+            contrast_ratio(candidate, "#1B2831") >= 4.5
+            and contrast_ratio(candidate, GRAPHITE_SURFACE) >= 4.5
+            and contrast_ratio(candidate, OBSIDIAN_SURFACE) >= 4.5
+        ):
+            return candidate
+    return "#A3FF47"
+
+
+def extract_wallpaper_accent(image_path: Path) -> str:
+    """Extract a vibrant, WCAG-AA safe accent hex color from a wallpaper image."""
+    path = Path(image_path)
+    if not path.is_file():
+        raise FileNotFoundError(f"Wallpaper image not found: {path}")
+
+    samples: list[tuple[int, int, int, float]] = []
+    try:
+        from PySide6.QtGui import QImage  # type: ignore
+
+        img = QImage(str(path))
+        if not img.isNull():
+            scaled = img.scaled(48, 48)
+            for y in range(scaled.height()):
+                for x in range(scaled.width()):
+                    col = scaled.pixelColor(x, y)
+                    r, g, b = col.red(), col.green(), col.blue()
+                    mx, mn = max(r, g, b), min(r, g, b)
+                    if mx > 35:
+                        sat = (mx - mn) / max(1, mx)
+                        if sat >= 0.20:
+                            samples.append((r, g, b, sat * (0.4 + mx / 255.0)))
+    except Exception:
+        pass
+
+    if not samples and shutil.which("magick"):
+        try:
+            proc = subprocess.run(
+                [
+                    "magick",
+                    str(path),
+                    "-resize",
+                    "32x32!",
+                    "-colors",
+                    "12",
+                    "-unique-colors",
+                    "txt:-",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            for line in proc.stdout.splitlines():
+                if "#" in line:
+                    idx = line.find("#")
+                    hex_part = line[idx + 1 : idx + 7]
+                    if len(hex_part) == 6 and all(c in "0123456789abcdefABCDEF" for c in hex_part):
+                        r, g, b = hex_to_rgb_tuple("#" + hex_part)
+                        mx, mn = max(r, g, b), min(r, g, b)
+                        sat = (mx - mn) / max(1, mx)
+                        if mx > 35:
+                            samples.append((r, g, b, max(0.05, sat) * (0.4 + mx / 255.0)))
+        except Exception:
+            pass
+
+    if not samples:
+        return ACCENT_COLORS["lime"]
+
+    # Quantize into 12 hue buckets weighted by saturation & brightness
+    buckets: dict[int, list[tuple[int, int, int, float]]] = {}
+    for r, g, b, weight in samples:
+        h, _, _ = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
+        bucket = int(h * 12) % 12
+        buckets.setdefault(bucket, []).append((r, g, b, weight))
+
+    best_bucket = max(buckets.values(), key=lambda items: sum(w for _, _, _, w in items))
+    total_w = sum(w for _, _, _, w in best_bucket)
+    avg_r = round(sum(r * w for r, _, _, w in best_bucket) / total_w)
+    avg_g = round(sum(g * w for _, g, _, w in best_bucket) / total_w)
+    avg_b = round(sum(b * w for _, _, b, w in best_bucket) / total_w)
+    return _clamp_wcag_accent(avg_r, avg_g, avg_b)
+
+
+def get_presets_path() -> Path:
+    return get_xdg_config_home() / "noxforge/presets.json"
+
+
+def load_presets() -> dict[str, dict[str, object]]:
+    """Load saved named NoxForge presets from ~/.config/noxforge/presets.json."""
+    path = get_presets_path()
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        presets = data.get("presets", {}) if isinstance(data, dict) else {}
+        return {str(k): dict(v) for k, v in presets.items() if isinstance(v, dict)}
+    except Exception:
+        return {}
+
+
+def save_preset(name: str, payload: dict[str, object]) -> dict[str, object]:
+    """Persist a named NoxForge preset cleanly."""
+    clean_name = name.strip()
+    if not clean_name:
+        raise ValueError("Preset name cannot be empty.")
+    presets = load_presets()
+    entry: dict[str, object] = {
+        "name": clean_name,
+        "profile": str(payload.get("profile", "graphite")),
+        "accent": str(payload.get("accent", "lime")),
+        "opacity": payload.get("opacity", 88),
+        "wallpaper": str(payload.get("wallpaper", "standard")),
+        "reduced_motion": bool(payload.get("reduced_motion", False)),
+        "union_mode": bool(payload.get("union_mode", False)),
+    }
+    presets[clean_name] = entry
+    path = get_presets_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"schemaVersion": 1, "presets": presets}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return entry
+
+
+def delete_preset(name: str) -> bool:
+    """Remove a named NoxForge preset if it exists."""
+    clean_name = name.strip()
+    presets = load_presets()
+    if clean_name not in presets:
+        return False
+    del presets[clean_name]
+    path = get_presets_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"schemaVersion": 1, "presets": presets}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return True
+
+
+def get_preset(name: str) -> dict[str, object] | None:
+    return load_presets().get(name.strip())
 
 
 def build_qt_stylesheet(profile: str = "graphite", accent_hex: str = "#A3FF47") -> str:
@@ -594,3 +764,75 @@ QTabBar::tab:hover:!selected {{
     color: #E8F0F2;
 }}
 """
+
+
+def render_accent_wallpaper(
+    profile: str,
+    accent_key_or_hex: str,
+    output_dir: Path | None = None,
+) -> Path | None:
+    """Re-tint the NoxForge wallpaper SVG to the active Forge accent and render PNG24."""
+    is_obsidian = profile.strip().lower() == "obsidian"
+    pal = resolve_accent_palette(accent_key_or_hex, is_obsidian=is_obsidian)
+    accent_hex = pal["accent"]
+    pressed_hex = pal["accentPressed"]
+    variant_dir = "NoxForge-Obsidian" if is_obsidian else "NoxForge"
+    candidates = [
+        ROOT / f"wallpapers/{variant_dir}/contents/source/NoxForge.svg",
+        Path("/usr/share/wallpapers") / variant_dir / "contents/source/NoxForge.svg",
+        get_xdg_data_home() / "wallpapers" / variant_dir / "contents/source/NoxForge.svg",
+    ]
+    source_svg = next((p for p in candidates if p.is_file()), None)
+    if source_svg is None:
+        return None
+    svg_text = source_svg.read_text(encoding="utf-8")
+    for legacy in ("#4EFA8B", "#A3FF47", "#a3ff47"):
+        svg_text = svg_text.replace(legacy, accent_hex)
+    svg_text = svg_text.replace("#22D3EE", pressed_hex)
+
+    dest_pkg = output_dir or (get_xdg_data_home() / "wallpapers/NoxForge-Active")
+    images_dir = dest_pkg / "contents/images"
+    source_dir = dest_pkg / "contents/source"
+    images_dir.mkdir(parents=True, exist_ok=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
+    tinted_svg = source_dir / "NoxForge.svg"
+    tinted_svg.write_text(svg_text, encoding="utf-8")
+    (dest_pkg / "metadata.json").write_text(
+        json.dumps(
+            {
+                "KPlugin": {
+                    "Id": "NoxForge-Active",
+                    "Name": "NoxForge Active Accent",
+                    "Version": get_app_version(),
+                    "License": "MIT",
+                }
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    out_png = images_dir / "2560x1440.png"
+    magick = shutil.which("magick")
+    if magick:
+        subprocess.run(
+            [
+                magick,
+                "-background",
+                "none",
+                str(tinted_svg),
+                "-resize",
+                "2560x1440^",
+                "-gravity",
+                "center",
+                "-extent",
+                "2560x1440",
+                "-depth",
+                "8",
+                "-strip",
+                f"PNG24:{out_png}",
+            ],
+            check=False,
+            capture_output=True,
+        )
+    return out_png if out_png.is_file() else tinted_svg

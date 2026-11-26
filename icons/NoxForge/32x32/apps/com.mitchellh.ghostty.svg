@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .surface-plate { fill: #1B2831; fill-opacity: 0.90; stroke: none; }
+      .surface-tab { fill: #141E25; fill-opacity: 0.92; stroke: none; }
+      .surface-bevel { stroke: #4B606A; stroke-width: 1; opacity: 0.72; }
+      .accent { color: #22D3EE; stroke: currentColor; }
+      .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
+      .lime { color: #A3FF47; stroke: currentColor; }
+      .lime-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.28; stroke: currentColor; }
+      .dimmed-fill { opacity: 0.24; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; opacity: 0.9; }
+      .warning-fill { color: #FBBF24; fill: currentColor; opacity: 0.9; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path class="surface-plate" d="M6.5 3H19a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.5z"/><path class="surface-bevel" d="M7 3.6h11.5"/><path d="M6.5 3H19a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.5z"/><path class="accent" d="M3 6.8L6.8 3"/><path d="M8 17V11a4 4 0 0 1 8 0v6l-2-1.2-2 1.2-2-1.2z"/><circle class="accent-fill" cx="10.5" cy="11.5" r="0.9"/><circle class="accent-fill" cx="13.5" cy="11.5" r="0.9"/>
+  </g>
+</svg>

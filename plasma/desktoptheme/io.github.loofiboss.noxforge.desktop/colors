@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Loofi
 # SPDX-License-Identifier: MIT
+# @noxforge-version: 21.0.0
 
 [ColorEffects:Disabled]
 Color=70,79,86

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #E8F0F2; }
+      .ColorScheme-Highlight { color: #A3FF47; }
+      .ColorScheme-NeutralText { color: #FBBF24; }
+      .ColorScheme-PositiveText { color: #A3FF47; }
+      .ColorScheme-NegativeText { color: #FF6B7A; }
+    </style>
+    <style id="noxforge-icon-style" type="text/css">
+      .text-fill { color: #E8F0F2; fill: currentColor; opacity: 0.92; stroke: none; }
+      .surface-plate { fill: #1B2831; fill-opacity: 0.90; stroke: none; }
+      .surface-tab { fill: #141E25; fill-opacity: 0.92; stroke: none; }
+      .surface-bevel { stroke: #4B606A; stroke-width: 1; opacity: 0.72; }
+      .accent { color: #22D3EE; stroke: currentColor; }
+      .accent-fill { color: #22D3EE; fill: currentColor; stroke: none; }
+      .lime { color: #A3FF47; stroke: currentColor; }
+      .lime-fill { color: #A3FF47; fill: currentColor; stroke: none; }
+      .dimmed { opacity: 0.28; stroke: currentColor; }
+      .dimmed-fill { opacity: 0.24; fill: currentColor; stroke: none; }
+      .symbolic-ring { opacity: 0.35; stroke: currentColor; stroke-width: 1; }
+      .warning { color: #FBBF24; stroke: currentColor; opacity: 0.9; }
+      .warning-fill { color: #FBBF24; fill: currentColor; opacity: 0.9; stroke: none; }
+      .negative { color: #FF6B7A; stroke: currentColor; opacity: 0.92; }
+      .negative-fill { color: #FF6B7A; fill: currentColor; opacity: 0.92; stroke: none; }
+    </style>
+  </defs>
+  <g fill="none" stroke="currentColor" class="ColorScheme-Text" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse class="surface-plate" cx="12" cy="6.5" rx="7" ry="2.5"/><path class="surface-tab" d="M5 6.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11z"/><ellipse cx="12" cy="6.5" rx="7" ry="2.5"/><path d="M5 6.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/><circle class="lime-fill" cx="15.5" cy="14.5" r="1"/>
+  </g>
+</svg>

@@ -62,7 +62,7 @@ class PhaseThreeTests(unittest.TestCase):
         self.assertGreaterEqual(len(icons), 120)
         self.assertEqual(
             {path.parent.name for path in icons},
-            {"actions", "animations", "applets", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"},
+            {"actions", "animations", "applets", "apps", "categories", "devices", "emblems", "mimetypes", "places", "preferences", "status"},
         )
 
     def test_wallpaper_has_editable_source_and_release_output(self) -> None:

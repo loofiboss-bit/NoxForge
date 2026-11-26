@@ -1,0 +1,60 @@
+{
+  "brandOpticalRenders": {
+    "128": {
+      "height": 96,
+      "sha256": "1bf76398d0c7a614f87d5dde38c44a28023eda0b14a5d6fc54a6a9aefac17a07",
+      "width": 128
+    },
+    "16": {
+      "height": 12,
+      "sha256": "0e23990f88395ec39ce25b6a46cbebffadeea5696b512da282400b4ca4a4aaff",
+      "width": 16
+    },
+    "24": {
+      "height": 18,
+      "sha256": "7a8620833a0f30a1f1b8bbdff6da36a23eafa09ed666b8435785d40fc7f5d347",
+      "width": 24
+    },
+    "48": {
+      "height": 36,
+      "sha256": "90bbf5bf28a6d2fd3ed5963cd8872c3ffa7d5f4bf5db39c665f33808f80b0a18",
+      "width": 48
+    },
+    "512": {
+      "height": 384,
+      "sha256": "7688951517d38a14f3f362871944a9494aa90ec36cab14fbaca76940420905e0",
+      "width": 512
+    }
+  },
+  "liveEvidence": false,
+  "originalEditable": true,
+  "phase": 2,
+  "release": "21.0.0",
+  "reviewAssertions": [
+    "The semantic and monochrome N/F masters share one clean continuous geometry.",
+    "The mark remains legible at 16, 24, 48, 128, and 512 px.",
+    "The horizontal lockup uses editable vector geometry without font dependencies.",
+    "The 16:9 and ultrawide wallpapers are independent compositions with quiet workspace regions.",
+    "Every fixed runtime-fixture icon is present and semantically recognizable.",
+    "Canonical cursor silhouettes and accent details remain distinct."
+  ],
+  "reviewStatus": "reviewed-offscreen",
+  "schemaVersion": 2,
+  "sheets": {
+    "docs/evidence/v21/artwork/artwork-brand-optical-sizes.png": "d415be46bec16869c7e83561bf0283f6044574f5055d2d3d8975f8b67c556911",
+    "docs/evidence/v21/artwork/artwork-brand-wallpaper.png": "20d9ae76490942141980d93f87382cf8efb752a0e7cb39cb0d3f370f6933541b",
+    "docs/evidence/v21/artwork/artwork-cursors.png": "ad170a4e85457a32633d6b80ecf012a8452489ba168d40fe96ce0bbdd9e67be7",
+    "docs/evidence/v21/artwork/artwork-icons.png": "24f612e53933169409831ee466c57cb245826aafdf356544c672a3458557869f"
+  },
+  "sources": {
+    "cursors/NoxForge-Cursors/coverage.json": "b5d65b72fe1bdc0b6640573f271e2e00b0d8193f1215fe37e77351db90561f50",
+    "design/artwork-contract.json": "aa091c12381c2df0249b47dc669812d9e0f0ec375fd5c644d72ce6b4c951dfa0",
+    "design/brand/noxforge-lockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
+    "design/brand/noxforge-mark-mono.svg": "69b480a264f50e1376d3fbfd320ec93d05eeb85a78063e4e6cb88992f61bf43b",
+    "design/brand/noxforge-mark.svg": "a45dd5d73e82457387059efac353c2b63190754d806d4a1fb84357a4881ed900",
+    "icons/NoxForge/coverage.json": "d45fdc3068393e57bb823605e9b3e25ed13075871a79c37749143a25ab5522c4",
+    "sounds/NoxForge/coverage.json": "73fab2a0ff4b8df0d79ca5916e7898e81f79d00aa0f1a5fb5591dfb9a9de585f",
+    "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg": "3892676816c0fa3aa8d5cb3c1319618e83adf0d4044330c97fe86fd7eb922ada",
+    "wallpapers/NoxForge/contents/source/NoxForge.svg": "efb7572a7b8098d57539176e04e4d56d81ebc0fc077614af4c21f49698262106"
+  }
+}

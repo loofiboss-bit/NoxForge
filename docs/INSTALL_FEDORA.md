@@ -1,11 +1,16 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 20.0.0 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
-journey. It provides the palette-adaptive native Qt style with dynamic accent engine,
-the unified Control Center suite (`noxforge-ctl` and PySide6 GUI), system doctor,
-GTK 3/4 themes, syntax/editor/terminal assets (including Zed, btop, Starship, Fastfetch,
-Firefox, Discord), both Obsidian and Graphite Plasma components, native Lock Screens,
-both KWin switchers, the `noxforge-opacity` configurator, and both SDDM theme variants.
+NoxForge 21.0.0 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
+journey. It provides the event-driven native Qt 6 style (`QFileSystemWatcher`, 6 WCAG-AA accents,
+custom `QPalette::Accent`), 10-module Plasma 6.8 Union CSS styles, the unified Control Center v6
+suite (`noxforge-ctl` with live hot-reload, Wallpaper Accent Extractor & Named Presets + async
+PySide6 GUI), Schema 14 system doctor, differentiated GTK 3/4 Libadwaita themes, Ecosystem v4
+assets (25 apps including Fastfetch Kinetic Studio v2, Bat, Delta, Fzf, Eza, Wofi, Neovim, VS Code,
+Zed, Yazi, Lazygit, Zellij, Tmux, btop, Starship, Firefox, and Discord), Duotone Surface icons
+(482 scalable + 1,052 optical), 5-size 4× AA Xcursors + Plasma 6 scalable Wayland cursors, Tactile
+Forge Audio v2, true PNG24 wallpapers (`16:10`, `32:9`, `images_dark/`), Aurorae v2 decorations,
+canonical OSD & SystemDialog Look-and-Feel QML, Lock Screens, KWin switchers, `noxforge-opacity`,
+and both SDDM theme variants.
 Fedora 44 and 45 use Plasma Login Manager (PLM) by default. NoxForge Quiet is the
 recommended standard PLM wallpaper; NoxForge does not ship a custom PLM greeter
 or write PLM configuration.
@@ -47,8 +52,8 @@ To get the clean, modern look featured in the showcase:
 ## Build from the distributed source archive
 
 ```bash
-tar -xJf noxforge-20.0.0-source.tar.xz
-cd NoxForge-20.0.0
+tar -xJf noxforge-21.0.0-source.tar.xz
+cd NoxForge-21.0.0
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 DESTDIR="$PWD/stage" cmake --install build

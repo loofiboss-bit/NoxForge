@@ -1,0 +1,605 @@
+{
+  "assetCount": 57,
+  "assets": [
+    {
+      "path": "widgets/action-overlays.svg",
+      "recipe": "glyph",
+      "sha256": "01f7cfa4f90eff48d5de09459e586ff78de3fb5be37d22a2da756a17efd287b6"
+    },
+    {
+      "path": "widgets/actionbutton.svg",
+      "recipe": "glyph",
+      "sha256": "2e6cf207891118e2f5082c6ec20b4b99bfbcfd975950c33e931e51aa6a409ee1"
+    },
+    {
+      "path": "widgets/analog_meter.svg",
+      "recipe": "glyph",
+      "sha256": "8e078c62e36ca57cbe6299fa66fce803918d8d556f004e090c179d89a4ecb005"
+    },
+    {
+      "path": "widgets/arrows.svg",
+      "recipe": "glyph",
+      "sha256": "4c52286dc6644fc68f72438cf5b2f0bc354cbaefe8b25dae29822c4bf5e75772"
+    },
+    {
+      "path": "widgets/background.svg",
+      "recipe": "overlay",
+      "sha256": "040b40b9c66fa493525f32fe15a3ea72cf3e57af954ace5f66f89b5b91e5c11e"
+    },
+    {
+      "path": "widgets/bar_meter_horizontal.svg",
+      "recipe": "progress",
+      "sha256": "126eab58c926c2ab4be8b8b231d84189733824e865afe7ffe3fb71ca437a8a94"
+    },
+    {
+      "path": "widgets/bar_meter_vertical.svg",
+      "recipe": "progress",
+      "sha256": "126eab58c926c2ab4be8b8b231d84189733824e865afe7ffe3fb71ca437a8a94"
+    },
+    {
+      "path": "widgets/branding.svg",
+      "recipe": "glyph",
+      "sha256": "4eb7dc84ed4ecbbcbe7199c74b83209b6008e341f27404c1d2be2636b0f3fa5f"
+    },
+    {
+      "path": "widgets/busywidget.svg",
+      "recipe": "progress",
+      "sha256": "57cdb2b1f4407c4bb22a0b7b485f5b5fc292715723f0a608df9d92c9d35f4b9c"
+    },
+    {
+      "path": "widgets/button.svg",
+      "recipe": "control",
+      "sha256": "9008d3ebde37b23fda66a0dd95baeca6a7ba79332753077e5c767ceaad6fac79"
+    },
+    {
+      "path": "widgets/calendar.svg",
+      "recipe": "glyph",
+      "sha256": "f57181182f2fe88cbda973bbfd0ae4ed3060be93da1feb06ef2e36ac38ee41b4"
+    },
+    {
+      "path": "widgets/checkmarks.svg",
+      "recipe": "glyph",
+      "sha256": "674ae84db9e285c7fa5fa59ffdf4aaeff79ef237b7e2eb86a4fdff19406fcd6f"
+    },
+    {
+      "path": "widgets/clock.svg",
+      "recipe": "glyph",
+      "sha256": "7b574fc5688834c49c9ecf00f07c1a89e981d4adee0c4c29671c85965c03aad8"
+    },
+    {
+      "path": "widgets/configuration-icons.svg",
+      "recipe": "glyph",
+      "sha256": "a3459892023fbb8880a3c81247e87a2c9af34993b6f7337efdfdb03a1860ca10"
+    },
+    {
+      "path": "widgets/containment-controls.svg",
+      "recipe": "glyph",
+      "sha256": "0c360ba19e1b56ee850ff8097fda04a1d56482762e66e081d22031a33c0c8e8c"
+    },
+    {
+      "path": "widgets/dragger.svg",
+      "recipe": "glyph",
+      "sha256": "18d3d6c92bdab2485a9012060882ac7ed7e95d1df45c98f9ffa741dae9888df7"
+    },
+    {
+      "path": "widgets/frame.svg",
+      "recipe": "shell",
+      "sha256": "923672a437114d4169121ebcd5b4a810c7dec5bff649ea1876d2f81d1ccdd208"
+    },
+    {
+      "path": "widgets/glowbar.svg",
+      "recipe": "focus",
+      "sha256": "99cab0e23a4d46c66a38315c69ae202532191ca8ea1fab5ff7a3f9d7f770a33f"
+    },
+    {
+      "path": "widgets/line.svg",
+      "recipe": "glyph",
+      "sha256": "5edde4c804ddd1ccc80b29182455484abb86b2b7ca22299b3b4d09b9c75a0aa1"
+    },
+    {
+      "path": "widgets/lineedit.svg",
+      "recipe": "sunken",
+      "sha256": "555374f5ace946d06189cea59e2a476665afa846e018403df85c56b405d4a7d9"
+    },
+    {
+      "path": "widgets/listitem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "115cfceca351c27ab08bd8311951324ac3839e072303ca638ea3c93331a0addf"
+    },
+    {
+      "path": "widgets/margins-highlight.svg",
+      "recipe": "focus",
+      "sha256": "98021a49ca512d9e7d52ac14f34fc6636f579f9faf9da0ebaeb358e3ec2ec90a"
+    },
+    {
+      "path": "widgets/media-delegate.svg",
+      "recipe": "controlRaised",
+      "sha256": "be64107e29fd20bffda6b25810f100f19fe49bf1061752d76f38d71679dacece"
+    },
+    {
+      "path": "widgets/menubaritem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "34aca7e9fb95f222b38bc0331404c8ea9c7bcdff11a655116bc5e2cc3e0a5a6a"
+    },
+    {
+      "path": "widgets/monitor.svg",
+      "recipe": "controlRaised",
+      "sha256": "3e0da9d36b93841043e2b7c5d8d04b81d5c8056a4f3d2733dc7fcd2dfe6af3b5"
+    },
+    {
+      "path": "widgets/notes.svg",
+      "recipe": "glyph",
+      "sha256": "a714611fa864ac548264f7ef84a393d17c1aa06a149f95094e331718ba60ac86"
+    },
+    {
+      "path": "widgets/pager.svg",
+      "recipe": "controlQuiet",
+      "sha256": "121111525fe3f75cd7211667b57ed8653afeb5e0f78e543702ced06d203aa11b"
+    },
+    {
+      "path": "widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "97b0149a4a196e7f940836a7b9012d998e46614cc53b826f55aae3d2ed9e9172"
+    },
+    {
+      "path": "widgets/picker.svg",
+      "recipe": "controlRaised",
+      "sha256": "35fa864e5daba52f17e91777c31f2455af95a01a1b65f9c3f0ec61e8945723f6"
+    },
+    {
+      "path": "widgets/plasmoidheading.svg",
+      "recipe": "overlay",
+      "sha256": "f78431070390f67c04a5a6d4ba591d7e250e49257ea721ac6d8f74b2ade4c028"
+    },
+    {
+      "path": "widgets/plot-background.svg",
+      "recipe": "canvas",
+      "sha256": "cac0bd75f0949b54d9edaf6c0a1dffea3b25886e79bc8217e1a14ead55052fa7"
+    },
+    {
+      "path": "widgets/radiobutton.svg",
+      "recipe": "glyph",
+      "sha256": "075b450b065a9b3765bda784ab75da65f976a5ca6eb1c11d195027984bf353f1"
+    },
+    {
+      "path": "widgets/scrollbar.svg",
+      "recipe": "disabled",
+      "sha256": "46b164cc77399d196081fa615a9048e124914ca884538abbdf6c1cba092a1eac"
+    },
+    {
+      "path": "widgets/scrollwidget.svg",
+      "recipe": "scrollSurface",
+      "sha256": "630fd0ced06840f7d07b501cdc21860ef5d606e84765cd59ae06bd1dca20cc91"
+    },
+    {
+      "path": "widgets/slider.svg",
+      "recipe": "disabled",
+      "sha256": "642925aad709738d5cd067631b7ae245b4e693a23a3b18ad17a8649abfe1dd7c"
+    },
+    {
+      "path": "widgets/switch.svg",
+      "recipe": "disabled",
+      "sha256": "8494a3f5ad157f75f896dc4506556ea5f5de77b1e83667c0f870494a8926fa07"
+    },
+    {
+      "path": "widgets/tabbar.svg",
+      "recipe": "focus",
+      "sha256": "0a4bce21d6bd7be2efdfe71c7da8e44103e0875a813d6cf60135dcb76ee4fd15"
+    },
+    {
+      "path": "widgets/tasks.svg",
+      "recipe": "controlQuiet",
+      "sha256": "0d822766ad097a2de2817199b30e4ba43f89e4384126b34206435c4d6f39acb2"
+    },
+    {
+      "path": "widgets/timer.svg",
+      "recipe": "glyph",
+      "sha256": "ed833c4cea90626e2f866c6586d8fc399143efbb58866a31c13b1b85d9907c08"
+    },
+    {
+      "path": "widgets/toolbar.svg",
+      "recipe": "controlQuiet",
+      "sha256": "1affa05ca22d36ec8a8cbf44f1899584f5c91ad860e6b6c5b734645db8c28863"
+    },
+    {
+      "path": "widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "8c5aa6063096b14c667b429ac5746454085fc80cc8c8353b35151765e9399aaa"
+    },
+    {
+      "path": "widgets/translucentbackground.svg",
+      "recipe": "translucent",
+      "sha256": "e3f50b34d83ae2b6cda33093bd01bdbea010492c65472eba57422f1fc3a2fed4"
+    },
+    {
+      "path": "widgets/viewitem.svg",
+      "recipe": "viewQuiet",
+      "sha256": "3ea96ef567aa94ac5f354dfec3cd219ac40171c34a4ed17af193c6d3a5e3b1bc"
+    },
+    {
+      "path": "weather/wind-arrows.svg",
+      "recipe": null,
+      "sha256": "7998b42a6b3155ab9324b19db9b25ac3401ec2c52533555d4be7a7422e61cf4c"
+    },
+    {
+      "path": "dialogs/background.svg",
+      "recipe": "overlay",
+      "sha256": "040b40b9c66fa493525f32fe15a3ea72cf3e57af954ace5f66f89b5b91e5c11e"
+    },
+    {
+      "path": "opaque/dialogs/background.svg",
+      "recipe": "overlay",
+      "sha256": "8424fba0338d0cc840690da1ca4bb53a71409a0f4777ab82049d6ae777b41f39"
+    },
+    {
+      "path": "opaque/widgets/background.svg",
+      "recipe": "overlay",
+      "sha256": "cea8d529c8bca9d9a9ceb1499e730368a8e849d6bf79cb4ec165f0fdb3204ee5"
+    },
+    {
+      "path": "opaque/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "a1045a2a1ca2fa97d1fd75bad202e4bd97fd97f0f7bd778f581c61452006edd5"
+    },
+    {
+      "path": "opaque/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "cea8d529c8bca9d9a9ceb1499e730368a8e849d6bf79cb4ec165f0fdb3204ee5"
+    },
+    {
+      "path": "solid/dialogs/background.svg",
+      "recipe": "overlay",
+      "sha256": "8424fba0338d0cc840690da1ca4bb53a71409a0f4777ab82049d6ae777b41f39"
+    },
+    {
+      "path": "solid/widgets/background.svg",
+      "recipe": "overlay",
+      "sha256": "cea8d529c8bca9d9a9ceb1499e730368a8e849d6bf79cb4ec165f0fdb3204ee5"
+    },
+    {
+      "path": "solid/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "a1045a2a1ca2fa97d1fd75bad202e4bd97fd97f0f7bd778f581c61452006edd5"
+    },
+    {
+      "path": "solid/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "cea8d529c8bca9d9a9ceb1499e730368a8e849d6bf79cb4ec165f0fdb3204ee5"
+    },
+    {
+      "path": "translucent/dialogs/background.svg",
+      "recipe": "overlay",
+      "sha256": "0ccfdfdbb071cf72052328fdbf9eb1f9a319e07403b7b7f0ac84174d8a4123ae"
+    },
+    {
+      "path": "translucent/widgets/background.svg",
+      "recipe": "overlay",
+      "sha256": "cdb0352fff8b79480a26535bbd22991fb115b5f272a296daa9fd6a91e56bec75"
+    },
+    {
+      "path": "translucent/widgets/panel-background.svg",
+      "recipe": "panel",
+      "sha256": "5085f94629e0591f9b4b541b809f2aea2834dbe9def2df6091014edb124f6d71"
+    },
+    {
+      "path": "translucent/widgets/tooltip.svg",
+      "recipe": "tooltip",
+      "sha256": "6feffc0cf87f8db115cc6361c1bc8ca6042b4fae1366be8c5e59a3272a607e45"
+    }
+  ],
+  "atlases": [
+    {
+      "file": "plasma-style-atlas-100pct.png",
+      "height": 996,
+      "scale": 1.0,
+      "sha256": "4882ac9de5b9bb0f4921a404837f037261c6e648dcb7557ff72f1e9927ae4112",
+      "width": 1316
+    },
+    {
+      "file": "plasma-style-atlas-125pct.png",
+      "height": 1236,
+      "scale": 1.25,
+      "sha256": "9fe4ebc804a904cbcbc9de3ccd10800cf7dd07c903991173dc306d3f67f6cd56",
+      "width": 1636
+    },
+    {
+      "file": "plasma-style-atlas-140pct.png",
+      "height": 1380,
+      "scale": 1.4,
+      "sha256": "b6d283747981a6bee5de13329ac523d77a80d0d02242486c082f0cd28d46d165",
+      "width": 1828
+    },
+    {
+      "file": "plasma-style-atlas-150pct.png",
+      "height": 1476,
+      "scale": 1.5,
+      "sha256": "821ce6e5b48bb03e84a2181b271d59bf6ddeeb22dd6e666b964fd8f924dc90a3",
+      "width": 1956
+    },
+    {
+      "file": "plasma-style-atlas-175pct.png",
+      "height": 1716,
+      "scale": 1.75,
+      "sha256": "1c01cae56c17bc36fdfbd0f04a085f11709bbbf09bb28b58ab6f8eff55471567",
+      "width": 2276
+    },
+    {
+      "file": "plasma-style-atlas-200pct.png",
+      "height": 1956,
+      "scale": 2.0,
+      "sha256": "952b760ce0fca958c83d472bff468eea0497f60f6c68c0fc3c8e53f12fb79d9b",
+      "width": 2596
+    }
+  ],
+  "columns": 8,
+  "evidenceClass": "deterministic-static-svg-source",
+  "limitations": [
+    "Static SVG source rasterization does not prove a running Plasma shell or compositor.",
+    "Live panel, blur, compact-layout, and multi-output checks remain pending."
+  ],
+  "materialAtlases": [
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-100pct.png",
+      "height": 128,
+      "scale": 1.0,
+      "sha256": "9e2dadde3f17702ddc60717ce7ab079ff4eaec7b0489ed31d0fb7fbd9f8d34bb",
+      "width": 1316
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-100pct.png",
+      "height": 128,
+      "scale": 1.0,
+      "sha256": "8c7a9c17c59fd4d457c19da7ffc214a4cc4a5f6ca8295f261ad8b8873c29893e",
+      "width": 1316
+    },
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-125pct.png",
+      "height": 158,
+      "scale": 1.25,
+      "sha256": "e5448eda9ab8a33f53a7ac48d2c79d04d04f21af95c9eba87103c75a00cdad04",
+      "width": 1636
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-125pct.png",
+      "height": 158,
+      "scale": 1.25,
+      "sha256": "2c34dd8b613b337a9c487a28c5b33b0efd7f087fad313d53e1334ef5b390955b",
+      "width": 1636
+    },
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-140pct.png",
+      "height": 176,
+      "scale": 1.4,
+      "sha256": "010267494b8a3f67ae025482637757c7743dacd79d536d3d4ec57a888250c036",
+      "width": 1828
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-140pct.png",
+      "height": 176,
+      "scale": 1.4,
+      "sha256": "56f32f0a9928c4aa106d42583ae514d6ed5381485cafea912f1d21be4811c996",
+      "width": 1828
+    },
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-150pct.png",
+      "height": 188,
+      "scale": 1.5,
+      "sha256": "04399226bc5f4bb5a144e22d90050610f0576e5b7074f1ab5b3233e952aaffcc",
+      "width": 1956
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-150pct.png",
+      "height": 188,
+      "scale": 1.5,
+      "sha256": "a6a9dcbc524788c52e9ad36352be8c60f006231a43db8944355892e95e0b820c",
+      "width": 1956
+    },
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-175pct.png",
+      "height": 218,
+      "scale": 1.75,
+      "sha256": "3d3424ecdc2e8f2dce78cac425671e1a4d9ab0f6d05f9c03ff553564bddd08fc",
+      "width": 2276
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-175pct.png",
+      "height": 218,
+      "scale": 1.75,
+      "sha256": "88c101025f0221ee6e6f5aaa47218a16ff47b4be923fd2bf13e3f016b06d0306",
+      "width": 2276
+    },
+    {
+      "assetCount": 4,
+      "blur": "on",
+      "file": "material-atlas-blur-on-200pct.png",
+      "height": 248,
+      "scale": 2.0,
+      "sha256": "bf1166ef2a63f64f44e26407f60067667954211666e9baf866e206a56d43678a",
+      "width": 2596
+    },
+    {
+      "assetCount": 8,
+      "blur": "off",
+      "file": "material-atlas-blur-off-200pct.png",
+      "height": 248,
+      "scale": 2.0,
+      "sha256": "26c8faf882f79aaa569abfda5cece3d2df768bc80e6662a2d408f4d62c31daa4",
+      "width": 2596
+    }
+  ],
+  "orientedTaskStates": {
+    "orientations": [
+      "north",
+      "south",
+      "east",
+      "west"
+    ],
+    "states": [
+      "normal",
+      "hover",
+      "focus",
+      "attention",
+      "minimized",
+      "progress"
+    ]
+  },
+  "plasmaVersion": "6.8",
+  "qualifiedSurfaces": {
+    "calendarWeather": [
+      "widgets/calendar.svg",
+      "widgets/viewitem.svg",
+      "weather/wind-arrows.svg"
+    ],
+    "inputs": [
+      "widgets/lineedit.svg",
+      "widgets/slider.svg",
+      "widgets/scrollbar.svg",
+      "widgets/busywidget.svg"
+    ],
+    "notifications": [
+      "dialogs/background.svg",
+      "widgets/button.svg",
+      "widgets/actionbutton.svg"
+    ],
+    "osdContainment": [
+      "widgets/background.svg",
+      "widgets/containment-controls.svg",
+      "widgets/configuration-icons.svg"
+    ],
+    "panels": [
+      "widgets/panel-background.svg",
+      "widgets/tasks.svg",
+      "widgets/button.svg"
+    ],
+    "popups": [
+      "dialogs/background.svg",
+      "widgets/background.svg"
+    ],
+    "tooltips": [
+      "widgets/tooltip.svg"
+    ]
+  },
+  "qualifiesLivePlasma": false,
+  "schemaVersion": 2,
+  "sourceCaptureMatrix": {
+    "blur": [
+      "on",
+      "off"
+    ],
+    "evidenceClass": "deterministic-static-svg-source",
+    "layouts": [
+      "standard",
+      "compact"
+    ],
+    "panelEdges": [
+      "top",
+      "bottom",
+      "left",
+      "right"
+    ],
+    "qualifiesLivePlasma": false,
+    "scales": [
+      1.0,
+      1.25,
+      1.4,
+      2.0
+    ],
+    "virtualOutputs": [
+      "primary",
+      "secondary"
+    ]
+  },
+  "stateFrames": {
+    "button": [
+      "normal",
+      "hover",
+      "focus",
+      "pressed",
+      "toolbutton-hover",
+      "toolbutton-focus",
+      "toolbutton-pressed"
+    ],
+    "frame": [
+      "plain",
+      "raised",
+      "sunken"
+    ],
+    "lineedit": [
+      "base",
+      "hover",
+      "focus"
+    ],
+    "listitem": [
+      "normal",
+      "hover",
+      "pressed",
+      "section"
+    ],
+    "menubaritem": [
+      "normal",
+      "hover",
+      "pressed"
+    ],
+    "plasmoidheading": [
+      "header",
+      "footer"
+    ],
+    "scrollbar": [
+      "background-horizontal",
+      "background-vertical",
+      "slider",
+      "mouseover-slider"
+    ],
+    "slider": [
+      "groove",
+      "groove-highlight"
+    ],
+    "switch": [
+      "inactive",
+      "active"
+    ],
+    "tabbar": [
+      "north-active-tab",
+      "south-active-tab",
+      "east-active-tab",
+      "west-active-tab"
+    ],
+    "tasks": [
+      "normal",
+      "hover",
+      "focus",
+      "attention",
+      "minimized",
+      "progress"
+    ],
+    "viewitem": [
+      "normal",
+      "hover",
+      "selected",
+      "selected+hover"
+    ]
+  },
+  "staticScenarioCount": 128,
+  "themeId": "io.github.loofiboss.noxforge.desktop",
+  "version": "21.0.0"
+}
