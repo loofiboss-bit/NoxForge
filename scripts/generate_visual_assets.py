@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-import gzip
-import io
 import json
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
@@ -984,18 +984,131 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
+def _bitrev(value: int, width: int) -> int:
+    result = 0
+    for _ in range(width):
+        result = (result << 1) | (value & 1)
+        value >>= 1
+    return result
+
+
+_FIXED_LITLEN: tuple[tuple[int, int], ...] = tuple(
+    (_bitrev(0x30 + s, 8), 8)
+    if s <= 143
+    else (_bitrev(0x190 + (s - 144), 9), 9)
+    if s <= 255
+    else (_bitrev(s - 256, 7), 7)
+    if s <= 279
+    else (_bitrev(0xC0 + (s - 280), 8), 8)
+    for s in range(288)
+)
+_FIXED_DIST: tuple[tuple[int, int], ...] = tuple((_bitrev(d, 5), 5) for d in range(30))
+_LEN_TABLE: tuple[tuple[int, int, int], ...] = (
+    (257, 3, 0), (258, 4, 0), (259, 5, 0), (260, 6, 0), (261, 7, 0),
+    (262, 8, 0), (263, 9, 0), (264, 10, 0), (265, 11, 1), (266, 13, 1),
+    (267, 15, 1), (268, 17, 1), (269, 19, 2), (270, 23, 2), (271, 27, 2),
+    (272, 31, 2), (273, 35, 3), (274, 43, 3), (275, 51, 3), (276, 59, 3),
+    (277, 67, 4), (278, 83, 4), (279, 99, 4), (280, 115, 4), (281, 131, 5),
+    (282, 163, 5), (283, 195, 5), (284, 227, 5), (285, 258, 0),
+)
+_DIST_TABLE: tuple[tuple[int, int, int], ...] = (
+    (0, 1, 0), (1, 2, 0), (2, 3, 0), (3, 4, 0), (4, 5, 1), (5, 7, 1),
+    (6, 9, 2), (7, 13, 2), (8, 17, 3), (9, 25, 3), (10, 33, 4), (11, 49, 4),
+    (12, 65, 5), (13, 97, 5), (14, 129, 6), (15, 193, 6), (16, 257, 7),
+    (17, 385, 7), (18, 513, 8), (19, 769, 8), (20, 1025, 9), (21, 1537, 9),
+    (22, 2049, 10), (23, 3073, 10), (24, 4097, 11), (25, 6145, 11),
+    (26, 8193, 12), (27, 12289, 12), (28, 16385, 13), (29, 24577, 13),
+)
+
+
 def canonical_gzip(payload: bytes) -> bytes:
-    """Return a platform-independent gzip stream with a canonical header."""
-    stream = io.BytesIO()
-    with gzip.GzipFile(
-        filename="",
-        mode="wb",
-        compresslevel=9,
-        fileobj=stream,
-        mtime=0,
-    ) as archive:
-        archive.write(payload)
-    return stream.getvalue()
+    """Return a pure-Python deterministic RFC 1952 gzip stream independent of zlib vs zlib-ng."""
+    out = bytearray(b"\x1f\x8b\x08\x00\x00\x00\x00\x00\x02\xff")
+    bitbuf = 0
+    bitlen = 0
+
+    def emit(bits: int, count: int) -> None:
+        nonlocal bitbuf, bitlen
+        bitbuf |= bits << bitlen
+        bitlen += count
+        while bitlen >= 8:
+            out.append(bitbuf & 0xFF)
+            bitbuf >>= 8
+            bitlen -= 8
+
+    # BFINAL=1, BTYPE=01 (fixed Huffman)
+    emit(0b011, 3)
+
+    n = len(payload)
+    chains: dict[bytes, list[int]] = {}
+    i = 0
+    while i < n:
+        best_len = 0
+        best_dist = 0
+        if i + 3 <= n:
+            key = payload[i : i + 3]
+            candidates = chains.get(key)
+            if candidates:
+                max_len = min(258, n - i)
+                for pos in reversed(candidates[-32:]):
+                    dist = i - pos
+                    if dist > 32768:
+                        break
+                    mlen = 3
+                    while mlen < max_len and payload[pos + mlen] == payload[i + mlen]:
+                        mlen += 1
+                    if mlen > best_len:
+                        best_len = mlen
+                        best_dist = dist
+                        if best_len == max_len:
+                            break
+                candidates.append(i)
+                if len(candidates) > 64:
+                    del candidates[:-32]
+            else:
+                chains[key] = [i]
+
+        if best_len >= 3:
+            # Encode length
+            for idx, (sym, base, extra) in enumerate(_LEN_TABLE):
+                next_base = _LEN_TABLE[idx + 1][1] if idx + 1 < len(_LEN_TABLE) else 259
+                if best_len < next_base:
+                    code, clen = _FIXED_LITLEN[sym]
+                    emit(code, clen)
+                    if extra:
+                        emit(best_len - base, extra)
+                    break
+            # Encode distance
+            for idx, (sym, base, extra) in enumerate(_DIST_TABLE):
+                next_base = _DIST_TABLE[idx + 1][1] if idx + 1 < len(_DIST_TABLE) else 32769
+                if best_dist < next_base:
+                    code, clen = _FIXED_DIST[sym]
+                    emit(code, clen)
+                    if extra:
+                        emit(best_dist - base, extra)
+                    break
+            for j in range(i + 1, min(i + best_len, n - 2)):
+                k = payload[j : j + 3]
+                c = chains.get(k)
+                if c is None:
+                    chains[k] = [j]
+                else:
+                    c.append(j)
+                    if len(c) > 64:
+                        del c[:-32]
+            i += best_len
+        else:
+            code, clen = _FIXED_LITLEN[payload[i]]
+            emit(code, clen)
+            i += 1
+
+    # End-of-block symbol (256)
+    eob_code, eob_len = _FIXED_LITLEN[256]
+    emit(eob_code, eob_len)
+    if bitlen:
+        out.append(bitbuf & 0xFF)
+    out.extend(struct.pack("<II", zlib.crc32(payload) & 0xFFFFFFFF, n & 0xFFFFFFFF))
+    return bytes(out)
 
 
 def write_aurorae_svg(target_dir: Path, name: str, content: str) -> None:

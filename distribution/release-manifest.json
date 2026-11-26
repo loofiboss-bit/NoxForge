@@ -10,12 +10,12 @@
       "commit": "5be527cc3fae42dfadec2125819cc84afeb89977",
       "tag": "v20.0.0",
       "tagCommit": "ca5c08e96a71344f263f6ee7c59eac3ba5697a95",
-      "rpmBytes": 1833750,
-      "srpmBytes": 15059800,
+      "rpmBytes": 1934546,
+      "srpmBytes": 15097725,
       "githubSourceBytes": 15059800,
       "githubSource": "https://github.com/loofiboss-bit/NoxForge/releases/tag/v20.0.0",
       "rpmFilename": "noxforge-20.0.0-1.fc44.x86_64.rpm",
-      "rpmSha256": "34dc56f6d9abe555472a97e79703b653098245dd72c8e08e3f03e097410c4e7e",
+      "rpmSha256": "2ab5c46c592758775b303f4e0a3f451e75d232ea03c39b2f72a2a0251fc445f3",
       "kdeStoreProduct": "2367662"
     }
   },
@@ -233,7 +233,7 @@
       "key": "source",
       "filename": "noxforge-21.0.0-source.tar.xz",
       "kind": "source",
-      "budgetBytes": 26214400
+      "budgetBytes": 31457280
     },
     {
       "key": "portable",
@@ -329,13 +329,13 @@
       "key": "rpm",
       "filename": "noxforge-21.0.0-1.fc44.x86_64.rpm",
       "kind": "rpm",
-      "budgetBytes": 8388608
+      "budgetBytes": 12582912
     },
     {
       "key": "srpm",
       "filename": "noxforge-21.0.0-1.fc44.src.rpm",
       "kind": "srpm",
-      "budgetBytes": 26214400
+      "budgetBytes": 31457280
     },
     {
       "key": "qualification",
