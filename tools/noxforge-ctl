@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.0"
+VERSION = "21.0.1"
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -115,10 +115,41 @@ def reload_running_apps(
     is_obsidian = (profile or "").strip().lower() == "obsidian"
     gtk_theme = "NoxForgeObsidian" if is_obsidian else "NoxForge"
 
-    # 1. KGlobalSettings PaletteChanged & KWin reconfigure
+    # 1. Purge stale KF6Svg / icon / Plasma caches so updated SVG/icon trees render immediately
+    cache_dir = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+    if cache_dir.is_dir():
+        for pattern in (
+            "ksvg-elements",
+            "icon-cache.kcache",
+            "plasma_theme_*.kcache",
+            "plasma-svgelements-*",
+            "plasma_svgelements*",
+        ):
+            for match in cache_dir.glob(pattern):
+                try:
+                    if match.is_dir():
+                        shutil.rmtree(match, ignore_errors=True)
+                    else:
+                        match.unlink(missing_ok=True)
+                except OSError:
+                    pass
+        reloaded.append("caches")
+
+    # Remove orphaned user-local icon-theme.cache if no local index.theme shadows system icons
+    user_icon_dir = get_xdg_data_home() / "icons/NoxForge"
+    if user_icon_dir.is_dir() and not (user_icon_dir / "index.theme").is_file():
+        orphan_cache = user_icon_dir / "icon-theme.cache"
+        if orphan_cache.is_file():
+            try:
+                orphan_cache.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+    # 2. KGlobalSettings PaletteChanged (0) + IconChanged (4) & KWin reconfigure
     qdbus = shutil.which("qdbus-qt6") or shutil.which("qdbus6") or shutil.which("qdbus")
     if qdbus:
         run_cmd([qdbus, "org.kde.KGlobalSettings", "/KGlobalSettings", "notifyChange", "0", "0"])
+        run_cmd([qdbus, "org.kde.KGlobalSettings", "/KGlobalSettings", "notifyChange", "4", "0"])
         reloaded.append("kglobalsettings")
     notify_plasma_kwin()
     reloaded.append("kwin")

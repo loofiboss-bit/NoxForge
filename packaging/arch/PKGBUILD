@@ -1,5 +1,5 @@
 pkgname=noxforge
-pkgver=21.0.0
+pkgver=21.0.1
 pkgrel=1
 pkgdesc='True Obsidian OLED Parity & Dual-Stack Architecture for Fedora and Arch KDE'
 arch=('x86_64')
@@ -11,8 +11,8 @@ optdepends=(
   'sddm: qualified NoxForge custom login-screen compatibility'
   'plasma-union: KDE Plasma 6.8 Union CSS/QQuick style engine integration'
 )
-source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v21.0.0/noxforge-21.0.0-source.tar.xz')
-sha256sums=('947ca73d993bd5f23d53aa37a7cfa3b7bf5662c0b77430c39fa21f5315b2529d')
+source=('https://github.com/loofiboss-bit/NoxForge/releases/download/v21.0.1/noxforge-21.0.1-source.tar.xz')
+sha256sums=('b9385f89198ccdffa08c8577f4f6378181337a3aa9bb9a938766cce0113b7275')
 
 build() {
   cmake -S "NoxForge-${pkgver}" -B build -G Ninja \

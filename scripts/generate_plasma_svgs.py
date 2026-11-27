@@ -39,6 +39,8 @@ def make_svg_header(colors: dict[str, str]) -> str:
       .ColorScheme-PositiveText {{ color: {colors['accent']}; }}
       .ColorScheme-NeutralText {{ color: {colors['neutral']}; }}
       .ColorScheme-NegativeText {{ color: {colors['negative']}; }}
+    ]]></style>
+    <style id="noxforge-plasma-style" type="text/css"><![CDATA[
       .NoxForge-Sunken {{ color: {colors['surfaceSunken']}; }}
       .NoxForge-Overlay {{ color: {colors['surfaceOverlay']}; }}
       .NoxForge-Hover {{ color: {colors['surfaceHover']}; }}

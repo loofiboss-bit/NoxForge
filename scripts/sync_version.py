@@ -49,6 +49,7 @@ BASE_VERSION_FILES = {
     "aurorae/io.github.loofiboss.noxforge.obsidian.desktop/metadata.desktop": ((r"(?m)^X-KDE-PluginInfo-Version=.*$", "X-KDE-PluginInfo-Version={version}"),),
     "aurorae/io.github.loofiboss.noxforge.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
     "aurorae/io.github.loofiboss.noxforge.obsidian.desktop/metadata.json": ((r'(?m)^(\s*"Version":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),
+    "icons/NoxForge/index.theme": ((r"(?m)^# @noxforge-version:\s+.*$", "# @noxforge-version: {version}"),),
     "sddm/NoxForge/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "sddm/NoxForgeObsidian/metadata.desktop": ((r"(?m)^Version=.*$", "Version={version}"),),
     "media/manifest.json": ((r'(?m)^(\s*"release":\s*)".*?"(,?)$', r'\g<1>"{version}"\g<2>'),),

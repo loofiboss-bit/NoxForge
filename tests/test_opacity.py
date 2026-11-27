@@ -151,7 +151,7 @@ class TestNoxForgeOpacity(unittest.TestCase):
 
         # Replace with 0.85 and 0.75
         new_content, count = noxforge_opacity.replace_aurorae_opacity(initial_content, 0.85, 0.75)
-        self.assertEqual(count, 27)  # 9 active + 9 inactive + 9 maximized
+        self.assertEqual(count, 36)  # 9 active + 9 inactive + 9 maximized + 9 maximized-inactive
         act_updated, inact_updated = noxforge_opacity.extract_aurorae_opacity(new_content)
         self.assertEqual(act_updated, 0.85)
         self.assertEqual(inact_updated, 0.75)

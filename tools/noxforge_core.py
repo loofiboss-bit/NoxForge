@@ -15,7 +15,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-DEFAULT_VERSION = "21.0.0"
+DEFAULT_VERSION = "21.0.1"
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent

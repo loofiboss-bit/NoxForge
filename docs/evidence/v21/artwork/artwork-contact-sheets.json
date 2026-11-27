@@ -29,7 +29,7 @@
   "liveEvidence": false,
   "originalEditable": true,
   "phase": 2,
-  "release": "21.0.0",
+  "release": "21.0.1",
   "reviewAssertions": [
     "The semantic and monochrome N/F masters share one clean continuous geometry.",
     "The mark remains legible at 16, 24, 48, 128, and 512 px.",
@@ -52,7 +52,7 @@
     "design/brand/noxforge-lockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
     "design/brand/noxforge-mark-mono.svg": "69b480a264f50e1376d3fbfd320ec93d05eeb85a78063e4e6cb88992f61bf43b",
     "design/brand/noxforge-mark.svg": "a45dd5d73e82457387059efac353c2b63190754d806d4a1fb84357a4881ed900",
-    "icons/NoxForge/coverage.json": "d45fdc3068393e57bb823605e9b3e25ed13075871a79c37749143a25ab5522c4",
+    "icons/NoxForge/coverage.json": "49218a81d597cd223401e20fb70d7c10d0512429549cc15805366234ded97117",
     "sounds/NoxForge/coverage.json": "73fab2a0ff4b8df0d79ca5916e7898e81f79d00aa0f1a5fb5591dfb9a9de585f",
     "wallpapers/NoxForge/contents/source/NoxForge-Ultrawide.svg": "3892676816c0fa3aa8d5cb3c1319618e83adf0d4044330c97fe86fd7eb922ada",
     "wallpapers/NoxForge/contents/source/NoxForge.svg": "efb7572a7b8098d57539176e04e4d56d81ebc0fc077614af4c21f49698262106"

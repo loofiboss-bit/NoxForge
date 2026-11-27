@@ -66,7 +66,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             self.assertEqual(meta["input-type"], "css")
             self.assertEqual(meta["input-version"], 1)
-            self.assertIn(meta["version"], ("19.0.0", "20.0.0", "21.0.0"))
+            self.assertRegex(meta["version"], r"^(19\.0\.0|20\.0\.0|21\.0\.\d+)$")
             self.assertEqual(meta["license"], "MIT")
 
             vars_css = (style_dir / "contents/css/variables.css").read_text(encoding="utf-8")
