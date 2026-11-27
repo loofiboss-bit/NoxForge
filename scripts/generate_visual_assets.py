@@ -757,6 +757,34 @@ def icon_svg(body: str, optical_size: int | None = None) -> str:
 '''
 
 
+def _shadow_gradient_defs(prefix: str, x: int, y: int, *, active: bool) -> str:
+    """Build filter-free seamless linear/radial ambient shadow gradients aligned to the 9-patch grid."""
+    pl, pr, pt, pb = 12, 12, 8, 16
+    fx = x + pl
+    fy = y + pt
+    stops = (
+        (("0%", "0.34"), ("30%", "0.16"), ("65%", "0.05"), ("100%", "0"))
+        if active
+        else (("0%", "0.20"), ("30%", "0.08"), ("65%", "0.02"), ("100%", "0"))
+    )
+    stop_xml = "".join(
+        f'<stop offset="{off}" stop-color="#000000" stop-opacity="{op}"/>'
+        for off, op in stops
+    )
+    return "\n".join(
+        [
+            f'    <linearGradient id="{prefix}-sh-t" gradientUnits="userSpaceOnUse" x1="0" y1="{fy}" x2="0" y2="{y}">{stop_xml}</linearGradient>',
+            f'    <linearGradient id="{prefix}-sh-b" gradientUnits="userSpaceOnUse" x1="0" y1="{fy + 40}" x2="0" y2="{fy + 40 + pb}">{stop_xml}</linearGradient>',
+            f'    <linearGradient id="{prefix}-sh-l" gradientUnits="userSpaceOnUse" x1="{fx}" y1="0" x2="{x}" y2="0">{stop_xml}</linearGradient>',
+            f'    <linearGradient id="{prefix}-sh-r" gradientUnits="userSpaceOnUse" x1="{fx + 40}" y1="0" x2="{fx + 40 + pr}" y2="0">{stop_xml}</linearGradient>',
+            f'    <radialGradient id="{prefix}-sh-tl" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate({fx} {fy}) scale({pl} {pt})">{stop_xml}</radialGradient>',
+            f'    <radialGradient id="{prefix}-sh-tr" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate({fx + 40} {fy}) scale({pr} {pt})">{stop_xml}</radialGradient>',
+            f'    <radialGradient id="{prefix}-sh-bl" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate({fx} {fy + 40}) scale({pl} {pb})">{stop_xml}</radialGradient>',
+            f'    <radialGradient id="{prefix}-sh-br" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate({fx + 40} {fy + 40}) scale({pr} {pb})">{stop_xml}</radialGradient>',
+        ]
+    )
+
+
 def decoration_frame(
     prefix: str,
     x: int,
@@ -768,15 +796,17 @@ def decoration_frame(
     shadow: bool = True,
     maximized: bool = False,
 ) -> str:
-    """Build Aurorae v2 9-patch frame with optional stepped ambient shadow & flat maximized corners."""
+    """Build pixel-exact Aurorae v2 9-patch frame with seamless gradient ambient shadows & flat maximized corners."""
     def name(position: str) -> str:
         return f"{prefix}-{position}"
+
+    def anchor(ax: int, ay: int, aw: int, ah: int) -> str:
+        return f'<rect x="{ax}" y="{ay}" width="{aw}" height="{ah}" fill="#000" fill-opacity="0"/>'
 
     attr = f'class="{css_class}" fill="currentColor" fill-opacity="{opacity:g}"'
     border_class = "NoxForge-EdgeHighlight" if active else "NoxForge-OutlineMuted"
     b_fill = f'class="{border_class}" fill="currentColor"'
-    b_attr = f'class="{border_class}" stroke="currentColor" fill="none" stroke-width="1"'
-    s_fill = 'class="NoxForge-OverlayShadow" fill="currentColor"'
+    notch_fill = 'class="ColorScheme-Highlight" fill="currentColor"' if active else b_fill
 
     pl = 12 if shadow else 0
     pr = 12 if shadow else 0
@@ -785,118 +815,139 @@ def decoration_frame(
     fx = x + pl
     fy = y + pt
 
-    top = f'<g id="{name("top")}">'
+    top = f'<g id="{name("top")}">' + anchor(fx + 6, y, 28, pt + 6)
     if shadow:
-        top += f'<rect x="{fx + 6}" y="{y + 2}" width="28" height="6" {s_fill} fill-opacity="0.14"/>'
-        top += f'<rect x="{fx + 6}" y="{y + 5}" width="28" height="3" {s_fill} fill-opacity="0.28"/>'
+        top += f'<rect x="{fx + 6}" y="{y}" width="28" height="{pt}" fill="url(#{prefix}-sh-t)"/>'
     top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="6" {attr}/>'
     top += f'<rect x="{fx + 6}" y="{fy}" width="28" height="1" {b_fill}/>'
-    if active:
-        rail = EDGE_POLISH["aurorae"]
-        top += (
-            f'<path d="M{fx + 8} {fy + 1}h{rail["activeRailLength"]}" '
-            'class="ColorScheme-Highlight" stroke="currentColor" '
-            f'stroke-width="{rail["activeRailThickness"]}"/>'
-        )
     top += "</g>"
 
     if maximized:
         topleft = (
             f'<g id="{name("topleft")}">'
-            f'<rect x="{fx}" y="{fy}" width="6" height="6" {attr}/>'
-            f'<rect x="{fx}" y="{fy}" width="6" height="1" {b_fill}/>'
-            f'</g>'
+            + anchor(fx, fy, 6, 6)
+            + f'<rect x="{fx}" y="{fy}" width="6" height="6" {attr}/>'
+            + f'<rect x="{fx}" y="{fy}" width="6" height="1" {b_fill}/>'
+            + '</g>'
         )
         topright = (
             f'<g id="{name("topright")}">'
-            f'<rect x="{fx + 34}" y="{fy}" width="6" height="6" {attr}/>'
-            f'<rect x="{fx + 34}" y="{fy}" width="6" height="1" {b_fill}/>'
-            f'</g>'
+            + anchor(fx + 34, fy, 6, 6)
+            + f'<rect x="{fx + 34}" y="{fy}" width="6" height="6" {attr}/>'
+            + f'<rect x="{fx + 34}" y="{fy}" width="6" height="1" {b_fill}/>'
+            + '</g>'
         )
         bottomleft = (
             f'<g id="{name("bottomleft")}">'
-            f'<rect x="{fx}" y="{fy + 34}" width="6" height="6" {attr}/>'
-            f'<rect x="{fx}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
-            f'</g>'
+            + anchor(fx, fy + 34, 6, 6)
+            + f'<rect x="{fx}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            + f'<rect x="{fx}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            + '</g>'
         )
         bottomright = (
             f'<g id="{name("bottomright")}">'
-            f'<rect x="{fx + 34}" y="{fy + 34}" width="6" height="6" {attr}/>'
-            f'<rect x="{fx + 34}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
-            f'</g>'
+            + anchor(fx + 34, fy + 34, 6, 6)
+            + f'<rect x="{fx + 34}" y="{fy + 34}" width="6" height="6" {attr}/>'
+            + f'<rect x="{fx + 34}" y="{fy + 39}" width="6" height="1" {b_fill}/>'
+            + '</g>'
         )
     else:
-        topleft = f'<g id="{name("topleft")}">'
+        sh_peak = "0.34" if active else "0.20"
+        topleft = f'<g id="{name("topleft")}">' + anchor(x, y, pl + 6, pt + 6)
         if shadow:
-            topleft += f'<rect x="{x + 4}" y="{y + 2}" width="{pl + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
-            topleft += f'<rect x="{x + 8}" y="{y + 5}" width="{pl - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
+            topleft += (
+                f'<rect x="{x}" y="{y}" width="{pl}" height="{pt}" fill="url(#{prefix}-sh-tl)"/>'
+                f'<rect x="{fx}" y="{y}" width="6" height="{pt}" fill="url(#{prefix}-sh-t)"/>'
+                f'<rect x="{x}" y="{fy}" width="{pl}" height="6" fill="url(#{prefix}-sh-l)"/>'
+                f'<path d="M{fx} {fy}H{fx + 4}L{fx} {fy + 4}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
+            )
         topleft += (
             f'<path d="M{fx + 4} {fy}H{fx + 6}V{fy + 6}H{fx}V{fy + 4}Z" {attr}/>'
-            f'<rect x="{fx + 4}" y="{fy}" width="2" height="1" {b_fill}/>'
-            f'<line x1="{fx + 4}" y1="{fy}" x2="{fx}" y2="{fy + 4}" {b_attr}/>'
-            f'<rect x="{fx}" y="{fy + 4}" width="1" height="2" {b_fill}/>'
-            f'</g>'
-        )
-        topright = f'<g id="{name("topright")}">'
-        if shadow:
-            topright += f'<rect x="{fx + 34}" y="{y + 2}" width="{pr + 2}" height="{pt + 4}" rx="6" {s_fill} fill-opacity="0.14"/>'
-            topright += f'<rect x="{fx + 34}" y="{y + 5}" width="{pr - 2}" height="{pt + 1}" rx="4" {s_fill} fill-opacity="0.28"/>'
-        topright += (
-            f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 34}Z" {attr}/>'
-            f'<path d="M{fx + 34} {fy + 0.5}A5.5 5.5 0 0 1 {fx + 39.5} {fy + 6}" {b_attr}/>'
-            f'</g>'
-        )
-        bottomleft = f'<g id="{name("bottomleft")}">'
-        if shadow:
-            bottomleft += f'<rect x="{x + 2}" y="{fy + 34}" width="{pl + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
-            bottomleft += f'<rect x="{x + 6}" y="{fy + 34}" width="{pl}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
-            bottomleft += f'<rect x="{x + 9}" y="{fy + 34}" width="{pl - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
-        bottomleft += (
-            f'<path d="M{fx} {fy + 34}H{fx + 6}V{fy + 40}A6 6 0 0 1 {fx} {fy + 34}Z" {attr}/>'
-            f'<path d="M{fx + 6} {fy + 39.5}A5.5 5.5 0 0 1 {fx + 0.5} {fy + 34}" {b_attr}/>'
-            f'</g>'
-        )
-        bottomright = f'<g id="{name("bottomright")}">'
-        if shadow:
-            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr + 4}" height="{pb + 2}" rx="8" {s_fill} fill-opacity="0.12"/>'
-            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr}" height="{pb - 4}" rx="6" {s_fill} fill-opacity="0.24"/>'
-            bottomright += f'<rect x="{fx + 34}" y="{fy + 34}" width="{pr - 3}" height="{pb - 9}" rx="4" {s_fill} fill-opacity="0.38"/>'
-        bottomright += (
-            f'<path d="M{fx + 34} {fy + 34}H{fx + 40}A6 6 0 0 1 {fx + 34} {fy + 40}Z" {attr}/>'
-            f'<path d="M{fx + 39.5} {fy + 34}A5.5 5.5 0 0 1 {fx + 34} {fy + 39.5}" {b_attr}/>'
-            f'</g>'
+            f'<path d="M{fx} {fy + 6}V{fy + 4}L{fx + 4} {fy}H{fx + 6}V{fy + 1}H{fx + 4.41}L{fx + 1} {fy + 4.41}V{fy + 6}Z" {notch_fill}/>'
+            '</g>'
         )
 
-    left = f'<g id="{name("left")}">'
+        topright = f'<g id="{name("topright")}">' + anchor(fx + 34, y, pr + 6, pt + 6)
+        if shadow:
+            topright += (
+                f'<rect x="{fx + 40}" y="{y}" width="{pr}" height="{pt}" fill="url(#{prefix}-sh-tr)"/>'
+                f'<rect x="{fx + 34}" y="{y}" width="6" height="{pt}" fill="url(#{prefix}-sh-t)"/>'
+                f'<rect x="{fx + 40}" y="{fy}" width="{pr}" height="6" fill="url(#{prefix}-sh-r)"/>'
+                f'<path d="M{fx + 34} {fy}H{fx + 40}V{fy + 6}A6 6 0 0 0 {fx + 34} {fy}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
+            )
+        topright += (
+            f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 34}Z" {attr}/>'
+            f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 39}A5 5 0 0 0 {fx + 34} {fy + 1}Z" {b_fill}/>'
+            '</g>'
+        )
+
+        # Crisp 2px outer bottom corners aligned with BorderLeft=2, BorderRight=2, BorderBottom=2
+        bottomleft = f'<g id="{name("bottomleft")}">' + anchor(x, fy + 34, pl + 6, pb + 6)
+        if shadow:
+            bottomleft += (
+                f'<rect x="{x}" y="{fy + 40}" width="{pl}" height="{pb}" fill="url(#{prefix}-sh-bl)"/>'
+                f'<rect x="{x}" y="{fy + 34}" width="{pl}" height="6" fill="url(#{prefix}-sh-l)"/>'
+                f'<rect x="{fx}" y="{fy + 40}" width="6" height="{pb}" fill="url(#{prefix}-sh-b)"/>'
+                f'<path d="M{fx} {fy + 38}V{fy + 40}H{fx + 2}A2 2 0 0 1 {fx} {fy + 38}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
+            )
+        bottomleft += (
+            f'<path d="M{fx} {fy + 34}H{fx + 6}V{fy + 40}H{fx + 2}A2 2 0 0 1 {fx} {fy + 38}Z" {attr}/>'
+            f'<path d="M{fx} {fy + 34}H{fx + 1}V{fy + 38}A1 1 0 0 0 {fx + 2} {fy + 39}H{fx + 6}V{fy + 40}H{fx + 2}A2 2 0 0 1 {fx} {fy + 38}Z" {b_fill}/>'
+            '</g>'
+        )
+
+        bottomright = f'<g id="{name("bottomright")}">' + anchor(fx + 34, fy + 34, pr + 6, pb + 6)
+        if shadow:
+            bottomright += (
+                f'<rect x="{fx + 40}" y="{fy + 40}" width="{pr}" height="{pb}" fill="url(#{prefix}-sh-br)"/>'
+                f'<rect x="{fx + 40}" y="{fy + 34}" width="{pr}" height="6" fill="url(#{prefix}-sh-r)"/>'
+                f'<rect x="{fx + 34}" y="{fy + 40}" width="6" height="{pb}" fill="url(#{prefix}-sh-b)"/>'
+                f'<path d="M{fx + 40} {fy + 38}V{fy + 40}H{fx + 38}A2 2 0 0 0 {fx + 40} {fy + 38}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
+            )
+        bottomright += (
+            f'<path d="M{fx + 34} {fy + 34}H{fx + 40}V{fy + 38}A2 2 0 0 1 {fx + 38} {fy + 40}H{fx + 34}Z" {attr}/>'
+            f'<path d="M{fx + 39} {fy + 34}H{fx + 40}V{fy + 38}A2 2 0 0 1 {fx + 38} {fy + 40}H{fx + 34}V{fy + 39}H{fx + 38}A1 1 0 0 0 {fx + 39} {fy + 38}Z" {b_fill}/>'
+            '</g>'
+        )
+
+    left = f'<g id="{name("left")}">' + anchor(x, fy + 6, pl + 6, 28)
     if shadow:
-        left += f'<rect x="{x + 2}" y="{fy + 6}" width="{pl - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
-        left += f'<rect x="{x + 6}" y="{fy + 6}" width="{pl - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+        left += f'<rect x="{x}" y="{fy + 6}" width="{pl}" height="28" fill="url(#{prefix}-sh-l)"/>'
     left += f'<rect x="{fx}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
 
     center = f'<rect id="{name("center")}" x="{fx + 6}" y="{fy + 6}" width="28" height="28" {attr}/>'
 
-    right = f'<g id="{name("right")}">'
+    right = f'<g id="{name("right")}">' + anchor(fx + 34, fy + 6, pr + 6, 28)
     if shadow:
-        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 2}" height="28" {s_fill} fill-opacity="0.12"/>'
-        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr - 6}" height="28" {s_fill} fill-opacity="0.26"/>'
+        right += f'<rect x="{fx + 40}" y="{fy + 6}" width="{pr}" height="28" fill="url(#{prefix}-sh-r)"/>'
     right += f'<rect x="{fx + 34}" y="{fy + 6}" width="6" height="28" {attr}/><rect x="{fx + 39}" y="{fy + 6}" width="1" height="28" {b_fill}/></g>'
 
-    bottom = f'<g id="{name("bottom")}">'
+    bottom = f'<g id="{name("bottom")}">' + anchor(fx + 6, fy + 34, 28, pb + 6)
     if shadow:
-        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb}" {s_fill} fill-opacity="0.12"/>'
-        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 5}" {s_fill} fill-opacity="0.24"/>'
-        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb - 10}" {s_fill} fill-opacity="0.38"/>'
+        bottom += f'<rect x="{fx + 6}" y="{fy + 40}" width="28" height="{pb}" fill="url(#{prefix}-sh-b)"/>'
     bottom += f'<rect x="{fx + 6}" y="{fy + 34}" width="28" height="6" {attr}/><rect x="{fx + 6}" y="{fy + 39}" width="28" height="1" {b_fill}/></g>'
 
     return "\n".join([topleft, top, topright, left, center, right, bottomleft, bottom, bottomright])
 
 
 def decoration_svg(colors: dict[str, str] = COLORS) -> str:
+    active_defs = _shadow_gradient_defs("decoration", 0, 0, active=True)
+    inactive_defs = _shadow_gradient_defs("decoration-inactive", 72, 0, active=False)
     active = decoration_frame("decoration", 0, 0, "ColorScheme-Raised", 1.0, active=True, shadow=True, maximized=False)
-    inactive = decoration_frame("decoration-inactive", 76, 0, "ColorScheme-Sunken", 0.9, active=False, shadow=True, maximized=False)
-    maximized = decoration_frame("decoration-maximized", 152, 8, "ColorScheme-Raised", 1.0, active=True, shadow=False, maximized=True)
-    maximized_inactive = decoration_frame("decoration-maximized-inactive", 198, 8, "ColorScheme-Sunken", 1.0, active=False, shadow=False, maximized=True)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="246" height="64" viewBox="0 0 246 64">
+    inactive = decoration_frame("decoration-inactive", 72, 0, "ColorScheme-Sunken", 0.9, active=False, shadow=True, maximized=False)
+    maximized = decoration_frame("decoration-maximized", 144, 8, "ColorScheme-Raised", 1.0, active=True, shadow=False, maximized=True)
+    maximized_inactive = decoration_frame("decoration-maximized-inactive", 192, 8, "ColorScheme-Sunken", 0.9, active=False, shadow=False, maximized=True)
+    hidden = 'fill="#000" fill-opacity="0"'
+    hints = "\n  ".join(
+        [
+            f'<rect id="hint-stretch-borders" x="144" y="56" width="1" height="1" {hidden}/>',
+            f'<rect id="decoration-hint-stretch-borders" x="146" y="56" width="1" height="1" {hidden}/>',
+            f'<rect id="decoration-inactive-hint-stretch-borders" x="148" y="56" width="1" height="1" {hidden}/>',
+            f'<rect id="decoration-maximized-hint-stretch-borders" x="150" y="56" width="1" height="1" {hidden}/>',
+            f'<rect id="decoration-maximized-inactive-hint-stretch-borders" x="152" y="56" width="1" height="1" {hidden}/>',
+        ]
+    )
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="64" viewBox="0 0 240 64">
   <defs>
     <style id="current-color-scheme" type="text/css"><![CDATA[
       .ColorScheme-Highlight {{ color: {colors["accent"]}; }}
@@ -908,14 +959,16 @@ def decoration_svg(colors: dict[str, str] = COLORS) -> str:
       .NoxForge-OutlineMuted {{ color: {colors["border"]}; }}
       .NoxForge-OverlayShadow {{ color: {colors.get("shadowOverlay", "#050708")}; }}
     ]]></style>
+{active_defs}
+{inactive_defs}
   </defs>
   {active}
   {inactive}
   {maximized}
   {maximized_inactive}
+  {hints}
 </svg>
 '''
-
 
 BUTTON_STATES = (
     ("active", "ColorScheme-Text", 0.0),

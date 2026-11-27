@@ -1,4 +1,4 @@
-%global upstream_version 21.0.1
+%global upstream_version 21.0.2
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        21.0.1
+Version:        21.0.2
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -108,6 +108,12 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Fri Nov 27 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.2-1
+- Fix floating green dot artifact on Dolphin dock resize handle by replacing inverted-axis dots with a crisp 1px structural divider (PM_DockWidgetSeparatorExtent=1, PM_SplitterWidth=4)
+- Fix Aurorae v2 floating window borders: eliminate dashed green top-edge tiling (add hint-stretch-borders, move Forge Notch accent highlight exclusively to fixed decoration-topleft), align all 36 9-patch cell bounds to exact integer pixels, replace stepped shadow blocks with seamless filter-free linear/radial gradient shadows, and refine floating borders to 2px with matching 2px bottom corners
+- Fix 0.5px subpixel corner overflow in Plasma Desktop Theme SVG edge highlights (exact 6x6 corners across dialogs, panels, and tooltips)
+- Synchronize decoration.svgz alongside decoration.svg in noxforge-ctl accent sync and noxforge-opacity
+
 * Fri Nov 27 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.1-1
 - Preserve upstream icons for third-party and external KDE apps by restricting icons/NoxForge/*/apps/ to NoxForge's own 4 app icons (430 scalable + 896 optical system/places/mimetypes icons)
 - Fix maximized Aurorae v2 titlebar transparency and KF6Svg style stripping by moving custom classes out of <style id="current-color-scheme"> across Aurorae and Plasma SVGs and adding decoration-maximized-inactive frames

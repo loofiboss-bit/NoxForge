@@ -1,7 +1,7 @@
 {
   "name": "NoxForge Obsidian",
   "type": "dark",
-  "version": "21.0.1",
+  "version": "21.0.2",
   "semanticHighlighting": true,
   "colors": {
     "focusBorder": "#A3FF47",

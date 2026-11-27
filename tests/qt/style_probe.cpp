@@ -479,6 +479,21 @@ int main(int argc, char **argv)
         if (renderPrimitive(style, QStyle::PE_IndicatorToolBarSeparator, tbHandleOpt).isNull()) return 64;
         if (renderPrimitive(style, QStyle::PE_PanelScrollAreaCorner, tbHandleOpt).isNull()) return 65;
         if (renderPrimitive(style, QStyle::PE_FrameTabBarBase, tbHandleOpt).isNull()) return 66;
+
+        // V21.0.2: verify dock resize handle has crisp 1px metric & no clipped floating lime dot
+        if (style->pixelMetric(QStyle::PM_DockWidgetSeparatorExtent) != 1) return 67;
+        if (style->pixelMetric(QStyle::PM_SplitterWidth) != 4) return 68;
+        QStyleOption dockSepVert;
+        dockSepVert.rect = QRect(0, 0, 6, 120);
+        dockSepVert.state = QStyle::State_Enabled | QStyle::State_MouseOver;
+        const QImage dockSepVertImg = renderPrimitive(style, QStyle::PE_IndicatorDockWidgetResizeHandle, dockSepVert);
+        if (containsColor(dockSepVertImg, QColor(QStringLiteral("#A3FF47")))) return 69;
+        if (!containsColor(dockSepVertImg, QColor(QStringLiteral("#4B606A")))) return 70;
+        QStyleOption dockSepHoriz;
+        dockSepHoriz.rect = QRect(0, 0, 120, 6);
+        dockSepHoriz.state = QStyle::State_Enabled | QStyle::State_Horizontal;
+        const QImage dockSepHorizImg = renderPrimitive(style, QStyle::PE_IndicatorDockWidgetResizeHandle, dockSepHoriz);
+        if (!containsColor(dockSepHorizImg, QColor(QStringLiteral("#2F414B")))) return 71;
     }
 
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"

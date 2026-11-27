@@ -18,7 +18,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.1"
+VERSION = "21.0.2"
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _ROOT = _SCRIPT_DIR.parent
@@ -506,6 +506,14 @@ def apply_opacity(
                 if count > 0:
                     if not dry_run:
                         dst_dec.write_text(new_content, encoding="utf-8", newline="\n")
+                        # Keep decoration.svgz synchronized because KWin/Aurorae prefers .svgz over .svg
+                        try:
+                            import gzip
+                            (target_dir / "decoration.svgz").write_bytes(
+                                gzip.compress(new_content.encode("utf-8"), mtime=0)
+                            )
+                        except OSError:
+                            pass
                     modified_files.append(
                         f"{dst_dec} (aurorae titlebar: {round(recipe.aurorae_active * 100)}% / {round(recipe.aurorae_inactive * 100)}%)"
                     )

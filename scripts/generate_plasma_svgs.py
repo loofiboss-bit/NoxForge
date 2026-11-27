@@ -116,21 +116,15 @@ def frame(
         highlight = paint_attrs(recipe("edgeHighlight"))
         if notch:
             extras["topleft"].append(
-                f'<path d="M{x + 0.5} {y + 6}V{y + 4.2}L{x + 4.2} {y + 0.5}H{x + 6}" '
-                f'fill="none" stroke-width="1" stroke="currentColor" '
-                f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+                f'<path d="M{x} {y + 6}V{y + 4}L{x + 4} {y}H{x + 6}V{y + 1}H{x + 4.41}L{x + 1} {y + 4.41}V{y + 6}Z" {highlight}/>'
             )
         else:
             extras["topleft"].append(
-                f'<path d="M{x + 1} {y + 5}A5 5 0 0 1 {x + 6} {y}" '
-                f'fill="none" stroke-width="1" stroke="currentColor" '
-                f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+                f'<path d="M{x} {y + 6}A6 6 0 0 1 {x + 6} {y}V{y + 1}A5 5 0 0 0 {x + 1} {y + 6}Z" {highlight}/>'
             )
         extras["top"].append(f'<rect x="{x + 6}" y="{y}" width="12" height="1" {highlight}/>')
         extras["topright"].append(
-            f'<path d="M{x + 18} {y}A5 5 0 0 1 {x + 23} {y + 5}" '
-            f'fill="none" stroke-width="1" stroke="currentColor" '
-            f'class="NoxForge-EdgeHighlight" stroke-opacity="{recipe("edgeHighlight").opacity:g}"/>'
+            f'<path d="M{x + 18} {y}A6 6 0 0 1 {x + 24} {y + 6}H{x + 23}A5 5 0 0 0 {x + 18} {y + 1}Z" {highlight}/>'
         )
         extras["left"].append(f'<rect x="{x}" y="{y + 6}" width="1" height="12" {highlight}/>')
     if overlay_shadow:
