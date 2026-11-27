@@ -455,6 +455,8 @@ int NoxForgeStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, c
     case PM_MenuVMargin: return 4;
     case PM_MenuButtonIndicator: return 20;
     case PM_SubMenuOverlap: return 0;
+    case PM_DockWidgetSeparatorExtent: return 1;
+    case PM_SplitterWidth: return 4;
     default: return QCommonStyle::pixelMetric(metric, option, widget);
     }
 }
@@ -941,14 +943,18 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
         return;
     case PE_IndicatorDockWidgetResizeHandle: {
         painter->fillRect(option->rect, NP::surface(obsidian));
-        const QColor grip = option->state.testFlag(State_MouseOver) ? accent : NP::borderStrong(obsidian);
+        const QColor line = option->state.testFlag(State_MouseOver)
+            ? NP::edgeHighlight(obsidian)
+            : NP::border(obsidian);
+        // Qt QDockAreaLayout sets State_Horizontal when the separator bar itself
+        // is horizontal (wide & short) and clears it when the separator bar is
+        // vertical (narrow & tall, e.g. Dolphin Places sidebar).
+        const bool horizontalBar = option->state.testFlag(State_Horizontal);
         const QPoint c = option->rect.center();
-        const bool horizontal = option->state.testFlag(State_Horizontal);
-        for (int offset : {-6, 0, 6}) {
-            const QRect dot = horizontal
-                ? QRect(c.x() - 1, c.y() + offset - 1, 2, 2)
-                : QRect(c.x() + offset - 1, c.y() - 1, 2, 2);
-            painter->fillRect(dot, grip);
+        if (horizontalBar) {
+            painter->fillRect(QRect(option->rect.left(), c.y(), option->rect.width(), 1), line);
+        } else {
+            painter->fillRect(QRect(c.x(), option->rect.top(), 1, option->rect.height()), line);
         }
         return;
     }
@@ -1291,16 +1297,19 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         painter->fillRect(QRect(option->rect.left(), option->rect.bottom(), option->rect.width(), 1), NP::border());
         return;
     case CE_Splitter: {
-        const bool horizontal = option->state.testFlag(State_Horizontal);
+        const bool horizontalLayout = option->state.testFlag(State_Horizontal);
+        const bool hovered = option->state.testFlag(State_MouseOver);
         const QPoint center = option->rect.center();
-        painter->save();
-        painter->setPen(QPen(NP::borderStrong(), 1));
-        if (horizontal) {
-            painter->drawLine(center.x(), center.y() - 6, center.x(), center.y() + 6);
+        painter->fillRect(option->rect, NP::surface(obsidian));
+        const QColor lineColor = hovered ? NP::edgeHighlight(obsidian) : NP::border(obsidian);
+        const QColor gripColor = hovered ? NP::edgeHighlight(obsidian) : NP::borderStrong(obsidian);
+        if (horizontalLayout) {
+            painter->fillRect(QRect(center.x(), option->rect.top(), 1, option->rect.height()), lineColor);
+            painter->fillRect(QRect(center.x(), center.y() - 8, 1, 17), gripColor);
         } else {
-            painter->drawLine(center.x() - 6, center.y(), center.x() + 6, center.y());
+            painter->fillRect(QRect(option->rect.left(), center.y(), option->rect.width(), 1), lineColor);
+            painter->fillRect(QRect(center.x() - 8, center.y(), 17, 1), gripColor);
         }
-        painter->restore();
         return;
     }
     default:

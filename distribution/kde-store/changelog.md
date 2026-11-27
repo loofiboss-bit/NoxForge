@@ -1,3 +1,10 @@
+# NoxForge 21.0.2
+
+- Fix Dolphin Dock Separator Green Dot & Splitter Metrics (`libnoxforge6.so`): fixed inverted `State_Horizontal` axis in `PE_IndicatorDockWidgetResizeHandle` (which clipped 3 dots down to a lone floating lime pixel on Dolphin's Places divider), replaced floating dots with a crisp 1px structural divider (`PM_DockWidgetSeparatorExtent = 1`, matching Breeze) with subtle `edgeHighlight` hover, and set `PM_SplitterWidth = 4` so `QSplitter` panes are cleanly draggable.
+- Fix Aurorae v2 Floating Window Borders, Top-Edge Tiling & Corner Artifacts: added `hint-stretch-borders`, removed the partial accent segment inside `decoration-top` (which tiled every 28px into a dashed green top border), placed the crisp 1px Forge Notch accent cue strictly inside the fixed `decoration-topleft` corner, aligned all 36 9-patch cell bounding boxes to exact integer pixels (`0.00px` drift), replaced hard-edged stepped shadow blocks with seamless filter-free `<linearGradient>` / `<radialGradient>` ambient shadows, and slimmed floating side/bottom borders from `6px` to a sleek `2px` bezel with matching `2px` outer bottom corners.
+- Fix Subpixel Corner Overflow in Plasma Desktop Theme SVGs: replaced `stroke-width="1"` top corner highlight arcs with exact 1px filled corner paths so `dialogs/background.svg`, `widgets/panel-background.svg`, and `widgets/tooltip.svg` measure exact `6.00×6.00` corner bounds with zero `-0.5px` bleed.
+- Fix Live Aurorae `.svgz` Sync in `noxforge-ctl` & `noxforge-opacity`: both tools now write synchronized `decoration.svgz` alongside `decoration.svg` so KWin 6.8 immediately applies user-local Aurorae accent and opacity overrides.
+
 # NoxForge 21.0.1
 
 - Preserve Original Third-Party & App Icons: removed all 52 external app icon overrides from `icons/NoxForge/*/apps/` (retaining only NoxForge's own 4 Control Center & Opacity icons) so Firefox, VLC, Steam, Discord, Telegram, Bitwarden, GIMP, Dolphin, VS Code, Spotify, and all other apps keep their authentic original icons via `Inherits=breeze-dark,breeze,hicolor` (430 scalable + 896 optical system/places/mimetypes icons).

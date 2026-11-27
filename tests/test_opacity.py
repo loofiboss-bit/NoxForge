@@ -135,8 +135,8 @@ class TestNoxForgeOpacity(unittest.TestCase):
         self.assertEqual(count, 9)
         updated_op = noxforge_opacity.extract_svg_opacity(new_content)
         self.assertEqual(updated_op, 0.78)
-        # Verify edge highlight stroke opacity remains untouched
-        self.assertIn('stroke-opacity="0.72"', new_content)
+        # Verify edge highlight opacity remains untouched
+        self.assertIn('class="NoxForge-EdgeHighlight" fill="currentColor" fill-opacity="0.72"', new_content)
         # Verify hint remains untouched
         self.assertIn('fill-opacity="0"', new_content)
 

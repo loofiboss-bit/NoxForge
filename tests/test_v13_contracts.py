@@ -77,7 +77,7 @@ class NoxForgeV13ContractsTests(unittest.TestCase):
         self.assertTrue((aurorae_dir / "metadata.desktop").is_file())
         self.assertTrue((aurorae_dir / "decoration.svg").is_file())
         rc = (aurorae_dir / "io.github.loofiboss.noxforge.obsidian.desktoprc").read_text(encoding="utf-8")
-        self.assertIn("BorderLeft=6", rc)
+        self.assertIn("BorderLeft=2", rc)
         self.assertIn("PaddingTop=8", rc)
         self.assertIn("Shadow=true", rc)
 

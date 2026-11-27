@@ -194,8 +194,16 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
             self.assertIn('id="decoration-maximized-center"', dec_svg)
             self.assertIn('id="decoration-maximized-inactive-center"', dec_svg)
             self.assertIn('id="noxforge-decoration-style"', dec_svg)
+            self.assertIn('id="hint-stretch-borders"', dec_svg)
+            self.assertIn("BorderLeft=2", rc)
+            self.assertIn("BorderRight=2", rc)
+            self.assertIn("BorderBottom=2", rc)
             self.assertNotIn("<filter", dec_svg)
             self.assertNotIn("feGaussianBlur", dec_svg)
+            # Regression: decoration-top must never contain a partial accent rail that tiles as green dashes
+            top_match = re.search(r'<g id="decoration-top">.*?</g>', dec_svg, re.DOTALL)
+            self.assertIsNotNone(top_match)
+            self.assertNotIn("ColorScheme-Highlight", top_match.group(0))
 
             # Plasma desktoptheme overhauled widgets & KF6Svg-safe custom style block
             plasma_dir = ROOT / "plasma/desktoptheme" / theme_id / "widgets"
