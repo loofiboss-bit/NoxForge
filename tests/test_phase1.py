@@ -188,8 +188,9 @@ class PhaseOneTests(unittest.TestCase):
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(standalone, encoding="utf-8")
         self.assertEqual(parser["General"]["ColorScheme"], "NoxForgeDark")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "34,52,41")
-        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "34,52,41")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundNormal"], "130,217,54")
+        self.assertEqual(parser["Colors:Selection"]["BackgroundAlternate"], "130,217,54")
+        self.assertEqual(parser["Colors:Selection"]["ForegroundNormal"], "13,20,25")
         self.assertEqual(parser["Colors:Selection"]["DecorationFocus"], "163,255,71")
 
 

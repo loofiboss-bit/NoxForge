@@ -1,7 +1,7 @@
 # Install the complete edition on Arch
 
-Download the exact 21.0.2 archive and `SHA256SUMS` from the
-[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v21.0.2).
+Download the exact 21.0.3 archive and `SHA256SUMS` from the
+[GitHub release](https://github.com/loofiboss-bit/NoxForge/releases/tag/v21.0.3).
 Verify its checksum before installation.
 
 The intended target is Arch Linux with Plasma/KWin 6.8+ and Qt 6.11. The
@@ -13,7 +13,7 @@ For a local candidate, preload the exact source archive into a temporary
 
 ```bash
 export SRCDEST="$(mktemp -d)"
-cp noxforge-21.0.2-source.tar.xz "$SRCDEST/"
+cp noxforge-21.0.3-source.tar.xz "$SRCDEST/"
 makepkg --verifysource --cleanbuild
 makepkg --cleanbuild
 ```

@@ -506,12 +506,29 @@ def color_scheme_for_palette(
         "ForegroundVisited": colors["detailViolet"],
     }
 
-    def section(name: str, background: str, alternate: str | None = None) -> str:
+    def section(
+        name: str,
+        background: str,
+        alternate: str | None = None,
+        overrides: dict[str, str] | None = None,
+    ) -> str:
         section_roles = dict(roles)
         section_roles["BackgroundNormal"] = background
         section_roles["BackgroundAlternate"] = alternate or colors["surface"]
+        if overrides:
+            section_roles.update(overrides)
         body = "\n".join(f"{key}={rgb(str(value))}" for key, value in section_roles.items())
         return f"[{name}]\n{body}\n"
+
+    selection_bg = str(colors["accentPressed"])
+    selection_ink = str(colors["background"])
+    selection_overrides = {
+        "ForegroundActive": selection_ink,
+        "ForegroundInactive": str(colors["surfaceRaised"]),
+        "ForegroundLink": selection_ink,
+        "ForegroundNormal": selection_ink,
+        "ForegroundPositive": selection_ink,
+    }
 
     return f'''# SPDX-FileCopyrightText: 2026 Loofi
 # SPDX-License-Identifier: MIT
@@ -541,7 +558,7 @@ IntensityEffect=0
 {section("Colors:Complementary", str(colors["background"]))}
 {section("Colors:Header", str(colors["surfaceRaised"]))}
 {section("Colors:Header][Inactive", str(colors["background"]))}
-{section("Colors:Selection", str(colors["surfaceSelected"]), str(colors["surfaceSelected"]))}
+{section("Colors:Selection", selection_bg, selection_bg, selection_overrides)}
 {section("Colors:Tooltip", str(colors["surfaceRaised"]))}
 {section("Colors:View", str(colors["background"]))}
 {section("Colors:Window", str(colors["surface"]), str(colors["surfaceRaised"]))}
@@ -1062,7 +1079,7 @@ progressbar progress, scale highlight {{
 }}
 
 /* Text and view selections */
-selection, ::selection, entry selection, textview text selection, label selection {{
+selection, entry selection, textview text selection, label selection {{
     background-color: @accent_bg_color;
     color: @accent_fg_color;
 }}

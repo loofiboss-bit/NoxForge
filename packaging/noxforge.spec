@@ -1,4 +1,4 @@
-%global upstream_version 21.0.2
+%global upstream_version 21.0.3
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        21.0.2
+Version:        21.0.3
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -108,6 +108,10 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sat Nov 28 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.3-1
+- Fix near-invisible text selection in Plasma Kickoff, KRunner, and PlasmaComponents3 TextField by updating [Colors:Selection] in NoxForgeDark, NoxForgeObsidian, and Plasma Desktop Theme colors to high-contrast accentPressed (#82D936) with dark ink (#0D1419 / #000000), raising selection-vs-input contrast from 1.35:1 to 10.10:1 with WCAG AAA (10.54:1 / 11.93:1) text readability
+- Fix GTK 3 and GTK 4 CSS parsing error ("Invalid name of pseudo-class") by removing unsupported ::selection pseudo-element from generated gtk.css files while preserving valid GTK selection node selectors
+
 * Fri Nov 27 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.2-1
 - Fix floating green dot artifact on Dolphin dock resize handle by replacing inverted-axis dots with a crisp 1px structural divider (PM_DockWidgetSeparatorExtent=1, PM_SplitterWidth=4)
 - Fix Aurorae v2 floating window borders: eliminate dashed green top-edge tiling (add hint-stretch-borders, move Forge Notch accent highlight exclusively to fixed decoration-topleft), align all 36 9-patch cell bounds to exact integer pixels, replace stepped shadow blocks with seamless filter-free linear/radial gradient shadows, and refine floating borders to 2px with matching 2px bottom corners

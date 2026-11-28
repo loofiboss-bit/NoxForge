@@ -1,3 +1,8 @@
+# NoxForge 21.0.3
+
+- Fix Plasma & KDE Text Selection Contrast (`[Colors:Selection]`): updated `color_scheme_for_palette()` in `scripts/generate_design_system.py` so `NoxForgeDark.colors`, `NoxForgeObsidian.colors`, and the embedded Plasma Desktop Theme `colors` files use high-contrast `accentPressed` (`#82D936`) selection fill with dark ink (`#0D1419` on Graphite, `#000000` on Obsidian) instead of dark `#223429`/`#192D1E` with light text — boosting Kickoff/KRunner/Plasma `TextField` selection contrast against sunken input backgrounds from `1.35:1` to `10.10:1` while delivering WCAG AAA (`10.54:1` / `11.93:1`) selected text legibility.
+- Fix GTK 3 & GTK 4 CSS Parser Error (`::selection`): removed the invalid web pseudo-element `::selection` from generated `themes/NoxForge*/gtk-{3.0,4.0}/gtk.css`, retaining valid GTK CSS node selectors (`selection, entry selection, textview text selection, label selection`) so GTK 3 and GTK 4 parse all stylesheets with zero warnings or errors.
+
 # NoxForge 21.0.2
 
 - Fix Dolphin Dock Separator Green Dot & Splitter Metrics (`libnoxforge6.so`): fixed inverted `State_Horizontal` axis in `PE_IndicatorDockWidgetResizeHandle` (which clipped 3 dots down to a lone floating lime pixel on Dolphin's Places divider), replaced floating dots with a crisp 1px structural divider (`PM_DockWidgetSeparatorExtent = 1`, matching Breeze) with subtle `edgeHighlight` hover, and set `PM_SplitterWidth = 4` so `QSplitter` panes are cleanly draggable.
