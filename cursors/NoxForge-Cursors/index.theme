@@ -1,4 +1,5 @@
-# @noxforge-version: 21.0.4
+# @noxforge-version: 21.0.5
 [Icon Theme]
 Name=NoxForge
 Comment=Original Forge Identity cursors
+Inherits=breeze_cursors,Adwaita,default

@@ -748,11 +748,16 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
         main_layout.addWidget(left_panel, 1)
         main_layout.addWidget(right_widget, 1)
 
-        # Global Shortcuts
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+S"), self, self._on_apply_clicked)
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self, self._on_apply_clicked)
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+R"), self, self._on_reset_clicked)
-        QtGui.QShortcut(QtGui.QKeySequence("Escape"), self, self.close)
+        # Global Shortcuts (parented to central widget so they stay active when embedded in Control Center)
+        for seq, slot in (
+            ("Ctrl+S", self._on_apply_clicked),
+            ("Ctrl+Return", self._on_apply_clicked),
+            ("Ctrl+R", self._on_reset_clicked),
+            ("Escape", self.close),
+        ):
+            sc = QtGui.QShortcut(QtGui.QKeySequence(seq), central)
+            sc.setContext(QtCore.Qt.ShortcutContext.WidgetWithChildrenShortcut)
+            sc.activated.connect(slot)
 
     def _load_current_status(self) -> None:
         """Query installed themes and sync slider values."""
@@ -839,7 +844,12 @@ class OpacityConfiguratorWindow(QtWidgets.QMainWindow):
                 btn.setStyleSheet("")
 
     def _sync_preview(self) -> None:
-        variant = "obsidian" if (self.radio_obsidian.isChecked() or self.active_profile == "obsidian") else "graphite"
+        if self.radio_obsidian.isChecked():
+            variant = "obsidian"
+        elif self.radio_graphite.isChecked():
+            variant = "graphite"
+        else:
+            variant = "obsidian" if self.active_profile == "obsidian" else "graphite"
         p_op = self.slider_panel.value() / 100.0
         d_op = self.slider_dialog.value() / 100.0
         w_op = self.slider_widget.value() / 100.0
@@ -987,7 +997,8 @@ def main(argv: list[str] | None = None) -> int:
         from tools import control_center
     except ImportError:
         import control_center
-    forwarded = list(argv) if argv is not None else sys.argv[1:]
+    raw = list(argv) if argv is not None else sys.argv[1:]
+    forwarded = [arg for arg in raw if arg != "--gui"]
     return control_center.main(["--tab", "opacity", *forwarded])
 
 

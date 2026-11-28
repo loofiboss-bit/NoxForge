@@ -14,6 +14,7 @@ Rectangle {
     border.color: tokens.edgeHighlight
     border.width: tokens.borderWidth
     focus: true
+    Keys.onEscapePressed: root.rejected()
 
     Tokens { id: tokens }
     MotionPolicy { id: motion }
@@ -114,6 +115,8 @@ Rectangle {
                     onClicked: root.rejected()
                 }
                 Keys.onReturnPressed: root.rejected()
+                Keys.onEnterPressed: root.rejected()
+                Keys.onSpacePressed: root.rejected()
             }
 
             Rectangle {
@@ -121,7 +124,9 @@ Rectangle {
                 implicitWidth: acceptText.implicitWidth + tokens.standardSpacing * 3
                 implicitHeight: tokens.controlHeight
                 radius: tokens.compactRadius
-                color: root.destructive ? tokens.negative : tokens.accent
+                color: root.destructive
+                    ? (acceptHover.pressed ? tokens.surfaceSunken : tokens.negative)
+                    : (acceptHover.pressed || acceptHover.containsMouse ? tokens.accentPressed : tokens.accent)
                 border.color: acceptBtn.activeFocus ? tokens.textPrimary : (root.destructive ? tokens.negative : tokens.accent)
                 border.width: acceptBtn.activeFocus ? tokens.focusWidth : tokens.borderWidth
                 activeFocusOnTab: true
@@ -132,17 +137,20 @@ Rectangle {
                     id: acceptText
                     anchors.centerIn: parent
                     text: root.acceptLabel
-                    color: tokens.accentInk
+                    color: (root.destructive && acceptHover.pressed) ? tokens.negative : tokens.accentInk
                     font.pixelSize: tokens.controlLabelSize
                     font.weight: tokens.headingWeight
                 }
 
                 MouseArea {
+                    id: acceptHover
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: root.accepted()
                 }
                 Keys.onReturnPressed: root.accepted()
+                Keys.onEnterPressed: root.accepted()
+                Keys.onSpacePressed: root.accepted()
             }
         }
     }

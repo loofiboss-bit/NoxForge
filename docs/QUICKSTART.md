@@ -1,6 +1,6 @@
 # Quick start and rollback
 
-NoxForge 21.0.4 targets Fedora 44/45 KDE and Arch Plasma/KWin 6.8+ with Qt 6.11 on
+NoxForge 21.0.5 targets Fedora 44/45 KDE and Arch Plasma/KWin 6.8+ with Qt 6.11 on
 Wayland. Graphite and Obsidian variants cover the Plasma Style, Global Theme (incl. OSD & SystemDialog),
 Lock Screen, Aurorae v2 decoration, KWin switcher, Duotone Surface icons (482 scalable + 1052 optical),
 native Qt & modular Plasma 6.8 Union styles, PNG24 wallpapers, and Ecosystem v4 (25 app/terminal/editor themes).
@@ -42,7 +42,7 @@ of the five wallpapers explicitly in System Settings, or orchestrate via
 ## Portable user-local edition
 
 ```bash
-tar -xJf noxforge-21.0.4-portable.tar.xz
+tar -xJf noxforge-21.0.5-portable.tar.xz
 cd noxforge
 ./scripts/install.sh --user --dry-run
 ./scripts/install.sh --user

@@ -36,66 +36,66 @@
   <g id="north-active-tab-bottom"><rect x="6" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="7" y="21" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <g id="north-active-tab-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
   <rect id="north-active-tab-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-active-tab-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="south-active-tab-topleft"><path d="M44 0H46V6H40V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="47" y="0" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
-  <g id="south-active-tab-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-center"><rect x="46" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-right"><rect x="58" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="south-active-tab-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <rect id="south-active-tab-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-active-tab-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="east-active-tab-topleft"><path d="M84 0H86V6H80V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-top"><rect x="86" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-topright"><path d="M98 0A6 6 0 0 1 104 6H98Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-left"><rect x="80" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="80" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
-  <g id="east-active-tab-center"><rect x="86" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-right"><rect x="98" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-bottomleft"><path d="M80 18H86V24A6 6 0 0 1 80 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-bottom"><rect x="86" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="east-active-tab-bottomright"><path d="M98 18H104A6 6 0 0 1 98 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <rect id="east-active-tab-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-active-tab-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="west-active-tab-topleft"><path d="M124 0H126V6H120V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-top"><rect x="126" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-topright"><path d="M138 0A6 6 0 0 1 144 6H138Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-left"><rect x="120" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-center"><rect x="126" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-right"><rect x="138" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="141" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
-  <g id="west-active-tab-bottomleft"><path d="M120 18H126V24A6 6 0 0 1 120 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-bottom"><rect x="126" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="west-active-tab-bottomright"><path d="M138 18H144A6 6 0 0 1 138 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <rect id="west-active-tab-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-top-inset" x="138" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-right-inset" x="140" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-bottom-inset" x="147" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-left-inset" x="149" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-active-tab-hint-stretch-borders" x="156" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-right-margin" x="6" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-bottom-margin" x="12" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-left-margin" x="18" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-top-inset" x="24" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-right-inset" x="30" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-bottom-inset" x="36" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-left-inset" x="42" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-active-tab-hint-stretch-borders" x="48" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="south-active-tab-topleft"><path d="M68 0H70V6H64V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-top"><rect x="70" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="71" y="0" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <g id="south-active-tab-topright"><path d="M82 0A6 6 0 0 1 88 6H82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-left"><rect x="64" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-center"><rect x="70" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-right"><rect x="82" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-bottomleft"><path d="M64 18H70V24A6 6 0 0 1 64 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-bottom"><rect x="70" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="south-active-tab-bottomright"><path d="M82 18H88A6 6 0 0 1 82 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <rect id="south-active-tab-hint-top-margin" x="64" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-right-margin" x="70" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-bottom-margin" x="76" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-left-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-top-inset" x="88" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-right-inset" x="94" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-bottom-inset" x="100" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-left-inset" x="106" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-active-tab-hint-stretch-borders" x="112" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="east-active-tab-topleft"><path d="M132 0H134V6H128V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-top"><rect x="134" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-topright"><path d="M146 0A6 6 0 0 1 152 6H146Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-left"><rect x="128" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="128" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <g id="east-active-tab-center"><rect x="134" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-right"><rect x="146" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-bottomleft"><path d="M128 18H134V24A6 6 0 0 1 128 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-bottom"><rect x="134" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="east-active-tab-bottomright"><path d="M146 18H152A6 6 0 0 1 146 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <rect id="east-active-tab-hint-top-margin" x="128" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-right-margin" x="134" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-bottom-margin" x="140" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-left-margin" x="146" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-top-inset" x="152" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-right-inset" x="158" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-bottom-inset" x="164" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-left-inset" x="170" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-active-tab-hint-stretch-borders" x="176" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="west-active-tab-topleft"><path d="M196 0H198V6H192V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-top"><rect x="198" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-topright"><path d="M210 0A6 6 0 0 1 216 6H210Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-left"><rect x="192" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-center"><rect x="198" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-right"><rect x="210" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="213" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <g id="west-active-tab-bottomleft"><path d="M192 18H198V24A6 6 0 0 1 192 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-bottom"><rect x="198" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="west-active-tab-bottomright"><path d="M210 18H216A6 6 0 0 1 210 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <rect id="west-active-tab-hint-top-margin" x="192" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-right-margin" x="198" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-bottom-margin" x="204" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-left-margin" x="210" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-top-inset" x="216" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-right-inset" x="222" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-bottom-inset" x="228" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-left-inset" x="234" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-active-tab-hint-stretch-borders" x="240" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

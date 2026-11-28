@@ -36,30 +36,30 @@
   <g id="picture-bottom"><rect x="6" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.9"/></g>
   <g id="picture-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.9"/></g>
   <rect id="picture-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="picture-selected-topleft"><path d="M44 0H46V6H40V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-center"><rect x="46" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-right"><rect x="58" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <g id="picture-selected-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
-  <rect id="picture-selected-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="picture-selected-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-right-margin" x="6" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-bottom-margin" x="12" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-left-margin" x="18" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-top-inset" x="24" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-right-inset" x="30" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-bottom-inset" x="36" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-left-inset" x="42" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-hint-stretch-borders" x="48" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="picture-selected-topleft"><path d="M68 0H70V6H64V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-top"><rect x="70" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-topright"><path d="M82 0A6 6 0 0 1 88 6H82Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-left"><rect x="64" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-center"><rect x="70" y="6" width="12" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-right"><rect x="82" y="6" width="6" height="12" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-bottomleft"><path d="M64 18H70V24A6 6 0 0 1 64 18Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-bottom"><rect x="70" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <g id="picture-selected-bottomright"><path d="M82 18H88A6 6 0 0 1 82 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
+  <rect id="picture-selected-hint-top-margin" x="64" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-right-margin" x="70" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-bottom-margin" x="76" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-left-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-top-inset" x="88" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-right-inset" x="94" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-bottom-inset" x="100" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-left-inset" x="106" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="picture-selected-hint-stretch-borders" x="112" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

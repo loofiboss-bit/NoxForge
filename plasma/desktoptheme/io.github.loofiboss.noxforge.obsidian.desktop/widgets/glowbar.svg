@@ -36,14 +36,14 @@
   <g id="north-bottom"><rect x="6" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="north-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <rect id="north-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="north-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-right-margin" x="6" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-bottom-margin" x="12" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-left-margin" x="18" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-top-inset" x="24" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-right-inset" x="30" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-bottom-inset" x="36" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-left-inset" x="42" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="north-hint-stretch-borders" x="48" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <g id="south-topleft"><path d="M44 0H46V6H40V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="south-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="south-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
@@ -54,14 +54,14 @@
   <g id="south-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/><rect x="47" y="21" width="10" height="3" class="ColorScheme-Highlight" fill="currentColor"/></g>
   <g id="south-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <rect id="south-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="south-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-right-margin" x="46" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-bottom-margin" x="52" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-left-margin" x="58" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-top-inset" x="64" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-right-inset" x="70" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-bottom-inset" x="76" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-left-inset" x="82" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="south-hint-stretch-borders" x="88" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <g id="east-topleft"><path d="M84 0H86V6H80V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="east-top"><rect x="86" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="east-topright"><path d="M98 0A6 6 0 0 1 104 6H98Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
@@ -72,14 +72,14 @@
   <g id="east-bottom"><rect x="86" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="east-bottomright"><path d="M98 18H104A6 6 0 0 1 98 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <rect id="east-hint-top-margin" x="80" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-right-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-bottom-margin" x="89" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-left-margin" x="91" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-top-inset" x="98" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-right-inset" x="100" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-bottom-inset" x="107" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-left-inset" x="109" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="east-hint-stretch-borders" x="116" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-right-margin" x="86" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-bottom-margin" x="92" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-left-margin" x="98" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-top-inset" x="104" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-right-inset" x="110" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-bottom-inset" x="116" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-left-inset" x="122" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="east-hint-stretch-borders" x="128" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
   <g id="west-topleft"><path d="M124 0H126V6H120V4Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="west-top"><rect x="126" y="0" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="west-topright"><path d="M138 0A6 6 0 0 1 144 6H138Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
@@ -90,12 +90,12 @@
   <g id="west-bottom"><rect x="126" y="18" width="12" height="6" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <g id="west-bottomright"><path d="M138 18H144A6 6 0 0 1 138 24Z" class="NoxForge-AccentSoft" fill="currentColor" fill-opacity="0.22"/></g>
   <rect id="west-hint-top-margin" x="120" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-right-margin" x="122" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-bottom-margin" x="129" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-left-margin" x="131" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-top-inset" x="138" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-right-inset" x="140" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-bottom-inset" x="147" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-left-inset" x="149" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="west-hint-stretch-borders" x="156" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-right-margin" x="126" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-bottom-margin" x="132" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-left-margin" x="138" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-top-inset" x="144" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-right-inset" x="150" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-bottom-inset" x="156" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-left-inset" x="162" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="west-hint-stretch-borders" x="168" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>

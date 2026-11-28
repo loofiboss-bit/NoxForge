@@ -2,9 +2,9 @@
   <title>NoxForge wait scalable cursor</title>
   <style>.accent { fill: #A3FF47; stroke: none; } .accent-line { fill: none; stroke: #A3FF47; }</style>
   <g fill="none" stroke="#050708" stroke-opacity="0.45" stroke-width="2.95" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="8"/><path class="accent-line" transform="rotate(240 12 12)" d="M12 4a8 8 0 0 1 6 3"/>
+    <circle fill="none" cx="12" cy="12" r="8"/><path class="accent-line" transform="rotate(240 12 12)" d="M12 4a8 8 0 0 1 6 3"/>
   </g>
   <g fill="#0D1419" stroke="#E8F0F2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="8"/><path class="accent-line" transform="rotate(240 12 12)" d="M12 4a8 8 0 0 1 6 3"/>
+    <circle fill="none" cx="12" cy="12" r="8"/><path class="accent-line" transform="rotate(240 12 12)" d="M12 4a8 8 0 0 1 6 3"/>
   </g>
 </svg>

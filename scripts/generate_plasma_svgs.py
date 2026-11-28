@@ -156,19 +156,20 @@ def frame(
     )
 
 
-def margins(prefix: str, x: int, y: int, size: int = 6) -> str:
+def margins(prefix: str, x: int, y: int, size: int = 6, *, inset: int = 0) -> str:
     hidden = 'fill="#000" fill-opacity="0"'
+    step = max(size, inset, 2) + 2
     return "\n".join(
         [
             f'<rect id="{element_id(prefix, "hint-top-margin")}" x="{x}" y="{y}" width="1" height="{size}" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-right-margin")}" x="{x + 2}" y="{y}" width="{size}" height="1" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-bottom-margin")}" x="{x + 9}" y="{y}" width="1" height="{size}" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-left-margin")}" x="{x + 11}" y="{y}" width="{size}" height="1" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-top-inset")}" x="{x + 18}" y="{y}" width="1" height="{size}" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-right-inset")}" x="{x + 20}" y="{y}" width="{size}" height="1" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-bottom-inset")}" x="{x + 27}" y="{y}" width="1" height="{size}" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-left-inset")}" x="{x + 29}" y="{y}" width="{size}" height="1" {hidden}/>',
-            f'<rect id="{element_id(prefix, "hint-stretch-borders")}" x="{x + 36}" y="{y}" width="1" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-right-margin")}" x="{x + step}" y="{y}" width="{size}" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-bottom-margin")}" x="{x + step * 2}" y="{y}" width="1" height="{size}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-left-margin")}" x="{x + step * 3}" y="{y}" width="{size}" height="1" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-top-inset")}" x="{x + step * 4}" y="{y}" width="{1 if inset > 0 else 0}" height="{inset}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-right-inset")}" x="{x + step * 5}" y="{y}" width="{inset}" height="{1 if inset > 0 else 0}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-bottom-inset")}" x="{x + step * 6}" y="{y}" width="{1 if inset > 0 else 0}" height="{inset}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-left-inset")}" x="{x + step * 7}" y="{y}" width="{inset}" height="{1 if inset > 0 else 0}" {hidden}/>',
+            f'<rect id="{element_id(prefix, "hint-stretch-borders")}" x="{x + step * 8}" y="{y}" width="1" height="1" {hidden}/>',
         ]
     )
 
@@ -197,24 +198,27 @@ def background(
             overlay_shadow=overlay_shadow,
         ),
         margins("", 0, 32, margin_size),
+        '<rect id="hint-compose-over-border" x="120" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>',
     ]
     if mask:
         parts.extend([
             frame("mask", 40, 0, recipe("glyph"), notch=notch),
-            margins("mask", 40, 32, margin_size),
+            margins("mask", 40, 48, margin_size),
         ])
     return svg("\n".join(parts))
 
 
 def state_sheet(states: list[tuple[str, Paint]], *, notch_states: set[str] | None = None,
                 marker_states: set[str] | None = None,
-                marker_edges: dict[str, str] | None = None) -> str:
+                marker_edges: dict[str, str] | None = None,
+                edge_highlight_states: set[str] | None = None) -> str:
     parts: list[str] = []
     notch_states = notch_states or set()
     marker_states = marker_states or set()
     marker_edges = marker_edges or {}
+    edge_highlight_states = edge_highlight_states or set()
     for index, (name, paint) in enumerate(states):
-        x = (index % 8) * 40
+        x = (index % 8) * 64
         y = (index // 8) * 64
         parts.extend(
             [
@@ -226,6 +230,7 @@ def state_sheet(states: list[tuple[str, Paint]], *, notch_states: set[str] | Non
                     notch=name in notch_states,
                     marker=name in marker_states,
                     marker_edge=marker_edges.get(name),
+                    edge_highlight=name in edge_highlight_states,
                 ),
                 margins(name, x, y + 32, 4),
             ]
@@ -240,6 +245,7 @@ def heading() -> str:
             ("footer", family_paint("widgets/plasmoidheading.svg")),
         ],
         notch_states={"header"},
+        edge_highlight_states={"header", "footer"},
     )
 
 
@@ -482,7 +488,7 @@ def generate_plasma_assets() -> None:
                 ("normal", family_paint("widgets/tasks.svg", opacity=0.08)),
                 ("hover", recipe("hoverQuiet", opacity=0.46)),
                 ("focus", recipe("selected")),
-                ("attention", recipe("attention")),
+                ("attention", recipe("attention", opacity=0.22)),
                 ("minimized", recipe("controlQuiet", opacity=0.05)),
                 ("progress", recipe("selected")),
             ] + [
@@ -492,7 +498,7 @@ def generate_plasma_assets() -> None:
                     ("normal", family_paint("widgets/tasks.svg", opacity=0.08)),
                     ("hover", recipe("hoverQuiet", opacity=0.46)),
                     ("focus", recipe("selected")),
-                    ("attention", recipe("attention")),
+                    ("attention", recipe("attention", opacity=0.22)),
                     ("minimized", recipe("controlQuiet", opacity=0.05)),
                     ("progress", recipe("selected")),
                 )
@@ -516,6 +522,7 @@ def generate_plasma_assets() -> None:
             ],
             notch_states={"selected", "selected+hover"},
             marker_states={"selected", "selected+hover"},
+            edge_highlight_states={"selected+hover"},
         ),
     )
     write(
@@ -598,8 +605,9 @@ def generate_plasma_assets() -> None:
                 ("background-vertical", recipe("sunken", opacity=0.28)),
                 ("slider", family_paint("widgets/scrollbar.svg", opacity=0.3)),
                 ("mouseover-slider", recipe("progress", opacity=0.7)),
+                ("sunken-slider", recipe("progress", opacity=0.92)),
             ]
-        ).replace("</svg>", '<rect id="hint-scrollbar-size" x="220" y="220" width="10" height="10" fill="#000" fill-opacity="0"/></svg>'),
+        ).replace("</svg>", '<rect id="hint-scrollbar-size" x="220" y="220" width="12" height="12" fill="#000" fill-opacity="0"/></svg>'),
     )
     write(
         "widgets/slider.svg",
@@ -609,7 +617,7 @@ def generate_plasma_assets() -> None:
                 ("groove-highlight", recipe("progress")),
             ]
         )
-        .replace("</svg>", '<rect id="hint-handle-size" x="160" y="160" width="18" height="18" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
+        .replace("</svg>", '<rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
     )
     write(
         "widgets/switch.svg",
@@ -619,7 +627,7 @@ def generate_plasma_assets() -> None:
                 ("active", recipe("progress", opacity=0.72)),
             ]
         )
-        .replace("</svg>", '<rect id="hint-bar-size" x="0" y="0" width="38" height="16" fill="#000" fill-opacity="0"/><rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
+        .replace("</svg>", '<rect id="hint-bar-size" x="112" y="160" width="38" height="16" fill="#000" fill-opacity="0"/><rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="handle-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="handle-pressed" cx="252" cy="180" r="7" class="ColorScheme-Highlight" fill="currentColor"/></svg>'),
     )
     write(
         "widgets/radiobutton.svg",
@@ -628,7 +636,7 @@ def generate_plasma_assets() -> None:
                 ("normal", "M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0", "ColorScheme-Text"),
                 ("hover", "M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0", "ColorScheme-ButtonHover"),
                 ("focus", "M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0", "ColorScheme-Highlight"),
-                ("checked", "M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0M9 12h6", "ColorScheme-Highlight"),
+                ("checked", "M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6", "ColorScheme-Highlight"),
             ]
         ),
     )
@@ -640,7 +648,6 @@ def generate_plasma_assets() -> None:
             'stroke-linecap="round" stroke-linejoin="round"/>\n'
             '<g id="radiobutton" transform="translate(32 0)">'
             '<circle cx="12" cy="12" r="5" class="ColorScheme-Highlight" fill="currentColor" stroke="none"/>'
-            '<circle cx="12" cy="12" r="2" class="ColorScheme-ViewBackground" fill="currentColor" stroke="none" opacity="0.25"/>'
             '</g>'
         ),
     )
@@ -687,7 +694,7 @@ def generate_plasma_assets() -> None:
             background(
                 recipe(variant["recipe"], opacity=variant["opacity"]),
                 notch="dialogs/" in relative,
-                mask=False,
+                mask=True,
                 edge_highlight=variant["edgeHighlight"],
                 overlay_shadow=variant["overlayShadow"],
                 margin_size=CONTRACT["shellMetrics"]["surfaceMargins"][margin_role],

@@ -123,6 +123,8 @@ Item {
             objectName: "windowList"
             anchors.fill: parent
             anchors.margins: Kirigami.Units.gridUnit
+            leftMargin: root.horizontalMode ? 0 : 6
+            rightMargin: root.horizontalMode ? 0 : 6
             model: root.windowModel
             currentIndex: root.currentIndex
             orientation: root.horizontalMode ? ListView.Horizontal : ListView.Vertical
@@ -193,10 +195,10 @@ Item {
                     ? "application-x-executable"
                     : icon
                 readonly property bool isCurrent: index === windowList.currentIndex
-                width: root.horizontalMode ? root.horizontalCardWidth : windowList.width
+                width: root.horizontalMode ? root.horizontalCardWidth : Math.max(1, windowList.width - 12)
                 height: root.horizontalMode
                     ? root.horizontalCardHeight
-                    : Math.max(Kirigami.Units.gridUnit * 4, delegateContent.implicitHeight + tokens.standardSpacing * 2)
+                    : Math.max(Kirigami.Units.gridUnit * 3.5, delegateContent.implicitHeight + tokens.standardSpacing * 2)
                 color: isCurrent
                     ? tokens.surfaceSelected
                     : (hoverHandler.hovered ? tokens.surfaceHover : tokens.surfaceRaised)
@@ -205,8 +207,20 @@ Item {
                     : (hoverHandler.hovered ? tokens.edgeHighlight : tokens.outlineMuted)
                 border.width: tokens.borderWidth
                 radius: tokens.radius
-                scale: (isCurrent && !root.reducedMotion) ? 1.03 : 1.0
+                scale: (isCurrent && !root.reducedMotion) ? (root.horizontalMode ? 1.03 : 1.015) : 1.0
 
+                Behavior on color {
+                    enabled: !root.reducedMotion
+                    ColorAnimation {
+                        duration: motion.duration(tokens.selectionDuration)
+                    }
+                }
+                Behavior on border.color {
+                    enabled: !root.reducedMotion
+                    ColorAnimation {
+                        duration: motion.duration(tokens.selectionDuration)
+                    }
+                }
                 Behavior on scale {
                     enabled: !root.reducedMotion
                     NumberAnimation {
@@ -217,47 +231,6 @@ Item {
 
                 HoverHandler {
                     id: hoverHandler
-                }
-
-                state: isCurrent ? "selected" : (hoverHandler.hovered ? "hovered" : "normal")
-                states: [
-                    State {
-                        name: "normal"
-                        PropertyChanges {
-                            windowDelegate.color: tokens.surfaceRaised
-                            windowDelegate.border.color: tokens.outlineMuted
-                        }
-                    },
-                    State {
-                        name: "hovered"
-                        PropertyChanges {
-                            windowDelegate.color: tokens.surfaceHover
-                            windowDelegate.border.color: tokens.edgeHighlight
-                        }
-                    },
-                    State {
-                        name: "selected"
-                        PropertyChanges {
-                            windowDelegate.color: tokens.surfaceSelected
-                            windowDelegate.border.color: tokens.accentMuted
-                        }
-                    }
-                ]
-                transitions: Transition {
-                    ColorAnimation {
-                        target: windowDelegate
-                        property: "color"
-                        duration: root.reducedMotion
-                            ? tokens.reducedMotionDuration
-                            : motion.duration(tokens.selectionDuration)
-                    }
-                    ColorAnimation {
-                        target: windowDelegate
-                        property: "border.color"
-                        duration: root.reducedMotion
-                            ? tokens.reducedMotionDuration
-                            : motion.duration(tokens.selectionDuration)
-                    }
                 }
 
                 Rectangle {
@@ -295,12 +268,15 @@ Item {
                     }
                 }
 
-                ColumnLayout {
+                GridLayout {
                     id: delegateContent
                     objectName: "delegateContent"
                     anchors.fill: parent
                     anchors.margins: tokens.standardSpacing
-                    spacing: tokens.compactSpacing
+                    anchors.leftMargin: root.horizontalMode ? tokens.standardSpacing : tokens.standardSpacing + tokens.activeMarkerWidth
+                    columns: root.horizontalMode ? 1 : 2
+                    rowSpacing: tokens.compactSpacing
+                    columnSpacing: tokens.standardSpacing
                     Kirigami.Icon {
                         source: windowDelegate.resolvedIcon
                         Layout.preferredWidth: root.horizontalMode
@@ -317,24 +293,29 @@ Item {
                             }
                         }
                     }
-                    Text {
-                        text: windowDelegate.caption
-                        color: windowDelegate.minimized ? tokens.textSecondary : tokens.textPrimary
-                        font.pixelSize: tokens.controlLabelSize
-                        font.weight: windowDelegate.index === windowList.currentIndex
-                            ? tokens.headingWeight
-                            : tokens.bodyWeight
-                        horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
-                        elide: Text.ElideRight
+                    ColumnLayout {
                         Layout.fillWidth: true
-                    }
-                    Text {
-                        text: qsTr("Minimized")
-                        visible: windowDelegate.minimized
-                        color: tokens.textDisabled
-                        font.pixelSize: tokens.microLabelSize
-                        horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
-                        Layout.fillWidth: true
+                        Layout.alignment: root.horizontalMode ? Qt.AlignHCenter : Qt.AlignVCenter
+                        spacing: 2
+                        Text {
+                            text: windowDelegate.caption
+                            color: windowDelegate.minimized ? tokens.textSecondary : tokens.textPrimary
+                            font.pixelSize: tokens.controlLabelSize
+                            font.weight: windowDelegate.index === windowList.currentIndex
+                                ? tokens.headingWeight
+                                : tokens.bodyWeight
+                            horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                        Text {
+                            text: qsTr("Minimized")
+                            visible: windowDelegate.minimized
+                            color: tokens.textDisabled
+                            font.pixelSize: tokens.microLabelSize
+                            horizontalAlignment: root.horizontalMode ? Text.AlignHCenter : Text.AlignLeft
+                            Layout.fillWidth: true
+                        }
                     }
                     Item { Layout.fillHeight: true; visible: root.horizontalMode }
                 }

@@ -21,7 +21,7 @@ library=org.kde.kwin.aurorae
 theme=__aurorae__svg__io.github.loofiboss.noxforge.obsidian.desktop
 
 [kwinrc][TabBox]
-LayoutName=io.github.loofiboss.noxforge.desktop
+LayoutName=io.github.loofiboss.noxforge.obsidian.desktop
 
 [ksplashrc][KSplash]
 Theme=io.github.loofiboss.noxforge.obsidian.desktop

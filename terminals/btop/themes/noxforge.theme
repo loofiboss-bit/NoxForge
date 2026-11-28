@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# @noxforge-version: 21.0.4
+# @noxforge-version: 21.0.5
 # NoxForge btop theme (Graphite)
 
 theme[main_bg]="#0D1419"

@@ -7,8 +7,10 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: root
-    width: screenGeometry.width
-    height: screenGeometry.height
+    width: typeof screenGeometry !== "undefined" && screenGeometry ? screenGeometry.width : 1280
+    height: typeof screenGeometry !== "undefined" && screenGeometry ? screenGeometry.height : 720
+    focus: true
+    Keys.onEscapePressed: root.cancelRequested()
     property bool reducedMotion: motion.reducedMotion
     property real testProgress: -1
     property bool entryReady: false
@@ -101,6 +103,7 @@ Item {
             onClicked: button.clicked()
         }
         Keys.onReturnPressed: clicked()
+        Keys.onEnterPressed: clicked()
         Keys.onSpacePressed: clicked()
     }
 
@@ -131,9 +134,12 @@ Item {
         Rectangle {
             width: Kirigami.Units.gridUnit * 3
             height: tokens.activeMarkerWidth
+            radius: tokens.activeMarkerWidth / 2
             color: tokens.accent
             anchors.left: parent.left
+            anchors.leftMargin: tokens.overlayRadius
             anchors.top: parent.top
+            anchors.topMargin: tokens.borderWidth
         }
 
         ColumnLayout {
@@ -259,5 +265,8 @@ Item {
             easing.bezierCurve: tokens.productiveEnterCurve
         }
     }
-    Component.onCompleted: entryReady = true
+    Component.onCompleted: {
+        entryReady = true
+        Qt.callLater(root.focusFirstAction)
+    }
 }

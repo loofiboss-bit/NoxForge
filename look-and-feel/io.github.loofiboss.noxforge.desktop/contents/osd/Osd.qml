@@ -5,7 +5,7 @@ import QtQuick
 
 Item {
     id: root
-    implicitWidth: Math.max(260, contentItem.implicitWidth + tokens.standardSpacing * 4)
+    implicitWidth: Math.min(480, Math.max(260, contentItem.implicitWidth + tokens.standardSpacing * 4))
     implicitHeight: Math.max(48, contentItem.implicitHeight + tokens.standardSpacing * 3)
 
     Tokens { id: tokens }

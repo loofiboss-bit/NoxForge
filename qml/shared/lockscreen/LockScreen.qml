@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.private.keyboardindicator as KeyboardIndicator
 
 Rectangle {
     id: root
@@ -192,10 +193,37 @@ Rectangle {
         }
     }
 
+    KeyboardIndicator.KeyState {
+        id: capsLockState
+        key: Qt.Key_CapsLock
+    }
+
+    Connections {
+        target: typeof authenticator !== "undefined" && authenticator ? authenticator : null
+        ignoreUnknownSignals: true
+        function onFailed() {
+            root.authenticating = false
+            root.statusMessage = qsTr("Unlocking failed")
+            root.statusDanger = true
+            passwordInput.text = ""
+            passwordInput.forceActiveFocus()
+        }
+        function onSucceeded() {
+            root.authenticating = false
+            root.statusMessage = ""
+            root.statusDanger = false
+        }
+        function onErrorMessage(msg) {
+            root.authenticating = false
+            root.statusMessage = msg && msg.length > 0 ? msg : qsTr("Authentication error")
+            root.statusDanger = true
+        }
+    }
+
     // Center container
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: tokens.largeSpacing ?? 24
+        spacing: tokens.standardSpacing * 3
         width: Math.min(parent.width * 0.85, 420)
 
         // Brand Lockup
@@ -238,6 +266,7 @@ Rectangle {
         // Password Input with Forge Notch & Kinetic Shake / Static Edge-Flash
         Rectangle {
             id: passwordBox
+            property bool revealPassword: false
             Layout.fillWidth: true
             Layout.preferredHeight: tokens.largeControlHeight
             radius: tokens.radius
@@ -281,8 +310,6 @@ Rectangle {
                 anchors.rightMargin: 4
                 spacing: tokens.compactSpacing
 
-                property bool revealPassword: false
-
                 Timer {
                     id: lockRevealTimer
                     interval: 5000
@@ -298,6 +325,8 @@ Rectangle {
                     placeholderText: qsTr("Password")
                     placeholderTextColor: tokens.textDisabled
                     color: tokens.textPrimary
+                    selectionColor: tokens.accentPressed
+                    selectedTextColor: tokens.accentInk
                     font.pixelSize: 13
                     font.family: "Noto Sans, Inter, sans-serif"
                     background: null
@@ -305,7 +334,7 @@ Rectangle {
                     Accessible.role: Accessible.EditableText
                     Accessible.name: qsTr("Password")
                     Accessible.description: qsTr("Enter password to unlock")
-                    readonly property bool capsLockActive: (passwordInput.inputMethodHints & Qt.ImhNoPredictiveText) !== 0
+                    readonly property bool capsLockActive: capsLockState.locked
 
                     onTextEdited: root.cancelFaceAuthentication()
                     Keys.onReturnPressed: root.submitPassword()
@@ -326,14 +355,27 @@ Rectangle {
                     implicitWidth: 26
                     implicitHeight: 26
                     radius: tokens.compactRadius
+                    activeFocusOnTab: true
                     color: lockRevealArea.containsMouse ? tokens.surfaceHover : "transparent"
+                    border.color: lockRevealBtn.activeFocus ? tokens.accent : "transparent"
+                    border.width: lockRevealBtn.activeFocus ? tokens.focusWidth : 0
                     Accessible.role: Accessible.Button
                     Accessible.name: passwordBox.revealPassword ? qsTr("Hide password") : qsTr("Show password")
 
-                    Text {
+                    function toggleReveal() {
+                        passwordBox.revealPassword = !passwordBox.revealPassword
+                        if (passwordBox.revealPassword) {
+                            lockRevealTimer.restart()
+                        } else {
+                            lockRevealTimer.stop()
+                        }
+                    }
+
+                    Kirigami.Icon {
                         anchors.centerIn: parent
-                        text: passwordBox.revealPassword ? "👁" : "•"
-                        font.pixelSize: 13
+                        implicitWidth: 16
+                        implicitHeight: 16
+                        source: passwordBox.revealPassword ? "password-show-off" : "password-show-on"
                         color: passwordBox.revealPassword ? tokens.accent : tokens.textSecondary
                     }
 
@@ -342,15 +384,11 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            passwordBox.revealPassword = !passwordBox.revealPassword
-                            if (passwordBox.revealPassword) {
-                                lockRevealTimer.restart()
-                            } else {
-                                lockRevealTimer.stop()
-                            }
-                        }
+                        onClicked: lockRevealBtn.toggleReveal()
                     }
+                    Keys.onReturnPressed: lockRevealBtn.toggleReveal()
+                    Keys.onEnterPressed: lockRevealBtn.toggleReveal()
+                    Keys.onSpacePressed: lockRevealBtn.toggleReveal()
                 }
 
                 // Unlock action button with micro-motion
@@ -359,12 +397,13 @@ Rectangle {
                     implicitWidth: 32
                     implicitHeight: 32
                     radius: tokens.compactRadius
+                    activeFocusOnTab: true
                     scale: submitArea.pressed ? 0.94 : (submitArea.containsMouse ? 1.06 : 1.0)
                     color: submitArea.containsMouse
                         ? tokens.accentPressed
                         : (passwordInput.text.length > 0 ? tokens.accent : tokens.surfaceOverlay)
-                    border.color: tokens.accent
-                    border.width: passwordInput.text.length > 0 ? 1 : 0
+                    border.color: submitButton.activeFocus ? tokens.textPrimary : tokens.accent
+                    border.width: submitButton.activeFocus ? tokens.focusWidth : (passwordInput.text.length > 0 ? 1 : 0)
                     Accessible.role: Accessible.Button
                     Accessible.name: qsTr("Unlock")
                     Accessible.description: qsTr("Submit password to unlock")
@@ -387,7 +426,7 @@ Rectangle {
                         text: "→"
                         font.pixelSize: 16
                         font.weight: Font.Bold
-                        color: passwordInput.text.length > 0 ? tokens.accentInk : tokens.textDisabled
+                        color: (passwordInput.text.length > 0 || submitArea.containsMouse) ? tokens.accentInk : tokens.textSecondary
                     }
 
                     MouseArea {
@@ -397,6 +436,9 @@ Rectangle {
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.submitPassword()
                     }
+                    Keys.onReturnPressed: root.submitPassword()
+                    Keys.onEnterPressed: root.submitPassword()
+                    Keys.onSpacePressed: root.submitPassword()
                 }
             }
         }

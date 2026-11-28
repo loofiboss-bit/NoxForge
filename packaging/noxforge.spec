@@ -1,4 +1,4 @@
-%global upstream_version 21.0.4
+%global upstream_version 21.0.5
 %global use_source_date_epoch_as_buildtime 1
 %global _buildhost fedora
 %undefine _unique_build_ids
@@ -6,7 +6,7 @@
 %global debug_package %{nil}
 
 Name:           noxforge
-Version:        21.0.4
+Version:        21.0.5
 Release:        1%{?dist}
 Summary:        Ecosystem and app parity KDE Plasma components
 
@@ -23,6 +23,7 @@ BuildRequires:  qt6-qtdeclarative-devel >= 6.7
 
 Requires:       kwin >= 6.8
 Requires:       plasma-workspace >= 6.8
+Requires:       python3
 Requires:       qt6-qtbase-gui >= 6.7
 Requires:       breeze-icon-theme
 Recommends:     python3-pyside6
@@ -108,6 +109,11 @@ display managers.
 %{_datadir}/sddm/themes/NoxForgeObsidian/
 
 %changelog
+* Sat Nov 28 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.5-1
+- Fix unreadable dark-on-dark selected sidebar items in KDE System Settings, Discover, Dolphin, and QQC2/Qt6 apps by adapting PE_PanelItemViewItem and PE_PanelItemViewRow to QPalette::HighlightedText WCAG luminance, adding SE_ItemViewItemText leading inset, fixing QSettings IniFormat QStringList AccentColor parsing, expanding CT_SpinBox/CT_ComboBox width margins (preventing clipped percentage suffixes), adding visible State_On checked toggle button states, and refining disabled indicators and flat buttons in libnoxforge6.so
+- Upgrade [Colors:Selection] semantic foreground roles (Negative/Neutral/Visited) to WCAG AAA contrast, align Plasma 6.8 Union CSS selectors with real Union 6.8 elements, fix GTK 3/4 checkbutton/radiobutton container fills and missing GTK 3 widget rules with zero Gtk.CssProvider errors, and polish Plasma SVGs, Aurorae v2 corners/close button, icons, Wayland scalable cursors, shared QML session surfaces (LockScreen revealPassword/CapsLock, OSD overdrive, TabBox layout, Logout/SystemDialog keyboard nav, SDDM guards), and ecosystem themes
+- Fix noxforge-ctl (@import ordering before existing GTK CSS rules, live colorscheme applier ordering with -a accent, Union full-mode preservation, Aurorae version refresh and dual-profile accent sync), control_center.py, opacity_gui.py (--gui handling), and noxforge-doctor (detect shadowing user/local libnoxforge6.so copies and .svgz Aurorae customizations); add Requires: python3
+
 * Sat Nov 28 2026 NoxForge Contributors <noxforge@users.noreply.github.com> - 21.0.4-1
 - Make Fastfetch strictly opt-in in noxforge-ctl so bulk ecosystem apply ("all" / Control Center "Deploy All Detected Themes") never overwrites users' existing ~/.config/fastfetch/config.jsonc or logo.txt
 - Fix fastfetch status check to require NoxForge tracking in ecosystem-state.json rather than flagging unrelated user fastfetch configs as synced, and preserve fastfetch state tracking on explicit opt-in so backups restore reliably

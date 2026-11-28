@@ -8,7 +8,6 @@ import org.kde.plasma.core as PlasmaCore
 
 KWin.TabBoxSwitcher {
     id: tabBox
-    currentIndex: (dialogLoader.object as NoxForgeDialog)?.currentIndex ?? currentIndex
 
     Instantiator {
         id: dialogLoader
@@ -20,7 +19,7 @@ KWin.TabBoxSwitcher {
         id: dialog
         property alias currentIndex: switcher.currentIndex
         visible: tabBox.visible
-        flags: Qt.Popup | Qt.X11BypassWindowManagerHint
+        flags: Qt.Popup
         location: PlasmaCore.Types.Floating
         Accessible.role: Accessible.Dialog
         Accessible.name: qsTr("Task Switcher")
@@ -31,7 +30,11 @@ KWin.TabBoxSwitcher {
             id: switcher
             windowModel: tabBox.model
             screenGeometry: tabBox.screenGeometry
-            currentIndex: tabBox.currentIndex
+            onCurrentIndexChanged: {
+                if (tabBox.currentIndex !== currentIndex && currentIndex >= 0) {
+                    tabBox.currentIndex = currentIndex
+                }
+            }
 
             Connections {
                 target: tabBox

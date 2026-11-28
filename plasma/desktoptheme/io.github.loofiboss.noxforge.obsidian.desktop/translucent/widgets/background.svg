@@ -36,12 +36,31 @@
   <g id="bottom"><rect x="6" y="18" width="12" height="6" class="NoxForge-Overlay" fill="currentColor" fill-opacity="0.92"/><rect x="6" y="22" width="12" height="2" class="NoxForge-OverlayShadow" fill="currentColor" fill-opacity="0.42"/></g>
   <g id="bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="NoxForge-Overlay" fill="currentColor" fill-opacity="0.92"/><path d="M18 22H22V18A4 4 0 0 1 18 22Z" class="NoxForge-OverlayShadow" fill="currentColor" fill-opacity="0.42"/></g>
   <rect id="hint-top-margin" x="0" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
-  <rect id="hint-right-margin" x="2" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-bottom-margin" x="9" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
-  <rect id="hint-left-margin" x="11" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-top-inset" x="18" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
-  <rect id="hint-right-inset" x="20" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-bottom-inset" x="27" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
-  <rect id="hint-left-inset" x="29" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-margin" x="10" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-margin" x="20" y="32" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-margin" x="30" y="32" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-top-inset" x="40" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="hint-right-inset" x="50" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="hint-bottom-inset" x="60" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="hint-left-inset" x="70" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="hint-stretch-borders" x="80" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="hint-compose-over-border" x="120" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="mask-topleft"><path d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-top"><rect x="46" y="0" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-left"><rect x="40" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-center"><rect x="46" y="6" width="12" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-right"><rect x="58" y="6" width="6" height="12" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-bottom"><rect x="46" y="18" width="12" height="6" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <g id="mask-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="ColorScheme-Text" fill="currentColor" fill-opacity="1"/></g>
+  <rect id="mask-hint-top-margin" x="40" y="48" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-right-margin" x="50" y="48" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-bottom-margin" x="60" y="48" width="1" height="8" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-left-margin" x="70" y="48" width="8" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-top-inset" x="80" y="48" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-right-inset" x="90" y="48" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-bottom-inset" x="100" y="48" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-left-inset" x="110" y="48" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="mask-hint-stretch-borders" x="120" y="48" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>
