@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Loofi
 # SPDX-License-Identifier: MIT
-# @noxforge-version: 21.0.2
+# @noxforge-version: 21.0.3
 
 [ColorEffects:Disabled]
 Color=70,79,86
@@ -79,17 +79,17 @@ ForegroundPositive=163,255,71
 ForegroundVisited=167,139,250
 
 [Colors:Selection]
-BackgroundAlternate=34,52,41
-BackgroundNormal=34,52,41
+BackgroundAlternate=130,217,54
+BackgroundNormal=130,217,54
 DecorationFocus=163,255,71
 DecorationHover=34,211,238
-ForegroundActive=163,255,71
-ForegroundInactive=166,180,185
-ForegroundLink=34,211,238
+ForegroundActive=13,20,25
+ForegroundInactive=27,40,49
+ForegroundLink=13,20,25
 ForegroundNegative=255,107,122
 ForegroundNeutral=251,191,36
-ForegroundNormal=232,240,242
-ForegroundPositive=163,255,71
+ForegroundNormal=13,20,25
+ForegroundPositive=13,20,25
 ForegroundVisited=167,139,250
 
 [Colors:Tooltip]

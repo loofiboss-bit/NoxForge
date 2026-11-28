@@ -81,7 +81,8 @@ class NoxForgeV18ContractsTests(unittest.TestCase):
                 self.assertIn("tabbar tab:checked", css)
                 self.assertIn("toast", css)
                 self.assertIn("popover", css)
-                self.assertIn("::selection", css)
+                self.assertIn("selection, entry selection", css)
+                self.assertNotIn("::selection", css)
 
     def test_gtk_3_4_dynamic_accent_variables_and_import_chaining(self) -> None:
         for theme_dir in ("themes/NoxForge", "themes/NoxForgeObsidian"):

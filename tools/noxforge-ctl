@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.2"
+VERSION = "21.0.3"
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 
