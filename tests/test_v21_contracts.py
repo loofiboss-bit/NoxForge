@@ -559,6 +559,100 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
         self.assertIn("#FF8FA3", qss)
         win.close()
 
+    def test_selection_wcag_and_audit_regressions(self) -> None:
+        import configparser
+
+        def _rel_lum(rgb: tuple[int, int, int]) -> float:
+            def _lin(c: int) -> float:
+                v = c / 255.0
+                return v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4
+            return 0.2126 * _lin(rgb[0]) + 0.7152 * _lin(rgb[1]) + 0.0722 * _lin(rgb[2])
+
+        def _contrast(c1: tuple[int, int, int], c2: tuple[int, int, int]) -> float:
+            l1, l2 = _rel_lum(c1), _rel_lum(c2)
+            return (max(l1, l2) + 0.05) / (min(l1, l2) + 0.05)
+
+        def _parse_rgb(raw: str) -> tuple[int, int, int]:
+            parts = [int(p.strip()) for p in raw.split(",")]
+            return (parts[0], parts[1], parts[2])
+
+        # All [Colors:Selection] foreground roles must meet WCAG AA (>= 4.5:1) against BackgroundNormal
+        for scheme_rel in (
+            "color-schemes/NoxForgeDark.colors",
+            "color-schemes/NoxForgeObsidian.colors",
+            "plasma/desktoptheme/io.github.loofiboss.noxforge.desktop/colors",
+            "plasma/desktoptheme/io.github.loofiboss.noxforge.obsidian.desktop/colors",
+        ):
+            cfg = configparser.ConfigParser(interpolation=None, strict=False)
+            cfg.read(ROOT / scheme_rel, encoding="utf-8")
+            bg = _parse_rgb(cfg.get("Colors:Selection", "BackgroundNormal"))
+            for key in (
+                "ForegroundNormal",
+                "ForegroundActive",
+                "ForegroundInactive",
+                "ForegroundLink",
+                "ForegroundNegative",
+                "ForegroundNeutral",
+                "ForegroundPositive",
+                "ForegroundVisited",
+            ):
+                fg = _parse_rgb(cfg.get("Colors:Selection", key))
+                ratio = _contrast(fg, bg)
+                self.assertGreaterEqual(
+                    ratio,
+                    4.5,
+                    f"{scheme_rel} [Colors:Selection] {key} contrast {ratio:.2f}:1 < 4.5:1",
+                )
+
+        # GTK CSS must not fill entire checkbutton/radiobutton label containers when checked
+        for gtk_css in (
+            "themes/NoxForge/gtk-3.0/gtk.css",
+            "themes/NoxForge/gtk-4.0/gtk.css",
+            "themes/NoxForgeObsidian/gtk-3.0/gtk.css",
+            "themes/NoxForgeObsidian/gtk-4.0/gtk.css",
+        ):
+            text = (ROOT / gtk_css).read_text(encoding="utf-8")
+            self.assertNotIn("checkbutton:checked", text, f"Broken container fill in {gtk_css}")
+            self.assertNotIn("radiobutton:checked", text, f"Broken container fill in {gtk_css}")
+            self.assertNotIn("::selection", text, f"Unsupported ::selection in {gtk_css}")
+
+        # LockScreen QML must declare revealPassword on passwordBox (no parent lookup TypeError)
+        for lnf in (
+            "look-and-feel/io.github.loofiboss.noxforge.desktop/contents/lockscreen/LockScreen.qml",
+            "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/lockscreen/LockScreen.qml",
+        ):
+            qml = (ROOT / lnf).read_text(encoding="utf-8")
+            self.assertIn("property bool revealPassword: false", qml)
+            self.assertNotIn("tokens.largeSpacing", qml)
+            self.assertNotIn("👁", qml)
+
+        # Obsidian Look-and-Feel defaults must point TabBox to the Obsidian switcher
+        obs_defaults = (
+            ROOT / "look-and-feel/io.github.loofiboss.noxforge.obsidian.desktop/contents/defaults"
+        ).read_text(encoding="utf-8")
+        self.assertIn("LayoutName=io.github.loofiboss.noxforge.obsidian.desktop", obs_defaults)
+
+        # sync_gtk_config must place @import BEFORE pre-existing user CSS rules
+        ctl_ns = runpy.run_path(str(ROOT / "tools/noxforge-ctl"), run_name="noxforge_ctl_v21_gtk_import")
+        with tempfile.TemporaryDirectory(prefix="noxforge-v21-gtk-") as temp:
+            cfg_home = Path(temp) / ".config"
+            (cfg_home / "gtk-4.0").mkdir(parents=True)
+            (cfg_home / "gtk-4.0/gtk.css").write_text("window { border: none; }\n", encoding="utf-8")
+            old_cfg = os.environ.get("XDG_CONFIG_HOME")
+            try:
+                os.environ["XDG_CONFIG_HOME"] = str(cfg_home)
+                ctl_ns["sync_gtk_config"](profile="graphite", accent_hex="#22D3EE", dry_run=False)
+                out_css = (cfg_home / "gtk-4.0/gtk.css").read_text(encoding="utf-8")
+                import_idx = out_css.find("@import url(")
+                rule_idx = out_css.find("window { border: none; }")
+                self.assertGreaterEqual(import_idx, 0)
+                self.assertGreater(rule_idx, import_idx, "@import must appear before existing CSS rules")
+            finally:
+                if old_cfg is None:
+                    os.environ.pop("XDG_CONFIG_HOME", None)
+                else:
+                    os.environ["XDG_CONFIG_HOME"] = old_cfg
+
 
 if __name__ == "__main__":
     unittest.main()

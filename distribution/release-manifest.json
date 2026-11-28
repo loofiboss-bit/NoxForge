@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "project": "NoxForge",
   "release": {
-    "version": "21.0.4",
-    "stableVersion": "21.0.4",
+    "version": "21.0.5",
+    "stableVersion": "21.0.5",
     "activePlan": "docs/NOXFORGE_V21_PLAN.md",
     "baseline": {
       "version": "20.0.0",
@@ -231,109 +231,109 @@
   "artifacts": [
     {
       "key": "source",
-      "filename": "noxforge-21.0.4-source.tar.xz",
+      "filename": "noxforge-21.0.5-source.tar.xz",
       "kind": "source",
       "budgetBytes": 31457280
     },
     {
       "key": "portable",
-      "filename": "noxforge-21.0.4-portable.tar.xz",
+      "filename": "noxforge-21.0.5-portable.tar.xz",
       "kind": "portable",
       "budgetBytes": 16777216
     },
     {
       "key": "global-theme",
-      "filename": "noxforge-21.0.4-global-theme.tar.xz",
+      "filename": "noxforge-21.0.5-global-theme.tar.xz",
       "kind": "store",
       "package": "globalTheme",
       "budgetBytes": 10485760
     },
     {
       "key": "global-theme-obsidian",
-      "filename": "noxforge-21.0.4-global-theme-obsidian.tar.xz",
+      "filename": "noxforge-21.0.5-global-theme-obsidian.tar.xz",
       "kind": "store",
       "package": "globalThemeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style",
-      "filename": "noxforge-21.0.4-plasma-style.tar.xz",
+      "filename": "noxforge-21.0.5-plasma-style.tar.xz",
       "kind": "store",
       "package": "plasmaStyle",
       "budgetBytes": 10485760
     },
     {
       "key": "plasma-style-obsidian",
-      "filename": "noxforge-21.0.4-plasma-style-obsidian.tar.xz",
+      "filename": "noxforge-21.0.5-plasma-style-obsidian.tar.xz",
       "kind": "store",
       "package": "plasmaStyleObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "colors",
-      "filename": "noxforge-21.0.4-colors.tar.xz",
+      "filename": "noxforge-21.0.5-colors.tar.xz",
       "kind": "store",
       "package": "colors",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae",
-      "filename": "noxforge-21.0.4-aurorae.tar.xz",
+      "filename": "noxforge-21.0.5-aurorae.tar.xz",
       "kind": "store",
       "package": "aurorae",
       "budgetBytes": 10485760
     },
     {
       "key": "aurorae-obsidian",
-      "filename": "noxforge-21.0.4-aurorae-obsidian.tar.xz",
+      "filename": "noxforge-21.0.5-aurorae-obsidian.tar.xz",
       "kind": "store",
       "package": "auroraeObsidian",
       "budgetBytes": 10485760
     },
     {
       "key": "icons",
-      "filename": "noxforge-21.0.4-icons.tar.xz",
+      "filename": "noxforge-21.0.5-icons.tar.xz",
       "kind": "store",
       "package": "icons",
       "budgetBytes": 10485760
     },
     {
       "key": "cursors",
-      "filename": "noxforge-21.0.4-cursors.tar.xz",
+      "filename": "noxforge-21.0.5-cursors.tar.xz",
       "kind": "store",
       "package": "cursors",
       "budgetBytes": 10485760
     },
     {
       "key": "kwin-switcher",
-      "filename": "noxforge-21.0.4-kwin-switcher.tar.xz",
+      "filename": "noxforge-21.0.5-kwin-switcher.tar.xz",
       "kind": "store",
       "package": "kwinSwitcher",
       "budgetBytes": 10485760
     },
     {
       "key": "sounds",
-      "filename": "noxforge-21.0.4-sounds.tar.xz",
+      "filename": "noxforge-21.0.5-sounds.tar.xz",
       "kind": "store",
       "package": "sounds",
       "budgetBytes": 10485760
     },
     {
       "key": "wallpapers",
-      "filename": "noxforge-21.0.4-wallpapers.tar.xz",
+      "filename": "noxforge-21.0.5-wallpapers.tar.xz",
       "kind": "store",
       "package": "wallpapers",
       "budgetBytes": 16777216
     },
     {
       "key": "rpm",
-      "filename": "noxforge-21.0.4-1.fc44.x86_64.rpm",
+      "filename": "noxforge-21.0.5-1.fc44.x86_64.rpm",
       "kind": "rpm",
       "budgetBytes": 12582912
     },
     {
       "key": "srpm",
-      "filename": "noxforge-21.0.4-1.fc44.src.rpm",
+      "filename": "noxforge-21.0.5-1.fc44.src.rpm",
       "kind": "srpm",
       "budgetBytes": 31457280
     },
@@ -351,7 +351,7 @@
     }
   ],
   "source": {
-    "archiveRoot": "NoxForge-21.0.4",
+    "archiveRoot": "NoxForge-21.0.5",
     "include": [
       "LICENSE",
       "LICENSES.md",

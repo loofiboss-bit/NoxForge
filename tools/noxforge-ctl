@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.4"
+VERSION = "21.0.5"
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -202,16 +202,27 @@ def sync_aurorae_accent(
         if (profile or "").strip().lower() == "obsidian"
         else ((THEME_GRAPHITE_ID,) if (profile or "").strip().lower() == "graphite" else (THEME_GRAPHITE_ID, THEME_OBSIDIAN_ID))
     )
+    def _aurorae_version(directory: Path) -> tuple[int, ...]:
+        meta = directory / "metadata.json"
+        if meta.is_file():
+            try:
+                ver_str = str(json.loads(meta.read_text(encoding="utf-8")).get("KPlugin", {}).get("Version", ""))
+                nums = [int(p) for p in re.findall(r"\d+", ver_str)]
+                if nums:
+                    return tuple(nums)
+            except Exception:
+                pass
+        return ()
+
     for theme_id in theme_ids:
         user_dir = data_home / "aurorae/themes" / theme_id
         user_deco = user_dir / "decoration.svg"
         base_deco = user_dir / ".decoration.base.svg"
 
-        source_dir = next(
+        upstream_dir = next(
             (
                 cand
                 for cand in (
-                    user_dir,
                     Path("/usr/share/aurorae/themes") / theme_id,
                     ROOT / "aurorae" / theme_id,
                 )
@@ -219,15 +230,38 @@ def sync_aurorae_accent(
             ),
             None,
         )
+        source_dir = user_dir if user_deco.is_file() else upstream_dir
         if source_dir is None:
             continue
 
         if not dry_run:
-            if source_dir.resolve() != user_dir.resolve() and not user_deco.is_file():
+            # Refresh stale user-local Aurorae copies when a newer system/repo version exists,
+            # while preserving any user opacity customization applied via noxforge-opacity.
+            needs_refresh = (
+                upstream_dir is not None
+                and user_deco.is_file()
+                and _aurorae_version(upstream_dir) > _aurorae_version(user_dir)
+            )
+            if (source_dir.resolve() != user_dir.resolve() and not user_deco.is_file()) or needs_refresh:
+                preserved_opacity: str | None = None
+                if needs_refresh and base_deco.is_file():
+                    m_op = re.search(r'\bfill-opacity="([^"]+)"', base_deco.read_text(encoding="utf-8", errors="ignore"))
+                    if m_op:
+                        preserved_opacity = m_op.group(1)
+                copy_from = upstream_dir if needs_refresh and upstream_dir is not None else source_dir
                 user_dir.mkdir(parents=True, exist_ok=True)
-                for item in source_dir.iterdir():
+                for item in copy_from.iterdir():
                     if item.is_file():
                         shutil.copy2(item, user_dir / item.name)
+                if user_deco.is_file():
+                    fresh_base = user_deco.read_text(encoding="utf-8")
+                    if preserved_opacity:
+                        fresh_base = re.sub(
+                            r'(\.NoxForge-Panel\s*\{[^}]*fill-opacity:\s*)([0-9.]+)',
+                            rf"\g<1>{preserved_opacity}",
+                            fresh_base,
+                        )
+                    base_deco.write_text(fresh_base, encoding="utf-8")
             if not base_deco.is_file() and user_deco.is_file():
                 shutil.copy2(user_deco, base_deco)
             src_svg = base_deco if base_deco.is_file() else user_deco
@@ -299,35 +333,55 @@ def sync_gtk_config(
             and not line.startswith("/* END NoxForge Dynamic Accent")
             and "@define-color accent_" not in line
             and "@define-color theme_selected_bg_color" not in line
+            and "@define-color theme_selected_fg_color" not in line
             and "@define-color theme_view_active" not in line
+            and "@define-color success_color" not in line
+            and "@define-color success_bg_color" not in line
+            and "@define-color success_fg_color" not in line
             and not (line.strip().startswith("@import url(") and "NoxForge" in line)
         ]
 
         base_css_path = find_gtk_theme_css(gtk_theme, gtk_dir)
-        block_lines: list[str] = []
+        import_block: list[str] = []
+        color_block: list[str] = []
         if base_css_path or effective_hex:
-            block_lines.append("/* NoxForge Dynamic Accent & Libadwaita Chain */")
+            # CSS specification requires @import statements to precede all non-charset rules.
             if base_css_path:
-                block_lines.append(f'@import url("file://{base_css_path.as_posix()}");')
+                import_block.append("/* NoxForge Dynamic Accent & Libadwaita Chain */")
+                import_block.append(f'@import url("file://{base_css_path.as_posix()}");')
             if effective_hex:
                 pal = resolve_accent_palette(effective_hex, is_obsidian=is_obsidian)
-                block_lines.extend(
+                if not import_block:
+                    color_block.append("/* NoxForge Dynamic Accent & Libadwaita Chain */")
+                color_block.extend(
                     [
                         f"@define-color accent_color {pal['accent']};",
                         f"@define-color accent_bg_color {pal['accent']};",
                         f"@define-color accent_fg_color {pal['accentInk']};",
                         f"@define-color accent_pressed_color {pal['accentPressed']};",
                         f"@define-color theme_selected_bg_color {pal['accent']};",
+                        f"@define-color theme_selected_fg_color {pal['accentInk']};",
                         f"@define-color theme_view_active {pal['surfaceSelected']};",
+                        f"@define-color success_color {pal['accent']};",
+                        f"@define-color success_bg_color {pal['accent']};",
+                        f"@define-color success_fg_color {pal['accentInk']};",
                     ]
                 )
-            block_lines.append("/* END NoxForge Dynamic Accent */")
+            color_block.append("/* END NoxForge Dynamic Accent */")
 
         cleaned = "\n".join(lines).strip()
-        if block_lines:
-            new_text = (cleaned + "\n\n" + "\n".join(block_lines) + "\n") if cleaned else ("\n".join(block_lines) + "\n")
-        else:
-            new_text = (cleaned + "\n") if cleaned else ""
+        sections: list[str] = []
+        if import_block:
+            if not cleaned and color_block:
+                sections.append("\n".join(import_block + color_block))
+                color_block = []
+            else:
+                sections.append("\n".join(import_block))
+        if cleaned:
+            sections.append(cleaned)
+        if color_block:
+            sections.append("\n".join(color_block))
+        new_text = ("\n\n".join(sections) + "\n") if sections else ""
 
         if not dry_run:
             css_file.parent.mkdir(parents=True, exist_ok=True)
@@ -396,7 +450,18 @@ def switch_profile(profile: str, dry_run: bool = False, no_reload: bool = False)
         return {"status": "dry-run", "changes": changes}
 
     # Apply KDE Settings
-    write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
+    # Apply colorscheme via plasma-apply-colorscheme BEFORE writing kdeglobals[General]ColorScheme
+    # because plasma-apply-colorscheme skips updating [Colors:*] if ColorScheme already matches.
+    applied_scheme_live = False
+    if _is_live_user_session() and shutil.which("plasma-apply-colorscheme"):
+        accent_rgb = read_kconfig("kdeglobals", "General", "AccentColor", "").strip()
+        cmd = ["plasma-apply-colorscheme"]
+        if accent_rgb:
+            cmd.extend(["-a", get_active_accent_hex()])
+        cmd.append(color_scheme)
+        applied_scheme_live = run_cmd(cmd).returncode == 0
+    if not applied_scheme_live:
+        write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
     write_kconfig("kdeglobals", "KDE", "unionStyle", union_style)
     write_kconfig("plasmarc", "Theme", "name", theme_id)
     write_kconfig("kwinrc", "org.kde.kdecoration2", "theme", aurorae_theme)
@@ -412,8 +477,6 @@ def switch_profile(profile: str, dry_run: bool = False, no_reload: bool = False)
 
     # Plasma live CLI appliers (gentle and safe)
     if _is_live_user_session():
-        if shutil.which("plasma-apply-colorscheme"):
-            run_cmd(["plasma-apply-colorscheme", color_scheme])
         if shutil.which("plasma-apply-desktoptheme"):
             run_cmd(["plasma-apply-desktoptheme", theme_id])
 
@@ -449,11 +512,14 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False, no_reload: b
     konsole_profile = sync_konsole_profile(target, dry_run=dry_run)
     gtk_synced = sync_gtk_config(profile=target, accent_hex=None, dry_run=dry_run)
 
+    prefs = _load_preferences()
+    widget_style = "Union" if bool(prefs.get("unionFullMode", False)) else "NoxForge"
+
     changes: dict[str, Any] = {
         "profile": target,
         "colorScheme": color_scheme,
         "plasmaStyle": theme_id,
-        "widgetStyle": "NoxForge",
+        "widgetStyle": widget_style,
         "unionStyle": union_style,
         "auroraeTheme": aurorae_theme,
         "kwinTabBox": tabbox_layout,
@@ -470,8 +536,17 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False, no_reload: b
         return {"status": "dry-run", "changes": changes}
 
     # KDE Configuration files
-    write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
-    write_kconfig("kdeglobals", "KDE", "widgetStyle", "NoxForge")
+    applied_scheme_live = False
+    if _is_live_user_session() and shutil.which("plasma-apply-colorscheme"):
+        accent_rgb = read_kconfig("kdeglobals", "General", "AccentColor", "").strip()
+        cmd = ["plasma-apply-colorscheme"]
+        if accent_rgb:
+            cmd.extend(["-a", get_active_accent_hex()])
+        cmd.append(color_scheme)
+        applied_scheme_live = run_cmd(cmd).returncode == 0
+    if not applied_scheme_live:
+        write_kconfig("kdeglobals", "General", "ColorScheme", color_scheme)
+    write_kconfig("kdeglobals", "KDE", "widgetStyle", widget_style)
     write_kconfig("kdeglobals", "KDE", "unionStyle", union_style)
     write_kconfig("kdeglobals", "Icons", "Theme", "NoxForge")
     write_kconfig("kdeglobals", "Sounds", "Theme", "NoxForge")
@@ -493,8 +568,6 @@ def sync_desktop(profile: str | None = None, dry_run: bool = False, no_reload: b
 
     # Plasma live CLI appliers (gentle and safe)
     if _is_live_user_session():
-        if shutil.which("plasma-apply-colorscheme"):
-            run_cmd(["plasma-apply-colorscheme", color_scheme])
         if shutil.which("plasma-apply-desktoptheme"):
             run_cmd(["plasma-apply-desktoptheme", theme_id])
         if shutil.which("plasma-apply-cursortheme"):
@@ -546,7 +619,7 @@ def apply_setup(
     theme_id = THEME_OBSIDIAN_ID if is_obsidian else THEME_GRAPHITE_ID
     wallpaper_name = "NoxForge-Obsidian" if is_obsidian else "NoxForge"
 
-    sync_res = sync_desktop(profile=target, dry_run=dry_run, no_reload=no_reload)
+    sync_res = sync_desktop(profile=target, dry_run=dry_run, no_reload=True)
     changes = dict(sync_res.get("changes", {}))
     changes["wallpaper"] = wallpaper_name
     changes["globalTheme"] = theme_id
@@ -562,6 +635,8 @@ def apply_setup(
             if apply_layout:
                 cmd.append("--resetLayout")
             run_cmd(cmd)
+            if bool(_load_preferences().get("unionFullMode", False)):
+                write_kconfig("kdeglobals", "KDE", "widgetStyle", "Union")
 
         wp_path = find_wallpaper_image(wallpaper_name)
         if wp_path and shutil.which("plasma-apply-wallpaperimage"):
@@ -647,7 +722,7 @@ def set_accent(
     gtk_synced = sync_gtk_accent(hex_color, dry_run=False)
     status_now = get_current_status()
     active_profile = status_now.get("profile") if status_now.get("profile") in ("graphite", "obsidian") else "graphite"
-    aurorae_synced = sync_aurorae_accent(hex_color or ACCENT_COLORS["lime"], profile=active_profile, dry_run=False)
+    aurorae_synced = sync_aurorae_accent(hex_color or ACCENT_COLORS["lime"], profile=None, dry_run=False)
 
     wallpaper_synced: str | None = None
     if sync_wallpaper:
@@ -659,7 +734,11 @@ def set_accent(
 
     active_scheme = read_kconfig("kdeglobals", "General", "ColorScheme", "NoxForgeDark")
     if _is_live_user_session() and shutil.which("plasma-apply-colorscheme"):
-        run_cmd(["plasma-apply-colorscheme", active_scheme])
+        scheme_cmd = ["plasma-apply-colorscheme"]
+        if hex_color:
+            scheme_cmd.extend(["-a", hex_color])
+        scheme_cmd.append(active_scheme)
+        run_cmd(scheme_cmd)
 
     eco_synced = sync_tracked_ecosystem(profile=None, accent_hex=hex_color or ACCENT_COLORS["lime"], dry_run=False)
 
@@ -1064,12 +1143,12 @@ def manage_schedule(
         if service_path.is_file():
             try:
                 svc_txt = service_path.read_text(encoding="utf-8")
-                m_dp = re.search(r"--day-preset\s+(\S+)", svc_txt)
-                m_np = re.search(r"--night-preset\s+(\S+)", svc_txt)
+                m_dp = re.search(r'--day-preset\s+(?:"([^"]+)"|\'([^\']+)\'|(\S+))', svc_txt)
+                m_np = re.search(r'--night-preset\s+(?:"([^"]+)"|\'([^\']+)\'|(\S+))', svc_txt)
                 if m_dp:
-                    parsed_day_preset = m_dp.group(1)
+                    parsed_day_preset = next(g for g in m_dp.groups() if g is not None)
                 if m_np:
-                    parsed_night_preset = m_np.group(1)
+                    parsed_night_preset = next(g for g in m_np.groups() if g is not None)
             except Exception:
                 pass
         if has_timer and shutil.which("systemctl"):
@@ -1137,9 +1216,11 @@ def manage_schedule(
             ctl_bin = Path(__file__).resolve()
             extra_flags = ""
             if day_preset:
-                extra_flags += f" --day-preset {day_preset}"
+                safe_dp = day_preset.replace("\\", "\\\\").replace('"', '\\"')
+                extra_flags += f' --day-preset "{safe_dp}"'
             if night_preset:
-                extra_flags += f" --night-preset {night_preset}"
+                safe_np = night_preset.replace("\\", "\\\\").replace('"', '\\"')
+                extra_flags += f' --night-preset "{safe_np}"'
             service_content = f"""[Unit]
 Description=NoxForge Day/Night Profile Switcher
 After=graphical-session.target
@@ -1956,7 +2037,7 @@ def ecosystem_apply(
             errors[app_id] = f"Unknown ecosystem application: {app_id}"
             continue
         app = SUPPORTED_ECOSYSTEM_APPS[app_id]
-        src = find_asset(app["source_subpath"])
+        src = find_asset(app["source_subpath"]) or (find_asset("fastfetch") if app_id == "fastfetch" else None)
         if not src or not src.exists():
             errors[app_id] = f"Source assets not found: {app['source_subpath']}"
             continue
@@ -2951,7 +3032,9 @@ def main() -> int:
         return 0
 
     if args.command == "opacity":
+        sibling_dir = Path(__file__).resolve().parent
         candidates = [
+            sibling_dir / "noxforge-opacity",
             ROOT / "tools/noxforge-opacity",
             Path(shutil.which("noxforge-opacity") or "/usr/bin/noxforge-opacity"),
             Path("/usr/bin/noxforge-opacity"),
@@ -2966,7 +3049,9 @@ def main() -> int:
         return res.returncode
 
     if args.command == "doctor":
+        sibling_dir = Path(__file__).resolve().parent
         candidates = [
+            sibling_dir / "noxforge-doctor",
             ROOT / "tools/noxforge-doctor",
             Path(shutil.which("noxforge-doctor") or "/usr/bin/noxforge-doctor"),
             Path("/usr/bin/noxforge-doctor"),

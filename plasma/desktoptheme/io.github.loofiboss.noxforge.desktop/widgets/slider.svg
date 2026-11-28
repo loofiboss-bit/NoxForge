@@ -36,30 +36,30 @@
   <g id="groove-bottom"><rect x="6" y="18" width="12" height="6" class="NoxForge-Sunken" fill="currentColor" fill-opacity="0.72"/></g>
   <g id="groove-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="NoxForge-Sunken" fill="currentColor" fill-opacity="0.72"/></g>
   <rect id="groove-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="groove-highlight-topleft"><path d="M46 0V6H40V6A6 6 0 0 1 46 0Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-center"><rect x="46" y="6" width="12" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-right"><rect x="58" y="6" width="6" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <g id="groove-highlight-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
-  <rect id="groove-highlight-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="groove-highlight-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-<rect id="hint-handle-size" x="160" y="160" width="18" height="18" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>
+  <rect id="groove-hint-right-margin" x="6" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-bottom-margin" x="12" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-left-margin" x="18" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-top-inset" x="24" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-right-inset" x="30" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-bottom-inset" x="36" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-left-inset" x="42" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-hint-stretch-borders" x="48" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="groove-highlight-topleft"><path d="M70 0V6H64V6A6 6 0 0 1 70 0Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-top"><rect x="70" y="0" width="12" height="6" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-topright"><path d="M82 0A6 6 0 0 1 88 6H82Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-left"><rect x="64" y="6" width="6" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-center"><rect x="70" y="6" width="12" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-right"><rect x="82" y="6" width="6" height="12" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-bottomleft"><path d="M64 18H70V24A6 6 0 0 1 64 18Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-bottom"><rect x="70" y="18" width="12" height="6" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <g id="groove-highlight-bottomright"><path d="M82 18H88A6 6 0 0 1 82 24Z" class="NoxForge-Progress" fill="currentColor" fill-opacity="0.86"/></g>
+  <rect id="groove-highlight-hint-top-margin" x="64" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-right-margin" x="70" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-bottom-margin" x="76" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-left-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-top-inset" x="88" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-right-inset" x="94" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-bottom-inset" x="100" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-left-inset" x="106" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="groove-highlight-hint-stretch-borders" x="112" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+<rect id="hint-handle-size" x="160" y="160" width="16" height="16" fill="#000" fill-opacity="0"/><circle id="horizontal-slider-handle" cx="180" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="horizontal-slider-hover" cx="204" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="horizontal-slider-focus" cx="228" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-handle" cx="252" cy="180" r="8" class="ColorScheme-Text" fill="currentColor"/><circle id="vertical-slider-hover" cx="276" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/><circle id="vertical-slider-focus" cx="300" cy="180" r="8" class="ColorScheme-Highlight" fill="currentColor"/></svg>

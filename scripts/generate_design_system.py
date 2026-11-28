@@ -526,8 +526,11 @@ def color_scheme_for_palette(
         "ForegroundActive": selection_ink,
         "ForegroundInactive": str(colors["surfaceRaised"]),
         "ForegroundLink": selection_ink,
+        "ForegroundNegative": "#5C0814",
+        "ForegroundNeutral": "#3B2500",
         "ForegroundNormal": selection_ink,
         "ForegroundPositive": selection_ink,
+        "ForegroundVisited": "#2D1458",
     }
 
     return f'''# SPDX-FileCopyrightText: 2026 Loofi
@@ -590,7 +593,7 @@ def obsidian_color_scheme(tokens: dict[str, object]) -> str:
     base = tokens["colors"]
     variants = tokens["variants"]
     assert isinstance(base, dict) and isinstance(variants, dict)
-    obsidian = variants["obsidian"]
+    obsidian = tokens.get("colorsObsidian", variants["obsidian"])
     assert isinstance(obsidian, dict)
     palette = dict(base)
     palette.update(obsidian)
@@ -678,7 +681,7 @@ def gtk_theme_css(tokens: dict[str, object], variant: str = "standard", gtk_vers
     fg_disabled = colors["textDisabled"]
     accent = colors["accent"]
     accent_pressed = colors["accentPressed"]
-    accent_ink = colors["accentInk"]
+    accent_ink = obsidian_colors["accentInk"] if is_obsidian else colors["accentInk"]
     border = obsidian_colors["border"] if is_obsidian else colors["border"]
     border_strong = obsidian_colors["borderStrong"] if is_obsidian else colors["borderStrong"]
     edge_highlight = obsidian_colors["edgeHighlight"] if is_obsidian else colors["edgeHighlight"]
@@ -850,19 +853,57 @@ window:backdrop, dialog:backdrop {{
 }}
 
 headerbar:backdrop {{
-    background-color: {bg};
+    background-color: @window_bg_color;
     color: {fg_secondary};
     border-bottom-color: {outline_muted};
 }}
 
 menubar, toolbar {{
-    background-color: {surface_sunken};
-    border-bottom: 1px solid {border};
-    color: {fg};
+    background-color: @headerbar_bg_color;
+    border-bottom: 1px solid @theme_border_color;
+    color: @window_fg_color;
+}}
+
+popover, popover.background {{
+    background-color: @popover_bg_color;
+    border: 1px solid {edge_highlight};
+    border-radius: 8px;
+    color: @popover_fg_color;
+    padding: 4px;
+}}
+
+combobox > box > button.combo {{
+    background-color: @card_bg_color;
+    border: 1px solid @theme_border_color;
+    border-radius: 6px;
+    color: @card_fg_color;
+}}
+
+treeview.view:selected, treeview:selected {{
+    background-color: @theme_view_active;
+    color: @view_fg_color;
+}}
+
+check:checked {{
+    -gtk-icon-source: -gtk-icontheme("object-select-symbolic");
+}}
+
+radio:checked {{
+    -gtk-icon-source: -gtk-icontheme("radio-checked-symbolic");
+}}
+
+progressbar trough {{
+    background-color: @headerbar_bg_color;
+    border: 1px solid @theme_border_color;
+    border-radius: 4px;
+    min-height: 6px;
 }}
 
 switch {{
-    background-color: {surface_sunken};
+    min-width: 44px;
+    min-height: 24px;
+    padding: 2px;
+    background-color: @headerbar_bg_color;
     border: 1px solid {border_strong};
     border-radius: 12px;
 }}
@@ -885,7 +926,7 @@ scale trough {{
 }}
 
 scale slider {{
-    background-color: {fg};
+    background-color: @window_fg_color;
     border: 2px solid @accent_color;
     border-radius: 50%;
     min-width: 16px;
@@ -937,45 +978,66 @@ scale slider {{
 
 /* Global application surfaces */
 window, dialog {{
-    background-color: {bg};
-    color: {fg};
+    background-color: @window_bg_color;
+    color: @window_fg_color;
 }}
 
 headerbar {{
-    background-color: {surface_sunken};
-    border-bottom: 1px solid {border};
-    color: {fg};
+    background-color: @headerbar_bg_color;
+    border-bottom: 1px solid @headerbar_border_color;
+    color: @headerbar_fg_color;
     padding: 4px 6px;
 }}
 
 /* Standard controls & buttons */
 button {{
-    background-color: {surface_raised};
+    background-color: @card_bg_color;
     border: 1px solid {outline_muted};
     border-radius: 6px;
-    color: {fg};
+    color: @card_fg_color;
     padding: 4px 12px;
     transition: background-color 90ms ease-out, border-color 90ms ease-out;
 }}
 
 button:hover {{
-    background-color: {surface_hover};
+    background-color: @theme_view_hover;
     border-color: {edge_highlight};
 }}
 
-button:active, button:checked {{
-    background-color: {surface_sunken};
-    border-color: {outline_muted};
+button:active {{
+    background-color: @headerbar_bg_color;
+    border-color: @accent_color;
+}}
+
+button:checked {{
+    background-color: @theme_view_active;
+    border-color: @accent_color;
+    color: @window_fg_color;
+}}
+
+button:checked:hover {{
+    background-color: @theme_view_hover;
+    border-color: @accent_color;
+}}
+
+button.flat {{
+    background-color: transparent;
+    border-color: transparent;
+}}
+
+button.flat:hover {{
+    background-color: @theme_view_hover;
+    border-color: @theme_border_color;
+}}
+
+button.flat:checked {{
+    background-color: @theme_view_active;
+    border-color: @accent_color;
 }}
 
 button:focus {{
     outline: 2px solid @accent_color;
     outline-offset: 1px;
-}}
-
-button:disabled {{
-    opacity: 0.55;
-    color: {fg_disabled};
 }}
 
 button.suggested-action {{
@@ -985,24 +1047,32 @@ button.suggested-action {{
     font-weight: 600;
 }}
 
-button.suggested-action:hover {{
+button.suggested-action:hover, button.suggested-action:active {{
     background-color: @accent_pressed_color;
     border-color: @accent_pressed_color;
+    color: @accent_fg_color;
 }}
 
 button.destructive-action {{
-    background-color: {red};
-    border-color: {red};
-    color: {accent_ink};
+    background-color: @destructive_bg_color;
+    border-color: @destructive_color;
+    color: @destructive_fg_color;
     font-weight: 600;
+}}
+
+button:disabled, button.suggested-action:disabled, button.destructive-action:disabled {{
+    background-color: @view_bg_color;
+    border-color: @theme_border_color;
+    color: {fg_disabled};
+    opacity: 0.72;
 }}
 
 /* Text entry fields */
 entry {{
-    background-color: {surface_sunken};
-    border: 1px solid {border};
+    background-color: @headerbar_bg_color;
+    border: 1px solid @theme_border_color;
     border-radius: 4px;
-    color: {fg};
+    color: @view_fg_color;
     padding: 4px 8px;
 }}
 
@@ -1011,26 +1081,40 @@ entry:focus {{
     outline: 1px solid @accent_color;
 }}
 
+entry:disabled {{
+    opacity: 0.55;
+    color: {fg_disabled};
+}}
+
 /* List views and item trees */
 treeview, listview, row {{
-    background-color: {surface};
-    color: {fg};
+    background-color: @view_bg_color;
+    color: @view_fg_color;
+}}
+
+row {{
+    border-left: 3px solid transparent;
 }}
 
 row:hover {{
-    background-color: {surface_hover};
+    background-color: @theme_view_hover;
 }}
 
 row:selected {{
     background-color: @theme_view_active;
-    color: {fg};
+    color: @view_fg_color;
     border-left: 3px solid @accent_color;
+}}
+
+row:disabled {{
+    color: {fg_disabled};
+    opacity: 0.65;
 }}
 
 /* Tabs / Notebook */
 notebook > header.top > tab {{
-    background-color: {surface_sunken};
-    border: 1px solid {border};
+    background-color: @headerbar_bg_color;
+    border: 1px solid @theme_border_color;
     border-bottom: none;
     border-radius: 4px 4px 0 0;
     color: {fg_secondary};
@@ -1038,14 +1122,14 @@ notebook > header.top > tab {{
 }}
 
 notebook > header.top > tab:checked, notebook > header.top > tab:active {{
-    background-color: {surface};
-    color: {fg};
+    background-color: @view_bg_color;
+    color: @view_fg_color;
     border-top: 2px solid @accent_color;
 }}
 
 /* Scrollbars */
 scrollbar slider {{
-    background-color: {border};
+    background-color: @theme_border_color;
     border-radius: 4px;
     min-width: 6px;
     min-height: 6px;
@@ -1057,6 +1141,7 @@ scrollbar slider:hover {{
 
 /* Checkboxes, switches, and progress indicators */
 check, radio {{
+    background-color: @headerbar_bg_color;
     border: 1px solid {border_strong};
     border-radius: 4px;
     min-width: 16px;
@@ -1067,10 +1152,14 @@ radio {{
     border-radius: 50%;
 }}
 
-check:checked, radio:checked, checkbutton:checked, radiobutton:checked, switch:checked {{
+check:checked, radio:checked, switch:checked {{
     background-color: @accent_bg_color;
     border-color: @accent_color;
     color: @accent_fg_color;
+}}
+
+check:disabled, radio:disabled, switch:disabled {{
+    opacity: 0.55;
 }}
 
 progressbar progress, scale highlight {{
@@ -1086,99 +1175,120 @@ selection, entry selection, textview text selection, label selection {{
 
 /* Libadwaita & GTK 4 Navigation Sidebars, Boxed Lists & Cards */
 .navigation-sidebar {{
-    background-color: {surface_sunken};
-    color: {fg};
+    background-color: @headerbar_bg_color;
+    color: @window_fg_color;
 }}
 
 .navigation-sidebar > row {{
     background-color: transparent;
+    border-left: 3px solid transparent;
     border-radius: 6px;
     margin: 2px 6px;
     padding: 6px 10px;
 }}
 
 .navigation-sidebar > row:hover {{
-    background-color: {surface_hover};
+    background-color: @theme_view_hover;
 }}
 
 .navigation-sidebar > row:selected {{
     background-color: @theme_view_active;
-    color: {fg};
+    color: @window_fg_color;
     border-left: 3px solid @accent_color;
 }}
 
 list.boxed-list, card, .card {{
-    background-color: {surface_raised};
-    border: 1px solid {border};
+    background-color: @card_bg_color;
+    border: 1px solid @card_border_color;
     border-radius: 6px;
-    color: {fg};
+    color: @card_fg_color;
 }}
 
 list.boxed-list > row {{
-    background-color: {surface_raised};
-    border-bottom: 1px solid {border};
+    background-color: @card_bg_color;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid @card_border_color;
     padding: 8px 12px;
 }}
 
+list.boxed-list > row:last-child {{
+    border-bottom: none;
+}}
+
 list.boxed-list > row:hover {{
-    background-color: {surface_hover};
+    background-color: @theme_view_hover;
+}}
+
+list.boxed-list > row:selected {{
+    background-color: @theme_view_active;
+    color: @card_fg_color;
+    border-left: 3px solid @accent_color;
 }}
 
 /* Libadwaita TabBar, Popovers, Menus, Toasts & Banners */
 tabbar tab {{
-    background-color: {surface_sunken};
+    background-color: @headerbar_bg_color;
     color: {fg_secondary};
-    border: 1px solid {border};
+    border: 1px solid @theme_border_color;
     border-bottom: none;
     padding: 6px 12px;
 }}
 
 tabbar tab:checked, tabbar tab:selected {{
-    background-color: {surface};
-    color: {fg};
+    background-color: @view_bg_color;
+    color: @view_fg_color;
     border-top: 2px solid @accent_color;
 }}
 
 popover > contents, popover.menu > contents, menu {{
-    background-color: {surface_overlay};
+    background-color: @popover_bg_color;
     border: 1px solid {edge_highlight};
     border-radius: 8px;
-    color: {fg};
+    color: @popover_fg_color;
     padding: 4px;
+}}
+
+modelbutton, menuitem {{
+    border-left: 2px solid transparent;
 }}
 
 modelbutton:hover, menuitem:hover {{
     background-color: @theme_view_active;
-    color: {fg};
+    color: @popover_fg_color;
     border-left: 2px solid @accent_color;
 }}
 
+modelbutton:disabled, menuitem:disabled {{
+    color: {fg_disabled};
+    opacity: 0.65;
+}}
+
 toast {{
-    background-color: {surface_overlay};
+    background-color: @popover_bg_color;
     border: 1px solid @accent_color;
     border-radius: 6px;
-    color: {fg};
+    color: @popover_fg_color;
     padding: 8px 14px;
 }}
 
 banner > revealer > widget {{
     background-color: @theme_view_active;
     border-bottom: 1px solid @accent_color;
-    color: {fg};
+    color: @window_fg_color;
     padding: 6px 12px;
 }}
 
 actionbar > revealer > box, searchbar > revealer > box {{
-    background-color: {surface_sunken};
-    border-color: {border};
-    color: {fg};
+    background-color: @headerbar_bg_color;
+    border-color: @theme_border_color;
+    color: @window_fg_color;
 }}
 
 spinbutton, dropdown > button {{
-    background-color: {surface_raised};
-    border: 1px solid {border};
+    background-color: @card_bg_color;
+    border: 1px solid @theme_border_color;
     border-radius: 6px;
-    color: {fg};
+    color: @card_fg_color;
 }}
 
 spinbutton:focus-within, dropdown > button:focus {{
@@ -1186,12 +1296,17 @@ spinbutton:focus-within, dropdown > button:focus {{
     outline: 1px solid @accent_color;
 }}
 
+spinbutton:disabled, dropdown > button:disabled {{
+    opacity: 0.55;
+    color: {fg_disabled};
+}}
+
 /* Tooltips */
 tooltip {{
-    background-color: {surface_overlay};
+    background-color: @popover_bg_color;
     border: 1px solid {border_strong};
     border-radius: 4px;
-    color: {fg};
+    color: @popover_fg_color;
     padding: 4px 8px;
 }}
 {version_specific}"""
@@ -1291,7 +1406,7 @@ def kate_syntax_theme(tokens: dict[str, object], variant: str = "standard") -> s
             "Operator": {"selected-text-color": syntax["operator"], "text-color": syntax["operator"]},
             "Others": {"selected-text-color": syntax["string"], "text-color": syntax["string"]},
             "Preprocessor": {"selected-text-color": syntax["type"], "text-color": syntax["type"]},
-            "RegionMarker": {"selected-text-color": colors["outlineMuted"], "text-color": colors["outlineMuted"]},
+            "RegionMarker": {"selected-text-color": colors["textSecondary"], "text-color": colors["textSecondary"]},
             "SpecialChar": {"selected-text-color": syntax["string"], "text-color": syntax["string"]},
             "SpecialString": {"selected-text-color": syntax["string"], "text-color": syntax["string"]},
             "String": {"selected-text-color": syntax["string"], "text-color": syntax["string"]},
@@ -1315,6 +1430,7 @@ def vscode_theme(tokens: dict[str, object], variant: str = "standard") -> str:
     surface_overlay = obsidian_colors["surfaceOverlay"] if is_obsidian else colors["surfaceOverlay"]
     surface_hover = obsidian_colors["surfaceHover"] if is_obsidian else colors["surfaceHover"]
     surface_selected = obsidian_colors["surfaceSelected"] if is_obsidian else colors["surfaceSelected"]
+    accent_ink = obsidian_colors["accentInk"] if is_obsidian else colors["accentInk"]
     name = "NoxForge Obsidian" if is_obsidian else "NoxForge Dark"
     version = str(tokens.get("version", "21.0.0"))
 
@@ -1381,9 +1497,9 @@ def vscode_theme(tokens: dict[str, object], variant: str = "standard") -> str:
             "activityBar.inactiveForeground": colors["textDisabled"],
             "activityBar.border": colors["border"],
             "activityBarBadge.background": colors["accent"],
-            "activityBarBadge.foreground": colors["accentInk"],
+            "activityBarBadge.foreground": accent_ink,
             "badge.background": colors["accent"],
-            "badge.foreground": colors["accentInk"],
+            "badge.foreground": accent_ink,
             "list.activeSelectionBackground": surface_selected,
             "list.activeSelectionForeground": colors["textPrimary"],
             "list.inactiveSelectionBackground": surface_raised,
@@ -1415,9 +1531,9 @@ def vscode_theme(tokens: dict[str, object], variant: str = "standard") -> str:
             "statusBar.foreground": colors["textSecondary"],
             "statusBar.border": colors["border"],
             "statusBar.debuggingBackground": colors["detailViolet"],
-            "statusBar.debuggingForeground": colors["accentInk"],
+            "statusBar.debuggingForeground": accent_ink,
             "statusBarItem.prominentBackground": colors["accent"],
-            "statusBarItem.prominentForeground": colors["accentInk"],
+            "statusBarItem.prominentForeground": accent_ink,
             "titleBar.activeBackground": surface_sunken,
             "titleBar.activeForeground": colors["textPrimary"],
             "titleBar.inactiveBackground": bg,
@@ -1437,7 +1553,7 @@ def vscode_theme(tokens: dict[str, object], variant: str = "standard") -> str:
             "dropdown.foreground": colors["textPrimary"],
             "dropdown.border": colors["border"],
             "button.background": colors["accent"],
-            "button.foreground": colors["accentInk"],
+            "button.foreground": accent_ink,
             "button.hoverBackground": colors["accentPressed"],
             "button.secondaryBackground": surface_raised,
             "button.secondaryForeground": colors["textPrimary"],
@@ -2390,6 +2506,9 @@ def discord_theme(tokens: dict[str, object], variant: str = "standard") -> str:
   --brand-560: {colors['accentPressed']};
   --accent-color: {colors['accent']};
   --focus-primary: {colors['accent']};
+  --button-filled-brand-background: {colors['accent']};
+  --button-filled-brand-background-hover: {colors['accentPressed']};
+  --button-filled-brand-text: {colors['background']};
   --button-positive-background: {colors['accent']};
   --button-positive-text: {colors['background']};
   --status-positive: {colors['accent']};
@@ -2398,6 +2517,11 @@ def discord_theme(tokens: dict[str, object], variant: str = "standard") -> str:
   --scrollbar-auto-thumb: {colors['borderStrong']};
   --scrollbar-auto-track: {colors['surfaceSunken']};
   --scrollbar-thin-thumb: {colors['border']};
+}}
+
+.theme-dark [class*="lookFilled"][class*="colorBrand"],
+.theme-dark [class*="lookFilled"][class*="colorBrand"]:hover {{
+  color: {colors['background']} !important;
 }}
 """
 
@@ -2439,11 +2563,22 @@ def firefox_userchrome(tokens: dict[str, object], variant: str = "standard") -> 
 }}
 
 /* URL Bar */
+#urlbar,
+#searchbar {{
+  --toolbar-field-color: var(--noxforge-text-primary) !important;
+  --toolbar-field-focus-color: var(--noxforge-text-primary) !important;
+  color: var(--noxforge-text-primary) !important;
+}}
+
 #urlbar-background,
 #searchbar {{
   background-color: var(--noxforge-surface) !important;
   border: 1px solid var(--noxforge-border) !important;
   border-radius: var(--noxforge-radius) !important;
+  color: var(--noxforge-text-primary) !important;
+}}
+
+#urlbar-input {{
   color: var(--noxforge-text-primary) !important;
 }}
 
@@ -2493,6 +2628,10 @@ def firefox_userchrome(tokens: dict[str, object], variant: str = "standard") -> 
   font-size: 12px !important;
 }}
 
+.tabbrowser-tab:not([selected="true"]) .tab-label {{
+  color: var(--noxforge-text-secondary) !important;
+}}
+
 /* Context Menus & Popups */
 menupopup, panel {{
   --panel-background: var(--noxforge-surface) !important;
@@ -2516,7 +2655,7 @@ def firefox_usercontent(tokens: dict[str, object], variant: str = "standard") ->
 /* @noxforge-version: {version} */
 /* NoxForge {title_suffix} userContent.css for Firefox, Zen Browser & LibreWolf internal pages */
 
-@-moz-document url("about:newtab"), url("about:home"), url("about:blank"), url("about:privatebrowsing"),
+@-moz-document url("about:newtab"), url("about:home"), url("about:privatebrowsing"),
                url-prefix("about:preferences"), url-prefix("about:addons"), url-prefix("about:config") {{
   :root {{
     --in-content-page-background: {colors['background']} !important;
@@ -2534,6 +2673,8 @@ def firefox_usercontent(tokens: dict[str, object], variant: str = "standard") ->
     --newtab-background-color-secondary: {colors['surface']} !important;
     --newtab-text-primary-color: {colors['textPrimary']} !important;
     --newtab-primary-action-background: {colors['accent']} !important;
+    --newtab-primary-action-foreground: {colors['background']} !important;
+    --newtab-primary-action-text-color: {colors['background']} !important;
     scrollbar-color: {colors['borderStrong']} {colors['surfaceSunken']} !important;
   }}
 
@@ -2543,8 +2684,8 @@ def firefox_usercontent(tokens: dict[str, object], variant: str = "standard") ->
   }}
 
   ::selection {{
-    background-color: {colors['surfaceSelected']} !important;
-    color: {colors['textPrimary']} !important;
+    background-color: {colors['accentPressed']} !important;
+    color: {colors['background']} !important;
   }}
 }}
 """
@@ -2856,6 +2997,7 @@ def delta_gitconfig(tokens: dict[str, object], variant: str = "standard") -> str
     version = str(tokens.get("version", "21.0.0"))
     label = "Obsidian" if obsidian else "Graphite"
     bat_name = "NoxForgeObsidian" if obsidian else "NoxForge"
+    section_name = "noxforge-obsidian" if obsidian else "noxforge"
     return f"""# SPDX-License-Identifier: MIT
 # @noxforge-version: {version}
 # Generated by scripts/generate_design_system.py for NoxForge {label} git-delta.
@@ -2863,7 +3005,7 @@ def delta_gitconfig(tokens: dict[str, object], variant: str = "standard") -> str
 #   [include]
 #       path = ~/.config/delta/noxforge.gitconfig
 
-[delta "noxforge"]
+[delta "{section_name}"]
     dark = true
     syntax-theme = {bat_name}
     file-style = bold "{colors['accent']}"
@@ -3143,6 +3285,10 @@ def union_variables_css(tokens: dict[str, object], variant: str = "standard") ->
     --complementary-text-color: custom-color("kcolorscheme", "active", "complementary", "foreground", "text");
     --complementary-background-color: custom-color("kcolorscheme", "active", "complementary", "background", "normal");
 
+    --tooltip-text-color: custom-color("kcolorscheme", "active", "tooltip", "foreground", "text");
+    --tooltip-background-color: custom-color("kcolorscheme", "active", "tooltip", "background", "normal");
+    --tooltip-border-color: custom-color("kcolorscheme", "active", "tooltip", "decoration", "frame");
+
     --positive-text: custom-color("kcolorscheme", "active", "view", "foreground", "positive");
     --neutral-text: custom-color("kcolorscheme", "active", "view", "foreground", "neutral");
     --negative-text: custom-color("kcolorscheme", "active", "view", "foreground", "negative");
@@ -3298,25 +3444,26 @@ tabbutton {{
 }}
 
 scrollbar {{
-    width: var(--medium-spacing);
-    height: var(--medium-spacing);
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
     background-color: transparent;
-}}
 
-scrollbar-slider {{
-    background-color: var(--card-border-color);
-    border-radius: var(--corner-radius);
-    transition: background-color 140ms ease;
+    & > handle {{
+        background-color: var(--card-border-color);
+        border-radius: var(--corner-radius);
+        transition: background-color 140ms ease;
 
-    &:hovered {{
-        background-color: var(--highlight-color);
+        &:hovered,
+        &:pressed {{
+            background-color: var(--highlight-color);
+        }}
     }}
 }}
 
 tooltip {{
-    background-color: var(--window-background-color);
-    color: var(--window-text-color);
-    border: 1px solid var(--window-border-color);
+    background-color: var(--tooltip-background-color);
+    color: var(--tooltip-text-color);
+    border: 1px solid var(--tooltip-border-color);
     border-radius: var(--corner-radius);
     padding: var(--small-spacing) var(--medium-spacing);
     box-shadow: var(--dialog-shadow);
@@ -3344,9 +3491,7 @@ def union_modular_css(tokens: dict[str, object], variant: str = "standard") -> d
         " */\n\n"
     )
     return {
-        "defaults.css": header + """widget,
-frame,
-pane,
+        "defaults.css": header + """frame,
 groupbox {
     background-color: var(--window-background-color);
     color: var(--window-text-color);
@@ -3376,7 +3521,22 @@ button.highlighted {
     transition: background-color 140ms ease, border-color 140ms ease;
 
     &:hovered {
-        background-color: var(--window-highlight-color);
+        background-color: mix(var(--highlight-color), var(--window-text-color), 0.14);
+        color: var(--highlight-text-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:pressed,
+    &:checked {
+        background-color: mix(var(--highlight-color), var(--window-background-color), 0.14);
+        color: var(--highlight-text-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:disabled {
+        background-color: var(--button-disabled-background-color);
+        color: var(--button-disabled-text-color);
+        border: 1px solid var(--button-disabled-border-color);
     }
 }
 
@@ -3416,10 +3576,14 @@ switch {
     spacing: var(--medium-spacing);
     color: var(--window-text-color);
     transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
+
+    &:disabled {
+        color: var(--window-disabled-text-color);
+    }
 }
 
-checkbox-indicator,
-radiobutton-indicator {
+checkbox > indicator,
+radiobutton > indicator {
     width: var(--small-element-size);
     height: var(--small-element-size);
     background-color: var(--view-background-color);
@@ -3434,13 +3598,18 @@ radiobutton-indicator {
     &:visual-focus {
         outline: var(--focus-outline);
     }
+
+    &:disabled {
+        background-color: var(--view-disabled-background-color);
+        border-color: var(--view-disabled-border-color);
+    }
 }
 
-radiobutton-indicator {
+radiobutton > indicator {
     border-radius: 50%;
 }
 
-switch-track {
+switch > indicator {
     width: 42px;
     height: 22px;
     border-radius: 11px;
@@ -3451,13 +3620,17 @@ switch-track {
         background-color: var(--highlight-color);
         border-color: var(--highlight-color);
     }
-}
 
-switch-handle {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: var(--window-text-color);
+    & > handle {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: var(--window-text-color);
+    }
+
+    &:checked > handle {
+        background-color: var(--highlight-text-color);
+    }
 }
 """,
         "bars.css": header + """progressbar,
@@ -3465,21 +3638,21 @@ slider {
     height: var(--medium-element-size);
 }
 
-progressbar-groove,
-slider-groove {
+progressbar > track,
+slider > groove {
     height: 4px;
     border-radius: 2px;
     background-color: var(--window-border-color);
 }
 
-progressbar-fill,
-slider-fill {
+progressbar > chunk,
+slider > fill {
     height: 4px;
     border-radius: 2px;
     background-color: var(--highlight-color);
 }
 
-slider-handle {
+slider > handle {
     width: 16px;
     height: 16px;
     border-radius: 50%;
@@ -3489,6 +3662,11 @@ slider-handle {
     &:hovered,
     &:pressed {
         background-color: var(--highlight-color);
+    }
+
+    &:disabled {
+        background-color: var(--window-disabled-text-color);
+        border-color: var(--window-disabled-border-color);
     }
 }
 
@@ -3502,7 +3680,7 @@ busyindicator {
     spacing: var(--minimal-spacing);
 }
 
-tabbar-tab {
+tabbar > tabbutton {
     padding: var(--medium-spacing) var(--large-spacing);
     background-color: var(--view-background-color);
     color: var(--view-text-color);
@@ -3514,11 +3692,14 @@ tabbar-tab {
         background-color: var(--card-hover-color);
     }
 
-    &:selected,
     &:checked {
         background-color: var(--window-background-color);
         color: var(--window-text-color);
         border-bottom: var(--forge-notch-size) solid var(--highlight-color);
+    }
+
+    &:disabled {
+        color: var(--view-disabled-text-color);
     }
 }
 """,
@@ -3551,8 +3732,8 @@ searchfield {
     }
 }
 
-spinbox-up,
-spinbox-down {
+spinbox > indicator.up,
+spinbox > indicator.down {
     width: 22px;
     background-color: var(--button-active-background-color);
     border-left: 1px solid var(--view-border-color);
@@ -3584,14 +3765,25 @@ checkdelegate,
 radiodelegate,
 switchdelegate {
     padding: var(--medium-spacing);
+    border: 1px solid transparent;
     border-radius: var(--corner-radius);
-    color: var(--view-text-color);
+    color: var(--window-text-color);
     transition: background-color 140ms ease, border-color 140ms ease;
 
-    &:hovered,
-    &:highlighted {
-        background-color: var(--highlight-hover-color);
+    &:hovered {
+        background-color: var(--card-hover-color);
+        border: 1px solid var(--window-border-color);
+    }
+
+    &:highlighted,
+    &:pressed {
+        background-color: var(--highlight-color);
+        color: var(--highlight-text-color);
         border: 1px solid var(--highlight-color);
+    }
+
+    &:disabled {
+        color: var(--window-disabled-text-color);
     }
 }
 
@@ -3609,20 +3801,19 @@ tableview {
     border: 1px solid var(--view-border-color);
 }
 
-headerview,
-horizontalheaderview,
-verticalheaderview {
+headerviewdelegate {
     background-color: var(--header-background-color);
     color: var(--header-text-color);
     border-bottom: 1px solid var(--header-border-color);
     padding: var(--small-spacing) var(--medium-spacing);
 }
 
-tableview-row,
-treeview-row {
+tableviewdelegate,
+treeviewdelegate {
     background-color: var(--view-background-color);
+    color: var(--view-text-color);
 
-    &:alternate {
+    &.alternating-colors {
         background-color: var(--view-background-alternate-color);
     }
 
@@ -3630,14 +3821,19 @@ treeview-row {
         background-color: var(--card-hover-color);
     }
 
-    &:selected {
-        background-color: var(--highlight-hover-color);
-        border-left: var(--forge-notch-size) solid var(--highlight-color);
+    &.selected,
+    &:highlighted {
+        background-color: var(--highlight-color);
+        color: var(--highlight-text-color);
+    }
+
+    &:disabled {
+        color: var(--view-disabled-text-color);
     }
 }
 """,
-        "kirigami.css": header + """kirigami-card,
-kirigami-abstractcard {
+        "kirigami.css": header + """card,
+abstractcard {
     padding: var(--large-spacing);
     border-radius: var(--corner-radius);
     background-color: var(--card-background-color);
@@ -3645,30 +3841,45 @@ kirigami-abstractcard {
     border: 1px solid var(--card-border-color);
 }
 
-kirigami-inlinemessage {
+inlinemessage {
     padding: var(--medium-spacing) var(--large-spacing);
     border-radius: var(--corner-radius);
     background-color: var(--view-background-alternate-color);
     border: 1px solid var(--highlight-color);
     border-left: var(--forge-notch-size) solid var(--highlight-color);
     color: var(--view-text-color);
+
+    &.positive {
+        border-color: var(--positive-text);
+    }
+
+    &.warning {
+        border-color: var(--neutral-text);
+    }
+
+    &.error {
+        border-color: var(--negative-text);
+    }
 }
 
-kirigami-overlaydrawer,
-kirigami-contextdrawer,
-kirigami-globaldrawer {
-    background-color: var(--window-background-color);
-    color: var(--window-text-color);
+overlaydrawer,
+applicationheader {
+    background-color: var(--header-background-color);
+    color: var(--header-text-color);
     border-right: 1px solid var(--window-border-color);
 }
 
-kirigami-navigationtabbar {
+navigationtabbar {
     background-color: var(--header-background-color);
     border-top: 1px solid var(--header-border-color);
 }
 
-kirigami-placeholder {
-    color: var(--window-disabled-text-color);
+navigationtabbutton {
+    color: var(--header-text-color);
+
+    &:checked {
+        color: var(--highlight-color);
+    }
 }
 """,
         "calendar.css": header + """calendar,
@@ -3678,22 +3889,22 @@ dayofweekrow {
     color: var(--view-text-color);
 }
 
-calendar-day {
+monthgrid label {
     border-radius: var(--corner-radius);
     padding: var(--small-spacing);
-    color: var(--view-text-color);
+    color: var(--view-disabled-text-color);
+
+    &.current-month {
+        color: var(--view-text-color);
+    }
 
     &:hovered {
         background-color: var(--card-hover-color);
     }
 
-    &:selected {
-        background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
-    }
-
-    &:today {
+    &.today {
         border: 1px solid var(--highlight-color);
+        color: var(--view-text-color);
     }
 }
 """,
@@ -3741,6 +3952,8 @@ def obsidian_css(tokens: dict[str, object], variant: str = "standard") -> str:
     --text-faint: {text_faint};
     --text-accent: {accent};
     --text-accent-hover: {accent_pressed};
+    --text-on-accent: {colors["accentInk"]};
+    --text-on-accent-inverted: {text_pri};
     --interactive-accent: {accent};
     --interactive-accent-hover: {accent_pressed};
     --scrollbar-bg: transparent;
@@ -3924,7 +4137,7 @@ Title=Active Processes & CPU Affinity
 [page]
 actionsFace=
 icon=speedometer
-loadType=onemand
+loadType=ondemand
 margin=2
 version=1
 Title=NoxForge Kinetic Telemetry

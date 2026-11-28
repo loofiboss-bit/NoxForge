@@ -198,7 +198,8 @@ V15_ICON_SPECS = {
         '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
     ),
     "status/network-wireless-connected-25.svg": (
-        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15.5a5 5 0 0 1 6 0"/>'
+        '<path class="dimmed" d="M3 8.5a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0"/>'
+        '<path class="accent" d="M9 15.5a5 5 0 0 1 6 0"/>'
         '<circle class="accent-fill" cx="12" cy="19" r="1.5"/>'
     ),
     "status/network-wireless-connected-00.svg": (
@@ -303,7 +304,7 @@ def _wifi_arcs_markup(lit_arcs: int, cls: str, *, dot_cls: str | None = None) ->
     parts = []
     for idx, d in enumerate(arcs, start=1):
         if idx <= lit_arcs:
-            parts.append(f'<path d="{d}"/>')
+            parts.append(f'<path class="{cls}" d="{d}"/>')
         else:
             parts.append(f'<path class="dimmed" d="{d}"/>')
     dc = dot_cls or cls
@@ -852,14 +853,12 @@ def decoration_frame(
             + '</g>'
         )
     else:
-        sh_peak = "0.34" if active else "0.20"
         topleft = f'<g id="{name("topleft")}">' + anchor(x, y, pl + 6, pt + 6)
         if shadow:
             topleft += (
                 f'<rect x="{x}" y="{y}" width="{pl}" height="{pt}" fill="url(#{prefix}-sh-tl)"/>'
                 f'<rect x="{fx}" y="{y}" width="6" height="{pt}" fill="url(#{prefix}-sh-t)"/>'
                 f'<rect x="{x}" y="{fy}" width="{pl}" height="6" fill="url(#{prefix}-sh-l)"/>'
-                f'<path d="M{fx} {fy}H{fx + 4}L{fx} {fy + 4}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
             )
         topleft += (
             f'<path d="M{fx + 4} {fy}H{fx + 6}V{fy + 6}H{fx}V{fy + 4}Z" {attr}/>'
@@ -873,7 +872,6 @@ def decoration_frame(
                 f'<rect x="{fx + 40}" y="{y}" width="{pr}" height="{pt}" fill="url(#{prefix}-sh-tr)"/>'
                 f'<rect x="{fx + 34}" y="{y}" width="6" height="{pt}" fill="url(#{prefix}-sh-t)"/>'
                 f'<rect x="{fx + 40}" y="{fy}" width="{pr}" height="6" fill="url(#{prefix}-sh-r)"/>'
-                f'<path d="M{fx + 34} {fy}H{fx + 40}V{fy + 6}A6 6 0 0 0 {fx + 34} {fy}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
             )
         topright += (
             f'<path d="M{fx + 34} {fy}A6 6 0 0 1 {fx + 40} {fy + 6}H{fx + 34}Z" {attr}/>'
@@ -888,7 +886,6 @@ def decoration_frame(
                 f'<rect x="{x}" y="{fy + 40}" width="{pl}" height="{pb}" fill="url(#{prefix}-sh-bl)"/>'
                 f'<rect x="{x}" y="{fy + 34}" width="{pl}" height="6" fill="url(#{prefix}-sh-l)"/>'
                 f'<rect x="{fx}" y="{fy + 40}" width="6" height="{pb}" fill="url(#{prefix}-sh-b)"/>'
-                f'<path d="M{fx} {fy + 38}V{fy + 40}H{fx + 2}A2 2 0 0 1 {fx} {fy + 38}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
             )
         bottomleft += (
             f'<path d="M{fx} {fy + 34}H{fx + 6}V{fy + 40}H{fx + 2}A2 2 0 0 1 {fx} {fy + 38}Z" {attr}/>'
@@ -902,7 +899,6 @@ def decoration_frame(
                 f'<rect x="{fx + 40}" y="{fy + 40}" width="{pr}" height="{pb}" fill="url(#{prefix}-sh-br)"/>'
                 f'<rect x="{fx + 40}" y="{fy + 34}" width="{pr}" height="6" fill="url(#{prefix}-sh-r)"/>'
                 f'<rect x="{fx + 34}" y="{fy + 40}" width="6" height="{pb}" fill="url(#{prefix}-sh-b)"/>'
-                f'<path d="M{fx + 40} {fy + 38}V{fy + 40}H{fx + 38}A2 2 0 0 0 {fx + 40} {fy + 38}Z" fill="#000000" fill-opacity="{sh_peak}"/>'
             )
         bottomright += (
             f'<path d="M{fx + 34} {fy + 34}H{fx + 40}V{fy + 38}A2 2 0 0 1 {fx + 38} {fy + 40}H{fx + 34}Z" {attr}/>'
@@ -996,14 +992,14 @@ def button_svg(kind: str, colors: dict[str, str] = COLORS) -> str:
         x = index * 32
         foreground = (
             colors["negative"]
-            if kind == "close" and state in {"hover", "pressed"}
+            if kind == "close" and state in {"hover", "pressed", "hover-inactive", "pressed-inactive"}
             else colors["textSecondary"]
             if "inactive" in state or state.startswith("deactivated")
             else colors["textPrimary"]
         )
         border_stroke = (
             f'<rect x="0.5" y="0.5" width="23" height="23" rx="{TOKENS["geometry"]["compactRadius"]}" fill="none" stroke="{colors["negative"] if kind == "close" else colors["edgeHighlight"]}" stroke-width="1" stroke-opacity="0.6"/>'
-            if state in {"hover", "pressed"}
+            if state in {"hover", "pressed", "hover-inactive", "pressed-inactive"}
             else ""
         )
         groups.append(

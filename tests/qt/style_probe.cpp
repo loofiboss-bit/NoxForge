@@ -494,6 +494,81 @@ int main(int argc, char **argv)
         dockSepHoriz.state = QStyle::State_Enabled | QStyle::State_Horizontal;
         const QImage dockSepHorizImg = renderPrimitive(style, QStyle::PE_IndicatorDockWidgetResizeHandle, dockSepHoriz);
         if (!containsColor(dockSepHorizImg, QColor(QStringLiteral("#2F414B")))) return 71;
+
+        // Audit regressions: dark HighlightedText (NoxForgeDark.colors / KDE AccentColor) must never
+        // be painted onto dark #223429 selection fills.
+        auto relLum = [](const QColor &c) -> qreal {
+            auto lin = [](qreal v) -> qreal {
+                return v <= 0.04045 ? v / 12.92 : std::pow((v + 0.055) / 1.055, 2.4);
+            };
+            return 0.2126 * lin(c.redF()) + 0.7152 * lin(c.greenF()) + 0.0722 * lin(c.blueF());
+        };
+        auto wcagContrast = [&](const QColor &a, const QColor &b) -> qreal {
+            const qreal la = relLum(a), lb = relLum(b);
+            return (qMax(la, lb) + 0.05) / (qMin(la, lb) + 0.05);
+        };
+        {
+            QPalette kdePal = style->standardPalette();
+            kdePal.setColor(QPalette::Highlight, QColor(118, 184, 57));
+            kdePal.setColor(QPalette::HighlightedText, QColor(13, 20, 25));
+
+            QStyleOptionViewItem selItem;
+            selItem.rect = QRect(0, 0, 180, 32);
+            selItem.state = QStyle::State_Enabled | QStyle::State_Active | QStyle::State_Selected;
+            selItem.palette = kdePal;
+            const QImage selItemImg = renderPrimitive(style, QStyle::PE_PanelItemViewItem, selItem);
+            if (wcagContrast(selItemImg.pixelColor(90, 16), QColor(13, 20, 25)) < 7.0) return 72;
+
+            const QImage selRowImg = renderPrimitive(style, QStyle::PE_PanelItemViewRow, selItem);
+            if (wcagContrast(selRowImg.pixelColor(90, 16), QColor(13, 20, 25)) < 7.0) return 73;
+        }
+
+        // SpinBox & ComboBox width breathing room prevents clipping ("100 %")
+        {
+            QStyleOptionSpinBox spinSizeOpt;
+            const QSize spinSize = style->sizeFromContents(QStyle::CT_SpinBox, &spinSizeOpt, QSize(52, 22));
+            if (spinSize.width() < 52 + 40) return 74;
+
+            QStyleOptionComboBox comboSizeOpt;
+            const QSize comboSize = style->sizeFromContents(QStyle::CT_ComboBox, &comboSizeOpt, QSize(80, 22));
+            if (comboSize.width() < 80 + 44) return 75;
+        }
+
+        // Checkable button (State_On) must render distinct accent indicator (e.g. Display Orientation buttons)
+        {
+            QStyleOptionButton uncheckedBtn;
+            uncheckedBtn.rect = QRect(0, 0, 80, 36);
+            uncheckedBtn.state = QStyle::State_Enabled | QStyle::State_Raised | QStyle::State_Off;
+            QStyleOptionButton checkedBtn = uncheckedBtn;
+            checkedBtn.state = QStyle::State_Enabled | QStyle::State_On;
+            const QImage uncheckedImg = renderPrimitive(style, QStyle::PE_PanelButtonCommand, uncheckedBtn);
+            const QImage checkedImg = renderPrimitive(style, QStyle::PE_PanelButtonCommand, checkedBtn);
+            if (uncheckedImg == checkedImg || !containsColor(checkedImg, QColor(QStringLiteral("#A3FF47")))) return 76;
+        }
+
+        // Frameless inner QLineEdit (lineWidth == 0, inside QSpinBox/QComboBox) must not draw a nested border
+        {
+            QStyleOptionFrame innerEdit;
+            innerEdit.rect = QRect(0, 0, 100, 28);
+            innerEdit.state = QStyle::State_Enabled;
+            innerEdit.lineWidth = 0;
+            const QImage innerImg = renderPrimitive(style, QStyle::PE_PanelLineEdit, innerEdit);
+            if (innerImg.pixelColor(50, 0) != innerImg.pixelColor(50, 14)) return 77;
+        }
+
+        // QSettings::IniFormat comma-separated AccentColor (QStringList) parsing regression
+        {
+            QSettings settings(kdeglobals, QSettings::IniFormat);
+            settings.setValue(QStringLiteral("General/AccentColor"), QStringLiteral("34,211,238"));
+            settings.sync();
+            QStyle *freshStyle = QStyleFactory::create(QStringLiteral("NoxForge"));
+            if (!freshStyle) return 78;
+            QPalette freshPal;
+            freshStyle->polish(freshPal);
+            const QString resolvedAccent = freshPal.color(QPalette::Accent).name().toLower();
+            delete freshStyle;
+            if (resolvedAccent != QStringLiteral("#22d3ee")) return 78;
+        }
     }
 
     QTextStream(stdout) << "QStyleFactory key: NoxForge\n"

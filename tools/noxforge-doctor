@@ -345,7 +345,7 @@ def metadata_version(path: Path, expected: str | None = None) -> str | None:
             return None
         return value if isinstance(value, str) and SEMVER.fullmatch(value) else None
     if path.name == "metadata.desktop":
-        parser = configparser.ConfigParser(interpolation=None)
+        parser = configparser.ConfigParser(interpolation=None, strict=False)
         try:
             parser.read(path, encoding="utf-8")
         except (configparser.Error, OSError):
@@ -427,10 +427,30 @@ def package_version(root: Path) -> str | None:
 
 def qt_plugin_paths(root: Path) -> list[Path]:
     candidates: list[Path] = []
-    for libdir in ("lib64", "lib"):
-        candidate = root / f"usr/{libdir}/qt6/plugins/styles/libnoxforge6.so"
-        if scoped_file(candidate, root):
+    seen: set[Path] = set()
+
+    def _add(candidate: Path) -> None:
+        if not scoped_file(candidate, root):
+            return
+        try:
+            resolved = candidate.resolve()
+        except OSError:
+            resolved = candidate
+        if resolved not in seen:
+            seen.add(resolved)
             candidates.append(candidate)
+
+    if root == Path("/"):
+        for env_entry in os.environ.get("QT_PLUGIN_PATH", "").split(":"):
+            if env_entry.strip():
+                _add(Path(env_entry.strip()).expanduser() / "styles/libnoxforge6.so")
+        for libdir in ("lib64", "lib"):
+            _add(Path.home() / f".local/{libdir}/qt6/plugins/styles/libnoxforge6.so")
+        for libdir in ("lib64", "lib"):
+            _add(Path(f"/usr/local/{libdir}/qt6/plugins/styles/libnoxforge6.so"))
+
+    for libdir in ("lib64", "lib"):
+        _add(root / f"usr/{libdir}/qt6/plugins/styles/libnoxforge6.so")
     return candidates
 
 
@@ -453,7 +473,7 @@ def read_active_components() -> dict[str, str]:
             if result is not None and result.returncode == 0 and result.stdout.strip():
                 active[label] = result.stdout.strip()
                 continue
-        parser = configparser.ConfigParser(interpolation=None)
+        parser = configparser.ConfigParser(interpolation=None, strict=False)
         try:
             parser.read(config_root / filename, encoding="utf-8")
         except (configparser.Error, OSError):
@@ -549,7 +569,7 @@ def detect_wallpaper() -> str:
     wallpaper_ids = []
     for image in images:
         match = re.search(
-            r"/wallpapers/(NoxForge(?:-Quiet|-Ultrawide|-Obsidian(?:-Ultrawide)?)?)/",
+            r"/wallpapers/(NoxForge(?:-Active|-Quiet|-Ultrawide|-Obsidian(?:-Ultrawide)?)?)(?:/|$)",
             image,
         )
         wallpaper_ids.append(match.group(1) if match else None)
@@ -886,7 +906,7 @@ def reduced_motion_diagnostics(roots: list[Path], root: Path = Path("/")) -> dic
 
     if kdeglobals_path and kdeglobals_path.is_file():
         try:
-            parser = configparser.ConfigParser(interpolation=None)
+            parser = configparser.ConfigParser(interpolation=None, strict=False)
             parser.read(kdeglobals_path, encoding="utf-8")
             if parser.has_option("KDE", "AnimationDurationFactor"):
                 animation_factor = float(parser.get("KDE", "AnimationDurationFactor"))
@@ -898,7 +918,7 @@ def reduced_motion_diagnostics(roots: list[Path], root: Path = Path("/")) -> dic
         theme_conf = r / "sddm/themes/NoxForge/theme.conf"
         if scoped_file(theme_conf, root):
             try:
-                parser = configparser.ConfigParser(interpolation=None)
+                parser = configparser.ConfigParser(interpolation=None, strict=False)
                 parser.read(theme_conf, encoding="utf-8")
                 if parser.has_option("General", "reducedMotion"):
                     sddm_policy = parser.get("General", "reducedMotion")
@@ -934,7 +954,7 @@ def custom_accent_contrast_diagnostics(root: Path = Path("/")) -> dict[str, Any]
     hex_color: str | None = None
     if kdeglobals_path and kdeglobals_path.is_file():
         try:
-            parser = configparser.ConfigParser(interpolation=None)
+            parser = configparser.ConfigParser(interpolation=None, strict=False)
             parser.read(kdeglobals_path, encoding="utf-8")
             raw_accent = None
             if parser.has_option("General", "AccentColor"):
@@ -1234,8 +1254,12 @@ def is_opacity_customized_copy(matches: list[Path]) -> bool:
     if set(user_files.keys()) != set(sys_files.keys()):
         return False
 
-    def norm_svg(text: str) -> str:
-        return re.sub(r'\b(?:fill|stroke)-opacity="[^"]*"', '', text)
+    def norm_svg(text: str, is_aurorae_deco: bool = False) -> str:
+        text = re.sub(r'\b(?:fill|stroke)-opacity="[^"]*"', '', text)
+        text = re.sub(r'(?:fill|stroke)-opacity:\s*[0-9.]+;?', '', text)
+        if is_aurorae_deco:
+            text = re.sub(r'#[0-9A-Fa-f]{6}\b', '#ACCENT', text)
+        return text
 
     for rel_path in user_files:
         p_user = user_files[rel_path]
@@ -1247,14 +1271,21 @@ def is_opacity_customized_copy(matches: list[Path]) -> bool:
             return False
 
         if bytes_user != bytes_sys:
-            if rel_path.suffix.lower() != ".svg":
+            suffix = rel_path.suffix.lower()
+            if suffix not in (".svg", ".svgz"):
                 return False
             try:
-                text_user = p_user.read_text(encoding="utf-8", errors="ignore")
-                text_sys = p_sys.read_text(encoding="utf-8", errors="ignore")
-            except OSError:
+                if suffix == ".svgz":
+                    import gzip
+                    text_user = gzip.decompress(bytes_user).decode("utf-8", errors="ignore")
+                    text_sys = gzip.decompress(bytes_sys).decode("utf-8", errors="ignore")
+                else:
+                    text_user = bytes_user.decode("utf-8", errors="ignore")
+                    text_sys = bytes_sys.decode("utf-8", errors="ignore")
+            except (OSError, EOFError):
                 return False
-            if norm_svg(text_user) != norm_svg(text_sys):
+            is_deco = rel_path.stem.lower() == "decoration"
+            if norm_svg(text_user, is_deco) != norm_svg(text_sys, is_deco):
                 return False
 
     return True
@@ -1670,17 +1701,36 @@ def build_report(root: Path) -> dict[str, Any]:
 
     plugins = qt_plugin_paths(root)
     qt_ver = expected if (plugins and expected) else None
+    qt_duplicate = "not-applicable"
+    if len(plugins) > 1:
+        plugin_digests = [content_digest(path, single_file=True) for path in plugins]
+        if None in plugin_digests:
+            qt_duplicate = "unknown"
+        elif len(set(plugin_digests)) == 1:
+            qt_duplicate = "identical"
+        else:
+            qt_duplicate = "conflict"
+
+    def _qt_provenance(path: Path) -> str:
+        if root != Path("/"):
+            return "staged-system"
+        if path.is_relative_to(Path.home()):
+            return "user"
+        if path.is_relative_to(Path("/usr/local")):
+            return "local-system"
+        return "system"
+
     components["qt-style"] = {
         "paths": [display_path(path, root) for path in plugins],
-        "effectivePath": None,
-        "shadowedPaths": [],
-        "duplicateStatus": "not-applicable",
+        "effectivePath": display_path(plugins[0], root) if len(plugins) > 1 else None,
+        "shadowedPaths": [display_path(path, root) for path in plugins[1:]] if len(plugins) > 1 else [],
+        "duplicateStatus": qt_duplicate,
         "metadataStatus": "known" if (plugins and qt_ver) else "unknown",
         "copyVersions": [qt_ver for _ in plugins],
         "found": bool(plugins),
         "copies": len(plugins),
         "versions": [qt_ver] if (plugins and qt_ver) else [],
-        "provenance": ["system" if root == Path("/") else "staged-system"] if plugins else [],
+        "provenance": sorted({_qt_provenance(path) for path in plugins}) if plugins else [],
     }
 
     icons = icon_diagnostics(roots, root)
@@ -1883,7 +1933,10 @@ def print_human(report: dict[str, Any]) -> None:
         suffix = f" ({', '.join(state['versions'])})" if state["versions"] else ""
         print(f"  {name}: {label}{suffix}")
         for index, path in enumerate(state["paths"]):
-            role = "effective" if index == 0 and name != "qt-style" else "discovered" if name == "qt-style" else "shadowed"
+            if name == "qt-style" and len(state["paths"]) == 1:
+                role = "discovered"
+            else:
+                role = "effective" if index == 0 else "shadowed"
             print(f"    {role}: {path}")
     for issue in report["issues"]:
         print(f"  [{issue['severity']}: {issue['code']}] {issue['message']}")
@@ -2049,7 +2102,7 @@ def apply_sync(target: str) -> None:
             with target_file.open("w", encoding="utf-8") as handle:
                 parser.write(handle)
 
-    qdbus = shutil.which("qdbus6") or shutil.which("qdbus")
+    qdbus = shutil.which("qdbus-qt6") or shutil.which("qdbus6") or shutil.which("qdbus")
     if qdbus:
         try:
             subprocess.run([qdbus, "org.kde.KWin", "/KWin", "reconfigure"], check=False, timeout=2)

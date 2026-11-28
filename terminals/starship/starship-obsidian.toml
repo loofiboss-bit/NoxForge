@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# @noxforge-version: 21.0.4
+# @noxforge-version: 21.0.5
 # NoxForge Obsidian OLED Starship Prompt Configuration
 
 palette = "noxforge_obsidian"

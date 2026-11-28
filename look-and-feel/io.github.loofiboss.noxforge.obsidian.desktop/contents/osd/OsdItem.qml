@@ -20,6 +20,10 @@ RowLayout {
     property bool mute: false
     property bool reducedMotion: motion.reducedMotion
 
+    readonly property bool overdrive: maxValue > 0 && value > maxValue
+    readonly property int displayPercent: maxValue > 0
+        ? Math.max(0, Math.round((value / maxValue) * 100))
+        : 0
     readonly property real normalizedProgress: maxValue > 0
         ? Math.max(0.0, Math.min(1.0, value / maxValue))
         : 0.0
@@ -51,8 +55,8 @@ RowLayout {
 
             Text {
                 visible: root.showingProgress
-                text: root.mute ? qsTr("Muted") : Math.round(root.normalizedProgress * 100) + "%"
-                color: root.mute ? tokens.negative : tokens.textPrimary
+                text: root.mute ? qsTr("Muted") : root.displayPercent + "%"
+                color: root.mute ? tokens.negative : (root.overdrive ? tokens.neutral : tokens.textPrimary)
                 font.pixelSize: tokens.metadataSize
                 font.weight: tokens.headingWeight
                 font.features: ({ "tnum": 1 })
@@ -72,10 +76,12 @@ RowLayout {
             border.width: tokens.borderWidth
 
             Rectangle {
-                height: parent.height
-                width: root.mute ? 0 : Math.round(parent.width * root.normalizedProgress)
-                radius: 3
-                color: root.normalizedProgress > 1.0 ? tokens.neutral : tokens.accent
+                x: parent.border.width
+                y: parent.border.width
+                height: Math.max(1, parent.height - parent.border.width * 2)
+                width: root.mute ? 0 : Math.round(Math.max(0, parent.width - parent.border.width * 2) * root.normalizedProgress)
+                radius: Math.max(1, parent.radius - parent.border.width)
+                color: root.overdrive ? tokens.neutral : tokens.accent
                 Behavior on width {
                     enabled: !root.reducedMotion
                     NumberAnimation {

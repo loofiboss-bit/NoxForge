@@ -24,17 +24,17 @@
     {
       "path": "widgets/background.svg",
       "recipe": "overlay",
-      "sha256": "b124b76c3fb334294c138aa99688ae5becae57f1535f1683cf01fb6f4b70ca7b"
+      "sha256": "ba6fea537062dbf62566f74905cb9d373ff3b8c823e8662f88e61b7290a9cba4"
     },
     {
       "path": "widgets/bar_meter_horizontal.svg",
       "recipe": "progress",
-      "sha256": "a3d0033b79a6c9234befd8ab9d42951bf4a57d99f4c16d6e5aca609cf250b9d7"
+      "sha256": "e07f7432033005a9a0ba769525e0e632476301d820ec59bdbac672c2d3fc32f0"
     },
     {
       "path": "widgets/bar_meter_vertical.svg",
       "recipe": "progress",
-      "sha256": "a3d0033b79a6c9234befd8ab9d42951bf4a57d99f4c16d6e5aca609cf250b9d7"
+      "sha256": "e07f7432033005a9a0ba769525e0e632476301d820ec59bdbac672c2d3fc32f0"
     },
     {
       "path": "widgets/branding.svg",
@@ -49,7 +49,7 @@
     {
       "path": "widgets/button.svg",
       "recipe": "control",
-      "sha256": "98d1e5d342853853648ea5fc4d419f4a8c71d5cc5b9d7672b09681e847f21c24"
+      "sha256": "6cee723406b6c20e731f998f1b2b965d63307da63e97a82a1d805456c822a5d6"
     },
     {
       "path": "widgets/calendar.svg",
@@ -59,7 +59,7 @@
     {
       "path": "widgets/checkmarks.svg",
       "recipe": "glyph",
-      "sha256": "1eddea74651589d9543a8bdd28d960bf5c51e724055bcdd9c205c2cbbd253621"
+      "sha256": "88dcd34d04d8e412324d4b366292a3829995d7d1c3d9541d6ebd2dc18d57e60b"
     },
     {
       "path": "widgets/clock.svg",
@@ -79,17 +79,17 @@
     {
       "path": "widgets/dragger.svg",
       "recipe": "glyph",
-      "sha256": "4559dbca95e87fe8f4d5c6339b41abddb519d3ee4db8822dba7a0da08231a552"
+      "sha256": "0e9dd0a7a848356781298973e94ed23b0d8417ffc5f54f54d59531796343ee5b"
     },
     {
       "path": "widgets/frame.svg",
       "recipe": "shell",
-      "sha256": "6a962d61d48b0c57f2c538df8631c363a731769d8f552b0b16529051b4ff39f3"
+      "sha256": "87feec638c538f36329e4467112331ba0a19071c9eba4dae60fed5bc834000f4"
     },
     {
       "path": "widgets/glowbar.svg",
       "recipe": "focus",
-      "sha256": "35b421a902039460ace43238202dbc1df23cb96eddbb0c392e3e8fefcf6410a8"
+      "sha256": "5c338541a08cba53c0a6cdc685cc0e18ad0b03d98687cda9f97714060886da3e"
     },
     {
       "path": "widgets/line.svg",
@@ -99,32 +99,32 @@
     {
       "path": "widgets/lineedit.svg",
       "recipe": "sunken",
-      "sha256": "67c378bb4310f71b6bd5e97ccd39b54dd20b375181498e0d535a78dc57c0235d"
+      "sha256": "de94040433f68038aefbe0e5887b1f81ca9bd10038b696d63522c512a15f7a62"
     },
     {
       "path": "widgets/listitem.svg",
       "recipe": "viewQuiet",
-      "sha256": "acf4bf43b491da094545dfd8d6bf8fcfb2a92db0e06f8d646243045674fa8da8"
+      "sha256": "f008466435c6531c22b924f313cc71702d3b63a4e3841c51b42de6e0ba951725"
     },
     {
       "path": "widgets/margins-highlight.svg",
       "recipe": "focus",
-      "sha256": "1d0d14182b5a97d9f09d5d3fd6380c5bc7e3e149126591dcfee384944d9f705c"
+      "sha256": "1c4ce6cb9f374b68b81a81c6c73ea6a186a96d017363b532e643a775bf59d440"
     },
     {
       "path": "widgets/media-delegate.svg",
       "recipe": "controlRaised",
-      "sha256": "095fef721f058001856bdf17ce6ddae07240e8efe2ca321bbbbed7835aa1d14a"
+      "sha256": "10a4d91e7ff0a3378374a3a550d4da73f3295315e96e3410ff3dcf65368a5a7a"
     },
     {
       "path": "widgets/menubaritem.svg",
       "recipe": "viewQuiet",
-      "sha256": "b29e8a6422951786ccd74362d0ecdcd3d6f15b21bdb843a4f1b9d946ab8c9b5f"
+      "sha256": "a4387c7634a75e04460087a2ef5a9e9802770b3818a4a400644d20090e7504e3"
     },
     {
       "path": "widgets/monitor.svg",
       "recipe": "controlRaised",
-      "sha256": "9d73f664bb1036ed9bc742e1bc3a91daf01f6d2b5642f2cee1fb52950042ab08"
+      "sha256": "d4ba3c87eaa0d4319ae2013d5d8da38b923c32c13737e558e8dec1aa42140aff"
     },
     {
       "path": "widgets/notes.svg",
@@ -134,62 +134,62 @@
     {
       "path": "widgets/pager.svg",
       "recipe": "controlQuiet",
-      "sha256": "0e8dcdfa9123282995041784c151fa081380b8f377ee3c5c0e35096af28f6bef"
+      "sha256": "6eb376b26cb64ef4315d0dbfae9ae9eeb74c11b510c8b183e7b83d70523c7cad"
     },
     {
       "path": "widgets/panel-background.svg",
       "recipe": "panel",
-      "sha256": "a348e88d29ef1cd3f8adc3d9a2001a8ef2ddbc53b21df248b9be6e10a3432ef2"
+      "sha256": "d76708d143b0cc04a79bcfee8846a21d7a288c0d622415550eb0017e01fc4436"
     },
     {
       "path": "widgets/picker.svg",
       "recipe": "controlRaised",
-      "sha256": "e000f9bbd34c266678780edee800b6cc5ad3a473c429fc7187355a681b37a775"
+      "sha256": "7737583da07fbf8392355a73747e3595e8c9d9d4acf41f11da4b82f04204f1c1"
     },
     {
       "path": "widgets/plasmoidheading.svg",
       "recipe": "overlay",
-      "sha256": "704a5423728cbd57c2719bc7bfdac6716732ccd574fcc15d9f19e73bf6b7d1ba"
+      "sha256": "2eeb180150cb100cb2d87db72431bacf1001020054a1b5f30d7ad47ce09215ab"
     },
     {
       "path": "widgets/plot-background.svg",
       "recipe": "canvas",
-      "sha256": "ec589fa0c6ae7aa8691f9d5bcf7a416ff26079d1d978dc82379def54f012365b"
+      "sha256": "07603f2336c95dcebf355ae4cdadef50a678978c7bc62ca44d4b2133c26f77d0"
     },
     {
       "path": "widgets/radiobutton.svg",
       "recipe": "glyph",
-      "sha256": "83173a2824c3265b0b84f59d59308244b2816b6fa84e65e6061c1b8955ab21f4"
+      "sha256": "672226c1e3325b9163c124ff66bb2fdf4d2d4caafaada0f704992798b6bfc127"
     },
     {
       "path": "widgets/scrollbar.svg",
       "recipe": "disabled",
-      "sha256": "bb063a62105cdaa25dc802a246451ccf77c214e30f771b61c33171f8a18e70c6"
+      "sha256": "9375b3db08a91b78c21b84c0f726afb5c5a31cb251ac24422d5076b4984933fa"
     },
     {
       "path": "widgets/scrollwidget.svg",
       "recipe": "scrollSurface",
-      "sha256": "253f2e8d26fc79a7bdfec2258061ff4b6c6bc8492d3abb877276e307b287b579"
+      "sha256": "901898d1dd21cc86cd6e3d3daf0a35ad2e3bdd6ae6be4cf285cebc3134059367"
     },
     {
       "path": "widgets/slider.svg",
       "recipe": "disabled",
-      "sha256": "f55a0e2ac9f5bb41a856ae5a1ab2a9a22c36737b3e2f0748524e930f97ecc26b"
+      "sha256": "8a2e8fe279eac56dcc8a909542463ab1812ee75b58335aa42bfecfe49e7a9920"
     },
     {
       "path": "widgets/switch.svg",
       "recipe": "disabled",
-      "sha256": "60147abeb7cb41237a9cc8e94a87b2b7c09534f5eb832039f608f591a9cf67b5"
+      "sha256": "4f08a9971d4b6788719da2c6a6bc92f631dc7794d27f7e182211922efddc620c"
     },
     {
       "path": "widgets/tabbar.svg",
       "recipe": "focus",
-      "sha256": "67b7fa83a59fc5229fc3a3206768fa22312273a1012c1f6e3137336df05cc9fc"
+      "sha256": "04329aa260aa11c9ebf0566b42ea91acac44c58c52a164a09cae72210cbf5ec6"
     },
     {
       "path": "widgets/tasks.svg",
       "recipe": "controlQuiet",
-      "sha256": "22427012fa9905c33e6d051463f45d285ff1d025c252805dd2bbe240f6e5aba8"
+      "sha256": "e4baa556d4dd65f6b51dcf55099692a8bbd7f1c8b7f1c353dd657737a18e20fb"
     },
     {
       "path": "widgets/timer.svg",
@@ -199,22 +199,22 @@
     {
       "path": "widgets/toolbar.svg",
       "recipe": "controlQuiet",
-      "sha256": "6ca157ea396f24fd91afdc3f06df56c597e8ff739b04aa4955697b10df0ef5d7"
+      "sha256": "30aad512a7368103ebd669043b5f4cedbf4f75544e7868de878a6863957946af"
     },
     {
       "path": "widgets/tooltip.svg",
       "recipe": "tooltip",
-      "sha256": "a5692fb529a8a3250846b1b5e830d78767cbb9ef2e5786143473a838979eede1"
+      "sha256": "837a6013ee2840a20fe41e2dddf4afc807d1a8a033d9d26199d25fd9287106f4"
     },
     {
       "path": "widgets/translucentbackground.svg",
       "recipe": "translucent",
-      "sha256": "64affe1b29c936497cd7270cb826a324ce013901284c4ef40af45cc359cb4ebe"
+      "sha256": "db6b228db9105cae5068918afb5233f95e926220da3f214e93005bf968549bbe"
     },
     {
       "path": "widgets/viewitem.svg",
       "recipe": "viewQuiet",
-      "sha256": "76315336ff145d0747c14cd82dd3ab180eb60508a5127d26580c59449481ec03"
+      "sha256": "8058f90e3d097d673e8d799cd415b98787d92ee8cf8a0565f882befef02af2c4"
     },
     {
       "path": "weather/wind-arrows.svg",
@@ -224,67 +224,67 @@
     {
       "path": "dialogs/background.svg",
       "recipe": "overlay",
-      "sha256": "b124b76c3fb334294c138aa99688ae5becae57f1535f1683cf01fb6f4b70ca7b"
+      "sha256": "ba6fea537062dbf62566f74905cb9d373ff3b8c823e8662f88e61b7290a9cba4"
     },
     {
       "path": "opaque/dialogs/background.svg",
       "recipe": "overlay",
-      "sha256": "d3a38d4638670c49fbd83e01d27b476419c84e3785bd630df2d5e6a3c640c9b8"
+      "sha256": "eadec09aefcd46337dc44a753cfa2a810ef991dd258eed208b7ae31d3494c0f7"
     },
     {
       "path": "opaque/widgets/background.svg",
       "recipe": "overlay",
-      "sha256": "cad573e44d865f369c512e79f1d777bbbd6b154c360d1c5e7740ae27af297af2"
+      "sha256": "837a6013ee2840a20fe41e2dddf4afc807d1a8a033d9d26199d25fd9287106f4"
     },
     {
       "path": "opaque/widgets/panel-background.svg",
       "recipe": "panel",
-      "sha256": "d263fa3061f1c1ef198c8b8aa4f5dd62584f996be23c7a26d91616d649c3cbe5"
+      "sha256": "a6218a5b426fcbb2ff4eaee77f8d2e4f5c42b19c0721f6941cf3e9a7d5e5a317"
     },
     {
       "path": "opaque/widgets/tooltip.svg",
       "recipe": "tooltip",
-      "sha256": "cad573e44d865f369c512e79f1d777bbbd6b154c360d1c5e7740ae27af297af2"
+      "sha256": "837a6013ee2840a20fe41e2dddf4afc807d1a8a033d9d26199d25fd9287106f4"
     },
     {
       "path": "solid/dialogs/background.svg",
       "recipe": "overlay",
-      "sha256": "d3a38d4638670c49fbd83e01d27b476419c84e3785bd630df2d5e6a3c640c9b8"
+      "sha256": "eadec09aefcd46337dc44a753cfa2a810ef991dd258eed208b7ae31d3494c0f7"
     },
     {
       "path": "solid/widgets/background.svg",
       "recipe": "overlay",
-      "sha256": "cad573e44d865f369c512e79f1d777bbbd6b154c360d1c5e7740ae27af297af2"
+      "sha256": "837a6013ee2840a20fe41e2dddf4afc807d1a8a033d9d26199d25fd9287106f4"
     },
     {
       "path": "solid/widgets/panel-background.svg",
       "recipe": "panel",
-      "sha256": "d263fa3061f1c1ef198c8b8aa4f5dd62584f996be23c7a26d91616d649c3cbe5"
+      "sha256": "a6218a5b426fcbb2ff4eaee77f8d2e4f5c42b19c0721f6941cf3e9a7d5e5a317"
     },
     {
       "path": "solid/widgets/tooltip.svg",
       "recipe": "tooltip",
-      "sha256": "cad573e44d865f369c512e79f1d777bbbd6b154c360d1c5e7740ae27af297af2"
+      "sha256": "837a6013ee2840a20fe41e2dddf4afc807d1a8a033d9d26199d25fd9287106f4"
     },
     {
       "path": "translucent/dialogs/background.svg",
       "recipe": "overlay",
-      "sha256": "de3cca232ecb9a8db725cd0a0403572aa9e10aec6e20d6f6897eabd6013ab47f"
+      "sha256": "a43f76aa44ff212828d27315a3a201169fab321a89790d72f7d2121c4d7881c8"
     },
     {
       "path": "translucent/widgets/background.svg",
       "recipe": "overlay",
-      "sha256": "f72c730ba06dc6b76054fd0331deb0ca225ab3fc1d00bb6457dc0b9f99d9a951"
+      "sha256": "76bdc1b54207d9db244284d9111b734076315c9269aff97997e196a2a43e3088"
     },
     {
       "path": "translucent/widgets/panel-background.svg",
       "recipe": "panel",
-      "sha256": "a7c39b8eb0c67a0fd273077b5ab98194a9d008f255d3636429c6af29faaf2bb2"
+      "sha256": "77a4e5e4ea1eee74b10253bca4474e1938e25fa01846031e61835f0fd0d6a7f1"
     },
     {
       "path": "translucent/widgets/tooltip.svg",
       "recipe": "tooltip",
-      "sha256": "81e4368265a994c159aafb1f195e4c460013fa77eb140403fb53ed7b27ea9708"
+      "sha256": "73bbcb8f361907d88fefa4d714d971b87c605582dafc0c37907dc321e3829201"
     }
   ],
   "atlases": [
@@ -292,42 +292,42 @@
       "file": "plasma-style-atlas-100pct.png",
       "height": 996,
       "scale": 1.0,
-      "sha256": "47639cad5ca79552582152edcde988dac1a282d9d0e29a9f6ae8b7127bc9c67d",
+      "sha256": "579efcc4387876478e802fce7b100db7d3082cf1784d931f07123002022b32cf",
       "width": 1316
     },
     {
       "file": "plasma-style-atlas-125pct.png",
       "height": 1236,
       "scale": 1.25,
-      "sha256": "aed7a788a62b9f88b0bd4359325573ce41065247c6b6f14bc03e04006e7a5f53",
+      "sha256": "e98366f7b5c7c97930b364c69e98d17e1929a745bcf3c5b531818a71a3e83517",
       "width": 1636
     },
     {
       "file": "plasma-style-atlas-140pct.png",
       "height": 1380,
       "scale": 1.4,
-      "sha256": "c7d3bff77a8fe508a707eb043c1409561fca1d9263bbd1b5a7514ba2b2aedb49",
+      "sha256": "a76191d495f7d18f04db815cfff06d87ba0c982fabfcbe8543724aedcad5b4f1",
       "width": 1828
     },
     {
       "file": "plasma-style-atlas-150pct.png",
       "height": 1476,
       "scale": 1.5,
-      "sha256": "46868074dbccc532104d9f5aefc96df717b3d3b918537b8bf63d7bec761bb6fa",
+      "sha256": "abda3fa7437a8c28b26227e51648ca82d939177da425878d4efa4403de71f6b5",
       "width": 1956
     },
     {
       "file": "plasma-style-atlas-175pct.png",
       "height": 1716,
       "scale": 1.75,
-      "sha256": "ff87bfadaed403399aaed8cad3084fb69beff4f6a4230b4868f9acb9bf40ef91",
+      "sha256": "f3574be0f98bcdacd0b69f9f7c7f0ed58c0db0838ccd48a71a6bde5d14a94457",
       "width": 2276
     },
     {
       "file": "plasma-style-atlas-200pct.png",
       "height": 1956,
       "scale": 2.0,
-      "sha256": "5aff457560851161f286dbf92e10e351437688cb9d83138e75b12e228a0d23f3",
+      "sha256": "466dade99af80ed21ec27daef39615001bf0a9f6258916d539f4bc28df3453a8",
       "width": 2596
     }
   ],
@@ -344,7 +344,7 @@
       "file": "material-atlas-blur-on-100pct.png",
       "height": 128,
       "scale": 1.0,
-      "sha256": "a758c1ed3ec35880cfcf30c3e848dd0c0461afd9134c74d7f1ab3b9e60e590ca",
+      "sha256": "7306834ae5ae60e66592bbe7d8044aea7e9dd1a507a4ff60435404cb14d8eec5",
       "width": 1316
     },
     {
@@ -353,7 +353,7 @@
       "file": "material-atlas-blur-off-100pct.png",
       "height": 128,
       "scale": 1.0,
-      "sha256": "51bde7d94cca445314e665ed66d373a4a4c191cc793811d14ff27e9208622e74",
+      "sha256": "108494e39c9e20df00f09204d693b04098b1bda0485dd9b7fb25027c5aa1da6d",
       "width": 1316
     },
     {
@@ -362,7 +362,7 @@
       "file": "material-atlas-blur-on-125pct.png",
       "height": 158,
       "scale": 1.25,
-      "sha256": "a124ddfd6805b3233848643e371867fc384c980cd5f755da92c910a52fddb7ca",
+      "sha256": "3407deaab653455429ac87cd0e1d0326bc1d88c49c998fac11485fae78f0f2df",
       "width": 1636
     },
     {
@@ -371,7 +371,7 @@
       "file": "material-atlas-blur-off-125pct.png",
       "height": 158,
       "scale": 1.25,
-      "sha256": "0e93f228cedefe6e3515c4d5daa2f363f11aadadfbd4cb10a0ecb4c5dc0677d8",
+      "sha256": "697e085249d981b55066baf7ad4a2f666e56871a3c5916e742e92198e5fcecf1",
       "width": 1636
     },
     {
@@ -380,7 +380,7 @@
       "file": "material-atlas-blur-on-140pct.png",
       "height": 176,
       "scale": 1.4,
-      "sha256": "d5b552e972a6b0726ef1e12858b58425ffc9a243528e3a34623e957e16a1ad59",
+      "sha256": "7129cb7ba01bcce11839874557c9497dc232f3fd401015fe2115488319347d37",
       "width": 1828
     },
     {
@@ -389,7 +389,7 @@
       "file": "material-atlas-blur-off-140pct.png",
       "height": 176,
       "scale": 1.4,
-      "sha256": "7eac74dafb7d6a40c83fbb62f5e4454e911c5a2c4baaea5b33ff024641264913",
+      "sha256": "f41c0989123e29139b7309b93597b7a8639d17aef85d262e63b836ccf776cb6a",
       "width": 1828
     },
     {
@@ -398,7 +398,7 @@
       "file": "material-atlas-blur-on-150pct.png",
       "height": 188,
       "scale": 1.5,
-      "sha256": "e6a25a50f55ca53c1c47304c8ef127010be7b7cb45605ee53be1a96cf8c88857",
+      "sha256": "f43980990b23f07252e2af9d42c2fdc960e0fd5256ef9af8abb34d26a314d1e7",
       "width": 1956
     },
     {
@@ -407,7 +407,7 @@
       "file": "material-atlas-blur-off-150pct.png",
       "height": 188,
       "scale": 1.5,
-      "sha256": "d86c8b0e64d84a7010e44e78a49c5fa88cedcc19d91020617f4134eed8565df8",
+      "sha256": "bd6efb9f8b74d905c7da74bbf54a56644443bae05142b6d665f0f0f6cc530e74",
       "width": 1956
     },
     {
@@ -416,7 +416,7 @@
       "file": "material-atlas-blur-on-175pct.png",
       "height": 218,
       "scale": 1.75,
-      "sha256": "fb0825bfdc85014c7539819446d94523b80c3341958a3a875a8017b06904d0a5",
+      "sha256": "448c88662178fd7591a8824aa51b57ab05dd62e6ee74b01207eca997a6a3a253",
       "width": 2276
     },
     {
@@ -425,7 +425,7 @@
       "file": "material-atlas-blur-off-175pct.png",
       "height": 218,
       "scale": 1.75,
-      "sha256": "73c1273084da6a96df2cf0662a8759df5de21e84495d21592966810b48a359c1",
+      "sha256": "c4cbf2c2fa2e471ea586fd9d234a96cb32d938f5ed693f15c10bb1d088040cd7",
       "width": 2276
     },
     {
@@ -434,7 +434,7 @@
       "file": "material-atlas-blur-on-200pct.png",
       "height": 248,
       "scale": 2.0,
-      "sha256": "9bcf61483ff7c4b10cb5148f9907d27a4c14f74b1130192d0feb3976e3349636",
+      "sha256": "ebd782373bb4decc929960c0faaf10e8a8745dcad4bf2a640f65305118fd618b",
       "width": 2596
     },
     {
@@ -443,7 +443,7 @@
       "file": "material-atlas-blur-off-200pct.png",
       "height": 248,
       "scale": 2.0,
-      "sha256": "c22f510e78eed1df813e89da35468723f6581a1239a1265581312565919b8905",
+      "sha256": "9eca20926a201027a628f5435fb0532cef82d67d2a7711dae05b97fe5d17e176",
       "width": 2596
     }
   ],
@@ -601,5 +601,5 @@
   },
   "staticScenarioCount": 128,
   "themeId": "io.github.loofiboss.noxforge.desktop",
-  "version": "21.0.4"
+  "version": "21.0.5"
 }

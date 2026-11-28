@@ -49,7 +49,7 @@ def get_app_version() -> str:
                     return v
             except Exception:
                 pass
-    return "21.0.4"
+    return "21.0.5"
 
 
 APP_VERSION = get_app_version()
@@ -463,14 +463,14 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.preview_badges: list[tuple[QtWidgets.QLabel, QtWidgets.QLabel, Path]] = []
 
         icon_samples = [
-            ("Wi-Fi 100%", ROOT / "icons/NoxForge/scalable/status/network-wireless.svg"),
-            ("Wi-Fi 75%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-75.svg"),
-            ("Wi-Fi 50%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-50.svg"),
-            ("Wi-Fi 25%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-25.svg"),
-            ("Wi-Fi 0%", ROOT / "icons/NoxForge/scalable/status/network-wireless-connected-00.svg"),
-            ("Disconnected", ROOT / "icons/NoxForge/scalable/status/network-wireless-disconnected.svg"),
-            ("Battery", ROOT / "icons/NoxForge/scalable/status/battery-100.svg"),
-            ("Audio", ROOT / "icons/NoxForge/scalable/status/audio-volume-high.svg"),
+            ("Wi-Fi 100%", self._studio_icon_path("scalable/status/network-wireless.svg")),
+            ("Wi-Fi 75%", self._studio_icon_path("scalable/status/network-wireless-connected-75.svg")),
+            ("Wi-Fi 50%", self._studio_icon_path("scalable/status/network-wireless-connected-50.svg")),
+            ("Wi-Fi 25%", self._studio_icon_path("scalable/status/network-wireless-connected-25.svg")),
+            ("Wi-Fi 0%", self._studio_icon_path("scalable/status/network-wireless-connected-00.svg")),
+            ("Disconnected", self._studio_icon_path("scalable/status/network-wireless-disconnected.svg")),
+            ("Battery", self._studio_icon_path("scalable/status/battery-100.svg")),
+            ("Audio", self._studio_icon_path("scalable/status/audio-volume-high.svg")),
         ]
 
         for title, svg_path in icon_samples:
@@ -607,7 +607,13 @@ class ProfileAccentTab(QtWidgets.QWidget):
         acc = pal["accent"]
         surf_sel = pal["surfaceSelected"]
 
+        prev_anim = getattr(self, "_shake_anim", None)
+        if prev_anim is not None and prev_anim.state() == QtCore.QAbstractAnimation.State.Running:
+            prev_anim.stop()
+            if hasattr(self, "_test_box_orig_rect"):
+                self.test_box.setGeometry(self._test_box_orig_rect)
         orig_rect = self.test_box.geometry()
+        self._test_box_orig_rect = orig_rect
         anim = QtCore.QSequentialAnimationGroup(self)
         for dx, dur in [(-8, 40), (8, 40), (-4, 40), (4, 40), (0, 60)]:
             step = QtCore.QPropertyAnimation(self.test_box, b"geometry")
@@ -852,7 +858,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
 
         for key, btn in self.accent_buttons.items():
             _, color = self.accent_meta[key]
-            is_selected = (key == accent_name) or (key == "lime" and accent_name == "default")
+            is_selected = (key == accent_name) or (key == "system" and accent_name == "default")
             if is_selected:
                 btn.setStyleSheet(
                     f"text-align: left; padding: 6px 12px; border-radius: 6px; font-weight: bold; color: {color}; "
@@ -952,7 +958,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
             return
         is_obs = profile == "obsidian"
         bg_hex = "#000000" if is_obs else "#0D1419"
-        surf_hex = "#080808" if is_obs else "#141E25"
+        surf_hex = "#0A0F13" if is_obs else "#141E25"
         border_hex = "#2F414B"
         text_hex = "#E8F0F2"
         acc = accent_hex or "#A3FF47"
@@ -964,7 +970,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         self.swatch_surf.setStyleSheet(f"background-color: {surf_hex}; color: #E8F0F2; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
 
         self.swatch_border.setText(f"BORDER {border_hex}")
-        self.swatch_border.setStyleSheet(f"background-color: #1A2832; color: {border_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
+        self.swatch_border.setStyleSheet(f"background-color: #1A2832; color: #E8F0F2; border: 2px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
 
         self.swatch_text.setText(f"TEXT {text_hex}")
         self.swatch_text.setStyleSheet(f"background-color: #1A2832; color: {text_hex}; border: 1px solid {border_hex}; border-radius: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px;")
@@ -1181,6 +1187,7 @@ class ProfileAccentTab(QtWidgets.QWidget):
         nt = self.night_time.time().toString("HH:mm")
         try:
             noxforge_ctl.manage_schedule(action, day_time=dt, night_time=nt)
+            self.refresh_state()
             self.statusChanged.emit(f"Day/Night automation: {action.upper()} ({dt} / {nt})")
         except Exception as err:
             self.statusChanged.emit(f"Day/Night schedule error: {err}")
@@ -1534,7 +1541,13 @@ class AccessibilityTab(QtWidgets.QWidget):
             self.hex_input.setText(chosen.name().upper())
 
     def play_kinetic_shake(self) -> None:
+        prev_anim = getattr(self, "_sim_shake_anim", None)
+        if prev_anim is not None and prev_anim.state() == QtCore.QAbstractAnimation.State.Running:
+            prev_anim.stop()
+            if hasattr(self, "_sim_orig_geom"):
+                self.sim_input.setGeometry(self._sim_orig_geom)
         orig = self.sim_input.geometry()
+        self._sim_orig_geom = orig
         anim = QtCore.QSequentialAnimationGroup(self)
         for dx, dur in [(-8, 40), (8, 40), (-4, 40), (4, 40), (0, 60)]:
             step = QtCore.QPropertyAnimation(self.sim_input, b"geometry")
@@ -1547,23 +1560,27 @@ class AccessibilityTab(QtWidgets.QWidget):
             "color: #FF7777; padding: 8px 12px; font-size: 13px; font-weight: bold;"
         )
         def restore():
+            sunken_bg = "#05080A" if getattr(self, "_active_profile", "graphite") == "obsidian" else "#10191F"
             self.sim_input.setStyleSheet(
-                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                f"background-color: {sunken_bg}; border: 1px solid #2F414B; border-radius: 5px; "
                 "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
             )
             self.sim_input.setGeometry(orig)
         anim.finished.connect(restore)
+        self._sim_shake_anim = anim
         anim.start()
         self.statusChanged.emit("Simulating kinetic spring shake (220ms)...")
 
     def play_edge_flash(self) -> None:
+        sunken_bg = "#05080A" if getattr(self, "_active_profile", "graphite") == "obsidian" else "#10191F"
         self.sim_input.setStyleSheet(
-            "background-color: #10191F; border: 2px solid #FF5555; border-radius: 5px; "
+            f"background-color: {sunken_bg}; border: 2px solid #FF5555; border-radius: 5px; "
             "color: #FF5555; padding: 8px 12px; font-size: 13px; font-weight: bold;"
         )
         def restore():
+            bg = "#05080A" if getattr(self, "_active_profile", "graphite") == "obsidian" else "#10191F"
             self.sim_input.setStyleSheet(
-                "background-color: #10191F; border: 1px solid #2F414B; border-radius: 5px; "
+                f"background-color: {bg}; border: 1px solid #2F414B; border-radius: 5px; "
                 "color: #E8F0F2; padding: 8px 12px; font-size: 13px;"
             )
         QtCore.QTimer.singleShot(220, restore)
@@ -1788,6 +1805,8 @@ class EcosystemTab(QtWidgets.QWidget):
             restore_btn.setEnabled(bool(info.get("hasBackup") or info.get("installed")))
             restore_btn.clicked.connect(lambda _, a=app_id: self.restore_app(a))
             self.table.setCellWidget(row, 4, restore_btn)
+        if hasattr(self, "search_input") and self.search_input.text():
+            self.filter_table(self.search_input.text())
 
     def apply_app(self, app_id: str) -> None:
         res = noxforge_ctl.ecosystem_apply([app_id])
@@ -1977,6 +1996,10 @@ class ControlCenterWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         if hasattr(self.tab_profile, "kinetic_timer") and self.tab_profile.kinetic_timer.isActive():
             self.tab_profile.kinetic_timer.stop()
+        worker = getattr(self.opacity_window, "worker", None)
+        if worker is not None and worker.isRunning():
+            worker.quit()
+            worker.wait(3000)
         super().closeEvent(event)
 
     def export_preset_dialog(self) -> None:

@@ -29,7 +29,7 @@
   "liveEvidence": false,
   "originalEditable": true,
   "phase": 2,
-  "release": "21.0.4",
+  "release": "21.0.5",
   "reviewAssertions": [
     "The semantic and monochrome N/F masters share one clean continuous geometry.",
     "The mark remains legible at 16, 24, 48, 128, and 512 px.",
@@ -43,11 +43,11 @@
   "sheets": {
     "docs/evidence/v21/artwork/artwork-brand-optical-sizes.png": "d415be46bec16869c7e83561bf0283f6044574f5055d2d3d8975f8b67c556911",
     "docs/evidence/v21/artwork/artwork-brand-wallpaper.png": "20d9ae76490942141980d93f87382cf8efb752a0e7cb39cb0d3f370f6933541b",
-    "docs/evidence/v21/artwork/artwork-cursors.png": "ad170a4e85457a32633d6b80ecf012a8452489ba168d40fe96ce0bbdd9e67be7",
+    "docs/evidence/v21/artwork/artwork-cursors.png": "32ef31848745507681a9ac86b596fb0c0cc542743a7c407b2dec041f694349a7",
     "docs/evidence/v21/artwork/artwork-icons.png": "24f612e53933169409831ee466c57cb245826aafdf356544c672a3458557869f"
   },
   "sources": {
-    "cursors/NoxForge-Cursors/coverage.json": "b5d65b72fe1bdc0b6640573f271e2e00b0d8193f1215fe37e77351db90561f50",
+    "cursors/NoxForge-Cursors/coverage.json": "7ac2f250c1c84b7e200ba14473f9ccc65131f23c417a38430d28c2c50a284716",
     "design/artwork-contract.json": "aa091c12381c2df0249b47dc669812d9e0f0ec375fd5c644d72ce6b4c951dfa0",
     "design/brand/noxforge-lockup.svg": "edd2d0fc7f871d8c98c6d88ba3ca548a4a668b18eda62ef4f6cda9aeab6e977e",
     "design/brand/noxforge-mark-mono.svg": "69b480a264f50e1376d3fbfd320ec93d05eeb85a78063e4e6cb88992f61bf43b",

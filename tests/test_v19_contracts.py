@@ -289,7 +289,7 @@ class NoxForgeV19ContractsTests(unittest.TestCase):
             self.assertIn("border-bottom: var(--forge-notch-size) solid var(--highlight-color);", css)
             self.assertIn("transition: background-color 140ms ease", css)
             self.assertIn("scrollbar {", css)
-            self.assertIn("scrollbar-slider {", css)
+            self.assertIn("& > handle {", css)
             self.assertIn("tooltip {", css)
 
 

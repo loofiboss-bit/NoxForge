@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: MIT */
-/* @noxforge-version: 21.0.4 */
+/* @noxforge-version: 21.0.5 */
 /* NoxForge Obsidian OLED userContent.css for Firefox, Zen Browser & LibreWolf internal pages */
 
-@-moz-document url("about:newtab"), url("about:home"), url("about:blank"), url("about:privatebrowsing"),
+@-moz-document url("about:newtab"), url("about:home"), url("about:privatebrowsing"),
                url-prefix("about:preferences"), url-prefix("about:addons"), url-prefix("about:config") {
   :root {
     --in-content-page-background: #000000 !important;
@@ -20,6 +20,8 @@
     --newtab-background-color-secondary: #0A0F13 !important;
     --newtab-text-primary-color: #E8F0F2 !important;
     --newtab-primary-action-background: #A3FF47 !important;
+    --newtab-primary-action-foreground: #000000 !important;
+    --newtab-primary-action-text-color: #000000 !important;
     scrollbar-color: #455A64 #05080A !important;
   }
 
@@ -29,7 +31,7 @@
   }
 
   ::selection {
-    background-color: #192D1E !important;
-    color: #E8F0F2 !important;
+    background-color: #82D936 !important;
+    color: #000000 !important;
   }
 }

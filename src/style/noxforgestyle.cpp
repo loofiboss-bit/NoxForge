@@ -116,15 +116,77 @@ void paintSurface(QPainter *painter, const QRect &rect, const QColor &fill,
     painter->restore();
 }
 
-void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirection direction,
-                          bool focused = false, bool obsidian = false, const QColor &accent = NP::accent())
+qreal relativeLuminance(const QColor &color)
 {
-    paintSurface(painter, rect, activeSurfaceSelected(accent, obsidian),
-                 focused ? accent : NP::borderStrong(),
+    auto linearize = [](qreal c) -> qreal {
+        return c <= 0.04045 ? c / 12.92 : std::pow((c + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * linearize(color.redF())
+         + 0.7152 * linearize(color.greenF())
+         + 0.0722 * linearize(color.blueF());
+}
+
+qreal contrastRatio(const QColor &first, const QColor &second)
+{
+    const qreal l1 = relativeLuminance(first);
+    const qreal l2 = relativeLuminance(second);
+    const qreal lighter = qMax(l1, l2);
+    const qreal darker = qMin(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+QPalette::ColorGroup effectiveColorGroup(const QStyleOption *option)
+{
+    if (!option || !enabled(option)) {
+        return QPalette::Disabled;
+    }
+    return option->state.testFlag(QStyle::State_Active)
+        ? QPalette::Active : QPalette::Inactive;
+}
+
+void paintSelectedSurface(QPainter *painter, const QRect &rect, Qt::LayoutDirection direction,
+                          bool focused = false, bool obsidian = false, const QColor &accent = NP::accent(),
+                          const QPalette *palette = nullptr, QPalette::ColorGroup cg = QPalette::Active)
+{
+    // Respect external text painters (Kirigami ItemDelegate / QCommonStyle CE_ItemViewItem):
+    // when QPalette::HighlightedText is dark ink (e.g. #0D1419 / #000000 from NoxForgeDark.colors
+    // or KDE's dynamic AccentColor), painting a dark #223429 fill makes selected text invisible.
+    if (palette) {
+        const QColor textColor = palette->color(cg, QPalette::HighlightedText);
+        if (textColor.isValid() && relativeLuminance(textColor) < 0.35) {
+            QColor fill = palette->color(cg, QPalette::Highlight);
+            if (!fill.isValid() || contrastRatio(fill, textColor) < 4.5) {
+                fill = activeAccentPressed(accent);
+            }
+            if (contrastRatio(fill, textColor) < 4.5) {
+                fill = accent;
+            }
+            if (contrastRatio(fill, textColor) < 4.5) {
+                fill = NP::textPrimary(obsidian);
+            }
+            if (cg == QPalette::Disabled) {
+                const QColor muted = mixedColor(fill, NP::surfaceRaised(obsidian), 0.35);
+                if (contrastRatio(muted, textColor) >= 3.5) {
+                    fill = muted;
+                }
+            }
+            const QColor stroke = focused ? NP::textPrimary(obsidian) : accent;
+            paintSurface(painter, rect, fill, stroke,
+                         focused ? NP::focusWidth : NP::borderWidth, true);
+            return;
+        }
+    }
+
+    const QColor fill = cg == QPalette::Disabled
+        ? NP::surface(obsidian) : activeSurfaceSelected(accent, obsidian);
+    const QColor rail = cg == QPalette::Disabled
+        ? NP::textDisabled(obsidian) : accent;
+    paintSurface(painter, rect, fill,
+                 focused ? rail : NP::borderStrong(),
                  focused ? NP::focusWidth : NP::borderWidth, true);
     painter->save();
     painter->setPen(Qt::NoPen);
-    painter->setBrush(accent);
+    painter->setBrush(rail);
     const int markerX = direction == Qt::RightToLeft
         ? rect.right() - NP::activeMarkerWidth + 1 : rect.left();
     painter->drawRect(markerX, rect.top() + NP::compactRadius,
@@ -286,17 +348,26 @@ void NoxForgeStyle::refreshConfigCache() const
     QSettings settings(path, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("General"));
     m_cachedScheme = settings.value(QStringLiteral("ColorScheme")).toString();
-    const QString accentStr = settings.value(QStringLiteral("AccentColor")).toString();
-    if (!accentStr.isEmpty()) {
-        const auto parts = accentStr.split(QLatin1Char(','));
-        if (parts.size() >= 3) {
-            bool okR = false, okG = false, okB = false;
-            const int r = parts[0].trimmed().toInt(&okR);
-            const int g = parts[1].trimmed().toInt(&okG);
-            const int b = parts[2].trimmed().toInt(&okB);
-            if (okR && okG && okB) {
-                m_cachedAccent = QColor(r, g, b);
-            }
+    const QVariant accentVal = settings.value(QStringLiteral("AccentColor"));
+    QStringList parts;
+    if (accentVal.metaType().id() == QMetaType::QStringList) {
+        parts = accentVal.toStringList();
+    } else {
+        const QString accentStr = accentVal.toString().trimmed();
+        if (!accentStr.isEmpty()) {
+            parts = accentStr.split(QLatin1Char(','));
+        }
+    }
+    if (parts.size() >= 3) {
+        bool okR = false, okG = false, okB = false;
+        const int r = parts[0].trimmed().toInt(&okR);
+        const int g = parts[1].trimmed().toInt(&okG);
+        const int b = parts[2].trimmed().toInt(&okB);
+        if (okR && okG && okB
+            && r >= 0 && r <= 255
+            && g >= 0 && g <= 255
+            && b >= 0 && b <= 255) {
+            m_cachedAccent = QColor(r, g, b);
         }
     }
 }
@@ -492,11 +563,23 @@ QSize NoxForgeStyle::sizeFromContents(ContentsType type, const QStyleOption *opt
     QSize size = QCommonStyle::sizeFromContents(type, option, contentsSize, widget);
     switch (type) {
     case CT_PushButton:
-    case CT_ComboBox:
-    case CT_LineEdit:
-    case CT_SpinBox:
         size.setHeight(qMax(size.height(), NP::controlHeight));
-        size.setWidth(qMax(size.width(), 48));
+        size.setWidth(std::max({size.width(), contentsSize.width() + 20, 48}));
+        break;
+    case CT_ComboBox:
+        // SC_ComboBoxEditField reserves 8px leading inset + 30px arrow button (+ 16px edit contents).
+        size.setHeight(qMax(size.height(), NP::controlHeight));
+        size.setWidth(std::max({size.width(), contentsSize.width() + 54, 68}));
+        break;
+    case CT_LineEdit:
+        // SE_LineEditContents reserves 8px horizontal and 4px vertical insets on each side.
+        size.setHeight(std::max({size.height(), contentsSize.height() + 8, NP::controlHeight}));
+        size.setWidth(std::max({size.width(), contentsSize.width() + 18, 48}));
+        break;
+    case CT_SpinBox:
+        // SC_SpinBoxEditField reserves 4px leading inset + 26px buttons (+ 16px inner QLineEdit padding).
+        size.setHeight(qMax(size.height(), NP::controlHeight));
+        size.setWidth(std::max({size.width(), contentsSize.width() + 52, 72}));
         break;
     case CT_MenuItem: {
         const auto *item = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
@@ -559,8 +642,20 @@ QSize NoxForgeStyle::sizeFromContents(ContentsType type, const QStyleOption *opt
         size.setWidth(std::max({size.width(), textWidth + 24, 44}));
         break;
     }
-    case CT_ToolButton: size.setHeight(qMax(size.height(), 32)); break;
-    case CT_TabBarTab: size.setHeight(qMax(size.height(), 32)); break;
+    case CT_ToolButton: {
+        const auto *tool = qstyleoption_cast<const QStyleOptionToolButton *>(option);
+        const bool hasMenu = tool && (tool->features.testFlag(QStyleOptionToolButton::Menu)
+            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup)
+            || tool->features.testFlag(QStyleOptionToolButton::HasMenu));
+        const int extraW = hasMenu ? 28 : 12;
+        size.setWidth(qMax(size.width(), contentsSize.width() + extraW));
+        size.setHeight(qMax(size.height(), NP::controlHeight));
+        break;
+    }
+    case CT_TabBarTab:
+        size.setWidth(size.width() + 10);
+        size.setHeight(qMax(size.height(), 32));
+        break;
     default: break;
     }
     return size;
@@ -631,7 +726,7 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
                                     buttonWidth, option->rect.height() - half));
         if (subControl == SC_SpinBoxEditField)
             return visualRect(option->direction, option->rect,
-                              option->rect.adjusted(8, 1, -buttonWidth, -1));
+                              option->rect.adjusted(4, 1, -buttonWidth - 1, -1));
     }
     if (control == CC_Slider) {
         const auto *slider = qstyleoption_cast<const QStyleOptionSlider *>(option);
@@ -663,7 +758,8 @@ QRect NoxForgeStyle::subControlRect(ComplexControl control, const QStyleOptionCo
         if (!tool)
             return QCommonStyle::subControlRect(control, option, subControl, widget);
         const bool hasMenu = tool->features.testFlag(QStyleOptionToolButton::Menu)
-            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup);
+            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup)
+            || tool->features.testFlag(QStyleOptionToolButton::HasMenu);
         const int menuWidth = hasMenu ? 24 : 0;
         const QRect logicalMenu(option->rect.right() - menuWidth + 1, option->rect.top(),
                                 menuWidth, option->rect.height());
@@ -740,6 +836,35 @@ QRect NoxForgeStyle::subElementRect(SubElement element, const QStyleOption *opti
     case SE_SliderLayoutItem:
     case SE_SpinBoxLayoutItem:
         return option->rect;
+    case SE_ItemViewItemText:
+    case SE_ItemViewItemDecoration:
+    case SE_ItemViewItemCheckIndicator: {
+        QRect r = QCommonStyle::subElementRect(element, option, widget);
+        if (!r.isEmpty() && option->rect.width() > 24) {
+            constexpr int minLead = 7;
+            if (option->direction == Qt::RightToLeft) {
+                const int leadGap = option->rect.right() - r.right();
+                if (leadGap < minLead) {
+                    const int shift = minLead - leadGap;
+                    r.adjust(0, 0, -shift, 0);
+                    if (element != SE_ItemViewItemText) {
+                        r.translate(-shift, 0);
+                    }
+                }
+            } else {
+                const int leadGap = r.left() - option->rect.left();
+                if (leadGap < minLead) {
+                    const int shift = minLead - leadGap;
+                    if (element == SE_ItemViewItemText) {
+                        r.adjust(shift, 0, 0, 0);
+                    } else {
+                        r.translate(shift, 0);
+                    }
+                }
+            }
+        }
+        return r;
+    }
     default:
         return QCommonStyle::subElementRect(element, option, widget);
     }
@@ -756,17 +881,32 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_PanelButtonTool: {
         const auto *button = qstyleoption_cast<const QStyleOptionButton *>(option);
         const bool primary = button && button->features.testFlag(QStyleOptionButton::DefaultButton);
+        const bool checked = option->state.testFlag(State_On);
         const bool hoverTarget = option->state.testFlag(State_MouseOver);
         const bool pressTarget = option->state.testFlag(State_Sunken);
+        const bool focused = option->state.testFlag(State_HasFocus);
         const qreal hover = motionValue(widget, NoxForgeMotion::Channel::Hover, hoverTarget);
         const qreal press = motionValue(widget, NoxForgeMotion::Channel::Press, pressTarget);
-        QColor fill = primary && enabled(option)
-            ? mixedColor(accent, accentPressed, press)
-            : stateSurface(option, hover, press, obsidian);
-        QColor stroke = option->state.testFlag(State_HasFocus)
-            ? (primary ? NP::background(obsidian) : accent) : NP::border();
-        const bool focused = option->state.testFlag(State_HasFocus);
-        if (enabled(option) && press < 0.98) {
+        const bool flat = (button && button->features.testFlag(QStyleOptionButton::Flat))
+            || (element == PE_PanelButtonTool && option->state.testFlag(State_AutoRaise));
+        if (flat && !primary && !checked && !hoverTarget && !pressTarget && !focused
+            && hover <= 0.01 && press <= 0.01) {
+            return;
+        }
+        QColor fill;
+        if (primary && enabled(option)) {
+            fill = mixedColor(accent, accentPressed, press);
+        } else if (checked && enabled(option)) {
+            const QColor baseChecked = activeSurfaceSelected(accent, obsidian);
+            fill = mixedColor(mixedColor(baseChecked, NP::surfaceHover(obsidian), hover * 0.4),
+                              NP::surfaceSunken(obsidian), press);
+        } else {
+            fill = stateSurface(option, hover, press, obsidian);
+        }
+        QColor stroke = focused
+            ? (primary ? NP::background(obsidian) : accent)
+            : (checked && enabled(option) ? accent : NP::border());
+        if (enabled(option) && press < 0.98 && !flat) {
             const QColor shadowBase = obsidian ? QColor(0, 0, 0) : QColor(8, 11, 14);
             const QColor shadow = mixedColor(QColor(shadowBase.red(), shadowBase.green(), shadowBase.blue(), 0),
                                              QColor(shadowBase.red(), shadowBase.green(), shadowBase.blue(), 90), 1.0 - press);
@@ -774,11 +914,24 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
                          0, false);
         }
         paintSurface(painter, option->rect, fill, stroke,
-                     focused ? NP::focusWidth : NP::borderWidth, focused);
+                     focused ? NP::focusWidth : NP::borderWidth, focused || checked);
+        if (checked && enabled(option) && !primary && option->rect.width() >= 14 && option->rect.height() >= 14) {
+            painter->save();
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(accent);
+            painter->drawRect(option->rect.left() + 6, option->rect.bottom() - 2,
+                              qMax(2, option->rect.width() - 12), 2);
+            painter->restore();
+        }
         return;
     }
     case PE_PanelLineEdit:
     case PE_FrameLineEdit: {
+        const auto *frame = qstyleoption_cast<const QStyleOptionFrame *>(option);
+        if (element == PE_PanelLineEdit && frame && frame->lineWidth == 0) {
+            painter->fillRect(option->rect, NP::background(obsidian));
+            return;
+        }
         const bool focused = option->state.testFlag(State_HasFocus);
         const bool hovered = option->state.testFlag(State_MouseOver);
         const qreal hoverVal = motionValue(widget, NoxForgeMotion::Channel::Hover, hovered);
@@ -810,7 +963,8 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_PanelItemViewItem:
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect.adjusted(1, 1, -1, -1),
-                                 option->direction, option->state.testFlag(State_HasFocus), obsidian, accent);
+                                 option->direction, option->state.testFlag(State_HasFocus),
+                                 obsidian, accent, &option->palette, effectiveColorGroup(option));
         } else if (option->state.testFlag(State_HasFocus)) {
             paintSurface(painter, option->rect.adjusted(1, 1, -1, -1),
                          option->state.testFlag(State_MouseOver) ? NP::surfaceHover(obsidian) : NP::background(obsidian),
@@ -827,24 +981,31 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_IndicatorItemViewItemCheck: {
         const QRect box = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), option->rect);
         const bool radio = element == PE_IndicatorRadioButton;
+        const bool isEnabled = enabled(option);
         const bool mixed = option->state.testFlag(State_NoChange);
         const bool checkedTarget = option->state.testFlag(State_On);
         const qreal checkedProgress = mixed ? 1.0
             : motionValue(widget, NoxForgeMotion::Channel::Checked, checkedTarget);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
-        painter->setPen(QPen(option->state.testFlag(State_HasFocus) ? accent : NP::borderStrong(), 1));
-        painter->setBrush((option->state.testFlag(State_On) || mixed)
-                              ? activeSurfaceSelected(accent, obsidian) : NP::background(obsidian));
+        const QColor boxStroke = !isEnabled
+            ? NP::border(obsidian)
+            : (option->state.testFlag(State_HasFocus) ? accent : NP::borderStrong());
+        const QColor boxFill = !isEnabled
+            ? NP::surface(obsidian)
+            : ((option->state.testFlag(State_On) || mixed)
+                ? activeSurfaceSelected(accent, obsidian) : NP::background(obsidian));
+        painter->setPen(QPen(boxStroke, 1));
+        painter->setBrush(boxFill);
         radio
             ? painter->drawEllipse(box.adjusted(1, 1, -1, -1))
             : painter->drawPath(surfacePath(box.adjusted(1, 1, -1, -1),
-                                            option->state.testFlag(State_HasFocus), 3));
+                                            isEnabled && option->state.testFlag(State_HasFocus), 3));
         if (mixed) {
-            painter->setPen(QPen(NP::cyan(), 2, Qt::SolidLine, Qt::SquareCap));
+            painter->setPen(QPen(isEnabled ? NP::cyan() : NP::textDisabled(obsidian), 2, Qt::SolidLine, Qt::SquareCap));
             painter->drawLine(box.left() + 4, box.center().y(), box.right() - 4, box.center().y());
         } else if (checkedProgress > 0.0) {
-            QColor indicator = accent;
+            QColor indicator = isEnabled ? accent : NP::textDisabled(obsidian);
             indicator.setAlphaF(checkedProgress);
             painter->setPen(QPen(indicator, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             if (radio) {
@@ -924,7 +1085,8 @@ void NoxForgeStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *
     case PE_PanelItemViewRow: {
         if (option->state.testFlag(State_Selected)) {
             paintSelectedSurface(painter, option->rect, option->direction,
-                                 option->state.testFlag(State_HasFocus), obsidian, accent);
+                                 option->state.testFlag(State_HasFocus), obsidian, accent,
+                                 &option->palette, effectiveColorGroup(option));
         } else if (option->state.testFlag(State_MouseOver)) {
             painter->fillRect(option->rect, NP::surfaceHover(obsidian));
         } else {
@@ -1179,10 +1341,16 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
                 QStyleOption check = *option;
                 check.rect = alignedRect(option->direction, Qt::AlignCenter, QSize(16, 16), leading);
                 check.state |= State_On;
-                drawPrimitive(PE_IndicatorCheckBox, &check, painter, widget);
+                const PrimitiveElement checkElem =
+                    item->checkType == QStyleOptionMenuItem::Exclusive
+                        ? PE_IndicatorRadioButton : PE_IndicatorCheckBox;
+                drawPrimitive(checkElem, &check, painter, widget);
             } else if (!item->icon.isNull()) {
+                const int iconExtent = qMin(iconWidth, qMax(16, leading.height() - 6));
+                const QRect iconRect = alignedRect(option->direction, Qt::AlignCenter,
+                                                   QSize(iconExtent, iconExtent), leading);
                 const QIcon::Mode mode = enabled(option) ? QIcon::Normal : QIcon::Disabled;
-                item->icon.paint(painter, leading, Qt::AlignCenter, mode);
+                item->icon.paint(painter, iconRect, Qt::AlignCenter, mode);
             }
         }
 
@@ -1193,13 +1361,14 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
             const int shortcutWidth = option->fontMetrics.horizontalAdvance(parts.value(1));
             logicalShortcut = QRect(logicalText.right() - shortcutWidth + 1,
                                     logicalText.top(), shortcutWidth, logicalText.height());
-            logicalText.setRight(logicalShortcut.left() - 16);
+            logicalText.setRight(qMax(logicalText.left(), logicalShortcut.left() - 16));
         }
         const QRect textRect = visualRect(option->direction, option->rect, logicalText);
         painter->save();
         painter->setPen(enabled(option) ? NP::textPrimary() : NP::textDisabled());
         painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeading | Qt::TextShowMnemonic, parts.value(0));
         if (!logicalShortcut.isEmpty()) {
+            painter->setPen(enabled(option) ? NP::textSecondary(obsidian) : NP::textDisabled(obsidian));
             painter->drawText(visualRect(option->direction, option->rect, logicalShortcut),
                               Qt::AlignVCenter | Qt::AlignLeading, parts.value(1));
         }
@@ -1227,28 +1396,34 @@ void NoxForgeStyle::drawControl(ControlElement element, const QStyleOption *opti
         if (busy && horizontal) {
             const int segment = qMax(8, fill.width() / 3);
             const qreal phase = m_motion.busyProgress(widget, true);
-            const int travel = fill.width() + segment;
-            fill.setLeft(fill.left() + qRound(phase * travel) - segment);
+            const int travel = qMax(0, fill.width() - segment);
+            fill.setLeft(fill.left() + qRound(phase * travel));
             fill.setWidth(segment);
             fill = fill.intersected(option->rect.adjusted(2, 2, -2, -2));
         } else if (busy) {
             const int segment = qMax(8, fill.height() / 3);
             const qreal phase = m_motion.busyProgress(widget, true);
-            const int travel = fill.height() + segment;
-            fill.setTop(fill.top() + qRound(phase * travel) - segment);
+            const int travel = qMax(0, fill.height() - segment);
+            fill.setTop(fill.top() + qRound(phase * travel));
             fill.setHeight(segment);
             fill = fill.intersected(option->rect.adjusted(2, 2, -2, -2));
+        } else if (busyRequested) {
+            return;
         } else if (horizontal) {
             const int amount = qRound(fill.width() * ratio);
+            if (amount <= 0) return;
             const bool reverse = progress->invertedAppearance ^ (option->direction == Qt::RightToLeft);
             if (reverse) fill.setLeft(fill.right() - amount + 1);
             else fill.setWidth(amount);
         } else {
             const int amount = qRound(fill.height() * ratio);
+            if (amount <= 0) return;
             if (progress->invertedAppearance) fill.setHeight(amount);
             else fill.setTop(fill.bottom() - amount + 1);
         }
-        paintSurface(painter, fill, NP::cyan(), NP::cyan());
+        if (fill.width() <= 0 || fill.height() <= 0) return;
+        const QColor barColor = enabled(option) ? NP::cyan() : NP::textDisabled(obsidian);
+        paintSurface(painter, fill, barColor, barColor);
         return;
     }
     case CE_ProgressBarLabel: {
@@ -1372,16 +1547,12 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
                                 option->rect.height() - 4), NP::border(obsidian));
         painter->fillRect(QRect(up.left() + 1, up.bottom(), qMax(1, up.width() - 2), 1),
                           NP::border(obsidian));
-        if (spin->stepEnabled.testFlag(QAbstractSpinBox::StepUpEnabled)) {
-            const QColor upColor = !upEnabled ? NP::textDisabled(obsidian)
-                : (upActive && sunken ? accent : NP::textPrimary(obsidian));
-            paintArrow(painter, up, Qt::UpArrow, upColor);
-        }
-        if (spin->stepEnabled.testFlag(QAbstractSpinBox::StepDownEnabled)) {
-            const QColor downColor = !downEnabled ? NP::textDisabled(obsidian)
-                : (downActive && sunken ? accent : NP::textPrimary(obsidian));
-            paintArrow(painter, down, Qt::DownArrow, downColor);
-        }
+        const QColor upColor = !upEnabled ? NP::textDisabled(obsidian)
+            : (upActive && sunken ? accent : NP::textPrimary(obsidian));
+        paintArrow(painter, up, Qt::UpArrow, upColor);
+        const QColor downColor = !downEnabled ? NP::textDisabled(obsidian)
+            : (downActive && sunken ? accent : NP::textPrimary(obsidian));
+        paintArrow(painter, down, Qt::DownArrow, downColor);
         return;
     }
     case CC_GroupBox: {
@@ -1421,12 +1592,14 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         const bool hoverTarget = option->state.testFlag(State_MouseOver);
         const qreal hovered = motionValue(
             widget, NoxForgeMotion::Channel::Hover, hoverTarget);
+        const bool isEnabled = enabled(option);
+        const QColor activeFill = isEnabled ? accent : NP::textDisabled(obsidian);
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
         painter->setBrush(NP::borderStrong(obsidian));
         painter->drawRoundedRect(groove, 3, 3);
-        painter->setBrush(accent);
+        painter->setBrush(activeFill);
         painter->drawRoundedRect(highlight, 3, 3);
         if (slider->tickPosition != QSlider::NoTicks && slider->maximum > slider->minimum) {
             const int interval = slider->tickInterval > 0
@@ -1438,7 +1611,7 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
                 const int offset = sliderPositionFromValue(
                     slider->minimum, slider->maximum, v, span, slider->upsideDown);
                 const bool passed = v <= slider->sliderPosition;
-                painter->setPen(QPen(passed ? accent : NP::outlineMuted(obsidian), 1));
+                painter->setPen(QPen(passed && isEnabled ? accent : NP::outlineMuted(obsidian), 1));
                 if (horizontal) {
                     const int tx = groove.left() + offset;
                     if (slider->tickPosition & QSlider::TicksAbove) {
@@ -1459,11 +1632,13 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
             }
             painter->setPen(Qt::NoPen);
         }
-        painter->setBrush(focused
-                              ? accent
-                              : mixedColor(NP::textPrimary(obsidian), accent, hovered));
+        painter->setBrush(!isEnabled
+                              ? NP::textDisabled(obsidian)
+                              : (focused
+                                  ? accent
+                                  : mixedColor(NP::textPrimary(obsidian), accent, hovered)));
         painter->drawEllipse(handle.adjusted(2, 2, -2, -2));
-        if (focused) {
+        if (focused && isEnabled) {
             painter->setPen(QPen(accent, NP::focusWidth));
             painter->setBrush(Qt::NoBrush);
             painter->drawEllipse(handle);
@@ -1644,9 +1819,13 @@ void NoxForgeStyle::drawComplexControl(ComplexControl control, const QStyleOptio
         drawPrimitive(PE_PanelButtonTool, option, painter, widget);
         QStyleOptionToolButton label = *tool;
         label.rect = subControlRect(CC_ToolButton, option, SC_ToolButton, widget);
+        const QColor textColor = enabled(option) ? NP::textPrimary(obsidian) : NP::textDisabled(obsidian);
+        label.palette.setColor(QPalette::ButtonText, textColor);
+        label.palette.setColor(QPalette::WindowText, textColor);
         QCommonStyle::drawControl(CE_ToolButtonLabel, &label, painter, widget);
         if (tool->features.testFlag(QStyleOptionToolButton::Menu)
-            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup)) {
+            || tool->features.testFlag(QStyleOptionToolButton::MenuButtonPopup)
+            || tool->features.testFlag(QStyleOptionToolButton::HasMenu)) {
             paintArrow(painter, subControlRect(CC_ToolButton, option, SC_ToolButtonMenu, widget),
                        Qt::DownArrow, enabled(option) ? NP::textPrimary() : NP::textDisabled());
         }

@@ -2,7 +2,7 @@
   "metadata": {
     "name": "NoxForgeObsidian",
     "revision": 1,
-    "version": "21.0.4"
+    "version": "21.0.5"
   },
   "editor-colors": {
     "BackgroundColor": "#000000",
@@ -136,8 +136,8 @@
       "text-color": "#A78BFA"
     },
     "RegionMarker": {
-      "selected-text-color": "#354852",
-      "text-color": "#354852"
+      "selected-text-color": "#A6B4B9",
+      "text-color": "#A6B4B9"
     },
     "SpecialChar": {
       "selected-text-color": "#22D3EE",

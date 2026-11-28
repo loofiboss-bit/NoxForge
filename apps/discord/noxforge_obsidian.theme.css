@@ -1,8 +1,8 @@
 /**
  * @name NoxForge Obsidian
  * @author NoxForge Team
- * @version 21.0.4
- * @noxforge-version: 21.0.4
+ * @version 21.0.5
+ * @noxforge-version: 21.0.5
  * @description Official NoxForge Obsidian OLED theme for Discord (Vencord / Vesktop / Equibop / BetterDiscord). Pure black OLED surfaces and Forge accents.
  * @source https://github.com/loofiboss-bit/NoxForge
  */
@@ -40,6 +40,9 @@
   --brand-560: #82D936;
   --accent-color: #A3FF47;
   --focus-primary: #A3FF47;
+  --button-filled-brand-background: #A3FF47;
+  --button-filled-brand-background-hover: #82D936;
+  --button-filled-brand-text: #000000;
   --button-positive-background: #A3FF47;
   --button-positive-text: #000000;
   --status-positive: #A3FF47;
@@ -48,4 +51,9 @@
   --scrollbar-auto-thumb: #455A64;
   --scrollbar-auto-track: #05080A;
   --scrollbar-thin-thumb: #2F414B;
+}
+
+.theme-dark [class*="lookFilled"][class*="colorBrand"],
+.theme-dark [class*="lookFilled"][class*="colorBrand"]:hover {
+  color: #000000 !important;
 }

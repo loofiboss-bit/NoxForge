@@ -15,7 +15,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-DEFAULT_VERSION = "21.0.4"
+DEFAULT_VERSION = "21.0.5"
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -536,7 +536,7 @@ QPushButton:pressed {{
 }}
 
 QPushButton:disabled {{
-    color: #55636A;
+    color: #748289;
     border-color: {bg_raised};
 }}
 
@@ -686,8 +686,8 @@ QRadioButton::indicator {{
 }}
 
 QCheckBox::indicator:checked, QRadioButton::indicator:checked {{
-    background-color: {acc};
-    border-color: {acc};
+    background-color: {surf_sel};
+    border: 2px solid {acc};
 }}
 
 QScrollArea {{

@@ -17,7 +17,7 @@ Rectangle {
     Tokens { id: tokens }
     property string statusMessage: ""
     property bool statusDanger: false
-    property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
+    property int sessionIndex: (typeof sessionModel !== "undefined" && sessionModel && sessionModel.lastIndex >= 0) ? sessionModel.lastIndex : 0
     property bool sessionMenuOpen: false
     property bool freezeClock: false
     property date currentDateTime: new Date()
@@ -226,8 +226,8 @@ Rectangle {
                     Layout.fillHeight: true
                     verticalAlignment: TextInput.AlignVCenter
                     color: tokens.textPrimary
-                    selectionColor: tokens.surfaceSelected
-                    selectedTextColor: tokens.textPrimary
+                    selectionColor: tokens.accentPressed
+                    selectedTextColor: tokens.accentInk
                     echoMode: (field.password && !field.revealPassword) ? TextInput.Password : TextInput.Normal
                     passwordCharacter: "•"
                     clip: true
@@ -242,14 +242,27 @@ Rectangle {
                     implicitWidth: 26
                     implicitHeight: 26
                     radius: tokens.compactRadius
+                    activeFocusOnTab: true
                     color: revealArea.containsMouse ? tokens.surfaceHover : "transparent"
+                    border.color: revealBtn.activeFocus ? tokens.accent : "transparent"
+                    border.width: revealBtn.activeFocus ? tokens.focusWidth : 0
                     Accessible.role: Accessible.Button
                     Accessible.name: field.revealPassword ? qsTr("Hide password") : qsTr("Show password")
 
+                    function toggleReveal() {
+                        field.revealPassword = !field.revealPassword
+                        if (field.revealPassword) {
+                            revealTimer.restart()
+                        } else {
+                            revealTimer.stop()
+                        }
+                    }
+
                     Text {
                         anchors.centerIn: parent
-                        text: field.revealPassword ? "👁" : "•"
-                        font.pixelSize: 13
+                        text: field.revealPassword ? "Aa" : "••"
+                        font.pixelSize: 11
+                        font.weight: Font.DemiBold
                         color: field.revealPassword ? tokens.accent : tokens.textSecondary
                     }
 
@@ -258,15 +271,11 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            field.revealPassword = !field.revealPassword
-                            if (field.revealPassword) {
-                                revealTimer.restart()
-                            } else {
-                                revealTimer.stop()
-                            }
-                        }
+                        onClicked: revealBtn.toggleReveal()
                     }
+                    Keys.onReturnPressed: revealBtn.toggleReveal()
+                    Keys.onEnterPressed: revealBtn.toggleReveal()
+                    Keys.onSpacePressed: revealBtn.toggleReveal()
                 }
             }
         }
@@ -343,7 +352,7 @@ Rectangle {
                 id: usernameField
                 label: qsTr("Username")
                 Layout.fillWidth: true
-                editor.text: userModel.lastUser
+                editor.text: (typeof userModel !== "undefined" && userModel && userModel.lastUser) ? userModel.lastUser : ""
                 editor.focus: true
                 editor.KeyNavigation.tab: passwordField.editor
                 editor.KeyNavigation.backtab: powerOffButton
@@ -430,6 +439,7 @@ Rectangle {
                             required property string name
                             label: name
                             primary: index === root.sessionIndex
+                            interactive: root.sessionMenuOpen
                             Layout.fillWidth: true
                             KeyNavigation.tab: index + 1 < sessionChoices.count
                                 ? sessionChoices.itemAt(index + 1)
@@ -501,11 +511,12 @@ Rectangle {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: Platform.Units.gridUnit * 2.5
-        label: keyboard.layouts[keyboard.currentLayout]?.longName ?? qsTr("Keyboard")
-        visible: keyboard.layouts.length > 1
+        readonly property bool hasLayouts: typeof keyboard !== "undefined" && keyboard && keyboard.layouts && keyboard.layouts.length > 0
+        label: hasLayouts ? (keyboard.layouts[keyboard.currentLayout]?.longName ?? qsTr("Keyboard")) : qsTr("Keyboard")
+        visible: hasLayouts && keyboard.layouts.length > 1
         KeyNavigation.tab: sleepButton
         KeyNavigation.backtab: loginButton
-        onClicked: keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length
+        onClicked: if (hasLayouts) keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length
     }
 
     Row {

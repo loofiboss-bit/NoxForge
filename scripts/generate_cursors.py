@@ -243,11 +243,22 @@ def render_aa_pixels(kind: str, size: int, frame: int = 0) -> list[int]:
 
 def hotspot(kind: str, size: int) -> tuple[int, int]:
     scale = size / 24
-    base = (3, 2) if kind in {"default", "help", "copy"} else (12, 12)
-    if kind == "hand":
-        base = (10, 4)
-    if kind == "text":
-        base = (12, 12)
+    bases = {
+        "default": (3, 2),
+        "help": (3, 2),
+        "copy": (3, 2),
+        "progress": (3, 2),
+        "hand": (10, 4),
+        "text": (12, 12),
+        "color-picker": (3, 21),
+        "zoom-in": (10, 10),
+        "zoom-out": (10, 10),
+        "up-arrow": (12, 3),
+        "down-arrow": (12, 21),
+        "left-arrow": (3, 12),
+        "right-arrow": (21, 12),
+    }
+    base = bases.get(kind, (12, 12))
     return round(base[0] * scale), round(base[1] * scale)
 
 
@@ -275,7 +286,7 @@ GLYPHS = {
     "default": '<path d="M3 2v18l5-4 3 6 4-2-3-6h9z"/><rect class="accent" x="3" y="2" width="2" height="2"/>',
     "help": '<path d="M3 2v18l5-4 3 6 4-2-3-6h9z"/><path class="accent-line" d="M15 5c0-3 5-3 5 0 0 2-2 2-2 4M18 11v1"/>',
     "copy": '<path d="M3 2v18l5-4 3 6 4-2-3-6h9z"/><path class="accent-line" d="M15 18h6M18 15v6"/>',
-    "hand": '<path d="M8 20V9c0-2 3-2 3 0V4c0-2 3-2 3 0v5-2c0-2 3-2 3 0v3-1c0-2 3-2 3 0v7c0 4-3 6-6 6h-2c-2 0-4-1-4-2z"/><path class="accent-line" d="M14 4v5"/>',
+    "hand": '<path d="M7 20V10c0-1.5 2-1.5 2 0V4c0-1.5 2-1.5 2 0v5c0-1.5 2-1.5 2 0v2c0-1.5 2-1.5 2 0v7c0 3-2 5-4.5 5H10c-2 0-3-1-3-3z"/><path class="accent-line" d="M10 3.5v3"/>',
     "text": '<path d="M6 4h12M12 4v16M6 20h12"/><path class="accent-line" d="M12 8v5"/>',
     "crosshair": '<path d="M12 3v18M3 12h18"/><rect class="accent" x="10" y="10" width="4" height="4"/>',
     "ew-resize": '<path d="M3 12h18M3 12l5-5M3 12l5 5M21 12l-5-5M21 12l-5 5"/><circle class="accent" cx="12" cy="12" r="2"/>',
@@ -283,9 +294,9 @@ GLYPHS = {
     "nwse-resize": '<path d="M4 4l16 16M4 4v7M4 4h7M20 20v-7M20 20h-7"/><circle class="accent" cx="12" cy="12" r="2"/>',
     "nesw-resize": '<path d="M20 4L4 20M20 4v7M20 4h-7M4 20v-7M4 20h7"/><circle class="accent" cx="12" cy="12" r="2"/>',
     "move": '<path d="M12 2v20M2 12h20M12 2L8 6M12 2l4 4M12 22l-4-4M12 22l4-4M2 12l4-4M2 12l4 4M22 12l-4-4M22 12l-4 4"/><circle class="accent" cx="12" cy="12" r="2"/>',
-    "forbidden": '<circle cx="12" cy="12" r="9"/><path class="accent-line" d="M6 6l12 12"/>',
-    "zoom-in": '<circle cx="9.5" cy="9.5" r="6.5"/><path d="M14 14l7 7"/><path class="accent-line" d="M6 9.5h7M9.5 6v7"/>',
-    "zoom-out": '<circle cx="9.5" cy="9.5" r="6.5"/><path d="M14 14l7 7"/><path class="accent-line" d="M6 9.5h7"/>',
+    "forbidden": '<circle fill="none" cx="12" cy="12" r="9"/><path class="accent-line" d="M6 6l12 12"/>',
+    "zoom-in": '<circle fill="none" cx="9.5" cy="9.5" r="6.5"/><path fill="none" d="M14 14l7 7"/><path class="accent-line" d="M6 9.5h7M9.5 6v7"/>',
+    "zoom-out": '<circle fill="none" cx="9.5" cy="9.5" r="6.5"/><path fill="none" d="M14 14l7 7"/><path class="accent-line" d="M6 9.5h7"/>',
     "color-picker": '<path d="M5 19L18 6l2 2L7 21H3z"/><path class="accent-line" d="M15 5l4 4M4 20h3"/>',
     "grab": '<path d="M7 19V9c0-2 3-2 3 0V6c0-2 3-2 3 0v3-2c0-2 3-2 3 0v3-1c0-2 3-2 3 0v7c0 4-3 6-7 6-2 0-4-1-5-3z"/>',
     "grabbing": '<path d="M7 19v-8c0-2 3-2 3 0V9c0-2 3-2 3 0v2-1c0-2 3-2 3 0v2-1c0-2 3-2 3 0v5c0 4-3 6-7 6-2 0-4-1-5-3z"/><path class="accent-line" d="M9 13h8"/>',
@@ -293,8 +304,8 @@ GLYPHS = {
     "down-arrow": '<path d="M12 21L4 9h6V3h4v6h6z"/>',
     "left-arrow": '<path d="M3 12l12-8v6h6v4h-6v6z"/>',
     "right-arrow": '<path d="M21 12L9 4v6H3v4h6v6z"/>',
-    "wait": '<circle cx="12" cy="12" r="8"/><path class="accent-line" d="M12 4a8 8 0 0 1 6 3"/>',
-    "progress": '<path d="M3 2v13l4-3 3 6 3-2-3-6h7z"/><path d="M14 4a7 7 0 1 1-1 13"/><path class="accent-line" d="M14 4a7 7 0 0 1 5 3"/>',
+    "wait": '<circle fill="none" cx="12" cy="12" r="8"/><path class="accent-line" d="M12 4a8 8 0 0 1 6 3"/>',
+    "progress": '<path d="M3 2v13l4-3 3 6 3-2-3-6h7z"/><path fill="none" d="M14 4a7 7 0 1 1-1 13"/><path class="accent-line" d="M14 4a7 7 0 0 1 5 3"/>',
 }
 
 
@@ -316,13 +327,13 @@ def scalable_wayland_svg(kind: str, frame: int | None = None) -> str:
         angle = frame * 30
         if kind == "wait":
             body = (
-                '<circle cx="12" cy="12" r="8"/>'
+                '<circle fill="none" cx="12" cy="12" r="8"/>'
                 f'<path class="accent-line" transform="rotate({angle} 12 12)" d="M12 4a8 8 0 0 1 6 3"/>'
             )
         else:
             body = (
                 '<path d="M3 2v13l4-3 3 6 3-2-3-6h7z"/>'
-                '<path d="M14 4a7 7 0 1 1-1 13"/>'
+                '<path fill="none" d="M14 4a7 7 0 1 1-1 13"/>'
                 f'<path class="accent-line" transform="rotate({angle} 14 11)" d="M14 4a7 7 0 0 1 5 3"/>'
             )
     stroke_w = EDGE_POLISH["cursors"]["outlineWidth"]
@@ -394,7 +405,7 @@ def main() -> None:
         outputs.update(scalable_package_files(alias, target))
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     outputs[THEME / "index.theme"] = (
-        f"# @noxforge-version: {version}\n[Icon Theme]\nName=NoxForge\nComment=Original Forge Identity cursors\n",
+        f"# @noxforge-version: {version}\n[Icon Theme]\nName=NoxForge\nComment=Original Forge Identity cursors\nInherits=breeze_cursors,Adwaita,default\n",
     )[0].encode()
     outputs[THEME / "coverage.json"] = (
         json.dumps(

@@ -36,30 +36,30 @@
   <g id="monitor-bottom"><rect x="6" y="18" width="12" height="6" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.98"/></g>
   <g id="monitor-bottomright"><path d="M18 18H24A6 6 0 0 1 18 24Z" class="ColorScheme-ButtonBackground" fill="currentColor" fill-opacity="0.98"/></g>
   <rect id="monitor-hint-top-margin" x="0" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-right-margin" x="2" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-bottom-margin" x="9" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-left-margin" x="11" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-top-inset" x="18" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-right-inset" x="20" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-bottom-inset" x="27" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-left-inset" x="29" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-hint-stretch-borders" x="36" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
-  <g id="monitor-active-topleft"><path d="M44 0H46V6H40V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-top"><rect x="46" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-topright"><path d="M58 0A6 6 0 0 1 64 6H58Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-left"><rect x="40" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="40" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
-  <g id="monitor-active-center"><rect x="46" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-right"><rect x="58" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-bottomleft"><path d="M40 18H46V24A6 6 0 0 1 40 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-bottom"><rect x="46" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <g id="monitor-active-bottomright"><path d="M58 18H64A6 6 0 0 1 58 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
-  <rect id="monitor-active-hint-top-margin" x="40" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-right-margin" x="42" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-bottom-margin" x="49" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-left-margin" x="51" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-top-inset" x="58" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-right-inset" x="60" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-bottom-inset" x="67" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-left-inset" x="69" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
-  <rect id="monitor-active-hint-stretch-borders" x="76" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-right-margin" x="6" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-bottom-margin" x="12" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-left-margin" x="18" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-top-inset" x="24" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-right-inset" x="30" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-bottom-inset" x="36" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-left-inset" x="42" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-hint-stretch-borders" x="48" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
+  <g id="monitor-active-topleft"><path d="M68 0H70V6H64V4Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-top"><rect x="70" y="0" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-topright"><path d="M82 0A6 6 0 0 1 88 6H82Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-left"><rect x="64" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/><rect x="64" y="7" width="3" height="10" class="ColorScheme-Highlight" fill="currentColor"/></g>
+  <g id="monitor-active-center"><rect x="70" y="6" width="12" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-right"><rect x="82" y="6" width="6" height="12" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-bottomleft"><path d="M64 18H70V24A6 6 0 0 1 64 18Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-bottom"><rect x="70" y="18" width="12" height="6" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <g id="monitor-active-bottomright"><path d="M82 18H88A6 6 0 0 1 82 24Z" class="NoxForge-Selected" fill="currentColor" fill-opacity="1"/></g>
+  <rect id="monitor-active-hint-top-margin" x="64" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-right-margin" x="70" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-bottom-margin" x="76" y="32" width="1" height="4" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-left-margin" x="82" y="32" width="4" height="1" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-top-inset" x="88" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-right-inset" x="94" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-bottom-inset" x="100" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-left-inset" x="106" y="32" width="0" height="0" fill="#000" fill-opacity="0"/>
+  <rect id="monitor-active-hint-stretch-borders" x="112" y="32" width="1" height="1" fill="#000" fill-opacity="0"/>
 </svg>
