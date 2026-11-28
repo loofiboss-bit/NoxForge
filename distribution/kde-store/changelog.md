@@ -1,3 +1,7 @@
+# NoxForge 21.0.4
+
+- Keep Fastfetch Strictly Opt-In (`tools/noxforge-ctl`): marked `fastfetch` as `opt_in: True` in `SUPPORTED_ECOSYSTEM_APPS` so bulk `noxforge-ctl ecosystem apply` / `ecosystem apply all` and Control Center's *Deploy All Detected Themes* never overwrite users' existing `~/.config/fastfetch/config.jsonc` or `logo.txt` automatically; fixed `fastfetch` installed-status detection to check `ecosystem-state.json` ownership instead of flagging any user config as synced; and fixed stale `ecosystem-state.json` writes when users explicitly opt into Fastfetch presets so `noxforge-ctl ecosystem restore fastfetch` reliably restores original configs.
+
 # NoxForge 21.0.3
 
 - Fix Plasma & KDE Text Selection Contrast (`[Colors:Selection]`): updated `color_scheme_for_palette()` in `scripts/generate_design_system.py` so `NoxForgeDark.colors`, `NoxForgeObsidian.colors`, and the embedded Plasma Desktop Theme `colors` files use high-contrast `accentPressed` (`#82D936`) selection fill with dark ink (`#0D1419` on Graphite, `#000000` on Obsidian) instead of dark `#223429`/`#192D1E` with light text — boosting Kickoff/KRunner/Plasma `TextField` selection contrast against sunken input backgrounds from `1.35:1` to `10.10:1` while delivering WCAG AAA (`10.54:1` / `11.93:1`) selected text legibility.
