@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-VERSION = "21.0.3"
+VERSION = "21.0.4"
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -1424,7 +1424,14 @@ def manage_fastfetch(
         rendered_cfg = rendered_cfg.replace("__NOXFORGE_FASTFETCH_LOGO__", str(logo_dst))
         bak_cfg = Path(str(target_cfg) + BACKUP_SUFFIX)
         had_orig = bak_cfg.is_file()
-        if not had_orig and target_cfg.is_file() and "@noxforge-version" not in target_cfg.read_text(encoding="utf-8", errors="ignore"):
+        existing_state = load_ecosystem_state()
+        already_managed = "fastfetch" in existing_state.get("apps", {})
+        if (
+            not had_orig
+            and target_cfg.is_file()
+            and not already_managed
+            and "@noxforge-version" not in target_cfg.read_text(encoding="utf-8", errors="ignore")
+        ):
             shutil.copy2(target_cfg, bak_cfg)
             had_orig = True
         target_cfg.write_text(rendered_cfg, encoding="utf-8")
@@ -1432,7 +1439,7 @@ def manage_fastfetch(
 
         prefs["fastfetchPreset"] = chosen
         _save_preferences(prefs)
-        state = load_ecosystem_state()
+        state = existing_state
         state.setdefault("apps", {})["fastfetch"] = {
             "profile": active_profile,
             "accent": active_accent,
@@ -1653,11 +1660,15 @@ SUPPORTED_ECOSYSTEM_APPS: dict[str, dict[str, Any]] = {
     },
     "fastfetch": {
         "name": "Fastfetch Kinetic Studio",
-        "description": "Kinetic Studio v2 system telemetry presets (Main / Cyber / Minimal) + ANSI logos",
+        "description": "Opt-in Kinetic Studio v2 telemetry presets (Main / Cyber / Minimal) + ANSI logos",
+        "opt_in": True,
         "detect": lambda: shutil.which("fastfetch") is not None or (get_kde_config_dir() / "fastfetch").is_dir(),
         "target_dir": lambda: get_kde_config_dir() / "fastfetch",
         "source_subpath": "tools/fastfetch",
-        "check": lambda: (get_kde_config_dir() / "fastfetch/config.jsonc").is_file(),
+        "check": lambda: (
+            (get_kde_config_dir() / "fastfetch/config.jsonc").is_file()
+            and "fastfetch" in load_ecosystem_state().get("apps", {})
+        ),
     },
     "systemmonitor": {
         "name": "Plasma System Monitor",
@@ -1896,7 +1907,14 @@ def ecosystem_apply(
     profile: str | None = None,
     accent_hex: str | None = None,
 ) -> dict[str, Any]:
-    targets = app_names if app_names and "all" not in app_names else list(SUPPORTED_ECOSYSTEM_APPS.keys())
+    if app_names and "all" not in app_names:
+        targets = app_names
+    else:
+        targets = [
+            app_id
+            for app_id, meta in SUPPORTED_ECOSYSTEM_APPS.items()
+            if not meta.get("opt_in", False)
+        ]
     applied: list[str] = []
     skipped: list[str] = []
     errors: dict[str, str] = {}
@@ -1971,7 +1989,10 @@ def ecosystem_apply(
                     ff_preset = str(_load_preferences().get("fastfetchPreset") or "main")
                     if ff_preset not in FASTFETCH_PRESETS:
                         ff_preset = "main"
-                    ff_res = manage_fastfetch(preset=ff_preset, action="apply", dry_run=False)
+                    manage_fastfetch(preset=ff_preset, action="apply", dry_run=False)
+                    refreshed_ff = load_ecosystem_state().get("apps", {}).get("fastfetch")
+                    if refreshed_ff:
+                        apps_state["fastfetch"] = refreshed_ff
                     applied.append(app_id)
                     continue
                 elif app_id == "firefox":

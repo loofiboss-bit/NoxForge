@@ -1,6 +1,6 @@
 # Install NoxForge on Fedora KDE
 
-NoxForge 21.0.3 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
+NoxForge 21.0.4 is a scriptlet-free Fedora 44 and Fedora 45 package for the complete-system
 journey. It provides the event-driven native Qt 6 style (`QFileSystemWatcher`, 6 WCAG-AA accents,
 custom `QPalette::Accent`), 10-module Plasma 6.8 Union CSS styles, the unified Control Center v6
 suite (`noxforge-ctl` with live hot-reload, Wallpaper Accent Extractor & Named Presets + async
@@ -52,8 +52,8 @@ To get the clean, modern look featured in the showcase:
 ## Build from the distributed source archive
 
 ```bash
-tar -xJf noxforge-21.0.3-source.tar.xz
-cd NoxForge-21.0.3
+tar -xJf noxforge-21.0.4-source.tar.xz
+cd NoxForge-21.0.4
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 DESTDIR="$PWD/stage" cmake --install build

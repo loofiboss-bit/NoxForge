@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# @noxforge-version: 21.0.3
+# @noxforge-version: 21.0.4
 # NoxForge Obsidian btop theme (OLED Black)
 
 theme[main_bg]="#000000"

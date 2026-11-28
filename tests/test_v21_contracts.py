@@ -444,6 +444,56 @@ class NoxForgeV21ContractsTests(unittest.TestCase):
         self.assertEqual(payload["status"], "dry-run")
         self.assertEqual(payload["applied"], ["bat", "delta", "fzf", "eza", "wofi", "fastfetch"])
 
+        # Fastfetch must remain strictly opt-in during bulk ecosystem apply ("all")
+        with tempfile.TemporaryDirectory(prefix="noxforge-v21-ff-optin-") as tmp:
+            iso_env = os.environ.copy()
+            iso_env["HOME"] = tmp
+            iso_env["XDG_CONFIG_HOME"] = str(Path(tmp) / ".config")
+            iso_env["XDG_DATA_HOME"] = str(Path(tmp) / ".local/share")
+            iso_env["XDG_CACHE_HOME"] = str(Path(tmp) / ".cache")
+            ff_dir = Path(tmp) / ".config/fastfetch"
+            ff_dir.mkdir(parents=True, exist_ok=True)
+            original_ff = '{"custom_user_config": true}\n'
+            (ff_dir / "config.jsonc").write_text(original_ff, encoding="utf-8")
+
+            bulk_res = subprocess.run(
+                [sys.executable, str(ROOT / "tools/noxforge-ctl"), "ecosystem", "apply", "all", "--json"],
+                cwd=ROOT,
+                env=iso_env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(bulk_res.returncode, 0, bulk_res.stderr)
+            bulk_payload = json.loads(bulk_res.stdout)
+            self.assertNotIn("fastfetch", bulk_payload["applied"])
+            self.assertEqual((ff_dir / "config.jsonc").read_text(encoding="utf-8"), original_ff)
+
+            # Explicit opt-in tracks fastfetch in state and cleanly restores original config
+            optin_res = subprocess.run(
+                [sys.executable, str(ROOT / "tools/noxforge-ctl"), "ecosystem", "apply", "fastfetch", "--json"],
+                cwd=ROOT,
+                env=iso_env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(optin_res.returncode, 0, optin_res.stderr)
+            self.assertIn("fastfetch", json.loads(optin_res.stdout)["applied"])
+            state = json.loads((Path(tmp) / ".config/noxforge/ecosystem-state.json").read_text(encoding="utf-8"))
+            self.assertIn("fastfetch", state.get("apps", {}))
+
+            restore_res = subprocess.run(
+                [sys.executable, str(ROOT / "tools/noxforge-ctl"), "ecosystem", "restore", "fastfetch", "--json"],
+                cwd=ROOT,
+                env=iso_env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(restore_res.returncode, 0, restore_res.stderr)
+            self.assertEqual((ff_dir / "config.jsonc").read_text(encoding="utf-8"), original_ff)
+
     def test_doctor_schema_14_and_honest_metadata_version(self) -> None:
         with tempfile.TemporaryDirectory(prefix="noxforge-v21-doc-") as temp:
             root = Path(temp)
